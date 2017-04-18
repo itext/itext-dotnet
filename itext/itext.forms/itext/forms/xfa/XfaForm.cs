@@ -42,15 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using iText.IO;
-using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -162,8 +159,7 @@ namespace iText.Forms.Xfa
 		        throw new ArgumentException("XfaForm, PdfAcroForm and PdfAcroForm's document shall not be null");
 		    }
 		    PdfDocument document = acroForm.GetPdfDocument();
-			if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
-				LoggerFactory.GetLogger(typeof(XfaForm)).Error(LogMessageConstant.XFA_DEPRECATED_IN_PDF20);
+			if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming.DEPRECATED_XFA_FORMS)) {
 				return;
 			}
 		    PdfObject xfa = GetXfaObject(acroForm);

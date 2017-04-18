@@ -64,23 +64,21 @@ namespace iText.Kernel.Pdf.Navigation {
                 PdfStructElem structElem = new PdfStructElem((PdfDictionary)firstObj);
                 while (true) {
                     IList<IPdfStructElem> kids = structElem.GetKids();
-                    if (kids.Count > 0) {
-                        IPdfStructElem firstKid = kids[0];
-                        if (firstKid is PdfMcr) {
-                            return ((PdfMcr)firstKid).GetPageObject();
+                    IPdfStructElem firstKid = kids.Count > 0 ? kids[0] : null;
+                    if (firstKid is PdfMcr) {
+                        return ((PdfMcr)firstKid).GetPageObject();
+                    }
+                    else {
+                        if (firstKid is PdfStructElem) {
+                            structElem = (PdfStructElem)firstKid;
                         }
                         else {
-                            if (firstKid is PdfStructElem) {
-                                structElem = (PdfStructElem)firstKid;
-                            }
-                            else {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
             }
-            return PdfNull.PDF_NULL;
+            return null;
         }
 
         public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {

@@ -493,7 +493,7 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FEATURE_IS_DEPRECATED)]
+        [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void EncryptWithPasswordAes128Pdf2() {
             String filename = "encryptWithPasswordAes128Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
@@ -504,7 +504,7 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FEATURE_IS_DEPRECATED)]
+        [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void StampAndUpdateVersionPreserveStandard40() {
             String filename = "stampAndUpdateVersionPreserveStandard40.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new 
@@ -518,7 +518,7 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FEATURE_IS_DEPRECATED)]
+        [LogMessage(VersionConforming.DEPRECATED_AES256_REVISION)]
         public virtual void StampAndUpdateVersionPreserveAes256() {
             String filename = "stampAndUpdateVersionPreserveAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties

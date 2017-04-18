@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -341,8 +340,8 @@ namespace iText.Forms {
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
-            if (document != null && document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
-                LoggerFactory.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.NEED_APPEARANCES_DEPRECATED_IN_PDF20);
+            if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
+                .DEPRECATED_NEED_APPEARANCES_IN_ACROFORM)) {
                 GetPdfObject().Remove(PdfName.NeedAppearances);
                 return this;
             }

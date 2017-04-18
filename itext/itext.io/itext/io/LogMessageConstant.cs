@@ -92,8 +92,6 @@ namespace iText.IO {
 
         public const String EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD = "Existing tag structure of the document has a root of \"{0}\" role in \"{1}\" namespace that is not mapped to the standard role.";
 
-        public const String FEATURE_IS_DEPRECATED = "{0} is deprecated for the {1} and higher versions. It is highly recommended not to use it.";
-
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
@@ -129,8 +127,6 @@ namespace iText.IO {
         public const String MAPPING_IN_STRUCT_ROOT_OVERWRITTEN = "Existing mapping for {0} in structure tree root role map was {1} and it was overwritten with {2}.";
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
-
-        public const String NEED_APPEARANCES_DEPRECATED_IN_PDF20 = "NeedAppearances has been deprecated in PDF 2.0. Appearance streams are required in PDF 2.0.";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
@@ -201,8 +197,6 @@ namespace iText.IO {
         public const String WRITER_ENCRYPTION_IS_IGNORED_APPEND = "Writer encryption will be ignored, because append mode is used. Document will preserve the original encryption (or will stay unencrypted)";
 
         public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
-
-        public const String XFA_DEPRECATED_IN_PDF20 = "XFA is deprecated in PDF 2.0. The XFA form will not be written to the document";
 
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }
