@@ -728,7 +728,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// .
         /// </returns>
         public virtual TagTreePointer CreatePointerForStructElem(PdfStructElem structElem) {
-            return new TagTreePointer(structElem);
+            return new TagTreePointer(structElem, document);
         }
 
         internal virtual PdfStructElem GetRootTag() {
@@ -860,7 +860,11 @@ namespace iText.Kernel.Pdf.Tagutils {
                     if (waitingTagsManager.GetObjForStructDict(parentStructDict) == null && parent.GetKids().Count == 0 && parentStructDict
                          != GetRootTag().GetPdfObject()) {
                         RemovePageTagFromParent(structParent, parent.GetParent());
-                        parentStructDict.GetIndirectReference().SetFree();
+                        PdfIndirectReference indRef = parentStructDict.GetIndirectReference();
+                        if (indRef != null) {
+                            // TODO how about possible references to structure element from refs or structure destination for instance?
+                            indRef.SetFree();
+                        }
                     }
                 }
                 else {

@@ -45,34 +45,40 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Tagging {
-    /// <summary>
-    /// To be able to be wrapped with this
-    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
-    /// the
-    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-    /// must be indirect.
-    /// </summary>
     public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
+        private PdfDocument document;
+
         private ParentTreeHandler parentTreeHandler;
 
         public PdfStructTreeRoot(PdfDocument document)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
+            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document)), document) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructTreeRoot);
         }
 
         /// <param name="pdfObject">must be an indirect object.</param>
+        [Obsolete]
         public PdfStructTreeRoot(PdfDictionary pdfObject)
+            : this(pdfObject, null) {
+        }
+
+        public PdfStructTreeRoot(PdfDictionary pdfObject, PdfDocument document)
             : base(pdfObject) {
-            EnsureObjectIsAddedToDocument(pdfObject);
+            this.document = document;
+            if (this.document == null) {
+                EnsureObjectIsAddedToDocument(pdfObject);
+                this.document = pdfObject.GetIndirectReference().GetDocument();
+            }
             SetForbidRelease();
             parentTreeHandler = new ParentTreeHandler(this);
             GetRoleMap();
         }
 
+        // TODO may be remove?
         public virtual PdfStructElem AddKid(PdfStructElem structElem) {
             return AddKid(-1, structElem);
         }
@@ -380,7 +386,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfDocument GetDocument() {
-            return GetPdfObject().GetIndirectReference().GetDocument();
+            return document;
         }
 
         internal virtual ParentTreeHandler GetParentTreeHandler() {
@@ -395,6 +401,10 @@ namespace iText.Kernel.Pdf.Tagging {
                 GetKidsObject().Add(index, structElem);
             }
             if (PdfStructElem.IsStructElem(structElem)) {
+                if (GetPdfObject().GetIndirectReference() == null) {
+                    throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                        );
+                }
                 structElem.Put(PdfName.P, GetPdfObject());
             }
             SetModified();
@@ -418,7 +428,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 kids.Add(null);
             }
             else {
-                if (kid.GetObjectType() == PdfObject.DICTIONARY && PdfStructElem.IsStructElem((PdfDictionary)kid)) {
+                if (kid.IsDictionary() && PdfStructElem.IsStructElem((PdfDictionary)kid)) {
                     kids.Add(new PdfStructElem((PdfDictionary)kid));
                 }
             }

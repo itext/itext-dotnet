@@ -49,47 +49,47 @@ using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
     internal class BackedAccessibleProperties : AccessibilityProperties {
-        private PdfStructElem backingElem;
+        private TagTreePointer pointerToBackingElem;
 
-        internal BackedAccessibleProperties(PdfStructElem backingElem) {
+        internal BackedAccessibleProperties(TagTreePointer pointerToBackingElem) {
             // TODO introduce IAccessibleProperties interface before iText 7.1 released
             // TODO move getRole/setRole from IAccessibleElement to it?
-            this.backingElem = backingElem;
+            this.pointerToBackingElem = new TagTreePointer(pointerToBackingElem);
         }
 
         public override String GetLanguage() {
-            return ToUnicodeString(backingElem.GetLang());
+            return ToUnicodeString(GetBackingElem().GetLang());
         }
 
         public override AccessibilityProperties SetLanguage(String language) {
-            backingElem.SetLang(new PdfString(language));
+            GetBackingElem().SetLang(new PdfString(language));
             return this;
         }
 
         public override String GetActualText() {
-            return ToUnicodeString(backingElem.GetActualText());
+            return ToUnicodeString(GetBackingElem().GetActualText());
         }
 
         public override AccessibilityProperties SetActualText(String actualText) {
-            backingElem.SetActualText(new PdfString(actualText));
+            GetBackingElem().SetActualText(new PdfString(actualText));
             return this;
         }
 
         public override String GetAlternateDescription() {
-            return ToUnicodeString(backingElem.GetAlt());
+            return ToUnicodeString(GetBackingElem().GetAlt());
         }
 
         public override AccessibilityProperties SetAlternateDescription(String alternateDescription) {
-            backingElem.SetAlt(new PdfString(alternateDescription));
+            GetBackingElem().SetAlt(new PdfString(alternateDescription));
             return this;
         }
 
         public override String GetExpansion() {
-            return ToUnicodeString(backingElem.GetE());
+            return ToUnicodeString(GetBackingElem().GetE());
         }
 
         public override AccessibilityProperties SetExpansion(String expansion) {
-            backingElem.SetE(new PdfString(expansion));
+            GetBackingElem().SetE(new PdfString(expansion));
             return this;
         }
 
@@ -101,21 +101,21 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (attributes == null) {
                 return this;
             }
-            PdfObject attributesObject = backingElem.GetAttributes(false);
+            PdfObject attributesObject = GetBackingElem().GetAttributes(false);
             PdfObject combinedAttributes = CombineAttributesList(attributesObject, index, JavaCollectionsUtil.SingletonList
-                (attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
-            backingElem.SetAttributes(combinedAttributes);
+                (attributes), GetBackingElem().GetPdfObject().GetAsNumber(PdfName.R));
+            GetBackingElem().SetAttributes(combinedAttributes);
             return this;
         }
 
         public override AccessibilityProperties ClearAttributes() {
-            backingElem.GetPdfObject().Remove(PdfName.A);
+            GetBackingElem().GetPdfObject().Remove(PdfName.A);
             return this;
         }
 
         public override IList<PdfDictionary> GetAttributesList() {
             List<PdfDictionary> attributesList = new List<PdfDictionary>();
-            PdfObject elemAttributesObj = backingElem.GetAttributes(false);
+            PdfObject elemAttributesObj = GetBackingElem().GetAttributes(false);
             if (elemAttributesObj != null) {
                 if (elemAttributesObj.IsDictionary()) {
                     attributesList.Add((PdfDictionary)elemAttributesObj);
@@ -135,50 +135,53 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties SetPhoneme(String phoneme) {
-            backingElem.SetPhoneme(new PdfString(phoneme));
+            GetBackingElem().SetPhoneme(new PdfString(phoneme));
             return this;
         }
 
         public override String GetPhoneme() {
-            return ToUnicodeString(backingElem.GetPhoneme());
+            return ToUnicodeString(GetBackingElem().GetPhoneme());
         }
 
         public override AccessibilityProperties SetPhoneticAlphabet(PdfName phoneticAlphabet) {
-            backingElem.SetPhoneticAlphabet(phoneticAlphabet);
+            GetBackingElem().SetPhoneticAlphabet(phoneticAlphabet);
             return this;
         }
 
         public override PdfName GetPhoneticAlphabet() {
-            return backingElem.GetPhoneticAlphabet();
+            return GetBackingElem().GetPhoneticAlphabet();
         }
 
         public override AccessibilityProperties SetNamespace(PdfNamespace @namespace) {
-            backingElem.SetNamespace(@namespace);
-            PdfDocument doc = backingElem.GetPdfObject().GetIndirectReference().GetDocument();
-            doc.GetTagStructureContext().EnsureNamespaceRegistered(@namespace);
+            GetBackingElem().SetNamespace(@namespace);
+            pointerToBackingElem.GetContext().EnsureNamespaceRegistered(@namespace);
             return this;
         }
 
         public override PdfNamespace GetNamespace() {
-            return backingElem.GetNamespace();
+            return GetBackingElem().GetNamespace();
         }
 
         public override AccessibilityProperties AddRef(TagTreePointer treePointer) {
-            backingElem.AddRef(treePointer.GetCurrentStructElem());
+            GetBackingElem().AddRef(treePointer.GetCurrentStructElem());
             return this;
         }
 
         public override IList<TagTreePointer> GetRefsList() {
             IList<TagTreePointer> refsList = new List<TagTreePointer>();
-            foreach (PdfStructElem @ref in backingElem.GetRefsList()) {
-                refsList.Add(new TagTreePointer(@ref));
+            foreach (PdfStructElem @ref in GetBackingElem().GetRefsList()) {
+                refsList.Add(new TagTreePointer(@ref, pointerToBackingElem.GetDocument()));
             }
-            return refsList;
+            return JavaCollectionsUtil.UnmodifiableList(refsList);
         }
 
         public override AccessibilityProperties ClearRefs() {
-            backingElem.GetPdfObject().Remove(PdfName.Ref);
+            GetBackingElem().GetPdfObject().Remove(PdfName.Ref);
             return this;
+        }
+
+        private PdfStructElem GetBackingElem() {
+            return pointerToBackingElem.GetCurrentStructElem();
         }
 
         internal override void SetToStructElem(PdfStructElem elem) {

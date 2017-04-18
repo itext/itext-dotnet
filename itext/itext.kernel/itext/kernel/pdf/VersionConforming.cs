@@ -14,7 +14,7 @@ namespace iText.Kernel.Pdf {
         // TODO consider constants location
         public static void ValidatePdfVersionForDictEntry(PdfDocument document, PdfVersion expectedVersion, PdfName
              entryKey, PdfName dictType) {
-            if (document.GetPdfVersion().CompareTo(expectedVersion) < 0) {
+            if (document != null && document.GetPdfVersion().CompareTo(expectedVersion) < 0) {
                 logger.Warn(String.Format(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, entryKey
                     , dictType, expectedVersion, document.GetPdfVersion()));
             }

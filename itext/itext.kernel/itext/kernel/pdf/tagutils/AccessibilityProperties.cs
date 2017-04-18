@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
@@ -64,7 +65,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal PdfNamespace @namespace;
 
-        protected internal IList<PdfDictionary> refs = new List<PdfDictionary>();
+        protected internal IList<TagTreePointer> refs = new List<TagTreePointer>();
 
         public virtual String GetLanguage() {
             return language;
@@ -155,16 +156,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual AccessibilityProperties AddRef(TagTreePointer treePointer) {
-            refs.Add(treePointer.GetCurrentStructElem().GetPdfObject());
+            refs.Add(new TagTreePointer(treePointer));
             return this;
         }
 
         public virtual IList<TagTreePointer> GetRefsList() {
-            IList<TagTreePointer> refsList = new List<TagTreePointer>();
-            foreach (PdfDictionary @ref in refs) {
-                refsList.Add(new TagTreePointer(new PdfStructElem(@ref)));
-            }
-            return refsList;
+            return JavaCollectionsUtil.UnmodifiableList(refs);
         }
 
         public virtual AccessibilityProperties ClearRefs() {
@@ -201,8 +198,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (GetNamespace() != null) {
                 elem.SetNamespace(GetNamespace());
             }
-            foreach (PdfDictionary @ref in refs) {
-                elem.AddRef(new PdfStructElem(@ref));
+            foreach (TagTreePointer @ref in refs) {
+                elem.AddRef(@ref.GetCurrentStructElem());
             }
         }
 

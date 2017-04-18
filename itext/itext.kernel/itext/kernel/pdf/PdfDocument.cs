@@ -1918,7 +1918,7 @@ namespace iText.Kernel.Pdf {
 
         private void TryInitTagStructure(PdfDictionary str) {
             try {
-                structTreeRoot = new PdfStructTreeRoot(str);
+                structTreeRoot = new PdfStructTreeRoot(str, this);
                 structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
             }
             catch (Exception ex) {

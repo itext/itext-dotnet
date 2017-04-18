@@ -138,7 +138,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     PdfDictionary topClone = top.Clone(ignoreKeysForClone);
                     topClone.Put(PdfName.P, destStructTreeRoot.GetPdfObject());
                     lastCloned.clone = topClone;
-                    SeparateKids(top, firstPartElems, lastCloned);
+                    SeparateKids(top, firstPartElems, lastCloned, destDocument);
                     if (topClone.ContainsKey(PdfName.K)) {
                         topClone.MakeIndirect(destDocument);
                         clonedTops.Add(topClone);
@@ -203,20 +203,23 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             StructureTreeCopier.StructElemCopyingParams structElemCopyingParams = new StructureTreeCopier.StructElemCopyingParams
                 (objectsToCopy, destDocument, page2pageDictionaries, copyFromDestDocument);
+            PdfStructTreeRoot destStructTreeRoot = destDocument.GetStructTreeRoot();
+            if (!destStructTreeRoot.GetPdfObject().IsIndirect()) {
+                destStructTreeRoot.MakeIndirect(destDocument);
+            }
             foreach (PdfDictionary top in topsInOriginalOrder) {
                 PdfDictionary copied = CopyObject(top, structElemCopyingParams);
-                destDocument.GetStructTreeRoot().AddKidObject(insertIndex, copied);
+                destStructTreeRoot.AddKidObject(insertIndex, copied);
                 if (insertIndex > -1) {
                     ++insertIndex;
                 }
             }
             if (!structElemCopyingParams.GetCopiedNamespaces().IsEmpty()) {
-                destDocument.GetStructTreeRoot().GetNamespacesObject().AddAll(structElemCopyingParams.GetCopiedNamespaces(
-                    ));
+                destStructTreeRoot.GetNamespacesObject().AddAll(structElemCopyingParams.GetCopiedNamespaces());
             }
             if (!copyFromDestDocument) {
                 PdfDictionary srcRoleMap = fromDocument.GetStructTreeRoot().GetRoleMap();
-                PdfDictionary destRoleMap = destDocument.GetStructTreeRoot().GetRoleMap();
+                PdfDictionary destRoleMap = destStructTreeRoot.GetRoleMap();
                 foreach (KeyValuePair<PdfName, PdfObject> mappingEntry in srcRoleMap.EntrySet()) {
                     if (!destRoleMap.ContainsKey(mappingEntry.Key)) {
                         destRoleMap.Put(mappingEntry.Key, mappingEntry.Value);
@@ -375,18 +378,17 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private static void SeparateKids(PdfDictionary structElem, ICollection<PdfObject> firstPartElems, StructureTreeCopier.LastClonedAncestor
-             lastCloned) {
+             lastCloned, PdfDocument document) {
             PdfObject k = structElem.Get(PdfName.K);
             // If /K entry is not a PdfArray - it would be a kid which we won't clone at the moment, because it won't contain
             // kids from both parts at the same time. It would either be cloned as an ancestor later, or not cloned at all.
             // If it's kid is struct elem - it would definitely be structElem from the first part, so we simply call separateKids for it.
             if (!k.IsArray()) {
                 if (k.IsDictionary() && PdfStructElem.IsStructElem((PdfDictionary)k)) {
-                    SeparateKids((PdfDictionary)k, firstPartElems, lastCloned);
+                    SeparateKids((PdfDictionary)k, firstPartElems, lastCloned, document);
                 }
             }
             else {
-                PdfDocument document = structElem.GetIndirectReference().GetDocument();
                 PdfArray kids = (PdfArray)k;
                 for (int i = 0; i < kids.Size(); ++i) {
                     PdfObject kid = kids.Get(i);
@@ -396,7 +398,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     }
                     if (dictKid != null && PdfStructElem.IsStructElem(dictKid)) {
                         if (firstPartElems.Contains(kid)) {
-                            SeparateKids((PdfDictionary)kid, firstPartElems, lastCloned);
+                            SeparateKids((PdfDictionary)kid, firstPartElems, lastCloned, document);
                         }
                         else {
                             if (dictKid.IsFlushed()) {

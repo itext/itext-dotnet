@@ -427,6 +427,8 @@ namespace iText.Kernel {
 
         public const String PdfVersionNotValid = "PDF version is not valid.";
 
+        public const String RefArrayItemsInStructureElementDictionaryShallBeIndirectObjects = "Ref array items in structure element dictionary shall be indirect objects.";
+
         public const String RequestedPageNumberIsOutOfBounds = "Requested page number {0} is out of bounds.";
 
         public const String PngFilterUnknown = "PNG filter unknown.";
@@ -455,6 +457,8 @@ namespace iText.Kernel {
         public const String StructureElementInStructureDestinationShallBeAnIndirectObject = "Structure element referenced by a structure destination shall be an indirect object.";
 
         public const String StructureElementShallContainParentObject = "StructureElement shall contain parent object.";
+
+        public const String StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren = "Structure element dictionary shall be an indirect object in order to have children.";
 
         public const String TagCannotBeMovedToTheAnotherDocumentsTagStructure = "Tag cannot be moved to the another document's tag structure.";
 

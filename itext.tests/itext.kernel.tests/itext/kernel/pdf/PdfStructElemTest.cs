@@ -274,7 +274,7 @@ namespace iText.Kernel.Pdf {
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));
             linkAnnotation.SetColor(new float[] { 0, 0, 1 }).SetBorder(new PdfArray(new float[] { 0, 0, 1 }));
             page.AddAnnotation(-1, linkAnnotation, false);
-            link.AddKid(new PdfObjRef(linkAnnotation, link));
+            link.AddKid(new PdfObjRef(linkAnnotation, link, document.GetNextStructParentIndex()));
             canvas.CloseTag();
             PdfStructElem span2 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
             canvas.OpenTag(new CanvasTag(span2.AddKid(new PdfMcrNumber(page, span2))));

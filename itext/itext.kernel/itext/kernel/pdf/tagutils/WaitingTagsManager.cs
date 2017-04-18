@@ -208,8 +208,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void RemoveWaitingStatusAndFlushIfParentFlushed(PdfStructElem structElem) {
             if (structElem != null) {
                 waitingTagToAssociatedObj.JRemove(structElem.GetPdfObject());
-                if (structElem.GetParent() == null) {
-                    // is flushed
+                IPdfStructElem parent = structElem.GetParent();
+                if (parent is PdfStructElem && ((PdfStructElem)parent).IsFlushed()) {
                     FlushStructElementAndItKids(structElem);
                 }
             }

@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -50,12 +52,14 @@ namespace iText.Kernel.Pdf.Tagging {
             : base(pdfObject, parent) {
         }
 
+        [Obsolete]
         public PdfObjRef(PdfAnnotation annot, PdfStructElem parent)
+            : this(annot, parent, (int)GetDocEnsureIndirect(parent).GetNextStructParentIndex()) {
+        }
+
+        public PdfObjRef(PdfAnnotation annot, PdfStructElem parent, int nextStructParentIndex)
             : base(new PdfDictionary(), parent) {
-            PdfDictionary parentObject = parent.GetPdfObject();
-            EnsureObjectIsAddedToDocument(parentObject);
-            PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
-            annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber((int)doc.GetNextStructParentIndex()));
+            annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber(nextStructParentIndex));
             annot.SetModified();
             PdfDictionary dict = (PdfDictionary)GetPdfObject();
             dict.Put(PdfName.Type, PdfName.OBJR);
@@ -76,6 +80,15 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual PdfDictionary GetReferencedObject() {
             return ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Obj);
+        }
+
+        private static PdfDocument GetDocEnsureIndirect(PdfStructElem structElem) {
+            PdfIndirectReference indRef = structElem.GetPdfObject().GetIndirectReference();
+            if (indRef == null) {
+                throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                    );
+            }
+            return indRef.GetDocument();
         }
     }
 }

@@ -265,9 +265,13 @@ namespace iText.Kernel.Pdf.Tagging {
             int currentMcid = 0;
             foreach (KeyValuePair<int, PdfMcr> entry in mcrs) {
                 PdfMcr mcr = entry.Value;
+                PdfDictionary parentObj = ((PdfStructElem)mcr.GetParent()).GetPdfObject();
+                if (!parentObj.IsIndirect()) {
+                    continue;
+                }
                 if (mcr is PdfObjRef) {
                     int structParent = KeyIntoStructParentIndex((int)entry.Key);
-                    parentTree.AddEntry(structParent, ((PdfStructElem)mcr.GetParent()).GetPdfObject());
+                    parentTree.AddEntry(structParent, parentObj);
                 }
                 else {
                     // if for some reason some mcr where not registered or don't exist, we ensure that the rest
@@ -275,7 +279,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     while (currentMcid++ < mcr.GetMcid()) {
                         parentsOfPageMcrs.Add(PdfNull.PDF_NULL);
                     }
-                    parentsOfPageMcrs.Add(((PdfStructElem)mcr.GetParent()).GetPdfObject());
+                    parentsOfPageMcrs.Add(parentObj);
                 }
             }
             if (parentsOfPageMcrs.Size() > 0) {

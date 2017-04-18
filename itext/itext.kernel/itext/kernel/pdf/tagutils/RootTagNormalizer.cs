@@ -20,10 +20,16 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         internal virtual PdfStructElem MakeSingleStandardRootTag(IList<IPdfStructElem> rootKids) {
+            if (document.GetStructTreeRoot().GetPdfObject().GetIndirectReference() == null) {
+                document.GetStructTreeRoot().MakeIndirect(document);
+            }
             if (rootTagElement == null) {
                 CreateNewRootTag();
             }
             else {
+                if (!rootTagElement.GetPdfObject().IsIndirect()) {
+                    rootTagElement.MakeIndirect(document);
+                }
                 document.GetStructTreeRoot().AddKid(rootTagElement);
                 EnsureExistingRootTagIsDocument();
             }
@@ -103,7 +109,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole, PdfNamespace wrapTagNs) {
             int kidsNum = parent.GetKids().Count;
-            TagTreePointer tagPointer = new TagTreePointer(parent);
+            TagTreePointer tagPointer = new TagTreePointer(parent, document);
             tagPointer.AddTag(0, wrapTagRole);
             if (context.TargetTagStructureVersionIs2()) {
                 tagPointer.GetProperties().SetNamespace(wrapTagNs);
