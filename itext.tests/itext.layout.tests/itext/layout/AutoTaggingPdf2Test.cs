@@ -371,7 +371,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS, Count
-             = 2)]
+             = 1)]
         public virtual void DocWithInvalidMapping07() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping07.pdf", 
