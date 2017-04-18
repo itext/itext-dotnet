@@ -141,5 +141,8 @@ namespace iText.Kernel.XMP {
         /// <summary>An alternative array of thumbnail images for a file, which can differ in characteristics such as size or image encoding.
         ///     </summary>
         public const String Thumbnails = "Thumbnails";
+
+        /// <summary>Indicates whether the document has been modified to include trapping information</summary>
+        public const String Trapped = "Trapped";
     }
 }

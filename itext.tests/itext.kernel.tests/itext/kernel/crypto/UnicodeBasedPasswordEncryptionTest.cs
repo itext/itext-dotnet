@@ -138,7 +138,8 @@ namespace iText.Kernel.Crypto {
                 , permissions, EncryptionConstants.ENCRYPTION_AES_256).SetPdfVersion(PdfVersion.PDF_2_0);
             PdfWriter writer = new PdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata());
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetAuthor(PdfEncryptionTest.author).SetCreator(PdfEncryptionTest.creator);
+            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTest.customInfoEntryKey, PdfEncryptionTest.customInfoEntryValue
+                );
             PdfPage page = document.AddNewPage();
             PdfEncryptionTest.WriteTextBytesOnPageContent(page, PdfEncryptionTest.pageTextContent);
             page.Flush();

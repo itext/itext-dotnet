@@ -1512,6 +1512,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Trans = CreateDirectName("Trans");
 
+        public static readonly iText.Kernel.Pdf.PdfName Trapped = CreateDirectName("Trapped");
+
         public static readonly iText.Kernel.Pdf.PdfName True = CreateDirectName("true");
 
         public static readonly iText.Kernel.Pdf.PdfName Table = CreateDirectName("Table");

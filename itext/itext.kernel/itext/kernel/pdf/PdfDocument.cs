@@ -618,10 +618,28 @@ namespace iText.Kernel.Pdf {
                     if (catalog.IsFlushed()) {
                         throw new PdfException(PdfException.CannotCloseDocumentWithAlreadyFlushedPdfCatalog);
                     }
+                    UpdateProducerInInfoDictionary();
                     UpdateXmpMetadata();
+                    // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
+                    if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                        foreach (PdfName deprecatedKey in PdfDocumentInfo.PDF20_DEPRECATED_KEYS) {
+                            info.GetPdfObject().Remove(deprecatedKey);
+                        }
+                    }
                     if (GetXmpMetadata() != null) {
-                        PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
-                        xmp.GetOutputStream().Write(xmpMetadata);
+                        PdfStream xmp = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                        if (IsAppendMode() && xmp != null && !xmp.IsFlushed() && xmp.GetIndirectReference() != null) {
+                            // Use existing object for append mode
+                            xmp.SetData(xmpMetadata);
+                            xmp.SetModified();
+                        }
+                        else {
+                            // Create new object
+                            xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
+                            xmp.GetOutputStream().Write(xmpMetadata);
+                            catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
+                            catalog.SetModified();
+                        }
                         xmp.Put(PdfName.Type, PdfName.Metadata);
                         xmp.Put(PdfName.Subtype, PdfName.XML);
                         if (writer.crypto != null && !writer.crypto.IsMetadataEncrypted()) {
@@ -629,19 +647,7 @@ namespace iText.Kernel.Pdf {
                             ar.Add(PdfName.Crypt);
                             xmp.Put(PdfName.Filter, ar);
                         }
-                        catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                     }
-                    String producer = null;
-                    if (reader == null) {
-                        producer = iText.Kernel.Version.GetInstance().GetVersion();
-                    }
-                    else {
-                        if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                            producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
-                        }
-                        producer = AddModifiedPostfix(producer);
-                    }
-                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     CheckIsoConformance();
                     PdfObject crypto = null;
                     if (properties.appendMode) {
@@ -666,7 +672,7 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         if (info.GetPdfObject().IsModified()) {
-                            info.Flush();
+                            info.GetPdfObject().Flush(false);
                         }
                         FlushFonts();
                         writer.FlushModifiedWaitingObjects();
@@ -698,7 +704,7 @@ namespace iText.Kernel.Pdf {
                             TryFlushTagStructure(false);
                         }
                         catalog.GetPdfObject().Flush(false);
-                        info.Flush();
+                        info.GetPdfObject().Flush(false);
                         FlushFonts();
                         writer.FlushWaitingObjects();
                         // flush unused objects
@@ -1666,6 +1672,7 @@ namespace iText.Kernel.Pdf {
                     PdfObject infoDict = trailer.Get(PdfName.Info, true);
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
+                    XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
                     if (str != null) {
                         TryInitTagStructure(str);
@@ -1789,7 +1796,8 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal virtual void UpdateXmpMetadata() {
             try {
-                if (writer.properties.addXmpMetadata) {
+                // We add PDF producer info in any case, and the valid way to do it for PDF 2.0 in only in metadata, not in the info dictionary.
+                if (writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
                     SetXmpMetadata(UpdateDefaultXmpMetadata());
                 }
             }
@@ -1807,69 +1815,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
-            PdfDictionary docInfo = info.GetPdfObject();
-            if (docInfo != null) {
-                PdfName key;
-                PdfObject obj;
-                String value;
-                foreach (PdfName pdfName in docInfo.KeySet()) {
-                    key = pdfName;
-                    obj = docInfo.Get(key);
-                    if (obj == null) {
-                        continue;
-                    }
-                    if (obj.GetObjectType() != PdfObject.STRING) {
-                        continue;
-                    }
-                    value = ((PdfString)obj).ToUnicodeString();
-                    if (PdfName.Title.Equals(key)) {
-                        xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst.X_DEFAULT, value);
-                    }
-                    else {
-                        if (PdfName.Author.Equals(key)) {
-                            xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Creator, new PropertyOptions(PropertyOptions.ARRAY_ORDERED
-                                ), value, null);
-                        }
-                        else {
-                            if (PdfName.Subject.Equals(key)) {
-                                xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT, XMPConst.X_DEFAULT, value
-                                    );
-                            }
-                            else {
-                                if (PdfName.Keywords.Equals(key)) {
-                                    foreach (String v in iText.IO.Util.StringUtil.Split(value, ",|;")) {
-                                        if (v.Trim().Length > 0) {
-                                            xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions.ARRAY), v.Trim
-                                                (), null);
-                                        }
-                                    }
-                                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Keywords, value);
-                                }
-                                else {
-                                    if (PdfName.Creator.Equals(key)) {
-                                        xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool, value);
-                                    }
-                                    else {
-                                        if (PdfName.Producer.Equals(key)) {
-                                            xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, value);
-                                        }
-                                        else {
-                                            if (PdfName.CreationDate.Equals(key)) {
-                                                xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreateDate, PdfDate.GetW3CDate(value));
-                                            }
-                                            else {
-                                                if (PdfName.ModDate.Equals(key)) {
-                                                    xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.ModifyDate, PdfDate.GetW3CDate(value));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);
             if (IsTagged() && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID, XMPConst.PART)) {
                 xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
                     ));
@@ -1957,6 +1903,20 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual Counter GetCounter() {
             return CounterFactory.GetCounter(typeof(iText.Kernel.Pdf.PdfDocument));
+        }
+
+        private void UpdateProducerInInfoDictionary() {
+            String producer = null;
+            if (reader == null) {
+                producer = iText.Kernel.Version.GetInstance().GetVersion();
+            }
+            else {
+                if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
+                    producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
+                }
+                producer = AddModifiedPostfix(producer);
+            }
+            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
         }
 
         private void TryInitTagStructure(PdfDictionary str) {

@@ -88,11 +88,11 @@ namespace iText.Kernel.Crypto {
 
         public static readonly String PRIVATE_KEY = sourceFolder + "test.p12";
 
-        internal const String author = "Alexander Chingarev";
-
-        internal const String creator = "iText 7";
-
         internal const String pageTextContent = "Hello world!";
+
+        internal const String customInfoEntryKey = "Custom";
+
+        internal const String customInfoEntryValue = "String";
 
         /// <summary>User password.</summary>
         public static byte[] USER = "Hello".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
@@ -102,6 +102,7 @@ namespace iText.Kernel.Crypto {
 
         private ICipherParameters privateKey;
 
+        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
@@ -395,8 +396,8 @@ namespace iText.Kernel.Crypto {
             String fileName = "copiedEncryptedDoc.pdf";
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));
             srcDoc.CopyPagesTo(1, 1, destDoc);
-            PdfDictionary srcInfo = srcDoc.GetDocumentInfo().GetPdfObject();
-            PdfDictionary destInfo = destDoc.GetDocumentInfo().GetPdfObject();
+            PdfDictionary srcInfo = srcDoc.GetTrailer().GetAsDictionary(PdfName.Info);
+            PdfDictionary destInfo = destDoc.GetTrailer().GetAsDictionary(PdfName.Info);
             foreach (PdfName srcInfoKey in srcInfo.KeySet()) {
                 destInfo.Put(((PdfName)srcInfoKey.CopyTo(destDoc)), srcInfo.Get(srcInfoKey).CopyTo(destDoc));
             }
@@ -446,7 +447,7 @@ namespace iText.Kernel.Crypto {
             PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
                 , encryptionType).AddXmpMetadata());
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
+            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfPage page = document.AddNewPage();
             String textContent = "Hello world!";
             WriteTextBytesOnPageContent(page, textContent);
@@ -551,7 +552,7 @@ namespace iText.Kernel.Crypto {
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
                 )));
-            doc.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
+            doc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             WriteTextBytesOnPageContent(doc.AddNewPage(), pageTextContent);
             doc.Close();
             CompareEncryptedPdf(filename);
@@ -577,7 +578,7 @@ namespace iText.Kernel.Crypto {
             PdfWriter writer = new PdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata());
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
+            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfPage page = document.AddNewPage();
             WriteTextBytesOnPageContent(page, pageTextContent);
             page.Flush();
@@ -599,7 +600,7 @@ namespace iText.Kernel.Crypto {
                 [] { cert }, new int[] { permissions }, encryptionType).AddXmpMetadata());
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
+            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfPage page = document.AddNewPage();
             WriteTextBytesOnPageContent(page, pageTextContent);
             page.Flush();
@@ -641,8 +642,8 @@ namespace iText.Kernel.Crypto {
             PdfPage page = document.GetPage(1);
             NUnit.Framework.Assert.IsTrue(iText.IO.Util.JavaUtil.GetStringForBytes(page.GetStreamBytes(0)).Contains(pageContent
                 ), "Expected content: \n" + pageContent);
-            NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor(), "Encrypted author");
-            NUnit.Framework.Assert.AreEqual(creator, document.GetDocumentInfo().GetCreator(), "Encrypted creator");
+            NUnit.Framework.Assert.AreEqual(customInfoEntryValue, document.GetTrailer().GetAsDictionary(PdfName.Info).
+                GetAsString(new PdfName(customInfoEntryKey)).ToUnicodeString(), "Encrypted custom");
             document.Close();
         }
 
@@ -657,8 +658,8 @@ namespace iText.Kernel.Crypto {
             PdfPage page = document.GetPage(1);
             String s = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetStreamBytes(0));
             NUnit.Framework.Assert.IsTrue(s.Contains(pageContent), "Expected content: \n" + pageContent);
-            NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor(), "Encrypted author");
-            NUnit.Framework.Assert.AreEqual(creator, document.GetDocumentInfo().GetCreator(), "Encrypted creator");
+            NUnit.Framework.Assert.AreEqual(customInfoEntryValue, document.GetTrailer().GetAsDictionary(PdfName.Info).
+                GetAsString(new PdfName(customInfoEntryKey)).ToUnicodeString(), "Encrypted custom");
             document.Close();
         }
 
