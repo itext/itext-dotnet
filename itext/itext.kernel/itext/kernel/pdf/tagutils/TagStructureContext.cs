@@ -430,6 +430,64 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
+        /// <summary>
+        /// <p>
+        /// Gets
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// at which
+        /// <see cref="TagTreePointer"/>
+        /// points.
+        /// </p>
+        /// NOTE: Be aware that
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// is a low level class, use it carefully,
+        /// especially in conjunction with high level
+        /// <see cref="TagTreePointer"/>
+        /// and
+        /// <see cref="TagStructureContext"/>
+        /// classes.
+        /// </summary>
+        /// <param name="pointer">
+        /// a
+        /// <see cref="TagTreePointer"/>
+        /// which points at desired
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// .
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// at which given
+        /// <see cref="TagTreePointer"/>
+        /// points.
+        /// </returns>
+        public virtual PdfStructElem GetPointerStructElem(TagTreePointer pointer) {
+            return pointer.GetCurrentStructElem();
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="TagTreePointer"/>
+        /// which points at given
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// .
+        /// </summary>
+        /// <param name="structElem">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// for which
+        /// <see cref="TagTreePointer"/>
+        /// will be created.
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="TagTreePointer"/>
+        /// .
+        /// </returns>
+        public virtual TagTreePointer CreatePointerForStructElem(PdfStructElem structElem) {
+            return new TagTreePointer(structElem);
+        }
+
         internal virtual PdfStructElem GetRootTag() {
             return rootTagElement;
         }
