@@ -70,28 +70,23 @@ namespace iText.Kernel.Pdf {
 
         //Samuel: Wouldn't this raise a nullpointer exception?
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTitle(String title) {
-            GetPdfObject().Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
-            return this;
+            return Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author) {
-            GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG));
-            return this;
+            return Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG));
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject) {
-            GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG));
-            return this;
+            return Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG));
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords) {
-            GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG));
-            return this;
+            return Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG));
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator) {
-            GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
-            return this;
+            return Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
         }
 
         public virtual String GetTitle() {
@@ -119,13 +114,11 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddCreationDate() {
-            this.GetPdfObject().Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
-            return this;
+            return Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
         }
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddModDate() {
-            this.GetPdfObject().Put(PdfName.ModDate, new PdfDate().GetPdfObject());
-            return this;
+            return Put(PdfName.ModDate, new PdfDate().GetPdfObject());
         }
 
         public virtual void SetMoreInfo(IDictionary<String, String> moreInfo) {
@@ -142,9 +135,10 @@ namespace iText.Kernel.Pdf {
             PdfName keyName = new PdfName(key);
             if (value == null) {
                 GetPdfObject().Remove(keyName);
+                SetModified();
             }
             else {
-                GetPdfObject().Put(keyName, new PdfString(value, PdfEncodings.UNICODE_BIG));
+                Put(keyName, new PdfString(value, PdfEncodings.UNICODE_BIG));
             }
         }
 
@@ -159,6 +153,12 @@ namespace iText.Kernel.Pdf {
         private String GetStringValue(PdfName name) {
             PdfString pdfString = GetPdfObject().GetAsString(name);
             return pdfString != null ? pdfString.ToUnicodeString() : null;
+        }
+
+        private iText.Kernel.Pdf.PdfDocumentInfo Put(PdfName key, PdfObject value) {
+            GetPdfObject().Put(key, value);
+            SetModified();
+            return this;
         }
     }
 }
