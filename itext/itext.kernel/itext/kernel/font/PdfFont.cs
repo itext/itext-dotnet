@@ -291,13 +291,16 @@ namespace iText.Kernel.Font {
                 else {
                     ch = text[k];
                 }
-                int[] bbox = GetGlyph(ch).GetBbox();
-                if (bbox != null && bbox[1] < min) {
-                    min = bbox[1];
-                }
-                else {
-                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min) {
-                        min = GetFontProgram().GetFontMetrics().GetTypoDescender();
+                Glyph glyph = GetGlyph(ch);
+                if (glyph != null) {
+                    int[] bbox = glyph.GetBbox();
+                    if (bbox != null && bbox[1] < min) {
+                        min = bbox[1];
+                    }
+                    else {
+                        if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min) {
+                            min = GetFontProgram().GetFontMetrics().GetTypoDescender();
+                        }
                     }
                 }
             }
@@ -314,7 +317,11 @@ namespace iText.Kernel.Font {
         /// <returns>the descent in points</returns>
         public virtual int GetDescent(int unicode, float fontSize) {
             int min = 0;
-            int[] bbox = GetGlyph(unicode).GetBbox();
+            Glyph glyph = GetGlyph(unicode);
+            if (glyph == null) {
+                return 0;
+            }
+            int[] bbox = glyph.GetBbox();
             if (bbox != null && bbox[1] < min) {
                 min = bbox[1];
             }
@@ -350,13 +357,16 @@ namespace iText.Kernel.Font {
                 else {
                     ch = text[k];
                 }
-                int[] bbox = GetGlyph(ch).GetBbox();
-                if (bbox != null && bbox[3] > max) {
-                    max = bbox[3];
-                }
-                else {
-                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max) {
-                        max = GetFontProgram().GetFontMetrics().GetTypoAscender();
+                Glyph glyph = GetGlyph(ch);
+                if (glyph != null) {
+                    int[] bbox = glyph.GetBbox();
+                    if (bbox != null && bbox[3] > max) {
+                        max = bbox[3];
+                    }
+                    else {
+                        if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max) {
+                            max = GetFontProgram().GetFontMetrics().GetTypoAscender();
+                        }
                     }
                 }
             }
@@ -373,7 +383,11 @@ namespace iText.Kernel.Font {
         /// <returns>the ascent in points</returns>
         public virtual int GetAscent(int unicode, float fontSize) {
             int max = 0;
-            int[] bbox = GetGlyph(unicode).GetBbox();
+            Glyph glyph = GetGlyph(unicode);
+            if (glyph == null) {
+                return 0;
+            }
+            int[] bbox = glyph.GetBbox();
             if (bbox != null && bbox[3] > max) {
                 max = bbox[3];
             }
