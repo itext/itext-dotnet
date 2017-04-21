@@ -89,6 +89,7 @@ namespace iText.Signatures.Sign {
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
             TestTsaClient testTsa = new TestTsaClient(iText.IO.Util.JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -113,6 +114,7 @@ namespace iText.Signatures.Sign {
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
+            BasicCheckDssDict("padesSignatureLevelLTTest01.pdf");
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -128,6 +130,15 @@ namespace iText.Signatures.Sign {
                 true);
             TestTsaClient testTsa = new TestTsaClient(iText.IO.Util.JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelLTATest01.pdf", "timestampSig1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void BasicCheckDssDict(String fileName) {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(destinationFolder + fileName));
+            PdfDictionary dssDict = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            NUnit.Framework.Assert.IsNotNull(dssDict);
+            NUnit.Framework.Assert.AreEqual(4, dssDict.Size());
         }
     }
 }

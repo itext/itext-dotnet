@@ -96,6 +96,18 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), new FileStream(ltvTsFileName, FileMode.Create
                 ), true);
             signer.Timestamp(testTsa, "timestampSig1");
+            BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        private void BasicCheckLtvDoc(String outFileName, String tsSigName) {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(destinationFolder + outFileName));
+            PdfDictionary dssDict = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            NUnit.Framework.Assert.IsNotNull(dssDict);
+            NUnit.Framework.Assert.AreEqual(4, dssDict.Size());
+            outDocument.Close();
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + outFileName, tsSigName);
         }
     }
 }

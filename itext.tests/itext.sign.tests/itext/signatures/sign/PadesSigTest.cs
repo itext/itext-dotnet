@@ -78,6 +78,7 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTest01() {
             SignApproval(certsSrc + "signCertRsa01.p12", destinationFolder + "padesRsaSigTest01.pdf");
+            BasicCheckSignedDoc(destinationFolder + "padesRsaSigTest01.pdf", "Signature1");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -100,6 +101,8 @@ namespace iText.Signatures.Sign {
             SignApproval(certsSrc + "signCertEcc01.p12", destinationFolder + "padesEccSigTest01.pdf");
         }
 
+        // TODO ECDSA encryption algorithms verification is not supported
+        //        basicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -117,6 +120,7 @@ namespace iText.Signatures.Sign {
             SignaturePolicyIdentifier sigPolicyIdentifier = new SignaturePolicyIdentifier(signaturePolicyId);
             SignApproval(certsSrc + "signCertRsa01.p12", destinationFolder + "padesEpesProfileTest01.pdf", sigPolicyIdentifier
                 );
+            BasicCheckSignedDoc(destinationFolder + "padesEpesProfileTest01.pdf", "Signature1");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -144,6 +148,16 @@ namespace iText.Signatures.Sign {
             else {
                 signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyInfo);
             }
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        internal static void BasicCheckSignedDoc(String filePath, String signatureName) {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(filePath));
+            SignatureUtil sigUtil = new SignatureUtil(outDocument);
+            PdfPKCS7 pdfPKCS7 = sigUtil.VerifySignature(signatureName);
+            NUnit.Framework.Assert.IsTrue(pdfPKCS7.Verify());
+            outDocument.Close();
         }
     }
 }

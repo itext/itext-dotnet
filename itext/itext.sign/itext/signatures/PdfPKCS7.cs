@@ -1007,6 +1007,7 @@ namespace iText.Signatures {
         /// <returns>true if it checks false otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">on error</exception>
         public virtual bool VerifyTimestampImprint() {
+            // TODO ensure this method works correctly
             if (timeStampToken == null) {
                 return false;
             }
