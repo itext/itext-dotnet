@@ -805,7 +805,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 }
                 PdfDictionary gsDic = extGState.GetAsDictionary(dictionaryName);
                 if (gsDic == null) {
-                    throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
+                    gsDic = extGState.GetAsStream(dictionaryName);
+                    if (gsDic == null) {
+                        throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
+                    }
                 }
                 // at this point, all we care about is the FONT entry in the GS dictionary TODO merge the whole gs dictionary
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);
