@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>InputStream</c>
         /// containing the document. The stream is read to the
-        /// end but is not closed
+        /// end but is not closed.
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         /// <exception cref="System.IO.IOException">on error</exception>
@@ -130,8 +130,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="file">
         /// the
         /// <c>File</c>
-        /// containing the document. Stream is closed automatically, when document is closed,
-        /// if user doesn't want to close stream, he should set closeStream=false;
+        /// containing the document.
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
         /// <exception cref="System.IO.FileNotFoundException">when the specified File is not found</exception>
@@ -143,8 +142,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. Stream is closed automatically, when document is closed,
-        /// if user doesn't want to close stream, he should set closeStream=false;
+        /// containing the document. the
+        /// <c>InputStream</c>
+        /// containing the document. The stream is read to the
+        /// end but is not closed.
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(Stream @is)
