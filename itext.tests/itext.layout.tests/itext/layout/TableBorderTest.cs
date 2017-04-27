@@ -1282,7 +1282,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-")]
         public virtual void HeaderTopBorderTest01() {
             String testName = "headerTopBorderTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1293,10 +1292,10 @@ namespace iText.Layout {
                 doc.Add(new Paragraph("aaaaaaaaaaaa"));
             }
             Table table = new Table(new float[] { 50, 50 }).SetBorder(new SolidBorder(1));
-            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(null));
-            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(null));
+            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
+            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
             for (int i = 0; i < 4; ++i) {
-                table.AddCell(new Cell().Add("aa").SetBorder(null));
+                table.AddCell(new Cell().Add("aa").SetBorder(Border.NO_BORDER));
             }
             doc.Add(table);
             doc.Add(new Paragraph("Correct result:"));

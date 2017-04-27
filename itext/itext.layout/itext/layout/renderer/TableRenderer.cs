@@ -254,6 +254,8 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
+                    // we've changed it during footer initialization. However, now we need to process borders again as they were.
+                    DeleteOwnProperty(Property.BORDER_BOTTOM);
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float footerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
@@ -285,6 +287,8 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
+                    // we've changed it during header initialization. However, now we need to process borders again as they were.
+                    DeleteOwnProperty(Property.BORDER_TOP);
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float headerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
