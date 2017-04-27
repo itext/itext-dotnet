@@ -53,6 +53,8 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Renderer;
 
 namespace iText.Signatures {
     /// <summary>Provides convenient methods to make a signature appearance.</summary>
@@ -502,7 +504,6 @@ namespace iText.Signatures {
                 else {
                     font = layer2Font;
                 }
-                float size = layer2FontSize;
                 Rectangle dataRect = null;
                 Rectangle signatureRect = null;
                 if (renderingMode == PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION || renderingMode == PdfSignatureAppearance.RenderingMode
@@ -523,9 +524,9 @@ namespace iText.Signatures {
                 else {
                     if (renderingMode == PdfSignatureAppearance.RenderingMode.GRAPHIC) {
                         if (signatureGraphic == null) {
-                            throw new InvalidOperationException();
+                            throw new InvalidOperationException("A signature image must be present when rendering mode is graphic. Use setSignatureGraphic()"
+                                );
                         }
-                        /*MessageLocalization.getComposedMessage("a.signature.image.should.be.present.when.rendering.mode.is.graphic.only")*/
                         signatureRect = new Rectangle(MARGIN, MARGIN, rect.GetWidth() - 2 * MARGIN, rect.GetHeight() - 2 * MARGIN);
                     }
                     else {
@@ -543,18 +544,15 @@ namespace iText.Signatures {
                         if (signedBy == null) {
                             signedBy = "";
                         }
-                        canvas = new PdfCanvas(n2, document);
-                        Paragraph paragraph = new Paragraph(signedBy).SetFont(font).SetFontSize(layer2FontSize).SetMargin(0).SetMultipliedLeading
-                            (0.9f);
-                        new iText.Layout.Canvas(canvas, document, signatureRect).Add(paragraph);
+                        AddTextToCanvas(signedBy, font, signatureRect);
                         break;
                     }
 
                     case PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
                         if (signatureGraphic == null) {
-                            throw new InvalidOperationException();
+                            throw new InvalidOperationException("A signature image must be present when rendering mode is graphic and description. Use setSignatureGraphic()"
+                                );
                         }
-                        /*MessageLocalization.getComposedMessage("a.signature.image.should.be.present.when.rendering.mode.is.graphic.and.description")*/
                         float imgWidth = signatureGraphic.GetWidth();
                         if (imgWidth == 0) {
                             imgWidth = signatureRect.GetWidth();
@@ -597,10 +595,7 @@ namespace iText.Signatures {
                     }
                 }
                 if (renderingMode != PdfSignatureAppearance.RenderingMode.GRAPHIC) {
-                    canvas = new PdfCanvas(n2, document);
-                    Paragraph paragraph_1 = new Paragraph(text).SetFont(font).SetFontSize(layer2FontSize).SetMargin(0).SetMultipliedLeading
-                        (0.9f);
-                    new iText.Layout.Canvas(canvas, document, dataRect).Add(paragraph_1);
+                    AddTextToCanvas(text, font, dataRect);
                 }
             }
             int rotation = document.GetPage(page).GetRotation();
@@ -608,10 +603,6 @@ namespace iText.Signatures {
             if (topLayer == null) {
                 topLayer = new PdfFormXObject(rotated);
                 topLayer.MakeIndirect(document);
-                float scale = Math.Min(rect.GetWidth(), rect.GetHeight()) * 0.9f;
-                float x = (rect.GetWidth() - scale) / 2;
-                float y = (rect.GetHeight() - scale) / 2;
-                scale /= 100;
                 canvas = new PdfCanvas(topLayer, document);
                 if (rotation == 90) {
                     canvas.ConcatMatrix(0, 1, -1, 0, rect.GetHeight(), 0);
@@ -685,6 +676,39 @@ namespace iText.Signatures {
             n0.MakeIndirect(document);
             PdfCanvas canvas = new PdfCanvas(n0, document);
             canvas.WriteLiteral("% DSBlank\n");
+        }
+
+        private void AddTextToCanvas(String text, PdfFont font, Rectangle dataRect) {
+            PdfCanvas canvas;
+            canvas = new PdfCanvas(n2, document);
+            Paragraph paragraph = new Paragraph(text).SetFont(font).SetMargin(0).SetMultipliedLeading(0.9f);
+            iText.Layout.Canvas layoutCanvas = new iText.Layout.Canvas(canvas, document, dataRect);
+            if (layer2FontSize == 0) {
+                ApplyCopyFittingFontSize(paragraph, dataRect, layoutCanvas.GetRenderer());
+            }
+            else {
+                paragraph.SetFontSize(layer2FontSize);
+            }
+            layoutCanvas.Add(paragraph);
+        }
+
+        private void ApplyCopyFittingFontSize(Paragraph paragraph, Rectangle rect, IRenderer parentRenderer) {
+            IRenderer renderer = paragraph.CreateRendererSubTree().SetParent(parentRenderer);
+            LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, rect));
+            float lFontSize = 0.1f;
+            float rFontSize = 100;
+            for (int i = 0; i < 15; i++) {
+                float mFontSize = (lFontSize + rFontSize) / 2;
+                paragraph.SetFontSize(mFontSize);
+                LayoutResult result = renderer.Layout(layoutContext);
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    lFontSize = mFontSize;
+                }
+                else {
+                    rFontSize = mFontSize;
+                }
+            }
+            paragraph.SetFontSize(lFontSize);
         }
 
         /// <summary>Signature rendering modes.</summary>
