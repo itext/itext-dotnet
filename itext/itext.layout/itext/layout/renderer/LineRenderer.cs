@@ -181,7 +181,7 @@ namespace iText.Layout.Renderer {
                     childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
                     childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
                 }
-                if (!childRenderer.HasProperty(Property.FLOAT)) {
+                if (!childRenderer.HasProperty(Property.FLOAT) || !(childRenderer is ImageRenderer)) {
                     maxAscent = Math.Max(maxAscent, childAscent);
                 }
                 else {
@@ -547,7 +547,7 @@ namespace iText.Layout.Renderer {
                 if (renderer is ILeafElementRenderer) {
                     float descent = ((ILeafElementRenderer)renderer).GetDescent();
                     renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
-                    if (renderer.HasProperty(Property.FLOAT)) {
+                    if (renderer is ImageRenderer && renderer.HasProperty(Property.FLOAT)) {
                         renderer.Move(0, -((ILeafElementRenderer)renderer).GetAscent() + maxAscent);
                     }
                 }

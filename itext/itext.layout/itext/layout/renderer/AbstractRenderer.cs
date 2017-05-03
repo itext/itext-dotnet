@@ -1296,6 +1296,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 layoutBox.SetWidth(blockWidth);
+                float topMargin = GetMargins()[0];
+                minFloatY -= topMargin;
                 if (minFloatY < int.MaxValue) {
                     layoutBox.SetHeight(minFloatY - layoutBox.GetY());
                     if (marginsCollapseHandler != null) {
@@ -1321,7 +1323,8 @@ namespace iText.Layout.Renderer {
                         floatRendererAreas.JRemoveAt(i);
                         if (clearPropertyValue.Equals(ClearPropertyValue.LEFT) || clearPropertyValue.Equals(ClearPropertyValue.BOTH
                             )) {
-                            if (floatRenderer.GetY() + floatRenderer.GetHeight() <= parentBBox.GetY() + parentBBox.GetHeight()) {
+                            if (floatRenderer.GetY() + floatRenderer.GetHeight() <= parentBBox.GetY() + parentBBox.GetHeight() && floatRenderer
+                                .GetX() < parentBBox.GetX()) {
                                 parentBBox.MoveLeft(floatRenderer.GetWidth());
                                 parentBBox.SetWidth(parentBBox.GetWidth() + floatRenderer.GetWidth());
                             }

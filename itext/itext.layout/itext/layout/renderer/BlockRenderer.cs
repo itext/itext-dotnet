@@ -276,6 +276,9 @@ namespace iText.Layout.Renderer {
                                 }
                                 overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                                 overflowRenderer.childRenderers = overflowRendererChildren;
+                                if (IsRelativePosition() && positionedRenderers.Count > 0) {
+                                    overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
+                                }
                                 if (keepTogether) {
                                     splitRenderer = null;
                                     overflowRenderer.childRenderers.Clear();
