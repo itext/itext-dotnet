@@ -1297,7 +1297,8 @@ namespace iText.Layout.Renderer {
                 }
                 layoutBox.SetWidth(blockWidth);
                 float topMargin = GetMargins()[0];
-                minFloatY -= topMargin;
+                float topPadding = GetPaddings()[0];
+                minFloatY -= topMargin + topPadding;
                 if (minFloatY < int.MaxValue) {
                     layoutBox.SetHeight(minFloatY - layoutBox.GetY());
                     if (marginsCollapseHandler != null) {
