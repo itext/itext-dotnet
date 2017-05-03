@@ -108,29 +108,5 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
         }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void FloatDivTest02() {
-            String cmpFileName = sourceFolder + "cmp_floatDivTest01.pdf";
-            String outFile = destinationFolder + "floatDivTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document doc = new Document(pdfDoc);
-            Div div = new Div();
-            div.SetWidth(70);
-            Paragraph p = new Paragraph();
-            p.Add("div1");
-            div.SetBorder(new SolidBorder(1));
-            p.SetBorder(new SolidBorder(1));
-            div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            div.Add(p);
-            doc.Add(div);
-            doc.Add(new Paragraph("div2"));
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
-        }
     }
 }

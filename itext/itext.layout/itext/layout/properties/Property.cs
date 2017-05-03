@@ -96,6 +96,8 @@ namespace iText.Layout.Properties {
 
         public const int CHARACTER_SPACING = 15;
 
+        public const int CLEAR = 100;
+
         public const int COLLAPSING_MARGINS = 89;
 
         public const int COLSPAN = 16;

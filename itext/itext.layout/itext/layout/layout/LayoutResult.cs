@@ -118,7 +118,7 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
-        protected internal IList<Rectangle> floatRenderers = new List<Rectangle>();
+        protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
 
         /// <summary>
         /// Creates the
@@ -167,31 +167,6 @@ namespace iText.Layout.Layout {
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
             this.causeOfNothing = cause;
-        }
-
-        /// <summary>
-        /// Creates the
-        /// <see cref="LayoutResult"/>
-        /// result of
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// }.
-        /// </summary>
-        /// <param name="status">
-        /// the status of
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
-        /// </param>
-        /// <param name="occupiedArea">the area occupied by the content</param>
-        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
-        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
-        /// <param name="cause">
-        /// the first renderer to produce
-        /// <see cref="NOTHING"/>
-        /// </param>
-        /// <param name="floatRenderers">the list of float renderers may affect this renderer</param>
-        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, IList<Rectangle> floatRenderers)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
-            this.floatRenderers = floatRenderers;
         }
 
         /// <summary>
@@ -298,8 +273,8 @@ namespace iText.Layout.Layout {
             return causeOfNothing;
         }
 
-        public virtual IList<Rectangle> GetFloatRenderers() {
-            return floatRenderers;
+        public virtual IList<Rectangle> GetFloatRendererAreas() {
+            return floatRendererAreas;
         }
 
         /// <summary><inheritDoc/></summary>

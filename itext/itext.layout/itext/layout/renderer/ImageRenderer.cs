@@ -106,7 +106,7 @@ namespace iText.Layout.Renderer {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
-            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
@@ -235,14 +235,10 @@ namespace iText.Layout.Renderer {
                 float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
                 minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
             }
-            ReduceFloatRenderersOccupiedArea(floatRenderers);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
-                GetWidth());
-            if (editedArea == null) {
-                editedArea = occupiedArea;
-            }
+            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
-                , floatRenderers).SetMinMaxWidth(minMaxWidth);
+                ).SetMinMaxWidth(minMaxWidth);
         }
 
         public override void Draw(DrawContext drawContext) {

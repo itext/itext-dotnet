@@ -210,7 +210,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
-            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
@@ -401,8 +401,8 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
-                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRenderers));
-                    floatRenderers = cellResult.GetFloatRenderers();
+                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRendererAreas
+                        ));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -539,7 +539,7 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
-                rowHeight = FixRowHeightIfFloatRendererPresented(rowHeight, floatRenderers);
+                rowHeight = FixRowHeightIfFloatRendererPresented(rowHeight, floatRendererAreas);
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -882,13 +882,9 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(GetBorders());
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            ReduceFloatRenderersOccupiedArea(floatRenderers);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
-                GetWidth());
-            if (editedArea == null) {
-                editedArea = occupiedArea;
-            }
-            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null, floatRenderers);
+            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas);
+            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1361,7 +1357,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual float FixRowHeightIfFloatRendererPresented(float rowHeight, IList<Rectangle> floatRenderers
+        internal virtual float FixRowHeightIfFloatRendererPresented(float rowHeight, IList<Rectangle> floatRenderers
             ) {
             float maxHeight = 0;
             foreach (Rectangle floatRenderer in floatRenderers) {

@@ -1,7 +1,8 @@
 namespace iText.Layout.Properties {
-    public enum FloatPropertyValue {
+    public enum ClearPropertyValue {
         LEFT,
         NONE,
-        RIGHT
+        RIGHT,
+        BOTH
     }
 }

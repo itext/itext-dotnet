@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.Collections.Generic;
-using iText.Kernel.Geom;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
@@ -54,8 +52,6 @@ namespace iText.Layout.Layout {
     public class LineLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
-
-        protected internal IList<Rectangle> currentLineFloatRenderers = new List<Rectangle>();
 
         /// <summary>
         /// Creates the
@@ -102,30 +98,6 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
         }
 
-        /// <summary>
-        /// Creates the
-        /// <see cref="LayoutResult"/>
-        /// result of
-        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
-        /// }.
-        /// </summary>
-        /// <param name="status">
-        /// the status of
-        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
-        /// </param>
-        /// <param name="occupiedArea">the area occupied by the content</param>
-        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
-        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
-        /// <param name="cause">
-        /// the first renderer to produce
-        /// <see cref="LayoutResult.NOTHING"/>
-        /// </param>
-        /// <param name="floatRenderers">a list of floated renderers</param>
-        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, IList<Rectangle> floatRenderers)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause, floatRenderers) {
-        }
-
         /// <summary>Indicates whether split was forced by new line symbol in rendered text.</summary>
         /// <remarks>
         /// Indicates whether split was forced by new line symbol in rendered text.
@@ -151,14 +123,6 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
-        }
-
-        public virtual IList<Rectangle> GetCurrentLineFloatRenderers() {
-            return currentLineFloatRenderers;
-        }
-
-        public virtual void SetCurrentLineFloatRenderers(IList<Rectangle> currentLineFloatRenderers) {
-            this.currentLineFloatRenderers = currentLineFloatRenderers;
         }
     }
 }

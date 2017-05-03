@@ -62,7 +62,7 @@ namespace iText.Layout.Layout {
 
         protected internal MarginsCollapseInfo marginsCollapseInfo;
 
-        protected internal IList<Rectangle> floatedRenderers = new List<Rectangle>();
+        protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
 
         public LayoutContext(LayoutArea area) {
             this.area = area;
@@ -73,12 +73,11 @@ namespace iText.Layout.Layout {
             this.marginsCollapseInfo = marginsCollapseInfo;
         }
 
-        public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRenderers
-            ) {
-            this.area = area;
-            this.marginsCollapseInfo = marginsCollapseInfo;
-            if (floatedRenderers != null) {
-                this.floatedRenderers.AddAll(floatedRenderers);
+        public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
+            )
+            : this(area, marginsCollapseInfo) {
+            if (floatedRendererAreas != null) {
+                this.floatRendererAreas = floatedRendererAreas;
             }
         }
 
@@ -96,8 +95,8 @@ namespace iText.Layout.Layout {
             return marginsCollapseInfo;
         }
 
-        public virtual IList<Rectangle> GetFloatedRenderers() {
-            return floatedRenderers;
+        public virtual IList<Rectangle> GetFloatRendererAreas() {
+            return floatRendererAreas;
         }
 
         /// <summary><inheritDoc/></summary>

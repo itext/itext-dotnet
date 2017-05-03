@@ -1003,6 +1003,30 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, Rectangle currentArea) {
+            float availableWidth = currentArea.GetWidth();
+            HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
+                );
+            if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
+                float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty(Property.FLOAT);
+                if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
+                    freeSpace -= (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
+                }
+                switch (horizontalAlignment) {
+                    case HorizontalAlignment.RIGHT: {
+                        childRenderer.Move(freeSpace, 0);
+                        break;
+                    }
+
+                    case HorizontalAlignment.CENTER: {
+                        childRenderer.Move(freeSpace / 2, 0);
+                        break;
+                    }
+                }
+            }
+        }
+
         /// <summary>Gets borders of the element in the specified order: top, right, bottom, left.</summary>
         /// <returns>
         /// an array of BorderDrawer objects.
@@ -1173,31 +1197,25 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>This method reduces occupied area of each float renderer affects current renderer.</summary>
-        /// <param name="floatRenderers"/>
-        protected internal virtual void ReduceFloatRenderersOccupiedArea(IList<Rectangle> floatRenderers) {
-            IList<Rectangle> renderersToRemove = new List<Rectangle>();
+        /// <summary>This method removes unnecessary float renderer areas.</summary>
+        /// <param name="floatRendererAreas"/>
+        internal virtual void RemoveUnnecessaryFloatRendererAreas(IList<Rectangle> floatRendererAreas) {
             if (!HasProperty(Property.FLOAT)) {
-                foreach (Rectangle floatRenderer in floatRenderers) {
-                    float floatRendererHeight = floatRenderer.GetHeight();
-                    floatRendererHeight -= occupiedArea.GetBBox().GetHeight();
-                    floatRenderer.SetHeight(floatRendererHeight);
-                    if (floatRendererHeight <= 0) {
-                        renderersToRemove.Add(floatRenderer);
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRendererArea = floatRendererAreas[i];
+                    if (floatRendererArea.GetY() > occupiedArea.GetBBox().GetY()) {
+                        floatRendererAreas.JRemoveAt(i);
                     }
                 }
             }
-            foreach (Rectangle rect in renderersToRemove) {
-                floatRenderers.Remove(rect);
-            }
         }
 
-        protected internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRenderers, float
-             availableWidth) {
-            LayoutArea editedArea = null;
-            if (HasProperty(Property.FLOAT) && occupiedArea.GetBBox().GetWidth() < availableWidth) {
+        internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas) {
+            LayoutArea editedArea = occupiedArea;
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 editedArea = occupiedArea.Clone();
-                floatRenderers.Add(occupiedArea.GetBBox());
+                floatRendererAreas.Add(occupiedArea.GetBBox());
                 editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
                 editedArea.GetBBox().SetHeight(0);
             }

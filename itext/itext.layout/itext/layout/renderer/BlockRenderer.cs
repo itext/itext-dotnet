@@ -71,8 +71,18 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                foreach (Rectangle floatRenderer in floatRendererAreas) {
+                    if (floatRenderer != null) {
+                        if (floatRenderer.GetX() <= parentBBox.GetX()) {
+                            parentBBox.MoveRight(floatRenderer.GetWidth());
+                            parentBBox.SetWidth(parentBBox.GetWidth() - floatRenderer.GetWidth());
+                        }
+                    }
+                }
+            }
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -133,8 +143,7 @@ namespace iText.Layout.Renderer {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
                 }
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
-                    ), childMarginsInfo, floatRenderers))).GetStatus() != LayoutResult.FULL) {
-                    floatRenderers = result.GetFloatRenderers();
+                    ), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
                     if (marginsCollapsingEnabled) {
                         if (result.GetStatus() != LayoutResult.NOTHING) {
                             marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
@@ -157,7 +166,7 @@ namespace iText.Layout.Renderer {
                         // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
                         // in case when parent box should wrap around child boxes.
                         // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
-                        AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox().GetWidth());
+                        AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
                     if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
@@ -283,19 +292,18 @@ namespace iText.Layout.Renderer {
                                 }
                                 else {
                                     if (layoutResult != LayoutResult.NOTHING) {
-                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null, result.GetFloatRenderers
-                                            ()).SetAreaBreak(result.GetAreaBreak());
+                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
+                                            .GetAreaBreak());
                                     }
                                     else {
-                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing(), result.GetFloatRenderers
-                                            ()).SetAreaBreak(result.GetAreaBreak());
+                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
+                                            (result.GetAreaBreak());
                                     }
                                 }
                             }
                         }
                     }
                 }
-                floatRenderers = result.GetFloatRenderers();
                 anythingPlaced = true;
                 if (result.GetOccupiedArea() != null) {
                     occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
@@ -310,7 +318,7 @@ namespace iText.Layout.Renderer {
                         // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
                         // in case when parent box should wrap around child boxes.
                         // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
-                        AlignChildHorizontally(childRenderer, occupiedArea.GetBBox().GetWidth());
+                        AlignChildHorizontally(childRenderer, occupiedArea.GetBBox());
                     }
                 }
                 // Save the first renderer to produce LayoutResult.NOTHING
@@ -364,23 +372,18 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this, floatRenderers);
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                     }
                 }
             }
             ApplyVerticalAlignment();
-            //        reduceFloatRenderersOccupiedArea(floatRenderers);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
-                GetWidth());
-            if (editedArea == null) {
-                editedArea = occupiedArea;
-            }
+            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas);
             if (null == overflowRenderer_1) {
-                return new LayoutResult(LayoutResult.FULL, editedArea, null, null, causeOfNothing, floatRenderers);
+                return new LayoutResult(LayoutResult.FULL, editedArea, null, null, causeOfNothing);
             }
             else {
-                return new LayoutResult(LayoutResult.PARTIAL, editedArea, this, overflowRenderer_1, causeOfNothing, floatRenderers
-                    );
+                return new LayoutResult(LayoutResult.PARTIAL, editedArea, this, overflowRenderer_1, causeOfNothing);
             }
         }
 

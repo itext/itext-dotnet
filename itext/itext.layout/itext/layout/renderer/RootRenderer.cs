@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea initialCurrentArea;
 
-        private IList<Rectangle> floatedRenderers = new List<Rectangle>();
+        private IList<Rectangle> floatRendererAreas = new List<Rectangle>();
 
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
@@ -103,7 +103,7 @@ namespace iText.Layout.Renderer {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
-                    (currentArea.Clone(), childMarginsInfo, floatedRenderers))).GetStatus() != LayoutResult.FULL) {
+                    (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (result.GetOverflowRenderer() is ImageRenderer) {
                             ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
@@ -189,8 +189,7 @@ namespace iText.Layout.Renderer {
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
                 }
-                floatedRenderers = result.GetFloatRenderers();
-                if (marginsCollapsingEnabled && floatedRenderers.Count == 0) {
+                if (marginsCollapsingEnabled && floatRendererAreas.Count == 0) {
                     marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                 }
                 if (null != result && null != result.GetSplitRenderer()) {
@@ -309,7 +308,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
-            AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
+            AlignChildHorizontally(renderer, currentArea.GetBBox());
             if (immediateFlush) {
                 FlushSingleRenderer(renderer);
             }
