@@ -222,10 +222,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            if (floatRenderers != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, layoutBox, layoutContext.GetArea().GetBBox().GetWidth
-                    ());
-            }
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();

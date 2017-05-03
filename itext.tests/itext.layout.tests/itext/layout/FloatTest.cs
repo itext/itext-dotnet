@@ -67,14 +67,12 @@ namespace iText.Layout {
             p.SetBorder(new SolidBorder(1));
             Paragraph p1 = new Paragraph();
             p1.Add("paragraph2");
-            p1.SetWidth(70);
             p1.SetBorder(new SolidBorder(1));
             p.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             doc.Add(p);
             doc.Add(p1);
             Paragraph p2 = new Paragraph();
             p2.Add("paragraph3");
-            p2.SetWidth(70);
             p2.SetBorder(new SolidBorder(1));
             doc.Add(p2);
             doc.Add(p2);

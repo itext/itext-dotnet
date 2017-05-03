@@ -123,10 +123,6 @@ namespace iText.Layout.Renderer {
             }
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
-            if (floatRenderers != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, parentBBox, layoutContext.GetArea().GetBBox().
-                    GetWidth() - additionalWidth);
-            }
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
                 float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;

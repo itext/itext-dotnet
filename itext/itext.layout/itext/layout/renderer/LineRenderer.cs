@@ -773,8 +773,13 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            layoutBox.MoveRight(maxWidth);
-            layoutBox.SetWidth(layoutBox.GetWidth() - maxWidth);
+            if (!parent.HasProperty(Property.WIDTH)) {
+                layoutBox.MoveRight(maxWidth);
+                layoutBox.SetWidth(layoutBox.GetWidth() - maxWidth);
+            }
+            else {
+                layoutBox.MoveDown(maxHeight);
+            }
         }
 
         private void AdjustLineRendererToCurrentLineFloatRendererers(ICollection<Rectangle> floatRenderers, Rectangle

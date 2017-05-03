@@ -1205,25 +1205,6 @@ namespace iText.Layout.Renderer {
             return editedArea;
         }
 
-        protected internal virtual void AdjustLineRendererAccordingToFloatRenderers(IDictionary<Rectangle, float?>
-             floatRenderers, Rectangle layoutBox, float allowedWidth) {
-            float maxWidth = 0;
-            foreach (Rectangle floatRenderer in floatRenderers.Keys) {
-                FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-                if (floatPropertyValue == null || !floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
-                    float width = floatRenderer.GetWidth();
-                    if (width > maxWidth) {
-                        maxWidth = width;
-                    }
-                }
-            }
-            maxWidth = layoutBox.GetWidth() + maxWidth;
-            if (floatRenderers.Count > 0 && maxWidth > allowedWidth) {
-                maxWidth = allowedWidth;
-            }
-            layoutBox.SetWidth(maxWidth);
-        }
-
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);

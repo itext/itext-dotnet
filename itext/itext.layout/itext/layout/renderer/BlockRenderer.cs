@@ -95,13 +95,9 @@ namespace iText.Layout.Renderer {
             }
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
-            float adjustValue = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
+            ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
-            }
-            if (floatRenderers != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, parentBBox, layoutContext.GetArea().GetBBox().
-                    GetWidth() - adjustValue);
             }
             float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
@@ -616,52 +612,6 @@ namespace iText.Layout.Renderer {
         }
 
         //TODO
-        protected internal virtual LayoutArea ApplyFloatRenderers(IList<IRenderer> floatRenderers) {
-            LayoutArea editedArea = occupiedArea.Clone();
-            float maxHeight = 0;
-            if (!HasProperty(Property.FLOAT)) {
-                for (int i = floatRenderers.Count - 1; i >= 0; i--) {
-                    IRenderer floatRenderer = floatRenderers[i];
-                    Rectangle floatRendererBBox = floatRenderer.GetOccupiedArea().GetBBox();
-                    floatRendererBBox.SetHeight(floatRendererBBox.GetHeight() - occupiedArea.GetBBox().GetHeight());
-                    if (maxHeight > floatRendererBBox.GetHeight()) {
-                        maxHeight = floatRendererBBox.GetHeight();
-                    }
-                }
-            }
-            if (floatRenderers.Count > 0) {
-                if (maxHeight >= 0) {
-                    editedArea.GetBBox().SetHeight(0);
-                }
-                else {
-                    editedArea.GetBBox().SetHeight(-maxHeight);
-                }
-            }
-            for (int i = floatRenderers.Count - 1; i >= 0; i--) {
-                if (floatRenderers[i].GetOccupiedArea().GetBBox().GetHeight() <= 0) {
-                    floatRenderers.JRemoveAt(i);
-                }
-            }
-            return editedArea;
-        }
-
-        protected internal virtual void AdjustLineRendererAccordingToFloatRenderers(IList<IRenderer> floatRenderers
-            , Rectangle layoutBox) {
-            float maxHeight = 0;
-            foreach (IRenderer floatRenderer in floatRenderers) {
-                Rectangle floatRendererBBox = floatRenderer.GetOccupiedArea().GetBBox();
-                if (floatRendererBBox != null) {
-                    if (maxHeight < floatRendererBBox.GetHeight()) {
-                        maxHeight = floatRendererBBox.GetHeight();
-                    }
-                    if (!HasProperty(Property.FLOAT)) {
-                        layoutBox.SetWidth(layoutBox.GetWidth() + floatRendererBBox.GetWidth());
-                    }
-                }
-            }
-            layoutBox.MoveUp(maxHeight);
-        }
-
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
             [] paddings) {
             float parentWidth = parentBBox.GetWidth();

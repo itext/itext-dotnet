@@ -118,10 +118,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            if (floatRenderers != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, layoutBox, layoutContext.GetArea().GetBBox().GetWidth
-                    ());
-            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
