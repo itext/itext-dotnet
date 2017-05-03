@@ -135,6 +135,7 @@ namespace iText.Layout.Renderer {
                 parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -401,6 +402,10 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth());
+            if (clearHeightCorrection > 0) {
+                editedArea = editedArea.Clone();
+                editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
+            }
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth
                     );

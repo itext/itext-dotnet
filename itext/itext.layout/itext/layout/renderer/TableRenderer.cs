@@ -211,16 +211,9 @@ namespace iText.Layout.Renderer {
                 wasHeightClipped = true;
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            foreach (Rectangle floatRendererArea in floatRendererAreas) {
-                if (floatRendererArea != null) {
-                    if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
-                        .GetWidth()) {
-                        layoutBox.MoveRight(floatRendererArea.GetWidth());
-                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
-                    }
-                }
-            }
+            AdjustLineRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -894,6 +887,10 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth());
+            if (clearHeightCorrection > 0) {
+                editedArea = editedArea.Clone();
+                editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
+            }
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 

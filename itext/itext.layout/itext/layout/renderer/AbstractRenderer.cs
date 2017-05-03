@@ -1245,6 +1245,30 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal virtual float CalculateClearHeightCorrection(IList<Rectangle> floatRendererAreas, Rectangle parentBBox
+            ) {
+            ClearPropertyValue? clearPropertyValue = GetProperty(Property.CLEAR);
+            float clearHeightCorrection = 0;
+            if (floatRendererAreas.Count > 0 && clearPropertyValue != null) {
+                float maxFloatHeight = 0;
+                float criticalPoint = parentBBox.GetX() + parentBBox.GetWidth();
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRenderer = floatRendererAreas[i];
+                    if (((clearPropertyValue.Equals(ClearPropertyValue.LEFT) && floatRenderer.GetX() < criticalPoint) || (clearPropertyValue
+                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() > criticalPoint)) || clearPropertyValue.Equals
+                        (ClearPropertyValue.BOTH)) {
+                        floatRendererAreas.JRemoveAt(i);
+                        if (maxFloatHeight < floatRenderer.GetHeight()) {
+                            maxFloatHeight = floatRenderer.GetHeight();
+                        }
+                    }
+                }
+                parentBBox.DecreaseHeight(maxFloatHeight);
+                clearHeightCorrection = maxFloatHeight;
+            }
+            return clearHeightCorrection;
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
