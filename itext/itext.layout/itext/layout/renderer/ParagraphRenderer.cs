@@ -395,7 +395,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            //reduceFloatRenderersOccupiedArea(floatRenderers);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
                 GetWidth());
             if (editedArea == null) {

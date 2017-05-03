@@ -190,7 +190,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 floatedRenderers = result.GetFloatRenderers();
-                if (marginsCollapsingEnabled) {
+                if (marginsCollapsingEnabled && floatedRenderers.Count == 0) {
                     marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                 }
                 if (null != result && null != result.GetSplitRenderer()) {

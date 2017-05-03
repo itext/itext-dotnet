@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -60,8 +59,6 @@ namespace iText.Layout.Renderer {
         protected internal float maxDescent;
 
         protected internal byte[] levels;
-
-        protected internal IList<Rectangle> currentLineFloatRenderers = new List<Rectangle>();
 
         protected internal LineRenderer()
             : base() {
@@ -568,7 +565,6 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.LineRenderer overflowRenderer = CreateOverflowRenderer();
             overflowRenderer.parent = parent;
             overflowRenderer.AddAllProperties(GetOwnProperties());
-            //        overflowRenderer.currentLineFloatRenderers = currentLineFloatRenderers;
             return new iText.Layout.Renderer.LineRenderer[] { splitRenderer, overflowRenderer };
         }
 
@@ -838,27 +834,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void AdjustLineRendererToCurrentLineFloatRendererers(IList<Rectangle> floatRenderers, Rectangle layoutBox
-            ) {
-            float maxWidth = 0;
-            float maxHeight = 0;
-            foreach (Rectangle floatRenderer in floatRenderers) {
-                if (floatRenderer != null) {
-                    if (floatRenderer.GetX() <= layoutBox.GetX() && !parent.HasProperty(Property.FLOAT)) {
-                        if (maxWidth < floatRenderer.GetWidth()) {
-                            maxWidth = floatRenderer.GetWidth();
-                        }
-                        if (maxHeight < floatRenderer.GetHeight()) {
-                            maxHeight = floatRenderer.GetHeight();
-                        }
-                    }
-                }
-            }
-            layoutBox.MoveRight(maxWidth);
-            layoutBox.SetWidth(layoutBox.GetWidth() - maxWidth);
-            layoutBox.SetHeight(layoutBox.GetHeight() + maxHeight);
-        }
-
         /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
         private void ResolveChildrenFonts() {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);
@@ -888,17 +863,6 @@ namespace iText.Layout.Renderer {
             public Glyph glyph;
 
             public TextRenderer renderer;
-        }
-
-        private float[] CalculateAscenderDescender() {
-            PdfFont listItemFont = ResolveFirstPdfFont();
-            float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
-            if (listItemFont != null && fontSize != null) {
-                float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
-                return new float[] { (float)fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, (float)fontSize
-                     * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
-            }
-            return new float[] { 0, 0 };
         }
     }
 }

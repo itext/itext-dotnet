@@ -88,44 +88,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FloatParagraphTest03() {
-            String cmpFileName = sourceFolder + "cmp_floatParagraphTest03.pdf";
-            String outFile = destinationFolder + "floatParagraphTest03.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document doc = new Document(pdfDoc);
-            doc.Add(new Paragraph("p1").SetBorder(new SolidBorder(1)));
-            doc.Add(new Paragraph("p2").SetBorder(new SolidBorder(5)));
-            doc.Add(new Paragraph("p3").SetBorder(new SolidBorder(10)));
-            Paragraph p = new Paragraph();
-            p.Add("paragraph1");
-            p.SetMargin(0);
-            p.SetWidth(70);
-            p.SetBorder(new SolidBorder(1));
-            p.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            doc.Add(p);
-            Paragraph p1 = new Paragraph();
-            p1.Add("paragraph2");
-            p1.SetWidth(70);
-            p1.SetMargin(0);
-            p1.SetBorder(new SolidBorder(5));
-            p1.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            doc.Add(p1);
-            Paragraph p2 = new Paragraph();
-            p2.Add("paragraph3");
-            p2.SetWidth(70);
-            p2.SetMargin(0);
-            p2.SetBorder(new SolidBorder(10));
-            p2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            doc.Add(p2);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         public virtual void FloatDivTest01() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest01.pdf";
             String outFile = destinationFolder + "floatDivTest01.pdf";

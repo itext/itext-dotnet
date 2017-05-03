@@ -301,7 +301,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                         ()));
                 }
-                if (marginsCollapsingEnabled) {
+                if (marginsCollapsingEnabled && !childRenderer.HasProperty(Property.FLOAT)) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
                 if (result.GetStatus() == LayoutResult.FULL) {
