@@ -102,6 +102,30 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="LayoutResult.NOTHING"/>
+        /// </param>
+        /// <param name="floatRenderers">a list of floated renderers</param>
+        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause, IList<Rectangle> floatRenderers)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause, floatRenderers) {
+        }
+
         /// <summary>Indicates whether split was forced by new line symbol in rendered text.</summary>
         /// <remarks>
         /// Indicates whether split was forced by new line symbol in rendered text.

@@ -369,7 +369,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyVerticalAlignment();
-            ReduceFloatRenderersOccupiedArea(floatRenderers);
+            //        reduceFloatRenderersOccupiedArea(floatRenderers);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
                 GetWidth());
             if (editedArea == null) {

@@ -182,6 +182,11 @@ namespace iText.Layout.Renderer {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         processedRenderer = (LineRenderer)result.GetSplitRenderer();
                     }
+                    else {
+                        if (floatRenderers.Count > 0) {
+                            processedRenderer = new LineRenderer((LineRenderer)result.GetSplitRenderer());
+                        }
+                    }
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
                     .LEFT);
@@ -218,11 +223,11 @@ namespace iText.Layout.Renderer {
                 if (processedRenderer != null && processedRenderer.ContainsImage()) {
                     leadingValue -= previousDescent;
                 }
-                bool doesNotFit = result.GetStatus() == LayoutResult.NOTHING;
+                bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
                 if (!doesNotFit) {
                     lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                    if (result.GetCurrentLineFloatRenderers().Count == 0) {
+                    if (result.GetFloatRenderers().Count == 0) {
                         deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
                     }
                     // for the first and last line in a paragraph, leading is smaller
@@ -380,7 +385,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            ReduceFloatRenderersOccupiedArea(floatRenderers);
+            //reduceFloatRenderersOccupiedArea(floatRenderers);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
                 GetWidth());
             if (editedArea == null) {
