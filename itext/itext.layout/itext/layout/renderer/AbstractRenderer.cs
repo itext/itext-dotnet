@@ -1210,10 +1210,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas) {
+        internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, float availableWidth
+            ) {
             LayoutArea editedArea = occupiedArea;
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue) && occupiedArea.GetBBox
+                ().GetWidth() < availableWidth) {
                 editedArea = occupiedArea.Clone();
                 floatRendererAreas.Add(occupiedArea.GetBBox());
                 editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());

@@ -883,7 +883,8 @@ namespace iText.Layout.Renderer {
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
+                ().GetWidth());
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
