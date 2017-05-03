@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
 
@@ -116,6 +118,8 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
+        protected internal IDictionary<Rectangle, float?> floatRenderers = new Dictionary<Rectangle, float?>();
+
         /// <summary>
         /// Creates the
         /// <see cref="LayoutResult"/>
@@ -163,6 +167,31 @@ namespace iText.Layout.Layout {
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
             this.causeOfNothing = cause;
+        }
+
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// </param>
+        /// <param name="floatRenderers">the list of float renderers may affect this renderer</param>
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause, IDictionary<Rectangle, float?> floatRenderers)
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
+            this.floatRenderers = floatRenderers;
         }
 
         /// <summary>
@@ -267,6 +296,10 @@ namespace iText.Layout.Layout {
         /// </returns>
         public virtual IRenderer GetCauseOfNothing() {
             return causeOfNothing;
+        }
+
+        public virtual IDictionary<Rectangle, float?> GetFloatRenderers() {
+            return floatRenderers;
         }
 
         /// <summary><inheritDoc/></summary>

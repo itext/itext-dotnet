@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.Kernel.Geom;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
@@ -63,6 +64,8 @@ namespace iText.Layout.Renderer {
         private MarginsCollapseHandler marginsCollapseHandler;
 
         private LayoutArea initialCurrentArea;
+
+        private IDictionary<Rectangle, float?> floatedRenderers = new Dictionary<Rectangle, float?>();
 
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
@@ -100,7 +103,7 @@ namespace iText.Layout.Renderer {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
-                    (currentArea.Clone(), childMarginsInfo))).GetStatus() != LayoutResult.FULL) {
+                    (currentArea.Clone(), childMarginsInfo, floatedRenderers))).GetStatus() != LayoutResult.FULL) {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (result.GetOverflowRenderer() is ImageRenderer) {
                             ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
@@ -186,6 +189,7 @@ namespace iText.Layout.Renderer {
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
                 }
+                floatedRenderers = result.GetFloatRenderers();
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                 }
@@ -292,9 +296,9 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {
             if (currentArea != null) {
-                float resultHeight = result.GetOccupiedArea().GetBBox().GetHeight();
-                currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultHeight);
-                if (currentArea.IsEmptyArea() && resultHeight > 0) {
+                float resultRendererHeight = result.GetOccupiedArea().GetBBox().GetHeight();
+                currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultRendererHeight);
+                if (currentArea.IsEmptyArea() && resultRendererHeight > 0) {
                     currentArea.SetEmptyArea(false);
                 }
                 ProcessRenderer(renderer, resultRenderers);

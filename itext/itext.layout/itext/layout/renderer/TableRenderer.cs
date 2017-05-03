@@ -210,6 +210,22 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
+            IDictionary<Rectangle, float?> floatRenderers = layoutContext.GetFloatedRenderers();
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            if (floatPropertyValue != null) {
+                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
+                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
+                }
+                else {
+                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
+                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
+                    }
+                }
+            }
+            if (floatRenderers != null) {
+                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, layoutBox, layoutContext.GetArea().GetBBox().GetWidth
+                    ());
+            }
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
@@ -389,7 +405,8 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
-                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
+                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRenderers));
+                    floatRenderers = cellResult.GetFloatRenderers();
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -526,6 +543,7 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
+                rowHeight = FixRowHeightIfFloatRendererPresented(rowHeight, floatRenderers.Keys);
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -868,7 +886,13 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(GetBorders());
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            ReduceFloatRenderersOccupiedArea(floatRenderers);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
+                GetWidth());
+            if (editedArea == null) {
+                editedArea = occupiedArea;
+            }
+            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null, floatRenderers);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1339,6 +1363,18 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
+        }
+
+        protected internal virtual float FixRowHeightIfFloatRendererPresented(float rowHeight, ICollection<Rectangle
+            > floatRenderers) {
+            float maxHeight = 0;
+            foreach (Rectangle floatRenderer in floatRenderers) {
+                float floatRendererHeight = floatRenderer.GetHeight();
+                if (floatRendererHeight > maxHeight) {
+                    maxHeight = floatRendererHeight;
+                }
+            }
+            return rowHeight + maxHeight;
         }
 
         /// <summary>If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.

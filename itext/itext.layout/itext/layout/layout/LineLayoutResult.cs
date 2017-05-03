@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
@@ -52,6 +54,9 @@ namespace iText.Layout.Layout {
     public class LineLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
+
+        protected internal IDictionary<Rectangle, float?> currentLineFloatRenderers = new Dictionary<Rectangle, float?
+            >();
 
         /// <summary>
         /// Creates the
@@ -123,6 +128,14 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
+        }
+
+        public virtual IDictionary<Rectangle, float?> GetCurrentLineFloatRenderers() {
+            return currentLineFloatRenderers;
+        }
+
+        public virtual void SetCurrentLineFloatRenderers(IDictionary<Rectangle, float?> currentLineFloatRenderers) {
+            this.currentLineFloatRenderers = currentLineFloatRenderers;
         }
     }
 }

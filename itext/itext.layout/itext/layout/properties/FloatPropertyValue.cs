@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2016 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,53 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.Collections.Generic;
-using iText.Kernel.Geom;
-using iText.Layout.Minmaxwidth;
-using iText.Layout.Renderer;
-
-namespace iText.Layout.Layout {
-    /// <summary>
-    /// Represents the result of content
-    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
-    /// </summary>
-    public class MinMaxWidthLayoutResult : LayoutResult {
-        protected internal MinMaxWidth minMaxWidth;
-
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            )
-            : base(status, occupiedArea, splitRenderer, overflowRenderer) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, IDictionary<Rectangle, float?> floatRenderers)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
-            this.floatRenderers = floatRenderers;
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public virtual MinMaxWidth GetNotNullMinMaxWidth(float availableWidth) {
-            if (minMaxWidth == null) {
-                minMaxWidth = new MinMaxWidth(0, availableWidth);
-            }
-            return GetMinMaxWidth();
-        }
-
-        public virtual MinMaxWidth GetMinMaxWidth() {
-            return minMaxWidth;
-        }
-
-        public virtual iText.Layout.Layout.MinMaxWidthLayoutResult SetMinMaxWidth(MinMaxWidth minMaxWidth) {
-            this.minMaxWidth = minMaxWidth;
-            return this;
-        }
+namespace iText.Layout.Properties {
+    public enum FloatPropertyValue {
+        LEFT,
+        NONE,
+        RIGHT
     }
 }

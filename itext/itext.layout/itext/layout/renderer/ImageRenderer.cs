@@ -106,6 +106,22 @@ namespace iText.Layout.Renderer {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
+            IDictionary<Rectangle, float?> floatRenderers = layoutContext.GetFloatedRenderers();
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            if (floatPropertyValue != null) {
+                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
+                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
+                }
+                else {
+                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
+                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
+                    }
+                }
+            }
+            if (floatRenderers != null) {
+                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, layoutBox, layoutContext.GetArea().GetBBox().GetWidth
+                    ());
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
@@ -223,8 +239,14 @@ namespace iText.Layout.Renderer {
                 float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
                 minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
             }
-            return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
-                ).SetMinMaxWidth(minMaxWidth);
+            ReduceFloatRenderersOccupiedArea(floatRenderers);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRenderers, layoutContext.GetArea().GetBBox().
+                GetWidth());
+            if (editedArea == null) {
+                editedArea = occupiedArea;
+            }
+            return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
+                , floatRenderers).SetMinMaxWidth(minMaxWidth);
         }
 
         public override void Draw(DrawContext drawContext) {

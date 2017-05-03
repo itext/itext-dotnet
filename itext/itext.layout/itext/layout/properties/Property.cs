@@ -108,6 +108,8 @@ namespace iText.Layout.Properties {
 
         public const int FIRST_LINE_INDENT = 18;
 
+        public const int FLOAT = 99;
+
         public const int FLUSH_ON_DRAW = 19;
 
         public const int FONT = 20;

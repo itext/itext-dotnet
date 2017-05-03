@@ -1173,6 +1173,57 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>This method reduces occupied area of each float renderer affects current renderer.</summary>
+        /// <param name="floatRenderers"/>
+        protected internal virtual void ReduceFloatRenderersOccupiedArea(IDictionary<Rectangle, float?> floatRenderers
+            ) {
+            IList<Rectangle> renderersToRemove = new List<Rectangle>();
+            if (!HasProperty(Property.FLOAT)) {
+                foreach (Rectangle floatRenderer in floatRenderers.Keys) {
+                    float floatRendererHeight = floatRenderers.Get(floatRenderer);
+                    floatRendererHeight -= occupiedArea.GetBBox().GetHeight();
+                    floatRenderers.Put(floatRenderer, floatRendererHeight);
+                    if (floatRendererHeight <= 0) {
+                        renderersToRemove.Add(floatRenderer);
+                    }
+                }
+            }
+            foreach (Rectangle rect in renderersToRemove) {
+                floatRenderers.JRemove(rect);
+            }
+        }
+
+        protected internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IDictionary<Rectangle, float?> floatRenderers
+            , float availableWidth) {
+            LayoutArea editedArea = null;
+            if (HasProperty(Property.FLOAT) && occupiedArea.GetBBox().GetWidth() < availableWidth) {
+                editedArea = occupiedArea.Clone();
+                floatRenderers.Put(occupiedArea.GetBBox(), editedArea.GetBBox().GetHeight());
+                editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
+                editedArea.GetBBox().SetHeight(0);
+            }
+            return editedArea;
+        }
+
+        protected internal virtual void AdjustLineRendererAccordingToFloatRenderers(IDictionary<Rectangle, float?>
+             floatRenderers, Rectangle layoutBox, float allowedWidth) {
+            float maxWidth = 0;
+            foreach (Rectangle floatRenderer in floatRenderers.Keys) {
+                FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+                if (floatPropertyValue == null || !floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
+                    float width = floatRenderer.GetWidth();
+                    if (width > maxWidth) {
+                        maxWidth = width;
+                    }
+                }
+            }
+            maxWidth = layoutBox.GetWidth() + maxWidth;
+            if (floatRenderers.Count > 0 && maxWidth > allowedWidth) {
+                maxWidth = allowedWidth;
+            }
+            layoutBox.SetWidth(maxWidth);
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
