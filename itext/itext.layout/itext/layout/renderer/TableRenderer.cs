@@ -212,6 +212,15 @@ namespace iText.Layout.Renderer {
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            foreach (Rectangle floatRendererArea in floatRendererAreas) {
+                if (floatRendererArea != null) {
+                    if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
+                        .GetWidth()) {
+                        layoutBox.MoveRight(floatRendererArea.GetWidth());
+                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
+                    }
+                }
+            }
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);

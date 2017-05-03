@@ -790,19 +790,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void AdjustLineRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
-            ) {
-            foreach (Rectangle floatRendererArea in floatRendererAreas) {
-                if (floatRendererArea != null) {
-                    if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
-                        .GetWidth()) {
-                        layoutBox.MoveRight(floatRendererArea.GetWidth());
-                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
-                    }
-                }
-            }
-        }
-
         /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
         private void ResolveChildrenFonts() {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);

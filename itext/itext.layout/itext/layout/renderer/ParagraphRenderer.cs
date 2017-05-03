@@ -91,14 +91,7 @@ namespace iText.Layout.Renderer {
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                foreach (Rectangle floatRenderer in floatRendererAreas) {
-                    if (floatRenderer != null) {
-                        if (floatRenderer.GetX() <= parentBBox.GetX()) {
-                            parentBBox.MoveRight(floatRenderer.GetWidth());
-                            parentBBox.SetWidth(parentBBox.GetWidth() - floatRenderer.GetWidth());
-                        }
-                    }
-                }
+                AdjustBlockRendererAccordingToFloatRenderers(floatRendererAreas, parentBBox);
             }
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (floatPropertyValue != null) {

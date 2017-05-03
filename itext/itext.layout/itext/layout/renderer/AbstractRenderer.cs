@@ -1224,6 +1224,27 @@ namespace iText.Layout.Renderer {
             return editedArea;
         }
 
+        internal virtual void AdjustLineRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+             layoutBox) {
+            foreach (Rectangle floatRendererArea in floatRendererAreas) {
+                if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
+                    .GetWidth()) {
+                    layoutBox.MoveRight(floatRendererArea.GetWidth());
+                    layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
+                }
+            }
+        }
+
+        internal virtual void AdjustBlockRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+             layoutBox) {
+            foreach (Rectangle floatRenderer in floatRendererAreas) {
+                if (floatRenderer.GetX() <= layoutBox.GetX()) {
+                    layoutBox.MoveRight(floatRenderer.GetWidth());
+                    layoutBox.SetWidth(layoutBox.GetWidth() - floatRenderer.GetWidth());
+                }
+            }
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
