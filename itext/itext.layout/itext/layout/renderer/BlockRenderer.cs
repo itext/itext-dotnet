@@ -49,6 +49,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -84,8 +85,15 @@ namespace iText.Layout.Renderer {
                         SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
                     }
                 }
+                float? minHeightProperty = GetPropertyAsFloat(Property.MIN_HEIGHT);
                 MinMaxWidth minMaxWidth = GetMinMaxWidth(parentBBox.GetWidth());
                 childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
+                if (minHeightProperty != null) {
+                    SetProperty(Property.MIN_HEIGHT, minHeightProperty);
+                }
+                else {
+                    DeleteProperty(Property.MIN_HEIGHT);
+                }
             }
             if (blockWidth != null && blockWidth > childrenMaxWidth) {
                 childrenMaxWidth = blockWidth;
@@ -107,8 +115,8 @@ namespace iText.Layout.Renderer {
             }
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 Rectangle layoutBox = layoutContext.GetArea().GetBBox();
-                float exremalRightBorder = layoutBox.GetX() + layoutBox.GetWidth();
-                AdjustBlockRendererAccordingToFloatRenderers(floatRendererAreas, parentBBox, exremalRightBorder, blockWidth
+                float extremalRightBorder = layoutBox.GetX() + layoutBox.GetWidth();
+                AdjustBlockRendererAccordingToFloatRenderers(floatRendererAreas, parentBBox, extremalRightBorder, blockWidth
                     , marginsCollapseHandler);
                 if (parentBBox.GetWidth() < childrenMaxWidth) {
                     childrenMaxWidth = parentBBox.GetWidth();
@@ -400,6 +408,14 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth(), childrenMaxWidth);
+            if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                Document document = GetDocument();
+                float bottomMargin = document == null ? 0 : document.GetBottomMargin();
+                if (occupiedArea.GetBBox().GetY() < bottomMargin) {
+                    floatRendererAreas.Clear();
+                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, null, layoutBox_1, parentBBoxWasAdjusted);
+                }
+            }
             AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
             if (null == overflowRenderer_1) {
                 return new LayoutResult(LayoutResult.FULL, editedArea, null, null, causeOfNothing, layoutBox_1, parentBBoxWasAdjusted

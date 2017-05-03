@@ -228,13 +228,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        float maxFloatWidth = 0;
-                        foreach (Rectangle floatRendererArea in floatRendererAreas) {
-                            if (floatRendererArea.GetWidth() > maxFloatWidth) {
-                                maxFloatWidth = floatRendererArea.GetWidth();
-                            }
-                        }
-                        float deltaX = childBBoxWidth - maxFloatWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                        float deltaX = childBBoxWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
                                 processedRenderer.Move(deltaX, 0);

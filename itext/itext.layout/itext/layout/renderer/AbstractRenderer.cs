@@ -574,6 +574,28 @@ namespace iText.Layout.Renderer {
             return parent;
         }
 
+        /// <summary>Tries to get document from the root renderer if there is any.</summary>
+        /// <returns/>
+        public virtual Document GetDocument() {
+            IRenderer parent = GetParent();
+            iText.Layout.Renderer.AbstractRenderer currentRenderer = this;
+            while (parent != null) {
+                if (parent is iText.Layout.Renderer.AbstractRenderer) {
+                    currentRenderer = (iText.Layout.Renderer.AbstractRenderer)parent;
+                    parent = currentRenderer.GetParent();
+                }
+                else {
+                    if (currentRenderer is DocumentRenderer) {
+                        return ((DocumentRenderer)currentRenderer).document;
+                    }
+                }
+            }
+            if (currentRenderer is DocumentRenderer) {
+                return ((DocumentRenderer)currentRenderer).document;
+            }
+            return null;
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
@@ -1226,6 +1248,14 @@ namespace iText.Layout.Renderer {
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 if (elementWidth != null) {
+                    if (elementWidth < occupiedArea.GetBBox().GetWidth()) {
+                        foreach (IRenderer renderer in childRenderers) {
+                            LayoutArea childArea = renderer.GetOccupiedArea();
+                            if (childArea != null && elementWidth < childArea.GetBBox().GetWidth()) {
+                                childArea.GetBBox().SetWidth(elementWidth);
+                            }
+                        }
+                    }
                     occupiedArea.GetBBox().SetWidth(elementWidth);
                 }
                 if (occupiedArea.GetBBox().GetWidth() < availableWidth) {

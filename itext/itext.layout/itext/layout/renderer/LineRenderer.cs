@@ -355,7 +355,7 @@ namespace iText.Layout.Renderer {
                             offset = initialPos;
                             newRenderer.line.SetGlyphs(replacementGlyphs);
                         }
-                        float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
+                        float currentXPos = occupiedArea.GetBBox().GetLeft();
                         foreach (IRenderer child in children) {
                             float currentWidth = ((TextRenderer)child).CalculateLineWidth();
                             float[] margins = ((TextRenderer)child).GetMargins();
