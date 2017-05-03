@@ -317,9 +317,6 @@ namespace iText.Layout.Renderer {
 
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
             AlignChildHorizontally(renderer, currentArea.GetBBox());
-            if (true.Equals(renderer.GetProperty(Property.DRAW_AFTER_NEXT))) {
-                return;
-            }
             if (immediateFlush) {
                 FlushSingleRenderer(renderer);
             }

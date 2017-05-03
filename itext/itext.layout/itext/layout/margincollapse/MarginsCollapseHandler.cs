@@ -267,7 +267,8 @@ namespace iText.Layout.Margincollapse {
                 bool prevChildCanApplyCollapseAfter = !prevChildMarginInfo.IsSelfCollapsing() || !prevChildMarginInfo.IsIgnoreOwnMarginTop
                     ();
                 if (!childIsBlockElement && prevChildCanApplyCollapseAfter) {
-                    float ownCollapsedMargins = prevChildMarginInfo.GetOwnCollapseAfter().GetCollapsedMarginsSize();
+                    MarginsCollapse ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
+                    float ownCollapsedMargins = ownCollapseAfter == null ? 0 : ownCollapseAfter.GetCollapsedMarginsSize();
                     layoutBox.SetHeight(layoutBox.GetHeight() - ownCollapsedMargins);
                 }
             }
@@ -382,7 +383,8 @@ namespace iText.Layout.Margincollapse {
             bool prevChildCanApplyCollapseAfter = !prevChildMarginInfo.IsSelfCollapsing() || !prevChildMarginInfo.IsIgnoreOwnMarginTop
                 ();
             if (isNotBlockChild && prevChildCanApplyCollapseAfter) {
-                float ownCollapsedMargins = prevChildMarginInfo.GetOwnCollapseAfter().GetCollapsedMarginsSize();
+                MarginsCollapse ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
+                float ownCollapsedMargins = ownCollapseAfter == null ? 0 : ownCollapseAfter.GetCollapsedMarginsSize();
                 bBox.SetHeight(bBox.GetHeight() + ownCollapsedMargins);
                 bBox.MoveDown(ownCollapsedMargins);
                 OverrideModelBottomMargin(prevRenderer, ownCollapsedMargins);
