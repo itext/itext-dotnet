@@ -102,6 +102,8 @@ namespace iText.Layout.Properties {
 
         public const int COLSPAN = 16;
 
+        public const int DRAW_AFTER_NEXT = 101;
+
         public const int DESTINATION = 17;
 
         public const int FILL_AVAILABLE_AREA = 86;

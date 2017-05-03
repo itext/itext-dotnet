@@ -211,9 +211,8 @@ namespace iText.Layout.Renderer {
                 wasHeightClipped = true;
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            AdjustLineRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            AdjustBlockRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -224,6 +223,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
@@ -886,11 +886,8 @@ namespace iText.Layout.Renderer {
             AdjustFooterAndFixOccupiedArea(layoutBox);
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                ().GetWidth());
-            if (clearHeightCorrection > 0) {
-                editedArea = editedArea.Clone();
-                editedArea.GetBBox().MoveDown(clearHeightCorrection);
-            }
+                ().GetWidth(), null);
+            AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
@@ -1367,6 +1364,9 @@ namespace iText.Layout.Renderer {
         internal virtual float FixRowHeightIfFloatRendererPresented(float rowHeight, IList<Rectangle> floatRenderers
             ) {
             float maxHeight = 0;
+            if (HasProperty(Property.FLOAT)) {
+                return rowHeight;
+            }
             foreach (Rectangle floatRenderer in floatRenderers) {
                 float floatRendererHeight = floatRenderer.GetHeight();
                 if (floatRendererHeight > maxHeight) {

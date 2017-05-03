@@ -388,8 +388,7 @@ namespace iText.Layout.Renderer {
                     affectedByFloat = true;
                     float maxFloatHeight = 0;
                     foreach (Rectangle floatRenderer in floatRendererAreas) {
-                        if (floatRenderer.GetX() < processed.GetOccupiedArea().GetBBox().GetX() && maxFloatHeight < floatRenderer.
-                            GetHeight()) {
+                        if (maxFloatHeight < floatRenderer.GetHeight()) {
                             maxFloatHeight = floatRenderer.GetHeight();
                         }
                     }

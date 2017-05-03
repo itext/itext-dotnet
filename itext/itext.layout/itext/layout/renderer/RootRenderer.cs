@@ -99,7 +99,7 @@ namespace iText.Layout.Renderer {
                 LayoutArea storedArea = null;
                 LayoutArea nextStoredArea = null;
                 MarginsCollapseInfo childMarginsInfo = null;
-                if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
+                if (marginsCollapsingEnabled && currentArea != null && renderer != null && floatRendererAreas.Count == 0) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
@@ -307,8 +307,19 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal override float CalculateFreeSpaceIfFloatPropertyIsPresented(float freeSpace, IRenderer childRenderer
+            , Rectangle currentArea) {
+            for (int i = 0; i < floatRendererAreas.Count - 1; i++) {
+                freeSpace -= floatRendererAreas[i].GetWidth();
+            }
+            return freeSpace;
+        }
+
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
             AlignChildHorizontally(renderer, currentArea.GetBBox());
+            if (true.Equals(renderer.GetProperty(Property.DRAW_AFTER_NEXT))) {
+                return;
+            }
             if (immediateFlush) {
                 FlushSingleRenderer(renderer);
             }

@@ -241,9 +241,7 @@ namespace iText.Layout.Renderer {
                 float deltaY = 0;
                 if (!doesNotFit) {
                     lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                    if (floatRendererAreas.Count == 0) {
-                        deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
-                    }
+                    deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
                     // for the first and last line in a paragraph, leading is smaller
                     if (firstLineInBox) {
                         deltaY = -(leadingValue - lastLineHeight) / 2;
@@ -388,9 +386,15 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
+            float initialWidth = occupiedArea.GetBBox().GetWidth();
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-            ApplyMargins(occupiedArea.GetBBox(), true);
+            Rectangle rect = ApplyMargins(occupiedArea.GetBBox(), true);
+            float childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
+            if (blockWidth != null && childrenMaxWidth < blockWidth) {
+                childrenMaxWidth = blockWidth;
+            }
+            childrenMaxWidth = childrenMaxWidth != 0 ? childrenMaxWidth + rect.GetWidth() - initialWidth : 0;
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
@@ -401,11 +405,8 @@ namespace iText.Layout.Renderer {
             }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                ().GetWidth());
-            if (clearHeightCorrection > 0) {
-                editedArea = editedArea.Clone();
-                editedArea.GetBBox().MoveDown(clearHeightCorrection);
-            }
+                ().GetWidth(), childrenMaxWidth);
+            AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth
                     );

@@ -71,11 +71,13 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
+            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 AdjustBlockRendererAccordingToFloatRenderers(floatRendererAreas, parentBBox);
             }
+            float childrenMaxWidth = 0;
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -85,8 +87,12 @@ namespace iText.Layout.Renderer {
                         SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
                     }
                 }
+                MinMaxWidth minMaxWidth = GetMinMaxWidth(parentBBox.GetWidth());
+                childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
             }
-            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
+            if (blockWidth != null && blockWidth > childrenMaxWidth) {
+                childrenMaxWidth = blockWidth;
+            }
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             bool isCellRenderer = this is CellRenderer;
@@ -351,6 +357,7 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
+            float initialWidth = occupiedArea.GetBBox().GetWidth();
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             if (positionedRenderers.Count > 0) {
@@ -361,7 +368,8 @@ namespace iText.Layout.Renderer {
                 }
                 ApplyBorderBox(area.GetBBox(), true);
             }
-            ApplyMargins(occupiedArea.GetBBox(), true);
+            Rectangle rect = ApplyMargins(occupiedArea.GetBBox(), true);
+            childrenMaxWidth = childrenMaxWidth != 0 ? childrenMaxWidth + rect.GetWidth() - initialWidth : 0;
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
@@ -373,11 +381,8 @@ namespace iText.Layout.Renderer {
             ApplyVerticalAlignment();
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                ().GetWidth());
-            if (clearHeightCorrection > 0) {
-                editedArea = editedArea.Clone();
-                editedArea.GetBBox().MoveDown(clearHeightCorrection);
-            }
+                ().GetWidth(), childrenMaxWidth);
+            AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
             if (null == overflowRenderer_1) {
                 return new LayoutResult(LayoutResult.FULL, editedArea, null, null, causeOfNothing);
             }

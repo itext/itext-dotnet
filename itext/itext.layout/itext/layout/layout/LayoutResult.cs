@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
@@ -275,6 +276,10 @@ namespace iText.Layout.Layout {
 
         public virtual IList<Rectangle> GetFloatRendererAreas() {
             return floatRendererAreas;
+        }
+
+        public virtual MinMaxWidth GetMinMaxWidth() {
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>

@@ -475,8 +475,17 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawChildren(DrawContext drawContext) {
+            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                child.Draw(drawContext);
+                if (child.HasProperty(Property.FLOAT)) {
+                    waitingRenderers.Add(child);
+                }
+                else {
+                    child.Draw(drawContext);
+                }
+            }
+            foreach (IRenderer waitingRenderer in waitingRenderers) {
+                waitingRenderer.Draw(drawContext);
             }
         }
 
@@ -1011,7 +1020,7 @@ namespace iText.Layout.Renderer {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty(Property.FLOAT);
                 if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
-                    freeSpace -= (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
+                    freeSpace = CalculateFreeSpaceIfFloatPropertyIsPresented(freeSpace, childRenderer, currentArea);
                 }
                 switch (horizontalAlignment) {
                     case HorizontalAlignment.RIGHT: {
@@ -1200,10 +1209,10 @@ namespace iText.Layout.Renderer {
         /// <summary>This method removes unnecessary float renderer areas.</summary>
         /// <param name="floatRendererAreas"/>
         internal virtual void RemoveUnnecessaryFloatRendererAreas(IList<Rectangle> floatRendererAreas) {
-            if (!HasProperty(Property.FLOAT)) {
+            if (!HasProperty(Property.FLOAT) && !parent.HasProperty(Property.FLOAT)) {
                 for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
                     Rectangle floatRendererArea = floatRendererAreas[i];
-                    if (floatRendererArea.GetY() > occupiedArea.GetBBox().GetY()) {
+                    if (floatRendererArea.GetY() >= occupiedArea.GetBBox().GetY()) {
                         floatRendererAreas.JRemoveAt(i);
                     }
                 }
@@ -1211,15 +1220,19 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, float availableWidth
-            ) {
+            , float? elementWidth) {
             LayoutArea editedArea = occupiedArea;
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue) && occupiedArea.GetBBox
-                ().GetWidth() < availableWidth) {
-                editedArea = occupiedArea.Clone();
-                floatRendererAreas.Add(occupiedArea.GetBBox());
-                editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
-                editedArea.GetBBox().SetHeight(0);
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                if (elementWidth != null) {
+                    occupiedArea.GetBBox().SetWidth(elementWidth);
+                }
+                if (occupiedArea.GetBBox().GetWidth() < availableWidth) {
+                    editedArea = occupiedArea.Clone();
+                    floatRendererAreas.Add(occupiedArea.GetBBox());
+                    editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
+                    editedArea.GetBBox().SetHeight(0);
+                }
             }
             return editedArea;
         }
@@ -1232,15 +1245,28 @@ namespace iText.Layout.Renderer {
                     layoutBox.MoveRight(floatRendererArea.GetWidth());
                     layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
                 }
+                else {
+                    if (layoutBox.GetX() < floatRendererArea.GetX() && layoutBox.GetX() + layoutBox.GetWidth() > floatRendererArea
+                        .GetX()) {
+                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
+                    }
+                }
             }
         }
 
         internal virtual void AdjustBlockRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
              layoutBox) {
             foreach (Rectangle floatRenderer in floatRendererAreas) {
-                if (floatRenderer.GetX() <= layoutBox.GetX()) {
+                FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+                if (layoutBox.GetX() >= floatRenderer.GetX() && layoutBox.GetX() < floatRenderer.GetX() + floatRenderer.GetWidth
+                    ()) {
                     layoutBox.MoveRight(floatRenderer.GetWidth());
                     layoutBox.SetWidth(layoutBox.GetWidth() - floatRenderer.GetWidth());
+                }
+                else {
+                    if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
+                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRenderer.GetWidth());
+                    }
                 }
             }
         }
@@ -1256,8 +1282,8 @@ namespace iText.Layout.Renderer {
                 for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
                     Rectangle floatRenderer = floatRendererAreas[i];
                     if (((clearPropertyValue.Equals(ClearPropertyValue.LEFT) && floatRenderer.GetX() < criticalPoint) || (clearPropertyValue
-                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() > criticalPoint)) || clearPropertyValue.Equals
-                        (ClearPropertyValue.BOTH)) {
+                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() + floatRenderer.GetWidth() >= criticalPoint)
+                        ) || clearPropertyValue.Equals(ClearPropertyValue.BOTH)) {
                         floatRendererAreas.JRemoveAt(i);
                         if (maxFloatHeight < floatRenderer.GetHeight()) {
                             theLowestFloatRectangle = floatRenderer;
@@ -1272,6 +1298,24 @@ namespace iText.Layout.Renderer {
                 }
             }
             return clearHeightCorrection;
+        }
+
+        internal virtual void AdjustLayoutAreaIfClearPropertyIsPresented(float clearHeightCorrection, LayoutArea area
+            , FloatPropertyValue? floatPropertyValue) {
+            if (clearHeightCorrection > 0) {
+                Rectangle rect = area.GetBBox();
+                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                    rect.MoveUp(occupiedArea.GetBBox().GetHeight() - clearHeightCorrection);
+                }
+                else {
+                    rect.MoveDown(clearHeightCorrection);
+                }
+            }
+        }
+
+        internal virtual float CalculateFreeSpaceIfFloatPropertyIsPresented(float freeSpace, IRenderer childRenderer
+            , Rectangle currentArea) {
+            return freeSpace - (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
         }
 
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {

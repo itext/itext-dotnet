@@ -72,7 +72,7 @@ namespace iText.Layout.Layout {
             return GetMinMaxWidth();
         }
 
-        public virtual MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             return minMaxWidth;
         }
 
