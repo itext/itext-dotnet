@@ -175,17 +175,20 @@ namespace iText.Layout.Renderer {
                     maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
                         );
                 }
-                if (childResult.GetStatus() != LayoutResult.NOTHING && childRenderer.HasProperty(Property.FLOAT) && childRenderer
-                     is ImageRenderer) {
-                    currentLineFloatRendererAreas.Add(childRenderer.GetOccupiedArea().GetBBox());
-                }
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is ILeafElementRenderer) {
                     childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
                     childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
                 }
-                maxAscent = Math.Max(maxAscent, childAscent);
+                if (!childRenderer.HasProperty(Property.FLOAT)) {
+                    maxAscent = Math.Max(maxAscent, childAscent);
+                }
+                else {
+                    if (childResult.GetStatus() != LayoutResult.NOTHING && childRenderer is ImageRenderer) {
+                        currentLineFloatRendererAreas.Add(childRenderer.GetOccupiedArea().GetBBox());
+                    }
+                }
                 maxDescent = Math.Min(maxDescent, childDescent);
                 float maxHeight = maxAscent - maxDescent;
                 if (hangingTabStop != null) {
@@ -540,17 +543,16 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual iText.Layout.Renderer.LineRenderer AdjustChildrenYLine() {
             float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
-            bool lineHasFloatElements = false;
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is ILeafElementRenderer) {
                     float descent = ((ILeafElementRenderer)renderer).GetDescent();
                     renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
+                    if (renderer.HasProperty(Property.FLOAT)) {
+                        renderer.Move(0, -((ILeafElementRenderer)renderer).GetAscent() + maxAscent);
+                    }
                 }
                 else {
                     renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
-                }
-                if (!lineHasFloatElements && renderer.HasProperty(Property.FLOAT)) {
-                    lineHasFloatElements = true;
                 }
             }
             return this;
@@ -596,7 +598,7 @@ namespace iText.Layout.Renderer {
             }
             if (lineHasFloatProperty && lineHeight > 0) {
                 editedArea = occupiedArea.Clone();
-                editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight() - lineHeight + maxDescent);
+                editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight() - lineHeight);
             }
             return editedArea;
         }

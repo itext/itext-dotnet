@@ -574,28 +574,6 @@ namespace iText.Layout.Renderer {
             return parent;
         }
 
-        /// <summary>Tries to get document from the root renderer if there is any.</summary>
-        /// <returns/>
-        public virtual Document GetDocument() {
-            IRenderer parent = GetParent();
-            iText.Layout.Renderer.AbstractRenderer currentRenderer = this;
-            while (parent != null) {
-                if (parent is iText.Layout.Renderer.AbstractRenderer) {
-                    currentRenderer = (iText.Layout.Renderer.AbstractRenderer)parent;
-                    parent = currentRenderer.GetParent();
-                }
-                else {
-                    if (currentRenderer is DocumentRenderer) {
-                        return ((DocumentRenderer)currentRenderer).document;
-                    }
-                }
-            }
-            if (currentRenderer is DocumentRenderer) {
-                return ((DocumentRenderer)currentRenderer).document;
-            }
-            return null;
-        }
-
         /// <summary><inheritDoc/></summary>
         public virtual void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
@@ -1379,6 +1357,28 @@ namespace iText.Layout.Renderer {
         internal virtual float CalculateFreeSpaceIfFloatPropertyIsPresented(float freeSpace, IRenderer childRenderer
             , Rectangle currentArea) {
             return freeSpace - (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
+        }
+
+        /// <summary>Tries to get document from the root renderer if there is any.</summary>
+        /// <returns/>
+        internal virtual Document GetDocument() {
+            IRenderer parent = GetParent();
+            iText.Layout.Renderer.AbstractRenderer currentRenderer = this;
+            while (parent != null) {
+                if (parent is iText.Layout.Renderer.AbstractRenderer) {
+                    currentRenderer = (iText.Layout.Renderer.AbstractRenderer)parent;
+                    parent = currentRenderer.GetParent();
+                }
+                else {
+                    if (currentRenderer is DocumentRenderer) {
+                        return ((DocumentRenderer)currentRenderer).document;
+                    }
+                }
+            }
+            if (currentRenderer is DocumentRenderer) {
+                return ((DocumentRenderer)currentRenderer).document;
+            }
+            return null;
         }
 
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
