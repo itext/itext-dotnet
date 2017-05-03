@@ -994,6 +994,7 @@ namespace iText.Layout.Renderer {
             return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
         }
 
+        [Obsolete]
         protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float availableWidth) {
             HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                 );
@@ -1013,6 +1014,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
+        // BlockRenderer, but actually, the block can have many areas, and occupied area will be the common area of sub-areas,
+        // whereas child element alignment should be performed area-wise.
         protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, Rectangle currentArea) {
             float availableWidth = currentArea.GetWidth();
             HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
@@ -1021,7 +1025,7 @@ namespace iText.Layout.Renderer {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty(Property.FLOAT);
                 if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
-                    freeSpace = CalculateFreeSpaceIfFloatPropertyIsPresented(freeSpace, childRenderer, currentArea);
+                    freeSpace = CalculateFreeSpaceIfFloatPropertyPresent(freeSpace, childRenderer, currentArea);
                 }
                 switch (horizontalAlignment) {
                     case HorizontalAlignment.RIGHT: {
@@ -1246,7 +1250,7 @@ namespace iText.Layout.Renderer {
             return editedArea;
         }
 
-        internal virtual void AdjustLineRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+        internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
              layoutBox) {
             foreach (Rectangle floatRendererArea in floatRendererAreas) {
                 if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
@@ -1263,7 +1267,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual void AdjustBlockRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+        internal virtual void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
              layoutBox, float extremalRightBorder, float? blockWidth, MarginsCollapseHandler marginsCollapseHandler
             ) {
             foreach (Rectangle floatRenderer in floatRendererAreas) {
@@ -1345,8 +1349,8 @@ namespace iText.Layout.Renderer {
             return clearHeightCorrection;
         }
 
-        internal virtual void AdjustLayoutAreaIfClearPropertyIsPresented(float clearHeightCorrection, LayoutArea area
-            , FloatPropertyValue? floatPropertyValue) {
+        internal virtual void AdjustLayoutAreaIfClearPropertyPresent(float clearHeightCorrection, LayoutArea area, 
+            FloatPropertyValue? floatPropertyValue) {
             if (clearHeightCorrection > 0) {
                 Rectangle rect = area.GetBBox();
                 if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
@@ -1358,8 +1362,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual float CalculateFreeSpaceIfFloatPropertyIsPresented(float freeSpace, IRenderer childRenderer
-            , Rectangle currentArea) {
+        internal virtual float CalculateFreeSpaceIfFloatPropertyPresent(float freeSpace, IRenderer childRenderer, 
+            Rectangle currentArea) {
             return freeSpace - (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
         }
 

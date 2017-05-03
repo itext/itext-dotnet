@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Geom;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Renderer;
 
@@ -66,12 +65,6 @@ namespace iText.Layout.Layout {
             minMaxWidth = new MinMaxWidth(0, 0);
         }
 
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, Rectangle parentBBox, bool parentBBoxWasAdjusted)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause, parentBBox, parentBBoxWasAdjusted) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
         public virtual MinMaxWidth GetNotNullMinMaxWidth(float availableWidth) {
             if (minMaxWidth == null) {
                 minMaxWidth = new MinMaxWidth(0, availableWidth);
@@ -79,7 +72,7 @@ namespace iText.Layout.Layout {
             return GetMinMaxWidth();
         }
 
-        public override MinMaxWidth GetMinMaxWidth() {
+        public virtual MinMaxWidth GetMinMaxWidth() {
             return minMaxWidth;
         }
 

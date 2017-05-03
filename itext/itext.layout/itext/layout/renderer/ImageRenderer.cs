@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            AdjustLineRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -240,7 +240,7 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth(), null);
-            AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
+            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

@@ -64,25 +64,12 @@ namespace iText.Layout.Renderer {
             : base() {
         }
 
-        protected internal bool affectedByFloat = false;
-
-        internal LineRenderer(iText.Layout.Renderer.LineRenderer other) {
-            // bidi levels
-            this.childRenderers = other.childRenderers;
-            this.positionedRenderers = other.positionedRenderers;
-            this.modelElement = other.modelElement;
-            this.flushed = other.flushed;
-            this.occupiedArea = other.occupiedArea != null ? other.occupiedArea.Clone() : null;
-            this.parent = other.parent;
-            this.properties.AddAll(other.properties);
-            this.isLastRendererForModelElement = other.isLastRendererForModelElement;
-        }
-
+        // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             if (floatRendererAreas != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
                 .GetHeight()).SetHeight(0));
@@ -388,7 +375,6 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (floatRendererAreas.Count > 0) {
-                    affectedByFloat = true;
                     float maxFloatHeight = 0;
                     foreach (Rectangle floatRenderer in floatRendererAreas) {
                         if (maxFloatHeight < floatRenderer.GetHeight()) {
@@ -591,7 +577,8 @@ namespace iText.Layout.Renderer {
                     lineHasFloatProperty = true;
                 }
                 else {
-                    if (renderer.GetOccupiedArea() != null && renderer.GetOccupiedArea().GetBBox().GetHeight() > lineHeight) {
+                    if ((renderer is BlockRenderer) && renderer.GetOccupiedArea() != null && renderer.GetOccupiedArea().GetBBox
+                        ().GetHeight() > lineHeight) {
                         lineHeight = renderer.GetOccupiedArea().GetBBox().GetHeight();
                     }
                 }

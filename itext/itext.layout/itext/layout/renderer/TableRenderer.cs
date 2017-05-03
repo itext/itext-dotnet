@@ -213,7 +213,7 @@ namespace iText.Layout.Renderer {
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             }
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
@@ -543,7 +543,7 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
-                rowHeight = FixRowHeightIfFloatRendererPresented(rowHeight, floatRendererAreas);
+                rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, floatRendererAreas);
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -889,7 +889,7 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth(), null);
-            AdjustLayoutAreaIfClearPropertyIsPresented(clearHeightCorrection, editedArea, floatPropertyValue);
+            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
@@ -1363,8 +1363,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual float FixRowHeightIfFloatRendererPresented(float rowHeight, IList<Rectangle> floatRenderers
-            ) {
+        private float CalculateRowHeightIfFloatRendererPresent(float rowHeight, IList<Rectangle> floatRenderers) {
             float maxHeight = 0;
             if (HasProperty(Property.FLOAT)) {
                 return rowHeight;

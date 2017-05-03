@@ -307,8 +307,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal override float CalculateFreeSpaceIfFloatPropertyIsPresented(float freeSpace, IRenderer childRenderer
-            , Rectangle currentArea) {
+        internal override float CalculateFreeSpaceIfFloatPropertyPresent(float freeSpace, IRenderer childRenderer, 
+            Rectangle currentArea) {
             for (int i = 0; i < floatRendererAreas.Count - 1; i++) {
                 freeSpace -= floatRendererAreas[i].GetWidth();
             }

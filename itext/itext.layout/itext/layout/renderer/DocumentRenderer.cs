@@ -83,38 +83,11 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush);
         }
 
-        public override void AddChild(IRenderer renderer) {
-            if (waitingDrawingElements.Count > 0 && !renderer.HasProperty(Property.FLOAT)) {
-                foreach (IRenderer waitingElement in waitingDrawingElements) {
-                    base.AddChild(waitingElement);
-                }
-                base.AddChild(renderer);
-                foreach (IRenderer waitingElement in waitingDrawingElements) {
-                    FlushSingleRenderer(waitingElement, true);
-                }
-                waitingDrawingElements.Clear();
-            }
-            else {
-                if (renderer.HasProperty(Property.FLOAT)) {
-                    waitingDrawingElements.Add(renderer);
-                }
-                else {
-                    base.AddChild(renderer);
-                }
-            }
-        }
-
         public override void Close() {
-            for (int i = 0; i < n; i++) {
-                IRenderer waitingDrawingElement = waitingDrawingElements[i];
-                base.AddChild(waitingDrawingElement);
-                waitingDrawingElement = waitingDrawingElements[i];
-                if (waitingDrawingElement.HasProperty(Property.FLOAT)) {
-                    FlushSingleRenderer(waitingDrawingElement, true);
-                }
-                waitingDrawingElements.JRemoveAt(i);
-                n--;
-                i--;
+            if (waitingDrawingElements.Count > 0) {
+                IRenderer waitingDrawingElement = waitingDrawingElements[0];
+                waitingDrawingElements.JRemoveAt(0);
+                FlushSingleRenderer(waitingDrawingElement);
             }
             base.Close();
         }
@@ -130,9 +103,10 @@ namespace iText.Layout.Renderer {
             else {
                 MoveToNextPage();
             }
-            IRenderer overflowRenderer = overflowResult != null ? overflowResult.GetOverflowRenderer() : null;
-            if (overflowRenderer != null && overflowRenderer.HasProperty(Property.FLOAT)) {
-                waitingDrawingElements[0] = overflowRenderer;
+            if (waitingDrawingElements.Count > 0) {
+                IRenderer renderer = waitingDrawingElements[0];
+                waitingDrawingElements.JRemoveAt(0);
+                FlushSingleRenderer(renderer);
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
             while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document.GetPdfDocument().GetPage
@@ -147,25 +121,12 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            if (!resultRenderer.IsFlushed() && !resultRenderer.HasProperty(Property.FLOAT)) {
-                int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
-                PdfDocument pdfDocument = document.GetPdfDocument();
-                EnsureDocumentHasNPages(pageNum, null);
-                PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
-                bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
-                    .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
-                    .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;
-                wrappedContentPage.Add(pageNum);
-                if (pdfDocument.IsTagged()) {
-                    pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage);
-                }
-                resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, wrapOldContent), pdfDocument
-                    .IsTagged()));
+            FloatPropertyValue? value = resultRenderer.GetProperty(Property.FLOAT);
+            if (value != null) {
+                waitingDrawingElements.Add(resultRenderer);
+                resultRenderer.SetProperty(Property.FLOAT, null);
             }
-        }
-
-        protected internal virtual void FlushSingleRenderer(IRenderer resultRenderer, bool ignoreFloatProperty) {
-            if (ignoreFloatProperty) {
+            else {
                 if (!resultRenderer.IsFlushed()) {
                     int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
                     PdfDocument pdfDocument = document.GetPdfDocument();
@@ -180,6 +141,13 @@ namespace iText.Layout.Renderer {
                     }
                     resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, wrapOldContent), pdfDocument
                         .IsTagged()));
+                    if (waitingDrawingElements.Count > 0) {
+                        foreach (IRenderer renderer in waitingDrawingElements) {
+                            renderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, wrapOldContent), pdfDocument.IsTagged
+                                ()));
+                        }
+                        waitingDrawingElements.Clear();
+                    }
                 }
             }
         }
