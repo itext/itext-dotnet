@@ -85,6 +85,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer child, Rectangle layoutBox) {
+            if (RendererIsFloated()) {
+                return null;
+            }
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
             bool childIsBlockElement = IsBlockElement(child);
@@ -158,6 +161,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void StartMarginsCollapse(Rectangle parentBBox) {
+            if (RendererIsFloated()) {
+                return;
+            }
             collapseInfo.GetCollapseBefore().JoinMargin(GetModelTopMargin(renderer));
             collapseInfo.GetCollapseAfter().JoinMargin(GetModelBottomMargin(renderer));
             if (!FirstChildMarginAdjoinedToParent(renderer)) {
@@ -174,6 +180,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void EndMarginsCollapse(Rectangle layoutBox) {
+            if (RendererIsFloated()) {
+                return;
+            }
             if (backupLayoutBox != null) {
                 RestoreLayoutBoxAfterFailedLayoutAttempt(layoutBox);
             }
@@ -189,13 +198,13 @@ namespace iText.Layout.Margincollapse {
                 }
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
-            MarginsCollapse ownCollapseAfter;
+            MarginsCollapse ownCollapseAfter = null;
             bool lastChildMarginJoinedToParent = prevChildMarginInfo != null && prevChildMarginInfo.IsIgnoreOwnMarginBottom
                 ();
             if (lastChildMarginJoinedToParent) {
                 ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
             }
-            else {
+            if (ownCollapseAfter == null) {
                 ownCollapseAfter = new MarginsCollapse();
             }
             ownCollapseAfter.JoinMargin(GetModelBottomMargin(renderer));
@@ -258,7 +267,8 @@ namespace iText.Layout.Margincollapse {
                 bool prevChildCanApplyCollapseAfter = !prevChildMarginInfo.IsSelfCollapsing() || !prevChildMarginInfo.IsIgnoreOwnMarginTop
                     ();
                 if (!childIsBlockElement && prevChildCanApplyCollapseAfter) {
-                    float ownCollapsedMargins = prevChildMarginInfo.GetOwnCollapseAfter().GetCollapsedMarginsSize();
+                    MarginsCollapse ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
+                    float ownCollapsedMargins = ownCollapseAfter == null ? 0 : ownCollapseAfter.GetCollapsedMarginsSize();
                     layoutBox.SetHeight(layoutBox.GetHeight() - ownCollapsedMargins);
                 }
             }
@@ -373,7 +383,8 @@ namespace iText.Layout.Margincollapse {
             bool prevChildCanApplyCollapseAfter = !prevChildMarginInfo.IsSelfCollapsing() || !prevChildMarginInfo.IsIgnoreOwnMarginTop
                 ();
             if (isNotBlockChild && prevChildCanApplyCollapseAfter) {
-                float ownCollapsedMargins = prevChildMarginInfo.GetOwnCollapseAfter().GetCollapsedMarginsSize();
+                MarginsCollapse ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
+                float ownCollapsedMargins = ownCollapseAfter == null ? 0 : ownCollapseAfter.GetCollapsedMarginsSize();
                 bBox.SetHeight(bBox.GetHeight() + ownCollapsedMargins);
                 bBox.MoveDown(ownCollapsedMargins);
                 OverrideModelBottomMargin(prevRenderer, ownCollapsedMargins);
@@ -397,6 +408,11 @@ namespace iText.Layout.Margincollapse {
         private void GetRidOfCollapseArtifactsAtopOccupiedArea() {
             Rectangle bBox = renderer.GetOccupiedArea().GetBBox();
             bBox.SetHeight(bBox.GetHeight() - collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize());
+        }
+
+        private bool RendererIsFloated() {
+            FloatPropertyValue? floatPropertyValue = renderer.GetProperty(Property.FLOAT);
+            return floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE);
         }
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
