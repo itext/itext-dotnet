@@ -396,9 +396,6 @@ namespace iText.Layout.Renderer {
                     processed.GetOccupiedArea().GetBBox().MoveDown(maxFloatHeight);
                 }
             }
-            if (result.GetStatus() != LayoutResult.FULL) {
-                RemoveUnnecessaryFloatRendererAreas(floatRendererAreas, processed);
-            }
             IList<IRenderer> currentLineChildRenderers = result.GetStatus() == LayoutResult.FULL ? this.childRenderers
                  : result.GetSplitRenderer().GetChildRenderers();
             LayoutArea editedArea = ApplyFloatPropertyOnChildRenderers(currentLineChildRenderers);
@@ -602,16 +599,6 @@ namespace iText.Layout.Renderer {
                 editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight() - lineHeight + maxDescent);
             }
             return editedArea;
-        }
-
-        private void RemoveUnnecessaryFloatRendererAreas(IList<Rectangle> floatRendererAreas, IRenderer processedRenderer
-            ) {
-            for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
-                Rectangle floatRendererArea = floatRendererAreas[i];
-                if (floatRendererArea.GetY() > processedRenderer.GetOccupiedArea().GetBBox().GetY()) {
-                    floatRendererAreas.JRemoveAt(i);
-                }
-            }
         }
 
         private IRenderer GetLastChildRenderer() {

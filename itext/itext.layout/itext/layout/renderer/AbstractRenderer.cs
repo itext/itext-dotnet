@@ -60,6 +60,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -1255,17 +1256,42 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void AdjustBlockRendererAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
-             layoutBox) {
+             layoutBox, float extremalRightBorder, float? blockWidth, MarginsCollapseHandler marginsCollapseHandler
+            ) {
             foreach (Rectangle floatRenderer in floatRendererAreas) {
                 FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
                 if (layoutBox.GetX() >= floatRenderer.GetX() && layoutBox.GetX() < floatRenderer.GetX() + floatRenderer.GetWidth
                     ()) {
                     layoutBox.MoveRight(floatRenderer.GetWidth());
-                    layoutBox.SetWidth(layoutBox.GetWidth() - floatRenderer.GetWidth());
+                    float freeSpace = extremalRightBorder - layoutBox.GetX() - layoutBox.GetWidth();
+                    if (freeSpace < 0) {
+                        layoutBox.SetWidth(layoutBox.GetWidth() + freeSpace);
+                    }
                 }
                 else {
                     if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
-                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRenderer.GetWidth());
+                        float freeSpace = extremalRightBorder - layoutBox.GetX() - layoutBox.GetWidth();
+                        if (freeSpace < 0) {
+                            layoutBox.SetWidth(layoutBox.GetWidth() + freeSpace);
+                        }
+                    }
+                }
+            }
+            if (blockWidth != null && blockWidth + layoutBox.GetX() > extremalRightBorder) {
+                float minFloatY = int.MaxValue;
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRendererArea = floatRendererAreas[i];
+                    layoutBox.MoveLeft(floatRendererArea.GetWidth());
+                    floatRendererAreas.JRemoveAt(i);
+                    if (floatRendererArea.GetY() < minFloatY) {
+                        minFloatY = floatRendererArea.GetY();
+                    }
+                }
+                layoutBox.SetWidth(blockWidth);
+                if (minFloatY < int.MaxValue) {
+                    layoutBox.SetHeight(minFloatY - layoutBox.GetY());
+                    if (marginsCollapseHandler != null) {
+                        marginsCollapseHandler.StartMarginsCollapse(layoutBox);
                     }
                 }
             }
@@ -1282,9 +1308,16 @@ namespace iText.Layout.Renderer {
                 for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
                     Rectangle floatRenderer = floatRendererAreas[i];
                     if (((clearPropertyValue.Equals(ClearPropertyValue.LEFT) && floatRenderer.GetX() < criticalPoint) || (clearPropertyValue
-                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() + floatRenderer.GetWidth() >= criticalPoint)
-                        ) || clearPropertyValue.Equals(ClearPropertyValue.BOTH)) {
+                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() + floatRenderer.GetWidth() > criticalPoint))
+                         || clearPropertyValue.Equals(ClearPropertyValue.BOTH)) {
                         floatRendererAreas.JRemoveAt(i);
+                        if (clearPropertyValue.Equals(ClearPropertyValue.LEFT) || clearPropertyValue.Equals(ClearPropertyValue.BOTH
+                            )) {
+                            if (floatRenderer.GetY() + floatRenderer.GetHeight() <= parentBBox.GetY() + parentBBox.GetHeight()) {
+                                parentBBox.MoveLeft(floatRenderer.GetWidth());
+                                parentBBox.SetWidth(parentBBox.GetWidth() + floatRenderer.GetWidth());
+                            }
+                        }
                         if (maxFloatHeight < floatRenderer.GetHeight()) {
                             theLowestFloatRectangle = floatRenderer;
                             maxFloatHeight = floatRenderer.GetHeight();

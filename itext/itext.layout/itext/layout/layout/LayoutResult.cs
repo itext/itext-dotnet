@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
@@ -119,7 +118,9 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
-        protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
+        internal Rectangle parentBBox;
+
+        internal bool parentBBoxWasAdjusted;
 
         /// <summary>
         /// Creates the
@@ -168,6 +169,32 @@ namespace iText.Layout.Layout {
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
             this.causeOfNothing = cause;
+        }
+
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// </param>
+        /// <param name="parentBBox">parent BBox</param>
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause, Rectangle parentBBox, bool parentBBoxWasAdjusted)
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
+            this.parentBBox = parentBBox;
+            this.parentBBoxWasAdjusted = parentBBoxWasAdjusted;
         }
 
         /// <summary>
@@ -274,12 +301,16 @@ namespace iText.Layout.Layout {
             return causeOfNothing;
         }
 
-        public virtual IList<Rectangle> GetFloatRendererAreas() {
-            return floatRendererAreas;
-        }
-
         public virtual MinMaxWidth GetMinMaxWidth() {
             return null;
+        }
+
+        public virtual Rectangle GetParentBBox() {
+            return parentBBox;
+        }
+
+        public virtual bool IsParentBBoxWasAdjusted() {
+            return parentBBoxWasAdjusted;
         }
 
         /// <summary><inheritDoc/></summary>
