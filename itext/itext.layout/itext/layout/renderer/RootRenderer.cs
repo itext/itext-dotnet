@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea initialCurrentArea;
 
-        private IDictionary<Rectangle, float?> floatedRenderers = new Dictionary<Rectangle, float?>();
+        private IList<Rectangle> floatedRenderers = new List<Rectangle>();
 
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,

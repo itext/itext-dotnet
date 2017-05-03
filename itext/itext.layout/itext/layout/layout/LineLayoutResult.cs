@@ -55,8 +55,7 @@ namespace iText.Layout.Layout {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
 
-        protected internal IDictionary<Rectangle, float?> currentLineFloatRenderers = new Dictionary<Rectangle, float?
-            >();
+        protected internal IList<Rectangle> currentLineFloatRenderers = new List<Rectangle>();
 
         /// <summary>
         /// Creates the
@@ -130,11 +129,11 @@ namespace iText.Layout.Layout {
             return this;
         }
 
-        public virtual IDictionary<Rectangle, float?> GetCurrentLineFloatRenderers() {
+        public virtual IList<Rectangle> GetCurrentLineFloatRenderers() {
             return currentLineFloatRenderers;
         }
 
-        public virtual void SetCurrentLineFloatRenderers(IDictionary<Rectangle, float?> currentLineFloatRenderers) {
+        public virtual void SetCurrentLineFloatRenderers(IList<Rectangle> currentLineFloatRenderers) {
             this.currentLineFloatRenderers = currentLineFloatRenderers;
         }
     }

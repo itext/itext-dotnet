@@ -71,7 +71,7 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            IDictionary<Rectangle, float?> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {

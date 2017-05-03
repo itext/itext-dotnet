@@ -60,17 +60,16 @@ namespace iText.Layout.Renderer {
 
         protected internal byte[] levels;
 
-        protected internal IDictionary<Rectangle, float?> currentLineFloatRenderers = new Dictionary<Rectangle, float?
-            >();
+        protected internal IList<Rectangle> currentLineFloatRenderers = new List<Rectangle>();
 
         // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
-            IDictionary<Rectangle, float?> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
             if (floatRenderers != null) {
-                AdjustLineRendererAccordingToFloatRenderers(floatRenderers.Keys, layoutBox);
+                AdjustLineRendererAccordingToFloatRenderers(floatRenderers, layoutBox);
             }
-            AdjustLineRendererToCurrentLineFloatRendererers(currentLineFloatRenderers.Keys, layoutBox);
+            AdjustLineRendererToCurrentLineFloatRendererers(currentLineFloatRenderers, layoutBox);
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
                 .GetHeight()).SetHeight(0));
             float curWidth = 0;
@@ -162,8 +161,7 @@ namespace iText.Layout.Renderer {
                         );
                 }
                 if (childRenderer.HasProperty(Property.FLOAT)) {
-                    currentLineFloatRenderers.Put(childRenderer.GetOccupiedArea().GetBBox(), childRenderer.GetOccupiedArea().GetBBox
-                        ().GetHeight());
+                    currentLineFloatRenderers.Add(childRenderer.GetOccupiedArea().GetBBox());
                 }
                 float childAscent = 0;
                 float childDescent = 0;
@@ -550,8 +548,8 @@ namespace iText.Layout.Renderer {
             return result.GetNotNullMinMaxWidth(availableWidth);
         }
 
-        protected internal virtual void ReduceFloatRenderersOccupiedArea(IRenderer processed, IDictionary<Rectangle
-            , float?> floatRenderers) {
+        protected internal virtual void ReduceFloatRenderersOccupiedArea(IRenderer processed, IList<Rectangle> floatRenderers
+            ) {
             float currentFloatRendererHeight = 0;
             float maxNonFloatRenderersHeight = 0;
             foreach (IRenderer renderer in processed.GetChildRenderers()) {
@@ -568,17 +566,14 @@ namespace iText.Layout.Renderer {
                 }
             }
             IList<Rectangle> renderersToRemove = new List<Rectangle>();
-            foreach (Rectangle floatRenderer in floatRenderers.Keys) {
+            foreach (Rectangle floatRenderer in floatRenderers) {
                 floatRenderer.SetHeight(floatRenderer.GetHeight() - maxNonFloatRenderersHeight);
-                if (floatRenderer.GetHeight() > 0) {
-                    floatRenderers.Put(floatRenderer, floatRenderer.GetHeight());
-                }
-                else {
+                if (floatRenderer.GetHeight() <= 0) {
                     renderersToRemove.Add(floatRenderer);
                 }
             }
             foreach (Rectangle rendererToRemove in renderersToRemove) {
-                floatRenderers.JRemove(rendererToRemove);
+                floatRenderers.Remove(rendererToRemove);
             }
         }
 
@@ -757,8 +752,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void AdjustLineRendererAccordingToFloatRenderers(ICollection<Rectangle> floatRenderers, Rectangle 
-            layoutBox) {
+        private void AdjustLineRendererAccordingToFloatRenderers(IList<Rectangle> floatRenderers, Rectangle layoutBox
+            ) {
             float maxWidth = 0;
             float maxHeight = 0;
             foreach (Rectangle floatRenderer in floatRenderers) {
@@ -782,8 +777,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void AdjustLineRendererToCurrentLineFloatRendererers(ICollection<Rectangle> floatRenderers, Rectangle
-             layoutBox) {
+        private void AdjustLineRendererToCurrentLineFloatRendererers(IList<Rectangle> floatRenderers, Rectangle layoutBox
+            ) {
             float maxWidth = 0;
             float maxHeight = 0;
             foreach (Rectangle floatRenderer in floatRenderers) {

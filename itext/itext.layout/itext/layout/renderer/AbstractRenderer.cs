@@ -1175,30 +1175,29 @@ namespace iText.Layout.Renderer {
 
         /// <summary>This method reduces occupied area of each float renderer affects current renderer.</summary>
         /// <param name="floatRenderers"/>
-        protected internal virtual void ReduceFloatRenderersOccupiedArea(IDictionary<Rectangle, float?> floatRenderers
-            ) {
+        protected internal virtual void ReduceFloatRenderersOccupiedArea(IList<Rectangle> floatRenderers) {
             IList<Rectangle> renderersToRemove = new List<Rectangle>();
             if (!HasProperty(Property.FLOAT)) {
-                foreach (Rectangle floatRenderer in floatRenderers.Keys) {
-                    float floatRendererHeight = floatRenderers.Get(floatRenderer);
+                foreach (Rectangle floatRenderer in floatRenderers) {
+                    float floatRendererHeight = floatRenderer.GetHeight();
                     floatRendererHeight -= occupiedArea.GetBBox().GetHeight();
-                    floatRenderers.Put(floatRenderer, floatRendererHeight);
+                    floatRenderer.SetHeight(floatRendererHeight);
                     if (floatRendererHeight <= 0) {
                         renderersToRemove.Add(floatRenderer);
                     }
                 }
             }
             foreach (Rectangle rect in renderersToRemove) {
-                floatRenderers.JRemove(rect);
+                floatRenderers.Remove(rect);
             }
         }
 
-        protected internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IDictionary<Rectangle, float?> floatRenderers
-            , float availableWidth) {
+        protected internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRenderers, float
+             availableWidth) {
             LayoutArea editedArea = null;
             if (HasProperty(Property.FLOAT) && occupiedArea.GetBBox().GetWidth() < availableWidth) {
                 editedArea = occupiedArea.Clone();
-                floatRenderers.Put(occupiedArea.GetBBox(), editedArea.GetBBox().GetHeight());
+                floatRenderers.Add(occupiedArea.GetBBox());
                 editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
                 editedArea.GetBBox().SetHeight(0);
             }

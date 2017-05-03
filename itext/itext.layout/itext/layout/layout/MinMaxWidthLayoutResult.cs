@@ -68,7 +68,7 @@ namespace iText.Layout.Layout {
         }
 
         public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, IDictionary<Rectangle, float?> floatRenderers)
+            , IRenderer cause, IList<Rectangle> floatRenderers)
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
             this.floatRenderers = floatRenderers;
             minMaxWidth = new MinMaxWidth(0, 0);

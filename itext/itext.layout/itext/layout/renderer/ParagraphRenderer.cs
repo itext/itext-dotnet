@@ -88,7 +88,7 @@ namespace iText.Layout.Renderer {
             bool firstLineInBox = true;
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            IDictionary<Rectangle, float?> floatRenderers = layoutContext.GetFloatedRenderers();
+            IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null) {
@@ -194,7 +194,7 @@ namespace iText.Layout.Renderer {
                 else {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
                         float maxFloatWidth = 0;
-                        foreach (Rectangle floatRenderer in floatRenderers.Keys) {
+                        foreach (Rectangle floatRenderer in floatRenderers) {
                             if (floatRenderer.GetWidth() > maxFloatWidth) {
                                 maxFloatWidth = floatRenderer.GetWidth();
                             }

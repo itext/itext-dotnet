@@ -118,7 +118,7 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
-        protected internal IDictionary<Rectangle, float?> floatRenderers = new Dictionary<Rectangle, float?>();
+        protected internal IList<Rectangle> floatRenderers = new List<Rectangle>();
 
         /// <summary>
         /// Creates the
@@ -189,7 +189,7 @@ namespace iText.Layout.Layout {
         /// </param>
         /// <param name="floatRenderers">the list of float renderers may affect this renderer</param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, IDictionary<Rectangle, float?> floatRenderers)
+            , IRenderer cause, IList<Rectangle> floatRenderers)
             : this(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
             this.floatRenderers = floatRenderers;
         }
@@ -298,7 +298,7 @@ namespace iText.Layout.Layout {
             return causeOfNothing;
         }
 
-        public virtual IDictionary<Rectangle, float?> GetFloatRenderers() {
+        public virtual IList<Rectangle> GetFloatRenderers() {
             return floatRenderers;
         }
 
