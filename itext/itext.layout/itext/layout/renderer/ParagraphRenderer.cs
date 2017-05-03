@@ -183,8 +183,18 @@ namespace iText.Layout.Renderer {
                         processedRenderer = (LineRenderer)result.GetSplitRenderer();
                     }
                     else {
-                        if (floatRenderers.Count > 0) {
+                        if (currentRenderer.affectedByFloat) {
                             processedRenderer = new LineRenderer((LineRenderer)result.GetSplitRenderer());
+                            float borderTotalHeight = 0;
+                            if (borders[0] != null) {
+                                borderTotalHeight += borders[0].GetWidth();
+                            }
+                            if (borders[2] != null) {
+                                borderTotalHeight += borders[2].GetWidth();
+                            }
+                            processedRenderer.GetOccupiedArea().GetBBox().MoveUp(borderTotalHeight);
+                            processedRenderer.GetOccupiedArea().GetBBox().SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetHeight
+                                () - borderTotalHeight);
                         }
                     }
                 }

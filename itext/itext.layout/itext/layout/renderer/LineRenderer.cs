@@ -67,6 +67,8 @@ namespace iText.Layout.Renderer {
             : base() {
         }
 
+        protected internal bool affectedByFloat = false;
+
         protected internal LineRenderer(iText.Layout.Renderer.LineRenderer other) {
             // bidi levels
             this.childRenderers = other.childRenderers;
@@ -77,10 +79,8 @@ namespace iText.Layout.Renderer {
             this.parent = other.parent;
             this.properties.AddAll(other.properties);
             this.isLastRendererForModelElement = other.isLastRendererForModelElement;
-            float[] ascenderAndDescender = CalculateAscenderDescender();
         }
 
-        //        occupiedArea.getBBox().setHeight(ascenderAndDescender[0] - ascenderAndDescender[1]);
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRenderers = layoutContext.GetFloatedRenderers();
@@ -271,7 +271,6 @@ namespace iText.Layout.Renderer {
                     if (newLineOccurred) {
                         result.SetSplitForcedByNewline(true);
                     }
-                    //                result.setCurrentLineFloatRenderers(currentLineFloatRenderers);
                     break;
                 }
                 else {
@@ -389,8 +388,16 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (floatRenderers.Count > 0) {
-                    processed.GetOccupiedArea().GetBBox().SetHeight(CalculateAscenderDescender()[0] - CalculateAscenderDescender
-                        ()[1]);
+                    affectedByFloat = true;
+                    float maxFloatHeight = 0;
+                    foreach (Rectangle floatRenderer in floatRenderers) {
+                        if (floatRenderer.GetX() < processed.GetOccupiedArea().GetBBox().GetX() && maxFloatHeight < floatRenderer.
+                            GetHeight()) {
+                            maxFloatHeight = floatRenderer.GetHeight();
+                        }
+                    }
+                    processed.GetOccupiedArea().GetBBox().SetHeight(maxFloatHeight);
+                    processed.GetOccupiedArea().GetBBox().MoveDown(maxFloatHeight);
                     foreach (Rectangle rend in floatRenderers) {
                         rend.SetHeight(rend.GetHeight() - processed.GetOccupiedArea().GetBBox().GetHeight());
                     }
@@ -405,8 +412,8 @@ namespace iText.Layout.Renderer {
                 processed.GetOccupiedArea().SetBBox(editedArea.GetBBox());
             }
             if (floatRenderers != null) {
+                result.GetFloatRenderers().AddAll(floatRenderers);
             }
-            //            result.getFloatRenderers().addAll(floatRenderers);
             return result;
         }
 
@@ -609,18 +616,14 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void ReduceFloatRenderersOccupiedArea(IRenderer processed, IList<Rectangle> floatRenderers
             ) {
-            float currentFloatRendererHeight = 0;
             float maxNonFloatRenderersHeight = 0;
-            foreach (IRenderer renderer in processed.GetChildRenderers()) {
-                float rendererHeight = renderer.GetOccupiedArea().GetBBox().GetHeight();
-                if (!renderer.HasProperty(Property.FLOAT)) {
-                    if (maxNonFloatRenderersHeight < rendererHeight) {
-                        maxNonFloatRenderersHeight = rendererHeight;
-                    }
-                }
-                else {
-                    if (currentFloatRendererHeight < rendererHeight) {
-                        currentFloatRendererHeight = rendererHeight;
+            if (!parent.HasProperty(Property.FLOAT)) {
+                foreach (IRenderer renderer in processed.GetChildRenderers()) {
+                    float rendererHeight = renderer.GetOccupiedArea().GetBBox().GetHeight();
+                    if (!renderer.HasProperty(Property.FLOAT)) {
+                        if (maxNonFloatRenderersHeight < rendererHeight) {
+                            maxNonFloatRenderersHeight = rendererHeight;
+                        }
                     }
                 }
             }
@@ -830,21 +833,11 @@ namespace iText.Layout.Renderer {
                 }
             }
             layoutBox.MoveRight(maxWidth);
-            layoutBox.SetWidth(layoutBox.GetWidth() - maxWidth);
+            if (!parent.HasProperty(Property.FLOAT)) {
+                layoutBox.SetWidth(layoutBox.GetWidth() - maxWidth);
+            }
         }
 
-        //        if (!parent.hasProperty(Property.WIDTH)) {
-        //            layoutBox.moveRight(maxWidth);
-        //            layoutBox.setWidth(layoutBox.getWidth() - maxWidth);
-        //
-        //        } else if (layoutBox.getWidth() < maxWidth){
-        //            layoutBox.setHeight(layoutBox.getHeight() - maxHeight);
-        //            if (!parent.hasProperty(Property.FLOAT)) {
-        //                floatRenderers.clear();
-        //            }
-        //        } else if (parent.hasProperty(Property.FLOAT)) {
-        //            layoutBox.moveRight(maxWidth);
-        //        }
         private void AdjustLineRendererToCurrentLineFloatRendererers(IList<Rectangle> floatRenderers, Rectangle layoutBox
             ) {
             float maxWidth = 0;
