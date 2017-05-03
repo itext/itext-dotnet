@@ -404,7 +404,7 @@ namespace iText.Layout.Renderer {
                 ().GetWidth());
             if (clearHeightCorrection > 0) {
                 editedArea = editedArea.Clone();
-                editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
+                editedArea.GetBBox().MoveDown(clearHeightCorrection);
             }
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth

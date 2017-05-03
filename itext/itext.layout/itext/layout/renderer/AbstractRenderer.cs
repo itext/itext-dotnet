@@ -1251,6 +1251,7 @@ namespace iText.Layout.Renderer {
             float clearHeightCorrection = 0;
             if (floatRendererAreas.Count > 0 && clearPropertyValue != null) {
                 float maxFloatHeight = 0;
+                Rectangle theLowestFloatRectangle = null;
                 float criticalPoint = parentBBox.GetX() + parentBBox.GetWidth();
                 for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
                     Rectangle floatRenderer = floatRendererAreas[i];
@@ -1259,12 +1260,16 @@ namespace iText.Layout.Renderer {
                         (ClearPropertyValue.BOTH)) {
                         floatRendererAreas.JRemoveAt(i);
                         if (maxFloatHeight < floatRenderer.GetHeight()) {
+                            theLowestFloatRectangle = floatRenderer;
                             maxFloatHeight = floatRenderer.GetHeight();
                         }
                     }
                 }
-                parentBBox.DecreaseHeight(maxFloatHeight);
-                clearHeightCorrection = maxFloatHeight;
+                if (theLowestFloatRectangle != null) {
+                    clearHeightCorrection = theLowestFloatRectangle.GetHeight() + theLowestFloatRectangle.GetY() - parentBBox.
+                        GetY() - parentBBox.GetHeight();
+                    parentBBox.DecreaseHeight(theLowestFloatRectangle.GetHeight() - clearHeightCorrection);
+                }
             }
             return clearHeightCorrection;
         }

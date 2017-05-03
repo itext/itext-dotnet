@@ -376,7 +376,7 @@ namespace iText.Layout.Renderer {
                 ().GetWidth());
             if (clearHeightCorrection > 0) {
                 editedArea = editedArea.Clone();
-                editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
+                editedArea.GetBBox().MoveDown(clearHeightCorrection);
             }
             if (null == overflowRenderer_1) {
                 return new LayoutResult(LayoutResult.FULL, editedArea, null, null, causeOfNothing);

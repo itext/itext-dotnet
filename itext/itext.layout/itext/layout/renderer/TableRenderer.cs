@@ -889,7 +889,7 @@ namespace iText.Layout.Renderer {
                 ().GetWidth());
             if (clearHeightCorrection > 0) {
                 editedArea = editedArea.Clone();
-                editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
+                editedArea.GetBBox().MoveDown(clearHeightCorrection);
             }
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
