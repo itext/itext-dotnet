@@ -1380,6 +1380,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName SeparationColorNames = CreateDirectName("SeparationColorNames"
             );
 
+        public static readonly iText.Kernel.Pdf.PdfName SD = CreateDirectName("SD");
+
         public static readonly iText.Kernel.Pdf.PdfName Shading = CreateDirectName("Shading");
 
         public static readonly iText.Kernel.Pdf.PdfName ShadingType = CreateDirectName("ShadingType");

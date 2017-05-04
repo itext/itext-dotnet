@@ -185,6 +185,28 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StructureDestination02Test() {
+            String srcFile = sourceFolder + "customRolesMappingPdf2.pdf";
+            String outFile = destinationFolder + "structureDestination02Test.pdf";
+            String cmpFile = sourceFolder + "cmp_structureDestination02Test.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
+            PdfStructElem imgElement = new PdfStructElem((PdfDictionary)document.GetPdfObject(13));
+            PdfStructureDestination dest = PdfStructureDestination.CreateFit(imgElement);
+            PdfPage secondPage = document.AddNewPage();
+            PdfPage thirdPage = document.AddNewPage();
+            PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+            PdfAction gotoStructAction = PdfAction.CreateGoTo(PdfExplicitDestination.CreateFit(thirdPage));
+            gotoStructAction.Put(PdfName.SD, dest.GetPdfObject());
+            linkExplicitDest.SetAction(gotoStructAction);
+            secondPage.AddAnnotation(linkExplicitDest);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void MakeDestination01Test() {
             String srcFile = sourceFolder + "cmp_structureDestination01Test.pdf";
