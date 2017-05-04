@@ -21,10 +21,10 @@ namespace iText.Kernel.Pdf.Tagging {
         private const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
-        public const String PDF_1_7 = "http://www.iso.org/pdf/ssn";
+        public const String PDF_1_7 = "http://iso.org/pdf/ssn";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 2.0</summary>
-        public const String PDF_2_0 = "http://www.iso.org/pdf2/ssn";
+        public const String PDF_2_0 = "http://iso.org/pdf2/ssn";
 
         static StandardStructureNamespace() {
             // other namespaces

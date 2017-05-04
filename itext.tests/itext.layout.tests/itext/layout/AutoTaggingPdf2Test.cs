@@ -233,7 +233,7 @@ namespace iText.Layout {
                 document.Add(customRolePara);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://www.iso.org/pdf/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf/ssn")));
 ;
         }
 
@@ -279,7 +279,7 @@ namespace iText.Layout {
                 document.Add(customRolePara);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://www.iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf2/ssn")));
 ;
         }
 
@@ -331,7 +331,7 @@ namespace iText.Layout {
                 document.Add(customRolePara2);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://www.iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf2/ssn")));
 ;
         }
 
@@ -395,7 +395,7 @@ namespace iText.Layout {
                 document.Add(new Paragraph(customRolePText1));
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/span", "http://www.iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/span", "http://iso.org/pdf2/ssn")));
 ;
         }
 
