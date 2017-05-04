@@ -1324,7 +1324,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-1250")]
         public virtual void TableWithHeaderInTheBottomOfPageTest() {
             String testName = "tableWithHeaderInTheBottomOfPageTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1339,6 +1339,27 @@ namespace iText.Layout {
             table.AddHeaderCell(new Cell().Add("Header Two"));
             table.AddCell(new Cell().Add("Hello"));
             table.AddCell(new Cell().Add("World"));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1250")]
+        public virtual void BigFooterTest01() {
+            String testName = "bigFooterTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1);
+            //        table.addHeaderCell(new Cell().add("h"));
+            table.AddFooterCell(new Cell().Add("Footer").SetHeight(650).SetBorderTop(new SolidBorder(Color.GREEN, 100)
+                ));
+            table.AddCell(new Cell().Add("Body").SetHeight(30));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
