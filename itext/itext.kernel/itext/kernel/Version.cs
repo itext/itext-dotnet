@@ -121,8 +121,7 @@ namespace iText.Kernel {
                             }
                             if (info.Length > 6) {
                                 if (info[6] != null && info[6].Trim().Length > 0) {
-                                    String versionToCheck = release.JSubstring(0, release.LastIndexOf("."));
-                                    if (!info[6].EqualsIgnoreCase(versionToCheck)) {
+                                    if (!release.StartsWith(info[6])) {
                                         throw new ArgumentException("Your license key version doesn't match the iText version.");
                                     }
                                 }
