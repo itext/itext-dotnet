@@ -72,6 +72,24 @@ namespace iText.Signatures {
     internal static class SignUtils {
         internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
 
+        internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
+            String algorithm;
+            if (cp is RsaKeyParameters) {
+                algorithm = "RSA";
+            } else if (cp is DsaKeyParameters) {
+                algorithm = "DSA";
+            } else if (cp is ECKeyParameters) {
+                algorithm = ((ECKeyParameters) cp).AlgorithmName;
+                if (algorithm == "EC") {
+                    algorithm = "ECDSA";
+                }
+            } else {
+                throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(cp.ToString());
+            }
+
+            return algorithm;
+        }
+
         /// <exception cref="CertificateException"/>
         /// <exception cref="CrlException"/>
         internal static X509Crl ParseCrlFromStream(Stream input) {
