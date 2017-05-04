@@ -577,7 +577,7 @@ namespace iText.Layout.Renderer {
                 // process footer with collapsed borders
                 if ((split || row == rows.Count - 1) && null != footerRenderer) {
                     // maybe the table was incomplete and we can process the footer
-                    if (!isAndWasComplete && !hasContent && 0 == childRenderers.Count) {
+                    if (!hasContent && childRenderers.Count == 0) {
                         bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                     }
                     else {
@@ -730,7 +730,9 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         int status = ((occupiedArea.GetBBox().GetHeight() - (null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea
-                            ().GetBBox().GetHeight()) == 0) && isAndWasComplete) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
+                            ().GetBBox().GetHeight()) - (null == headerRenderer ? 0 : headerRenderer.GetOccupiedArea().GetBBox().GetHeight
+                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && isAndWasComplete) ? LayoutResult.NOTHING
+                             : LayoutResult.PARTIAL;
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
