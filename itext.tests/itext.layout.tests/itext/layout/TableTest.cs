@@ -1369,7 +1369,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1249")]
         public virtual void TableWithDocumentRelayoutTest() {
             String testName = "tableWithDocumentRelayoutTest.pdf";
             String outFileName = destinationFolder + testName;

@@ -1349,6 +1349,7 @@ namespace iText.Layout.Renderer {
             bool isBottomTablePart = IsBottomTablePart();
             bool isComplete = GetTable().IsComplete();
             bool isFooterRendererOfLargeTable = IsFooterRendererOfLargeTable();
+            bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetStartRow() + heights.Count - 1);
             float y1 = startY;
             if (isFooterRendererOfLargeTable) {
                 bordersHandler.DrawHorizontalBorder(0, startX, y1, drawContext.GetCanvas(), countedColumnWidth);
