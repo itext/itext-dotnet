@@ -285,7 +285,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
-                , null, null, true);
+                , null, null);
             PdfFileAttachmentAnnotation fileAttach = new PdfFileAttachmentAnnotation(new Rectangle(100, 100), spec);
             fileAttach.SetIconName(PdfName.Paperclip);
             page1.AddAnnotation(fileAttach);
@@ -752,7 +752,7 @@ namespace iText.Kernel.Pdf {
             }
             fos.Dispose();
             fis.Dispose();
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav", true);
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
             PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
@@ -778,7 +778,7 @@ namespace iText.Kernel.Pdf {
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
-                , null, null, true);
+                , null, null);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
@@ -803,7 +803,7 @@ namespace iText.Kernel.Pdf {
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, new FileStream(sourceFolder + "sample.wav", 
-                FileMode.Open, FileAccess.Read), null, "sample.wav", null, null, true);
+                FileMode.Open, FileAccess.Read), null, "sample.wav", null, null);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
@@ -835,7 +835,7 @@ namespace iText.Kernel.Pdf {
                 reads = @is.Read();
             }
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, baos.ToArray(), null, "sample.wav", null, null
-                , null, true);
+                , null);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);

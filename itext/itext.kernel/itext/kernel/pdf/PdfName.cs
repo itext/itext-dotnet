@@ -553,6 +553,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName EncryptMetadata = CreateDirectName("EncryptMetadata");
 
+        public static readonly iText.Kernel.Pdf.PdfName EncryptedPayload = CreateDirectName("EncryptedPayload");
+
         public static readonly iText.Kernel.Pdf.PdfName End = CreateDirectName("End");
 
         public static readonly iText.Kernel.Pdf.PdfName EndIndent = CreateDirectName("EndIndent");
@@ -697,6 +699,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName ForComment = CreateDirectName("ForComment");
 
         public static readonly iText.Kernel.Pdf.PdfName Form = CreateDirectName("Form");
+
+        public static readonly iText.Kernel.Pdf.PdfName FormData = CreateDirectName("FormData");
 
         public static readonly iText.Kernel.Pdf.PdfName ForPublicRelease = CreateDirectName("ForPublicRelease");
 

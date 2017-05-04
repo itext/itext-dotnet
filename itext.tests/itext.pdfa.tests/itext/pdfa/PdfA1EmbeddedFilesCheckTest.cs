@@ -69,7 +69,7 @@ namespace iText.Pdfa {
                 fileNames.Put(PdfName.Names, names);
                 names.Add(new PdfString("some/file/path"));
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 names.Add(spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
@@ -91,7 +91,7 @@ namespace iText.Pdfa {
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 stream.Put(PdfName.F, spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
@@ -113,7 +113,7 @@ namespace iText.Pdfa {
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 stream.Put(new PdfName("fileData"), spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();

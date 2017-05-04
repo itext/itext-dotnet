@@ -1318,10 +1318,12 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfName.Unspecified"/>
         /// .
         /// </param>
+        [System.ObsoleteAttribute(@"use AddAssociatedFile(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec) methods. Will be removed in iText 7.1"
+            )]
         public virtual void AddFileAttachment(String description, byte[] fileStore, String fileDisplay, PdfName mimeType
             , PdfDictionary fileParameter, PdfName afRelationshipValue) {
             AddFileAttachment(description, PdfFileSpec.CreateEmbeddedFileSpec(this, fileStore, description, fileDisplay
-                , mimeType, fileParameter, afRelationshipValue, true));
+                , mimeType, fileParameter, afRelationshipValue));
         }
 
         /// <summary>Adds file attachment at document level.</summary>
@@ -1347,10 +1349,12 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </param>
         /// <exception cref="System.IO.IOException"/>
+        [System.ObsoleteAttribute(@"use AddAssociatedFile(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec) methods. Will be removed in iText 7.1"
+            )]
         public virtual void AddFileAttachment(String description, String file, String fileDisplay, PdfName mimeType
             , PdfName afRelationshipValue) {
             AddFileAttachment(description, PdfFileSpec.CreateEmbeddedFileSpec(this, file, description, fileDisplay, mimeType
-                , afRelationshipValue, true));
+                , afRelationshipValue));
         }
 
         /// <summary>Adds file attachment at document level.</summary>
@@ -1363,12 +1367,25 @@ namespace iText.Kernel.Pdf {
         public virtual void AddFileAttachment(String description, PdfFileSpec fs) {
             CheckClosingStatus();
             catalog.AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+        }
+
+        public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
             PdfArray afArray = catalog.GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {
                 afArray = ((PdfArray)new PdfArray().MakeIndirect(this));
                 catalog.Put(PdfName.AF, afArray);
             }
             afArray.Add(fs.GetPdfObject());
+            AddFileAttachment(description, fs);
+        }
+
+        public virtual PdfArray GetAssociatedFiles() {
+            CheckClosingStatus();
+            return catalog.GetPdfObject().GetAsArray(PdfName.AF);
         }
 
         /// <summary>This method retrieves the page labels from a document as an array of String objects.</summary>

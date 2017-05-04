@@ -454,7 +454,7 @@ namespace iText.Kernel.Crypto {
             String descripton = "encryptedFile";
             String path = sourceFolder + "pageWithContent.pdf";
             document.AddFileAttachment(descripton, PdfFileSpec.CreateEmbeddedFileSpec(document, path, descripton, path
-                , null, null, true));
+                , null, null));
             page.Flush();
             document.Close();
             CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent);

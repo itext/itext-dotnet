@@ -42,8 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Pdf.Xobject {
@@ -117,6 +119,28 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <returns>float value.</returns>
         public virtual float GetHeight() {
             throw new NotSupportedException();
+        }
+
+        public virtual void AddAssociatedFile(PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null) {
+                afArray = new PdfArray();
+                GetPdfObject().Put(PdfName.AF, afArray);
+            }
+            afArray.Add(fs.GetPdfObject());
+        }
+
+        public virtual PdfArray GetAssociatedFiles(bool create) {
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null && create) {
+                afArray = new PdfArray();
+                GetPdfObject().Put(PdfName.AF, afArray);
+            }
+            return afArray;
         }
 
         /// <summary><inheritDoc/></summary>
