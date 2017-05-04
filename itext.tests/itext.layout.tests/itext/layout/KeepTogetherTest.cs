@@ -41,9 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -146,6 +148,30 @@ namespace iText.Layout {
             div.Add(new Paragraph("second paragraph"));
             div.Add(new Paragraph("third paragraph"));
             div.SetKeepTogether(true);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherMinHeightTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherMinHeightTest.pdf";
+            String outFile = destinationFolder + "keepTogetherMinHeightTest.pdf";
+            PdfWriter writer = new PdfWriter(outFile);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            Paragraph p = new Paragraph("Test String");
+            for (int i = 0; i < 15; i++) {
+                doc.Add(p);
+            }
+            Div div = new Div();
+            div.SetBorder(new SolidBorder(Color.BLACK, 1));
+            div.SetMinHeight(500);
+            div.SetKeepTogether(true);
+            div.Add(new Paragraph("Hello"));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 

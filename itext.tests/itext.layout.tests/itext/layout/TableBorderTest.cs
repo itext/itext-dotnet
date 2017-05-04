@@ -1279,6 +1279,32 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HeaderTopBorderTest01() {
+            String testName = "headerTopBorderTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            for (int i = 0; i < 29; ++i) {
+                doc.Add(new Paragraph("aaaaaaaaaaaa"));
+            }
+            Table table = new Table(new float[] { 50, 50 }).SetBorder(new SolidBorder(1));
+            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
+            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
+            for (int i = 0; i < 4; ++i) {
+                table.AddCell(new Cell().Add("aa").SetBorder(Border.NO_BORDER));
+            }
+            doc.Add(table);
+            doc.Add(new Paragraph("Correct result:"));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document CreateDocument() {
             outFileName = destinationFolder + fileName;

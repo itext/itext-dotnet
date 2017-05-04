@@ -210,6 +210,22 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            FloatPropertyValue? floatPropertyValue = GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            }
+            if (floatPropertyValue != null) {
+                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
+                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
+                }
+                else {
+                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
+                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
+                    }
+                }
+            }
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
@@ -254,6 +270,8 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
+                    // we've changed it during footer initialization. However, now we need to process borders again as they were.
+                    DeleteOwnProperty(Property.BORDER_BOTTOM);
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float footerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
@@ -285,6 +303,8 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
+                    // we've changed it during header initialization. However, now we need to process borders again as they were.
+                    DeleteOwnProperty(Property.BORDER_TOP);
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float headerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
@@ -389,7 +409,8 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
-                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
+                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRendererAreas
+                        ));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -526,6 +547,7 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
+                rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, floatRendererAreas);
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -868,7 +890,11 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(GetBorders());
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
+                ().GetWidth(), null);
+            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
+            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1324,6 +1350,7 @@ namespace iText.Layout.Renderer {
             bool isBottomTablePart = IsBottomTablePart();
             bool isComplete = GetTable().IsComplete();
             bool isFooterRendererOfLargeTable = IsFooterRendererOfLargeTable();
+            bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetStartRow() + heights.Count - 1);
             float y1 = startY;
             if (isFooterRendererOfLargeTable) {
                 bordersHandler.DrawHorizontalBorder(0, startX, y1, drawContext.GetCanvas(), countedColumnWidth);
@@ -1367,6 +1394,20 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
+        }
+
+        private float CalculateRowHeightIfFloatRendererPresent(float rowHeight, IList<Rectangle> floatRenderers) {
+            float maxHeight = 0;
+            if (HasProperty(Property.FLOAT)) {
+                return rowHeight;
+            }
+            foreach (Rectangle floatRenderer in floatRenderers) {
+                float floatRendererHeight = floatRenderer.GetHeight();
+                if (floatRendererHeight > maxHeight) {
+                    maxHeight = floatRendererHeight;
+                }
+            }
+            return rowHeight + maxHeight;
         }
 
         /// <summary>If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.

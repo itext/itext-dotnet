@@ -63,6 +63,10 @@ namespace iText.Layout.Renderer {
         // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            if (floatRendererAreas != null) {
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
                 .GetHeight()).SetHeight(0));
             float curWidth = 0;
@@ -79,6 +83,7 @@ namespace iText.Layout.Renderer {
             bool anythingPlaced = false;
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
+            IList<Rectangle> currentLineFloatRendererAreas = new List<Rectangle>();
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult childResult;
@@ -159,7 +164,14 @@ namespace iText.Layout.Renderer {
                     childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
                     childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
                 }
-                maxAscent = Math.Max(maxAscent, childAscent);
+                if (!childRenderer.HasProperty(Property.FLOAT) || !(childRenderer is ImageRenderer)) {
+                    maxAscent = Math.Max(maxAscent, childAscent);
+                }
+                else {
+                    if (childResult.GetStatus() != LayoutResult.NOTHING && childRenderer is ImageRenderer) {
+                        currentLineFloatRendererAreas.Add(childRenderer.GetOccupiedArea().GetBBox());
+                    }
+                }
                 maxDescent = Math.Min(maxDescent, childDescent);
                 float maxHeight = maxAscent - maxDescent;
                 if (hangingTabStop != null) {
@@ -198,7 +210,8 @@ namespace iText.Layout.Renderer {
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                     bool wordWasSplitAndItWillFitOntoNextLine = false;
                     if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit()) {
-                        LayoutResult newLayoutResult = childRenderer.Layout(layoutContext);
+                        LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
+                            ().GetPageNumber(), layoutBox)));
                         if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
                             wordWasSplitAndItWillFitOntoNextLine = true;
                         }
@@ -226,6 +239,7 @@ namespace iText.Layout.Renderer {
                     }
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
                         () : childRenderer;
+                    floatRendererAreas.AddAll(currentLineFloatRendererAreas);
                     if (split[1] == null) {
                         result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing);
                     }
@@ -327,7 +341,7 @@ namespace iText.Layout.Renderer {
                             offset = initialPos;
                             newRenderer.line.SetGlyphs(replacementGlyphs);
                         }
-                        float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
+                        float currentXPos = occupiedArea.GetBBox().GetLeft();
                         foreach (IRenderer child in children) {
                             float currentWidth = ((TextRenderer)child).CalculateLineWidth();
                             float[] margins = ((TextRenderer)child).GetMargins();
@@ -348,12 +362,31 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
+                ();
             if (anythingPlaced) {
-                LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
-                    ();
                 processed.AdjustChildrenYLine().TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
+            else {
+                if (floatRendererAreas.Count > 0) {
+                    float maxFloatHeight = 0;
+                    foreach (Rectangle floatRenderer in floatRendererAreas) {
+                        if (maxFloatHeight < floatRenderer.GetHeight()) {
+                            maxFloatHeight = floatRenderer.GetHeight();
+                        }
+                    }
+                    processed.GetOccupiedArea().GetBBox().SetHeight(maxFloatHeight);
+                    processed.GetOccupiedArea().GetBBox().MoveDown(maxFloatHeight);
+                }
+            }
+            IList<IRenderer> currentLineChildRenderers = result.GetStatus() == LayoutResult.FULL ? this.childRenderers
+                 : result.GetSplitRenderer().GetChildRenderers();
+            LayoutArea editedArea = ApplyFloatPropertyOnChildRenderers(currentLineChildRenderers);
+            if (editedArea != null) {
+                processed.GetOccupiedArea().SetBBox(editedArea.GetBBox());
+            }
+            floatRendererAreas.AddAll(currentLineFloatRendererAreas);
             return result;
         }
 
@@ -495,6 +528,9 @@ namespace iText.Layout.Renderer {
                 if (renderer is ILeafElementRenderer) {
                     float descent = ((ILeafElementRenderer)renderer).GetDescent();
                     renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
+                    if (renderer is ImageRenderer && renderer.HasProperty(Property.FLOAT)) {
+                        renderer.Move(0, -((ILeafElementRenderer)renderer).GetAscent() + maxAscent);
+                    }
                 }
                 else {
                     renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
@@ -525,6 +561,28 @@ namespace iText.Layout.Renderer {
             LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
                 new Rectangle(availableWidth, AbstractRenderer.INF)))));
             return result.GetNotNullMinMaxWidth(availableWidth);
+        }
+
+        private LayoutArea ApplyFloatPropertyOnChildRenderers(IList<IRenderer> childRenderers) {
+            LayoutArea editedArea = null;
+            float lineHeight = 0;
+            bool lineHasFloatProperty = false;
+            foreach (IRenderer renderer in childRenderers) {
+                if (renderer.HasProperty(Property.FLOAT)) {
+                    lineHasFloatProperty = true;
+                }
+                else {
+                    if ((renderer is BlockRenderer) && renderer.GetOccupiedArea() != null && renderer.GetOccupiedArea().GetBBox
+                        ().GetHeight() > lineHeight) {
+                        lineHeight = renderer.GetOccupiedArea().GetBBox().GetHeight();
+                    }
+                }
+            }
+            if (lineHasFloatProperty && lineHeight > 0) {
+                editedArea = occupiedArea.Clone();
+                editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight() - lineHeight);
+            }
+            return editedArea;
         }
 
         private IRenderer GetLastChildRenderer() {

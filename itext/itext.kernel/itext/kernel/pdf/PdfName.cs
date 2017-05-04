@@ -151,7 +151,7 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Alternate = CreateDirectName("Alternate");
 
-        public static readonly iText.Kernel.Pdf.PdfName Alternates = CreateDirectName("Alternate");
+        public static readonly iText.Kernel.Pdf.PdfName Alternates = CreateDirectName("Alternates");
 
         public static readonly iText.Kernel.Pdf.PdfName AlternatePresentations = CreateDirectName("AlternatePresentations"
             );

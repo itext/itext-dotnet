@@ -87,7 +87,9 @@ namespace iText.Signatures {
 
         internal static byte[] GetExtensionValueByOid(X509Certificate certificate, String oid) {
             Asn1OctetString extensionValue = certificate.GetExtensionValue(oid);
-            return extensionValue != null ? extensionValue.GetOctets() : null;
+            return extensionValue != null ? extensionValue.GetDerEncoded() : null;
+            
+            
         }
 
         internal static IDigest GetMessageDigest(String hashAlgorithm) {

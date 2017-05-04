@@ -83,6 +83,7 @@ namespace iText.Signatures.Sign {
                 false);
             TestTsaClient testTsa = new TestTsaClient(iText.IO.Util.JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
         }
         //        TimeStampToken tsWrong = new TimeStampResponse(Files.readAllBytes(Paths.get("c:\\Users\\yulian\\Desktop\\myTs"))).getTimeStampToken();
         //
