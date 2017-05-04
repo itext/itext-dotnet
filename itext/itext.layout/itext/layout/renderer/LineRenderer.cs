@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -443,30 +442,9 @@ namespace iText.Layout.Renderer {
                 child.Move(lastRightPos - childX, 0);
                 childX = lastRightPos;
                 if (child is TextRenderer) {
-                    TextRenderer childTextRenderer = (TextRenderer)child;
                     float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
                     child.SetProperty(Property.CHARACTER_SPACING, characterSpacing / childHSCale);
-                    PdfFont childFont = ((TextRenderer)child).GetPropertyAsFont(Property.FONT);
-                    if (childFont is PdfType0Font && childTextRenderer.line != null) {
-                        // From the spec: Word spacing is applied to every occurrence of the single-byte character code 32 in
-                        // a string when using a simple font or a composite font that defines code 32 as a single-byte code.
-                        // It does not apply to occurrences of the byte value 32 in multiple-byte codes.
-                        //
-                        // For PdfType0Font we must add word manually with glyph offsets
-                        GlyphLine gl = childTextRenderer.line;
-                        for (int gInd = gl.start; gInd < gl.end; gInd++) {
-                            if (TextUtil.IsUni0020(gl.Get(gInd))) {
-                                short advance = (short)(TextRenderer.TEXT_SPACE_COEFF * wordSpacing / childHSCale / childTextRenderer.GetPropertyAsFloat
-                                    (Property.FONT_SIZE));
-                                Glyph copy = new Glyph(gl.Get(gInd));
-                                copy.SetXAdvance(advance);
-                                gl.Set(gInd, copy);
-                            }
-                        }
-                    }
-                    else {
-                        child.SetProperty(Property.WORD_SPACING, wordSpacing / childHSCale);
-                    }
+                    child.SetProperty(Property.WORD_SPACING, wordSpacing / childHSCale);
                     bool isLastTextRenderer = i + 1 == childRenderers.Count;
                     float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() - 1) : ((TextRenderer)child
                         ).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer)child).GetNumberOfSpaces();

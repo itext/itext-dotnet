@@ -606,12 +606,30 @@ namespace iText.Layout.Renderer {
                     canvas.SetCharacterSpacing((float)characterSpacing);
                 }
                 if (wordSpacing != null && wordSpacing != 0) {
-                    canvas.SetWordSpacing((float)wordSpacing);
+                    if (font is PdfType0Font) {
+                        // From the spec: Word spacing is applied to every occurrence of the single-byte character code 32 in
+                        // a string when using a simple font or a composite font that defines code 32 as a single-byte code.
+                        // It does not apply to occurrences of the byte value 32 in multiple-byte codes.
+                        //
+                        // For PdfType0Font we must add word manually with glyph offsets
+                        for (int gInd = line.start; gInd < line.end; gInd++) {
+                            if (TextUtil.IsUni0020(line.Get(gInd))) {
+                                short advance = (short)(iText.Layout.Renderer.TextRenderer.TEXT_SPACE_COEFF * (float)wordSpacing / fontSize
+                                    );
+                                Glyph copy = new Glyph(line.Get(gInd));
+                                copy.SetXAdvance(advance);
+                                line.Set(gInd, copy);
+                            }
+                        }
+                    }
+                    else {
+                        canvas.SetWordSpacing((float)wordSpacing);
+                    }
                 }
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_642();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_662();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -675,8 +693,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_642 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_642() {
+        private sealed class _IGlyphLineFilter_662 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_662() {
             }
 
             public bool Accept(Glyph glyph) {
