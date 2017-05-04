@@ -121,6 +121,23 @@ namespace iText.Kernel.Pdf.Xobject {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF XObject and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF XObject and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the XObject dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
@@ -134,6 +151,8 @@ namespace iText.Kernel.Pdf.Xobject {
             afArray.Add(fs.GetPdfObject());
         }
 
+        /// <summary>Returns files associated with XObject.</summary>
+        /// <returns>associated files array.</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {

@@ -241,6 +241,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// These pronunciation lexicons may be used as pronunciation hints when the document’s content is presented via
         /// text-to-speech. Where two or more pronunciation lexicons apply to the same text, the first match – as defined by
         /// the order of entries in the array and the order of entries inside the pronunciation lexicon file – should be used.
+        /// <p>
         /// See ISO 32000-2 14.9.6, "Pronunciation hints".
         /// </summary>
         /// <returns>
@@ -389,6 +390,25 @@ namespace iText.Kernel.Pdf.Tagging {
             return document;
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with structure tree root and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with structure tree root and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the structure tree root dictionary.
+        /// If description is provided, it also will add file description to catalog Names tree.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="description">the file description</param>
+        /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
@@ -405,10 +425,30 @@ namespace iText.Kernel.Pdf.Tagging {
             afArray.Add(fs.GetPdfObject());
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with structure tree root and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with structure tree root and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the structure tree root dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             AddAssociatedFile(null, fs);
         }
 
+        /// <summary>Returns files associated with structure tree root.</summary>
+        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
+        /// <returns>associated files array.</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {

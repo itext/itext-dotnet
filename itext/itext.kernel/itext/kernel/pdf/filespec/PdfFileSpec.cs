@@ -170,6 +170,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, fileStore, description, fileDisplay, null, null, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="filePath"/>
         /// <param name="description"/>
@@ -193,6 +194,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="filePath"/>
         /// <param name="description"/>
@@ -206,6 +208,7 @@ namespace iText.Kernel.Pdf.Filespec {
                 );
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="filePath"/>
         /// <param name="description"/>
@@ -217,6 +220,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, null, null, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="filePath"/>
         /// <param name="fileDisplay"/>
@@ -227,6 +231,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, filePath, null, fileDisplay, null, null, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="is"/>
         /// <param name="description"/>
@@ -249,6 +254,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="is"/>
         /// <param name="description"/>
@@ -260,6 +266,7 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, @is, description, fileDisplay, mimeType, null, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="stream"/>
         /// <param name="description"/>
@@ -296,13 +303,14 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="stream"/>
         /// <param name="fileDisplay"/>
         /// <param name="afRelationshipValue"/>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
-            , String fileDisplay, PdfName afRelationshipValue) {
-            return CreateEmbeddedFileSpec(doc, stream, null, fileDisplay, null, afRelationshipValue);
+            , String description, String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, null, afRelationshipValue);
         }
 
         public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec SetFileIdentifier(PdfArray fileIdentifier) {

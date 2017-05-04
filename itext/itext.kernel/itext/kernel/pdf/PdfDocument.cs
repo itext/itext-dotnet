@@ -1369,6 +1369,28 @@ namespace iText.Kernel.Pdf {
             catalog.AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF document as a whole and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF document as a whole and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method is very similar to
+        /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
+        /// .
+        /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document catalog.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="description">the file description</param>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        /// <seealso cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
@@ -1383,6 +1405,8 @@ namespace iText.Kernel.Pdf {
             AddFileAttachment(description, fs);
         }
 
+        /// <summary>Returns files associated with PDF document.</summary>
+        /// <returns>associated files array.</returns>
         public virtual PdfArray GetAssociatedFiles() {
             CheckClosingStatus();
             return catalog.GetPdfObject().GetAsArray(PdfName.AF);
@@ -1520,6 +1544,7 @@ namespace iText.Kernel.Pdf {
         /// Create a new instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// or load already created one.
+        /// <p>
         /// Note, PdfFont which created with
         /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
         /// won't be cached

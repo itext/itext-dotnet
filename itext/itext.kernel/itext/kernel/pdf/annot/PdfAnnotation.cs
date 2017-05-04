@@ -1449,6 +1449,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <li>the content region that is intended to be removed for a redaction annotation;</li>
         /// </ul>
         /// <p>
+        /// <p>
         /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
         /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
         /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
@@ -1473,6 +1474,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// quadrilaterals define see
         /// <see cref="GetQuadPoints()"/>
         /// .
+        /// <p>
         /// <p>
         /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
         /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
@@ -1888,6 +1890,23 @@ namespace iText.Kernel.Pdf.Annot {
             return this;
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF annotation and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF annotation and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the annotation dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
@@ -1901,6 +1920,9 @@ namespace iText.Kernel.Pdf.Annot {
             afArray.Add(fs.GetPdfObject());
         }
 
+        /// <summary>Returns files associated with PDF annotation.</summary>
+        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
+        /// <returns>associated files array.</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {
