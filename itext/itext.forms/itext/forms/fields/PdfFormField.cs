@@ -2432,7 +2432,7 @@ namespace iText.Forms.Fields {
             if (fs == 0) {
                 float height = bBox.ToRectangle().GetHeight() - borderWidth * 2;
                 int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-                fs = height / ((fontBbox[2] - fontBbox[1]) / FontProgram.UNITS_NORMALIZATION);
+                fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
                 float baseWidth = localFont.GetWidth(value, 1);
                 float offsetX = Math.Max(borderWidth + X_OFFSET, 1);
                 if (baseWidth != 0) {
