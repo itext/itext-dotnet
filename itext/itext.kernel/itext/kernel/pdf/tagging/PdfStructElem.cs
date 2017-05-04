@@ -316,7 +316,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     return null;
                 }
                 PdfStructTreeRoot structTreeRoot = pdfDoc.GetStructTreeRoot();
-                return structTreeRoot.GetPdfObject() == parent ? (IPdfStructElem) structTreeRoot : new iText.Kernel.Pdf.Tagging.PdfStructElem
+                return structTreeRoot.GetPdfObject() == parent ? (IPdfStructElem)structTreeRoot : new iText.Kernel.Pdf.Tagging.PdfStructElem
                     (parent);
             }
             if (IsStructElem(parent)) {
