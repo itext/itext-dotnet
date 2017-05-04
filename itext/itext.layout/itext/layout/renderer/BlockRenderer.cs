@@ -74,8 +74,8 @@ namespace iText.Layout.Renderer {
             }
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
-            float childrenMaxWidth = 0;
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            float? childrenMaxWidth = 0f;
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -85,7 +85,7 @@ namespace iText.Layout.Renderer {
                         SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
                     }
                 }
-                float? minHeightProperty = GetPropertyAsFloat(Property.MIN_HEIGHT);
+                float? minHeightProperty = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
                 MinMaxWidth minMaxWidth = GetMinMaxWidth(parentBBox.GetWidth());
                 childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
                 if (minHeightProperty != null) {
