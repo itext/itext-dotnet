@@ -363,10 +363,15 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                     blockMinHeight -= occupiedArea.GetBBox().GetHeight();
                     if (!IsFixedLayout() && blockMinHeight > AbstractRenderer.EPS) {
-                        overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                        overflowRenderer_1.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight);
-                        if (HasProperty(Property.HEIGHT)) {
-                            overflowRenderer_1.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                        if (IsKeepTogether()) {
+                            return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
+                        }
+                        else {
+                            overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
+                            overflowRenderer_1.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight);
+                            if (HasProperty(Property.HEIGHT)) {
+                                overflowRenderer_1.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
                         }
                     }
                 }

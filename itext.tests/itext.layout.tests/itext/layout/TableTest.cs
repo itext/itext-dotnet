@@ -1369,7 +1369,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-1249")]
         public virtual void TableWithDocumentRelayoutTest() {
             String testName = "tableWithDocumentRelayoutTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1382,6 +1382,26 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithKeepTogetherOnCells() {
+            String testName = "tableWithKeepTogetherOnCells.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1.3f, 1f, 1f, 1f, 1f, 1f, 1f }));
+            table.SetWidthPercent(100f).SetFixedLayout();
+            for (int i = 1; i <= 7 * 100; i++) {
+                Cell cell = new Cell().SetKeepTogether(true).SetMinHeight(45).Add("" + i);
+                table.AddCell(cell);
+            }
+            document.Add(table);
+            document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
