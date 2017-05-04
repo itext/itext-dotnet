@@ -211,7 +211,7 @@ namespace iText.Layout.Renderer {
                 wasHeightClipped = true;
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             }

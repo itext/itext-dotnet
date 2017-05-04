@@ -1324,6 +1324,30 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("")]
+        public virtual void TableWithHeaderInTheBottomOfPageTest() {
+            String testName = "tableWithHeaderInTheBottomOfPageTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            for (int i = 0; i < 28; i++) {
+                doc.Add(new Paragraph("Text"));
+            }
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10 }));
+            table.AddHeaderCell(new Cell().Add("Header One"));
+            table.AddHeaderCell(new Cell().Add("Header Two"));
+            table.AddCell(new Cell().Add("Hello"));
+            table.AddCell(new Cell().Add("World"));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void EmptyTableTest01() {
             String testName = "emptyTableTest01.pdf";
             String outFileName = destinationFolder + testName;
