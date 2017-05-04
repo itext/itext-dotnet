@@ -151,8 +151,8 @@ namespace iText.Kernel {
                             version.AddAGPLPostfix(null);
                         }
                     }
-                    catch (ArgumentException exc) {
-                        throw;
+                    catch (ArgumentException iae) {
+                        version.AddAGPLPostfix(iae.InnerException);
                     }
                     catch (Exception e) {
                         version.AddAGPLPostfix(e.InnerException);
