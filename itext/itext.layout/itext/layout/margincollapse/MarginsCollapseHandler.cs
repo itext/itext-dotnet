@@ -411,7 +411,7 @@ namespace iText.Layout.Margincollapse {
         }
 
         private bool RendererIsFloated() {
-            FloatPropertyValue? floatPropertyValue = renderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            FloatPropertyValue? floatPropertyValue = renderer.GetProperty(Property.FLOAT);
             return floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE);
         }
 

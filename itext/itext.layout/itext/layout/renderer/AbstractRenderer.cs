@@ -1024,7 +1024,7 @@ namespace iText.Layout.Renderer {
                 );
             if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty(Property.FLOAT);
                 if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
                     freeSpace = CalculateFreeSpaceIfFloatPropertyPresent(freeSpace, childRenderer, currentArea);
                 }
@@ -1228,18 +1228,18 @@ namespace iText.Layout.Renderer {
         internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, float availableWidth
             , float? elementWidth) {
             LayoutArea editedArea = occupiedArea;
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 if (elementWidth != null) {
                     if (elementWidth < occupiedArea.GetBBox().GetWidth()) {
                         foreach (IRenderer renderer in childRenderers) {
                             LayoutArea childArea = renderer.GetOccupiedArea();
                             if (childArea != null && elementWidth < childArea.GetBBox().GetWidth()) {
-                                childArea.GetBBox().SetWidth((float)elementWidth);
+                                childArea.GetBBox().SetWidth(elementWidth);
                             }
                         }
                     }
-                    occupiedArea.GetBBox().SetWidth((float)elementWidth);
+                    occupiedArea.GetBBox().SetWidth(elementWidth);
                 }
                 if (occupiedArea.GetBBox().GetWidth() < availableWidth) {
                     editedArea = occupiedArea.Clone();
@@ -1272,7 +1272,7 @@ namespace iText.Layout.Renderer {
              layoutBox, float extremalRightBorder, float? blockWidth, MarginsCollapseHandler marginsCollapseHandler
             ) {
             foreach (Rectangle floatRenderer in floatRendererAreas) {
-                FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
                 if (layoutBox.GetX() >= floatRenderer.GetX() && layoutBox.GetX() < floatRenderer.GetX() + floatRenderer.GetWidth
                     ()) {
                     layoutBox.MoveRight(floatRenderer.GetWidth());
@@ -1300,7 +1300,7 @@ namespace iText.Layout.Renderer {
                         minFloatY = floatRendererArea.GetY();
                     }
                 }
-                layoutBox.SetWidth((float)blockWidth);
+                layoutBox.SetWidth(blockWidth);
                 float topMargin = GetMargins()[0];
                 float topPadding = GetPaddings()[0];
                 minFloatY -= topMargin + topPadding;
@@ -1315,7 +1315,7 @@ namespace iText.Layout.Renderer {
 
         internal virtual float CalculateClearHeightCorrection(IList<Rectangle> floatRendererAreas, Rectangle parentBBox
             ) {
-            ClearPropertyValue? clearPropertyValue = this.GetProperty<ClearPropertyValue?>(Property.CLEAR);
+            ClearPropertyValue? clearPropertyValue = GetProperty(Property.CLEAR);
             float clearHeightCorrection = 0;
             if (floatRendererAreas.Count > 0 && clearPropertyValue != null) {
                 float maxFloatHeight = 0;

@@ -107,7 +107,7 @@ namespace iText.Layout.Renderer {
                 ApplyAbsolutePosition(layoutBox);
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {

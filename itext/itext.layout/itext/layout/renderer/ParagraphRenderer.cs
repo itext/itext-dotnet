@@ -89,7 +89,7 @@ namespace iText.Layout.Renderer {
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            FloatPropertyValue? floatPropertyValue = GetProperty(Property.FLOAT);
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
@@ -399,7 +399,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             Rectangle rect = ApplyMargins(occupiedArea.GetBBox(), true);
-            float? childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
+            float childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
             if (blockWidth != null && childrenMaxWidth < blockWidth) {
                 childrenMaxWidth = blockWidth;
             }
