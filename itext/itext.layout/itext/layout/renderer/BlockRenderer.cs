@@ -85,7 +85,7 @@ namespace iText.Layout.Renderer {
                         SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
                     }
                 }
-                float? minHeightProperty = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+                float? minHeightProperty = this.GetProperty<float?>(Property.MIN_HEIGHT);
                 MinMaxWidth minMaxWidth = GetMinMaxWidth(parentBBox.GetWidth());
                 childrenMaxWidth = minMaxWidth.GetChildrenMaxWidth();
                 if (minHeightProperty != null) {
