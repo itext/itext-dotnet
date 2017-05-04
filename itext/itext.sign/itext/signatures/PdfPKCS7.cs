@@ -112,7 +112,7 @@ namespace iText.Signatures {
             digestalgos.Add(digestAlgorithmOid);
             // find the signing algorithm (RSA or DSA)
             if (privKey != null) {
-                digestEncryptionAlgorithmOid = privKey.GetAlgorithm();
+                digestEncryptionAlgorithmOid = SignUtils.GetPrivateKeyAlgorithm(privKey);
                 if (digestEncryptionAlgorithmOid.Equals("RSA")) {
                     digestEncryptionAlgorithmOid = SecurityIDs.ID_RSA;
                 }
