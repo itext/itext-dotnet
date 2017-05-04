@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
-using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -555,10 +554,9 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         public virtual void CorruptedTagStructureTest02() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "directStructElem01.pdf"));
-            NUnit.Framework.Assert.IsFalse(document.IsTagged());
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
             document.Close();
         }
 
@@ -566,20 +564,14 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CorruptedTagStructureTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "directStructElem02.pdf");
-            PdfWriter writer = new PdfWriter(new ByteBufferOutputStream());
+            MemoryStream baos = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(reader, writer);
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
-            bool isThrown = false;
-            try {
-                document.Close();
-            }
-            catch (PdfException ex) {
-                NUnit.Framework.Assert.AreEqual(ex.Message, PdfException.TagStructureFlushingFailedItMightBeCorrupted);
-                isThrown = true;
-            }
-            if (!isThrown) {
-                NUnit.Framework.Assert.Fail("Exception is expected.");
-            }
+            document.Close();
+            document = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
+            document.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -587,21 +579,15 @@ namespace iText.Kernel.Pdf {
         public virtual void CorruptedTagStructureTest04() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "directStructElem03.pdf"));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
-            bool isThrown = false;
-            try {
-                PdfDocument docToCopyTo = new PdfDocument(new PdfWriter(new MemoryStream()));
-                docToCopyTo.SetTagged();
-                document.CopyPagesTo(1, 1, docToCopyTo);
-            }
-            catch (PdfException ex) {
-                NUnit.Framework.Assert.AreEqual(ex.Message, PdfException.TagStructureCopyingFailedItMightBeCorruptedInOneOfTheDocuments
-                    );
-                isThrown = true;
-            }
+            MemoryStream baos = new MemoryStream();
+            PdfDocument docToCopyTo = new PdfDocument(new PdfWriter(baos));
+            docToCopyTo.SetTagged();
+            document.CopyPagesTo(1, 1, docToCopyTo);
             document.Close();
-            if (!isThrown) {
-                NUnit.Framework.Assert.Fail("Exception is expected.");
-            }
+            docToCopyTo.Close();
+            document = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
+            document.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>

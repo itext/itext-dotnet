@@ -641,7 +641,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 // TODO how about possible references to structure element from refs or structure destination for instance?
                 indRef.SetFree();
             }
-            currentStructElem.GetPdfObject().Clear();
             foreach (IPdfStructElem kid in kids) {
                 if (kid is PdfStructElem) {
                     parent.AddKid(removedKidIndex++, (PdfStructElem)kid);
@@ -651,6 +650,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                     parent.AddKid(removedKidIndex++, mcr);
                 }
             }
+            currentStructElem.GetPdfObject().Clear();
             SetCurrentStructElem(parent);
             return this;
         }
