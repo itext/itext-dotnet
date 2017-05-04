@@ -1348,6 +1348,26 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("")]
+        public virtual void TableWithDocumentRelayoutTest() {
+            String testName = "tableWithDocumentRelayoutTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4, false);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10 }));
+            for (int i = 0; i < 40; i++) {
+                table.AddCell(new Cell().Add("" + (i + 1)));
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void EmptyTableTest01() {
             String testName = "emptyTableTest01.pdf";
             String outFileName = destinationFolder + testName;
