@@ -1274,7 +1274,8 @@ namespace iText.Kernel.Utils {
             return dictsAreSame;
         }
 
-        private PdfNumber FlattenNumTree(PdfDictionary dictionary, PdfNumber leftOver, LinkedList<PdfObject> items) {
+        private PdfNumber FlattenNumTree(PdfDictionary dictionary, PdfNumber leftOver, LinkedList<PdfObject> items
+            ) {
             /*Map<PdfNumber, PdfObject> items*/
             PdfArray nums = dictionary.GetAsArray(PdfName.Nums);
             if (nums != null) {
