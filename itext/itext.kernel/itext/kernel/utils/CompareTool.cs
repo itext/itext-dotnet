@@ -1242,6 +1242,22 @@ namespace iText.Kernel.Utils {
                         continue;
                     }
                 }
+                // A number tree can be stored in multiple, semantically equivalent ways.
+                // Flatten to a single array, in order to get a canonical representation.
+                if (key.Equals(PdfName.ParentTree) || key.Equals(PdfName.PageLabels)) {
+                    PdfDictionary outNumTree = outDict.GetAsDictionary(key);
+                    PdfDictionary cmpNumTree = cmpDict.GetAsDictionary(key);
+                    LinkedList<PdfObject> outItems = new LinkedList<PdfObject>();
+                    LinkedList<PdfObject> cmpItems = new LinkedList<PdfObject>();
+                    FlattenNumTree(outNumTree, null, outItems);
+                    FlattenNumTree(cmpNumTree, null, cmpItems);
+                    PdfArray outArray = new PdfArray(outItems, outItems.Count);
+                    PdfArray cmpArray = new PdfArray(cmpItems, cmpItems.Count);
+                    if (!CompareArraysExtended(outArray, cmpArray, currentPath, compareResult)) {
+                        return false;
+                    }
+                    continue;
+                }
                 if (currentPath != null) {
                     currentPath.PushDictItemToPath(key);
                 }
@@ -1256,6 +1272,39 @@ namespace iText.Kernel.Utils {
                 }
             }
             return dictsAreSame;
+        }
+
+        private PdfNumber FlattenNumTree(PdfDictionary dictionary, PdfNumber leftOver, LinkedList<PdfObject> items) {
+            /*Map<PdfNumber, PdfObject> items*/
+            PdfArray nums = dictionary.GetAsArray(PdfName.Nums);
+            if (nums != null) {
+                for (int k = 0; k < nums.Size(); k++) {
+                    PdfNumber number;
+                    if (leftOver == null) {
+                        number = nums.GetAsNumber(k++);
+                    }
+                    else {
+                        number = leftOver;
+                        leftOver = null;
+                    }
+                    if (k < nums.Size()) {
+                        items.AddLast(number);
+                        items.AddLast(nums.Get(k, false));
+                    }
+                    else {
+                        return number;
+                    }
+                }
+            }
+            else {
+                if ((nums = dictionary.GetAsArray(PdfName.Kids)) != null) {
+                    for (int k = 0; k < nums.Size(); k++) {
+                        PdfDictionary kid = nums.GetAsDictionary(k);
+                        leftOver = FlattenNumTree(kid, leftOver, items);
+                    }
+                }
+            }
+            return null;
         }
 
         private bool CompareObjects(PdfObject outObj, PdfObject cmpObj, CompareTool.ObjectPath currentPath, CompareTool.CompareResult
