@@ -1352,13 +1352,15 @@ namespace iText.Layout.Renderer {
             bool isComplete = GetTable().IsComplete();
             bool isFooterRendererOfLargeTable = IsFooterRendererOfLargeTable();
             bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetStartRow() + heights.Count - 1);
-            if (hasFooter) {
-                ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(footerRenderer.bordersHandler.GetFirstHorizontalBorder
-                    ());
-            }
-            else {
-                if (isBottomTablePart) {
-                    ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null);
+            if (bordersHandler is CollapsedTableBorders) {
+                if (hasFooter) {
+                    ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(footerRenderer.bordersHandler.GetFirstHorizontalBorder
+                        ());
+                }
+                else {
+                    if (isBottomTablePart) {
+                        ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null);
+                    }
                 }
             }
             // we do not need to fix top border, because either this is header or the top border has been already written
