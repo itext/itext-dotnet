@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using iText.IO.Log;
 using iText.Test.Attributes;
 using log4net;
@@ -81,19 +80,13 @@ namespace iText.Test {
 
         private void CheckLogMessages(ITest testDetails) {
             int checkedMessages = 0;
-            LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
-            if (attributes.Length == 0) {
-                attributes = testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true)
-                    .Select(attr => (LogMessageAttribute) attr).ToArray();
-            }
+            LogMessageAttribute[] attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
             if (attributes.Length > 0) {
                 for (int i = 0; i < attributes.Length; i++) {
                     LogMessageAttribute logMessage = attributes[i];
                     int foundCount = Contains(logMessage.GetMessageTemplate());
                     if (foundCount != logMessage.Count && !logMessage.Ignore) {
-                        Assert.Fail(
-                            "{0} Expected to find {1}, but found {2} messages with the following content: \"{3}\"",
-                            testDetails.FullName, logMessage.Count, foundCount, logMessage.GetMessageTemplate());
+                        LogListenerHelper.FailWrongMessageCount(logMessage.Count, foundCount, logMessage.GetMessageTemplate(), testDetails);
                     } else {
                         checkedMessages += foundCount;
                     }
@@ -101,23 +94,7 @@ namespace iText.Test {
             }
 
             if (GetSize() > checkedMessages) {
-                Assert.Fail("{0}: The test does not check the message logging - {1} messages",
-                    testDetails.FullName,
-                    GetSize() - checkedMessages);
-            }
-        }
-
-        /*
-        * compare  parametrized message with  base template, for example:
-        *  "Hello fox1 , World  fox2 !" with "Hello {0} , World {1} !"
-        * */
-
-        private bool EqualsMessageByTemplate(string message, string template) {
-            if (template.Contains("{") && template.Contains("}")) {
-                String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.)*?");
-                return Regex.IsMatch(message, templateWithoutParameters, RegexOptions.Singleline);
-            } else {
-                return message.Contains(template);
+                LogListenerHelper.FailWrongTotalCount(GetSize(), checkedMessages, testDetails);
             }
         }
 
@@ -125,7 +102,7 @@ namespace iText.Test {
             LoggingEvent[] eventList = appender.GetEvents();
             int index = 0;
             for (int i = 0; i < eventList.Length; i++) {
-                if (EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement)) {
+                if (LogListenerHelper.EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement)) {
                     index++;
                 }
             }
