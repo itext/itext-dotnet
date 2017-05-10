@@ -298,11 +298,11 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 26)]
+        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 28)]
         public virtual void CopyFieldsTest12() {
             String srcFilename1 = sourceFolder + "datasheet.pdf";
             String srcFilename2 = sourceFolder + "datasheet2.pdf";
-            String destFilename = sourceFolder + "copyFields12.pdf";
+            String destFilename = destinationFolder + "copyFields12.pdf";
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
             PdfDocument srcDoc2 = new PdfDocument(new PdfReader(srcFilename2));
             srcDoc2.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
@@ -313,9 +313,10 @@ namespace iText.Forms {
             destDoc.FlushCopiedObjects(srcDoc1);
             srcDoc1.Close();
             destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields12.pdf"
+                , destinationFolder, "diff_"));
         }
 
-        //Assert.assertNull(new CompareTool().compareByContent(destFilename, sourceFolder + "cmp_copyFields12.pdf", destinationFolder, "diff_"));
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

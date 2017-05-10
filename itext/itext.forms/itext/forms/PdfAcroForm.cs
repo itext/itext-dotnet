@@ -1098,7 +1098,7 @@ namespace iText.Forms {
         /// </param>
         private void MergeResources(PdfDictionary result, PdfDictionary source) {
             foreach (PdfName name in resourceNames) {
-                PdfDictionary dic = source.GetAsDictionary(name);
+                PdfDictionary dic = source.IsFlushed() ? null : source.GetAsDictionary(name);
                 PdfDictionary res = result.GetAsDictionary(name);
                 if (res == null) {
                     res = new PdfDictionary();
