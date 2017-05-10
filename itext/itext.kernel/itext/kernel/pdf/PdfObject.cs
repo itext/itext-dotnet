@@ -67,25 +67,76 @@ namespace iText.Kernel.Pdf {
 
         public const byte STRING = 10;
 
+        /// <summary>Indicates if the object has been flushed.</summary>
         protected internal const short FLUSHED = 1;
 
+        /// <summary>Indicates that the indirect reference of the object could be reused or have to be marked as free.
+        ///     </summary>
         protected internal const short FREE = 1 << 1;
 
+        /// <summary>Indicates that definition of the indirect reference of the object still not found (e.g.</summary>
+        /// <remarks>Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
+        ///     </remarks>
         protected internal const short READING = 1 << 2;
 
+        /// <summary>Indicates that object changed (is used in append mode).</summary>
         protected internal const short MODIFIED = 1 << 3;
 
+        /// <summary>Indicates that the indirect reference of the object represents ObjectStream from original document.
+        ///     </summary>
+        /// <remarks>
+        /// Indicates that the indirect reference of the object represents ObjectStream from original document.
+        /// When PdfReader read ObjectStream reference marked as OriginalObjectStream
+        /// to avoid further reusing.
+        /// </remarks>
         protected internal const short ORIGINAL_OBJECT_STREAM = 1 << 4;
 
+        /// <summary>For internal usage only.</summary>
+        /// <remarks>
+        /// For internal usage only. Marks objects that shall be written to the output document.
+        /// Option is needed to build the correct PDF objects tree when closing the document.
+        /// As a result it avoids writing unused (removed) objects.
+        /// </remarks>
         protected internal const short MUST_BE_FLUSHED = 1 << 5;
 
+        /// <summary>Indicates that the object shall be indirect when it is written to the document.</summary>
+        /// <remarks>
+        /// Indicates that the object shall be indirect when it is written to the document.
+        /// It is used to postpone the creation of indirect reference for the objects that shall be indirect,
+        /// so it is possible to create such objects without PdfDocument instance.
+        /// </remarks>
         protected internal const short MUST_BE_INDIRECT = 1 << 6;
 
+        /// <summary>Indicates that the object is highly sensitive and we do not want to release it even if release() is called.
+        ///     </summary>
+        /// <remarks>
+        /// Indicates that the object is highly sensitive and we do not want to release it even if release() is called.
+        /// This flag can be set in stamping mode in object wrapper constructors and is automatically set when setModified
+        /// flag is set (we do not want to release changed objects).
+        /// The flag is set automatically for some wrappers that need document even in reader mode (FormFields etc).
+        /// </remarks>
         protected internal const short FORBID_RELEASE = 1 << 7;
 
+        /// <summary>
+        /// Indicates that we do not want this object to be ever written into the resultant document
+        /// (because of multiple objects read from the same reference inconsistency).
+        /// </summary>
         protected internal const short READ_ONLY = 1 << 8;
 
+        /// <summary>Indicates that this object is not encrypted in the encrypted document.</summary>
+        /// <remarks>
+        /// Indicates that this object is not encrypted in the encrypted document.
+        /// E.g. digital signature dictionary /Contents entry shall not be encrypted.
+        /// </remarks>
         protected internal const short UNENCRYPTED = 1 << 9;
+
+        /// <summary>Indicates, that the reference content set to null.</summary>
+        /// <remarks>
+        /// Indicates, that the reference content set to null.
+        /// Used by
+        /// <see cref="PdfDocument.FlushCopiedObjects(PdfDocument, bool)"/>
+        /// </remarks>
+        protected internal const short FLUSHED_CONTENT = 1 << 10;
 
         /// <summary>If object is flushed the indirect reference is kept here.</summary>
         protected internal PdfIndirectReference indirectReference = null;
@@ -94,27 +145,6 @@ namespace iText.Kernel.Pdf {
         ///     </summary>
         private short state;
 
-        // Indicates if the object has been flushed.
-        // Indicates that the indirect reference of the object could be reused or have to be marked as free.
-        // Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
-        // Indicates that object changed (is used in append mode).
-        // Indicates that the indirect reference of the object represents ObjectStream from original document.
-        // When PdfReader read ObjectStream reference marked as OriginalObjectStream
-        // to avoid further reusing.
-        // For internal usage only. Marks objects that shall be written to the output document.
-        // Option is needed to build the correct PDF objects tree when closing the document.
-        // As a result it avoids writing unused (removed) objects.
-        // Indicates that the object shall be indirect when it is written to the document.
-        // It is used to postpone the creation of indirect reference for the objects that shall be indirect,
-        // so it is possible to create such objects without PdfDocument instance.
-        // Indicates that the object is highly sensitive and we do not want to release it even if release() is called.
-        // This flag can be set in stamping mode in object wrapper constructors and is automatically set when setModified
-        // flag is set (we do not want to release changed objects).
-        // The flag is set automatically for some wrappers that need document even in reader mode (FormFields etc).
-        // Indicates that we do not want this object to be ever written into the resultant document
-        // (because of multiple objects read from the same reference inconsistency).
-        // Indicates that this object is not encrypted in the encrypted document.
-        // E.g. digital signature dictionary /Contents entry shall not be encrypted.
         /// <summary>Gets object type.</summary>
         /// <returns>object type.</returns>
         public abstract byte GetObjectType();

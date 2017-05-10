@@ -482,14 +482,10 @@ namespace iText.Kernel.Pdf {
                     GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
-                    if (annot.GetSubtype().Equals(PdfName.Widget)) {
-                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                            , false))), false);
-                    }
-                    else {
-                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                            , true))), false);
-                    }
+                    bool isWidget = PdfName.Widget.Equals(annot.GetSubtype());
+                    // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
+                    page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
+                        (PdfName.P, PdfName.Parent), !isWidget)), false);
                 }
             }
             if (toDocument.IsTagged()) {

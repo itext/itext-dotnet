@@ -1090,6 +1090,19 @@ namespace iText.Kernel.Pdf {
             return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier);
         }
 
+        /// <summary>Flush all copied objects.</summary>
+        /// <param name="sourceDoc">source document</param>
+        /// <param name="freeReferences">
+        /// if true, refersTo will be set to
+        /// <see langword="null"/>
+        /// .
+        /// </param>
+        public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc, bool freeReferences) {
+            if (GetWriter() != null) {
+                GetWriter().FlushCopiedObjects(sourceDoc.GetDocumentId(), freeReferences);
+            }
+        }
+
         /// <summary>
         /// Checks, whether
         /// <see cref="Close()"/>
@@ -2120,11 +2133,11 @@ namespace iText.Kernel.Pdf {
         /// an unique object key during the copy process.
         /// </remarks>
         internal class IndirectRefDescription {
-            private long docId;
+            internal readonly long docId;
 
-            private int objNr;
+            internal readonly int objNr;
 
-            private int genNr;
+            internal readonly int genNr;
 
             internal IndirectRefDescription(PdfIndirectReference reference) {
                 this.docId = reference.GetDocument().GetDocumentId();

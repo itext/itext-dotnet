@@ -383,6 +383,32 @@ namespace iText.Kernel.Pdf {
             return CalculateIndRefKey(obj.GetIndirectReference());
         }
 
+        /// <summary>Flush all copied objects.</summary>
+        /// <param name="docId">id of the source document</param>
+        /// <param name="freeReferences">
+        /// if true, refersTo will be set to
+        /// <see langword="null"/>
+        /// .
+        /// </param>
+        internal virtual void FlushCopiedObjects(long docId, bool freeReferences) {
+            foreach (KeyValuePair<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObject in copiedObjects
+                ) {
+                if (copiedObject.Key.docId == docId) {
+                    if (copiedObject.Value.refersTo != null) {
+                        copiedObject.Value.refersTo.Flush();
+                        if (freeReferences) {
+                            copiedObject.Value.SetState(PdfObject.FLUSHED_CONTENT);
+                            copiedObject.Value.refersTo = null;
+                        }
+                    }
+                }
+            }
+            if (freeReferences) {
+                serializedContentToObjectRef.Clear();
+                objectRefToSerializedContent.Clear();
+            }
+        }
+
         /// <summary>Used in the smart mode.</summary>
         /// <remarks>
         /// Used in the smart mode.
