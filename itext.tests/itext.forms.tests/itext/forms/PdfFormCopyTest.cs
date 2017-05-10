@@ -254,6 +254,46 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CopyFieldsTest10() {
+            String srcFilename1 = sourceFolder + "datasheet.pdf";
+            String srcFilename2 = sourceFolder + "datasheet2.pdf";
+            String destFilename = destinationFolder + "copyFieldsTest10.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties()));
+            PdfDocument srcDoc1 = new PdfDocument(new PdfReader(srcFilename1));
+            srcDoc1.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc1);
+            srcDoc1.Close();
+            PdfDocument srcDoc2 = new PdfDocument(new PdfReader(srcFilename2));
+            srcDoc2.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc2);
+            srcDoc2.Close();
+            destDoc.Close();
+        }
+
+        //Assert.assertNull(new CompareTool().compareByContent(destFilename, sourceFolder + "cmp_copyFields09.pdf", destinationFolder, "diff_"));
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CopyFieldsTest11() {
+            String srcFilename1 = sourceFolder + "datasheet.pdf";
+            String srcFilename2 = sourceFolder + "datasheet2.pdf";
+            String destFilename = sourceFolder + "copyFieldsTest11.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
+            PdfDocument srcDoc2 = new PdfDocument(new PdfReader(srcFilename2));
+            srcDoc2.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc2);
+            srcDoc2.Close();
+            PdfDocument srcDoc1 = new PdfDocument(new PdfReader(srcFilename1));
+            srcDoc1.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc1);
+            srcDoc1.Close();
+            destDoc.Close();
+        }
+
+        //Assert.assertNull(new CompareTool().compareByContent(destFilename, sourceFolder + "cmp_copyFields09.pdf", destinationFolder, "diff_"));
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CopyPagesWithInheritedResources() {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
             String destFile = destinationFolder + "AnnotationSampleStandard_copy.pdf";
