@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
@@ -76,8 +74,8 @@ namespace iText.Kernel.Pdf {
         private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new Dictionary
             <PdfDocument.IndirectRefDescription, PdfIndirectReference>();
 
-        /// <summary>Is used in smart mode to store serialized objects content.</summary>
-        private PdfWriter.SerializeCache serializeCache = new PdfWriter.SerializeCache();
+        /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
+        private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -274,10 +272,10 @@ namespace iText.Kernel.Pdf {
                     tryToFindDuplicate = false;
                 }
             }
-            PdfWriter.SerializedPdfObject objectKey = null;
+            SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
-                objectKey = serializeCache.SerializeObject(obj);
-                PdfIndirectReference objectRef = serializeCache.Get(objectKey);
+                serializedContent = smartModeSerializer.SerializeObject(obj);
+                PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
                 if (objectRef != null) {
                     copiedObjects.Put(copiedObjectKey, objectRef);
                     return objectRef.refersTo;
@@ -289,8 +287,8 @@ namespace iText.Kernel.Pdf {
                     copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
                 PdfIndirectReference indRef = newObject.MakeIndirect(documentTo).GetIndirectReference();
-                if (objectKey != null) {
-                    serializeCache.Put(objectKey, indRef);
+                if (serializedContent != null) {
+                    smartModeSerializer.SaveSerializedObject(serializedContent, indRef);
                 }
                 copiedObjects.Put(copiedObjectKey, indRef);
             }
@@ -443,183 +441,6 @@ namespace iText.Kernel.Pdf {
         private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType) {
             return dictionary.IsDictionary() && expectedType.Equals(((PdfDictionary)dictionary).GetAsName(PdfName.Type
                 ));
-        }
-
-        private class SerializeCache {
-            private IDigest md5;
-
-            private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializeCache = new Dictionary<PdfWriter.SerializedPdfObject
-                , PdfIndirectReference>();
-
-            internal SerializeCache() {
-                try {
-                    md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
-                }
-                catch (Exception e) {
-                    throw new PdfException(e);
-                }
-            }
-
-            internal virtual PdfWriter.SerializedPdfObject SerializeObject(PdfObject obj) {
-                if (!obj.IsStream() && !obj.IsDictionary()) {
-                    return null;
-                }
-                System.Diagnostics.Debug.Assert(obj.GetIndirectReference() != null);
-                IDictionary<PdfIndirectReference, byte[]> serializedCache = obj.GetIndirectReference().GetDocument().referenceCache;
-                byte[] content = serializedCache.Get(obj.GetIndirectReference());
-                if (content == null) {
-                    ByteBufferOutputStream bb = new ByteBufferOutputStream();
-                    int level = 100;
-                    SerObject(obj, bb, level, serializedCache);
-                    content = bb.ToByteArray();
-                }
-                return new PdfWriter.SerializedPdfObject(content);
-            }
-
-            internal virtual void Put(PdfWriter.SerializedPdfObject objectKey, PdfIndirectReference reference) {
-                serializeCache.Put(objectKey, reference);
-            }
-
-            internal virtual PdfIndirectReference Get(PdfWriter.SerializedPdfObject objectKey) {
-                if (objectKey != null) {
-                    return serializeCache.Get(objectKey);
-                }
-                else {
-                    return null;
-                }
-            }
-
-            private void SerObject(PdfObject obj, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-                , byte[]> serializedCache) {
-                if (level <= 0) {
-                    return;
-                }
-                if (obj == null) {
-                    bb.Append("$Lnull");
-                    return;
-                }
-                PdfIndirectReference reference = null;
-                ByteBufferOutputStream savedBb = null;
-                PdfDocument.IndirectRefDescription indRefKey = null;
-                if (obj.IsIndirectReference()) {
-                    reference = (PdfIndirectReference)obj;
-                    byte[] cached = serializedCache.Get(reference);
-                    if (cached != null) {
-                        bb.Append(cached);
-                        return;
-                    }
-                    else {
-                        savedBb = bb;
-                        bb = new ByteBufferOutputStream();
-                        obj = reference.GetRefersTo();
-                    }
-                }
-                if (obj.IsStream()) {
-                    SerDic((PdfDictionary)obj, bb, level - 1, serializedCache);
-                    bb.Append("$B");
-                    if (level > 0) {
-                        md5.Reset();
-                        bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
-                    }
-                }
-                else {
-                    if (obj.IsDictionary()) {
-                        SerDic((PdfDictionary)obj, bb, level - 1, serializedCache);
-                    }
-                    else {
-                        if (obj.IsArray()) {
-                            SerArray((PdfArray)obj, bb, level - 1, serializedCache);
-                        }
-                        else {
-                            if (obj.IsString()) {
-                                bb.Append("$S").Append(obj.ToString());
-                            }
-                            else {
-                                if (obj.IsName()) {
-                                    bb.Append("$N").Append(obj.ToString());
-                                }
-                                else {
-                                    bb.Append("$L").Append(obj.ToString());
-                                }
-                            }
-                        }
-                    }
-                }
-                // PdfNull case is also here
-                if (savedBb != null) {
-                    serializedCache.Put(reference, bb.GetBuffer());
-                    savedBb.Append(bb);
-                }
-            }
-
-            private void SerDic(PdfDictionary dic, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-                , byte[]> serializedCache) {
-                bb.Append("$D");
-                if (level <= 0) {
-                    return;
-                }
-                PdfName[] keys = new PdfName[dic.KeySet().Count];
-                keys = dic.KeySet().ToArray(keys);
-                iText.IO.Util.JavaUtil.Sort(keys);
-                foreach (Object key in keys) {
-                    if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
-                        ()) || key.Equals(PdfName.Parent)) {
-                        // ignore recursive call
-                        continue;
-                    }
-                    SerObject((PdfObject)key, bb, level, serializedCache);
-                    SerObject(dic.Get((PdfName)key, false), bb, level, serializedCache);
-                }
-                bb.Append("$\\D");
-            }
-
-            private void SerArray(PdfArray array, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-                , byte[]> serializedCache) {
-                bb.Append("$A");
-                if (level <= 0) {
-                    return;
-                }
-                for (int k = 0; k < array.Size(); ++k) {
-                    SerObject(array.Get(k, false), bb, level, serializedCache);
-                }
-                bb.Append("$\\A");
-            }
-        }
-
-        private class SerializedPdfObject {
-            private readonly byte[] serializedContent;
-
-            private readonly int hash;
-
-            internal SerializedPdfObject(byte[] serializedContent) {
-                this.serializedContent = serializedContent;
-                this.hash = CalculateHash(serializedContent);
-            }
-
-            /// <summary>Compares this PdfWriter to the obj.</summary>
-            /// <remarks>
-            /// Compares this PdfWriter to the obj.
-            /// Two PdfWriters are equal if their hashcodes are equal and their serialized content are equal.
-            /// </remarks>
-            /// <param name="obj">obj to compare</param>
-            /// <returns>True if this and obj are equal, false otherwise</returns>
-            public override bool Equals(Object obj) {
-                return obj is PdfWriter.SerializedPdfObject && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
-                    (serializedContent, ((PdfWriter.SerializedPdfObject)obj).serializedContent);
-            }
-
-            public override int GetHashCode() {
-                return hash;
-            }
-
-            private static int CalculateHash(byte[] b) {
-                int hash = 0;
-                int len = b.Length;
-                for (int k = 0; k < len; ++k) {
-                    hash = hash * 31 + (b[k] & 0xff);
-                }
-                return hash;
-            }
         }
     }
 }

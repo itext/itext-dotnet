@@ -161,9 +161,9 @@ namespace iText.Kernel.Pdf {
         private LinkedDictionary<PdfPage, IList<PdfLinkAnnotation>> linkAnnotations = new LinkedDictionary<PdfPage
             , IList<PdfLinkAnnotation>>();
 
-        /// <summary>Cache to avoid circular references in smart mode.</summary>
-        internal IDictionary<PdfIndirectReference, byte[]> referenceCache = new Dictionary<PdfIndirectReference, byte
-            []>();
+        /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
+        internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
+            , byte[]>();
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
