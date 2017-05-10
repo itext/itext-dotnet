@@ -943,7 +943,12 @@ namespace iText.Kernel.Pdf {
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
-                    annotations.Add(PdfAnnotation.MakeAnnotation(annot).SetPage(this));
+                    PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(annot);
+                    // PdfAnnotation.makeAnnotation returns null if annotation SubType is not recognized or not present at all
+                    // (although SubType is required according to the spec)
+                    if (annotation != null) {
+                        annotations.Add(annotation.SetPage(this));
+                    }
                 }
             }
             return annotations;
