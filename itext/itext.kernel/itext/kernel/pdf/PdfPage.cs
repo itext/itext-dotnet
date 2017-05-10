@@ -483,9 +483,13 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     bool isWidget = PdfName.Widget.Equals(annot.GetSubtype());
+                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
+                        (PdfName.P, PdfName.Parent), !isWidget));
+                    if (isWidget) {
+                        RebuildWidgetAnnotationParent(annot, newAnnot, toDocument);
+                    }
                     // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
-                    page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
-                        (PdfName.P, PdfName.Parent), !isWidget)), false);
+                    page.AddAnnotation(-1, newAnnot, false);
                 }
             }
             if (toDocument.IsTagged()) {
@@ -1525,6 +1529,22 @@ namespace iText.Kernel.Pdf {
                 if (cropBox != null) {
                     copyPdfPage.SetCropBox(cropBox.ToRectangle());
                 }
+            }
+        }
+
+        private void RebuildWidgetAnnotationParent(PdfAnnotation annot, PdfAnnotation newAnnot, PdfDocument toDocument
+            ) {
+            PdfDictionary oldParent = annot.GetPdfObject().GetAsDictionary(PdfName.Parent);
+            if (oldParent != null) {
+                PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
+                    .Kids, PdfName.Parent), false);
+                PdfArray kids = newParent.GetAsArray(PdfName.Kids);
+                if (kids == null) {
+                    kids = new PdfArray();
+                    newParent.Put(PdfName.Kids, kids);
+                }
+                kids.Add(newAnnot.GetPdfObject());
+                newAnnot.Put(PdfName.Parent, newParent);
             }
         }
     }

@@ -134,7 +134,9 @@ namespace iText.Forms {
                                             toPage.GetPdfObject().GetAsArray(PdfName.Annots).Add(field.GetPdfObject());
                                             toPage.RemoveAnnotation(annot);
                                         }
-                                        parentField.AddKid(field);
+                                        else {
+                                            parentField.AddKid(field);
+                                        }
                                     }
                                 }
                             }
