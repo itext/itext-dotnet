@@ -11,13 +11,6 @@ namespace iText.Kernel.Pdf {
             this.hash = CalculateHash(serializedContent);
         }
 
-        /// <summary>Compares this PdfWriter to the obj.</summary>
-        /// <remarks>
-        /// Compares this PdfWriter to the obj.
-        /// Two PdfWriters are equal if their hashcodes are equal and their serialized content are equal.
-        /// </remarks>
-        /// <param name="obj">obj to compare</param>
-        /// <returns>True if this and obj are equal, false otherwise</returns>
         public override bool Equals(Object obj) {
             return obj is iText.Kernel.Pdf.SerializedObjectContent && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
                 (serializedContent, ((iText.Kernel.Pdf.SerializedObjectContent)obj).serializedContent);

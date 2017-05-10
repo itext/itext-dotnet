@@ -71,7 +71,7 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new Dictionary
+        private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new LinkedDictionary
             <PdfDocument.IndirectRefDescription, PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
