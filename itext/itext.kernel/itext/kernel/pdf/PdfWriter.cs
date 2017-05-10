@@ -275,13 +275,14 @@ namespace iText.Kernel.Pdf {
                     tryToFindDuplicate = false;
                 }
             }
+            PdfWriter.SerializedPdfObject objectKey = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
-                PdfIndirectReference copiedObjectRef = TryToFindPreviouslyCopiedEqualObject(obj);
-                if (copiedObjectRef != null) {
-                    PdfIndirectReference copiedIndirectReference = copiedObjects.Get(new PdfDocument.IndirectRefDescription(copiedObjectRef
-                        ));
-                    copiedObjects.Put(copiedObjectKey, copiedIndirectReference);
-                    return copiedIndirectReference.GetRefersTo();
+                objectKey = GetSerializedPdfObject(obj);
+                if (objectKey != null) {
+                    PdfIndirectReference objectRef = serializedContentToObjectRef.Get(objectKey);
+                    if (objectRef != null) {
+                        return objectRef.refersTo;
+                    }
                 }
             }
             PdfObject newObject = obj.NewInstance();
@@ -290,6 +291,9 @@ namespace iText.Kernel.Pdf {
                     copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
                 PdfIndirectReference indRef = newObject.MakeIndirect(documentTo).GetIndirectReference();
+                if (objectKey != null) {
+                    serializedContentToObjectRef.Put(objectKey, indRef);
+                }
                 copiedObjects.Put(copiedObjectKey, indRef);
             }
             newObject.CopyContent(obj, documentTo);
@@ -409,24 +413,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Used in the smart mode.</summary>
-        /// <remarks>
-        /// Used in the smart mode.
-        /// It serializes given object content and tries to find previously copied object with the same content.
-        /// If already copied object is not found, it saves current object serialized content into the map.
-        /// </remarks>
-        /// <param name="object">an object to check if some other object with the same content was already copied.</param>
-        /// <returns>indirect reference of the object with the same content, which already has a copy in the new document.
-        ///     </returns>
-        private PdfIndirectReference TryToFindPreviouslyCopiedEqualObject(PdfObject @object) {
-            PdfWriter.SerializedPdfObject objectKey;
+        private PdfWriter.SerializedPdfObject GetSerializedPdfObject(PdfObject @object) {
             if (@object.IsStream() || @object.IsDictionary()) {
-                objectKey = new PdfWriter.SerializedPdfObject(@object);
-                PdfIndirectReference objectRef = serializedContentToObjectRef.Get(objectKey);
-                if (objectRef != null) {
-                    return objectRef;
-                }
-                serializedContentToObjectRef.Put(objectKey, @object.GetIndirectReference());
+                return new PdfWriter.SerializedPdfObject(@object);
             }
             return null;
         }
