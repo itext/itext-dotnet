@@ -134,7 +134,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Indicates, that the reference content set to null.
         /// Used by
-        /// <see cref="PdfDocument.FlushCopiedObjects(PdfDocument, bool)"/>
+        /// <see cref="PdfDocument.FlushCopiedObjects(PdfDocument)"/>
         /// </remarks>
         protected internal const short FLUSHED_CONTENT = 1 << 10;
 

@@ -162,8 +162,8 @@ namespace iText.Kernel.Pdf {
             , IList<PdfLinkAnnotation>>();
 
         /// <summary>Cache to avoid circular references in smart mode.</summary>
-        internal IDictionary<PdfIndirectReference, byte[]> objectToSerializedContent = new Dictionary<PdfIndirectReference
-            , byte[]>();
+        internal IDictionary<PdfIndirectReference, byte[]> referenceCache = new Dictionary<PdfIndirectReference, byte
+            []>();
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
@@ -1094,16 +1094,15 @@ namespace iText.Kernel.Pdf {
             return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier);
         }
 
-        /// <summary>Flush all copied objects.</summary>
+        /// <summary>Flush all copied objects and remove them from copied cache.</summary>
+        /// <remarks>
+        /// Flush all copied objects and remove them from copied cache.
+        /// Note, if you will copy objects from the same document, doublicated objects will be created.
+        /// </remarks>
         /// <param name="sourceDoc">source document</param>
-        /// <param name="freeReferences">
-        /// if true, refersTo will be set to
-        /// <see langword="null"/>
-        /// .
-        /// </param>
-        public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc, bool freeReferences) {
+        public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc) {
             if (GetWriter() != null) {
-                GetWriter().FlushCopiedObjects(sourceDoc.GetDocumentId(), freeReferences);
+                GetWriter().FlushCopiedObjects(sourceDoc.GetDocumentId());
             }
         }
 
