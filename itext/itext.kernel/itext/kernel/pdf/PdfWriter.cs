@@ -80,9 +80,6 @@ namespace iText.Kernel.Pdf {
         private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
             Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference>();
 
-        private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objectRefToSerializedContent = new Dictionary
-            <PdfDocument.IndirectRefDescription, byte[]>();
-
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
@@ -249,7 +246,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument document, bool allowDuplicating
+        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument documentTo, bool allowDuplicating
             ) {
             if (obj is PdfIndirectReference) {
                 obj = ((PdfIndirectReference)obj).GetRefersTo();
@@ -292,10 +289,10 @@ namespace iText.Kernel.Pdf {
                 if (copiedObjectKey == null) {
                     copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
-                PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
+                PdfIndirectReference indRef = newObject.MakeIndirect(documentTo).GetIndirectReference();
                 copiedObjects.Put(copiedObjectKey, indRef);
             }
-            newObject.CopyContent(obj, document);
+            newObject.CopyContent(obj, documentTo);
             return newObject;
         }
 
@@ -391,12 +388,14 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </param>
         internal virtual void FlushCopiedObjects(long docId, bool freeReferences) {
+            IList<PdfDocument.IndirectRefDescription> remove = new List<PdfDocument.IndirectRefDescription>();
             foreach (KeyValuePair<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObject in copiedObjects
                 ) {
                 if (copiedObject.Key.docId == docId) {
                     if (copiedObject.Value.refersTo != null) {
                         copiedObject.Value.refersTo.Flush();
                         if (freeReferences) {
+                            remove.Add(copiedObject.Key);
                             copiedObject.Value.SetState(PdfObject.FLUSHED_CONTENT);
                             copiedObject.Value.refersTo = null;
                         }
@@ -404,8 +403,9 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (freeReferences) {
-                serializedContentToObjectRef.Clear();
-                objectRefToSerializedContent.Clear();
+                foreach (PdfDocument.IndirectRefDescription ird in remove) {
+                    copiedObjects.JRemove(ird);
+                }
             }
         }
 
@@ -421,7 +421,7 @@ namespace iText.Kernel.Pdf {
         private PdfIndirectReference TryToFindPreviouslyCopiedEqualObject(PdfObject @object) {
             PdfWriter.SerializedPdfObject objectKey;
             if (@object.IsStream() || @object.IsDictionary()) {
-                objectKey = new PdfWriter.SerializedPdfObject(@object, objectRefToSerializedContent);
+                objectKey = new PdfWriter.SerializedPdfObject(@object);
                 PdfIndirectReference objectRef = serializedContentToObjectRef.Get(objectKey);
                 if (objectRef != null) {
                     return objectRef;
@@ -483,12 +483,12 @@ namespace iText.Kernel.Pdf {
 
             private IDigest md5;
 
-            private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent;
+            private IDictionary<PdfIndirectReference, byte[]> objToSerializedContent;
 
-            internal SerializedPdfObject(PdfObject obj, Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent
-                ) {
+            internal SerializedPdfObject(PdfObject obj) {
                 System.Diagnostics.Debug.Assert(obj.IsDictionary() || obj.IsStream());
-                this.objToSerializedContent = objToSerializedContent;
+                System.Diagnostics.Debug.Assert(obj.GetIndirectReference() != null);
+                objToSerializedContent = obj.GetIndirectReference().GetDocument().objectToSerializedContent;
                 try {
                     md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
                 }
@@ -518,8 +518,7 @@ namespace iText.Kernel.Pdf {
                 PdfDocument.IndirectRefDescription indRefKey = null;
                 if (obj.IsIndirectReference()) {
                     reference = (PdfIndirectReference)obj;
-                    indRefKey = new PdfDocument.IndirectRefDescription(reference);
-                    byte[] cached = objToSerializedContent.Get(indRefKey);
+                    byte[] cached = objToSerializedContent.Get(reference);
                     if (cached != null) {
                         bb.Append(cached);
                         return;
@@ -531,8 +530,8 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 if (obj.IsStream()) {
-                    bb.Append("$B");
                     SerDic((PdfDictionary)obj, level - 1, bb);
+                    bb.Append("$B");
                     if (level > 0) {
                         md5.Reset();
                         bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
@@ -563,7 +562,7 @@ namespace iText.Kernel.Pdf {
                 }
                 // PdfNull case is also here
                 if (savedBb != null) {
-                    objToSerializedContent.Put(indRefKey, bb.GetBuffer());
+                    objToSerializedContent.Put(reference, bb.GetBuffer());
                     savedBb.Append(bb);
                 }
             }
@@ -585,6 +584,7 @@ namespace iText.Kernel.Pdf {
                     SerObject((PdfObject)key, level, bb);
                     SerObject(dic.Get((PdfName)key, false), level, bb);
                 }
+                bb.Append("$\\D");
             }
 
             private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb) {
@@ -595,6 +595,7 @@ namespace iText.Kernel.Pdf {
                 for (int k = 0; k < array.Size(); ++k) {
                     SerObject(array.Get(k, false), level, bb);
                 }
+                bb.Append("$\\A");
             }
 
             private static int CalculateHash(byte[] b) {
