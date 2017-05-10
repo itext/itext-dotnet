@@ -19,18 +19,16 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        public virtual void SaveSerializedObject(SerializedObjectContent objectKey, PdfIndirectReference reference
+        public virtual void SaveSerializedObject(SerializedObjectContent serializedContent, PdfIndirectReference objectReference
             ) {
-            serializedContentToObj.Put(objectKey, reference);
+            serializedContentToObj.Put(serializedContent, objectReference);
         }
 
         public virtual PdfIndirectReference GetSavedSerializedObject(SerializedObjectContent serializedContent) {
             if (serializedContent != null) {
                 return serializedContentToObj.Get(serializedContent);
             }
-            else {
-                return null;
-            }
+            return null;
         }
 
         public virtual SerializedObjectContent SerializeObject(PdfObject obj) {
@@ -61,7 +59,6 @@ namespace iText.Kernel.Pdf {
             }
             PdfIndirectReference reference = null;
             ByteBufferOutputStream savedBb = null;
-            PdfDocument.IndirectRefDescription indRefKey = null;
             if (obj.IsIndirectReference()) {
                 reference = (PdfIndirectReference)obj;
                 byte[] cached = serializedCache.Get(reference);
@@ -79,7 +76,6 @@ namespace iText.Kernel.Pdf {
                 SerDic((PdfDictionary)obj, bb, level - 1, serializedCache);
                 bb.Append("$B");
                 if (level > 0) {
-                    md5.Reset();
                     bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
                 }
             }
@@ -96,6 +92,7 @@ namespace iText.Kernel.Pdf {
                             bb.Append("$S").Append(obj.ToString());
                         }
                         else {
+                            // TODO specify length for strings, streams, may be names?
                             if (obj.IsName()) {
                                 bb.Append("$N").Append(obj.ToString());
                             }
@@ -108,6 +105,7 @@ namespace iText.Kernel.Pdf {
             }
             // PdfNull case is also here
             if (savedBb != null) {
+                // TODO getBuffer? won't it contain garbage also?
                 serializedCache.Put(reference, bb.GetBuffer());
                 savedBb.Append(bb);
             }
@@ -119,17 +117,12 @@ namespace iText.Kernel.Pdf {
             if (level <= 0) {
                 return;
             }
-            PdfName[] keys = new PdfName[dic.KeySet().Count];
-            keys = dic.KeySet().ToArray(keys);
-            iText.IO.Util.JavaUtil.Sort(keys);
-            foreach (Object key in keys) {
-                if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
-                    ()) || key.Equals(PdfName.Parent)) {
-                    // ignore recursive call
+            foreach (PdfName key in dic.KeySet()) {
+                if (IsKeyRefersBack(dic, key)) {
                     continue;
                 }
-                SerObject((PdfObject)key, bb, level, serializedCache);
-                SerObject(dic.Get((PdfName)key, false), bb, level, serializedCache);
+                SerObject(key, bb, level, serializedCache);
+                SerObject(dic.Get(key, false), bb, level, serializedCache);
             }
             bb.Append("$\\D");
         }
@@ -144,6 +137,13 @@ namespace iText.Kernel.Pdf {
                 SerObject(array.Get(k, false), bb, level, serializedCache);
             }
             bb.Append("$\\A");
+        }
+
+        private bool IsKeyRefersBack(PdfDictionary dic, PdfName key) {
+            // TODO review this method?
+            // ignore recursive call
+            return key.Equals(PdfName.P) && (dic.Get(key).IsIndirectReference() || dic.Get(key).IsDictionary()) || key
+                .Equals(PdfName.Parent);
         }
     }
 }
