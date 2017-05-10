@@ -279,6 +279,7 @@ namespace iText.Kernel.Pdf {
                 objectKey = serializeCache.SerializeObject(obj);
                 PdfIndirectReference objectRef = serializeCache.Get(objectKey);
                 if (objectRef != null) {
+                    copiedObjects.Put(copiedObjectKey, objectRef);
                     return objectRef.refersTo;
                 }
             }
