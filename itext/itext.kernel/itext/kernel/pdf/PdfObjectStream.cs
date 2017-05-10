@@ -53,32 +53,17 @@ namespace iText.Kernel.Pdf {
         protected internal PdfNumber size = new PdfNumber(0);
 
         /// <summary>Stream containing object indices, a heading part of object stream.</summary>
-        protected internal PdfOutputStream indexStream = new PdfOutputStream(new ByteArrayOutputStream());
+        protected internal PdfOutputStream indexStream;
 
         public PdfObjectStream(PdfDocument doc)
             : base() {
-            //avoid reuse existed references
+            //avoid reuse existed references, create new, opposite to get next reference
             MakeIndirect(doc, doc.GetXref().CreateNewIndirectReference(doc));
             GetOutputStream().document = doc;
+            indexStream = new PdfOutputStream(new ByteArrayOutputStream());
             Put(PdfName.Type, PdfName.ObjStm);
             Put(PdfName.N, size);
             Put(PdfName.First, new PdfNumber(indexStream.GetCurrentPos()));
-        }
-
-        /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
-        /// <remarks>
-        /// This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.
-        /// NOTE Only for internal use in PdfWriter!
-        /// </remarks>
-        /// <param name="prev">previous PdfObjectStream.</param>
-        internal PdfObjectStream(iText.Kernel.Pdf.PdfObjectStream prev)
-            : this(prev.GetIndirectReference().GetDocument()) {
-            ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream().GetOutputStream();
-            prevOutputStream.JReset();
-            InitOutputStream(prevOutputStream);
-            ByteArrayOutputStream prevIndexStream = ((ByteArrayOutputStream)indexStream.GetOutputStream());
-            prevIndexStream.JReset();
-            indexStream = new PdfOutputStream(prevIndexStream);
         }
 
         /// <summary>Adds object to the object stream.</summary>
@@ -109,19 +94,13 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal override void ReleaseContent() {
-            ReleaseContent(false);
-        }
-
-        private void ReleaseContent(bool close) {
-            if (close) {
-                base.ReleaseContent();
-                try {
-                    indexStream.Dispose();
-                }
-                catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.IoException, e);
-                }
+            base.ReleaseContent();
+            try {
+                indexStream.Dispose();
                 indexStream = null;
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(PdfException.IoException, e);
             }
         }
     }
