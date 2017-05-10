@@ -329,5 +329,64 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff09_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1254")]
+        public virtual void FloatingImageInParagraph() {
+            String cmpFileName = sourceFolder + "cmp_floatingImageInParagraph.pdf";
+            String outFile = destinationFolder + "floatingImageInParagraph.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            // Image floats on the left inside the paragraph
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img1.SetMarginRight(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Paragraph p = new Paragraph();
+            p.Add(img1).Add(text);
+            document.Add(p);
+            // Image floats on the right inside the paragraph - BROKEN
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img2.SetMarginLeft(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            p = new Paragraph();
+            p.Add(img2).Add(text);
+            document.Add(p);
+            // Paragraph containing image floats on the right inside the paragraph
+            iText.Layout.Element.Image img3 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img3.SetMarginLeft(10);
+            p = new Paragraph();
+            p.Add(img3);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(p);
+            document.Add(new Paragraph(text));
+            // Image floats on the left inside short paragraph
+            iText.Layout.Element.Image img4 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img4.SetMarginRight(10);
+            img4.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p = new Paragraph();
+            p.Add(img4).Add("A little text.");
+            document.Add(p);
+            document.Add(new Paragraph(text));
+            // Image floats on the left inside short paragraph
+            iText.Layout.Element.Image img5 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img5.SetMarginRight(10);
+            img5.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p = new Paragraph();
+            p.Add(img4).Add("A little text.");
+            document.Add(p);
+            p = new Paragraph(text);
+            p.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff10_"));
+        }
     }
 }
