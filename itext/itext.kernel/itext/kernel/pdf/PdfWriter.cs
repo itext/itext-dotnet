@@ -187,7 +187,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (objectStream.GetSize() == PdfObjectStream.MAX_OBJ_STREAM_SIZE) {
                     objectStream.Flush();
-                    objectStream = new PdfObjectStream(document);
+                    objectStream = new PdfObjectStream(objectStream);
                 }
             }
             return objectStream;

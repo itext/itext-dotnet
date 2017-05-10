@@ -66,6 +66,24 @@ namespace iText.Kernel.Pdf {
             Put(PdfName.First, new PdfNumber(indexStream.GetCurrentPos()));
         }
 
+        /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
+        /// <remarks>
+        /// This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.
+        /// NOTE Only for internal use in PdfWriter!
+        /// </remarks>
+        /// <param name="prev">previous PdfObjectStream.</param>
+        internal PdfObjectStream(iText.Kernel.Pdf.PdfObjectStream prev)
+            : base(prev.GetOutputStream().GetOutputStream()) {
+            indexStream = new PdfOutputStream(prev.indexStream.GetOutputStream());
+            MakeIndirect(prev.GetIndirectReference().GetDocument());
+            ((ByteArrayOutputStream)outputStream.GetOutputStream()).JReset();
+            ((ByteArrayOutputStream)indexStream.GetOutputStream()).JReset();
+            prev.ReleaseContent(true);
+            Put(PdfName.Type, PdfName.ObjStm);
+            Put(PdfName.N, size);
+            Put(PdfName.First, new PdfNumber(indexStream.GetCurrentPos()));
+        }
+
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
         public virtual void AddObject(PdfObject @object) {
@@ -94,13 +112,14 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal override void ReleaseContent() {
-            base.ReleaseContent();
-            try {
-                indexStream.Dispose();
+            ReleaseContent(false);
+        }
+
+        private void ReleaseContent(bool close) {
+            if (close) {
+                outputStream = null;
                 indexStream = null;
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoException, e);
+                base.ReleaseContent();
             }
         }
     }
