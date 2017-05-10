@@ -235,6 +235,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 84)]
         public virtual void CopyFieldsTest09() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFieldsTest09.pdf";
@@ -242,7 +243,7 @@ namespace iText.Forms {
             // copying the same page from the same document twice
             for (int i = 0; i < 3; ++i) {
                 PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-                srcDoc.CopyPagesTo(1, 1, destDoc);
+                srcDoc.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
                 destDoc.FlushCopiedObjects(srcDoc);
                 srcDoc.Close();
             }

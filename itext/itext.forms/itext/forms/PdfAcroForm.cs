@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -110,6 +111,8 @@ namespace iText.Forms {
 
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
+
+        internal ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
             , PdfName.Pattern };
@@ -934,6 +937,10 @@ namespace iText.Forms {
             fields) {
             int index = 1;
             foreach (PdfObject field in array) {
+                if (field.IsFlushed()) {
+                    logger.Warn(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    continue;
+                }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 PdfString fieldName = formField.GetFieldName();
                 String name;
@@ -1042,9 +1049,9 @@ namespace iText.Forms {
         private IList<PdfDictionary> GetResources(PdfDictionary field) {
             IList<PdfDictionary> resources = new List<PdfDictionary>();
             PdfDictionary ap = field.GetAsDictionary(PdfName.AP);
-            if (ap != null) {
+            if (ap != null && !ap.IsFlushed()) {
                 PdfObject normal = ap.Get(PdfName.N);
-                if (normal != null) {
+                if (normal != null && !normal.IsFlushed()) {
                     if (normal.IsDictionary()) {
                         foreach (PdfName key in ((PdfDictionary)normal).KeySet()) {
                             PdfStream appearance = ((PdfDictionary)normal).GetAsStream(key);

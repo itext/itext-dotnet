@@ -155,9 +155,14 @@ namespace iText.Forms {
                                         field = MergeFieldsWithTheSameName(field, PdfFormField.MakeFormField(clonedAnnot, toPage.GetDocument()));
                                         logger.Warn(String.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
                                         PdfArray kids = field.GetKids();
-                                        field.GetPdfObject().Remove(PdfName.Kids);
-                                        formTo.AddField(field, toPage);
-                                        field.GetPdfObject().Put(PdfName.Kids, kids);
+                                        if (kids != null) {
+                                            field.GetPdfObject().Remove(PdfName.Kids);
+                                            formTo.AddField(field, toPage);
+                                            field.GetPdfObject().Put(PdfName.Kids, kids);
+                                        }
+                                        else {
+                                            formTo.AddField(field, toPage);
+                                        }
                                     }
                                     else {
                                         formTo.AddField(PdfFormField.MakeFormField(annot.GetPdfObject(), documentTo), null);
@@ -173,9 +178,19 @@ namespace iText.Forms {
         private PdfFormField MergeFieldsWithTheSameName(PdfFormField existingField, PdfFormField newField) {
             String fullFieldName = newField.GetFieldName().ToUnicodeString();
             PdfString fieldName = newField.GetPdfObject().GetAsString(PdfName.T);
+            existingField = formTo.GetField(fullFieldName);
+            if (existingField.IsFlushed()) {
+                int index = 0;
+                do {
+                    index++;
+                    newField.SetFieldName(fieldName.ToUnicodeString() + "_#" + index);
+                    fullFieldName = newField.GetFieldName().ToUnicodeString();
+                }
+                while (formTo.GetField(fullFieldName) != null);
+                return newField;
+            }
             newField.GetPdfObject().Remove(PdfName.T);
             newField.GetPdfObject().Remove(PdfName.P);
-            existingField = formTo.GetField(fullFieldName);
             PdfArray kids = existingField.GetKids();
             if (kids != null && !kids.IsEmpty()) {
                 existingField.AddKid(newField);
