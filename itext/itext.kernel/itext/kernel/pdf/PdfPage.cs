@@ -1538,6 +1538,10 @@ namespace iText.Kernel.Pdf {
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
                     .Kids, PdfName.Parent), false);
+                if (newParent.IsFlushed()) {
+                    newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
+                        .Parent), true);
+                }
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
                     kids = new PdfArray();

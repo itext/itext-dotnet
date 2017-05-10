@@ -235,6 +235,24 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CopyFieldsTest09() {
+            String srcFilename = sourceFolder + "datasheet.pdf";
+            String destFilename = destinationFolder + "copyFieldsTest09.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
+            // copying the same page from the same document twice
+            for (int i = 0; i < 3; ++i) {
+                PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+                srcDoc.CopyPagesTo(1, 1, destDoc);
+                destDoc.FlushCopiedObjects(srcDoc);
+                srcDoc.Close();
+            }
+            destDoc.Close();
+        }
+
+        //        Assert.assertNull(new CompareTool().compareByContent(destFilename, sourceFolder + "cmp_copyFields09.pdf", destinationFolder, "diff_"));
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CopyPagesWithInheritedResources() {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
             String destFile = destinationFolder + "AnnotationSampleStandard_copy.pdf";
