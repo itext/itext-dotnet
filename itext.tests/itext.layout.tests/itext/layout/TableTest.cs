@@ -1690,6 +1690,52 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FixedLayoutTest01() {
+            String testName = "fixedLayoutTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            // Initialize document
+            Document doc = new Document(pdf);
+            doc.Add(new Paragraph("Simple table with proportional width. Ignore cell width, because sum(col[*]) < tableWidth:"
+                ));
+            Table table = new Table(new float[] { 1, 2, 3 }).SetFixedLayout().SetWidth(400);
+            table.AddCell("1x");
+            table.AddCell("2x");
+            table.AddCell("3x");
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FixedLayoutTest02() {
+            String testName = "fixedLayoutTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            // Initialize document
+            Document doc = new Document(pdf);
+            doc.Add(new Paragraph("Simple table with proportional width. Ignore table width, because sum(col[*]) > tableWidth."
+                ));
+            Table table = new Table(new float[] { 20, 40, 60 }).SetFixedLayout().SetWidth(10);
+            table.AddCell("1x");
+            table.AddCell("2x");
+            table.AddCell("3x");
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
