@@ -331,5 +331,19 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, sourceFolder + "cmp_AnnotationSampleStandard_copy.pdf"
                 , destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void UnnamedFieldsHierarchyTest() {
+            String srcFilename = sourceFolder + "unnamedFields.pdf";
+            String destFilename = destinationFolder + "hierarchyTest.pdf";
+            PdfDocument src = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument merged = new PdfDocument(new PdfWriter(destFilename));
+            src.CopyPagesTo(1, 1, merged, new PdfPageFormCopier());
+            merged.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "unnamedFields.pdf"
+                , destinationFolder, "diff_"));
+        }
     }
 }

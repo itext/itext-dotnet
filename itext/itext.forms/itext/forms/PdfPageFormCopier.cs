@@ -135,7 +135,9 @@ namespace iText.Forms {
                                             toPage.RemoveAnnotation(annot);
                                         }
                                         else {
-                                            parentField.AddKid(field);
+                                            HashSet<String> existingFields = new HashSet<String>();
+                                            GetAllFieldNames(formTo.GetFields(), existingFields);
+                                            AddChildToExistingParent(annot.GetPdfObject(), existingFields);
                                         }
                                     }
                                 }
