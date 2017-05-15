@@ -601,6 +601,9 @@ namespace iText.Kernel.Pdf {
             if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
                 GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
             }
+            if (!GetPdfObject().ContainsKey(PdfName.Resources)) {
+                Put(PdfName.Resources, new PdfDictionary());
+            }
             if (flushResourcesContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
                 FlushResourcesContentStreams();
