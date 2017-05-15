@@ -482,10 +482,9 @@ namespace iText.Kernel.Pdf {
                     GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
-                    bool isWidget = PdfName.Widget.Equals(annot.GetSubtype());
                     PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
-                        (PdfName.P, PdfName.Parent), !isWidget));
-                    if (isWidget) {
+                        (PdfName.P, PdfName.Parent), true));
+                    if (PdfName.Widget.Equals(annot.GetSubtype())) {
                         RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
                     }
                     // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
@@ -1539,6 +1538,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument) {
+            if (newField.ContainsKey(PdfName.Parent)) {
+                return;
+            }
             PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
