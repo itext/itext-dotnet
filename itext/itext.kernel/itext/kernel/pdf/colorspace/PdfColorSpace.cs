@@ -60,6 +60,9 @@ namespace iText.Kernel.Pdf.Colorspace {
             if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
             }
+            if (pdfObject.IsArray() && ((PdfArray)pdfObject).Size() == 1) {
+                pdfObject = ((PdfArray)pdfObject).Get(0);
+            }
             if (PdfName.DeviceGray.Equals(pdfObject)) {
                 return new PdfDeviceCs.Gray();
             }
