@@ -486,7 +486,7 @@ namespace iText.Kernel.Pdf {
                     PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
                         (PdfName.P, PdfName.Parent), !isWidget));
                     if (isWidget) {
-                        RebuildWidgetAnnotationParent(annot, newAnnot, toDocument);
+                        RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
                     }
                     // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
                     page.AddAnnotation(-1, newAnnot, false);
@@ -598,11 +598,9 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
                 TryFlushPageTags();
             }
+            GetResources();
             if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
                 GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
-            }
-            if (!GetPdfObject().ContainsKey(PdfName.Resources)) {
-                Put(PdfName.Resources, new PdfDictionary());
             }
             if (flushResourcesContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
@@ -1540,9 +1538,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void RebuildWidgetAnnotationParent(PdfAnnotation annot, PdfAnnotation newAnnot, PdfDocument toDocument
-            ) {
-            PdfDictionary oldParent = annot.GetPdfObject().GetAsDictionary(PdfName.Parent);
+        private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument) {
+            PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
                     .Kids, PdfName.Parent), false);
@@ -1550,13 +1547,14 @@ namespace iText.Kernel.Pdf {
                     newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
                         .Parent), true);
                 }
+                RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
                     kids = new PdfArray();
                     newParent.Put(PdfName.Kids, kids);
                 }
-                kids.Add(newAnnot.GetPdfObject());
-                newAnnot.Put(PdfName.Parent, newParent);
+                kids.Add(newField);
+                newField.Put(PdfName.Parent, newParent);
             }
         }
     }

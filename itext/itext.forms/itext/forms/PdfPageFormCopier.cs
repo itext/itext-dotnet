@@ -266,13 +266,15 @@ namespace iText.Forms {
         private void GetAllFieldNames(PdfArray fields, ICollection<String> existingFields) {
             foreach (PdfObject field in fields) {
                 PdfDictionary dic = (PdfDictionary)field;
-                PdfString name = dic.GetAsString(PdfName.T);
-                if (name != null) {
-                    existingFields.Add(name.ToUnicodeString());
-                }
-                PdfArray kids = dic.GetAsArray(PdfName.Kids);
-                if (kids != null) {
-                    GetAllFieldNames(kids, existingFields);
+                if (!dic.IsFlushed()) {
+                    PdfString name = dic.GetAsString(PdfName.T);
+                    if (name != null) {
+                        existingFields.Add(name.ToUnicodeString());
+                    }
+                    PdfArray kids = dic.GetAsArray(PdfName.Kids);
+                    if (kids != null) {
+                        GetAllFieldNames(kids, existingFields);
+                    }
                 }
             }
         }
