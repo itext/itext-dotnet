@@ -342,7 +342,7 @@ namespace iText.Forms {
             PdfDocument merged = new PdfDocument(new PdfWriter(destFilename));
             src.CopyPagesTo(1, 1, merged, new PdfPageFormCopier());
             merged.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "unnamedFields.pdf"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_unnamedFieldsHierarchyTest.pdf"
                 , destinationFolder, "diff_"));
         }
     }
