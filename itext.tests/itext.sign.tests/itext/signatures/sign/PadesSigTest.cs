@@ -99,10 +99,10 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesEccSigTest01() {
             SignApproval(certsSrc + "signCertEcc01.p12", destinationFolder + "padesEccSigTest01.pdf");
+            // TODO ECDSA encryption algorithms verification is not supported
+            BasicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
         }
 
-        // TODO ECDSA encryption algorithms verification is not supported
-        //        basicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
