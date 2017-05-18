@@ -198,13 +198,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             int row;
             int col;
-            if (IsPositioned()) {
-                if (IsFixedLayout()) {
-                    float x = (float)this.GetPropertyAsFloat(Property.X);
-                    float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
-                    layoutBox.SetX(relativeX + x);
-                }
-            }
+            ApplyFixedXOrYPosition(true, layoutBox);
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
@@ -759,10 +753,12 @@ namespace iText.Layout.Renderer {
                                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                                 }
                             }
+                            ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
                         }
                         else {
+                            ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             if (HasProperty(Property.HEIGHT)) {
                                 splitResult[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
@@ -875,13 +871,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                 }
             }
-            if (IsPositioned()) {
-                if (IsFixedLayout()) {
-                    float y = (float)this.GetPropertyAsFloat(Property.Y);
-                    float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
-                    Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
-                }
-            }
+            ApplyFixedXOrYPosition(false, layoutBox);
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
@@ -1421,6 +1411,21 @@ namespace iText.Layout.Renderer {
                 }
             }
             return rowHeight + maxHeight;
+        }
+
+        private void ApplyFixedXOrYPosition(bool isXPosition, Rectangle layoutBox) {
+            if (IsPositioned()) {
+                if (IsFixedLayout()) {
+                    if (isXPosition) {
+                        float x = (float)this.GetPropertyAsFloat(Property.X);
+                        layoutBox.SetX(x);
+                    }
+                    else {
+                        float y = (float)this.GetPropertyAsFloat(Property.Y);
+                        Move(0, y - occupiedArea.GetBBox().GetY());
+                    }
+                }
+            }
         }
 
         /// <summary>If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.

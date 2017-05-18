@@ -1736,6 +1736,38 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        public virtual void FixedPositionTest01() {
+            String testName = "fixedPositionTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            // Initialize document
+            Document doc = new Document(pdf);
+            Table table = new Table(1);
+            for (int i = 0; i < 100; i++) {
+                table.AddCell(new Cell().Add("Hello " + i).SetBackgroundColor(Color.RED));
+            }
+            table.SetFixedPosition(150, 300, 200);
+            table.SetHeight(300);
+            table.SetBackgroundColor(Color.YELLOW);
+            doc.Add(new Paragraph("The next table has fixed position and height property. However set height is shorter than needed and we can place table only partially."
+                ));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetHeight(10);
+            doc.Add(new Paragraph("The next table has fixed position and height property. However set height is shorter than needed and we cannot fully place even a cell."
+                ));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
