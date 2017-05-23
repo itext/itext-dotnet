@@ -129,7 +129,7 @@ namespace iText.Layout.Renderer {
                                     // set percent only to cells without one
                                     for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
                                         if (!widths[i].isPercent) {
-                                            widths[i].SetPercents(percentAddition / pointColumns).SetFixed(true);
+                                            widths[i].SetPercents(percentAddition / pointColumns);
                                         }
                                     }
                                 }
@@ -165,16 +165,18 @@ namespace iText.Layout.Renderer {
                                 if (flexibleCols > 0) {
                                     // check min width in columns
                                     for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        if (!widths[i].isFixed && widths[i].CheckCollision(colspanRemain / flexibleCols)) {
+                                        if (widths[i].IsFlexible() && widths[i].CheckCollision(colspanRemain / flexibleCols)) {
                                             widths[i].SetPoints(widths[i].min).SetFixed(true);
-                                            if ((colspanRemain -= widths[i].min) <= 0 || flexibleCols-- <= 0) {
+                                            colspanRemain -= widths[i].min;
+                                            flexibleCols--;
+                                            if (colspanRemain <= 0 || flexibleCols <= 0) {
                                                 break;
                                             }
                                         }
                                     }
                                     if (colspanRemain > 0 && flexibleCols > 0) {
                                         for (int k = cell.GetCol(); k < cell.GetCol() + cell.GetColspan(); k++) {
-                                            if (!widths[k].isFixed) {
+                                            if (widths[k].IsFlexible()) {
                                                 widths[k].AddPoints(colspanRemain / flexibleCols).SetFixed(true);
                                             }
                                         }
@@ -190,27 +192,21 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (!widths[cell.GetCol()].isFixed) {
+                    if (widths[cell.GetCol()].IsFlexible()) {
                         //if there is no information, try to set max width
                         int flexibleCols = 0;
                         float remainWidth = 0;
                         for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                            if (!widths[i].isFixed && !widths[i].isPercent) {
+                            if (widths[i].IsFlexible()) {
                                 remainWidth += widths[i].max - widths[i].width;
                                 flexibleCols++;
                             }
                         }
                         if (remainWidth > 0) {
-                            if (flexibleCols > 0) {
-                                for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                    if (!widths[i].isFixed && !widths[i].isPercent) {
-                                        widths[i].AddPoints(remainWidth / flexibleCols);
-                                    }
-                                }
-                            }
-                            else {
-                                for (int k = cell.GetCol(); k < cell.GetCol() + cell.GetColspan(); k++) {
-                                    widths[k].AddPoints(remainWidth / cell.GetColspan());
+                            // flexibleCols > 0 too
+                            for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                                if (widths[i].IsFlexible()) {
+                                    widths[i].AddPoints(remainWidth / flexibleCols);
                                 }
                             }
                         }
@@ -230,11 +226,10 @@ namespace iText.Layout.Renderer {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
                 if (colWidth.GetValue() >= 0) {
                     if (colWidth.IsPercentValue()) {
-                        if (!widths[i].isPercent && widths[i].isFixed && widths[i].width > widths[i].min) {
-                            widths[i].max = widths[i].width;
-                            widths[i].SetFixed(false);
-                        }
                         if (!widths[i].isPercent) {
+                            if (widths[i].isFixed && widths[i].width > widths[i].min) {
+                                widths[i].max = widths[i].width;
+                            }
                             widths[i].SetPercents(colWidth.GetValue());
                         }
                     }
@@ -244,7 +239,7 @@ namespace iText.Layout.Renderer {
                                 widths[i].SetPoints(colWidth.GetValue());
                             }
                             else {
-                                widths[i].ResetPoints(colWidth.GetValue());
+                                widths[i].ResetPoints(colWidth.GetValue()).SetFixed(true);
                             }
                         }
                     }
@@ -273,7 +268,7 @@ namespace iText.Layout.Renderer {
                         else {
                             if (sumOfPercents >= 100) {
                                 widths[i].ResetPoints(widths[i].min);
-                                minTableWidth += widths[i].width;
+                                minTableWidth += widths[i].min;
                                 Warn100percent();
                             }
                             else {
@@ -397,7 +392,8 @@ namespace iText.Layout.Renderer {
                             float extraWidth = tableWidth - totalPercent - minTotalNonPercent;
                             if (fixedAddition > 0 && (extraWidth < fixedAddition || flexibleAddition == 0)) {
                                 for (int i = 0; i < numberOfColumns; i++) {
-                                    if (!widths[i].isPercent && widths[i].isFixed) {
+                                    //only points could be fixed
+                                    if (widths[i].isFixed) {
                                         widths[i].finalWidth += (widths[i].width - widths[i].min) * extraWidth / fixedAddition;
                                     }
                                 }
@@ -406,11 +402,11 @@ namespace iText.Layout.Renderer {
                                 extraWidth -= fixedAddition;
                                 if (extraWidth < flexibleAddition) {
                                     for (int i = 0; i < numberOfColumns; i++) {
-                                        if (!widths[i].isPercent) {
-                                            if (widths[i].isFixed) {
-                                                widths[i].finalWidth = widths[i].width;
-                                            }
-                                            else {
+                                        if (widths[i].isFixed) {
+                                            widths[i].finalWidth = widths[i].width;
+                                        }
+                                        else {
+                                            if (!widths[i].isPercent) {
                                                 widths[i].finalWidth += (widths[i].width - widths[i].min) * extraWidth / flexibleAddition;
                                             }
                                         }
@@ -420,12 +416,12 @@ namespace iText.Layout.Renderer {
                                     float totalFixed = 0;
                                     float totalFlexible = 0;
                                     for (int i = 0; i < numberOfColumns; i++) {
-                                        if (!widths[i].isPercent) {
-                                            if (widths[i].isFixed) {
-                                                widths[i].finalWidth = widths[i].width;
-                                                totalFixed += widths[i].width;
-                                            }
-                                            else {
+                                        if (widths[i].isFixed) {
+                                            widths[i].finalWidth = widths[i].width;
+                                            totalFixed += widths[i].width;
+                                        }
+                                        else {
+                                            if (!widths[i].isPercent) {
                                                 totalFlexible += widths[i].width;
                                             }
                                         }
@@ -672,6 +668,7 @@ namespace iText.Layout.Renderer {
                     isPercent = true;
                     width = percent;
                 }
+                isFixed = false;
                 return this;
             }
 
@@ -684,6 +681,10 @@ namespace iText.Layout.Renderer {
             internal virtual TableWidths.ColumnWidthData SetFixed(bool @fixed) {
                 this.isFixed = @fixed;
                 return this;
+            }
+
+            internal virtual bool IsFlexible() {
+                return !this.isFixed && !this.isPercent;
             }
 
             /// <summary>Check collusion between min value and point width</summary>
