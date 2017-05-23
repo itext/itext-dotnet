@@ -1250,6 +1250,33 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest16() {
+            String testName = "tableWithHeaderFooterTest16.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1);
+            table.AddHeaderCell(new Cell().Add("Header 1").SetBorderBottom(new SolidBorder(Color.RED, 25)).SetBorderTop
+                (new SolidBorder(Color.ORANGE, 27)));
+            table.GetHeader().AddHeaderCell("Header 2");
+            table.AddCell(new Cell().Add("Body 1").SetBorderTop(new SolidBorder(Color.GREEN, 20)));
+            table.AddFooterCell(new Cell().Add("Footer 1").SetBorderTop(new SolidBorder(Color.RED, 25)).SetBorderBottom
+                (new SolidBorder(Color.ORANGE, 27)));
+            table.GetFooter().AddFooterCell("Footer 2");
+            table.SetBorderTop(new SolidBorder(Color.BLUE, 30)).SetBorderBottom(new SolidBorder(Color.BLUE, 30));
+            table.GetFooter().SetBorderBottom(new SolidBorder(Color.YELLOW, 50));
+            table.GetHeader().SetBorderTop(new SolidBorder(Color.YELLOW, 50));
+            table.SetBackgroundColor(Color.MAGENTA);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";
