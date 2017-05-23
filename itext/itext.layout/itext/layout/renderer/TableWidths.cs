@@ -191,9 +191,9 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (!widths[cell.GetCol()].isFixed) {
+                        //if there is no information, try to set max width
                         int flexibleCols = 0;
                         float remainWidth = 0;
-                        //if there is no information, try to set max width
                         for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
                             if (!widths[i].isFixed && !widths[i].isPercent) {
                                 remainWidth += widths[i].max - widths[i].width;
@@ -297,7 +297,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (tableWidthBasedOnPercents <= tableWidth) {
                         tableWidth = tableWidthBasedOnPercents;
-                        //we don't need more space, columns are done.
+                        //we don't need more space, columns are done based on column's max width.
                         toBalance = false;
                     }
                 }
@@ -310,6 +310,7 @@ namespace iText.Layout.Renderer {
                     sumOfPercents = 100;
                 }
                 if (!toBalance) {
+                    //column width based on max width, no need to check min width.
                     for (int i = 0; i < numberOfColumns; i++) {
                         widths[i].finalWidth = widths[i].isPercent ? tableWidth * widths[i].width / 100 : widths[i].width;
                     }
@@ -321,7 +322,7 @@ namespace iText.Layout.Renderer {
                         float remainWidth = tableWidth - minTableWidth;
                         for (int i = 0; i < numberOfColumns; i++) {
                             if (widths[i].isPercent) {
-                                if (remainWidth * widths[i].width >= widths[i].min) {
+                                if (remainWidth * widths[i].width / 100 >= widths[i].min) {
                                     widths[i].finalWidth = remainWidth * widths[i].width / 100;
                                 }
                                 else {
@@ -349,8 +350,8 @@ namespace iText.Layout.Renderer {
                         // or have to decrease columns to fit table width.
                         //
                         // columns shouldn't be more than its max value in case unspecified table width.
-                        //columns shouldn't be more than its percentage value.
-                        // opposite to sumOfPercents, which is sum of percent values.
+                        // columns shouldn't be more than its percentage value.
+                        // opposite to sumOfPercents, which is sum of percent values in points.
                         float totalPercent = 0;
                         float minTotalNonPercent = 0;
                         float fixedAddition = 0;
@@ -487,13 +488,13 @@ namespace iText.Layout.Renderer {
             }
             if (remainWidth > 0) {
                 if (numberOfColumns == processedColumns) {
-                    //Set remainWidth to all columns proportionally.
+                    //Set remaining width to all columns.
                     for (int i = 0; i < numberOfColumns; i++) {
                         columnWidths[i] = tableWidth * columnWidths[i] / (tableWidth - remainWidth);
                     }
                 }
                 else {
-                    // Set all remain width to the unprocessed columns.
+                    // Set remaining width to the unprocessed columns.
                     for (int i = 0; i < numberOfColumns; i++) {
                         if (columnWidths[i] == -1) {
                             columnWidths[i] = remainWidth / (numberOfColumns - processedColumns);
@@ -503,7 +504,8 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (numberOfColumns != processedColumns) {
-                    //TODO shall we add warning?
+                    //            Logger logger = LoggerFactory.getLogger(TableWidths.class);
+                    //            logger.warn(LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_TABLE_WIDTH);
                     for (int i = 0; i < numberOfColumns; i++) {
                         if (columnWidths[i] == -1) {
                             columnWidths[i] = 0;

@@ -1693,6 +1693,26 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void AutoLayoutTest02() {
+            String testName = "autoLayoutTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            doc.Add(new Paragraph("Simple cell:"));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 5, 95 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hellowor ld!")));
+            table.AddCell(new Cell().Add(new Paragraph("Long long long Long long long Long long long Long long long text"
+                )));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FixedLayoutTest01() {
             String testName = "fixedLayoutTest01.pdf";
             String outFileName = destinationFolder + testName;

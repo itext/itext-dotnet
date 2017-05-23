@@ -237,6 +237,14 @@ namespace iText.Layout.Renderer {
                 float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
                 minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
             }
+            else {
+                bool autoScale = HasProperty(Property.AUTO_SCALE) && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE);
+                bool autoScaleWidth = HasProperty(Property.AUTO_SCALE_WIDTH) && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH
+                    );
+                if (autoScale || autoScaleWidth) {
+                    minMaxWidth.SetChildrenMinWidth(0);
+                }
+            }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
                 ().GetWidth(), null);
