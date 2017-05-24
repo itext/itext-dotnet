@@ -46,6 +46,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -494,7 +495,14 @@ namespace iText.Forms.Xfa
             xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
 			XmlReaderSettings readerSettings = new XmlReaderSettings();
 			readerSettings.DtdProcessing = DtdProcessing.Ignore;
-            XmlReader reader = XmlReader.Create(@is, readerSettings, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			XmlReader reader = XmlReader.Create(@is, readerSettings, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			try {
+				// Prevents Exception "Reference to undeclared entity 'question'"
+				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				propertyInfo.SetValue(reader, true, null);
+			} catch (Exception exc) {
+			}
             
             FillXfaForm(reader, readOnly);
 		}
@@ -657,6 +665,7 @@ namespace iText.Forms.Xfa
 		        XmlWriterSettings settings = new XmlWriterSettings {
 		            Encoding = new UTF8Encoding(false),
 		            OmitXmlDeclaration = true,
+			        NewLineChars = "\n",
 		        };
 		        XmlWriter writer = XmlWriter.Create(fout, settings);
 		        n.WriteTo(writer);
@@ -708,7 +717,15 @@ namespace iText.Forms.Xfa
 		{
 			XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
 			xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
-			SetDomDocument(XDocument.Load(XmlReader.Create(inputStream, xmlReaderSettings), LoadOptions.PreserveWhitespace));
+			XmlReader reader = XmlReader.Create(inputStream, xmlReaderSettings);
+			try {
+				// Prevents Exception "Reference to undeclared entity 'question'"
+				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				propertyInfo.SetValue(reader, true, null);
+			} catch (Exception exc) {
+			}
+			SetDomDocument(XDocument.Load(reader, LoadOptions.PreserveWhitespace));
 			xfaPresent = true;
 		}
 

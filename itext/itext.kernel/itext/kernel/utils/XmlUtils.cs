@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -60,10 +61,8 @@ namespace iText.Kernel.Utils {
         }
 
         public static bool CompareXmls(Stream xml1, Stream xml2) {
-            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-            xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
-            XElement el1 = XElement.Load(XmlReader.Create(xml1, xmlReaderSettings));
-            XElement el2 = XElement.Load(XmlReader.Create(xml2, xmlReaderSettings));
+            XElement el1 = XElement.Load(createSafeReader(xml1));
+            XElement el2 = XElement.Load(createSafeReader(xml2));
 
             return XNode.DeepEquals(Normalize(el1), Normalize(el2));
         }
@@ -89,6 +88,20 @@ namespace iText.Kernel.Utils {
 
             return new XElement(element.Name, element.Attributes()
                 .OrderBy(a => a.Name.ToString()), element.Value);
+        }
+
+        private static XmlReader createSafeReader(Stream str) {
+            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+            xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
+            XmlReader reader = XmlReader.Create(str, xmlReaderSettings);
+            try {
+                // Prevents Exception "Reference to undeclared entity 'question'"
+                PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                propertyInfo.SetValue(reader, true, null);
+            } catch (Exception exc) {
+            }
+            return reader;
         }
     }
 }
