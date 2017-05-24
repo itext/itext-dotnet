@@ -60,8 +60,10 @@ namespace iText.Kernel.Utils {
         }
 
         public static bool CompareXmls(Stream xml1, Stream xml2) {
-            XElement el1 = XElement.Load(xml1);
-            XElement el2 = XElement.Load(xml2);
+            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+            xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
+            XElement el1 = XElement.Load(XmlReader.Create(xml1, xmlReaderSettings));
+            XElement el2 = XElement.Load(XmlReader.Create(xml2, xmlReaderSettings));
 
             return XNode.DeepEquals(Normalize(el1), Normalize(el2));
         }

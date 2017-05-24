@@ -492,7 +492,9 @@ namespace iText.Forms.Xfa
             XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
             XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
             xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
-            XmlReader reader = XmlReader.Create(@is, new XmlReaderSettings(), new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			XmlReaderSettings readerSettings = new XmlReaderSettings();
+			readerSettings.DtdProcessing = DtdProcessing.Ignore;
+            XmlReader reader = XmlReader.Create(@is, readerSettings, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
             
             FillXfaForm(reader, readOnly);
 		}
@@ -704,7 +706,9 @@ namespace iText.Forms.Xfa
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(Stream inputStream)
 		{
-			SetDomDocument(XDocument.Load(inputStream, LoadOptions.PreserveWhitespace));
+			XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+			xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
+			SetDomDocument(XDocument.Load(XmlReader.Create(inputStream, xmlReaderSettings), LoadOptions.PreserveWhitespace));
 			xfaPresent = true;
 		}
 
