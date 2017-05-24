@@ -465,8 +465,10 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
         /// <param name="copier">
-        /// a copier which bears a specific copy logic. May be
-        /// <see langword="null"/>
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
         /// </param>
         /// <returns>
         /// copied
