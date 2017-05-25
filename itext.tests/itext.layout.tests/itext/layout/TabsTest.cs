@@ -267,6 +267,25 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("1280")]
+        [NUnit.Framework.Test]
+        public virtual void TabsInParagraphTest01() {
+            String outFileName = destinationFolder + "tabsInParagraphTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabsInParagraphTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            float tabWidth = pdfDoc.GetDefaultPageSize().GetWidth() - doc.GetLeftMargin() - doc.GetRightMargin();
+            Paragraph p = new Paragraph();
+            p.AddTabStops(new TabStop(tabWidth, TabAlignment.RIGHT)).Add("There is a tab after me. And then two texts."
+                ).Add(new Tab()).Add("Text1").Add("Text2");
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
