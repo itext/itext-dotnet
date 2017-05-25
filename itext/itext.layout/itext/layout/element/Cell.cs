@@ -210,7 +210,9 @@ namespace iText.Layout.Element {
             newCell.row = row;
             newCell.col = col;
             newCell.properties = new Dictionary<int, Object>(properties);
-            newCell.styles = new LinkedHashSet<Style>(styles);
+            if (null != styles) {
+                newCell.styles = new LinkedHashSet<Style>(styles);
+            }
             if (includeContent) {
                 newCell.childElements = new List<IElement>(childElements);
             }
