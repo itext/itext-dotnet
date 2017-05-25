@@ -1063,6 +1063,30 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SplitCellWithStyles() {
+            String testName = "splitCellWithStyles.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String text = "Make Gretzky Great Again";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7);
+            Table table = new Table(2).SetBorder(Border.NO_BORDER).SetMarginTop(10).SetMarginBottom(10);
+            Style cellStyle = new Style();
+            cellStyle.SetBorderLeft(Border.NO_BORDER).SetBorderRight(Border.NO_BORDER).SetBorderTop(new SolidBorder(Color
+                .BLUE, 1)).SetBorderBottom(new SolidBorder(Color.BLUE, 1));
+            for (int i = 0; i < 10; i++) {
+                table.AddCell(new Cell().Add(iText.IO.Util.JavaUtil.IntegerToString(i)).AddStyle(cellStyle));
+                table.AddCell(new Cell().Add(text).AddStyle(cellStyle));
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void ImageInTableTest_HA() {
             String testName = "imageInTableTest_HA.pdf";
             String outFileName = destinationFolder + testName;
@@ -1099,6 +1123,27 @@ namespace iText.Layout {
             for (int i = 0; i < 20; i++) {
                 table.AddCell(new Cell().Add(i + " Liberté!\nÉgalité!\nFraternité!").SetHeight(100).SetVerticalAlignment(VerticalAlignment
                     .MIDDLE));
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MemoryTest01() {
+            String testName = "memoryTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(5);
+            for (int i = 0; i < 20000; i++) {
+                for (int j = 0; j < 5; j++) {
+                    table.AddCell(j + " Liberté!\nÉgalité!\nFraternité!");
+                }
             }
             doc.Add(table);
             doc.Close();
