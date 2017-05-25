@@ -148,8 +148,7 @@ namespace iText.Kernel.Pdf {
             }
             // PdfNull case is also here
             if (savedBb != null) {
-                // TODO getBuffer? won't it contain garbage also?
-                serializedCache.Put(reference, bb.GetBuffer());
+                serializedCache.Put(reference, bb.ToByteArray());
                 savedBb.Append(bb);
             }
         }
