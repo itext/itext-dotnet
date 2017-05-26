@@ -604,8 +604,7 @@ namespace iText.Layout.Renderer {
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
-                    iText.Layout.Renderer.TableRenderer[] splitResult = !split ? Split(row + 1, false, cellWithBigRowspanAdded
-                        ) : Split(row, hasContent, cellWithBigRowspanAdded);
+                    iText.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent, cellWithBigRowspanAdded);
                     // delete #layout() related properties
                     if (null != headerRenderer || null != footerRenderer) {
                         if (null != headerRenderer || tableModel.IsEmpty()) {
@@ -627,23 +626,25 @@ namespace iText.Layout.Renderer {
                                 if (splits[col].GetStatus() != LayoutResult.NOTHING && (hasContent || cellWithBigRowspanAdded)) {
                                     childRenderers.Add(cellSplit);
                                 }
-                                LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
+                                LayoutArea cellOccupiedArea = splitResult[1].rows[0][col].GetOccupiedArea();
                                 if (hasContent || cellWithBigRowspanAdded || splits[col].GetStatus() == LayoutResult.NOTHING) {
                                     CellRenderer cellOverflow = (CellRenderer)splits[col].GetOverflowRenderer();
-                                    currentRow[col] = null;
-                                    rows[targetOverflowRowIndex[col]][col] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
+                                    splitResult[1].rows[0][col] = null;
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col] = (CellRenderer)cellOverflow.SetParent(splitResult
+                                        [1]);
                                 }
                                 else {
-                                    rows[targetOverflowRowIndex[col]][col] = (CellRenderer)currentRow[col].SetParent(splitResult[1]);
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col] = (CellRenderer)splitResult[1].rows[0][col].SetParent
+                                        (splitResult[1]);
                                 }
-                                rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;
+                                splitResult[1].rows[targetOverflowRowIndex[col] - row][col].occupiedArea = cellOccupiedArea;
                             }
                             else {
-                                if (currentRow[col] != null) {
+                                if (splitResult[1].rows[0][col] != null) {
                                     if (hasContent) {
-                                        rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
+                                        rowspans[col] = ((Cell)splitResult[1].rows[0][col].GetModelElement()).GetRowspan();
                                     }
-                                    bool isBigRowspannedCell = 1 != ((Cell)currentRow[col].GetModelElement()).GetRowspan();
+                                    bool isBigRowspannedCell = 1 != ((Cell)splitResult[1].rows[0][col].GetModelElement()).GetRowspan();
                                     if (hasContent || isBigRowspannedCell) {
                                         columnsWithCellToBeEnlarged[col] = true;
                                     }
@@ -658,38 +659,40 @@ namespace iText.Layout.Renderer {
                         }
                         for (col = 0; col < numberOfColumns; col++) {
                             if (columnsWithCellToBeEnlarged[col]) {
-                                LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
+                                LayoutArea cellOccupiedArea = splitResult[1].rows[0][col].GetOccupiedArea();
                                 if (1 == minRowspan) {
                                     // Here we use the same cell, but create a new renderer which doesn't have any children,
                                     // therefore it won't have any content.
-                                    Cell overflowCell = ((Cell)currentRow[col].GetModelElement()).Clone(true);
+                                    Cell overflowCell = ((Cell)splitResult[1].rows[0][col].GetModelElement()).Clone(true);
                                     // we will change properties
-                                    currentRow[col].isLastRendererForModelElement = false;
-                                    childRenderers.Add(currentRow[col]);
-                                    currentRow[col] = null;
-                                    rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
-                                    rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.HEIGHT);
-                                    rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.MIN_HEIGHT);
-                                    rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.MAX_HEIGHT);
+                                    splitResult[1].rows[0][col].isLastRendererForModelElement = false;
+                                    childRenderers.Add(splitResult[1].rows[0][col]);
+                                    splitResult[1].rows[0][col] = null;
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col] = (CellRenderer)overflowCell.GetRenderer().SetParent
+                                        (this);
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col].DeleteProperty(Property.HEIGHT);
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col].DeleteProperty(Property.MIN_HEIGHT);
+                                    splitResult[1].rows[targetOverflowRowIndex[col] - row][col].DeleteProperty(Property.MAX_HEIGHT);
                                 }
                                 else {
-                                    childRenderers.Add(currentRow[col]);
+                                    childRenderers.Add(splitResult[1].rows[0][col]);
                                     // shift all cells in the column up
                                     int i = row;
-                                    for (; i < row + minRowspan && i + 1 < rows.Count && rows[i + 1][col] != null; i++) {
-                                        rows[i][col] = rows[i + 1][col];
-                                        rows[i + 1][col] = null;
+                                    for (; i < row + minRowspan && i + 1 < rows.Count && splitResult[1].rows[i + 1 - row][col] != null; i++) {
+                                        splitResult[1].rows[i - row][col] = splitResult[1].rows[i + 1 - row][col];
+                                        splitResult[1].rows[i + 1 - row][col] = null;
                                     }
                                     // the number of cells behind is less then minRowspan-1
                                     // so we should process the last cell in the column as in the case 1 == minRowspan
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
                                         Cell overflowCell = ((Cell)rows[i][col].GetModelElement());
-                                        rows[i][col].isLastRendererForModelElement = false;
-                                        rows[i][col] = null;
-                                        rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
+                                        splitResult[1].rows[i - row][col].isLastRendererForModelElement = false;
+                                        splitResult[1].rows[i - row][col] = null;
+                                        splitResult[1].rows[targetOverflowRowIndex[col] - row][col] = (CellRenderer)overflowCell.GetRenderer().SetParent
+                                            (this);
                                     }
                                 }
-                                rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;
+                                splitResult[1].rows[targetOverflowRowIndex[col] - row][col].occupiedArea = cellOccupiedArea;
                             }
                         }
                     }
@@ -709,7 +712,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA)) || true.Equals(GetPropertyAsBoolean(Property
                         .FILL_AVAILABLE_AREA_ON_SPLIT))) {
-                        ExtendLastRow(currentRow, layoutBox);
+                        ExtendLastRow(splitResult[1].rows[0], layoutBox);
                     }
                     AdjustFooterAndFixOccupiedArea(layoutBox);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
