@@ -266,12 +266,6 @@ namespace iText.Kernel.Pdf {
                     return copiedIndirectReference.GetRefersTo();
                 }
             }
-            if (obj.IsDictionary()) {
-                PdfName subtype = ((PdfDictionary)obj).GetAsName(PdfName.Subtype);
-                if (subtype != null && subtype.Equals(PdfName.Widget)) {
-                    tryToFindDuplicate = false;
-                }
-            }
             SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
                 serializedContent = smartModeSerializer.SerializeObject(obj);
