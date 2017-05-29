@@ -100,23 +100,26 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <p/>
-        /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
+        /// <br/>
+        /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
-        /// <p/>
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <paramref name="columnWidths"/>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>
         /// .
         /// </summary>
-        /// <param name="columnWidths">preferable column widths in points.</param>
+        /// <param name="columnWidths">
+        /// preferable column widths in points.  Values must be greater than or equal to zero,
+        /// otherwise it will be interpreted as undefined.
+        /// </param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -138,23 +141,26 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <p/>
-        /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
+        /// <br/>
+        /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
-        /// <p/>
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <paramref name="columnWidths"/>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>
         /// .
         /// </summary>
-        /// <param name="columnWidths">preferable column widths, points and/or percents.</param>
+        /// <param name="columnWidths">
+        /// preferable column widths, points and/or percents.  Values must be greater than or equal to zero,
+        /// otherwise it will be interpreted as undefined.
+        /// </param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -178,22 +184,25 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <p/>
-        /// Since 7.0.2 table layout was introduced. Auto layout is default.
-        /// <p/>
+        /// <br/>
+        /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default.
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <paramref name="columnWidths"/>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>
         /// .
         /// </summary>
-        /// <param name="columnWidths">preferable column widths, points and/or percents.</param>
+        /// <param name="columnWidths">
+        /// preferable column widths, points and/or percents. Values must be greater than or equal to zero,
+        /// otherwise it will be interpreted as undefined.
+        /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         public Table(UnitValue[] columnWidths)
@@ -204,22 +213,25 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <p/>
-        /// Since 7.0.2 table layout was introduced. Auto layout is default.
-        /// <p/>
+        /// <br/>
+        /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default.
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <c>columnWidths</c>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>
         /// .
         /// </summary>
-        /// <param name="pointColumnWidths">preferable column widths in points.</param>
+        /// <param name="pointColumnWidths">
+        /// preferable column widths in points. Values must be greater than or equal to zero,
+        /// otherwise it will be interpreted as undefined.
+        /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         public Table(float[] pointColumnWidths)
@@ -231,16 +243,16 @@ namespace iText.Layout.Element {
         /// <c>Table</c>
         /// with number of columns. Each column will get equal percent width.
         /// 100% table width set implicitly for backward compatibility.
-        /// <p/>
-        /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
+        /// <br/>
+        /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
-        /// <p/>
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <c>columnWidths</c>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
@@ -263,7 +275,7 @@ namespace iText.Layout.Element {
             }
             //TODO remove in 7.1. It shall work as html tables.
             UseAllAvailableWidth();
-            this.columnWidths = NormalizeColumnWidths(numColumns, true);
+            this.columnWidths = NormalizeColumnWidths(numColumns);
             InitializeLargeTable(largeTable);
             InitializeRows();
         }
@@ -282,7 +294,7 @@ namespace iText.Layout.Element {
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
         /// where
         /// <c>columnWidths</c>
-        /// is &lt;colgroup&gt;'s width values.
+        /// is &lt;colgroup&gt;'s widths.
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
@@ -324,31 +336,33 @@ namespace iText.Layout.Element {
             return normalized;
         }
 
-        private static bool HasNegativeValue(UnitValue[] unitColumnWidths) {
-            foreach (UnitValue uv in unitColumnWidths) {
-                if (uv.GetValue() < 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns, bool usePercents) {
+        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
             UnitValue[] normalized = new UnitValue[numberOfColumns];
             for (int i = 0; i < numberOfColumns; i++) {
-                normalized[i] = usePercents ? UnitValue.CreatePercentValue((float)100 / numberOfColumns) : UnitValue.CreatePointValue
-                    (-1);
+                normalized[i] = UnitValue.CreatePercentValue((float)100 / numberOfColumns);
             }
             return normalized;
         }
 
         /// <summary>Set fixed layout.</summary>
         /// <remarks>
-        /// Set fixed layout.
-        /// <see cref="iText.Layout.Properties.Property.WIDTH"/>
-        /// must be set.
+        /// Set fixed layout. Analog of
+        /// <c>table-layout:fixed</c>
+        /// CSS property.
+        /// Note, the table must have width property, otherwise auto layout will be used.
         /// <p/>
-        /// 1.
+        /// Algorithm description
+        /// <br/>
+        /// 1. Scan columns for width property and set it. (Columns have set in constructor, analog of
+        /// <c>&lt;colgroup&gt;</c>
+        /// element in HTML)<br/>
+        /// 2. Scan the very first row of table for width property and set it to undefined columns (cell width has lower priority in comparing with column).
+        /// If cell has colspan, each column will get equal width:
+        /// <c>(width/colspan)</c>
+        /// .<br/>
+        /// 3. If sum of columns is less, than table width, there are two options:<br/>
+        /// 3.1. If undefined columns still exist, they will get the rest remaining width.<br/>
+        /// 3.2. Otherwise all columns will be expanded proportionally based on its width.<br/>
         /// </remarks>
         /// <returns>this element.</returns>
         public virtual iText.Layout.Element.Table SetFixedLayout() {
@@ -356,6 +370,13 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>Set auto layout.</summary>
+        /// <remarks>
+        /// Set auto layout.
+        /// <p/>
+        /// 1.
+        /// </remarks>
+        /// <returns>this element.</returns>
         public virtual iText.Layout.Element.Table SetAutoLayout() {
             SetProperty(Property.TABLE_LAYOUT, "auto");
             return this;
@@ -948,9 +969,6 @@ namespace iText.Layout.Element {
         private void InitializeLargeTable(bool largeTable) {
             this.isComplete = !largeTable;
             if (largeTable) {
-                if (HasNegativeValue(this.columnWidths)) {
-                    throw new ArgumentException("Large table must have valid column widths.");
-                }
                 SetWidth(UnitValue.CreatePercentValue(100));
                 SetFixedLayout();
             }

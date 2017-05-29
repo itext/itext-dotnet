@@ -462,24 +462,39 @@ namespace iText.Layout.Renderer {
             //fill columns with -1 from cell info.
             int processedColumns = 0;
             float remainWidth = tableWidth;
-            for (int i = 0; i < numberOfColumns; i++) {
-                if (columnWidths[i] == -1) {
-                    CellRenderer cell = tableRenderer.rows[0][i];
-                    if (cell != null) {
-                        float? cellWidth = cell.RetrieveUnitValue(tableWidth, Property.WIDTH);
-                        if (cellWidth != null && cellWidth >= 0) {
-                            int colspan = ((Cell)cell.GetModelElement()).GetColspan();
-                            for (int j = 0; j < colspan; j++) {
-                                columnWidths[i + j] = (float)cellWidth / colspan;
-                            }
-                            remainWidth -= columnWidths[i];
-                            processedColumns++;
-                        }
-                    }
+            CellRenderer[] firtsRow;
+            if (tableRenderer.headerRenderer != null && tableRenderer.headerRenderer.rows.Count > 0) {
+                firtsRow = tableRenderer.headerRenderer.rows[0];
+            }
+            else {
+                if (tableRenderer.rows.Count > 0) {
+                    firtsRow = tableRenderer.rows[0];
                 }
                 else {
-                    remainWidth -= columnWidths[i];
-                    processedColumns++;
+                    //most likely it is large table
+                    firtsRow = null;
+                }
+            }
+            if (firtsRow != null) {
+                for (int i = 0; i < numberOfColumns; i++) {
+                    if (columnWidths[i] == -1) {
+                        CellRenderer cell = firtsRow[i];
+                        if (cell != null) {
+                            float? cellWidth = cell.RetrieveUnitValue(tableWidth, Property.WIDTH);
+                            if (cellWidth != null && cellWidth >= 0) {
+                                int colspan = ((Cell)cell.GetModelElement()).GetColspan();
+                                for (int j = 0; j < colspan; j++) {
+                                    columnWidths[i + j] = (float)cellWidth / colspan;
+                                }
+                                remainWidth -= columnWidths[i];
+                                processedColumns++;
+                            }
+                        }
+                    }
+                    else {
+                        remainWidth -= columnWidths[i];
+                        processedColumns++;
+                    }
                 }
             }
             if (remainWidth > 0) {

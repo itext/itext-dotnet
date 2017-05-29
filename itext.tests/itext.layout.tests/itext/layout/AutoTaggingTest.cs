@@ -264,8 +264,6 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
-            String outFileName = destinationFolder + "tableTest05.pdf";
-            String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -340,6 +338,36 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Close();
             CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void TableTest08() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(new UnitValue[5], true);
+            doc.Add(table);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
+            table.AddHeaderCell(cell);
+            for (int i = 0; i < 5; ++i) {
+                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+            }
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
+            table.AddFooterCell(cell);
+            table.SetSkipFirstHeader(true);
+            table.SetSkipLastFooter(true);
+            for (int i = 0; i < 350; i++) {
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
+                table.Flush();
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
