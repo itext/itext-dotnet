@@ -174,6 +174,17 @@ namespace iText.Kernel.Utils {
                 (PdfName.Metadata));
             CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject
                 (), catalogPath, compareResult, ignoredCatalogEntries);
+            // Method compareDictionariesExtended eventually calls compareObjects method which doesn't compare page objects.
+            // At least for now compare page dictionaries explicitly here like this.
+            if (outPagesRef.Count != cmpPagesRef.Count) {
+                compareResult.AddError(catalogPath, "Documents have different numbers of pages.");
+            }
+            for (int i = 0; i < Math.Min(cmpPagesRef.Count, outPagesRef.Count); i++) {
+                CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpPagesRef[i], outPagesRef[i]);
+                PdfDictionary outPageDict = (PdfDictionary)outPagesRef[i].GetRefersTo();
+                PdfDictionary cmpPageDict = (PdfDictionary)cmpPagesRef[i].GetRefersTo();
+                CompareDictionariesExtended(outPageDict, cmpPageDict, currentPath, compareResult);
+            }
             return compareResult;
         }
 
