@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.Kernel;
@@ -103,7 +102,8 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual int GetNextMcidForPage(PdfPage page) {
-            SortedDictionary<int, PdfMcr> pageMcrs = (SortedDictionary<int, PdfMcr>)GetPageMarkedContentReferences(page);
+            SortedDictionary<int, PdfMcr> pageMcrs = (SortedDictionary<int, PdfMcr>)GetPageMarkedContentReferences(page
+                );
             if (pageMcrs == null || pageMcrs.Count == 0) {
                 return 0;
             }
