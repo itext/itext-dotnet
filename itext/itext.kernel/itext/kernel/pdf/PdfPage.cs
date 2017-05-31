@@ -489,10 +489,6 @@ namespace iText.Kernel.Pdf {
                     page.AddAnnotation(-1, newAnnot, false);
                 }
             }
-            if (toDocument.IsTagged()) {
-                int structParents = (int)toDocument.GetNextStructParentIndex();
-                page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
-            }
             if (copier != null) {
                 copier.Copy(this, page);
             }
