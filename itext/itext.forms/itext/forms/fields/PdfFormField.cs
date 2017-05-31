@@ -2313,6 +2313,7 @@ namespace iText.Forms.Fields {
                     appearance.GetResources().AddFont(GetDocument(), localFont);
                     PdfDictionary ap = new PdfDictionary();
                     ap.Put(PdfName.N, appearance.GetPdfObject());
+                    ap.SetModified();
                     Put(PdfName.AP, ap);
                     return true;
                 }
