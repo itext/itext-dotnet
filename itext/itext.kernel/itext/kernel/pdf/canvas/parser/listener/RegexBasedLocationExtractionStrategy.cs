@@ -1,0 +1,151 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+
+namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
+    /// <summary>This class is designed to search for the occurrences of a regular expression and return the resultant rectangles.
+    ///     </summary>
+    public class RegexBasedLocationExtractionStrategy : ILocationExtractionStrategy {
+        private Regex pattern;
+
+        private IList<CharacterRenderInfo> parseResult = new List<CharacterRenderInfo>();
+
+        public RegexBasedLocationExtractionStrategy(String regex) {
+            this.pattern = iText.IO.Util.StringUtil.RegexCompile(regex);
+        }
+
+        public RegexBasedLocationExtractionStrategy(Regex pattern) {
+            this.pattern = pattern;
+        }
+
+        public virtual ICollection<IPdfTextLocation> GetResultantLocations() {
+            // align characters in "logical" order
+            JavaCollectionsUtil.Sort(parseResult);
+            // process parse results
+            IList<IPdfTextLocation> retval = new List<IPdfTextLocation>();
+            CharacterRenderInfo.StringConversionInfo txt = CharacterRenderInfo.MapString(parseResult);
+            Match mat = iText.IO.Util.StringUtil.Match(pattern, txt.text);
+            while (mat.Success) {
+                int? startIndex = txt.indexMap.Get(mat.Index);
+                int? endIndex = txt.indexMap.Get(mat.Index + mat.Length);
+                foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value))) {
+                    retval.Add(new DefaultPdfTextLocation(0, r, iText.IO.Util.StringUtil.Group(mat, 0)));
+                }
+                mat = mat.NextMatch();
+            }
+            /* sort
+            * even though the return type is Collection<Rectangle>, we apply a sorting algorithm here
+            * This is to ensure that tests that use this functionality (for instance to generate pdf with
+            * areas of interest highlighted) will not break when compared.
+            */
+            JavaCollectionsUtil.Sort(retval, new _IComparer_54());
+            return retval;
+        }
+
+        private sealed class _IComparer_54 : IComparer<IPdfTextLocation> {
+            public _IComparer_54() {
+            }
+
+            public int Compare(IPdfTextLocation l1, IPdfTextLocation l2) {
+                Rectangle o1 = l1.GetRectangle();
+                Rectangle o2 = l2.GetRectangle();
+                if (o1.GetY() == o2.GetY()) {
+                    return o1.GetX() == o2.GetX() ? 0 : (o1.GetX() < o2.GetX() ? -1 : 1);
+                }
+                else {
+                    return o1.GetY() < o2.GetY() ? -1 : 1;
+                }
+            }
+        }
+
+        public virtual void EventOccurred(IEventData data, EventType type) {
+            if (data is TextRenderInfo) {
+                parseResult.AddAll(ToCRI((TextRenderInfo)data));
+            }
+        }
+
+        public virtual ICollection<EventType> GetSupportedEvents() {
+            return null;
+        }
+
+        /// <summary>
+        /// Convert
+        /// <c>TextRenderInfo</c>
+        /// to
+        /// <c>CharacterRenderInfo</c>
+        /// This method is public and not final so that custom implementations can choose to override it.
+        /// Other implementations of
+        /// <c>CharacterRenderInfo</c>
+        /// may choose to store different properties than
+        /// merely the
+        /// <c>Rectangle</c>
+        /// describing the bounding box. E.g. a custom implementation might choose to
+        /// store
+        /// <c>Color</c>
+        /// information as well, to better match the content surrounding the redaction
+        /// <c>Rectangle</c>
+        /// .
+        /// </summary>
+        /// <param name="tri"/>
+        /// <returns/>
+        protected internal virtual IList<CharacterRenderInfo> ToCRI(TextRenderInfo tri) {
+            IList<CharacterRenderInfo> cris = new List<CharacterRenderInfo>();
+            foreach (TextRenderInfo subTri in tri.GetCharacterRenderInfos()) {
+                cris.Add(new CharacterRenderInfo(subTri));
+            }
+            return cris;
+        }
+
+        /// <summary>
+        /// Converts
+        /// <c>CharacterRenderInfo</c>
+        /// objects to
+        /// <c>Rectangles</c>
+        /// This method is protected and not final so that custom implementations can choose to override it.
+        /// E.g. other implementations may choose to add padding/margin to the Rectangles.
+        /// This method also offers a convenient access point to the mapping of
+        /// <c>CharacterRenderInfo</c>
+        /// to
+        /// <c>Rectangle</c>
+        /// .
+        /// This mapping enables (custom implementations) to match color of text in redacted Rectangles,
+        /// or match color of background, by the mere virtue of offering access to the
+        /// <c>CharacterRenderInfo</c>
+        /// objects
+        /// that generated the
+        /// <c>Rectangle</c>
+        /// .
+        /// </summary>
+        /// <param name="cris"/>
+        /// <returns/>
+        protected internal virtual IList<Rectangle> ToRectangles(IList<CharacterRenderInfo> cris) {
+            IList<Rectangle> retval = new List<Rectangle>();
+            if (cris.IsEmpty()) {
+                return retval;
+            }
+            int prev = 0;
+            int curr = 0;
+            while (curr < cris.Count) {
+                while (curr < cris.Count && cris[curr].SameLine(cris[prev])) {
+                    curr++;
+                }
+                float x = cris[prev].GetBoundingBox().GetX();
+                float y = cris[prev].GetBoundingBox().GetY();
+                float w = cris[curr - 1].GetBoundingBox().GetX() - cris[prev].GetBoundingBox().GetX() + cris[curr - 1].GetBoundingBox
+                    ().GetWidth();
+                float h = 0f;
+                foreach (CharacterRenderInfo cri in cris.SubList(prev, curr)) {
+                    h = Math.Max(h, cri.GetBoundingBox().GetHeight());
+                }
+                retval.Add(new Rectangle(x, y, w, h));
+                prev = curr;
+            }
+            // return
+            return retval;
+        }
+    }
+}
