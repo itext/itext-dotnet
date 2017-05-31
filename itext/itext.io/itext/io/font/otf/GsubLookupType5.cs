@@ -59,6 +59,7 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
+            bool changed = false;
             int oldLineStart = line.start;
             int oldLineEnd = line.end;
             int initialLineIndex = line.idx;
@@ -80,16 +81,16 @@ namespace iText.IO.Font.Otf {
                     }
                     line.idx = gidx.idx;
                     OpenTableLookup lookupTable = openReader.GetLookupTable(substRecord.lookupListIndex);
-                    lookupTable.TransformOne(line);
+                    changed = lookupTable.TransformOne(line) || changed;
                 }
                 line.idx = line.end;
                 line.start = oldLineStart;
                 int lenDelta = lineEndBeforeSubstitutions - line.end;
                 line.end = oldLineEnd - lenDelta;
-                return true;
+                return changed;
             }
             ++line.idx;
-            return false;
+            return changed;
         }
 
         /// <exception cref="System.IO.IOException"/>
