@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test01() {
             String outFile = destinationFolder + "parentTreeTest01.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest01.pdf";
@@ -96,7 +95,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test02() {
             String outFile = destinationFolder + "parentTreeTest02.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest02.pdf";
@@ -126,7 +124,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test03() {
             String outFile = destinationFolder + "parentTreeTest03.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest03.pdf";
@@ -158,7 +155,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test04() {
             String outFile = destinationFolder + "parentTreeTest04.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest04.pdf";
@@ -189,7 +185,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test05() {
             String outFile = destinationFolder + "parentTreeTest05.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest05.pdf";
@@ -234,7 +229,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1253")]
         public virtual void Test06() {
             String outFile = destinationFolder + "parentTreeTest06.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest06.pdf";

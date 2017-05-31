@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.Kernel;
@@ -102,7 +103,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual int GetNextMcidForPage(PdfPage page) {
-            SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(page.GetPdfObject().GetIndirectReference());
+            SortedDictionary<int, PdfMcr> pageMcrs = (SortedDictionary<int, PdfMcr>)GetPageMarkedContentReferences(page);
             if (pageMcrs == null || pageMcrs.Count == 0) {
                 return 0;
             }
@@ -131,7 +132,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 return;
             }
             pageToPageMcrs.JRemove(page.GetPdfObject().GetIndirectReference());
-            UpdateStructParentTreeEntries(page.GetStructParentIndex(), mcrs);
+            UpdateStructParentTreeEntries(page, mcrs);
             structTreeRoot.SetModified();
         }
 
@@ -258,7 +259,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
-        private void UpdateStructParentTreeEntries(int? pageStructParentIndex, IDictionary<int, PdfMcr> mcrs) {
+        private void UpdateStructParentTreeEntries(PdfPage page, IDictionary<int, PdfMcr> mcrs) {
             // element indexes in parentsOfPageMcrs shall be the same as mcid of one of their kids.
             // See "Finding Structure Elements from Content Items" in pdf spec.
             PdfArray parentsOfPageMcrs = new PdfArray();
@@ -280,7 +281,10 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             if (parentsOfPageMcrs.Size() > 0) {
                 parentsOfPageMcrs.MakeIndirect(structTreeRoot.GetDocument());
-                parentTree.AddEntry(pageStructParentIndex, parentsOfPageMcrs);
+                int structParents = (int)page.GetStructParentIndex() != -1 ? (int)page.GetStructParentIndex() : (int)page.
+                    GetDocument().GetNextStructParentIndex();
+                page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
+                parentTree.AddEntry((int?)structParents, parentsOfPageMcrs);
                 structTreeRoot.GetDocument().CheckIsoConformance(parentsOfPageMcrs, IsoKey.TAG_STRUCTURE_ELEMENT);
                 parentsOfPageMcrs.Flush();
             }
