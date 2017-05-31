@@ -504,7 +504,7 @@ namespace iText.Layout.Element {
         /// <summary>Adds a new cell with received blockElement as a content to the footer of the table.</summary>
         /// <remarks>
         /// Adds a new cell with received blockElement as a content to the footer of the table.
-        /// The header will be displayed in the top of every area of this table.
+        /// The footer will be displayed in the bottom of every area of this table.
         /// See also
         /// <see cref="SetSkipLastFooter(bool)"/>
         /// .
@@ -520,7 +520,7 @@ namespace iText.Layout.Element {
         /// <summary>Adds a new cell with received image as a content to the footer of the table.</summary>
         /// <remarks>
         /// Adds a new cell with received image as a content to the footer of the table.
-        /// The header will be displayed in the top of every area of this table.
+        /// The footer will be displayed in the bottom of every area of this table.
         /// See also
         /// <see cref="SetSkipLastFooter(bool)"/>
         /// .
@@ -535,7 +535,7 @@ namespace iText.Layout.Element {
         /// <summary>Adds a new cell with received string as a content to the footer of the table.</summary>
         /// <remarks>
         /// Adds a new cell with received string as a content to the footer of the table.
-        /// The header will be displayed in the top of every area of this table.
+        /// The footer will be displayed in the bottom of every area of this table.
         /// See also
         /// <see cref="SetSkipLastFooter(bool)"/>
         /// .
@@ -805,7 +805,7 @@ namespace iText.Layout.Element {
         /// <summary>Flushes the content which has just been added to the document.</summary>
         /// <remarks>
         /// Flushes the content which has just been added to the document.
-        /// This is a method for internal usage and is called automatically by the docunent.
+        /// This is a method for internal usage and is called automatically by the document.
         /// </remarks>
         public virtual void FlushContent() {
             if (lastAddedRowGroups == null || lastAddedRowGroups.IsEmpty()) {
