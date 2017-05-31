@@ -60,7 +60,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLocationExtraction() {
-            String inputFile = sourceFolder + "AliceInWonderland.pdf";
+            String inputFile = sourceFolder + "aliceInWonderland.pdf";
             PdfReader reader = new PdfReader(inputFile);
             PdfDocument pdfDocument = new PdfDocument(reader);
             // calculate marked areas
