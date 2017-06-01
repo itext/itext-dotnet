@@ -1144,8 +1144,9 @@ namespace iText.Layout.Renderer {
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             InitializeTableLayoutBorders();
-            TableWidths tableWidths = new TableWidths(this, availableWidth, true, bordersHandler.GetRightBorderMaxWidth
-                (), bordersHandler.GetLeftBorderMaxWidth());
+            float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
+            float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
+            TableWidths tableWidths = new TableWidths(this, availableWidth, true, rightMaxBorder, leftMaxBorder);
             float[] columns = tableWidths.Layout();
             float minWidth = tableWidths.GetMinWidth();
             CleanTableLayoutBorders();
@@ -1154,7 +1155,7 @@ namespace iText.Layout.Renderer {
                 maxColTotalWidth += column;
             }
             float additionalWidth = (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT) + (float)this.GetPropertyAsFloat
-                (Property.MARGIN_LEFT);
+                (Property.MARGIN_LEFT) + rightMaxBorder / 2 + leftMaxBorder / 2;
             return new MinMaxWidth(additionalWidth, availableWidth, minWidth, maxColTotalWidth);
         }
 
