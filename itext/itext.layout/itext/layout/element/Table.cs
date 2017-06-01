@@ -322,7 +322,9 @@ namespace iText.Layout.Element {
         private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
             UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
             for (int i = 0; i < normalized.Length; i++) {
-                normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
+                if (pointColumnWidths[i] >= 0) {
+                    normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
+                }
             }
             return normalized;
         }
@@ -330,8 +332,8 @@ namespace iText.Layout.Element {
         private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
             UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
             for (int i = 0; i < unitColumnWidths.Length; i++) {
-                normalized[i] = unitColumnWidths[i] != null ? new UnitValue(unitColumnWidths[i]) : UnitValue.CreatePointValue
-                    (-1);
+                normalized[i] = unitColumnWidths[i] != null && unitColumnWidths[i].GetValue() >= 0 ? new UnitValue(unitColumnWidths
+                    [i]) : null;
             }
             return normalized;
         }

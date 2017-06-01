@@ -96,11 +96,12 @@ namespace iText.Layout.Renderer {
                 minSum += width.min;
             }
             //region Process cells
-            bool[] minColumns = new bool[numberOfColumns];
             foreach (TableWidths.CellInfo cell in cells) {
-                //NOTE in automatic layout algorithm percents have higher priority
-                UnitValue cellWidth = cell.GetWidth();
-                if (cellWidth != null && cellWidth.GetValue() >= 0) {
+                // For automatic layout algorithm percents have higher priority
+                // value must be > 0, while for fixed layout >= 0
+                UnitValue cellWidth = GetCellWidth(cell.GetCell(), false);
+                if (cellWidth != null) {
+                    System.Diagnostics.Debug.Assert(cellWidth.GetValue() > 0);
                     if (cellWidth.IsPercentValue()) {
                         //cellWidth has percent value
                         if (cell.GetColspan() == 1) {
@@ -138,53 +139,63 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         //cellWidth has point value
-                        if (cell.GetCol() == 1) {
+                        if (cell.GetColspan() == 1) {
                             if (!widths[cell.GetCol()].isPercent) {
-                                widths[cell.GetCol()].SetPoints(cellWidth.GetValue()).SetFixed(true);
-                                if (widths[cell.GetCol()].HasCollision()) {
-                                    minColumns[cell.GetCol()] = true;
+                                if (widths[cell.GetCol()].min <= cellWidth.GetValue()) {
+                                    widths[cell.GetCol()].SetPoints(cellWidth.GetValue()).SetFixed(true);
+                                }
+                                else {
+                                    widths[cell.GetCol()].SetPoints(widths[cell.GetCol()].min);
                                 }
                             }
                         }
                         else {
                             int flexibleCols = 0;
-                            float colspanRemain = cellWidth.GetValue();
+                            float remainWidth = cellWidth.GetValue();
                             for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
                                 if (!widths[i].isPercent) {
-                                    colspanRemain -= widths[i].width;
+                                    remainWidth -= widths[i].width;
                                     if (!widths[i].isFixed) {
                                         flexibleCols++;
                                     }
                                 }
                                 else {
-                                    colspanRemain = -1;
+                                    // if any col has percent value, we cannot predict remaining width.
+                                    remainWidth = 0;
                                     break;
                                 }
                             }
-                            if (colspanRemain > 0) {
+                            if (remainWidth > 0) {
+                                int[] flexibleColIndexes = ArrayUtil.FillWithValue(new int[cell.GetColspan()], -1);
                                 if (flexibleCols > 0) {
                                     // check min width in columns
                                     for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        if (widths[i].IsFlexible() && widths[i].CheckCollision(colspanRemain / flexibleCols)) {
-                                            widths[i].SetPoints(widths[i].min).SetFixed(true);
-                                            colspanRemain -= widths[i].min;
+                                        if (!widths[i].IsFlexible()) {
+                                            continue;
+                                        }
+                                        if (widths[i].min > widths[i].width + remainWidth / flexibleCols) {
+                                            widths[i].ResetPoints(widths[i].min);
+                                            remainWidth -= widths[i].min - widths[i].width;
                                             flexibleCols--;
-                                            if (colspanRemain <= 0 || flexibleCols <= 0) {
+                                            if (flexibleCols == 0 || remainWidth <= 0) {
                                                 break;
                                             }
                                         }
+                                        else {
+                                            flexibleColIndexes[i - cell.GetCol()] = i;
+                                        }
                                     }
-                                    if (colspanRemain > 0 && flexibleCols > 0) {
-                                        for (int k = cell.GetCol(); k < cell.GetCol() + cell.GetColspan(); k++) {
-                                            if (widths[k].IsFlexible()) {
-                                                widths[k].AddPoints(colspanRemain / flexibleCols).SetFixed(true);
+                                    if (flexibleCols > 0 && remainWidth > 0) {
+                                        for (int i = 0; i < flexibleColIndexes.Length; i++) {
+                                            if (flexibleColIndexes[i] >= 0) {
+                                                widths[flexibleColIndexes[i]].AddPoints(remainWidth / flexibleCols).SetFixed(true);
                                             }
                                         }
                                     }
                                 }
                                 else {
                                     for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        widths[i].AddPoints(colspanRemain / cell.GetColspan());
+                                        widths[i].AddPoints(remainWidth / cell.GetColspan());
                                     }
                                 }
                             }
@@ -211,12 +222,6 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                }
-            }
-            for (int col = 0; col < minColumns.Length; col++) {
-                if (minColumns[col] && !widths[col].isPercent && widths[col].isFixed && widths[col].HasCollision()) {
-                    minSum += widths[col].min - widths[col].width;
-                    widths[col].SetPoints(widths[col].min);
                 }
             }
             //endregion
@@ -480,11 +485,16 @@ namespace iText.Layout.Renderer {
                     if (columnWidths[i] == -1) {
                         CellRenderer cell = firtsRow[i];
                         if (cell != null) {
-                            float? cellWidth = cell.RetrieveUnitValue(tableWidth, Property.WIDTH);
-                            if (cellWidth != null && cellWidth >= 0) {
+                            UnitValue cellWidth = GetCellWidth(cell, true);
+                            if (cellWidth != null) {
+                                System.Diagnostics.Debug.Assert(cellWidth.GetValue() >= 0);
+                                float width = cellWidth.GetValue();
+                                if (cellWidth.IsPercentValue()) {
+                                    width = tableWidth * width / 100;
+                                }
                                 int colspan = ((Cell)cell.GetModelElement()).GetColspan();
                                 for (int j = 0; j < colspan; j++) {
-                                    columnWidths[i + j] = (float)cellWidth / colspan;
+                                    columnWidths[i + j] = width / colspan;
                                 }
                                 remainWidth -= columnWidths[i];
                                 processedColumns++;
@@ -659,11 +669,13 @@ namespace iText.Layout.Renderer {
 
             internal virtual TableWidths.ColumnWidthData SetPoints(float width) {
                 System.Diagnostics.Debug.Assert(!isPercent);
+                System.Diagnostics.Debug.Assert(this.min <= width);
                 this.width = Math.Max(this.width, width);
                 return this;
             }
 
             internal virtual TableWidths.ColumnWidthData ResetPoints(float width) {
+                System.Diagnostics.Debug.Assert(this.min <= width);
                 this.width = width;
                 this.isPercent = false;
                 return this;
@@ -716,7 +728,7 @@ namespace iText.Layout.Renderer {
             }
 
             /// <summary>Check collusion between min value and available point width.</summary>
-            /// <param name="availableWidth">additional available point width.</param>
+            /// <param name="additional">additional available point width.</param>
             /// <returns>
             /// true, if
             /// <see cref="min"/>
@@ -724,14 +736,40 @@ namespace iText.Layout.Renderer {
             /// <see cref="width"/>
             /// + additionalWidth).
             /// </returns>
-            internal virtual bool CheckCollision(float availableWidth) {
+            internal virtual bool CheckCollision(float additional) {
                 System.Diagnostics.Debug.Assert(!isPercent);
-                return min > width + availableWidth;
+                return min > width + additional;
             }
 
             public override String ToString() {
                 return "w=" + width + (isPercent ? "%" : "pt") + (isFixed ? " !!" : "") + ", min=" + min + ", max=" + max 
                     + ", finalWidth=" + finalWidth;
+            }
+        }
+
+        //TODO DEVSIX-1174, box-sizing property
+        internal UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
+            UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
+            if (widthValue == null || widthValue.GetValue() < 0) {
+                return null;
+            }
+            if (!zeroIsValid && widthValue.GetValue() == 0) {
+                return null;
+            }
+            if (widthValue == null || widthValue.IsPercentValue()) {
+                return widthValue;
+            }
+            else {
+                Border[] borders = cell.GetBorders();
+                if (borders[1] != null) {
+                    widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                }
+                if (borders[3] != null) {
+                    widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                }
+                float[] paddings = cell.GetPaddings();
+                widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
+                return widthValue;
             }
         }
 
@@ -769,26 +807,6 @@ namespace iText.Layout.Renderer {
 
             internal virtual int GetRowspan() {
                 return ((Cell)cell.GetModelElement()).GetRowspan();
-            }
-
-            //TODO DEVSIX-1057, DEVSIX-1021
-            internal virtual UnitValue GetWidth() {
-                UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
-                if (widthValue == null || widthValue.IsPercentValue()) {
-                    return widthValue;
-                }
-                else {
-                    Border[] borders = cell.GetBorders();
-                    if (borders[1] != null) {
-                        widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
-                    }
-                    if (borders[3] != null) {
-                        widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
-                    }
-                    float[] paddings = cell.GetPaddings();
-                    widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
-                    return widthValue;
-                }
             }
 
             public virtual int CompareTo(TableWidths.CellInfo o) {

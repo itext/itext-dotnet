@@ -82,10 +82,18 @@ namespace iText.IO.Util {
             return result;
         }
 
-        public static void FillWithValue(int[] a, int value) {
+        public static int[] FillWithValue(int[] a, int value) {
             for (int i = 0; i < a.Length; i++) {
                 a[i] = value;
             }
+            return a;
+        }
+
+        public static float[] FillWithValue(float[] a, float value) {
+            for (int i = 0; i < a.Length; i++) {
+                a[i] = value;
+            }
+            return a;
         }
 
         public static void FillWithValue<T>(T[] a, T value) {
