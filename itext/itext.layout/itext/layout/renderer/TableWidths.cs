@@ -229,7 +229,7 @@ namespace iText.Layout.Renderer {
             //TODO add colgroup information.
             for (int i = 0; i < numberOfColumns; i++) {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
-                if (colWidth.GetValue() >= 0) {
+                if (colWidth != null && colWidth.GetValue() > 0) {
                     if (colWidth.IsPercentValue()) {
                         if (!widths[i].isPercent) {
                             if (widths[i].isFixed && widths[i].width > widths[i].min) {
@@ -359,7 +359,7 @@ namespace iText.Layout.Renderer {
                         //sum of non fixed non percent columns.
                         for (int i = 0; i < numberOfColumns; i++) {
                             if (widths[i].isPercent) {
-                                if (tableWidth * widths[i].width >= widths[i].min) {
+                                if (tableWidth * widths[i].width / 100 >= widths[i].min) {
                                     widths[i].finalWidth = tableWidth * widths[i].width / 100;
                                     totalPercent += widths[i].finalWidth;
                                 }
@@ -488,10 +488,7 @@ namespace iText.Layout.Renderer {
                             UnitValue cellWidth = GetCellWidth(cell, true);
                             if (cellWidth != null) {
                                 System.Diagnostics.Debug.Assert(cellWidth.GetValue() >= 0);
-                                float width = cellWidth.GetValue();
-                                if (cellWidth.IsPercentValue()) {
-                                    width = tableWidth * width / 100;
-                                }
+                                float width = cellWidth.IsPercentValue() ? tableWidth * cellWidth.GetValue() / 100 : cellWidth.GetValue();
                                 int colspan = ((Cell)cell.GetModelElement()).GetColspan();
                                 for (int j = 0; j < colspan; j++) {
                                     columnWidths[i + j] = width / colspan;
@@ -747,14 +744,17 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private static readonly UnitValue ZeroWidth = UnitValue.CreatePointValue(0);
+
         //TODO DEVSIX-1174, box-sizing property
         internal UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
             UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
             if (widthValue == null || widthValue.GetValue() < 0) {
                 return null;
             }
-            if (!zeroIsValid && widthValue.GetValue() == 0) {
-                return null;
+            //zero has special meaning in fixed layout, we shall not add padding to zero value
+            if (widthValue.GetValue() == 0) {
+                return zeroIsValid ? ZeroWidth : null;
             }
             if (widthValue == null || widthValue.IsPercentValue()) {
                 return widthValue;
