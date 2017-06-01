@@ -100,8 +100,7 @@ namespace iText.Signatures {
             signatureName = names[names.Count - 1];
             this.signDate = DateTimeUtil.GetCurrentUtcTime();
             pkcs7 = CoversWholeDocument();
-            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "",
-                signatureName
+            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
                 ));
         }
 
