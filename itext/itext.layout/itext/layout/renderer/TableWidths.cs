@@ -782,27 +782,31 @@ namespace iText.Layout.Renderer {
         //TODO DEVSIX-1174, box-sizing property
         internal UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
             UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
+            //zero has special meaning in fixed layout, we shall not add padding to zero value
             if (widthValue == null || widthValue.GetValue() < 0) {
                 return null;
             }
-            //zero has special meaning in fixed layout, we shall not add padding to zero value
-            if (widthValue.GetValue() == 0) {
-                return zeroIsValid ? ZeroWidth : null;
-            }
-            if (widthValue == null || widthValue.IsPercentValue()) {
-                return widthValue;
-            }
             else {
-                Border[] borders = cell.GetBorders();
-                if (borders[1] != null) {
-                    widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                if (widthValue.GetValue() == 0) {
+                    return zeroIsValid ? ZeroWidth : null;
                 }
-                if (borders[3] != null) {
-                    widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                else {
+                    if (widthValue.IsPercentValue()) {
+                        return widthValue;
+                    }
+                    else {
+                        Border[] borders = cell.GetBorders();
+                        if (borders[1] != null) {
+                            widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                        }
+                        if (borders[3] != null) {
+                            widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                        }
+                        float[] paddings = cell.GetPaddings();
+                        widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
+                        return widthValue;
+                    }
                 }
-                float[] paddings = cell.GetPaddings();
-                widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
-                return widthValue;
             }
         }
 
