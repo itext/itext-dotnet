@@ -823,7 +823,7 @@ namespace iText.Layout.Renderer {
 
             private readonly int col;
 
-            public readonly byte region;
+            internal readonly byte region;
 
             internal CellInfo(CellRenderer cell, int row, int col, byte region) {
                 this.cell = cell;
