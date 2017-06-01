@@ -51,15 +51,15 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal sealed class TableWidths {
-        private TableRenderer tableRenderer;
+        private readonly TableRenderer tableRenderer;
 
-        private int numberOfColumns;
+        private readonly int numberOfColumns;
 
-        private float rightBorderMaxWidth;
+        private readonly float rightBorderMaxWidth;
 
-        private float leftBorderMaxWidth;
+        private readonly float leftBorderMaxWidth;
 
-        private TableWidths.ColumnWidthData[] widths;
+        private readonly TableWidths.ColumnWidthData[] widths;
 
         private IList<TableWidths.CellInfo> cells;
 
@@ -69,12 +69,13 @@ namespace iText.Layout.Renderer {
 
         private bool fixedTableLayout = false;
 
-        private float minWidth;
+        private float tableMinWidth;
 
         internal TableWidths(TableRenderer tableRenderer, float availableWidth, bool calculateTableMaxWidth, float
              rightBorderMaxWidth, float leftBorderMaxWidth) {
             this.tableRenderer = tableRenderer;
-            numberOfColumns = ((Table)tableRenderer.GetModelElement()).GetNumberOfColumns();
+            this.numberOfColumns = ((Table)tableRenderer.GetModelElement()).GetNumberOfColumns();
+            this.widths = new TableWidths.ColumnWidthData[numberOfColumns];
             this.rightBorderMaxWidth = rightBorderMaxWidth;
             this.leftBorderMaxWidth = leftBorderMaxWidth;
             CalculateTableWidth(availableWidth, calculateTableMaxWidth);
@@ -84,13 +85,23 @@ namespace iText.Layout.Renderer {
             return fixedTableLayout;
         }
 
-        internal float GetMinWidth() {
-            return minWidth;
+        internal float[] Layout() {
+            if (HasFixedLayout()) {
+                return FixedLayout();
+            }
+            else {
+                return AutoLayout();
+            }
         }
 
-        internal float[] AutoLayout(float[] minWidths, float[] maxWidths) {
-            FillWidths(minWidths, maxWidths);
+        internal float GetMinWidth() {
+            return tableMinWidth;
+        }
+
+        internal float[] AutoLayout() {
+            System.Diagnostics.Debug.Assert(tableRenderer.GetTable().IsComplete());
             FillAndSortCells();
+            CalculateMinMaxWidths();
             float minSum = 0;
             foreach (TableWidths.ColumnWidthData width in widths) {
                 minSum += width.min;
@@ -542,12 +553,12 @@ namespace iText.Layout.Renderer {
             if (fixedTableLayout && width != null && width.GetValue() >= 0) {
                 fixedTableWidth = true;
                 tableWidth = RetrieveTableWidth(width, availableWidth);
-                minWidth = width.IsPercentValue() ? 0 : tableWidth;
+                tableMinWidth = width.IsPercentValue() ? 0 : tableWidth;
             }
             else {
                 fixedTableLayout = false;
                 //min width will initialize later
-                minWidth = -1;
+                tableMinWidth = -1;
                 if (calculateTableMaxWidth) {
                     fixedTableWidth = false;
                     tableWidth = RetrieveTableWidth(availableWidth);
@@ -581,11 +592,58 @@ namespace iText.Layout.Renderer {
 
         //endregion
         //region Auto layout utils
-        private void FillWidths(float[] minWidths, float[] maxWidths) {
-            widths = new TableWidths.ColumnWidthData[minWidths.Length];
+        private void CalculateMinMaxWidths() {
+            float[] minWidths = new float[numberOfColumns];
+            float[] maxWidths = new float[numberOfColumns];
+            foreach (TableWidths.CellInfo cell in cells) {
+                // Why we need it? Header/Footer?
+                cell.GetCell().SetParent(tableRenderer);
+                MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                float[] indents = GetCellBorderIndents(cell);
+                minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
+                if (cell.GetColspan() == 1) {
+                    minWidths[cell.GetCol()] = Math.Max(minMax.GetMinWidth(), minWidths[cell.GetCol()]);
+                    maxWidths[cell.GetCol()] = Math.Max(minMax.GetMaxWidth(), maxWidths[cell.GetCol()]);
+                }
+                else {
+                    float remainMin = minMax.GetMinWidth();
+                    float remainMax = minMax.GetMaxWidth();
+                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                        remainMin -= minWidths[i];
+                        remainMax -= maxWidths[i];
+                    }
+                    if (remainMin > 0) {
+                        for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                            minWidths[i] += remainMin / cell.GetColspan();
+                        }
+                    }
+                    if (remainMax > 0) {
+                        for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                            maxWidths[i] += remainMax / cell.GetColspan();
+                        }
+                    }
+                }
+            }
             for (int i = 0; i < widths.Length; i++) {
                 widths[i] = new TableWidths.ColumnWidthData(minWidths[i], maxWidths[i]);
             }
+        }
+
+        private float[] GetCellBorderIndents(TableWidths.CellInfo cell) {
+            TableRenderer renderer;
+            if (cell.region == TableWidths.CellInfo.HEADER) {
+                renderer = tableRenderer.headerRenderer;
+            }
+            else {
+                if (cell.region == TableWidths.CellInfo.HEADER) {
+                    renderer = tableRenderer.footerRenderer;
+                }
+                else {
+                    renderer = tableRenderer;
+                }
+            }
+            return renderer.bordersHandler.GetCellBorderIndents(cell.GetRow(), cell.GetCol(), cell.GetRowspan(), cell.
+                GetColspan());
         }
 
         private void FillAndSortCells() {
@@ -607,7 +665,7 @@ namespace iText.Layout.Renderer {
                 for (int col = 0; col < numberOfColumns; col++) {
                     CellRenderer cell = renderer.rows[row][col];
                     if (cell != null) {
-                        cells.Add(new TableWidths.CellInfo(cell, region));
+                        cells.Add(new TableWidths.CellInfo(cell, row, region));
                     }
                 }
             }
@@ -620,13 +678,13 @@ namespace iText.Layout.Renderer {
 
         private float[] ExtractWidths() {
             float actualWidth = 0;
-            minWidth = 0;
+            tableMinWidth = 0;
             float[] columnWidths = new float[widths.Length];
             for (int i = 0; i < widths.Length; i++) {
                 System.Diagnostics.Debug.Assert(widths[i].finalWidth >= 0);
                 columnWidths[i] = widths[i].finalWidth;
                 actualWidth += widths[i].finalWidth;
-                minWidth += widths[i].min;
+                tableMinWidth += widths[i].min;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
@@ -711,33 +769,6 @@ namespace iText.Layout.Renderer {
                 return !this.isFixed && !this.isPercent;
             }
 
-            /// <summary>Check collusion between min value and point width</summary>
-            /// <returns>
-            /// true, if
-            /// <see cref="min"/>
-            /// greater than
-            /// <see cref="width"/>
-            /// .
-            /// </returns>
-            internal virtual bool HasCollision() {
-                System.Diagnostics.Debug.Assert(!isPercent);
-                return min > width;
-            }
-
-            /// <summary>Check collusion between min value and available point width.</summary>
-            /// <param name="additional">additional available point width.</param>
-            /// <returns>
-            /// true, if
-            /// <see cref="min"/>
-            /// greater than (
-            /// <see cref="width"/>
-            /// + additionalWidth).
-            /// </returns>
-            internal virtual bool CheckCollision(float additional) {
-                System.Diagnostics.Debug.Assert(!isPercent);
-                return min > width + additional;
-            }
-
             public override String ToString() {
                 return "w=" + width + (isPercent ? "%" : "pt") + (isFixed ? " !!" : "") + ", min=" + min + ", max=" + max 
                     + ", finalWidth=" + finalWidth;
@@ -780,15 +811,19 @@ namespace iText.Layout.Renderer {
 
             internal const byte FOOTER = 3;
 
-            private CellRenderer cell;
+            private readonly CellRenderer cell;
 
-            private byte region;
+            private readonly int row;
 
-            internal CellInfo(CellRenderer cell, byte region) {
+            public readonly byte region;
+
+            internal CellInfo(CellRenderer cell, int row, byte region) {
                 this.cell = cell;
                 this.region = region;
+                this.row = row;
             }
 
+            //assert this.row != cell.getModelElement().getRow();
             internal virtual CellRenderer GetCell() {
                 return cell;
             }
@@ -802,7 +837,7 @@ namespace iText.Layout.Renderer {
             }
 
             internal virtual int GetRow() {
-                return ((Cell)cell.GetModelElement()).GetRow();
+                return row;
             }
 
             internal virtual int GetRowspan() {
