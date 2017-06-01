@@ -367,6 +367,7 @@ namespace iText.Layout.Renderer {
                         float minTotalNonPercent = 0;
                         float fixedAddition = 0;
                         float flexibleAddition = 0;
+                        bool hasFlexibleCell = false;
                         //sum of non fixed non percent columns.
                         for (int i = 0; i < numberOfColumns; i++) {
                             if (widths[i].isPercent) {
@@ -390,6 +391,7 @@ namespace iText.Layout.Renderer {
                                 }
                                 else {
                                     flexibleAddition += addition;
+                                    hasFlexibleCell = true;
                                 }
                             }
                         }
@@ -406,7 +408,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             float extraWidth = tableWidth - totalPercent - minTotalNonPercent;
-                            if (fixedAddition > 0 && (extraWidth < fixedAddition || flexibleAddition == 0)) {
+                            if (fixedAddition > 0 && (extraWidth < fixedAddition || !hasFlexibleCell)) {
                                 for (int i = 0; i < numberOfColumns; i++) {
                                     //only points could be fixed
                                     if (widths[i].isFixed) {
@@ -635,7 +637,7 @@ namespace iText.Layout.Renderer {
                 renderer = tableRenderer.headerRenderer;
             }
             else {
-                if (cell.region == TableWidths.CellInfo.HEADER) {
+                if (cell.region == TableWidths.CellInfo.FOOTER) {
                     renderer = tableRenderer.footerRenderer;
                 }
                 else {
@@ -665,7 +667,7 @@ namespace iText.Layout.Renderer {
                 for (int col = 0; col < numberOfColumns; col++) {
                     CellRenderer cell = renderer.rows[row][col];
                     if (cell != null) {
-                        cells.Add(new TableWidths.CellInfo(cell, row, region));
+                        cells.Add(new TableWidths.CellInfo(cell, row, col, region));
                     }
                 }
             }
@@ -815,25 +817,29 @@ namespace iText.Layout.Renderer {
 
             private readonly int row;
 
+            private readonly int col;
+
             public readonly byte region;
 
-            internal CellInfo(CellRenderer cell, int row, byte region) {
+            internal CellInfo(CellRenderer cell, int row, int col, byte region) {
                 this.cell = cell;
                 this.region = region;
+                //we cannot use getModelElement().getCol() or getRow(), because its may be changed during layout.
                 this.row = row;
+                this.col = col;
             }
 
-            //assert this.row != cell.getModelElement().getRow();
             internal virtual CellRenderer GetCell() {
                 return cell;
             }
 
             internal virtual int GetCol() {
-                return ((Cell)cell.GetModelElement()).GetCol();
+                return col;
             }
 
             internal virtual int GetColspan() {
-                return ((Cell)cell.GetModelElement()).GetColspan();
+                //we cannot use getModelElement().getColspan(), because it may be changed during layout.
+                return (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             }
 
             internal virtual int GetRow() {
@@ -841,7 +847,8 @@ namespace iText.Layout.Renderer {
             }
 
             internal virtual int GetRowspan() {
-                return ((Cell)cell.GetModelElement()).GetRowspan();
+                //we cannot use getModelElement().getRowspan(), because it may be changed during layout.
+                return (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             }
 
             public virtual int CompareTo(TableWidths.CellInfo o) {
@@ -852,6 +859,25 @@ namespace iText.Layout.Renderer {
                     return GetCol() + GetColspan() - o.GetCol() - o.GetColspan();
                 }
                 return region == o.region ? GetRow() - o.GetRow() : region - o.region;
+            }
+
+            public override String ToString() {
+                String str = String.Format("row={0}, col={1}, rowspan={2}, colspan={3}, ", GetRow(), GetCol(), GetRowspan(
+                    ), GetColspan());
+                if (region == HEADER) {
+                    str += "header";
+                }
+                else {
+                    if (region == BODY) {
+                        str += "body";
+                    }
+                    else {
+                        if (region == FOOTER) {
+                            str += "footer";
+                        }
+                    }
+                }
+                return str;
             }
         }
         //endregion

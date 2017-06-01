@@ -769,9 +769,10 @@ namespace iText.Layout.Element {
             return isComplete;
         }
 
-        /// <summary>Indicates that all the desired content has been added to this large element.</summary>
+        /// <summary>Indicates that all the desired content has been added to this large element and no more content will be added.
+        ///     </summary>
         /// <remarks>
-        /// Indicates that all the desired content has been added to this large element.
+        /// Indicates that all the desired content has been added to this large element and no more content will be added.
         /// After this method is called, more precise rendering is activated.
         /// For instance, a table may have a
         /// <see cref="SetSkipLastFooter(bool)"/>
@@ -787,6 +788,7 @@ namespace iText.Layout.Element {
         /// when some content is still there and not flushed.
         /// </remarks>
         public virtual void Complete() {
+            System.Diagnostics.Debug.Assert(!isComplete);
             isComplete = true;
             Flush();
         }
