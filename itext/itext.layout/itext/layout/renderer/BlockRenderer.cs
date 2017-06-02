@@ -445,7 +445,6 @@ namespace iText.Layout.Renderer {
                 logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
                 return;
             }
-            ApplyDestinationsAndAnnotation(drawContext);
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
@@ -474,6 +473,7 @@ namespace iText.Layout.Renderer {
                     isTagged = false;
                 }
             }
+            ApplyDestinationsAndAnnotation(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
