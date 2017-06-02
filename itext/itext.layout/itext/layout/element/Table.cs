@@ -122,7 +122,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <param name="largeTable">
         /// whether parts of the table will be written before all data is added.
-        /// Note, large table do not support auto layout. Table width must be specified.
+        /// Note, large table does not support auto layout. Table width must be specified.
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -265,7 +265,7 @@ namespace iText.Layout.Element {
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <param name="largeTable">
         /// whether parts of the table will be written before all data is added.
-        /// Note, large table do not support auto layout. Table width must be specified.
+        /// Note, large table does not support auto layout. Table width must be specified.
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -927,7 +927,7 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
-        [System.ObsoleteAttribute(@"This method do nothing after implementation table column width algorithms.")]
+        [System.ObsoleteAttribute(@"This method does nothing after implementation table column width algorithms.")]
         protected internal virtual void CalculateWidths() {
         }
 
