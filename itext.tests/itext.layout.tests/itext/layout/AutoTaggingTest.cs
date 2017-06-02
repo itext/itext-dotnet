@@ -345,7 +345,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
-        [NUnit.Framework.Ignore("")]
         [NUnit.Framework.Test]
         public virtual void LinkInsideTable() {
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));

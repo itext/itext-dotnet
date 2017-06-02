@@ -979,9 +979,21 @@ namespace iText.Layout.Renderer {
                         adjustByHeaderRowsNum = modelElement.GetHeader().GetNumberOfRows();
                     }
                     int cellRow = ((Cell)child.GetModelElement()).GetRow() + adjustByHeaderRowsNum;
-                    int rowsNum = tagPointer.GetKidsRoles().Count;
-                    if (cellRow < rowsNum) {
-                        tagPointer.MoveToKid(cellRow);
+                    int cellRowKidIndex = -1;
+                    int foundRowsNum = 0;
+                    IList<PdfName> kidsRoles = tagPointer.GetKidsRoles();
+                    for (int i = 0; i < kidsRoles.Count; ++i) {
+                        PdfName kidRole = kidsRoles[i];
+                        if (kidRole == null || PdfName.TR.Equals(kidRole)) {
+                            ++foundRowsNum;
+                        }
+                        if (foundRowsNum - 1 == cellRow) {
+                            cellRowKidIndex = i;
+                            break;
+                        }
+                    }
+                    if (cellRowKidIndex > -1) {
+                        tagPointer.MoveToKid(cellRowKidIndex);
                     }
                     else {
                         tagPointer.AddTag(PdfName.TR);
