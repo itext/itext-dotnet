@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace iText.Layout.Font {
@@ -20,11 +21,11 @@ namespace iText.Layout.Font {
         }
 
         public void Add(FontInfo item) {
-            throw new System.ApplicationException("Unsupported operation");
+            throw new NotSupportedException();
         }
 
         public void Clear() {
-            throw new System.ApplicationException("Unsupported operation");
+            throw new NotSupportedException();
         }
 
         public bool Contains(FontInfo item) {
@@ -41,7 +42,7 @@ namespace iText.Layout.Font {
         }
 
         public bool Remove(FontInfo item) {
-            throw new System.ApplicationException("Unsupported operation");
+            throw new NotSupportedException();
         }
 
         public int Count {
