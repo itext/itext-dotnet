@@ -898,6 +898,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
+            ApplyDestinationsAndAnnotation(drawContext);
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             bool ignoreTag = false;
@@ -918,15 +919,41 @@ namespace iText.Layout.Renderer {
                     PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
                     ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
                 }
-                base.Draw(drawContext);
+                bool relativePosition = IsRelativePosition();
+                if (relativePosition) {
+                    ApplyRelativePositioningTranslation(false);
+                }
+                BeginElementOpacityApplying(drawContext);
+                DrawBackground(drawContext);
+                DrawBorder(drawContext);
+                DrawChildren(drawContext);
+                DrawPositionedChildren(drawContext);
+                EndElementOpacityApplying(drawContext);
+                if (relativePosition) {
+                    ApplyRelativePositioningTranslation(true);
+                }
                 tagPointer.MoveToParent();
                 bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
                     tagPointer.RemoveElementConnectionToTag(accessibleElement);
                 }
+                flushed = true;
             }
             else {
-                base.Draw(drawContext);
+                bool relativePosition = IsRelativePosition();
+                if (relativePosition) {
+                    ApplyRelativePositioningTranslation(false);
+                }
+                BeginElementOpacityApplying(drawContext);
+                DrawBackground(drawContext);
+                DrawBorder(drawContext);
+                DrawChildren(drawContext);
+                DrawPositionedChildren(drawContext);
+                EndElementOpacityApplying(drawContext);
+                if (relativePosition) {
+                    ApplyRelativePositioningTranslation(true);
+                }
+                flushed = true;
             }
         }
 

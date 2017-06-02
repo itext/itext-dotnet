@@ -49,6 +49,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -338,6 +339,27 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Close();
             CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Test]
+        public virtual void LinkInsideTable() {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
+            pdf.SetTagged();
+            Document doc = new Document(pdf);
+            Table table = new Table(new float[] { 1, 2, 3 }).SetFixedLayout().SetWidth(400);
+            table.AddCell("1x");
+            table.AddCell("2x");
+            table.AddCell("3x");
+            table.SetProperty(Property.LINK_ANNOTATION, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0))
+                .SetAction(PdfAction.CreateURI("http://itextpdf.com/"))));
+            doc.Add(table);
+            doc.Close();
+            CompareResult("linkInsideTable.pdf", "cmp_linkInsideTable.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
