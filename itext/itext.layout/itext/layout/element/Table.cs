@@ -120,7 +120,10 @@ namespace iText.Layout.Element {
         /// preferable column widths in points.  Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
         /// </param>
-        /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
+        /// <param name="largeTable">
+        /// whether parts of the table will be written before all data is added.
+        /// Note, large table do not support auto layout. Table width must be specified.
+        /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         public Table(float[] columnWidths, bool largeTable) {
@@ -241,8 +244,8 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with number of columns. Each column will get equal percent width.
-        /// 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns. Each column will get equal percent width,
+        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
         /// <br/>
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
@@ -260,7 +263,10 @@ namespace iText.Layout.Element {
         /// .
         /// </summary>
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
-        /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
+        /// <param name="largeTable">
+        /// whether parts of the table will be written before all data is added.
+        /// Note, large table do not support auto layout. Table width must be specified.
+        /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use another constructor to get predictable result."
@@ -283,8 +289,8 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with number of columns. Each column will get equal percent width.
-        /// 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns. Each column will get equal percent width,
+        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
         /// <br/>
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
@@ -355,16 +361,29 @@ namespace iText.Layout.Element {
         /// <p/>
         /// Algorithm description
         /// <br/>
-        /// 1. Scan columns for width property and set it. (Columns have set in constructor, analog of
+        /// 1. Scan columns for width property and set it. All the rest columns get undefined value.
+        /// Column width includes borders and paddings. Columns have set in constructor, analog of
         /// <c>&lt;colgroup&gt;</c>
-        /// element in HTML)<br/>
-        /// 2. Scan the very first row of table for width property and set it to undefined columns (cell width has lower priority in comparing with column).
-        /// If cell has colspan, each column will get equal width:
-        /// <c>(width/colspan)</c>
-        /// .<br/>
-        /// 3. If sum of columns is less, than table width, there are two options:<br/>
-        /// 3.1. If undefined columns still exist, they will get the rest remaining width.<br/>
-        /// 3.2. Otherwise all columns will be expanded proportionally based on its width.<br/>
+        /// element in HTML.
+        /// <br/>
+        /// 2. Scan the very first row of table for width property and set it to undefined columns.
+        /// Cell width has lower priority in comparing with column. Cell width doesn't include borders and paddings.
+        /// <br/>
+        /// 2.1 If cell has colspan and all columns are undefined, each column will get equal width:
+        /// <c>width/colspan</c>
+        /// .
+        /// <br/>
+        /// 2.2 If some columns already have width, equal remain width will be added
+        /// <c>remainWidth/colspan</c>
+        /// to each column.
+        /// <br/>
+        /// 3. If sum of columns is less, than table width, there are two options:
+        /// <br/>
+        /// 3.1. If undefined columns still exist, they will get the rest remaining width.
+        /// <br/>
+        /// 3.2. Otherwise all columns will be expanded proportionally based on its width.
+        /// <br/>
+        /// 4. If sum of columns is greater, than table width, nothing to do.
         /// </remarks>
         /// <returns>this element.</returns>
         public virtual iText.Layout.Element.Table SetFixedLayout() {
@@ -374,9 +393,22 @@ namespace iText.Layout.Element {
 
         /// <summary>Set auto layout.</summary>
         /// <remarks>
-        /// Set auto layout.
+        /// Set auto layout. Analog of
+        /// <c>table-layout:fixed</c>
+        /// CSS property. <br />
+        /// Note, large table does not support auto layout.
         /// <p/>
-        /// 1.
+        /// Algorithm principles.
+        /// <br/>
+        /// 1. Column width cannot be less, than min-width of any cell in the column (calculated by layout).
+        /// <br/>
+        /// 2. Specified table width has higher priority, than sum of column and cell widths.
+        /// <br/>
+        /// 3. Percent value of cell and column width has higher priority, than point value.
+        /// <br/>
+        /// 4. Cell width has higher priority, than column width.
+        /// <br/>
+        /// 5. If column has no width, it will try to reach max-value (calculated by layout).
         /// </remarks>
         /// <returns>this element.</returns>
         public virtual iText.Layout.Element.Table SetAutoLayout() {
