@@ -47,6 +47,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using iText.IO.Font;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -1266,8 +1267,30 @@ namespace iText.Kernel.Utils {
                     PdfDictionary cmpNumTree = cmpDict.GetAsDictionary(key);
                     LinkedList<PdfObject> outItems = new LinkedList<PdfObject>();
                     LinkedList<PdfObject> cmpItems = new LinkedList<PdfObject>();
-                    FlattenNumTree(outNumTree, null, outItems);
-                    FlattenNumTree(cmpNumTree, null, cmpItems);
+                    PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
+                    PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
+                    if (outLeftover != null) {
+                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                            );
+                        if (compareResult != null && cmpLeftover == null) {
+                            compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
+                        }
+                    }
+                    if (cmpLeftover != null) {
+                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                            );
+                        if (compareResult != null && outLeftover == null) {
+                            compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"
+                                );
+                        }
+                    }
+                    if (outLeftover != null && cmpLeftover != null && !CompareNumbers(outLeftover, cmpLeftover)) {
+                        if (compareResult != null) {
+                            compareResult.AddError(currentPath, "Number tree was expected to end with a different key (although it is invalid according to the specification)"
+                                );
+                        }
+                        return false;
+                    }
                     PdfArray outArray = new PdfArray(outItems, outItems.Count);
                     PdfArray cmpArray = new PdfArray(cmpItems, cmpItems.Count);
                     if (!CompareArraysExtended(outArray, cmpArray, currentPath, compareResult)) {
