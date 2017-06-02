@@ -1225,6 +1225,10 @@ namespace iText.Kernel.Utils {
             ICollection<PdfName> mergedKeys = new SortedSet<PdfName>(cmpDict.KeySet());
             mergedKeys.AddAll(outDict.KeySet());
             foreach (PdfName key in mergedKeys) {
+                if (!dictsAreSame && (currentPath == null || compareResult == null || compareResult.IsMessageLimitReached(
+                    ))) {
+                    return false;
+                }
                 if (excludedKeys != null && excludedKeys.Contains(key)) {
                     continue;
                 }
@@ -1263,6 +1267,9 @@ namespace iText.Kernel.Utils {
                 // A number tree can be stored in multiple, semantically equivalent ways.
                 // Flatten to a single array, in order to get a canonical representation.
                 if (key.Equals(PdfName.ParentTree) || key.Equals(PdfName.PageLabels)) {
+                    if (currentPath != null) {
+                        currentPath.PushDictItemToPath(key);
+                    }
                     PdfDictionary outNumTree = outDict.GetAsDictionary(key);
                     PdfDictionary cmpNumTree = cmpDict.GetAsDictionary(key);
                     LinkedList<PdfObject> outItems = new LinkedList<PdfObject>();
@@ -1272,29 +1279,41 @@ namespace iText.Kernel.Utils {
                     if (outLeftover != null) {
                         LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
-                        if (compareResult != null && cmpLeftover == null) {
-                            compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
+                        if (cmpLeftover == null) {
+                            if (compareResult != null && currentPath != null) {
+                                compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
+                            }
+                            dictsAreSame = false;
                         }
                     }
                     if (cmpLeftover != null) {
                         LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
-                        if (compareResult != null && outLeftover == null) {
-                            compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"
-                                );
+                        if (outLeftover == null) {
+                            if (compareResult != null && currentPath != null) {
+                                compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"
+                                    );
+                            }
+                            dictsAreSame = false;
                         }
                     }
                     if (outLeftover != null && cmpLeftover != null && !CompareNumbers(outLeftover, cmpLeftover)) {
-                        if (compareResult != null) {
+                        if (compareResult != null && currentPath != null) {
                             compareResult.AddError(currentPath, "Number tree was expected to end with a different key (although it is invalid according to the specification)"
                                 );
                         }
-                        return false;
+                        dictsAreSame = false;
                     }
                     PdfArray outArray = new PdfArray(outItems, outItems.Count);
                     PdfArray cmpArray = new PdfArray(cmpItems, cmpItems.Count);
                     if (!CompareArraysExtended(outArray, cmpArray, currentPath, compareResult)) {
-                        return false;
+                        if (compareResult != null && currentPath != null) {
+                            compareResult.AddError(currentPath, "Number trees were flattened, compared and found to be different.");
+                        }
+                        dictsAreSame = false;
+                    }
+                    if (currentPath != null) {
+                        currentPath.Pop();
                     }
                     continue;
                 }
@@ -1305,10 +1324,6 @@ namespace iText.Kernel.Utils {
                     ) && dictsAreSame;
                 if (currentPath != null) {
                     currentPath.Pop();
-                }
-                if (!dictsAreSame && (currentPath == null || compareResult == null || compareResult.IsMessageLimitReached(
-                    ))) {
-                    return false;
                 }
             }
             return dictsAreSame;
