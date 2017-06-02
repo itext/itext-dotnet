@@ -271,17 +271,6 @@ namespace iText.Layout.Renderer {
             if (fixedXPosition == null) {
                 fixedXPosition = occupiedArea.GetBBox().GetX();
             }
-            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            if (angle != null) {
-                fixedXPosition += rotatedDeltaX;
-                fixedYPosition -= rotatedDeltaY;
-                drawContext.GetCanvas().SaveState();
-                ApplyConcatMatrix(drawContext, angle);
-            }
-            base.Draw(drawContext);
-            if (angle != null) {
-                drawContext.GetCanvas().RestoreState();
-            }
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled();
             bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
@@ -305,6 +294,17 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+            }
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (angle != null) {
+                fixedXPosition += rotatedDeltaX;
+                fixedYPosition -= rotatedDeltaY;
+                drawContext.GetCanvas().SaveState();
+                ApplyConcatMatrix(drawContext, angle);
+            }
+            base.Draw(drawContext);
+            if (angle != null) {
+                drawContext.GetCanvas().RestoreState();
             }
             PdfCanvas canvas = drawContext.GetCanvas();
             if (isTagged) {
