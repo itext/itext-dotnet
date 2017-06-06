@@ -77,10 +77,10 @@ namespace iText.IO.Font.Otf {
                 //skip Ligature Caret List Table
                 int markAttachClassDefOffset = rf.ReadUnsignedShort();
                 if (glyphClassDefOffset > 0) {
-                    glyphClass = new OtfClass(rf, glyphClassDefOffset + tableLocation);
+                    glyphClass = OtfClass.Create(rf, glyphClassDefOffset + tableLocation);
                 }
                 if (markAttachClassDefOffset > 0) {
-                    markAttachmentClass = new OtfClass(rf, markAttachClassDefOffset + tableLocation);
+                    markAttachmentClass = OtfClass.Create(rf, markAttachClassDefOffset + tableLocation);
                 }
             }
         }

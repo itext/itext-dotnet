@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using  Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Font;
@@ -174,7 +174,7 @@ namespace iText.Signatures {
             if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {
                 return false;
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
@@ -229,32 +229,28 @@ namespace iText.Signatures {
                     vd.certs.Add(cert);
                 }
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static byte[] BuildOCSPResponse(byte[] BasicOCSPResponse) {
-            DerOctetString doctet = new DerOctetString(BasicOCSPResponse);
-            Asn1EncodableVector v2 = new Asn1EncodableVector();
-            v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
-            v2.Add(doctet);
-            DerEnumerated den = new DerEnumerated(0);
-            Asn1EncodableVector v3 = new Asn1EncodableVector();
-            v3.Add(den);
-            v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
-            DerSequence seq = new DerSequence(v3);
-            return seq.GetEncoded();
+        private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
+            DerOctetString doctet = new DerOctetString(basicOcspResponse);
+            OcspResponseStatus respStatus = new OcspResponseStatus(Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
+                );
+            ResponseBytes responseBytes = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, doctet);
+            OcspResponse ocspResponse = new OcspResponse(respStatus, responseBytes);
+            return new OcspResp(ocspResponse).GetEncoded();
         }
 
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         /// <exception cref="System.IO.IOException"/>
         private PdfName GetSignatureHashKey(String signatureName) {
-            PdfDictionary dic = sgnUtil.GetSignatureDictionary(signatureName);
-            PdfString contents = dic.GetAsString(PdfName.Contents);
+            PdfSignature sig = sgnUtil.GetSignature(signatureName);
+            PdfString contents = sig.GetContents();
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
-            if (PdfName.ETSI_RFC3161.Equals(dic.GetAsName(PdfName.SubFilter))) {
+            if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
                 Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
                 Asn1Object pkcs = din.ReadObject();
                 bc = pkcs.GetEncoded();

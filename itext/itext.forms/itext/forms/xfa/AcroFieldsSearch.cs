@@ -56,7 +56,7 @@ namespace iText.Forms.Xfa {
             acroShort2LongName = new Dictionary<String, String>();
             foreach (String itemName in items) {
                 String itemShort = GetShortName(itemName);
-                acroShort2LongName[itemShort] = itemName;
+                acroShort2LongName.Put(itemShort, itemName);
                 InverseSearchAdd(inverseSearch, SplitParts(itemShort), itemName);
             }
         }

@@ -53,6 +53,7 @@ namespace iText.Kernel.Pdf.Navigation {
 
         public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names);
 
+        [System.ObsoleteAttribute(@"do not use this method. Will be removed in 7.1")]
         public abstract iText.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
             > names);
 

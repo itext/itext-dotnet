@@ -83,6 +83,17 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>Adds an area break to the div's contents.</summary>
+        /// <param name="areaBreak">
+        /// an
+        /// <see cref="AreaBreak"/>
+        /// </param>
+        /// <returns>this Element</returns>
+        public virtual Div Add(AreaBreak areaBreak) {
+            childElements.Add(areaBreak);
+            return this;
+        }
+
         public override PdfName GetRole() {
             return role;
         }

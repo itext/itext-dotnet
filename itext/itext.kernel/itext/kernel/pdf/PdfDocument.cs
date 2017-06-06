@@ -107,7 +107,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
+        /// <summary>The ID entry that represents the initial identifier.</summary>
+        [Obsolete]
+        protected internal PdfString initialDocumentId;
+
         /// <summary>The ID entry that represents a change in a document.</summary>
+        [Obsolete]
         protected internal PdfString modifiedDocumentId;
 
         /// <summary>The original second id when the document is read initially.</summary>
@@ -143,7 +148,7 @@ namespace iText.Kernel.Pdf {
         [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
 
-        private static long lastDocumentId = new long();
+        private static readonly AtomicLong lastDocumentId = new AtomicLong();
 
         private long documentId;
 
@@ -156,13 +161,17 @@ namespace iText.Kernel.Pdf {
         private LinkedDictionary<PdfPage, IList<PdfLinkAnnotation>> linkAnnotations = new LinkedDictionary<PdfPage
             , IList<PdfLinkAnnotation>>();
 
+        /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
+        internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
+            , byte[]>();
+
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader) {
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -179,7 +188,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -208,7 +217,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -618,8 +627,7 @@ namespace iText.Kernel.Pdf {
                         xmp.GetOutputStream().Write(xmpMetadata);
                         xmp.Put(PdfName.Type, PdfName.Metadata);
                         xmp.Put(PdfName.Subtype, PdfName.XML);
-                        PdfEncryption crypto = writer.crypto;
-                        if (crypto != null && !crypto.IsMetadataEncrypted()) {
+                        if (writer.crypto != null && !writer.crypto.IsMetadataEncrypted()) {
                             PdfArray ar = new PdfArray();
                             ar.Add(PdfName.Crypt);
                             xmp.Put(PdfName.Filter, ar);
@@ -638,7 +646,7 @@ namespace iText.Kernel.Pdf {
                     }
                     info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     CheckIsoConformance();
-                    PdfObject crypto_1 = null;
+                    PdfObject crypto = null;
                     if (properties.appendMode) {
                         if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified()) {
                             TryFlushTagStructure();
@@ -656,7 +664,7 @@ namespace iText.Kernel.Pdf {
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
                         if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
-                            catalog.GetPdfObject().Put(PdfName.Pages, pageRoot);
+                            catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
                         }
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
@@ -673,7 +681,7 @@ namespace iText.Kernel.Pdf {
                         if (writer.crypto != null) {
                             System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject(), "Conflict with source encryption"
                                 );
-                            crypto_1 = reader.decrypt.GetPdfObject();
+                            crypto = reader.decrypt.GetPdfObject();
                         }
                     }
                     else {
@@ -712,59 +720,21 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                     }
-                    byte[] originalFileID = null;
-                    if (crypto_1 == null && writer.crypto != null) {
-                        originalFileID = writer.crypto.GetDocumentId();
-                        crypto_1 = writer.crypto.GetPdfObject();
-                        crypto_1.MakeIndirect(this);
+                    PdfObject fileId = GetFileId(crypto, writer.properties);
+                    if (crypto == null && writer.crypto != null) {
+                        crypto = writer.crypto.GetPdfObject();
+                        crypto.MakeIndirect(this);
                         // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
                         // NOTE. No need in reverting, because it is the last operation with the document.
                         writer.crypto = null;
-                        crypto_1.Flush(false);
+                        crypto.Flush(false);
                     }
-                    PdfObject fileId;
-                    bool isModified = false;
-                    if (originalFileID == null) {
-                        if (GetReader() != null) {
-                            originalFileID = GetReader().GetOriginalFileId();
-                            isModified = true;
-                        }
-                        if (originalFileID == null) {
-                            originalFileID = PdfEncryption.GenerateNewDocumentId();
-                        }
-                    }
-                    byte[] secondId;
-                    if (modifiedDocumentId != null) {
-                        secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
-                    }
-                    else {
-                        if (originalModifiedDocumentId != null) {
-                            PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
-                            if (!originalModifiedDocumentId.Equals(newModifiedId)) {
-                                secondId = ByteUtils.GetIsoBytes(newModifiedId.GetValue());
-                            }
-                            else {
-                                secondId = PdfEncryption.GenerateNewDocumentId();
-                            }
-                        }
-                        else {
-                            if (isModified) {
-                                secondId = PdfEncryption.GenerateNewDocumentId();
-                            }
-                            else {
-                                secondId = originalFileID;
-                            }
-                        }
-                    }
-                    // if originalFIleID comes from crypto, it means that no need in checking modified state.
-                    // For crypto purposes new documentId always generated.
-                    fileId = PdfEncryption.CreateInfoId(originalFileID, secondId);
                     // The following two operators prevents the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
                     trailer.Put(PdfName.Info, info.GetPdfObject());
-                    xref.WriteXrefTableAndTrailer(this, fileId, crypto_1);
+                    xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     Counter counter = GetCounter();
                     if (counter != null) {
@@ -800,6 +770,51 @@ namespace iText.Kernel.Pdf {
             closed = true;
         }
 
+        private PdfObject GetFileId(PdfObject crypto, WriterProperties properties) {
+            bool isModified = false;
+            byte[] originalFileID = null;
+            if (properties.initialDocumentId != null) {
+                originalFileID = ByteUtils.GetIsoBytes(properties.initialDocumentId.GetValue());
+            }
+            else {
+                if (initialDocumentId != null) {
+                    originalFileID = ByteUtils.GetIsoBytes(initialDocumentId.GetValue());
+                }
+            }
+            if (originalFileID == null && crypto == null && writer.crypto != null) {
+                originalFileID = writer.crypto.GetDocumentId();
+            }
+            if (originalFileID == null && GetReader() != null) {
+                originalFileID = GetReader().GetOriginalFileId();
+                isModified = true;
+            }
+            if (originalFileID == null) {
+                originalFileID = PdfEncryption.GenerateNewDocumentId();
+            }
+            byte[] secondId = null;
+            if (properties.modifiedDocumentId != null) {
+                secondId = ByteUtils.GetIsoBytes(properties.modifiedDocumentId.GetValue());
+            }
+            else {
+                if (modifiedDocumentId != null) {
+                    secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
+                }
+            }
+            if (secondId == null && originalModifiedDocumentId != null) {
+                PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
+                if (!originalModifiedDocumentId.Equals(newModifiedId)) {
+                    secondId = ByteUtils.GetIsoBytes(newModifiedId.GetValue());
+                }
+                else {
+                    secondId = PdfEncryption.GenerateNewDocumentId();
+                }
+            }
+            if (secondId == null) {
+                secondId = (isModified) ? PdfEncryption.GenerateNewDocumentId() : originalFileID;
+            }
+            return PdfEncryption.CreateInfoId(originalFileID, secondId);
+        }
+
         /// <summary>Gets close status of the document.</summary>
         /// <returns>true, if the document has already been closed, otherwise false.</returns>
         public virtual bool IsClosed() {
@@ -820,7 +835,7 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary markInfo = new PdfDictionary();
                 markInfo.Put(PdfName.Marked, PdfBoolean.TRUE);
                 if (userProperties) {
-                    markInfo.Put(PdfName.UserProperties, new PdfBoolean(true));
+                    markInfo.Put(PdfName.UserProperties, PdfBoolean.ValueOf(true));
                 }
                 catalog.GetPdfObject().Put(PdfName.MarkInfo, markInfo);
                 structParentIndex = 0;
@@ -901,7 +916,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageTo">1-based end of the range of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage, IPdfPageExtraCopier copier) {
@@ -938,7 +958,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end of the range of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be null.</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages.</returns>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , IPdfPageExtraCopier copier) {
@@ -971,7 +996,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pagesToCopy">list of pages to be copied. TreeSet for the order of the pages to be natural.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             int insertBeforePage, IPdfPageExtraCopier copier) {
@@ -992,13 +1022,13 @@ namespace iText.Kernel.Pdf {
                 PdfPage newPage = page.CopyTo(toDocument, copier);
                 copiedPages.Add(newPage);
                 if (!page2page.ContainsKey(page)) {
-                    page2page[page] = newPage;
+                    page2page.Put(page, newPage);
                 }
                 if (lastCopiedPageNum >= pageNum) {
                     rangesOfPagesWithIncreasingNumbers.Add(new Dictionary<PdfPage, PdfPage>());
                 }
                 int lastRangeInd = rangesOfPagesWithIncreasingNumbers.Count - 1;
-                rangesOfPagesWithIncreasingNumbers[lastRangeInd][page] = newPage;
+                rangesOfPagesWithIncreasingNumbers[lastRangeInd].Put(page, newPage);
                 if (insertInBetween) {
                     toDocument.AddPage(pageInsertIndex, newPage);
                 }
@@ -1072,11 +1102,28 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="pagesToCopy">list of pages to be copied. TreeSet for the order of the pages to be natural.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
-        /// <param name="copier">a copier which bears a special copy logic</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             IPdfPageExtraCopier copier) {
             return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier);
+        }
+
+        /// <summary>Flush all copied objects and remove them from copied cache.</summary>
+        /// <remarks>
+        /// Flush all copied objects and remove them from copied cache.
+        /// Note, if you will copy objects from the same document, doublicated objects will be created.
+        /// </remarks>
+        /// <param name="sourceDoc">source document</param>
+        public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc) {
+            if (GetWriter() != null) {
+                GetWriter().FlushCopiedObjects(sourceDoc.GetDocumentId());
+            }
         }
 
         /// <summary>
@@ -1469,10 +1516,25 @@ namespace iText.Kernel.Pdf {
         /// <summary>The /ID entry of a document contains an array with two entries.</summary>
         /// <remarks>
         /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
+        /// The second one should be the same entry, unless the document has been modified. iText will by default keep thi
+        /// existing initial id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="initialDocumentId">the new initial document id</param>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetInitialDocumentId(PdfString) instead"
+            )]
+        public virtual void SetInitialDocumentId(PdfString initialDocumentId) {
+            this.initialDocumentId = initialDocumentId;
+        }
+
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
         /// The second one should be the same entry, unless the document has been modified. iText will by default generate
         /// a modified id. But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="modifiedDocumentId">the new modified document id</param>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetModifiedDocumentId(PdfString) instead"
+            )]
         public virtual void SetModifiedDocumentId(PdfString modifiedDocumentId) {
             this.modifiedDocumentId = modifiedDocumentId;
         }
@@ -1516,7 +1578,6 @@ namespace iText.Kernel.Pdf {
             if (defaultFont == null) {
                 try {
                     defaultFont = PdfFontFactory.CreateFont();
-                    defaultFont.MakeIndirect(this);
                     AddFont(defaultFont);
                 }
                 catch (System.IO.IOException e) {
@@ -1528,17 +1589,23 @@ namespace iText.Kernel.Pdf {
             return defaultFont;
         }
 
+        /// <summary>
+        /// Adds a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to this document so that this font is flushed automatically
+        /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
+        /// </summary>
+        /// <returns>the same PdfFont instance.</returns>
+        public virtual PdfFont AddFont(PdfFont font) {
+            font.MakeIndirect(this);
+            documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
+            return font;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
-        }
-
-        /// <summary>Adds PdfFont without an checks</summary>
-        /// <returns>the same PdfFont instance.</returns>
-        internal virtual PdfFont AddFont(PdfFont font) {
-            documentFonts[font.GetPdfObject().GetIndirectReference()] = font;
-            return font;
         }
 
         /// <summary>
@@ -1565,7 +1632,7 @@ namespace iText.Kernel.Pdf {
             IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations.Get(page);
             if (pageAnnotations == null) {
                 pageAnnotations = new List<PdfLinkAnnotation>();
-                linkAnnotations[page] = pageAnnotations;
+                linkAnnotations.Put(page, pageAnnotations);
             }
             pageAnnotations.Add(annotation);
         }
@@ -1629,9 +1696,9 @@ namespace iText.Kernel.Pdf {
                             pdfVersion = catalogVersion;
                         }
                     }
-                    if (catalog.GetPdfObject().ContainsKey(PdfName.Metadata) && null != catalog.GetPdfObject().Get(PdfName.Metadata
-                        )) {
-                        xmpMetadata = catalog.GetPdfObject().GetAsStream(PdfName.Metadata).GetBytes();
+                    PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                    if (xmpMetadataStream != null) {
+                        xmpMetadata = xmpMetadataStream.GetBytes();
                         try {
                             reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(xmpMetadata
                                 ));
@@ -2051,53 +2118,13 @@ namespace iText.Kernel.Pdf {
             if (null == oldParent) {
                 return;
             }
-            ICollection<String> names = toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Keys;
-            IDictionary<String, PdfObject> srcNamedDestinations = catalog.GetNameTree(PdfName.Dests).GetNames();
             foreach (PdfOutline outline in oldParent.GetAllChildren()) {
                 if (outlinesToCopy.Contains(outline)) {
-                    PdfDestination dest = outline.GetDestination();
-                    if (dest is PdfStringDestination) {
-                        String name = ((PdfString)dest.GetPdfObject()).ToUnicodeString();
-                        if (!names.Contains(name)) {
-                            PdfArray array = new PdfArray();
-                            array.AddAll((PdfArray)srcNamedDestinations.Get(name));
-                            PdfObject pageObject = array.Get(0);
-                            if (!pageObject.IsNumber()) {
-                                PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-                                PdfPage newPage = page2page.Get(oldPage);
-                                if (oldPage == null || newPage == null) {
-                                    dest = null;
-                                }
-                                else {
-                                    array.Set(0, newPage.GetPdfObject());
-                                }
-                            }
-                            if (dest != null) {
-                                toDocument.AddNamedDestination(name, ((PdfArray)array.MakeIndirect(toDocument)));
-                            }
-                        }
-                    }
-                    else {
-                        if (dest is PdfExplicitDestination) {
-                            PdfArray destArray = new PdfArray();
-                            destArray.AddAll((PdfArray)dest.GetPdfObject());
-                            PdfObject pageObject = destArray.Get(0);
-                            if (!pageObject.IsNumber()) {
-                                PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-                                PdfPage newPage = page2page.Get(oldPage);
-                                if (oldPage == null || newPage == null) {
-                                    dest = null;
-                                }
-                                else {
-                                    destArray.Set(0, newPage.GetPdfObject());
-                                    dest = new PdfExplicitDestination(destArray);
-                                }
-                            }
-                        }
-                    }
+                    PdfObject destObjToCopy = outline.GetDestination().GetPdfObject();
+                    PdfDestination copiedDest = GetCatalog().CopyDestination(destObjToCopy, page2page, toDocument);
                     PdfOutline child = newParent.AddOutline(outline.GetTitle());
-                    if (dest != null) {
-                        child.AddDestination(dest);
+                    if (copiedDest != null) {
+                        child.AddDestination(copiedDest);
                     }
                     CloneOutlines(outlinesToCopy, child, outline, page2page, toDocument);
                 }
@@ -2129,11 +2156,11 @@ namespace iText.Kernel.Pdf {
         /// an unique object key during the copy process.
         /// </remarks>
         internal class IndirectRefDescription {
-            private long docId;
+            internal readonly long docId;
 
-            private int objNr;
+            internal readonly int objNr;
 
-            private int genNr;
+            internal readonly int genNr;
 
             internal IndirectRefDescription(PdfIndirectReference reference) {
                 this.docId = reference.GetDocument().GetDocumentId();
@@ -2180,10 +2207,6 @@ namespace iText.Kernel.Pdf {
                 buf.Append(version.GetVersion());
                 return buf.ToString();
             }
-        }
-
-        private long IncrementDocumentId() {
-            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {

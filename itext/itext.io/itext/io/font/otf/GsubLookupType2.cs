@@ -88,7 +88,7 @@ namespace iText.IO.Font.Otf {
                 for (int i = 0; i < sequenceCount; ++i) {
                     openReader.rf.Seek(sequenceLocations[i]);
                     int glyphCount = openReader.rf.ReadUnsignedShort();
-                    substMap[coverageGlyphIds[i]] = openReader.ReadUShortArray(glyphCount);
+                    substMap.Put(coverageGlyphIds[i], openReader.ReadUShortArray(glyphCount));
                 }
             }
             else {

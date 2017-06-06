@@ -47,6 +47,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using iText.IO.Font;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -92,9 +93,9 @@ namespace iText.Kernel.Utils {
 
         private const String ignoredAreasPrefix = "ignored_areas_";
 
-        private const String gsParams = " -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile=<outputfile> <inputfile>";
+        private const String gsParams = " -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile='<outputfile>' '<inputfile>'";
 
-        private const String compareParams = " \"<image1>\" \"<image2>\" \"<difference>\"";
+        private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
         private String gsExec;
 
@@ -174,6 +175,23 @@ namespace iText.Kernel.Utils {
                 (PdfName.Metadata));
             CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject
                 (), catalogPath, compareResult, ignoredCatalogEntries);
+            // Method compareDictionariesExtended eventually calls compareObjects method which doesn't compare page objects.
+            // At least for now compare page dictionaries explicitly here like this.
+            if (cmpPagesRef == null || outPagesRef == null) {
+                return compareResult;
+            }
+            if (outPagesRef.Count != cmpPagesRef.Count && !compareResult.IsMessageLimitReached()) {
+                compareResult.AddError(catalogPath, "Documents have different numbers of pages.");
+            }
+            for (int i = 0; i < Math.Min(cmpPagesRef.Count, outPagesRef.Count); i++) {
+                if (compareResult.IsMessageLimitReached()) {
+                    break;
+                }
+                CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpPagesRef[i], outPagesRef[i]);
+                PdfDictionary outPageDict = (PdfDictionary)outPagesRef[i].GetRefersTo();
+                PdfDictionary cmpPageDict = (PdfDictionary)cmpPagesRef[i].GetRefersTo();
+                CompareDictionariesExtended(outPageDict, cmpPageDict, currentPath, compareResult);
+            }
             return compareResult;
         }
 
@@ -849,10 +867,11 @@ namespace iText.Kernel.Utils {
         private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
             >> ignoredAreas, IList<int> equalPages) {
             if (gsExec == null) {
-                return undefinedGsPath;
+                throw new CompareTool.CompareToolExecutionException(this, undefinedGsPath);
             }
-            if (!(new FileInfo(gsExec).Exists)) {
-                return new FileInfo(gsExec).FullName + " does not exist";
+            if (!(new FileInfo(gsExec).CanExecute())) {
+                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(gsExec).FullName + " is not an executable program"
+                    );
             }
             if (!outPath.EndsWith("/")) {
                 outPath = outPath + "/";
@@ -862,10 +881,7 @@ namespace iText.Kernel.Utils {
             if (ignoredAreas != null && !ignoredAreas.IsEmpty()) {
                 CreateIgnoredAreasPdfs(outPath, ignoredAreas);
             }
-            String imagesGenerationResult = RunGhostScriptImageGeneration(outPath);
-            if (imagesGenerationResult != null) {
-                return imagesGenerationResult;
-            }
+            RunGhostScriptImageGeneration(outPath);
             return CompareImagesOfPdfs(outPath, differenceImagePrefix, equalPages);
         }
 
@@ -882,12 +898,17 @@ namespace iText.Kernel.Utils {
             }
             int cnt = Math.Min(imageFiles.Length, cmpImageFiles.Length);
             if (cnt < 1) {
-                return "No files for comparing.\nThe result or sample pdf file is not processed by GhostScript.";
+                throw new CompareTool.CompareToolExecutionException(this, "No files for comparing. The result or sample pdf file is not processed by GhostScript."
+                    );
             }
             iText.IO.Util.JavaUtil.Sort(imageFiles, new CompareTool.ImageNameComparator(this));
             iText.IO.Util.JavaUtil.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
             String differentPagesFail = null;
-            bool compareExecIsOk = compareExec != null && new FileInfo(compareExec).Exists;
+            bool compareExecIsOk = compareExec != null && new FileInfo(compareExec).CanExecute();
+            if (compareExec != null && !compareExecIsOk) {
+                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(compareExec).FullName + " is not an executable program"
+                    );
+            }
             IList<int> diffPages = new List<int>();
             for (int i = 0; i < cnt; i++) {
                 if (equalPages != null && equalPages.Contains(i)) {
@@ -907,7 +928,7 @@ namespace iText.Kernel.Utils {
                         String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].FullName).Replace("<image2>", cmpImageFiles
                             [i].FullName).Replace("<difference>", outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString
                             (i + 1) + ".png");
-                        if (SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
+                        if (!SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
                             differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString
                                 (i + 1) + ".png for more details.";
                         }
@@ -999,22 +1020,22 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Runs ghostscript to create images of pdfs.</summary>
         /// <param name="outPath">Path to the output folder.</param>
-        /// <returns>Returns null if result is successful, else returns error message.</returns>
+        /// <exception cref="CompareToolExecutionException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private String RunGhostScriptImageGeneration(String outPath) {
+        private void RunGhostScriptImageGeneration(String outPath) {
             if (!FileUtil.DirectoryExists(outPath)) {
-                return cannotOpenOutputDirectory.Replace("<filename>", outPdf);
+                throw new CompareTool.CompareToolExecutionException(this, cannotOpenOutputDirectory.Replace("<filename>", 
+                    outPdf));
             }
             String currGsParams = gsParams.Replace("<outputfile>", outPath + cmpImage).Replace("<inputfile>", cmpPdf);
             if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                return gsFailed.Replace("<filename>", cmpPdf);
+                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", cmpPdf));
             }
             currGsParams = gsParams.Replace("<outputfile>", outPath + outImage).Replace("<inputfile>", outPdf);
             if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                return gsFailed.Replace("<filename>", outPdf);
+                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", outPdf));
             }
-            return null;
         }
 
         private void PrintOutCmpDirectories() {
@@ -1204,6 +1225,10 @@ namespace iText.Kernel.Utils {
             ICollection<PdfName> mergedKeys = new SortedSet<PdfName>(cmpDict.KeySet());
             mergedKeys.AddAll(outDict.KeySet());
             foreach (PdfName key in mergedKeys) {
+                if (!dictsAreSame && (currentPath == null || compareResult == null || compareResult.IsMessageLimitReached(
+                    ))) {
+                    return false;
+                }
                 if (excludedKeys != null && excludedKeys.Contains(key)) {
                     continue;
                 }
@@ -1239,6 +1264,59 @@ namespace iText.Kernel.Utils {
                         continue;
                     }
                 }
+                // A number tree can be stored in multiple, semantically equivalent ways.
+                // Flatten to a single array, in order to get a canonical representation.
+                if (key.Equals(PdfName.ParentTree) || key.Equals(PdfName.PageLabels)) {
+                    if (currentPath != null) {
+                        currentPath.PushDictItemToPath(key);
+                    }
+                    PdfDictionary outNumTree = outDict.GetAsDictionary(key);
+                    PdfDictionary cmpNumTree = cmpDict.GetAsDictionary(key);
+                    LinkedList<PdfObject> outItems = new LinkedList<PdfObject>();
+                    LinkedList<PdfObject> cmpItems = new LinkedList<PdfObject>();
+                    PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
+                    PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
+                    if (outLeftover != null) {
+                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                            );
+                        if (cmpLeftover == null) {
+                            if (compareResult != null && currentPath != null) {
+                                compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
+                            }
+                            dictsAreSame = false;
+                        }
+                    }
+                    if (cmpLeftover != null) {
+                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                            );
+                        if (outLeftover == null) {
+                            if (compareResult != null && currentPath != null) {
+                                compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"
+                                    );
+                            }
+                            dictsAreSame = false;
+                        }
+                    }
+                    if (outLeftover != null && cmpLeftover != null && !CompareNumbers(outLeftover, cmpLeftover)) {
+                        if (compareResult != null && currentPath != null) {
+                            compareResult.AddError(currentPath, "Number tree was expected to end with a different key (although it is invalid according to the specification)"
+                                );
+                        }
+                        dictsAreSame = false;
+                    }
+                    PdfArray outArray = new PdfArray(outItems, outItems.Count);
+                    PdfArray cmpArray = new PdfArray(cmpItems, cmpItems.Count);
+                    if (!CompareArraysExtended(outArray, cmpArray, currentPath, compareResult)) {
+                        if (compareResult != null && currentPath != null) {
+                            compareResult.AddError(currentPath, "Number trees were flattened, compared and found to be different.");
+                        }
+                        dictsAreSame = false;
+                    }
+                    if (currentPath != null) {
+                        currentPath.Pop();
+                    }
+                    continue;
+                }
                 if (currentPath != null) {
                     currentPath.PushDictItemToPath(key);
                 }
@@ -1247,12 +1325,42 @@ namespace iText.Kernel.Utils {
                 if (currentPath != null) {
                     currentPath.Pop();
                 }
-                if (!dictsAreSame && (currentPath == null || compareResult == null || compareResult.IsMessageLimitReached(
-                    ))) {
-                    return false;
-                }
             }
             return dictsAreSame;
+        }
+
+        private PdfNumber FlattenNumTree(PdfDictionary dictionary, PdfNumber leftOver, LinkedList<PdfObject> items
+            ) {
+            /*Map<PdfNumber, PdfObject> items*/
+            PdfArray nums = dictionary.GetAsArray(PdfName.Nums);
+            if (nums != null) {
+                for (int k = 0; k < nums.Size(); k++) {
+                    PdfNumber number;
+                    if (leftOver == null) {
+                        number = nums.GetAsNumber(k++);
+                    }
+                    else {
+                        number = leftOver;
+                        leftOver = null;
+                    }
+                    if (k < nums.Size()) {
+                        items.AddLast(number);
+                        items.AddLast(nums.Get(k, false));
+                    }
+                    else {
+                        return number;
+                    }
+                }
+            }
+            else {
+                if ((nums = dictionary.GetAsArray(PdfName.Kids)) != null) {
+                    for (int k = 0; k < nums.Size(); k++) {
+                        PdfDictionary kid = nums.GetAsDictionary(k);
+                        leftOver = FlattenNumTree(kid, leftOver, items);
+                    }
+                }
+            }
+            return null;
         }
 
         private bool CompareObjects(PdfObject outObj, PdfObject cmpObj, CompareTool.ObjectPath currentPath, CompareTool.CompareResult
@@ -1319,16 +1427,14 @@ namespace iText.Kernel.Utils {
                 // References to the same page
                 if (cmpPagesRef == null) {
                     cmpPagesRef = new List<PdfIndirectReference>();
-                    for (int i = 1; i <= cmpObj.GetIndirectReference().GetDocument().GetNumberOfPages(); ++i) {
-                        cmpPagesRef.Add(cmpObj.GetIndirectReference().GetDocument().GetPage(i).GetPdfObject().GetIndirectReference
-                            ());
+                    for (int i = 1; i <= cmpRefKey.GetDocument().GetNumberOfPages(); ++i) {
+                        cmpPagesRef.Add(cmpRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
                 if (outPagesRef == null) {
                     outPagesRef = new List<PdfIndirectReference>();
-                    for (int i = 1; i <= outObj.GetIndirectReference().GetDocument().GetNumberOfPages(); ++i) {
-                        outPagesRef.Add(outObj.GetIndirectReference().GetDocument().GetPage(i).GetPdfObject().GetIndirectReference
-                            ());
+                    for (int i = 1; i <= outRefKey.GetDocument().GetNumberOfPages(); ++i) {
+                        outPagesRef.Add(outRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
                 if (cmpPagesRef.Contains(cmpRefKey) && cmpPagesRef.IndexOf(cmpRefKey) == outPagesRef.IndexOf(outRefKey)) {
@@ -1893,7 +1999,7 @@ namespace iText.Kernel.Utils {
 
             protected internal virtual void AddError(CompareTool.ObjectPath path, String message) {
                 if (this.differences.Count < this.messageLimit) {
-                    this.differences[((CompareTool.ObjectPath)path.Clone())] = message;
+                    this.differences.Put(((CompareTool.ObjectPath)path.Clone()), message);
                 }
             }
 
@@ -2406,6 +2512,15 @@ namespace iText.Kernel.Utils {
                 return new CompareTool.TrailerPath(cmpDocument, outDocument, (Stack<CompareTool.ObjectPath.LocalPathItem>)
                     path.Clone());
             }
+        }
+
+        public class CompareToolExecutionException : Exception {
+            public CompareToolExecutionException(CompareTool _enclosing, String msg)
+                : base(msg) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly CompareTool _enclosing;
         }
     }
 }

@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -110,6 +111,8 @@ namespace iText.Forms {
 
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
+
+        internal ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
             , PdfName.Pattern };
@@ -236,7 +239,7 @@ namespace iText.Forms {
                 ProcessKids(kids, fieldDic, page);
             }
             GetFields().Add(fieldDic);
-            fields[field.GetFieldName().ToUnicodeString()] = field;
+            fields.Put(field.GetFieldName().ToUnicodeString(), field);
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
             }
@@ -313,6 +316,18 @@ namespace iText.Forms {
             return fields;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// this
+        /// <see cref="PdfAcroForm"/>
+        /// belongs to.
+        /// </summary>
+        /// <returns>the document of this form</returns>
+        public virtual PdfDocument GetPdfDocument() {
+            return document;
+        }
+
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
@@ -327,7 +342,7 @@ namespace iText.Forms {
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
-            return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
+            return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
         }
 
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
@@ -691,7 +706,7 @@ namespace iText.Forms {
             IDictionary<int, PdfObject> initialPageResourceClones = new LinkedDictionary<int, PdfObject>();
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.Resources);
-                initialPageResourceClones[i] = resources == null ? null : resources.Clone();
+                initialPageResourceClones.Put(i, resources == null ? null : resources.Clone());
             }
             PdfPage page;
             foreach (PdfFormField field in fields) {
@@ -854,7 +869,7 @@ namespace iText.Forms {
             if (field != null) {
                 field.SetFieldName(newName);
                 fields.JRemove(oldName);
-                fields[newName] = field;
+                fields.Put(newName, field);
             }
         }
 
@@ -922,6 +937,10 @@ namespace iText.Forms {
             fields) {
             int index = 1;
             foreach (PdfObject field in array) {
+                if (field.IsFlushed()) {
+                    logger.Warn(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    continue;
+                }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 PdfString fieldName = formField.GetFieldName();
                 String name;
@@ -939,7 +958,7 @@ namespace iText.Forms {
                 else {
                     name = fieldName.ToUnicodeString();
                 }
-                fields[name] = formField;
+                fields.Put(name, formField);
                 if (formField.GetKids() != null) {
                     IterateFields(formField.GetKids(), fields);
                 }
@@ -1030,9 +1049,9 @@ namespace iText.Forms {
         private IList<PdfDictionary> GetResources(PdfDictionary field) {
             IList<PdfDictionary> resources = new List<PdfDictionary>();
             PdfDictionary ap = field.GetAsDictionary(PdfName.AP);
-            if (ap != null) {
+            if (ap != null && !ap.IsFlushed()) {
                 PdfObject normal = ap.Get(PdfName.N);
-                if (normal != null) {
+                if (normal != null && !normal.IsFlushed()) {
                     if (normal.IsDictionary()) {
                         foreach (PdfName key in ((PdfDictionary)normal).KeySet()) {
                             PdfStream appearance = ((PdfDictionary)normal).GetAsStream(key);
@@ -1079,7 +1098,7 @@ namespace iText.Forms {
         /// </param>
         private void MergeResources(PdfDictionary result, PdfDictionary source) {
             foreach (PdfName name in resourceNames) {
-                PdfDictionary dic = source.GetAsDictionary(name);
+                PdfDictionary dic = source.IsFlushed() ? null : source.GetAsDictionary(name);
                 PdfDictionary res = result.GetAsDictionary(name);
                 if (res == null) {
                     res = new PdfDictionary();

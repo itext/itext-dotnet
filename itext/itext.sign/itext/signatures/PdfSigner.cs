@@ -465,7 +465,7 @@ namespace iText.Signatures {
             // time-stamp will over-rule this
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = estimatedSize * 2 + 2;
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
             String hashAlgorithm = externalSignature.GetHashAlgorithm();
             PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
@@ -521,7 +521,7 @@ namespace iText.Signatures {
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = estimatedSize * 2 + 2;
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
             byte[] encodedSig = externalSignatureContainer.Sign(data);
@@ -561,7 +561,7 @@ namespace iText.Signatures {
             dic.Put(PdfName.Type, PdfName.DocTimeStamp);
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = contentEstimated * 2 + 2;
+            exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
             IDigest messageDigest = tsa.GetMessageDigest();
@@ -602,17 +602,16 @@ namespace iText.Signatures {
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
-            PdfDictionary v = signatureUtil.GetSignatureDictionary(fieldName);
-            if (v == null) {
+            PdfSignature signature = signatureUtil.GetSignature(fieldName);
+            if (signature == null) {
                 throw new PdfException(PdfException.ThereIsNoFieldInTheDocumentWithSuchName1).SetMessageParams(fieldName);
             }
             if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
-                new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams(fieldName
-                    );
+                throw new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams
+                    (fieldName);
             }
-            PdfArray b = v.GetAsArray(PdfName.ByteRange);
+            PdfArray b = signature.GetByteRange();
             long[] gaps = SignatureUtil.AsLongArray(b);
-            // TODO: refactor
             if (b.Size() != 4 || gaps[0] != 0) {
                 throw new ArgumentException("Single exclusion space supported");
             }
@@ -765,12 +764,12 @@ namespace iText.Signatures {
             }
             exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
             PdfLiteral lit = new PdfLiteral(80);
-            exclusionLocations[PdfName.ByteRange] = lit;
+            exclusionLocations.Put(PdfName.ByteRange, lit);
             cryptoDictionary.Put(PdfName.ByteRange, lit);
             foreach (KeyValuePair<PdfName, int?> entry in exclusionSizes) {
                 PdfName key = entry.Key;
                 lit = new PdfLiteral((int)entry.Value);
-                exclusionLocations[key] = lit;
+                exclusionLocations.Put(key, lit);
                 cryptoDictionary.Put(key, lit);
             }
             if (certificationLevel > 0) {

@@ -649,7 +649,7 @@ namespace iText.IO.Image {
                         indexed[2] = gColor - 1;
                         indexed[3] = PdfEncodings.ConvertToString(palette, null);
                         tiff.additional = new Dictionary<String, Object>();
-                        tiff.additional["ColorSpace"] = indexed;
+                        tiff.additional.Put("ColorSpace", indexed);
                     }
                 }
                 if (photometric == TIFFConstants.PHOTOMETRIC_MINISWHITE) {

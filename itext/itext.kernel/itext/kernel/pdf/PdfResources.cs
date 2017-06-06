@@ -125,7 +125,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds font to resources and register PdfFont in the document for further flushing.</summary>
         /// <returns>added font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
-            font.MakeIndirect(pdfDocument);
             pdfDocument.AddFont(font);
             return AddResource(font, fontNamesGen);
         }
@@ -763,7 +762,7 @@ namespace iText.Kernel.Pdf {
             if (GetPdfObject().ContainsKey(resType) && GetPdfObject().GetAsDictionary(resType).ContainsKey(resName)) {
                 return;
             }
-            resourceToName[resource] = resName;
+            resourceToName.Put(resource, resName);
             PdfDictionary resourceCategory = GetPdfObject().GetAsDictionary(resType);
             if (resourceCategory == null) {
                 GetPdfObject().Put(resType, resourceCategory = new PdfDictionary());
@@ -796,7 +795,7 @@ namespace iText.Kernel.Pdf {
                 }
                 foreach (PdfName resourceName in resources.KeySet()) {
                     PdfObject resource = resources.Get(resourceName, false);
-                    resourceToName[resource] = resourceName;
+                    resourceToName.Put(resource, resourceName);
                 }
             }
         }

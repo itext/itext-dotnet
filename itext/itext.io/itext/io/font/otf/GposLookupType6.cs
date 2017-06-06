@@ -135,11 +135,11 @@ namespace iText.IO.Font.Otf {
             IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation);
             GposLookupType6.MarkToBaseMark markToBaseMark = new GposLookupType6.MarkToBaseMark();
             for (int k = 0; k < markCoverage.Count; ++k) {
-                markToBaseMark.marks[markCoverage[k]] = markRecords[k];
+                markToBaseMark.marks.Put(markCoverage[k], markRecords[k]);
             }
             IList<GposAnchor[]> baseArray = OtfReadCommon.ReadBaseArray(openReader, classCount, baseArrayLocation);
             for (int k = 0; k < baseCoverage.Count; ++k) {
-                markToBaseMark.baseMarks[baseCoverage[k]] = baseArray[k];
+                markToBaseMark.baseMarks.Put(baseCoverage[k], baseArray[k]);
             }
             marksbases.Add(markToBaseMark);
         }

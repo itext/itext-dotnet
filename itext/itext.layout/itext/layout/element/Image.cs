@@ -443,12 +443,12 @@ namespace iText.Layout.Element {
         }
 
         public virtual iText.Layout.Element.Image SetMaxHeight(float maxHeight) {
-            SetProperty(Property.HEIGHT, maxHeight);
+            SetProperty(Property.MAX_HEIGHT, maxHeight);
             return (iText.Layout.Element.Image)(Object)this;
         }
 
         public virtual iText.Layout.Element.Image SetMinHeight(float minHeight) {
-            SetProperty(Property.HEIGHT, minHeight);
+            SetProperty(Property.MIN_HEIGHT, minHeight);
             return (iText.Layout.Element.Image)(Object)this;
         }
 

@@ -216,9 +216,9 @@ namespace iText.Kernel.Pdf.Xobject {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
                 DoNothingFilter stubFilter = new DoNothingFilter();
-                filters[PdfName.DCTDecode] = stubFilter;
-                filters[PdfName.JBIG2Decode] = stubFilter;
-                filters[PdfName.JPXDecode] = stubFilter;
+                filters.Put(PdfName.DCTDecode, stubFilter);
+                filters.Put(PdfName.JBIG2Decode, stubFilter);
+                filters.Put(PdfName.JPXDecode, stubFilter);
                 bytes = PdfReader.DecodeBytes(bytes, GetPdfObject(), filters);
                 if (stubFilter.GetLastFilterName() == null) {
                     try {
@@ -490,7 +490,7 @@ namespace iText.Kernel.Pdf.Xobject {
                                 }
                                 else {
                                     if (value is bool?) {
-                                        dictionary.Put(new PdfName(key), new PdfBoolean((bool)value));
+                                        dictionary.Put(new PdfName(key), PdfBoolean.ValueOf((bool)value));
                                     }
                                     else {
                                         if (value is Object[]) {

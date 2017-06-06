@@ -131,12 +131,12 @@ namespace iText.IO.Font.Otf {
             IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation);
             GposLookupType5.MarkToLigature markToLigature = new GposLookupType5.MarkToLigature();
             for (int k = 0; k < markCoverage.Count; ++k) {
-                markToLigature.marks[markCoverage[k]] = markRecords[k];
+                markToLigature.marks.Put(markCoverage[k], markRecords[k]);
             }
             IList<IList<GposAnchor[]>> ligatureArray = OtfReadCommon.ReadLigatureArray(openReader, classCount, ligatureArrayLocation
                 );
             for (int k = 0; k < ligatureCoverage.Count; ++k) {
-                markToLigature.ligatures[ligatureCoverage[k]] = ligatureArray[k];
+                markToLigature.ligatures.Put(ligatureCoverage[k], ligatureArray[k]);
             }
             marksligatures.Add(markToLigature);
         }

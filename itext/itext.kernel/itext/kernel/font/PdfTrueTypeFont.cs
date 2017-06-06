@@ -93,7 +93,7 @@ namespace iText.Kernel.Font {
                     Glyph notdef = ((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0);
                     if (notdef != null) {
                         glyph = new Glyph(((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0), unicode);
-                        notdefGlyphs[unicode] = glyph;
+                        notdefGlyphs.Put(unicode, glyph);
                     }
                 }
                 return glyph;
@@ -116,6 +116,7 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            EnsureUnderlyingObjectHasIndirectReference();
             //TODO make subtype class member and simplify this method
             if (newFont) {
                 PdfName subtype;

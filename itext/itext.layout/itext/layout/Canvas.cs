@@ -175,7 +175,11 @@ namespace iText.Layout {
             if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
             }
-            rootRenderer = new CanvasRenderer(this, immediateFlush);
+            IRenderer nextRelayoutRenderer = rootRenderer != null ? rootRenderer.GetNextRenderer() : null;
+            if (nextRelayoutRenderer == null || !(nextRelayoutRenderer is RootRenderer)) {
+                nextRelayoutRenderer = new CanvasRenderer(this, immediateFlush);
+            }
+            rootRenderer = (RootRenderer)nextRelayoutRenderer;
             foreach (IElement element in childElements) {
                 rootRenderer.AddChild(element.CreateRendererSubTree());
             }

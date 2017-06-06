@@ -236,7 +236,7 @@ namespace iText.IO.Image {
                 }
                 png.genBWMask = (!png.palShades && (pal0 > 1 || png.transRedGray >= 0));
                 if (!png.palShades && !png.genBWMask && pal0 == 1) {
-                    png.additional["Mask"] = String.Format("[{0} {1}]", palIdx, palIdx);
+                    png.additional.Put("Mask", String.Format("[{0} {1}]", palIdx, palIdx));
                 }
                 bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType & 4) != 0) || png.
                     palShades || png.genBWMask;
@@ -291,17 +291,17 @@ namespace iText.IO.Image {
                         ());
                     png.image.SetDeflated(true);
                     IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
-                    decodeparms["BitsPerComponent"] = png.bitDepth;
-                    decodeparms["Predictor"] = 15;
-                    decodeparms["Columns"] = png.width;
-                    decodeparms["Colors"] = (png.colorType == 3 || (png.colorType & 2) == 0) ? 1 : 3;
+                    decodeparms.Put("BitsPerComponent", png.bitDepth);
+                    decodeparms.Put("Predictor", 15);
+                    decodeparms.Put("Columns", png.width);
+                    decodeparms.Put("Colors", (png.colorType == 3 || (png.colorType & 2) == 0) ? 1 : 3);
                     png.image.decodeParms = decodeparms;
                 }
                 if (png.additional.Get("ColorSpace") == null) {
-                    png.additional["ColorSpace"] = GetColorspace(png);
+                    png.additional.Put("ColorSpace", GetColorspace(png));
                 }
                 if (png.intent != null) {
-                    png.additional["Intent"] = png.intent;
+                    png.additional.Put("Intent", png.intent);
                 }
                 if (png.iccProfile != null) {
                     png.image.SetProfile(png.iccProfile);
@@ -351,8 +351,8 @@ namespace iText.IO.Image {
                         return "/DeviceGray";
                     }
                     array[0] = "/CalGray";
-                    map["Gamma"] = png.gamma;
-                    map["WhitePoint"] = new int[] { 1, 1, 1 };
+                    map.Put("Gamma", png.gamma);
+                    map.Put("WhitePoint", new int[] { 1, 1, 1 });
                     array[1] = map;
                 }
                 else {
@@ -363,7 +363,7 @@ namespace iText.IO.Image {
                         gm[0] = png.gamma;
                         gm[1] = png.gamma;
                         gm[2] = png.gamma;
-                        map["Gamma"] = gm;
+                        map.Put("Gamma", gm);
                     }
                     if (png.hasCHRM) {
                         float z = png.yW * ((png.xG - png.xB) * png.yR - (png.xR - png.xB) * png.yG + (png.xR - png.xG) * png.yB);
@@ -398,9 +398,9 @@ namespace iText.IO.Image {
                         matrix[6] = XC;
                         matrix[7] = YC;
                         matrix[8] = ZC;
-                        map["Matrix"] = matrix;
+                        map.Put("Matrix", matrix);
                     }
-                    map["WhitePoint"] = wp;
+                    map.Put("WhitePoint", wp);
                     array[1] = map;
                 }
                 return array;
@@ -443,7 +443,7 @@ namespace iText.IO.Image {
                                         png.transRedGray = gray;
                                     }
                                     else {
-                                        png.additional["Mask"] = String.Format("[{0} {1}]", gray, gray);
+                                        png.additional.Put("Mask", String.Format("[{0} {1}]", gray, gray));
                                     }
                                 }
                                 break;
@@ -461,7 +461,7 @@ namespace iText.IO.Image {
                                         png.transBlue = blue;
                                     }
                                     else {
-                                        png.additional["Mask"] = String.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue, blue);
+                                        png.additional.Put("Mask", String.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue, blue));
                                     }
                                 }
                                 break;
@@ -503,7 +503,7 @@ namespace iText.IO.Image {
                                     }
                                     png.colorTable = colorTableBuf.ToByteArray();
                                     colorspace[3] = PdfEncodings.ConvertToString(png.colorTable, null);
-                                    png.additional["ColorSpace"] = colorspace;
+                                    png.additional.Put("ColorSpace", colorspace);
                                 }
                                 else {
                                     StreamUtil.Skip(pngStream, len);

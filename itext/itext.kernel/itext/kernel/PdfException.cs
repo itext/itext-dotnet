@@ -348,6 +348,7 @@ namespace iText.Kernel {
 
         public const String NumberOfEntriesInThisXrefSubsectionNotFound = "Number of entries in this xref subsection not found.";
 
+        [Obsolete]
         public const String NameAlreadyExistsInTheNameTree = "Name already exists in the name tree.";
 
         public const String NoCompatibleEncryptionFound = "No compatible encryption found.";
@@ -478,6 +479,8 @@ namespace iText.Kernel {
         public const String ThisInstanceOfPdfSignerIsAlreadyClosed = "This instance of PdfSigner has been already closed.";
 
         public const String ThisInstanceOfPdfSignerAlreadyClosed = "This instance of PdfSigner has been already closed.";
+
+        public const String ToFlushThisWrapperUnderlyingObjectMustBeAddedToDocument = "To manually flush this wrapper, you have to ensure that the object behind this wrapper is added to the document, i.e. it has an indirect reference.";
 
         public const String Tsa1FailedToReturnTimeStampToken2 = "TSA {0} failed to return time stamp token: {1}.";
 

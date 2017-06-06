@@ -771,7 +771,6 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(filename2), new StampingProperties
                 ().UseAppendMode());
             pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document");
-            pdfDoc2.GetDocumentInfo().SetModified();
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(filename2);
             PdfDocument pdfDoc3 = new PdfDocument(reader3);

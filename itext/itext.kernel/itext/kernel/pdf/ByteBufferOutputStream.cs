@@ -154,55 +154,6 @@ namespace iText.Kernel.Pdf
 			}
 		}
 
-		/// <summary>Converts an double (multiplied by 100 and cast to an int) into an array of bytes.
-		/// 	</summary>
-		/// <param name="i">the int</param>
-		/// <returns>a byte array</returns>
-		private static byte[] ConvertToBytes(int i)
-		{
-			int size = (int)Math.Floor(Math.Log(i) / Math.Log(10));
-			if (i % 100 != 0)
-			{
-				size += 2;
-			}
-			if (i % 10 != 0)
-			{
-				size++;
-			}
-			if (i < 100)
-			{
-				size++;
-				if (i < 10)
-				{
-					size++;
-				}
-			}
-			size--;
-			byte[] cache = new byte[size];
-			size--;
-			if (i < 100)
-			{
-				cache[0] = (byte)'0';
-			}
-			if (i % 10 != 0)
-			{
-				cache[size--] = bytes[i % 10];
-			}
-			if (i % 100 != 0)
-			{
-				cache[size--] = bytes[(i / 10) % 10];
-				cache[size--] = (byte)'.';
-			}
-			size = (int)Math.Floor(Math.Log(i) / Math.Log(10)) - 1;
-			int add = 0;
-			while (add < size)
-			{
-				cache[add] = bytes[(i / (int)Math.Pow(10, size - add + 1)) % 10];
-				add++;
-			}
-			return cache;
-		}
-
 		/// <summary>Appends an <CODE>int</CODE>.</summary>
 		/// <remarks>Appends an <CODE>int</CODE>. The size of the array will grow by one.</remarks>
 		/// <param name="b">the int to be appended</param>
@@ -809,6 +760,55 @@ namespace iText.Kernel.Pdf
 
 		public override void SetLength(long value) {
 			SetSize((int)value);
+		}
+
+		/// <summary>Converts an double (multiplied by 100 and cast to an int) into an array of bytes.
+		/// 	</summary>
+		/// <param name="i">the int</param>
+		/// <returns>a byte array</returns>
+		private static byte[] ConvertToBytes(int i)
+		{
+			int size = (int)Math.Floor(Math.Log(i) / Math.Log(10));
+			if (i % 100 != 0)
+			{
+				size += 2;
+			}
+			if (i % 10 != 0)
+			{
+				size++;
+			}
+			if (i < 100)
+			{
+				size++;
+				if (i < 10)
+				{
+					size++;
+				}
+			}
+			size--;
+			byte[] cache = new byte[size];
+			size--;
+			if (i < 100)
+			{
+				cache[0] = (byte)'0';
+			}
+			if (i % 10 != 0)
+			{
+				cache[size--] = bytes[i % 10];
+			}
+			if (i % 100 != 0)
+			{
+				cache[size--] = bytes[(i / 10) % 10];
+				cache[size--] = (byte)'.';
+			}
+			size = (int)Math.Floor(Math.Log(i) / Math.Log(10)) - 1;
+			int add = 0;
+			while (add < size)
+			{
+				cache[add] = bytes[(i / (int)Math.Pow(10, size - add + 1)) % 10];
+				add++;
+			}
+			return cache;
 		}
 	}
 }

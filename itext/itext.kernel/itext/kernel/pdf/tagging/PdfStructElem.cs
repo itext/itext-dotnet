@@ -231,9 +231,6 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElem AddKid(int index, iText.Kernel.Pdf.Tagging.PdfStructElem
              kid) {
-            if (GetStructElementType() == InlineLevel || GetStructElementType() == Illustration) {
-                throw new PdfException(PdfException.InlineLevelOrIllustrationElementCannotContainKids, GetPdfObject());
-            }
             AddKidObject(GetPdfObject(), index, kid.GetPdfObject());
             return kid;
         }

@@ -212,31 +212,31 @@ namespace iText.IO.Colors {
         }
 
         static IccProfile() {
-            cstags["XYZ "] = 3;
-            cstags["Lab "] = 3;
-            cstags["Luv "] = 3;
-            cstags["YCbr"] = 3;
-            cstags["Yxy "] = 3;
-            cstags["RGB "] = 3;
-            cstags["GRAY"] = 1;
-            cstags["HSV "] = 3;
-            cstags["HLS "] = 3;
-            cstags["CMYK"] = 4;
-            cstags["CMY "] = 3;
-            cstags["2CLR"] = 2;
-            cstags["3CLR"] = 3;
-            cstags["4CLR"] = 4;
-            cstags["5CLR"] = 5;
-            cstags["6CLR"] = 6;
-            cstags["7CLR"] = 7;
-            cstags["8CLR"] = 8;
-            cstags["9CLR"] = 9;
-            cstags["ACLR"] = 10;
-            cstags["BCLR"] = 11;
-            cstags["CCLR"] = 12;
-            cstags["DCLR"] = 13;
-            cstags["ECLR"] = 14;
-            cstags["FCLR"] = 15;
+            cstags.Put("XYZ ", 3);
+            cstags.Put("Lab ", 3);
+            cstags.Put("Luv ", 3);
+            cstags.Put("YCbr", 3);
+            cstags.Put("Yxy ", 3);
+            cstags.Put("RGB ", 3);
+            cstags.Put("GRAY", 1);
+            cstags.Put("HSV ", 3);
+            cstags.Put("HLS ", 3);
+            cstags.Put("CMYK", 4);
+            cstags.Put("CMY ", 3);
+            cstags.Put("2CLR", 2);
+            cstags.Put("3CLR", 3);
+            cstags.Put("4CLR", 4);
+            cstags.Put("5CLR", 5);
+            cstags.Put("6CLR", 6);
+            cstags.Put("7CLR", 7);
+            cstags.Put("8CLR", 8);
+            cstags.Put("9CLR", 9);
+            cstags.Put("ACLR", 10);
+            cstags.Put("BCLR", 11);
+            cstags.Put("CCLR", 12);
+            cstags.Put("DCLR", 13);
+            cstags.Put("ECLR", 14);
+            cstags.Put("FCLR", 15);
         }
     }
 }

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -77,6 +78,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         private int clippingRule;
 
         private CanvasGraphicsState gs;
+
+        private bool graphicsStateIsPreserved;
 
         /// <param name="path">The path to be rendered.</param>
         /// <param name="operation">
@@ -121,6 +124,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
+        /// <p>
         /// See
         /// <see cref="PathRenderInfo(iText.Kernel.Geom.Path, int, int, bool, int, iText.Kernel.Pdf.Canvas.CanvasGraphicsState)
         ///     "/>
@@ -181,35 +185,86 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>Current transformation matrix.</returns>
         public virtual Matrix GetCtm() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetCtm();
         }
 
         public virtual float GetLineWidth() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetLineWidth();
         }
 
         public virtual int GetLineCapStyle() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetLineCapStyle();
         }
 
         public virtual int GetLineJoinStyle() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetLineJoinStyle();
         }
 
         public virtual float GetMiterLimit() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetMiterLimit();
         }
 
         public virtual PdfArray GetLineDashPattern() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetDashPattern();
         }
 
         public virtual Color GetStrokeColor() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetStrokeColor();
         }
 
         public virtual Color GetFillColor() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return gs.GetFillColor();
+        }
+
+        public virtual bool IsGraphicsStatePreserved() {
+            return graphicsStateIsPreserved;
+        }
+
+        public virtual void PreserveGraphicsState() {
+            // check if graphics state was released
+            if (null == gs) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
+            this.graphicsStateIsPreserved = true;
+            gs = new CanvasGraphicsState(gs);
+        }
+
+        public virtual void ReleaseGraphicsState() {
+            if (!graphicsStateIsPreserved) {
+                gs = null;
+            }
         }
     }
 }

@@ -686,7 +686,7 @@ namespace iText.Pdfa.Checker {
             if (colorSpaceObj != null) {
                 colorSpace = PdfColorSpace.MakeColorSpace(colorSpaceObj);
                 CheckColorSpace(colorSpace, currentColorSpaces, true, null);
-                checkedObjectsColorspace[image] = colorSpace;
+                checkedObjectsColorspace.Put(image, colorSpace);
             }
             if (image.ContainsKey(PdfName.Alternates)) {
                 throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainAlternatesKey);
@@ -746,21 +746,21 @@ namespace iText.Pdfa.Checker {
                                     case 1: {
                                         PdfDeviceCs.Gray deviceGrayCs = new PdfDeviceCs.Gray();
                                         CheckColorSpace(deviceGrayCs, currentColorSpaces, true, null);
-                                        checkedObjectsColorspace[image] = deviceGrayCs;
+                                        checkedObjectsColorspace.Put(image, deviceGrayCs);
                                         break;
                                     }
 
                                     case 3: {
                                         PdfDeviceCs.Rgb deviceRgbCs = new PdfDeviceCs.Rgb();
                                         CheckColorSpace(deviceRgbCs, currentColorSpaces, true, null);
-                                        checkedObjectsColorspace[image] = deviceRgbCs;
+                                        checkedObjectsColorspace.Put(image, deviceRgbCs);
                                         break;
                                     }
 
                                     case 12: {
                                         PdfDeviceCs.Cmyk deviceCmykCs = new PdfDeviceCs.Cmyk();
                                         CheckColorSpace(deviceCmykCs, currentColorSpaces, true, null);
-                                        checkedObjectsColorspace[image] = deviceCmykCs;
+                                        checkedObjectsColorspace.Put(image, deviceCmykCs);
                                         break;
                                     }
                                 }
@@ -852,7 +852,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             else {
-                separationColorSpaces[separation.GetAsName(0)] = separation;
+                separationColorSpaces.Put(separation.GetAsName(0), separation);
             }
         }
 

@@ -125,9 +125,14 @@ namespace iText.Layout.Renderer {
             return currentArea;
         }
 
-        /// <summary><inheritDoc/></summary>
+        /// <summary>
+        /// For
+        /// <see cref="CanvasRenderer"/>
+        /// , this has a meaning of the renderer that will be used for relayout.
+        /// </summary>
+        /// <returns>relayout renderer.</returns>
         public override IRenderer GetNextRenderer() {
-            return null;
+            return new iText.Layout.Renderer.CanvasRenderer(canvas, immediateFlush);
         }
     }
 }

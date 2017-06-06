@@ -253,6 +253,10 @@ namespace iText.Kernel.Pdf {
                 .GetAsName(PdfName.Type).Equals(PdfName.Metadata));
         }
 
+        private bool IsXRefStream(PdfStream pdfStream) {
+            return PdfName.XRef.Equals(pdfStream.GetAsName(PdfName.Type));
+        }
+
         private void Write(PdfStream pdfStream) {
             try {
                 bool userDefinedCompression = pdfStream.GetCompressionLevel() != CompressionConstants.UNDEFINED_COMPRESSION;
@@ -370,21 +374,27 @@ namespace iText.Kernel.Pdf {
                 return false;
             }
             else {
-                PdfObject filter = pdfStream.Get(PdfName.Filter, true);
-                if (filter != null) {
-                    if (PdfName.Crypt.Equals(filter)) {
-                        return false;
-                    }
-                    else {
-                        if (filter.GetObjectType() == PdfObject.ARRAY) {
-                            PdfArray filters = (PdfArray)filter;
-                            if (!filters.IsEmpty() && PdfName.Crypt.Equals(filters.Get(0, true))) {
-                                return false;
+                if (IsXRefStream(pdfStream)) {
+                    // The cross-reference stream shall not be encrypted
+                    return false;
+                }
+                else {
+                    PdfObject filter = pdfStream.Get(PdfName.Filter, true);
+                    if (filter != null) {
+                        if (PdfName.Crypt.Equals(filter)) {
+                            return false;
+                        }
+                        else {
+                            if (filter.GetObjectType() == PdfObject.ARRAY) {
+                                PdfArray filters = (PdfArray)filter;
+                                if (!filters.IsEmpty() && PdfName.Crypt.Equals(filters.Get(0, true))) {
+                                    return false;
+                                }
                             }
                         }
                     }
+                    return true;
                 }
-                return true;
             }
         }
 

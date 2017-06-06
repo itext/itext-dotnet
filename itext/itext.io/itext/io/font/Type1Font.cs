@@ -160,7 +160,7 @@ namespace iText.IO.Font {
         /// </returns>
         public virtual bool SetKerning(int first, int second, int kern) {
             long record = ((long)first << 32) + second;
-            kernPairs[record] = kern;
+            kernPairs.Put(record, kern);
             return true;
         }
 
@@ -414,10 +414,10 @@ namespace iText.IO.Font {
                 int unicode = AdobeGlyphList.NameToUnicode(N);
                 Glyph glyph = new Glyph(C, WX, unicode, B);
                 if (C >= 0) {
-                    codeToGlyph[C] = glyph;
+                    codeToGlyph.Put(C, glyph);
                 }
                 if (unicode != -1) {
-                    unicodeToGlyph[unicode] = glyph;
+                    unicodeToGlyph.Put(unicode, glyph);
                 }
                 avgWidth += WX;
                 widthCount++;
@@ -440,7 +440,7 @@ namespace iText.IO.Font {
             if (!unicodeToGlyph.ContainsKey(0x00A0)) {
                 Glyph space = unicodeToGlyph.Get(0x0020);
                 if (space != null) {
-                    unicodeToGlyph[0x00A0] = new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space.GetBbox());
+                    unicodeToGlyph.Put(0x00A0, new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space.GetBbox()));
                 }
             }
             bool endOfMetrics = false;
@@ -476,7 +476,7 @@ namespace iText.IO.Font {
                         int secondUni = AdobeGlyphList.NameToUnicode(second);
                         if (firstUni != -1 && secondUni != -1) {
                             long record = ((long)firstUni << 32) + secondUni;
-                            kernPairs[record] = width;
+                            kernPairs.Put(record, width);
                         }
                     }
                     else {

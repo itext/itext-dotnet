@@ -129,8 +129,8 @@ namespace iText.IO.Font {
                     int width = metrics.ContainsKey(cid) ? metrics.Get(cid) : DEFAULT_WIDTH;
                     Glyph glyph = new Glyph(cid, width, uni);
                     avgWidth += glyph.GetWidth();
-                    codeToGlyph[cid] = glyph;
-                    unicodeToGlyph[uni] = glyph;
+                    codeToGlyph.Put(cid, glyph);
+                    unicodeToGlyph.Put(uni, glyph);
                 }
                 FixSpaceIssue();
                 if (codeToGlyph.Count != 0) {

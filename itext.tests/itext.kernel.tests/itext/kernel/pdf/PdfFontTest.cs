@@ -1101,6 +1101,8 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont("aller");
+            //clear font cache for other tests
+            FontProgramFactory.ClearRegisteredFonts();
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfTrueTypeFont);
             pdfDoc.AddNewPage();
             pdfDoc.Close();

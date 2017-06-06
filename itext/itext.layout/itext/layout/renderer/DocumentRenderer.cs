@@ -57,6 +57,8 @@ namespace iText.Layout.Renderer {
 
         protected internal IList<int> wrappedContentPage = new List<int>();
 
+        protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
+
         public DocumentRenderer(Document document)
             : this(document, true) {
         }
@@ -71,17 +73,40 @@ namespace iText.Layout.Renderer {
             throw new InvalidOperationException("Not applicable for DocumentRenderer");
         }
 
+        /// <summary>
+        /// For
+        /// <see cref="DocumentRenderer"/>
+        /// , this has a meaning of the renderer that will be used for relayout.
+        /// </summary>
+        /// <returns>relayout renderer.</returns>
         public override IRenderer GetNextRenderer() {
-            return null;
+            return new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush);
+        }
+
+        public override void Close() {
+            if (waitingDrawingElements.Count > 0) {
+                IRenderer waitingDrawingElement = waitingDrawingElements[0];
+                waitingDrawingElements.JRemoveAt(0);
+                FlushSingleRenderer(waitingDrawingElement);
+            }
+            base.Close();
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
-            MoveToNextPage();
-            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE && currentPageNumber < document
-                .GetPdfDocument().GetNumberOfPages()) {
+            if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
+                while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
+                    MoveToNextPage();
+                }
+            }
+            else {
                 MoveToNextPage();
+            }
+            if (waitingDrawingElements.Count > 0) {
+                IRenderer renderer = waitingDrawingElements[0];
+                waitingDrawingElements.JRemoveAt(0);
+                FlushSingleRenderer(renderer);
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
             while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document.GetPdfDocument().GetPage
@@ -96,20 +121,33 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            if (!resultRenderer.IsFlushed()) {
-                int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
-                PdfDocument pdfDocument = document.GetPdfDocument();
-                EnsureDocumentHasNPages(pageNum, null);
-                PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
-                bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
-                    .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
-                    .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;
-                wrappedContentPage.Add(pageNum);
-                if (pdfDocument.IsTagged()) {
-                    pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage);
+            FloatPropertyValue? value = resultRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (value != null) {
+                waitingDrawingElements.Add(resultRenderer);
+                resultRenderer.SetProperty(Property.FLOAT, null);
+            }
+            else {
+                if (!resultRenderer.IsFlushed()) {
+                    int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
+                    PdfDocument pdfDocument = document.GetPdfDocument();
+                    EnsureDocumentHasNPages(pageNum, null);
+                    PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
+                    bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
+                        .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
+                        .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;
+                    wrappedContentPage.Add(pageNum);
+                    if (pdfDocument.IsTagged()) {
+                        pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage);
+                    }
+                    PdfCanvas pageCanvas = new PdfCanvas(correspondingPage, wrapOldContent);
+                    resultRenderer.Draw(new DrawContext(pdfDocument, pageCanvas, pdfDocument.IsTagged()));
+                    if (waitingDrawingElements.Count > 0) {
+                        foreach (IRenderer renderer in waitingDrawingElements) {
+                            renderer.Draw(new DrawContext(pdfDocument, pageCanvas, pdfDocument.IsTagged()));
+                        }
+                        waitingDrawingElements.Clear();
+                    }
                 }
-                resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, wrapOldContent), pdfDocument
-                    .IsTagged()));
             }
         }
 

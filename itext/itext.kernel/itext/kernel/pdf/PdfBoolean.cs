@@ -146,5 +146,20 @@ namespace iText.Kernel.Pdf {
         public override int GetHashCode() {
             return (value ? 1 : 0);
         }
+
+        /// <summary>Gets PdfBoolean existing static class variable equivalent for given boolean value.</summary>
+        /// <remarks>
+        /// Gets PdfBoolean existing static class variable equivalent for given boolean value.
+        /// Note, returned object will be direct only, which means it is impossible to make in indirect.
+        /// If required PdfBoolean has to be indirect,
+        /// use
+        /// <see cref="PdfBoolean(bool)"/>
+        /// constructor instead.
+        /// </remarks>
+        /// <param name="value">boolean variable defining value of PdfBoolean to return.</param>
+        /// <returns>existing static PdfBoolean class variable.</returns>
+        public static iText.Kernel.Pdf.PdfBoolean ValueOf(bool value) {
+            return value ? TRUE : FALSE;
+        }
     }
 }

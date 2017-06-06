@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf.Action {
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
-                ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+                ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
         }
 
         /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf.Action {
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow, PdfTargetDictionary targetDictionary) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
-                GoToE).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+                GoToE).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
@@ -273,7 +273,7 @@ namespace iText.Kernel.Pdf.Action {
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
             ) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
-                Launch).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+                Launch).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
@@ -332,7 +332,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri, bool isMap) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.URI).Put(PdfName.URI, new PdfString(
-                uri)).Put(PdfName.IsMap, new PdfBoolean(isMap));
+                uri)).Put(PdfName.IsMap, PdfBoolean.ValueOf(isMap));
         }
 
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
@@ -365,8 +365,8 @@ namespace iText.Kernel.Pdf.Action {
                 throw new ArgumentException("volume");
             }
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound).Put
-                (PdfName.Volume, new PdfNumber(volume)).Put(PdfName.Synchronous, new PdfBoolean(synchronous)).Put(PdfName
-                .Repeat, new PdfBoolean(repeat)).Put(PdfName.Mix, new PdfBoolean(mix));
+                (PdfName.Volume, new PdfNumber(volume)).Put(PdfName.Synchronous, PdfBoolean.ValueOf(synchronous)).Put(
+                PdfName.Repeat, PdfBoolean.ValueOf(repeat)).Put(PdfName.Mix, PdfBoolean.ValueOf(mix));
         }
 
         /// <summary>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1).</summary>
@@ -400,7 +400,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation annotation, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, annotation.GetPdfObject
-                ()).Put(PdfName.H, new PdfBoolean(hidden));
+                ()).Put(PdfName.H, PdfBoolean.ValueOf(hidden));
         }
 
         /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
@@ -410,7 +410,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation[] annotations, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetPdfArrayFromAnnotationsList
-                (annotations)).Put(PdfName.H, new PdfBoolean(hidden));
+                (annotations)).Put(PdfName.H, PdfBoolean.ValueOf(hidden));
         }
 
         /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
@@ -423,7 +423,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String text, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, new PdfString(text
-                )).Put(PdfName.H, new PdfBoolean(hidden));
+                )).Put(PdfName.H, PdfBoolean.ValueOf(hidden));
         }
 
         /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
@@ -436,7 +436,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String[] text, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetArrayFromStringList
-                (text)).Put(PdfName.H, new PdfBoolean(hidden));
+                (text)).Put(PdfName.H, PdfBoolean.ValueOf(hidden));
         }
 
         /// <summary>Creates a Named action (section 12.6.4.11 of ISO 32000-1).</summary>
@@ -484,7 +484,7 @@ namespace iText.Kernel.Pdf.Action {
                 stateArr.AddAll(state.GetObjectList());
             }
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.SetOCGState).Put(PdfName.State, stateArr
-                ).Put(PdfName.PreserveRB, new PdfBoolean(preserveRb));
+                ).Put(PdfName.PreserveRB, PdfBoolean.ValueOf(preserveRb));
         }
 
         /// <summary>Creates a Rendition action (section 12.6.4.13 of ISO 32000-1).</summary>

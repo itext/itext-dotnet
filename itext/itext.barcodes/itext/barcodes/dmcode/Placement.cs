@@ -71,7 +71,7 @@ namespace iText.Barcodes.Dmcode {
             p.ncol = ncol;
             p.array = new short[nrow * ncol];
             p.Ecc200();
-            cache[key] = p.array;
+            cache.Put(key, p.array);
             return p.array;
         }
 

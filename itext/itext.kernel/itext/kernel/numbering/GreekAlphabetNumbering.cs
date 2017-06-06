@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Text;
 
 namespace iText.Kernel.Numbering {
     /// <summary>
@@ -68,15 +69,15 @@ namespace iText.Kernel.Numbering {
             ALPHABET_LOWERCASE = new char[ALPHABET_LENGTH];
             ALPHABET_UPPERCASE = new char[ALPHABET_LENGTH];
             for (int i = 0; i < ALPHABET_LENGTH; i++) {
-                ALPHABET_LOWERCASE[i] = GetSymbolFontChar((char)(945 + i + (i > 16 ? 1 : 0)));
-                ALPHABET_UPPERCASE[i] = GetSymbolFontChar((char)(913 + i + (i > 16 ? 1 : 0)));
+                ALPHABET_LOWERCASE[i] = (char)(945 + i + (i > 16 ? 1 : 0));
+                ALPHABET_UPPERCASE[i] = (char)(913 + i + (i > 16 ? 1 : 0));
             }
         }
 
         /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet lowercase string representation.
-        /// E.g. 1 will be converted to "?", 2 to "?", and so on.
+        /// E.g. 1 will be converted to "alpha", 2 to "beta", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
         public static String ToGreekAlphabetNumberLowerCase(int number) {
@@ -97,12 +98,37 @@ namespace iText.Kernel.Numbering {
         /// <remarks>
         /// Converts the given number to its Greek alphabet string representation.
         /// E.g. for <code>upperCase</code> set to false,
-        /// 1 will be converted to "?", 2 to "?", and so on.
+        /// 1 will be converted to "alpha", 2 to "beta", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         public static String ToGreekAlphabetNumber(int number, bool upperCase) {
-            return upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase(number);
+            return ToGreekAlphabetNumber(number, upperCase, false);
+        }
+
+        /// <summary>Converts the given number to its Greek alphabet string representation.</summary>
+        /// <remarks>
+        /// Converts the given number to its Greek alphabet string representation.
+        /// E.g. for <code>upperCase</code> set to false,
+        /// 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// </remarks>
+        /// <param name="number">the number to be converted</param>
+        /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
+        /// <param name="symbolFont">if <code>true</code>, then the string representation will be returned ready to write it in Symbol font
+        ///     </param>
+        public static String ToGreekAlphabetNumber(int number, bool upperCase, bool symbolFont) {
+            String result = upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase(number
+                );
+            if (symbolFont) {
+                StringBuilder symbolFontStr = new StringBuilder();
+                for (int i = 0; i < result.Length; i++) {
+                    symbolFontStr.Append(GetSymbolFontChar(result[i]));
+                }
+                return symbolFontStr.ToString();
+            }
+            else {
+                return result;
+            }
         }
 
         /// <summary>Converts a given greek unicode character code into the code of the corresponding char Symbol font.

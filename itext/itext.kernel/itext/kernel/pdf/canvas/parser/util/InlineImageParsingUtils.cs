@@ -83,41 +83,41 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             // equivalent image dictionary keys
             inlineImageEntryAbbreviationMap = new Dictionary<PdfName, PdfName>();
             // allowed entries - just pass these through
-            inlineImageEntryAbbreviationMap[PdfName.BitsPerComponent] = PdfName.BitsPerComponent;
-            inlineImageEntryAbbreviationMap[PdfName.ColorSpace] = PdfName.ColorSpace;
-            inlineImageEntryAbbreviationMap[PdfName.Decode] = PdfName.Decode;
-            inlineImageEntryAbbreviationMap[PdfName.DecodeParms] = PdfName.DecodeParms;
-            inlineImageEntryAbbreviationMap[PdfName.Filter] = PdfName.Filter;
-            inlineImageEntryAbbreviationMap[PdfName.Height] = PdfName.Height;
-            inlineImageEntryAbbreviationMap[PdfName.ImageMask] = PdfName.ImageMask;
-            inlineImageEntryAbbreviationMap[PdfName.Intent] = PdfName.Intent;
-            inlineImageEntryAbbreviationMap[PdfName.Interpolate] = PdfName.Interpolate;
-            inlineImageEntryAbbreviationMap[PdfName.Width] = PdfName.Width;
+            inlineImageEntryAbbreviationMap.Put(PdfName.BitsPerComponent, PdfName.BitsPerComponent);
+            inlineImageEntryAbbreviationMap.Put(PdfName.ColorSpace, PdfName.ColorSpace);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Decode, PdfName.Decode);
+            inlineImageEntryAbbreviationMap.Put(PdfName.DecodeParms, PdfName.DecodeParms);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Filter, PdfName.Filter);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Height, PdfName.Height);
+            inlineImageEntryAbbreviationMap.Put(PdfName.ImageMask, PdfName.ImageMask);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Intent, PdfName.Intent);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Interpolate, PdfName.Interpolate);
+            inlineImageEntryAbbreviationMap.Put(PdfName.Width, PdfName.Width);
             // abbreviations - transform these to corresponding correct values
-            inlineImageEntryAbbreviationMap[new PdfName("BPC")] = PdfName.BitsPerComponent;
-            inlineImageEntryAbbreviationMap[new PdfName("CS")] = PdfName.ColorSpace;
-            inlineImageEntryAbbreviationMap[new PdfName("D")] = PdfName.Decode;
-            inlineImageEntryAbbreviationMap[new PdfName("DP")] = PdfName.DecodeParms;
-            inlineImageEntryAbbreviationMap[new PdfName("F")] = PdfName.Filter;
-            inlineImageEntryAbbreviationMap[new PdfName("H")] = PdfName.Height;
-            inlineImageEntryAbbreviationMap[new PdfName("IM")] = PdfName.ImageMask;
-            inlineImageEntryAbbreviationMap[new PdfName("I")] = PdfName.Interpolate;
-            inlineImageEntryAbbreviationMap[new PdfName("W")] = PdfName.Width;
+            inlineImageEntryAbbreviationMap.Put(new PdfName("BPC"), PdfName.BitsPerComponent);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("CS"), PdfName.ColorSpace);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("D"), PdfName.Decode);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("DP"), PdfName.DecodeParms);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("F"), PdfName.Filter);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("H"), PdfName.Height);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("IM"), PdfName.ImageMask);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("I"), PdfName.Interpolate);
+            inlineImageEntryAbbreviationMap.Put(new PdfName("W"), PdfName.Width);
             // Map between value abbreviations allowed in dictionary of inline images for COLORSPACE
             inlineImageColorSpaceAbbreviationMap = new Dictionary<PdfName, PdfName>();
-            inlineImageColorSpaceAbbreviationMap[new PdfName("G")] = PdfName.DeviceGray;
-            inlineImageColorSpaceAbbreviationMap[new PdfName("RGB")] = PdfName.DeviceRGB;
-            inlineImageColorSpaceAbbreviationMap[new PdfName("CMYK")] = PdfName.DeviceCMYK;
-            inlineImageColorSpaceAbbreviationMap[new PdfName("I")] = PdfName.Indexed;
+            inlineImageColorSpaceAbbreviationMap.Put(new PdfName("G"), PdfName.DeviceGray);
+            inlineImageColorSpaceAbbreviationMap.Put(new PdfName("RGB"), PdfName.DeviceRGB);
+            inlineImageColorSpaceAbbreviationMap.Put(new PdfName("CMYK"), PdfName.DeviceCMYK);
+            inlineImageColorSpaceAbbreviationMap.Put(new PdfName("I"), PdfName.Indexed);
             // Map between value abbreviations allowed in dictionary of inline images for FILTER
             inlineImageFilterAbbreviationMap = new Dictionary<PdfName, PdfName>();
-            inlineImageFilterAbbreviationMap[new PdfName("AHx")] = PdfName.ASCIIHexDecode;
-            inlineImageFilterAbbreviationMap[new PdfName("A85")] = PdfName.ASCII85Decode;
-            inlineImageFilterAbbreviationMap[new PdfName("LZW")] = PdfName.LZWDecode;
-            inlineImageFilterAbbreviationMap[new PdfName("Fl")] = PdfName.FlateDecode;
-            inlineImageFilterAbbreviationMap[new PdfName("RL")] = PdfName.RunLengthDecode;
-            inlineImageFilterAbbreviationMap[new PdfName("CCF")] = PdfName.CCITTFaxDecode;
-            inlineImageFilterAbbreviationMap[new PdfName("DCT")] = PdfName.DCTDecode;
+            inlineImageFilterAbbreviationMap.Put(new PdfName("AHx"), PdfName.ASCIIHexDecode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("A85"), PdfName.ASCII85Decode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("LZW"), PdfName.LZWDecode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("Fl"), PdfName.FlateDecode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("RL"), PdfName.RunLengthDecode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("CCF"), PdfName.CCITTFaxDecode);
+            inlineImageFilterAbbreviationMap.Put(new PdfName("DCT"), PdfName.DCTDecode);
         }
 
         /// <summary>Parses an inline image from the provided content parser.</summary>
@@ -414,9 +414,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
                 DoNothingFilter stubfilter = new DoNothingFilter();
-                filters[PdfName.DCTDecode] = stubfilter;
-                filters[PdfName.JBIG2Decode] = stubfilter;
-                filters[PdfName.JPXDecode] = stubfilter;
+                filters.Put(PdfName.DCTDecode, stubfilter);
+                filters.Put(PdfName.JBIG2Decode, stubfilter);
+                filters.Put(PdfName.JPXDecode, stubfilter);
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
             }
             catch (Exception) {

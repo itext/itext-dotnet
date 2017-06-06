@@ -205,7 +205,7 @@ namespace iText.Kernel.Utils {
                     PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
                     PdfPage page = document.GetPage(pageDic);
                     processor.ProcessContent(page.GetContentBytes(), page.GetResources());
-                    parsedTags[pageDic] = listener.GetMcidContent();
+                    parsedTags.Put(pageDic, listener.GetMcidContent());
                 }
                 if (parsedTags.Get(pageDic).ContainsKey(mcid)) {
                     tagContent = parsedTags.Get(pageDic).Get(mcid);
@@ -315,7 +315,7 @@ namespace iText.Kernel.Utils {
             public virtual IDictionary<int, String> GetMcidContent() {
                 IDictionary<int, String> content = new Dictionary<int, String>();
                 foreach (int id in this.contentByMcid.Keys) {
-                    content[id] = this.contentByMcid.Get(id).GetResultantText();
+                    content.Put(id, this.contentByMcid.Get(id).GetResultantText());
                 }
                 return content;
             }
@@ -329,7 +329,7 @@ namespace iText.Kernel.Utils {
                             ITextExtractionStrategy textExtractionStrategy = this.contentByMcid.Get(mcid);
                             if (textExtractionStrategy == null) {
                                 textExtractionStrategy = new LocationTextExtractionStrategy();
-                                this.contentByMcid[mcid] = textExtractionStrategy;
+                                this.contentByMcid.Put(mcid, textExtractionStrategy);
                             }
                             textExtractionStrategy.EventOccurred(data, type);
                         }

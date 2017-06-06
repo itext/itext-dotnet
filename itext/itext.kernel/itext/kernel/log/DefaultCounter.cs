@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Codec;
+using iText.IO.Log;
 
 namespace iText.Kernel.Log {
     /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
@@ -54,6 +55,8 @@ namespace iText.Kernel.Log {
         private readonly int[] repeat = new int[] { 10000, 5000, 1000 };
 
         private int repeat_level = 10000;
+
+        private ILogger logger;
 
         private static byte[] message_1 = System.Convert.FromBase64String("DQoNCllvdSBhcmUgdXNpbmcgaVRleHQgdW5kZXIgdGhlIEFHUEwuDQoNCklmIHR"
              + "oaXMgaXMgeW91ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG" + "93biBzb3VyY2UgY29kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4NClBsZWFzZSBsZ"
@@ -99,7 +102,10 @@ namespace iText.Kernel.Log {
                     else {
                         repeat_level = repeat[2];
                     }
-                    System.Console.Out.WriteLine(message);
+                    if (logger == null) {
+                        logger = LoggerFactory.GetLogger(this.GetType());
+                    }
+                    logger.Info(message);
                 }
                 count = 0;
             }

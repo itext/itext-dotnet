@@ -259,13 +259,17 @@ namespace iText.Kernel.Font {
             foreach (byte b in contentBytes) {
                 int code = b & 0xff;
                 int uni = fontEncoding.GetUnicode(code);
+                Glyph glyph = null;
                 if (uni > -1) {
-                    glyphs.Add(GetGlyph(uni));
+                    glyph = GetGlyph(uni);
                 }
                 else {
                     if (fontEncoding.GetBaseEncoding() == null) {
-                        glyphs.Add(fontProgram.GetGlyphByCode(code));
+                        glyph = fontProgram.GetGlyphByCode(code);
                     }
+                }
+                if (glyph != null) {
+                    glyphs.Add(glyph);
                 }
             }
             return new GlyphLine(glyphs);

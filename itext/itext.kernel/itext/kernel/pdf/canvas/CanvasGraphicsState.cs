@@ -58,6 +58,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <remarks>
         /// The current transformation matrix, which maps positions from user coordinates to device coordinates.
+        /// <p>
         /// We use an identity matrix as a default value, but in spec a default value is:
         /// "a matrix that transforms default user coordinates to device coordinates".
         /// </remarks>
@@ -96,8 +97,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>A description of the dash pattern to be used when paths are stroked.</summary>
         /// <remarks>
         /// A description of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <p>
         /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
         /// where dashArray is itself an array and dashPhase is an integer.
+        /// <p>
         /// An empty dash array (first element in the array) and zero phase (second element in the array)
         /// can be used to restore the dash pattern to a solid line.
         /// </remarks>
@@ -150,7 +153,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        protected internal CanvasGraphicsState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
+        public CanvasGraphicsState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
             // color
             // text state
             // horizontal scaling
@@ -162,7 +165,8 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Updates this object with the values from a dictionary.</summary>
         /// <param name="extGState">the dictionary containing source parameters</param>
         public virtual void UpdateFromExtGState(PdfDictionary extGState) {
-            UpdateFromExtGState(new PdfExtGState(extGState));
+            UpdateFromExtGState(new PdfExtGState(extGState), extGState.GetIndirectReference() == null ? null : extGState
+                .GetIndirectReference().GetDocument());
         }
 
         /// <returns>current transformation matrix.</returns>
@@ -396,6 +400,14 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Updates current graphic state with values from extended graphic state dictionary.</summary>
         /// <param name="extGState">the wrapper around the extended graphic state dictionary</param>
         public virtual void UpdateFromExtGState(PdfExtGState extGState) {
+            UpdateFromExtGState(extGState, null);
+        }
+
+        /// <summary>Updates current graphic state with values from extended graphic state dictionary.</summary>
+        /// <param name="extGState">the wrapper around the extended graphic state dictionary</param>
+        /// <param name="pdfDocument">the document to retrieve fonts from. Needed when the newly created fonts are used
+        ///     </param>
+        internal virtual void UpdateFromExtGState(PdfExtGState extGState, PdfDocument pdfDocument) {
             float? lw = extGState.GetLineWidth();
             if (lw != null) {
                 lineWidth = (float)lw;
@@ -436,7 +448,7 @@ namespace iText.Kernel.Pdf.Canvas {
             if (fnt != null) {
                 PdfDictionary fontDictionary = fnt.GetAsDictionary(0);
                 if (this.font == null || this.font.GetPdfObject() != fontDictionary) {
-                    this.font = PdfFontFactory.CreateFont(fontDictionary);
+                    this.font = pdfDocument.GetFont(fontDictionary);
                 }
                 PdfNumber fntSz = fnt.GetAsNumber(1);
                 if (fntSz != null) {

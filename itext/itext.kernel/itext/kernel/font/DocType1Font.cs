@@ -97,11 +97,11 @@ namespace iText.Kernel.Font {
             int glyphsWithWidths = 0;
             for (int i = 0; i < 256; i++) {
                 Glyph glyph = new Glyph(i, widths[i], fontEncoding.GetUnicode(i));
-                fontProgram.codeToGlyph[i] = glyph;
+                fontProgram.codeToGlyph.Put(i, glyph);
                 if (glyph.HasValidUnicode()) {
                     //FontEncoding.codeToUnicode table has higher priority
                     if (fontEncoding.ConvertToByte(glyph.GetUnicode()) == i) {
-                        fontProgram.unicodeToGlyph[glyph.GetUnicode()] = glyph;
+                        fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
                     }
                 }
                 else {

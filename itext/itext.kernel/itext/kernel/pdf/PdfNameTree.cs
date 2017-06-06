@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Kernel;
+using iText.IO.Log;
 
 namespace iText.Kernel.Pdf {
     public class PdfNameTree {
@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf {
                     foreach (String key in keys) {
                         PdfArray arr = GetNameArray(items.Get(key));
                         if (arr != null) {
-                            items[key] = arr;
+                            items.Put(key, arr);
                         }
                         else {
                             items.JRemove(key);
@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf {
                         if (array == null) {
                             continue;
                         }
-                        items[key.GetValue()] = array;
+                        items.Put(key.GetValue(), array);
                     }
                 }
             }
@@ -113,11 +113,19 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">key of the entry</param>
         /// <param name="value">object to add</param>
         public virtual void AddEntry(String key, PdfObject value) {
-            if (items.Keys.Contains(key)) {
-                throw new PdfException(PdfException.NameAlreadyExistsInTheNameTree);
+            PdfObject existingVal = items.Get(key);
+            if (existingVal != null) {
+                if (value.GetIndirectReference() != null && value.GetIndirectReference().Equals(existingVal.GetIndirectReference
+                    ())) {
+                    return;
+                }
+                else {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
+                    logger.Warn(String.Format(iText.IO.LogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, key));
+                }
             }
             modified = true;
-            items[key] = value;
+            items.Put(key, value);
         }
 
         /// <returns>True if the object has been modified, false otherwise.</returns>
@@ -214,7 +222,7 @@ namespace iText.Kernel.Pdf {
                         leftOver = null;
                     }
                     if (k < names.Size()) {
-                        items[name.ToUnicodeString()] = names.Get(k);
+                        items.Put(name.ToUnicodeString(), names.Get(k));
                     }
                     else {
                         return name;

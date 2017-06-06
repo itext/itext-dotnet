@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Font;
+using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -85,7 +86,8 @@ namespace iText.Kernel.Font {
             subset = true;
             embedded = true;
             fontProgram = new Type3FontProgram(false);
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), null, false);
+            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
             PdfDictionary charProcsDic = GetPdfObject().GetAsDictionary(PdfName.CharProcs);
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (GetPdfObject().ContainsKey(PdfName.FontBBox)) {
@@ -188,7 +190,7 @@ namespace iText.Kernel.Font {
                     // Handle special layout characters like sfthyphen (00AD).
                     // This glyphs will be skipped while converting to bytes
                     glyph = new Glyph(-1, 0, unicode);
-                    notdefGlyphs[unicode] = glyph;
+                    notdefGlyphs.Put(unicode, glyph);
                 }
                 return glyph;
             }
@@ -216,6 +218,7 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            EnsureUnderlyingObjectHasIndirectReference();
             if (((Type3FontProgram)GetFontProgram()).GetGlyphsCount() < 1) {
                 throw new PdfException("no.glyphs.defined.fo r.type3.font");
             }

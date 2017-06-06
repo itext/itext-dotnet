@@ -51,25 +51,37 @@ namespace iText.Signatures {
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
         static EncryptionAlgorithms() {
-            algorithmNames["1.2.840.113549.1.1.1"] = "RSA";
-            algorithmNames["1.2.840.10040.4.1"] = "DSA";
-            algorithmNames["1.2.840.113549.1.1.2"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.4"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.5"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.14"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.11"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.12"] = "RSA";
-            algorithmNames["1.2.840.113549.1.1.13"] = "RSA";
-            algorithmNames["1.2.840.10040.4.3"] = "DSA";
-            algorithmNames["2.16.840.1.101.3.4.3.1"] = "DSA";
-            algorithmNames["2.16.840.1.101.3.4.3.2"] = "DSA";
-            algorithmNames["1.3.14.3.2.29"] = "RSA";
-            algorithmNames["1.3.36.3.3.1.2"] = "RSA";
-            algorithmNames["1.3.36.3.3.1.3"] = "RSA";
-            algorithmNames["1.3.36.3.3.1.4"] = "RSA";
-            algorithmNames["1.2.643.2.2.19"] = "ECGOST3410";
+            algorithmNames.Put("1.2.840.113549.1.1.1", "RSA");
+            algorithmNames.Put("1.2.840.10040.4.1", "DSA");
+            algorithmNames.Put("1.2.840.113549.1.1.2", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.4", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.5", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.14", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.11", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.12", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.13", "RSA");
+            algorithmNames.Put("1.2.840.10040.4.3", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.1", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.2", "DSA");
+            algorithmNames.Put("1.3.14.3.2.29", "RSA");
+            algorithmNames.Put("1.3.36.3.3.1.2", "RSA");
+            algorithmNames.Put("1.3.36.3.3.1.3", "RSA");
+            algorithmNames.Put("1.3.36.3.3.1.4", "RSA");
+            algorithmNames.Put("1.2.643.2.2.19", "ECGOST3410");
+            algorithmNames.Put("1.2.840.10045.2.1", "ECDSA");
+            //Elliptic curve public key cryptography.
+            algorithmNames.Put("1.2.840.10045.4.1", "ECDSA");
+            //Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA) algorithm.
+            algorithmNames.Put("1.2.840.10045.4.3", "ECDSA");
+            //Elliptic curve Digital Signature Algorithm (DSA).
+            algorithmNames.Put("1.2.840.10045.4.3.2", "ECDSA");
+            //Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA256) algorithm.
+            algorithmNames.Put("1.2.840.10045.4.3.3", "ECDSA");
+            //Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA384) algorithm.
+            algorithmNames.Put("1.2.840.10045.4.3.4", "ECDSA");
         }
 
+        //Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA512) algorithm.
         /// <summary>Gets the algorithm name for a certain id.</summary>
         /// <param name="oid">an id (for instance "1.2.840.113549.1.1.1")</param>
         /// <returns>an algorithm name (for instance "RSA")</returns>

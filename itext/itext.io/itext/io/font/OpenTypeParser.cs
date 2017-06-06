@@ -494,7 +494,7 @@ namespace iText.IO.Font {
                 int[] table_location = new int[2];
                 table_location[0] = raf.ReadInt();
                 table_location[1] = raf.ReadInt();
-                tables[tag] = table_location;
+                tables.Put(tag, table_location);
             }
         }
 
@@ -745,7 +745,7 @@ namespace iText.IO.Font {
                     names = allNameEntries.Get(nameID);
                 }
                 else {
-                    allNameEntries[nameID] = names = new List<String[]>();
+                    allNameEntries.Put(nameID, names = new List<String[]>());
                 }
                 int pos = (int)raf.GetPosition();
                 raf.Seek(table_location[0] + startOfStorage + offset);
@@ -1076,7 +1076,7 @@ namespace iText.IO.Font {
                 int[] r = new int[2];
                 r[0] = raf.ReadUnsignedByte();
                 r[1] = GetGlyphWidth(r[0]);
-                h[k] = r;
+                h.Put(k, r);
             }
             return h;
         }
@@ -1135,9 +1135,9 @@ namespace iText.IO.Font {
                     // So, in case symbol font (cmap 3/0) we add both char codes:
                     // j & 0xff and j. It will simplify unicode conversion in TrueTypeFont
                     if (fontSpecific && ((j & 0xff00) == 0xf000)) {
-                        h[j & 0xff] = r;
+                        h.Put(j & 0xff, r);
                     }
-                    h[j] = r;
+                    h.Put(j, r);
                 }
             }
             return h;
@@ -1160,7 +1160,7 @@ namespace iText.IO.Font {
                 int[] r = new int[2];
                 r[0] = raf.ReadUnsignedShort();
                 r[1] = GetGlyphWidth(r[0]);
-                h[k + start_code] = r;
+                h.Put(k + start_code, r);
             }
             return h;
         }
@@ -1180,7 +1180,7 @@ namespace iText.IO.Font {
                     int[] r = new int[2];
                     r[0] = startGlyphID;
                     r[1] = GetGlyphWidth(r[0]);
-                    h[i] = r;
+                    h.Put(i, r);
                     startGlyphID++;
                 }
             }

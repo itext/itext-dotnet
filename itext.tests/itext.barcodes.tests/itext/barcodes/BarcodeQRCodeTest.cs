@@ -73,7 +73,7 @@ namespace iText.Barcodes {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
-            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.L;
+            hints.Put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
             barcode.PlaceBarcode(canvas, Color.GRAY, 12);
             document.Close();
@@ -92,7 +92,7 @@ namespace iText.Barcodes {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
-            hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
+            hints.Put(EncodeHintType.CHARACTER_SET, "UTF-8");
             BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
             barcode1.PlaceBarcode(canvas, Color.GRAY, 12);
             document.Close();
@@ -112,8 +112,8 @@ namespace iText.Barcodes {
                 PdfPage page1 = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
                 IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
-                hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
-                hints[EncodeHintType.MIN_VERSION_NR] = i;
+                hints.Put(EncodeHintType.CHARACTER_SET, "UTF-8");
+                hints.Put(EncodeHintType.MIN_VERSION_NR, i);
                 BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
                 barcode1.PlaceBarcode(canvas, Color.GRAY, 3);
             }

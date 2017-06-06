@@ -172,7 +172,6 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>The relative order of the field name.</summary>
         /// <remarks>The relative order of the field name. Fields are sorted in ascending order.</remarks>
         /// <param name="order">a number indicating the order of the field</param>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order) {
             GetPdfObject().Put(PdfName.O, new PdfNumber(order));
             return this;
@@ -184,9 +183,8 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Sets the initial visibility of the field.</summary>
         /// <param name="visible"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible) {
-            GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
+            GetPdfObject().Put(PdfName.V, PdfBoolean.ValueOf(visible));
             return this;
         }
 
@@ -196,9 +194,8 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Indication if the field value should be editable in the viewer.</summary>
         /// <param name="editable"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable) {
-            GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
+            GetPdfObject().Put(PdfName.E, PdfBoolean.ValueOf(editable));
             return this;
         }
 

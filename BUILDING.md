@@ -1,0 +1,1 @@
+To build **iText 7 Community**, you need to build `itextsharp/itextcore/iTextCore.sln`.

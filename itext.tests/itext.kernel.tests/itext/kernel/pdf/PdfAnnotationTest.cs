@@ -852,7 +852,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WaterMarkTest() {
-            String filename = destinationFolder + "waterMarkAnnotation01.pdf";
+            String filename = destinationFolder + "watermarkAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 400, 200, 200));

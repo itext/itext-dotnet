@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
@@ -73,20 +71,23 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new Dictionary
+        private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new LinkedDictionary
             <PdfDocument.IndirectRefDescription, PdfIndirectReference>();
 
-        /// <summary>Is used in smart mode to store serialized objects content.</summary>
-        private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
-            Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference>();
-
-        private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objectRefToSerializedContent = new Dictionary
-            <PdfDocument.IndirectRefDescription, byte[]>();
+        /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
+        private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
+        /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
+        /// <param name="file">File to write to.</param>
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        public PdfWriter(FileInfo file)
+            : this(file.FullName) {
+        }
+
         /// <summary>Create a PdfWriter writing to the passed outputstream and with default writer properties.</summary>
-        /// <param name="os">Outputstream to write too.</param>
+        /// <param name="os">Outputstream to write to.</param>
         public PdfWriter(Stream os)
             : this(os, new WriterProperties()) {
         }
@@ -242,7 +243,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument document, bool allowDuplicating
+        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument documentTo, bool allowDuplicating
             ) {
             if (obj is PdfIndirectReference) {
                 obj = ((PdfIndirectReference)obj).GetRefersTo();
@@ -265,19 +266,13 @@ namespace iText.Kernel.Pdf {
                     return copiedIndirectReference.GetRefersTo();
                 }
             }
-            if (obj.IsDictionary()) {
-                PdfName subtype = ((PdfDictionary)obj).GetAsName(PdfName.Subtype);
-                if (subtype != null && subtype.Equals(PdfName.Widget)) {
-                    tryToFindDuplicate = false;
-                }
-            }
+            SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
-                PdfIndirectReference copiedObjectRef = TryToFindPreviouslyCopiedEqualObject(obj);
-                if (copiedObjectRef != null) {
-                    PdfIndirectReference copiedIndirectReference = copiedObjects.Get(new PdfDocument.IndirectRefDescription(copiedObjectRef
-                        ));
-                    copiedObjects[copiedObjectKey] = copiedIndirectReference;
-                    return copiedIndirectReference.GetRefersTo();
+                serializedContent = smartModeSerializer.SerializeObject(obj);
+                PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
+                if (objectRef != null) {
+                    copiedObjects.Put(copiedObjectKey, objectRef);
+                    return objectRef.refersTo;
                 }
             }
             PdfObject newObject = obj.NewInstance();
@@ -285,10 +280,13 @@ namespace iText.Kernel.Pdf {
                 if (copiedObjectKey == null) {
                     copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
-                PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
-                copiedObjects[copiedObjectKey] = indRef;
+                PdfIndirectReference indRef = newObject.MakeIndirect(documentTo).GetIndirectReference();
+                if (serializedContent != null) {
+                    smartModeSerializer.SaveSerializedObject(serializedContent, indRef);
+                }
+                copiedObjects.Put(copiedObjectKey, indRef);
             }
-            newObject.CopyContent(obj, document);
+            newObject.CopyContent(obj, documentTo);
             return newObject;
         }
 
@@ -376,26 +374,22 @@ namespace iText.Kernel.Pdf {
             return CalculateIndRefKey(obj.GetIndirectReference());
         }
 
-        /// <summary>Used in the smart mode.</summary>
-        /// <remarks>
-        /// Used in the smart mode.
-        /// It serializes given object content and tries to find previously copied object with the same content.
-        /// If already copied object is not found, it saves current object serialized content into the map.
-        /// </remarks>
-        /// <param name="object">an object to check if some other object with the same content was already copied.</param>
-        /// <returns>indirect reference of the object with the same content, which already has a copy in the new document.
-        ///     </returns>
-        private PdfIndirectReference TryToFindPreviouslyCopiedEqualObject(PdfObject @object) {
-            PdfWriter.SerializedPdfObject objectKey;
-            if (@object.IsStream() || @object.IsDictionary()) {
-                objectKey = new PdfWriter.SerializedPdfObject(@object, objectRefToSerializedContent);
-                PdfIndirectReference objectRef = serializedContentToObjectRef.Get(objectKey);
-                if (objectRef != null) {
-                    return objectRef;
+        /// <summary>Flush all copied objects.</summary>
+        /// <param name="docId">id of the source document</param>
+        internal virtual void FlushCopiedObjects(long docId) {
+            IList<PdfDocument.IndirectRefDescription> remove = new List<PdfDocument.IndirectRefDescription>();
+            foreach (KeyValuePair<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObject in copiedObjects
+                ) {
+                if (copiedObject.Key.docId == docId) {
+                    if (copiedObject.Value.refersTo != null) {
+                        copiedObject.Value.refersTo.Flush();
+                        remove.Add(copiedObject.Key);
+                    }
                 }
-                serializedContentToObjectRef[objectKey] = @object.GetIndirectReference();
             }
-            return null;
+            foreach (PdfDocument.IndirectRefDescription ird in remove) {
+                copiedObjects.JRemove(ird);
+            }
         }
 
         private void MarkArrayContentToFlush(PdfArray array) {
@@ -441,153 +435,6 @@ namespace iText.Kernel.Pdf {
         private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType) {
             return dictionary.IsDictionary() && expectedType.Equals(((PdfDictionary)dictionary).GetAsName(PdfName.Type
                 ));
-        }
-
-        internal class SerializedPdfObject {
-            private readonly byte[] serializedContent;
-
-            private readonly int hash;
-
-            private IDigest md5;
-
-            private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent;
-
-            internal SerializedPdfObject(PdfObject obj, Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent
-                ) {
-                System.Diagnostics.Debug.Assert(obj.IsDictionary() || obj.IsStream());
-                this.objToSerializedContent = objToSerializedContent;
-                try {
-                    md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
-                }
-                catch (Exception e) {
-                    throw new PdfException(e);
-                }
-                ByteBufferOutputStream bb = new ByteBufferOutputStream();
-                int level = 100;
-                SerObject(obj, level, bb);
-                this.serializedContent = bb.ToByteArray();
-                hash = CalculateHash(this.serializedContent);
-                md5 = null;
-            }
-
-            // TODO 2: object is not checked if it was already serialized on start, double work could be done
-            // TODO 3: indirect objects often stored multiple times as parts of the other objects
-            private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb) {
-                if (level <= 0) {
-                    return;
-                }
-                if (obj == null) {
-                    bb.Append("$Lnull");
-                    return;
-                }
-                PdfIndirectReference reference = null;
-                ByteBufferOutputStream savedBb = null;
-                PdfDocument.IndirectRefDescription indRefKey = null;
-                if (obj.IsIndirectReference()) {
-                    reference = (PdfIndirectReference)obj;
-                    indRefKey = new PdfDocument.IndirectRefDescription(reference);
-                    byte[] cached = objToSerializedContent.Get(indRefKey);
-                    if (cached != null) {
-                        bb.Append(cached);
-                        return;
-                    }
-                    else {
-                        savedBb = bb;
-                        bb = new ByteBufferOutputStream();
-                        obj = reference.GetRefersTo();
-                    }
-                }
-                if (obj.IsStream()) {
-                    bb.Append("$B");
-                    SerDic((PdfDictionary)obj, level - 1, bb);
-                    if (level > 0) {
-                        md5.Reset();
-                        bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
-                    }
-                }
-                else {
-                    if (obj.IsDictionary()) {
-                        SerDic((PdfDictionary)obj, level - 1, bb);
-                    }
-                    else {
-                        if (obj.IsArray()) {
-                            SerArray((PdfArray)obj, level - 1, bb);
-                        }
-                        else {
-                            if (obj.IsString()) {
-                                bb.Append("$S").Append(obj.ToString());
-                            }
-                            else {
-                                if (obj.IsName()) {
-                                    bb.Append("$N").Append(obj.ToString());
-                                }
-                                else {
-                                    bb.Append("$L").Append(obj.ToString());
-                                }
-                            }
-                        }
-                    }
-                }
-                // PdfNull case is also here
-                if (savedBb != null) {
-                    objToSerializedContent[indRefKey] = bb.GetBuffer();
-                    savedBb.Append(bb);
-                }
-            }
-
-            private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb) {
-                bb.Append("$D");
-                if (level <= 0) {
-                    return;
-                }
-                PdfName[] keys = new PdfName[dic.KeySet().Count];
-                keys = dic.KeySet().ToArray(keys);
-                iText.IO.Util.JavaUtil.Sort(keys);
-                foreach (Object key in keys) {
-                    if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
-                        ()) || key.Equals(PdfName.Parent)) {
-                        // ignore recursive call
-                        continue;
-                    }
-                    SerObject((PdfObject)key, level, bb);
-                    SerObject(dic.Get((PdfName)key, false), level, bb);
-                }
-            }
-
-            private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb) {
-                bb.Append("$A");
-                if (level <= 0) {
-                    return;
-                }
-                for (int k = 0; k < array.Size(); ++k) {
-                    SerObject(array.Get(k, false), level, bb);
-                }
-            }
-
-            private static int CalculateHash(byte[] b) {
-                int hash = 0;
-                int len = b.Length;
-                for (int k = 0; k < len; ++k) {
-                    hash = hash * 31 + (b[k] & 0xff);
-                }
-                return hash;
-            }
-
-            /// <summary>Compares this PdfWriter to the obj.</summary>
-            /// <remarks>
-            /// Compares this PdfWriter to the obj.
-            /// Two PdfWriters are equal if their hashcodes are equal and their serialized content are equal.
-            /// </remarks>
-            /// <param name="obj">obj to compare</param>
-            /// <returns>True if this and obj are equal, false otherwise</returns>
-            public override bool Equals(Object obj) {
-                return obj is PdfWriter.SerializedPdfObject && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
-                    (serializedContent, ((PdfWriter.SerializedPdfObject)obj).serializedContent);
-            }
-
-            public override int GetHashCode() {
-                return hash;
-            }
         }
     }
 }

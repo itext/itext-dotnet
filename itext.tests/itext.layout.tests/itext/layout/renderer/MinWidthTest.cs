@@ -51,6 +51,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -292,6 +293,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void SimpleTableTest() {
             String outFileName = destinationFolder + "simpleTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
@@ -302,14 +304,12 @@ namespace iText.Layout.Renderer {
                 .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(2).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2
                 .Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
-            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
-                (cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
-            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
-                (cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table minTable = new Table(new float[] { -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop(10
+                ).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell
+                (cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 
+                20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone
+                (true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -321,6 +321,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void ColspanTableTest() {
             String outFileName = destinationFolder + "colspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
@@ -331,16 +332,12 @@ namespace iText.Layout.Renderer {
                 .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(3).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell
                 .Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
-            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
-                (cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (cell.Clone(true));
-            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
-                (cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (cell.Clone(true));
+            Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
+                (10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true))
+                .AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE
+                , 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone
+                (true)).AddCell(cell.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -352,6 +349,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void ColspanRowspanTableTest() {
             String outFileName = destinationFolder + "colspanRowspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
@@ -364,16 +362,12 @@ namespace iText.Layout.Renderer {
                 NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(3).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell
                 .Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
-            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell
-                (cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone
-                (true));
-            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell
-                (cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone
-                (true));
+            Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
+                (10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
+                (rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK
+                , 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell
+                .Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -385,6 +379,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void HeaderFooterTableTest() {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";
@@ -401,14 +396,13 @@ namespace iText.Layout.Renderer {
                 (cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMinWidth())).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell
-                (mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
-                (cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell
-                .Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
-            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
-                (table, minMaxWidth.GetMaxWidth())).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell
-                (mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
+            Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetBorder(new 
+                SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone
+                (true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)
+                ).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)
+                ).AddHeaderCell(cell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop
+                (20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
                 (cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell
                 .Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             doc.Add(table);

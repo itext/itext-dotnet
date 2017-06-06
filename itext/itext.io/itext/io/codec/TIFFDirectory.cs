@@ -236,7 +236,7 @@ namespace iText.IO.Codec {
                     processTag = false;
                 }
                 if (processTag) {
-                    fieldIndex[tag] = i;
+                    fieldIndex.Put(tag, i);
                     Object obj = null;
                     switch (type) {
                         case TIFFField.TIFF_BYTE:

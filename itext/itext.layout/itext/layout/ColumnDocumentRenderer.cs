@@ -98,6 +98,19 @@ namespace iText.Layout {
             this.columns = columns;
         }
 
+        /// <summary>
+        /// Gets the array index of the next area that will be written on after the
+        /// current one is full (overflowed).
+        /// </summary>
+        /// <returns>the array index of the next area that will be written on</returns>
+        public virtual int GetNextAreaNumber() {
+            return nextAreaNumber;
+        }
+
+        public override IRenderer GetNextRenderer() {
+            return new iText.Layout.ColumnDocumentRenderer(document, immediateFlush, columns);
+        }
+
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult.GetAreaBreak().GetAreaType
                 () != AreaBreakType.NEXT_AREA) {
@@ -108,15 +121,6 @@ namespace iText.Layout {
             }
             return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone()
                 ));
-        }
-
-        /// <summary>
-        /// Gets the array index of the next area that will be written on after the
-        /// current one is full (overflowed).
-        /// </summary>
-        /// <returns>the array index of the next area that will be written on</returns>
-        public virtual int GetNextAreaNumber() {
-            return nextAreaNumber;
         }
     }
 }

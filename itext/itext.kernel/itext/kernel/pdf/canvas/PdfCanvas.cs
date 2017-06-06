@@ -1856,7 +1856,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetExtGState(PdfExtGState extGState) {
             if (!extGState.IsFlushed()) {
-                currentGs.UpdateFromExtGState(extGState);
+                currentGs.UpdateFromExtGState(extGState, document);
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);
@@ -2123,7 +2123,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y"/>
         /// <param name="height"/>
         /// <param name="dummy"/>
-        /// <returns/>
+        /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y, float height, bool
              dummy) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
@@ -2180,7 +2180,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="image"/>
         /// <param name="x"/>
         /// <param name="y"/>
-        /// <returns/>
+        /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float x, float y) {
             return AddImage(image, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
         }
@@ -2192,7 +2192,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </summary>
         /// <param name="image"/>
         /// <param name="rect"/>
-        /// <returns/>
+        /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, iText.Kernel.Geom.Rectangle rect
             ) {
             return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
@@ -2207,7 +2207,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="x"/>
         /// <param name="y"/>
         /// <param name="width"/>
-        /// <returns/>
+        /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float x, float y, float width) {
             return AddImage(image, width, 0, 0, width / image.GetWidth() * image.GetHeight(), x, y);
         }

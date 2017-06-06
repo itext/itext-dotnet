@@ -49,9 +49,9 @@ namespace iText.Kernel.Pdf {
     {
         private IEnumerator<PdfObject> parentEnumerator;
 
-        internal PdfArrayDirectIterator(IEnumerator<PdfObject> parentEnumerator)
+        internal PdfArrayDirectIterator(IList<PdfObject> array)
         {
-            this.parentEnumerator = parentEnumerator;
+            this.parentEnumerator = array.GetEnumerator();
         }
 
         public void Dispose()

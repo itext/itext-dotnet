@@ -75,8 +75,7 @@ namespace iText.IO.Font {
 
         protected internal FontEncoding() {
             unicodeToCode = new IntHashtable(256);
-            codeToUnicode = new int[256];
-            ArrayUtil.FillWithValue(codeToUnicode, -1);
+            codeToUnicode = ArrayUtil.FillWithValue(new int[256], -1);
             unicodeDifferences = new IntHashtable(256);
             fontSpecific = false;
         }
@@ -223,7 +222,7 @@ namespace iText.IO.Font {
         /// could be encoded.
         /// </returns>
         public virtual bool CanEncode(int unicode) {
-            return unicodeToCode.ContainsKey(unicode);
+            return unicodeToCode.ContainsKey(unicode) || TextUtil.IsNonPrintable(unicode);
         }
 
         /// <summary>

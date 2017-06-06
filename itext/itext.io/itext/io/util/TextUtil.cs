@@ -257,6 +257,14 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
+        /// Determines if represented Glyph is whitespace character.
+        /// </summary>
+        public static bool IsWhitespace(Glyph glyph)
+        {
+            return IsWhiteSpace((char)glyph.GetUnicode());
+        }
+
+        /// <summary>
         /// Determines if represented Glyph is ' ' (SPACE) character.
         /// </summary>
         public static bool IsUni0020(Glyph g)

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
-    internal abstract class AbstractWidthHandler {
+    public abstract class AbstractWidthHandler {
         internal MinMaxWidth minMaxWidth;
 
         public AbstractWidthHandler(MinMaxWidth minMaxWidth) {

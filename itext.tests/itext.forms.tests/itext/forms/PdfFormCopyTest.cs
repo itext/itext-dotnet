@@ -235,6 +235,91 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 26)]
+        public virtual void CopyFieldsTest09() {
+            String srcFilename = sourceFolder + "datasheet.pdf";
+            String destFilename = destinationFolder + "copyFields09.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
+            // copying the same page from the same document twice
+            PdfPageFormCopier copier = new PdfPageFormCopier();
+            for (int i = 0; i < 3; ++i) {
+                PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+                srcDoc.CopyPagesTo(1, 1, destDoc, copier);
+                destDoc.FlushCopiedObjects(srcDoc);
+                srcDoc.Close();
+            }
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields09.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 84)]
+        public virtual void CopyFieldsTest10() {
+            String srcFilename = sourceFolder + "datasheet.pdf";
+            String destFilename = destinationFolder + "copyFields10.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
+            // copying the same page from the same document twice
+            for (int i = 0; i < 3; ++i) {
+                PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+                srcDoc.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+                destDoc.FlushCopiedObjects(srcDoc);
+                srcDoc.Close();
+            }
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields10.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 28)]
+        public virtual void CopyFieldsTest11() {
+            String srcFilename1 = sourceFolder + "datasheet.pdf";
+            String srcFilename2 = sourceFolder + "datasheet2.pdf";
+            String destFilename = destinationFolder + "copyFields11.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties()));
+            PdfDocument srcDoc1 = new PdfDocument(new PdfReader(srcFilename1));
+            srcDoc1.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc1);
+            srcDoc1.Close();
+            PdfDocument srcDoc2 = new PdfDocument(new PdfReader(srcFilename2));
+            srcDoc2.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc2);
+            srcDoc2.Close();
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields11.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 28)]
+        public virtual void CopyFieldsTest12() {
+            String srcFilename1 = sourceFolder + "datasheet.pdf";
+            String srcFilename2 = sourceFolder + "datasheet2.pdf";
+            String destFilename = destinationFolder + "copyFields12.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename, new WriterProperties().UseSmartMode()));
+            PdfDocument srcDoc2 = new PdfDocument(new PdfReader(srcFilename2));
+            srcDoc2.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc2);
+            srcDoc2.Close();
+            PdfDocument srcDoc1 = new PdfDocument(new PdfReader(srcFilename1));
+            srcDoc1.CopyPagesTo(1, 1, destDoc, new PdfPageFormCopier());
+            destDoc.FlushCopiedObjects(srcDoc1);
+            srcDoc1.Close();
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields12.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CopyPagesWithInheritedResources() {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
             String destFile = destinationFolder + "AnnotationSampleStandard_copy.pdf";
@@ -244,6 +329,20 @@ namespace iText.Forms {
             source.CopyPagesTo(1, source.GetNumberOfPages(), target, new PdfPageFormCopier());
             target.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, sourceFolder + "cmp_AnnotationSampleStandard_copy.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void UnnamedFieldsHierarchyTest() {
+            String srcFilename = sourceFolder + "unnamedFields.pdf";
+            String destFilename = destinationFolder + "hierarchyTest.pdf";
+            PdfDocument src = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument merged = new PdfDocument(new PdfWriter(destFilename));
+            src.CopyPagesTo(1, 1, merged, new PdfPageFormCopier());
+            merged.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_unnamedFieldsHierarchyTest.pdf"
                 , destinationFolder, "diff_"));
         }
     }

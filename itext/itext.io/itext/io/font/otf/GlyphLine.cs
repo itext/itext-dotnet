@@ -317,6 +317,36 @@ namespace iText.IO.Font.Otf {
             return new ActualTextIterator(this);
         }
 
+        public override bool Equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || GetType() != obj.GetType()) {
+                return false;
+            }
+            iText.IO.Font.Otf.GlyphLine other = (iText.IO.Font.Otf.GlyphLine)obj;
+            if (end - start != other.end - other.start) {
+                return false;
+            }
+            if (actualText == null && other.actualText != null || actualText != null && other.actualText == null) {
+                return false;
+            }
+            for (int i = start; i < end; i++) {
+                int otherPos = other.start + i - start;
+                Glyph myGlyph = Get(i);
+                Glyph otherGlyph = other.Get(otherPos);
+                if (myGlyph == null && otherGlyph != null || !myGlyph.Equals(otherGlyph)) {
+                    return false;
+                }
+                GlyphLine.ActualText myAT = actualText == null ? null : actualText[i];
+                GlyphLine.ActualText otherAT = other.actualText == null ? null : other.actualText[otherPos];
+                if (myAT == null && otherAT != null || !myAT.Equals(otherAT)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private void RemoveGlyph(int index) {
             glyphs.JRemoveAt(index);
             if (actualText != null) {
@@ -368,6 +398,17 @@ namespace iText.IO.Font.Otf {
             }
 
             public String value;
+
+            public override bool Equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null || GetType() != obj.GetType()) {
+                    return false;
+                }
+                GlyphLine.ActualText other = (GlyphLine.ActualText)obj;
+                return value == null && other.value == null || value.Equals(other.value);
+            }
         }
     }
 }
