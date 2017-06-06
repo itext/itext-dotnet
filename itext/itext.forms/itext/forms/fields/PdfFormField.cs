@@ -2311,6 +2311,7 @@ namespace iText.Forms.Fields {
                         DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
                     }
                     appearance.GetResources().AddFont(GetDocument(), localFont);
+                    appearance.SetModified();
                     PdfDictionary ap = new PdfDictionary();
                     ap.Put(PdfName.N, appearance.GetPdfObject());
                     ap.SetModified();
