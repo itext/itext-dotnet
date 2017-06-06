@@ -302,7 +302,7 @@ namespace iText.Layout.Renderer {
                 if (!fixedTableWidth) {
                     float tableWidthBasedOnPercents = sumOfPercents < 100 ? totalNonPercent * 100 / (100 - sumOfPercents) : 0;
                     for (int i = 0; i < numberOfColumns; i++) {
-                        if (widths[i].isPercent) {
+                        if (widths[i].isPercent && widths[i].width > 0) {
                             tableWidthBasedOnPercents = Math.Max(widths[i].max * 100 / widths[i].width, tableWidthBasedOnPercents);
                         }
                     }
