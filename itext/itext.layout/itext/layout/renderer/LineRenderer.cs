@@ -84,6 +84,7 @@ namespace iText.Layout.Renderer {
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
             IList<Rectangle> currentLineFloatRendererAreas = new List<Rectangle>();
+            int lastTabIndex = 0;
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult childResult;
@@ -107,6 +108,7 @@ namespace iText.Layout.Renderer {
                             hangingTabStop = null;
                         }
                         if (hangingTabStop != null) {
+                            lastTabIndex = childPos;
                             ++childPos;
                             continue;
                         }
@@ -174,14 +176,24 @@ namespace iText.Layout.Renderer {
                 }
                 maxDescent = Math.Min(maxDescent, childDescent);
                 float maxHeight = maxAscent - maxDescent;
-                if (hangingTabStop != null) {
-                    IRenderer tabRenderer = childRenderers[childPos - 1];
-                    float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, childRenderer, childResult, tabRenderer
-                        );
+                bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
+                    ());
+                bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
+                if (hangingTabStop != null && (TabAlignment.LEFT == hangingTabStop.GetTabAlignment() || shouldBreakLayouting
+                     || childRenderers.Count - 1 == childPos || childRenderers[childPos + 1] is TabRenderer)) {
+                    IRenderer tabRenderer = childRenderers[lastTabIndex];
+                    IList<IRenderer> affectedRenderers = new List<IRenderer>();
+                    affectedRenderers.AddAll(childRenderers.SubList(lastTabIndex + 1, childPos + 1));
+                    float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, affectedRenderers, tabRenderer);
                     tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
-                    childResult.GetOccupiedArea().GetBBox().MoveRight(tabWidth);
+                    float sumOfAffectedRendererWidths = 0;
+                    foreach (IRenderer renderer in affectedRenderers) {
+                        renderer.GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths);
+                        sumOfAffectedRendererWidths += renderer.GetOccupiedArea().GetBBox().GetWidth();
+                    }
                     if (childResult.GetSplitRenderer() != null) {
-                        childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth);
+                        childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths
+                             - childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().GetWidth());
                     }
                     float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
                     if (hangingTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < hangingTabStop
@@ -196,15 +208,14 @@ namespace iText.Layout.Renderer {
                     hangingTabStop = null;
                 }
                 else {
-                    curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
-                    widthHandler.UpdateMinChildWidth(minChildWidth);
-                    widthHandler.UpdateMaxChildWidth(maxChildWidth);
+                    if (null == hangingTabStop) {
+                        curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                        widthHandler.UpdateMinChildWidth(minChildWidth);
+                        widthHandler.UpdateMaxChildWidth(maxChildWidth);
+                    }
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
                     curWidth, maxHeight));
-                bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
-                    ());
-                bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
                 if (shouldBreakLayouting) {
                     LineRenderer[] split = Split();
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -631,41 +642,48 @@ namespace iText.Layout.Renderer {
         /// Calculates and sets tab size with the account of the element that is next in the line after the tab.
         /// Returns resulting width of the tab.
         /// </remarks>
-        private float CalculateTab(Rectangle layoutBox, float curWidth, TabStop tabStop, IRenderer nextElementRenderer
-            , LayoutResult nextElementResult, IRenderer tabRenderer) {
-            float childWidth = 0;
-            if (nextElementRenderer != null) {
-                childWidth = nextElementRenderer.GetOccupiedArea().GetBBox().GetWidth();
+        private float CalculateTab(Rectangle layoutBox, float curWidth, TabStop tabStop, IList<IRenderer> affectedRenderers
+            , IRenderer tabRenderer) {
+            float sumOfAffectedRendererWidths = 0;
+            foreach (IRenderer renderer in affectedRenderers) {
+                sumOfAffectedRendererWidths += renderer.GetOccupiedArea().GetBBox().GetWidth();
             }
             float tabWidth = 0;
             switch (tabStop.GetTabAlignment()) {
                 case TabAlignment.RIGHT: {
-                    tabWidth = tabStop.GetTabPosition() - curWidth - childWidth;
+                    tabWidth = tabStop.GetTabPosition() - curWidth - sumOfAffectedRendererWidths;
                     break;
                 }
 
                 case TabAlignment.CENTER: {
-                    tabWidth = tabStop.GetTabPosition() - curWidth - childWidth / 2;
+                    tabWidth = tabStop.GetTabPosition() - curWidth - sumOfAffectedRendererWidths / 2;
                     break;
                 }
 
                 case TabAlignment.ANCHOR: {
                     float anchorPosition = -1;
-                    if (nextElementRenderer is TextRenderer) {
-                        anchorPosition = ((TextRenderer)nextElementRenderer).GetTabAnchorCharacterPosition();
+                    float processedRenderersWidth = 0;
+                    foreach (IRenderer renderer in affectedRenderers) {
+                        anchorPosition = ((TextRenderer)renderer).GetTabAnchorCharacterPosition();
+                        if (-1 != anchorPosition) {
+                            break;
+                        }
+                        else {
+                            processedRenderersWidth += renderer.GetOccupiedArea().GetBBox().GetWidth();
+                        }
                     }
                     if (anchorPosition == -1) {
-                        anchorPosition = childWidth;
+                        anchorPosition = 0;
                     }
-                    tabWidth = tabStop.GetTabPosition() - curWidth - anchorPosition;
+                    tabWidth = tabStop.GetTabPosition() - curWidth - anchorPosition - processedRenderersWidth;
                     break;
                 }
             }
             if (tabWidth < 0) {
                 tabWidth = 0;
             }
-            if (curWidth + tabWidth + childWidth > layoutBox.GetWidth()) {
-                tabWidth -= (curWidth + childWidth + tabWidth) - layoutBox.GetWidth();
+            if (curWidth + tabWidth + sumOfAffectedRendererWidths > layoutBox.GetWidth()) {
+                tabWidth -= (curWidth + sumOfAffectedRendererWidths + tabWidth) - layoutBox.GetWidth();
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
             tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
