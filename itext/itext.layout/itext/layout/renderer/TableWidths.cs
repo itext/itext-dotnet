@@ -598,8 +598,7 @@ namespace iText.Layout.Renderer {
             float[] minWidths = new float[numberOfColumns];
             float[] maxWidths = new float[numberOfColumns];
             foreach (TableWidths.CellInfo cell in cells) {
-                // Why we need it? Header/Footer?
-                cell.GetCell().SetParent(tableRenderer);
+                cell.SetParent(tableRenderer);
                 MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth(MinMaxWidthUtils.GetMax());
                 float[] indents = GetCellBorderIndents(cell);
                 minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
@@ -882,6 +881,20 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 return str;
+            }
+
+            public virtual void SetParent(TableRenderer tableRenderer) {
+                if (region == HEADER) {
+                    cell.SetParent(tableRenderer.headerRenderer);
+                }
+                else {
+                    if (region == FOOTER) {
+                        cell.SetParent(tableRenderer.footerRenderer);
+                    }
+                    else {
+                        cell.SetParent(tableRenderer);
+                    }
+                }
             }
         }
         //endregion
