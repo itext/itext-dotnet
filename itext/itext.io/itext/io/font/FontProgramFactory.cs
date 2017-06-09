@@ -546,5 +546,13 @@ namespace iText.IO.Font {
             }
             return key;
         }
+
+        public static void ClearRegisteredFonts() {
+            fontRegisterProvider.ClearRegisteredFonts();
+        }
+
+        public static void ClearRegisteredFontFamilies() {
+            fontRegisterProvider.ClearRegisteredFontFamilies();
+        }
     }
 }

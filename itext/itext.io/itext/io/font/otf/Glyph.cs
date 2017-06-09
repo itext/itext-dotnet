@@ -279,7 +279,7 @@ namespace iText.IO.Font.Otf {
             if (this == obj) {
                 return true;
             }
-            if (!(obj is iText.IO.Font.Otf.Glyph)) {
+            if (obj == null || GetType() != obj.GetType()) {
                 return false;
             }
             iText.IO.Font.Otf.Glyph other = (iText.IO.Font.Otf.Glyph)obj;

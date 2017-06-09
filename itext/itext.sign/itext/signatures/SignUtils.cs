@@ -49,6 +49,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -64,10 +65,30 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
+using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace iText.Signatures {
     internal static class SignUtils {
         internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
+
+        internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
+            String algorithm;
+            if (cp is RsaKeyParameters) {
+                algorithm = "RSA";
+            } else if (cp is DsaKeyParameters) {
+                algorithm = "DSA";
+            } else if (cp is ECKeyParameters) {
+                algorithm = ((ECKeyParameters) cp).AlgorithmName;
+                if (algorithm == "EC") {
+                    algorithm = "ECDSA";
+                }
+            } else {
+                throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(cp.ToString());
+            }
+
+            return algorithm;
+        }
 
         /// <exception cref="CertificateException"/>
         /// <exception cref="CrlException"/>
@@ -84,7 +105,9 @@ namespace iText.Signatures {
 
         internal static byte[] GetExtensionValueByOid(X509Certificate certificate, String oid) {
             Asn1OctetString extensionValue = certificate.GetExtensionValue(oid);
-            return extensionValue != null ? extensionValue.GetOctets() : null;
+            return extensionValue != null ? extensionValue.GetDerEncoded() : null;
+            
+            
         }
 
         internal static IDigest GetMessageDigest(String hashAlgorithm) {
@@ -247,6 +270,16 @@ namespace iText.Signatures {
 
         internal static ISigner GetSignatureHelper(String algorithm) {
             return SignerUtilities.GetSigner(algorithm);
+        }
+
+        internal static bool VerifyCertificateSignature(X509Certificate certificate, AsymmetricKeyParameter issuerPublicKey) {
+            bool res = false;
+            try {
+                certificate.Verify(issuerPublicKey);
+                res = true;
+            } catch (Exception ignored) {
+            }
+            return res;
         }
 
         internal static IEnumerable<X509Certificate> GetCertificates(List<X509Certificate> rootStore) {

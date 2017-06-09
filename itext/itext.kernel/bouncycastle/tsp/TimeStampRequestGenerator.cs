@@ -28,6 +28,12 @@ namespace Org.BouncyCastle.Tsp
 			this.reqPolicy = new DerObjectIdentifier(reqPolicy);
 		}
 
+	    public void SetReqPolicy(
+	        DerObjectIdentifier reqPolicy)
+	    {
+	        this.reqPolicy = reqPolicy;
+	    }
+
 		public void SetCertReq(
 			bool certReq)
 		{

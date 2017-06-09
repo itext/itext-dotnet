@@ -44,7 +44,7 @@ using System;
 using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
-    internal class MaxMaxWidthHandler : AbstractWidthHandler {
+    public class MaxMaxWidthHandler : AbstractWidthHandler {
         public MaxMaxWidthHandler(MinMaxWidth minMaxWidth)
             : base(minMaxWidth) {
         }

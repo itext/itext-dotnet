@@ -293,7 +293,7 @@ namespace iText.Kernel.Pdf.Layer {
                     ));
                 // We will set onPanel to true later for the objects present in /D->/Order entry.
                 currentLayer.onPanel = false;
-                layerMap[currentLayer.GetIndirectReference()] = currentLayer;
+                layerMap.Put(currentLayer.GetIndirectReference(), currentLayer);
             }
             PdfDictionary d = GetPdfObject().GetAsDictionary(PdfName.D);
             if (d != null && !d.IsEmpty()) {

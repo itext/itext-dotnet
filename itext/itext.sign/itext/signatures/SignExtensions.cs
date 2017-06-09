@@ -58,6 +58,10 @@ namespace iText.Signatures {
             return str.Substring(beginIndex, endIndex - beginIndex);
         }
 
+        public static byte[] GetBytes(this String str) {
+            return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
         public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems) {
             foreach (T item in newItems) {
                 t.Add(item);
@@ -124,12 +128,15 @@ namespace iText.Signatures {
         }
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
-            TValue value = default(TValue);
-            if (key != null) {
-                col.TryGetValue(key, out value);
-            }
-
+            TValue value;
+            col.TryGetValue(key, out value);
             return value;
+        }
+
+        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            TValue oldVal = col.Get(key);
+            col[key] = value;
+            return oldVal;
         }
 
         public static bool After(this DateTime date, DateTime when) {
@@ -158,20 +165,6 @@ namespace iText.Signatures {
 
         public static void Update(this ISigner signer, byte[] data, int offset, int count) {
             signer.BlockUpdate(data, offset, count);
-        }
-
-        public static String GetAlgorithm(this ICipherParameters cp) {
-            String algorithm;
-            if (cp is RsaKeyParameters)
-                algorithm = "RSA";
-            else if (cp is DsaKeyParameters)
-                algorithm = "DSA";
-            else if (cp is ECKeyParameters)
-                algorithm = "ECDSA";
-            else
-                throw new PdfException("unknown.key.algorithm {0}").SetMessageParams(cp.ToString());
-
-            return algorithm;
         }
 
         public static void Update(this IDigest dgst, byte[] input) {

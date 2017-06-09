@@ -45,7 +45,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -60,13 +59,28 @@ namespace iText.Layout.Font {
     /// <see cref="iText.IO.Font.FontProgramDescriptorFactory"/>
     /// .
     /// </summary>
+    /// <seealso cref="FontProvider.GetPdfFont(FontInfo)"/>
+    /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)">
+    /// <p/>
+    /// Note,
+    /// <see cref="GetAlias()"/>
+    /// and
+    /// <see cref="GetDescriptor()"/>
+    /// do not taken into account in
+    /// <see cref="Equals(System.Object)"/>
+    /// ,
+    /// the same font with different aliases will have equal FontInfo's,
+    /// and therefore the same
+    /// <see cref="iText.Kernel.Font.PdfFont"/>
+    /// in the end document.
+    /// </seealso>
     public sealed class FontInfo {
         private static readonly IDictionary<FontCacheKey, FontProgramDescriptor> fontNamesCache = new ConcurrentDictionary
             <FontCacheKey, FontProgramDescriptor>();
 
         private readonly String fontName;
 
-        private readonly byte[] fontProgram;
+        private readonly byte[] fontData;
 
         private readonly FontProgramDescriptor descriptor;
 
@@ -74,62 +88,102 @@ namespace iText.Layout.Font {
 
         private readonly String encoding;
 
-        private FontInfo(String fontName, byte[] fontProgram, String encoding, FontProgramDescriptor descriptor) {
+        private readonly String alias;
+
+        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor, String
+             alias) {
             this.fontName = fontName;
-            this.fontProgram = fontProgram;
+            this.fontData = fontData;
             this.encoding = encoding;
             this.descriptor = descriptor;
-            this.hash = CalculateHashCode(fontName, fontProgram, encoding);
+            this.alias = alias != null ? alias.ToLowerInvariant() : null;
+            this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
+            return new iText.Layout.Font.FontInfo(fontInfo.fontName, fontInfo.fontData, fontInfo.encoding, fontInfo.descriptor
+                , alias);
+        }
+
+        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
-            return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor);
+            return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, alias);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding, String alias) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
             if (descriptor == null) {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontName);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor, alias) : 
+                null;
         }
 
-        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding, String alias) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
             if (descriptor == null) {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor, alias)
+                 : null;
         }
 
+        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) instead.")]
         public PdfFont GetPdfFont(FontProvider fontProvider) {
-            try {
-                return fontProvider.GetPdfFont(this);
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
-            }
+            return fontProvider.GetPdfFont(this);
         }
 
         public FontProgramDescriptor GetDescriptor() {
             return descriptor;
         }
 
+        /// <summary>
+        /// Gets path to font, if
+        /// <see cref="FontInfo"/>
+        /// was created by String.
+        /// Note, to get PostScript or full name, use
+        /// <see cref="GetDescriptor()"/>
+        /// .
+        /// </summary>
         public String GetFontName() {
             return fontName;
         }
 
+        /// <summary>
+        /// Gets font data, if
+        /// <see cref="FontInfo"/>
+        /// was created with
+        /// <c>byte[]</c>
+        /// .
+        /// </summary>
+        [System.ObsoleteAttribute(@"use GetFontData() instead.")]
         public byte[] GetFontProgram() {
-            return fontProgram;
+            return fontData;
+        }
+
+        /// <summary>
+        /// Gets font data, if
+        /// <see cref="FontInfo"/>
+        /// was created with
+        /// <c>byte[]</c>
+        /// .
+        /// </summary>
+        public byte[] GetFontData() {
+            return fontData;
         }
 
         public String GetEncoding() {
             return encoding;
+        }
+
+        /// <summary>Gets font alias.</summary>
+        /// <returns>alias if exist, otherwise null.</returns>
+        public String GetAlias() {
+            return alias;
         }
 
         public override bool Equals(Object o) {
@@ -141,8 +195,8 @@ namespace iText.Layout.Font {
             }
             iText.Layout.Font.FontInfo that = (iText.Layout.Font.FontInfo)o;
             return (fontName != null ? fontName.Equals(that.fontName) : that.fontName == null) && iText.IO.Util.JavaUtil.ArraysEquals
-                (fontProgram, that.fontProgram) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding 
-                == null);
+                (fontData, that.fontData) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding == null
+                );
         }
 
         public override int GetHashCode() {
@@ -175,7 +229,7 @@ namespace iText.Layout.Font {
 
         private static void PutFontNamesToCache(FontCacheKey key, FontProgramDescriptor descriptor) {
             if (descriptor != null) {
-                fontNamesCache[key] = descriptor;
+                fontNamesCache.Put(key, descriptor);
             }
         }
     }

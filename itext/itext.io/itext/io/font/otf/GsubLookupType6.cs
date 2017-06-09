@@ -78,7 +78,7 @@ namespace iText.IO.Font.Otf {
                     chainSubRuleSet.Add(new SubTableLookup6Format1.SubstRuleFormat1(backtrackGlyphIds, inputGlyphIds, lookAheadGlyphIds
                         , substLookupRecords));
                 }
-                substMap[coverageGlyphIds[i]] = chainSubRuleSet;
+                substMap.Put(coverageGlyphIds[i], chainSubRuleSet);
             }
             subTables.Add(new SubTableLookup6Format1(openReader, lookupFlag, substMap));
         }

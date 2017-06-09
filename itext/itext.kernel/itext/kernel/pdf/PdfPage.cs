@@ -62,8 +62,6 @@ namespace iText.Kernel.Pdf {
 
         private int mcid = -1;
 
-        private int structParents = -1;
-
         internal PdfPages parentPages;
 
         private IList<PdfName> excludedKeys = new List<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.Parent
@@ -95,8 +93,6 @@ namespace iText.Kernel.Pdf {
             GetPdfObject().Put(PdfName.MediaBox, new PdfArray(pageSize));
             GetPdfObject().Put(PdfName.TrimBox, new PdfArray(pageSize));
             if (pdfDocument.IsTagged()) {
-                structParents = (int)pdfDocument.GetNextStructParentIndex();
-                GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
                 SetTabOrder(PdfName.S);
             }
         }
@@ -465,8 +461,10 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
         /// <param name="copier">
-        /// a copier which bears a specific copy logic. May be
-        /// <see langword="null"/>
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
         /// </param>
         /// <returns>
         /// copied
@@ -482,19 +480,14 @@ namespace iText.Kernel.Pdf {
                     GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
-                    if (annot.GetSubtype().Equals(PdfName.Widget)) {
-                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                            , false))), false);
+                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
+                        (PdfName.P, PdfName.Parent), true));
+                    if (PdfName.Widget.Equals(annot.GetSubtype())) {
+                        RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
                     }
-                    else {
-                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                            , true))), false);
-                    }
+                    // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
+                    page.AddAnnotation(-1, newAnnot, false);
                 }
-            }
-            if (toDocument.IsTagged()) {
-                page.structParents = (int)toDocument.GetNextStructParentIndex();
-                page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(page.structParents));
             }
             if (copier != null) {
                 copier.Copy(this, page);
@@ -598,6 +591,7 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
                 TryFlushPageTags();
             }
+            GetResources();
             if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
                 GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
             }
@@ -889,18 +883,11 @@ namespace iText.Kernel.Pdf {
         /// 
         /// <see cref="int?"/>
         /// key of the page’s entry in the structural parent tree.
+        /// If page has no entry in the structural parent tree, returned value is -1.
         /// </returns>
         public virtual int? GetStructParentIndex() {
-            if (structParents == -1) {
-                PdfNumber n = GetPdfObject().GetAsNumber(PdfName.StructParents);
-                if (n != null) {
-                    structParents = n.IntValue();
-                }
-                else {
-                    structParents = (int)GetDocument().GetNextStructParentIndex();
-                }
-            }
-            return structParents;
+            return GetPdfObject().GetAsNumber(PdfName.StructParents) != null ? GetPdfObject().GetAsNumber(PdfName.StructParents
+                ).IntValue() : -1;
         }
 
         /// <summary>Helper method to add an additional action to this page.</summary>
@@ -943,7 +930,12 @@ namespace iText.Kernel.Pdf {
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
-                    annotations.Add(PdfAnnotation.MakeAnnotation(annot).SetPage(this));
+                    PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(annot);
+                    // PdfAnnotation.makeAnnotation returns null if annotation SubType is not recognized or not present at all
+                    // (although SubType is required according to the spec)
+                    if (annotation != null) {
+                        annotations.Add(annotation.SetPage(this));
+                    }
                 }
             }
             return annotations;
@@ -1043,7 +1035,12 @@ namespace iText.Kernel.Pdf {
                 annots.Add(index, annotation.SetPage(this).GetPdfObject());
             }
             if (annots.GetIndirectReference() == null) {
+                //Annots are not indirect so page needs to be marked as modified
                 SetModified();
+            }
+            else {
+                //Annots are indirect so need to be marked as modified
+                annots.SetModified();
             }
             return this;
         }
@@ -1120,6 +1117,14 @@ namespace iText.Kernel.Pdf {
             return GetDocument().GetCatalog().GetPagesWithOutlines().Get(GetPdfObject());
         }
 
+        /// <returns>
+        /// true - if in case the page has a rotation, then new content will be automatically rotated in the
+        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
+        /// </returns>
+        public virtual bool IsIgnorePageRotationForContent() {
+            return ignorePageRotationForContent;
+        }
+
         /// <summary>This method adds or replaces a page label.</summary>
         /// <param name="numberingStyle">
         /// The numbering style that shall be used for the numeric portion of each page label.
@@ -1154,14 +1159,6 @@ namespace iText.Kernel.Pdf {
         [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String, int) overload instead. Will be removed in 7.1.")]
         public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix, int firstPage) {
             return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, firstPage);
-        }
-
-        /// <returns>
-        /// true - if in case the page has a rotation, then new content will be automatically rotated in the
-        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
-        /// </returns>
-        public virtual bool IsIgnorePageRotationForContent() {
-            return ignorePageRotationForContent;
         }
 
         /// <summary>
@@ -1524,6 +1521,29 @@ namespace iText.Kernel.Pdf {
                 if (cropBox != null) {
                     copyPdfPage.SetCropBox(cropBox.ToRectangle());
                 }
+            }
+        }
+
+        private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument) {
+            if (newField.ContainsKey(PdfName.Parent)) {
+                return;
+            }
+            PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
+            if (oldParent != null) {
+                PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
+                    .Kids, PdfName.Parent), false);
+                if (newParent.IsFlushed()) {
+                    newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
+                        .Parent), true);
+                }
+                RebuildFormFieldParent(oldParent, newParent, toDocument);
+                PdfArray kids = newParent.GetAsArray(PdfName.Kids);
+                if (kids == null) {
+                    kids = new PdfArray();
+                    newParent.Put(PdfName.Kids, kids);
+                }
+                kids.Add(newField);
+                newField.Put(PdfName.Parent, newParent);
             }
         }
     }

@@ -97,7 +97,7 @@ namespace iText.Kernel.Font {
                     }
                     toUnicode = uni.ExportToUnicode();
                 }
-                uniMaps[uniMap] = toUnicode;
+                uniMaps.Put(uniMap, toUnicode);
                 return toUnicode;
             }
         }

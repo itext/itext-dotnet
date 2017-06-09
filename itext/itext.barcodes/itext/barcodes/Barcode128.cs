@@ -269,7 +269,7 @@ namespace iText.Barcodes {
                 }
             }
             c = text[0];
-            char currentCode = START_B;
+            char currentCode = GetStartSymbol(codeSet);
             int index = 0;
             if ((codeSet == Barcode128.Barcode128CodeSet.AUTO || codeSet == Barcode128.Barcode128CodeSet.C) && IsNextDigits
                 (text, index, 2)) {
@@ -720,66 +720,66 @@ namespace iText.Barcodes {
         }
 
         static Barcode128() {
-            ais[0] = 20;
-            ais[1] = 16;
-            ais[2] = 16;
-            ais[10] = -1;
-            ais[11] = 9;
-            ais[12] = 8;
-            ais[13] = 8;
-            ais[15] = 8;
-            ais[17] = 8;
-            ais[20] = 4;
-            ais[21] = -1;
-            ais[22] = -1;
-            ais[23] = -1;
-            ais[240] = -1;
-            ais[241] = -1;
-            ais[250] = -1;
-            ais[251] = -1;
-            ais[252] = -1;
-            ais[30] = -1;
+            ais.Put(0, 20);
+            ais.Put(1, 16);
+            ais.Put(2, 16);
+            ais.Put(10, -1);
+            ais.Put(11, 9);
+            ais.Put(12, 8);
+            ais.Put(13, 8);
+            ais.Put(15, 8);
+            ais.Put(17, 8);
+            ais.Put(20, 4);
+            ais.Put(21, -1);
+            ais.Put(22, -1);
+            ais.Put(23, -1);
+            ais.Put(240, -1);
+            ais.Put(241, -1);
+            ais.Put(250, -1);
+            ais.Put(251, -1);
+            ais.Put(252, -1);
+            ais.Put(30, -1);
             for (int k = 3100; k < 3700; ++k) {
-                ais[k] = 10;
+                ais.Put(k, 10);
             }
-            ais[37] = -1;
+            ais.Put(37, -1);
             for (int k = 3900; k < 3940; ++k) {
-                ais[k] = -1;
+                ais.Put(k, -1);
             }
-            ais[400] = -1;
-            ais[401] = -1;
-            ais[402] = 20;
-            ais[403] = -1;
+            ais.Put(400, -1);
+            ais.Put(401, -1);
+            ais.Put(402, 20);
+            ais.Put(403, -1);
             for (int k = 410; k < 416; ++k) {
-                ais[k] = 16;
+                ais.Put(k, 16);
             }
-            ais[420] = -1;
-            ais[421] = -1;
-            ais[422] = 6;
-            ais[423] = -1;
-            ais[424] = 6;
-            ais[425] = 6;
-            ais[426] = 6;
-            ais[7001] = 17;
-            ais[7002] = -1;
+            ais.Put(420, -1);
+            ais.Put(421, -1);
+            ais.Put(422, 6);
+            ais.Put(423, -1);
+            ais.Put(424, 6);
+            ais.Put(425, 6);
+            ais.Put(426, 6);
+            ais.Put(7001, 17);
+            ais.Put(7002, -1);
             for (int k = 7030; k < 7040; ++k) {
-                ais[k] = -1;
+                ais.Put(k, -1);
             }
-            ais[8001] = 18;
-            ais[8002] = -1;
-            ais[8003] = -1;
-            ais[8004] = -1;
-            ais[8005] = 10;
-            ais[8006] = 22;
-            ais[8007] = -1;
-            ais[8008] = -1;
-            ais[8018] = 22;
-            ais[8020] = -1;
-            ais[8100] = 10;
-            ais[8101] = 14;
-            ais[8102] = 6;
+            ais.Put(8001, 18);
+            ais.Put(8002, -1);
+            ais.Put(8003, -1);
+            ais.Put(8004, -1);
+            ais.Put(8005, 10);
+            ais.Put(8006, 22);
+            ais.Put(8007, -1);
+            ais.Put(8008, -1);
+            ais.Put(8018, 22);
+            ais.Put(8020, -1);
+            ais.Put(8100, 10);
+            ais.Put(8101, 14);
+            ais.Put(8102, 6);
             for (int k = 90; k < 100; ++k) {
-                ais[k] = -1;
+                ais.Put(k, -1);
             }
         }
 

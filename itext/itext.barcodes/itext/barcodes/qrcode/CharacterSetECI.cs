@@ -100,7 +100,7 @@ namespace iText.Barcodes.Qrcode {
         private static void AddCharacterSet(int value, String encodingName, IDictionary<String, iText.Barcodes.Qrcode.CharacterSetECI
             > n) {
             iText.Barcodes.Qrcode.CharacterSetECI eci = new iText.Barcodes.Qrcode.CharacterSetECI(value, encodingName);
-            n[encodingName] = eci;
+            n.Put(encodingName, eci);
         }
 
         private static void AddCharacterSet(int value, String[] encodingNames, IDictionary<String, iText.Barcodes.Qrcode.CharacterSetECI
@@ -108,7 +108,7 @@ namespace iText.Barcodes.Qrcode {
             iText.Barcodes.Qrcode.CharacterSetECI eci = new iText.Barcodes.Qrcode.CharacterSetECI(value, encodingNames
                 [0]);
             for (int i = 0; i < encodingNames.Length; i++) {
-                n[encodingNames[i]] = eci;
+                n.Put(encodingNames[i], eci);
             }
         }
 

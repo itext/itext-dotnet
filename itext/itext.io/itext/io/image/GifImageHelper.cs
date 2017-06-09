@@ -358,7 +358,7 @@ namespace iText.IO.Image {
                 colorspace[2] = len / 3 - 1;
                 colorspace[3] = PdfEncodings.ConvertToString(gif.m_curr_table, null);
                 IDictionary<String, Object> ad = new Dictionary<String, Object>();
-                ad["ColorSpace"] = colorspace;
+                ad.Put("ColorSpace", colorspace);
                 RawImageData img = new RawImageData(gif.m_out, ImageType.NONE);
                 RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out);
                 RawImageHelper.UpdateImageAttributes(img, ad);

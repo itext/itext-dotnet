@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf {
 
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
-            tmpMap[new PdfName("b")] = new PdfName("c");
+            tmpMap.Put(new PdfName("b"), new PdfName("c"));
             return new PdfDictionary(tmpMap);
         }
     }

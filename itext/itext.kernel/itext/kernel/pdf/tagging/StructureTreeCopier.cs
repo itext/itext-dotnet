@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf.Tagging {
             IDictionary<PdfDictionary, PdfDictionary> page2pageDictionaries = new Dictionary<PdfDictionary, PdfDictionary
                 >();
             foreach (KeyValuePair<PdfPage, PdfPage> page in page2page) {
-                page2pageDictionaries[page.Key.GetPdfObject()] = page.Value.GetPdfObject();
+                page2pageDictionaries.Put(page.Key.GetPdfObject(), page.Value.GetPdfObject());
                 ICollection<PdfMcr> mcrs = fromDocument.GetStructTreeRoot().GetPageMarkedContentReferences(page.Key);
                 if (mcrs != null) {
                     foreach (PdfMcr mcr in mcrs) {

@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.IO.Font.Otf {
-    /// <author>psoares</author>
     public abstract class OpenTableLookup {
         protected internal int lookupFlag;
 
@@ -61,16 +60,6 @@ namespace iText.IO.Font.Otf {
             return lookupFlag;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadSubTables() {
-            foreach (int subTableLocation in subTableLocations) {
-                ReadSubTable(subTableLocation);
-            }
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        protected internal abstract void ReadSubTable(int subTableLocation);
-
         public abstract bool TransformOne(GlyphLine line);
 
         public virtual bool TransformLine(GlyphLine line) {
@@ -81,6 +70,20 @@ namespace iText.IO.Font.Otf {
             }
             return changed;
         }
+
+        public virtual bool HasSubstitution(int index) {
+            return false;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual void ReadSubTables() {
+            foreach (int subTableLocation in subTableLocations) {
+                ReadSubTable(subTableLocation);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        protected internal abstract void ReadSubTable(int subTableLocation);
 
         public class GlyphIndexer {
             public GlyphLine line;
@@ -110,10 +113,6 @@ namespace iText.IO.Font.Otf {
                     }
                 }
             }
-        }
-
-        public virtual bool HasSubstitution(int index) {
-            return false;
         }
     }
 }

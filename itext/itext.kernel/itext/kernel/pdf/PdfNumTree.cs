@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual void AddEntry(int? key, PdfObject value) {
-            items[key] = value;
+            items.Put(key, value);
         }
 
         public virtual PdfDictionary BuildTree() {
@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf {
                         leftOver = null;
                     }
                     if (k < nums.Size()) {
-                        items[number.IntValue()] = nums.Get(k);
+                        items.Put(number.IntValue(), nums.Get(k));
                     }
                     else {
                         return number;

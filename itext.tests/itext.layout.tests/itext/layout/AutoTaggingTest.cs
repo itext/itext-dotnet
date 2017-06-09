@@ -49,6 +49,8 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -103,6 +105,30 @@ namespace iText.Layout {
             document.Add(image);
             document.Close();
             CompareResult("imageTest01.pdf", "cmp_imageTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest02.pdf"));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Div div = new Div();
+            div.Add(new Paragraph("text before"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
+                )).SetWidth(200);
+            PdfDictionary imgAttributes = new PdfDictionary();
+            imgAttributes.Put(PdfName.O, PdfName.Layout);
+            imgAttributes.Put(PdfName.Placement, PdfName.Block);
+            image.GetAccessibilityProperties().AddAttributes(imgAttributes);
+            div.Add(image);
+            div.Add(new Paragraph("text after"));
+            document.Add(div);
+            document.Close();
+            CompareResult("imageTest02.pdf", "cmp_imageTest02.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -239,8 +265,6 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
-            String outFileName = destinationFolder + "tableTest05.pdf";
-            String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -301,6 +325,77 @@ namespace iText.Layout {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
+        public virtual void TableTest07() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest07.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(new float[] { 130, 130, 260 }).AddHeaderCell(new Cell().Add(new Paragraph("hcell 1, 1"
+                ))).AddHeaderCell(new Cell().Add(new Paragraph("hcell 1, 2"))).AddHeaderCell(new Cell().Add(new Paragraph
+                ("hcell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 2"))).AddCell(new Cell().Add(new Paragraph("cell 2, 3"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 1"))).AddCell(new Cell().Add(new Paragraph("cell 3, 2"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3"))).AddFooterCell(new Cell().Add(new Paragraph("fcell 4, 1"))).AddFooterCell(new Cell().Add
+                (new Paragraph("fcell 4, 2"))).AddFooterCell(new Cell().Add(new Paragraph("fcell 4, 3")));
+            doc.Add(table);
+            doc.Close();
+            CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void LinkInsideTable() {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
+            pdf.SetTagged();
+            Document doc = new Document(pdf);
+            Table table = new Table(new float[] { 1, 2, 3 }).SetFixedLayout().SetWidth(400);
+            table.AddCell("1x");
+            table.AddCell("2x");
+            table.AddCell("3x");
+            table.SetProperty(Property.LINK_ANNOTATION, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0))
+                .SetAction(PdfAction.CreateURI("http://itextpdf.com/"))));
+            doc.Add(table);
+            doc.Close();
+            CompareResult("linkInsideTable.pdf", "cmp_linkInsideTable.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void TableTest08() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(new UnitValue[5], true);
+            doc.Add(table);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
+            table.AddHeaderCell(cell);
+            for (int i = 0; i < 5; ++i) {
+                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+            }
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
+            table.AddFooterCell(cell);
+            table.SetSkipFirstHeader(true);
+            table.SetSkipLastFooter(true);
+            for (int i = 0; i < 350; i++) {
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
+                table.Flush();
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
         public virtual void ListTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();
@@ -312,6 +407,87 @@ namespace iText.Layout {
             doc.Add(list);
             doc.Close();
             CompareResult("listTest01.pdf", "cmp_listTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ListTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest02.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            doc.SetFont(PdfFontFactory.CreateFont(sourceFolder + "../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
+                ));
+            PdfDictionary attributesDisc = new PdfDictionary();
+            attributesDisc.Put(PdfName.O, PdfName.List);
+            attributesDisc.Put(PdfName.ListNumbering, PdfName.Disc);
+            PdfDictionary attributesSquare = new PdfDictionary();
+            attributesSquare.Put(PdfName.O, PdfName.List);
+            attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
+            PdfDictionary attributesCircle = new PdfDictionary();
+            attributesCircle.Put(PdfName.O, PdfName.List);
+            attributesCircle.Put(PdfName.ListNumbering, PdfName.Circle);
+            String discSymbol = "\u2022";
+            String squareSymbol = "\u25AA";
+            String circleSymbol = "\u25E6";
+            List list = new List(ListNumberingType.ROMAN_UPPER);
+            // setting numbering type for now
+            list.Add("item 1");
+            ListItem listItem = new ListItem("item 2");
+ {
+                List subList = new List().SetListSymbol(discSymbol).SetMarginLeft(30);
+                subList.GetAccessibilityProperties().AddAttributes(attributesDisc);
+                ListItem subListItem = new ListItem("sub item 1");
+ {
+                    List subSubList = new List().SetListSymbol(squareSymbol).SetMarginLeft(30);
+                    subSubList.GetAccessibilityProperties().AddAttributes(attributesSquare);
+                    subSubList.Add("sub sub item 1");
+                    subSubList.Add("sub sub item 2");
+                    subSubList.Add("sub sub item 3");
+                    subListItem.Add(subSubList);
+                }
+                subList.Add(subListItem);
+                subList.Add("sub item 2");
+                subList.Add("sub item 3");
+                listItem.Add(subList);
+            }
+            list.Add(listItem);
+            list.Add("item 3");
+            doc.Add(list);
+            doc.Add(new LineSeparator(new SolidLine()));
+            doc.Add(list.SetListSymbol(circleSymbol));
+            // setting circle symbol, not setting attributes
+            doc.Add(new LineSeparator(new SolidLine()));
+            list.GetAccessibilityProperties().AddAttributes(attributesCircle);
+            doc.Add(list);
+            // circle symbol set, setting attributes
+            doc.Close();
+            CompareResult("listTest02.pdf", "cmp_listTest02.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ListTest03() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest03.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            PdfDictionary attributesSquare = new PdfDictionary();
+            attributesSquare.Put(PdfName.O, PdfName.List);
+            attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
+            List list = new List(ListNumberingType.DECIMAL);
+            // explicitly overriding ListNumbering attribute
+            list.GetAccessibilityProperties().AddAttributes(attributesSquare);
+            list.Add("item 1");
+            list.Add("item 2");
+            list.Add("item 3");
+            doc.Add(list);
+            doc.Close();
+            CompareResult("listTest03.pdf", "cmp_listTest03.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -586,6 +762,41 @@ namespace iText.Layout {
             doc.Add(p2);
             doc.Close();
             CompareResult("wordBreaksLineEndingsTest05.pdf", "cmp_wordBreaksLineEndingsTest05.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageAndTextNoRole01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageAndTextNoRole01.pdf", new 
+                WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            doc.Add(new Paragraph("Set Image role to null and add to div with role \"Figure\""));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
+                )).SetWidth(200);
+            img.SetRole(null);
+            Div div = new Div();
+            div.SetRole(PdfName.Figure);
+            div.Add(img);
+            Paragraph caption = new Paragraph("Caption");
+            caption.SetRole(PdfName.Caption);
+            div.Add(caption);
+            doc.Add(div);
+            doc.Add(new Paragraph("Set Text role to null and add to Paragraph").SetMarginTop(20));
+            div = new Div();
+            div.SetRole(PdfName.Code);
+            iText.Layout.Element.Text txt = new iText.Layout.Element.Text("// Prints Hello world!");
+            txt.SetRole(null);
+            div.Add(new Paragraph(txt).SetMarginBottom(0));
+            txt = new iText.Layout.Element.Text("System.out.println(\"Hello world!\");");
+            txt.SetRole(null);
+            div.Add(new Paragraph(txt).SetMarginTop(0));
+            doc.Add(div);
+            doc.Close();
+            CompareResult("imageAndTextNoRole01.pdf", "cmp_imageAndTextNoRole01.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>

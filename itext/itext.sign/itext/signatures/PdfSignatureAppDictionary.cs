@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
@@ -65,7 +64,7 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="name">String name of the application creating the signature</param>
         public virtual void SetSignatureCreator(String name) {
-            GetPdfObject().Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
+            GetPdfObject().Put(PdfName.Name, new PdfName(name));
         }
 
         protected override bool IsWrappedObjectMustBeIndirect() {

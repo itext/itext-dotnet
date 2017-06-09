@@ -48,7 +48,10 @@ using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Font;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Properties;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -81,6 +84,8 @@ namespace iText.Kernel.Pdf {
         internal const String author = "Alexander Chingarev";
 
         internal const String creator = "iText 7";
+
+        internal const String pageTextContent = "Hello world!";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfEncryptionTest/";
@@ -364,6 +369,114 @@ namespace iText.Kernel.Pdf {
 ;
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void MetadataReadingInEncryptedDoc() {
+            PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPlainMetadata.pdf", new ReaderProperties().SetPassword
+                (OWNER));
+            PdfDocument doc = new PdfDocument(reader);
+            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(doc.GetXmpMetadata());
+            XMPProperty creatorToolXmp = xmpMeta.GetProperty(XMPConst.NS_XMP, "CreatorTool");
+            doc.Close();
+            NUnit.Framework.Assert.IsNotNull(creatorToolXmp);
+            NUnit.Framework.Assert.AreEqual("iText 7", creatorToolXmp.GetValue());
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CopyEncryptedDocument() {
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new 
+                ReaderProperties().SetPublicKeySecurityParams(GetPublicCertificate(CERT), GetPrivateKey())));
+            String fileName = "copiedEncryptedDoc.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            srcDoc.CopyPagesTo(1, 1, destDoc);
+            PdfDictionary srcInfo = srcDoc.GetDocumentInfo().GetPdfObject();
+            PdfDictionary destInfo = destDoc.GetDocumentInfo().GetPdfObject();
+            foreach (PdfName srcInfoKey in srcInfo.KeySet()) {
+                destInfo.Put(((PdfName)srcInfoKey.CopyTo(destDoc)), srcInfo.Get(srcInfoKey).CopyTo(destDoc));
+            }
+            srcDoc.Close();
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenDocNoUserPassword() {
+            String fileName = "noUserPassword.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
+            document.Close();
+            CheckDecryptedWithPasswordContent(sourceFolder + fileName, null, pageTextContent);
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void StampDocNoUserPassword() {
+            NUnit.Framework.Assert.That(() =>  {
+                String fileName = "stampedNoPassword.pdf";
+                PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "noUserPassword.pdf"), new PdfWriter(destinationFolder
+                     + fileName));
+                document.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("Specific crypto filters for EFF StmF and StrF are not supported at the moment.")]
+        public virtual void EncryptWithPasswordAes128EmbeddedFilesOnly() {
+            String filename = "encryptWithPasswordAes128EmbeddedFilesOnly.pdf";
+            int encryptionType = EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants.EMBEDDED_FILES_ONLY;
+            String outFileName = destinationFolder + filename;
+            int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
+            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
+                , encryptionType).AddXmpMetadata());
+            PdfDocument document = new PdfDocument(writer);
+            document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
+            PdfPage page = document.AddNewPage();
+            String textContent = "Hello world!";
+            WriteTextBytesOnPageContent(page, textContent);
+            String descripton = "encryptedFile";
+            String path = sourceFolder + "pageWithContent.pdf";
+            document.AddFileAttachment(descripton, PdfFileSpec.CreateEmbeddedFileSpec(document, path, descripton, path
+                , null, null, true));
+            page.Flush();
+            document.Close();
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent);
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, textContent);
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff_", USER, USER);
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+            CheckEncryptedWithPasswordDocumentStamping(filename, OWNER);
+            CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256Pdf2NotEncryptMetadata() {
+            String filename = "encryptAes256Pdf2NotEncryptMetadata.pdf";
+            int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
+            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+        }
+
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
@@ -376,12 +489,11 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
             PdfPage page = document.AddNewPage();
-            String textContent = "Hello world!";
-            WriteTextBytesOnPageContent(page, textContent);
+            WriteTextBytesOnPageContent(page, pageTextContent);
             page.Flush();
             document.Close();
-            CheckDecryptedWithPasswordContent(filename, OWNER, textContent);
-            CheckDecryptedWithPasswordContent(filename, USER, textContent);
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, pageTextContent);
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, pageTextContent);
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff_", USER, USER);
@@ -406,11 +518,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
             PdfPage page = document.AddNewPage();
-            String textContent = "Hello world!";
-            WriteTextBytesOnPageContent(page, textContent);
+            WriteTextBytesOnPageContent(page, pageTextContent);
             page.Flush();
             document.Close();
-            CheckDecryptedWithCertificateContent(filename, cert, textContent);
+            CheckDecryptedWithCertificateContent(filename, cert, pageTextContent);
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             compareTool.GetOutReaderProperties().SetPublicKeySecurityParams(cert, GetPrivateKey());
             compareTool.GetCmpReaderProperties().SetPublicKeySecurityParams(cert, GetPrivateKey());
@@ -448,9 +559,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void CheckDecryptedWithPasswordContent(String filename, byte[] password, String pageContent
-            ) {
-            String src = destinationFolder + filename;
+        public virtual void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent) {
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(password));
             PdfDocument document = new PdfDocument(reader);
             PdfPage page = document.GetPage(1);

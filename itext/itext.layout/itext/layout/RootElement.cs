@@ -68,6 +68,8 @@ namespace iText.Layout {
 
         protected internal PdfFont defaultFont;
 
+        protected internal FontProvider defaultFontProvider;
+
         protected internal ISplitCharacters defaultSplitCharacters;
 
         protected internal RootRenderer rootRenderer;
@@ -159,6 +161,13 @@ namespace iText.Layout {
                         return (T1)(Object)defaultFont;
                     }
 
+                    case Property.FONT_PROVIDER: {
+                        if (defaultFontProvider == null) {
+                            defaultFontProvider = new FontProvider();
+                        }
+                        return (T1)(Object)defaultFontProvider;
+                    }
+
                     case Property.SPLIT_CHARACTERS: {
                         if (defaultSplitCharacters == null) {
                             defaultSplitCharacters = new DefaultSplitCharacters();
@@ -197,7 +206,7 @@ namespace iText.Layout {
         }
 
         public override void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         /// <summary>

@@ -95,8 +95,8 @@ namespace iText.IO.Font {
                         continue;
                     }
                     int num = System.Convert.ToInt32(hex, 16);
-                    unicode2names[num] = name;
-                    names2unicode[name] = num;
+                    unicode2names.Put(num, name);
+                    names2unicode.Put(name, num);
                 }
             }
             catch (Exception e) {

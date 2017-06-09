@@ -259,5 +259,25 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AutoScaleFontSizeInFormFields() {
+            String outPdf = destinationFolder + "autoScaleFontSizeInFormFields.pdf";
+            String cmpPdf = sourceFolder + "cmp_autoScaleFontSizeInFormFields.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfFormField field = PdfFormField.CreateText(pdfDoc, new Rectangle(36, 786, 80, 20), "name", "TestValueAndALittleMore"
+                );
+            form.AddField(field.SetFontSizeAutoScale());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }

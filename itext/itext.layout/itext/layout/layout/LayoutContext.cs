@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Layout.Margincollapse;
 
 namespace iText.Layout.Layout {
@@ -60,6 +62,8 @@ namespace iText.Layout.Layout {
 
         protected internal MarginsCollapseInfo marginsCollapseInfo;
 
+        protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
+
         public LayoutContext(LayoutArea area) {
             this.area = area;
         }
@@ -67,6 +71,14 @@ namespace iText.Layout.Layout {
         public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo) {
             this.area = area;
             this.marginsCollapseInfo = marginsCollapseInfo;
+        }
+
+        public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
+            )
+            : this(area, marginsCollapseInfo) {
+            if (floatedRendererAreas != null) {
+                this.floatRendererAreas = floatedRendererAreas;
+            }
         }
 
         /// <summary>
@@ -81,6 +93,10 @@ namespace iText.Layout.Layout {
 
         public virtual MarginsCollapseInfo GetMarginsCollapseInfo() {
             return marginsCollapseInfo;
+        }
+
+        public virtual IList<Rectangle> GetFloatRendererAreas() {
+            return floatRendererAreas;
         }
 
         /// <summary><inheritDoc/></summary>

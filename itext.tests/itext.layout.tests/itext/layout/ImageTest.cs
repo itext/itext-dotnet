@@ -627,5 +627,34 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageWithMinMaxHeightTest01() {
+            String outFileName = destinationFolder + "imageWithMinMaxHeightTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageWithMinMaxHeightTest01.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            doc.Add(new Paragraph(new Text("Default height")));
+            doc.Add(image);
+            doc.Add(new Paragraph(new Text("Min height bigger than default")));
+            doc.Add(image.SetMinHeight(200));
+            doc.Add(new Paragraph(new Text("Min height smaller than default")));
+            image.DeleteOwnProperty(Property.MIN_HEIGHT);
+            doc.Add(image.SetMinHeight(10));
+            doc.Add(new Paragraph(new Text("Max height bigger than default")));
+            image.DeleteOwnProperty(Property.MIN_HEIGHT);
+            doc.Add(image.SetMaxHeight(250));
+            doc.Add(new Paragraph(new Text("Max height smaller than default")));
+            image.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(image.SetMaxHeight(30));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

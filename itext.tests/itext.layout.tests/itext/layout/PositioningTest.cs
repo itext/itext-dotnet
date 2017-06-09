@@ -105,6 +105,25 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void RelativePositioningTable01Test() {
+            String outFileName = destinationFolder + "relativePositioningTable01Test.pdf";
+            String cmpFileName = sourceFolder + "cmp_relativePositioningTable01Test.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table = new Table(new UnitValue[] { UnitValue.CreatePointValue(100), UnitValue.CreatePointValue(100)
+                 });
+            table.AddCell("One");
+            table.AddCell("Two");
+            table.SetRelativePosition(100, 20, 0, 0);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";

@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -603,7 +604,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents) {
-            return SetContents(new PdfString(contents));
+            return SetContents(new PdfString(contents, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>
@@ -1433,7 +1434,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
-            return Put(PdfName.Open, new PdfBoolean(open));
+            return Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
 
         /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>

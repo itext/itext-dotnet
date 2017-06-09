@@ -62,7 +62,7 @@ namespace iText.IO.Font {
             try {
                 LoadRegistry();
                 foreach (String font in registryNames.Get("fonts")) {
-                    allFonts[font] = ReadFontProperties(font);
+                    allFonts.Put(font, ReadFontProperties(font));
                 }
             }
             catch (Exception) {
@@ -130,7 +130,7 @@ namespace iText.IO.Font {
                         hs.Add(s);
                     }
                 }
-                registryNames[(String)key] = hs;
+                registryNames.Put((String)key, hs);
             }
         }
 
@@ -147,10 +147,10 @@ namespace iText.IO.Font {
             p.Remove("W2");
             IDictionary<String, Object> map = new Dictionary<String, Object>();
             foreach (Object obj in p.Keys) {
-                map[(String)obj] = p.GetProperty((String)obj);
+                map.Put((String)obj, p.GetProperty((String)obj));
             }
-            map["W"] = W;
-            map["W2"] = W2;
+            map.Put("W", W);
+            map.Put("W2", W2);
             return map;
         }
 

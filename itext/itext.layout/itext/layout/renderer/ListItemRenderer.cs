@@ -117,7 +117,7 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
             if (symbolRenderer != null && !symbolAddedInside) {
-                symbolRenderer.SetParent(parent);
+                symbolRenderer.SetParent(this);
                 float x = occupiedArea.GetBBox().GetX();
                 ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
                     , Property.LIST_SYMBOL_POSITION);

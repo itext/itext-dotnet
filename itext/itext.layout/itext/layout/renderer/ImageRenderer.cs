@@ -56,7 +56,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    public class ImageRenderer : AbstractRenderer {
+    public class ImageRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -106,6 +106,20 @@ namespace iText.Layout.Renderer {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            if (floatPropertyValue != null) {
+                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
+                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
+                }
+                else {
+                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
+                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
+                    }
+                }
+            }
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
@@ -223,7 +237,19 @@ namespace iText.Layout.Renderer {
                 float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
                 minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
             }
-            return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
+            else {
+                bool autoScale = HasProperty(Property.AUTO_SCALE) && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE);
+                bool autoScaleWidth = HasProperty(Property.AUTO_SCALE_WIDTH) && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH
+                    );
+                if (autoScale || autoScaleWidth) {
+                    minMaxWidth.SetChildrenMinWidth(0);
+                }
+            }
+            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
+                ().GetWidth(), null);
+            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
+            return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }
 
@@ -245,6 +271,30 @@ namespace iText.Layout.Renderer {
             if (fixedXPosition == null) {
                 fixedXPosition = occupiedArea.GetBBox().GetX();
             }
+            PdfDocument document = drawContext.GetDocument();
+            bool isTagged = drawContext.IsTaggingEnabled();
+            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
+            bool isArtifact = isTagged && !modelElementIsAccessible;
+            TagTreePointer tagPointer = null;
+            if (isTagged) {
+                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
+                if (modelElementIsAccessible) {
+                    IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
+                    PdfName role = accessibleElement.GetRole();
+                    if (role != null && !PdfName.Artifact.Equals(role)) {
+                        tagPointer.AddTag(accessibleElement);
+                        PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(accessibleElement.GetRole
+                            (), this, tagPointer);
+                        ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                    }
+                    else {
+                        modelElementIsAccessible = false;
+                        if (PdfName.Artifact.Equals(role)) {
+                            isArtifact = true;
+                        }
+                    }
+                }
+            }
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
                 fixedXPosition += rotatedDeltaX;
@@ -256,32 +306,13 @@ namespace iText.Layout.Renderer {
             if (angle != null) {
                 drawContext.GetCanvas().RestoreState();
             }
-            PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool isArtifact = false;
-            TagTreePointer tagPointer = null;
-            if (isTagged) {
-                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                PdfName role = accessibleElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, document);
-                    tagPointer.AddTag(accessibleElement);
-                }
-                else {
-                    isTagged = false;
-                    if (PdfName.Artifact.Equals(role)) {
-                        isArtifact = true;
-                    }
-                }
-            }
             PdfCanvas canvas = drawContext.GetCanvas();
             if (isTagged) {
-                canvas.OpenTag(tagPointer.GetTagReference());
-            }
-            else {
                 if (isArtifact) {
                     canvas.OpenTag(new CanvasArtifact());
+                }
+                else {
+                    canvas.OpenTag(tagPointer.GetTagReference());
                 }
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
@@ -292,7 +323,7 @@ namespace iText.Layout.Renderer {
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
-            if (isTagged || isArtifact) {
+            if (isTagged) {
                 canvas.CloseTag();
             }
             if (isRelativePosition) {
@@ -300,7 +331,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            if (isTagged) {
+            if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
             }
         }
@@ -476,6 +507,14 @@ namespace iText.Layout.Renderer {
                 rotatedDeltaY += rightBorderWidth;
             }
             occupiedArea.GetBBox().IncreaseHeight(rotatedDeltaY);
+        }
+
+        public virtual float GetAscent() {
+            return occupiedArea.GetBBox().GetHeight();
+        }
+
+        public virtual float GetDescent() {
+            return 0;
         }
     }
 }

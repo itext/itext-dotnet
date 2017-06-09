@@ -89,7 +89,7 @@ namespace iText.IO.Font.Otf {
             }
             IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
             for (int k = 0; k < alternateSetCount; ++k) {
-                substMap[coverageGlyphIds[k]] = substitute[k];
+                substMap.Put(coverageGlyphIds[k], substitute[k]);
             }
         }
 

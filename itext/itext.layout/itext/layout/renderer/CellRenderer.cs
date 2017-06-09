@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -52,8 +51,6 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
-        protected internal IDictionary<int, Object> oldProperties = new Dictionary<int, Object>();
-
         /// <summary>Creates a CellRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -62,7 +59,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
-            // TODO delete after refactoring
+            System.Diagnostics.Debug.Assert(modelElement != null);
             SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }
@@ -137,35 +134,18 @@ namespace iText.Layout.Renderer {
 
         // Do nothing here. Border drawing for cells is done on TableRenderer.
         protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
-            float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
-            float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;
-            float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
-            float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
-            return rect.ApplyMargins<Rectangle>(topWidth / 2, rightWidth / 2, bottomWidth / 2, leftWidth / 2, reverse);
+            // Do nothing here. Borders are processed on TableRenderer level.
+            return rect;
+        }
+
+        protected internal override Rectangle ApplyMargins(Rectangle rect, float[] margins, bool reverse) {
+            // Do nothing here. Margins shouldn't be processed on cells.
+            return rect;
         }
 
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
-        }
-
-        protected internal virtual IRenderer SaveProperties() {
-            if (null != properties) {
-                oldProperties = new Dictionary<int, Object>();
-            }
-            else {
-                oldProperties.Clear();
-            }
-            oldProperties.AddAll(properties);
-            return this;
-        }
-
-        protected internal virtual IRenderer RestoreProperties() {
-            if (null != oldProperties) {
-                properties.Clear();
-                properties.AddAll(oldProperties);
-            }
-            return this;
         }
     }
 }

@@ -102,7 +102,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
         /// <param name="isUnicodeFileName"/>
-        /// <returns/>
         /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
@@ -119,7 +118,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
         /// <param name="isUnicodeFileName"/>
-        /// <returns/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
              description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
             ) {
@@ -135,7 +133,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
         /// <param name="isUnicodeFileName"/>
-        /// <returns/>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
             ) {

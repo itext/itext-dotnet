@@ -293,7 +293,7 @@ namespace iText.Pdfa {
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -313,7 +313,7 @@ namespace iText.Pdfa {
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -333,7 +333,7 @@ namespace iText.Pdfa {
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {

@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf {
             egs.GetPdfObject().Put(PdfName.LW, new PdfNumber(5));
             PdfArray font = new PdfArray();
             PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
-            pdfFont.Flush();
+            document.AddFont(pdfFont);
             font.Add(pdfFont.GetPdfObject());
             font.Add(new PdfNumber(24));
             egs.GetPdfObject().Put(PdfName.Font, font);

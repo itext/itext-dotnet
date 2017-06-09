@@ -422,7 +422,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the conversion class</param>
         public static void AddExtraEncoding(String name, IExtraEncoding enc) {
             lock (extraEncodings) {
-                extraEncodings[name.ToLowerInvariant()] = enc;
+                extraEncodings.Put(name.ToLowerInvariant(), enc);
             }
         }
 

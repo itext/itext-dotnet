@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>InputStream</c>
         /// containing the document. The stream is read to the
-        /// end but is not closed
+        /// end but is not closed.
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         /// <exception cref="System.IO.IOException">on error</exception>
@@ -127,11 +127,25 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
+        /// <param name="file">
+        /// the
+        /// <c>File</c>
+        /// containing the document.
+        /// </param>
+        /// <exception cref="System.IO.IOException">on error</exception>
+        /// <exception cref="System.IO.FileNotFoundException">when the specified File is not found</exception>
+        public PdfReader(FileInfo file)
+            : this(file.FullName) {
+        }
+
+        /// <summary>Reads and parses a PDF document.</summary>
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. Stream is closed automatically, when document is closed,
-        /// if user doesn't want to close stream, he should set closeStream=false;
+        /// containing the document. the
+        /// <c>InputStream</c>
+        /// containing the document. The stream is read to the
+        /// end but is not closed.
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(Stream @is)
@@ -281,7 +295,7 @@ namespace iText.Kernel.Pdf {
                 file.Seek(stream.GetOffset());
                 bytes = new byte[length];
                 file.ReadFully(bytes);
-                if (decrypt != null) {
+                if (decrypt != null && !decrypt.IsEmbeddedFilesOnly()) {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
@@ -669,11 +683,11 @@ namespace iText.Kernel.Pdf {
 
                 case PdfTokenizer.TokenType.String: {
                     PdfString pdfString = new PdfString(tokens.GetByteContent(), tokens.IsHexString());
-                    if (currentIndirectReference != null) {
-                        pdfString.SetDecryptInfoNum(currentIndirectReference.GetObjNumber());
-                        pdfString.SetDecryptInfoGen(currentIndirectReference.GetGenNumber());
+                    if (IsEncrypted() && !decrypt.IsEmbeddedFilesOnly() && !objStm) {
+                        pdfString.SetDecryption(currentIndirectReference.GetObjNumber(), currentIndirectReference.GetGenNumber(), 
+                            decrypt);
                     }
-                    return !IsEncrypted() || objStm ? pdfString : pdfString.Decrypt(decrypt);
+                    return pdfString;
                 }
 
                 case PdfTokenizer.TokenType.Name: {
@@ -1033,7 +1047,6 @@ namespace iText.Kernel.Pdf {
                             }
                             else {
                                 newReference = new PdfIndirectReference(pdfDocument, @base, field3, 0);
-                                newReference.SetFree();
                             }
                             break;
                         }
@@ -1054,6 +1067,11 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     if (xref.Get(@base) == null) {
+                        // we should postpone freeing reference, because if we won't add it to xref,
+                        // it will be removed from xref in any case inside setFree() method.
+                        if (type == 0) {
+                            newReference.SetFree();
+                        }
                         xref.Add(newReference);
                     }
                     else {

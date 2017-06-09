@@ -71,7 +71,7 @@ namespace iText.IO.Util {
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {
-                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
+                isp = new FileStream(Uri.UnescapeDataString(url.AbsolutePath), FileMode.Open, FileAccess.Read);
             } else {
 #if !NETSTANDARD1_6
                 WebRequest req = WebRequest.Create(url);
@@ -107,10 +107,19 @@ namespace iText.IO.Util {
         /// <summary>
         /// This method makes a normalized URI from a given file. 
         /// </summary>
-        /// <param name="filename">a given file</param>
+        /// <param name="file">a given file</param>
         /// <returns>a valid Uri</returns>
         public static Uri ToNormalizedURI(FileInfo file) {
             return new Uri(file.FullName);
+        }
+
+        /// <summary>
+        /// This method gets the last redirected url.
+        /// </summary>
+        /// <param name="uri">an initial url</param>
+        /// <returns>the last redirected url</returns>
+        public static Uri GetFinalURL(Uri uri) {
+            return uri;
         }
     }
 }

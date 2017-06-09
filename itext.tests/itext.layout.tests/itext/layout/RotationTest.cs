@@ -383,6 +383,44 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1241")]
+        public virtual void CellRotationTest02() {
+            String outFileName = destinationFolder + "cellRotationTest02.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 5, 95 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello world").SetRotationAngle(Math.PI / 2)));
+            table.AddCell(new Cell().Add(new Paragraph("Long long long Long long long Long long long Long long long text"
+                )));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1241")]
+        public virtual void CellRotationTest03() {
+            String outFileName = destinationFolder + "cellRotationTest03.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePointArray(new float[] { -1, -1 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello world").SetRotationAngle(Math.PI / 2)));
+            table.AddCell(new Cell().Add(new Paragraph("Long long long Long long long Long long long Long long long text"
+                )));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void DivRotationTest01() {
             String outFileName = destinationFolder + "divRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest01.pdf";

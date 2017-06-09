@@ -56,8 +56,7 @@ namespace iText.Kernel.Pdf {
     /// relative to a base version of PDF. Additionally, the convention identifies
     /// extension levels relative to that base version. The intent of this dictionary
     /// is to enable developers of PDF-producing applications to identify company-specific
-    /// specifications (such as this one) that PDF-consuming applications use to
-    /// interpret the extensions.
+    /// specifications that PDF-consuming applications use to interpret the extensions.
     /// </remarks>
     public class PdfDeveloperExtension {
         /// <summary>An instance of this class for Adobe 1.7 Extension level 3.</summary>
@@ -86,8 +85,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="baseVersion">the number of the base version</param>
         /// <param name="extensionLevel">the extension level within the baseverion.</param>
         public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel) {
-            /* TODO: There is one more entry in PDF 2.0 (URL entry), so probably this class
-            * should be refactored to be more flexible in the future */
             this.prefix = prefix;
             this.baseVersion = baseVersion;
             this.extensionLevel = extensionLevel;

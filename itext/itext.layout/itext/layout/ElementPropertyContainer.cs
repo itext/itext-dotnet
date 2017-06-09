@@ -68,7 +68,7 @@ namespace iText.Layout {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
 
         public virtual void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         public virtual bool HasProperty(int property) {
@@ -195,15 +195,17 @@ namespace iText.Layout {
 
         /// <summary>Sets values for a absolute repositioning of the Element.</summary>
         /// <remarks>
-        /// Sets values for a absolute repositioning of the Element. Also has as a
-        /// side effect that the Element's
+        /// Sets values for a absolute repositioning of the Element.
+        /// The coordinates specified correspond to the
+        /// bottom-left corner of the element and it grows upwards.
+        /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="y">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(float x, float y, float width) {
@@ -213,15 +215,17 @@ namespace iText.Layout {
 
         /// <summary>Sets values for a absolute repositioning of the Element.</summary>
         /// <remarks>
-        /// Sets values for a absolute repositioning of the Element. Also has as a
-        /// side effect that the Element's
+        /// Sets values for a absolute repositioning of the Element.
+        /// The coordinates specified correspond to the
+        /// bottom-left corner of the element and it grows upwards.
+        /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="y">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">
         /// a
         /// <see cref="iText.Layout.Properties.UnitValue"/>
@@ -235,21 +239,20 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>
-        /// Sets values for a absolute repositioning of the Element, on a specific
-        /// page.
-        /// </summary>
+        /// <summary>Sets values for a absolute repositioning of the Element.</summary>
         /// <remarks>
-        /// Sets values for a absolute repositioning of the Element, on a specific
-        /// page. Also has as a side effect that the Element's
+        /// Sets values for a absolute repositioning of the Element.
+        /// The coordinates specified correspond to the
+        /// bottom-left corner of the element and it grows upwards.
+        /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="y">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(int pageNumber, float x, float y, float width) {
@@ -258,21 +261,20 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>
-        /// Sets values for a absolute repositioning of the Element, on a specific
-        /// page.
-        /// </summary>
+        /// <summary>Sets values for a absolute repositioning of the Element.</summary>
         /// <remarks>
-        /// Sets values for a absolute repositioning of the Element, on a specific
-        /// page. Also has as a side effect that the Element's
+        /// Sets values for a absolute repositioning of the Element.
+        /// The coordinates specified correspond to the
+        /// bottom-left corner of the element and it grows upwards.
+        /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="y">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width) {

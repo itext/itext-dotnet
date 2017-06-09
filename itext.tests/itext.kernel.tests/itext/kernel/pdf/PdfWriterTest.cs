@@ -172,8 +172,8 @@ namespace iText.Kernel.Pdf {
             aDirect.Add(new PdfArray(tmpArray));
             aDirect.Add(new PdfBoolean(true));
             SortedDictionary<PdfName, PdfObject> tmpMap = new SortedDictionary<PdfName, PdfObject>();
-            tmpMap[new PdfName("one")] = new PdfNumber(1);
-            tmpMap[new PdfName("two")] = new PdfNumber(2);
+            tmpMap.Put(new PdfName("one"), new PdfNumber(1));
+            tmpMap.Put(new PdfName("two"), new PdfNumber(2));
             aDirect.Add(new PdfDictionary(tmpMap));
             aDirect.Add(new PdfName("name"));
             aDirect.Add(new PdfNull());
@@ -225,8 +225,8 @@ namespace iText.Kernel.Pdf {
             aDirect.Add(new PdfArray(tmpArray));
             aDirect.Add(new PdfBoolean(true));
             SortedDictionary<PdfName, PdfObject> tmpMap = new SortedDictionary<PdfName, PdfObject>();
-            tmpMap[new PdfName("one")] = new PdfNumber(1);
-            tmpMap[new PdfName("two")] = ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1));
+            tmpMap.Put(new PdfName("one"), new PdfNumber(1));
+            tmpMap.Put(new PdfName("two"), ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1)));
             aDirect.Add(new PdfDictionary(tmpMap));
             aDirect.Add(new PdfName("name"));
             aDirect.Add(((PdfNull)new PdfNull().MakeIndirect(pdfDoc1)));

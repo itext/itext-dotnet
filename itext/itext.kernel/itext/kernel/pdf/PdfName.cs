@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Alternate = CreateDirectName("Alternate");
 
-        public static readonly iText.Kernel.Pdf.PdfName Alternates = CreateDirectName("Alternate");
+        public static readonly iText.Kernel.Pdf.PdfName Alternates = CreateDirectName("Alternates");
 
         public static readonly iText.Kernel.Pdf.PdfName AlternatePresentations = CreateDirectName("AlternatePresentations"
             );
@@ -263,6 +263,9 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BorderStyle = CreateDirectName("BorderStyle");
 
+        public static readonly iText.Kernel.Pdf.PdfName BorderThickness = CreateDirectName("BorderThickness");
+
+        [Obsolete]
         public static readonly iText.Kernel.Pdf.PdfName BorderThikness = CreateDirectName("BorderThikness");
 
         public static readonly iText.Kernel.Pdf.PdfName Bounds = CreateDirectName("Bounds");
@@ -473,6 +476,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName DigestValue = CreateDirectName("DigestValue");
 
         public static readonly iText.Kernel.Pdf.PdfName Direction = CreateDirectName("Direction");
+
+        public static readonly iText.Kernel.Pdf.PdfName Disc = CreateDirectName("Disc");
 
         public static readonly iText.Kernel.Pdf.PdfName DisplayDocTitle = CreateDirectName("DisplayDocTitle");
 
@@ -1686,7 +1691,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Create a PdfName from the passed string</summary>
-        /// <param name="value"/>
+        /// <param name="value">string value, shall not be null.</param>
         public PdfName(String value)
             : base() {
             System.Diagnostics.Debug.Assert(value != null);
@@ -1699,7 +1704,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Create a PdfName from the passed bytes</summary>
-        /// <param name="content"/>
+        /// <param name="content">byte content, shall not be null.</param>
         public PdfName(byte[] content)
             : base(content) {
         }

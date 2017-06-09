@@ -82,9 +82,9 @@ namespace iText.Kernel.Font {
 
         internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph) {
             Glyph glyph = new Glyph(code, width, unicode, bbox);
-            codeToGlyph[code] = glyph;
-            unicodeToGlyph[unicode] = glyph;
-            type3Glyphs[unicode] = type3Glyph;
+            codeToGlyph.Put(code, glyph);
+            unicodeToGlyph.Put(unicode, glyph);
+            type3Glyphs.Put(unicode, type3Glyph);
         }
     }
 }

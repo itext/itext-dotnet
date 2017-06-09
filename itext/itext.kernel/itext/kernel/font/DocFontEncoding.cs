@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
@@ -123,24 +124,36 @@ namespace iText.Kernel.Font {
                         currentNumber = ((PdfNumber)obj).IntValue();
                     }
                     else {
-                        String glyphName = ((PdfName)obj).GetValue();
-                        int unicode = AdobeGlyphList.NameToUnicode(glyphName);
-                        if (unicode != -1) {
-                            fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
-                            fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
-                            fontEncoding.differences[currentNumber] = glyphName;
-                            fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
+                        if (currentNumber > 255) {
+                            ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.DocFontEncoding));
+                            LOGGER.Warn(String.Format(iText.IO.LogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, ((PdfName)obj).GetValue
+                                ()));
                         }
                         else {
-                            if (byte2uni.Contains(currentNumber)) {
-                                unicode = byte2uni.Get(currentNumber);
+                            /* don't return or break, because differences subarrays may
+                            * be in any order:
+                            * e.g. [255 /space /one 250 /two /three]
+                            * /one is invalid but all others should be parsed
+                            */
+                            String glyphName = ((PdfName)obj).GetValue();
+                            int unicode = AdobeGlyphList.NameToUnicode(glyphName);
+                            if (unicode != -1) {
                                 fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
                                 fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
                                 fontEncoding.differences[currentNumber] = glyphName;
                                 fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
                             }
+                            else {
+                                if (byte2uni.Contains(currentNumber)) {
+                                    unicode = byte2uni.Get(currentNumber);
+                                    fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
+                                    fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
+                                    fontEncoding.differences[currentNumber] = glyphName;
+                                    fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
+                                }
+                            }
+                            currentNumber++;
                         }
-                        currentNumber++;
                     }
                 }
             }

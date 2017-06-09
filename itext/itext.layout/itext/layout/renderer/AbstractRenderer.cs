@@ -54,12 +54,14 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -283,7 +285,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public virtual void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -475,8 +477,17 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawChildren(DrawContext drawContext) {
+            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                child.Draw(drawContext);
+                if (child.HasProperty(Property.FLOAT)) {
+                    waitingRenderers.Add(child);
+                }
+                else {
+                    child.Draw(drawContext);
+                }
+            }
+            foreach (IRenderer waitingRenderer in waitingRenderers) {
+                waitingRenderer.Draw(drawContext);
             }
         }
 
@@ -551,6 +562,17 @@ namespace iText.Layout.Renderer {
         public virtual IRenderer SetParent(IRenderer parent) {
             this.parent = parent;
             return this;
+        }
+
+        /// <summary>
+        /// Gets the parent of this
+        /// <see cref="IRenderer"/>
+        /// , if previously set by
+        /// <see cref="SetParent(IRenderer)"/>
+        /// </summary>
+        /// <returns>parent of the renderer</returns>
+        public virtual IRenderer GetParent() {
+            return parent;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -973,11 +995,39 @@ namespace iText.Layout.Renderer {
             return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
         }
 
+        [Obsolete]
         protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float availableWidth) {
             HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                 );
             if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                switch (horizontalAlignment) {
+                    case HorizontalAlignment.RIGHT: {
+                        childRenderer.Move(freeSpace, 0);
+                        break;
+                    }
+
+                    case HorizontalAlignment.CENTER: {
+                        childRenderer.Move(freeSpace / 2, 0);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
+        // BlockRenderer, but actually, the block can have many areas, and occupied area will be the common area of sub-areas,
+        // whereas child element alignment should be performed area-wise.
+        protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, Rectangle currentArea) {
+            float availableWidth = currentArea.GetWidth();
+            HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
+                );
+            if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
+                float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                FloatPropertyValue? floatPropertyValue = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
+                    freeSpace = CalculateFreeSpaceIfFloatPropertyPresent(freeSpace, childRenderer, currentArea);
+                }
                 switch (horizontalAlignment) {
                     case HorizontalAlignment.RIGHT: {
                         childRenderer.Move(freeSpace, 0);
@@ -1162,6 +1212,184 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>This method removes unnecessary float renderer areas.</summary>
+        /// <param name="floatRendererAreas"/>
+        internal virtual void RemoveUnnecessaryFloatRendererAreas(IList<Rectangle> floatRendererAreas) {
+            if (!HasProperty(Property.FLOAT) && !parent.HasProperty(Property.FLOAT)) {
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRendererArea = floatRendererAreas[i];
+                    if (floatRendererArea.GetY() >= occupiedArea.GetBBox().GetY()) {
+                        floatRendererAreas.JRemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, float availableWidth
+            , float? elementWidth) {
+            LayoutArea editedArea = occupiedArea;
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                if (elementWidth != null) {
+                    if (elementWidth < occupiedArea.GetBBox().GetWidth()) {
+                        foreach (IRenderer renderer in childRenderers) {
+                            LayoutArea childArea = renderer.GetOccupiedArea();
+                            if (childArea != null && elementWidth < childArea.GetBBox().GetWidth()) {
+                                childArea.GetBBox().SetWidth((float)elementWidth);
+                            }
+                        }
+                    }
+                    occupiedArea.GetBBox().SetWidth((float)elementWidth);
+                }
+                if (occupiedArea.GetBBox().GetWidth() < availableWidth) {
+                    editedArea = occupiedArea.Clone();
+                    floatRendererAreas.Add(occupiedArea.GetBBox());
+                    editedArea.GetBBox().MoveUp(editedArea.GetBBox().GetHeight());
+                    editedArea.GetBBox().SetHeight(0);
+                }
+            }
+            return editedArea;
+        }
+
+        internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+             layoutBox) {
+            foreach (Rectangle floatRendererArea in floatRendererAreas) {
+                if (layoutBox.GetX() >= floatRendererArea.GetX() && layoutBox.GetX() < floatRendererArea.GetX() + floatRendererArea
+                    .GetWidth()) {
+                    layoutBox.MoveRight(floatRendererArea.GetWidth());
+                    layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
+                }
+                else {
+                    if (layoutBox.GetX() < floatRendererArea.GetX() && layoutBox.GetX() + layoutBox.GetWidth() > floatRendererArea
+                        .GetX()) {
+                        layoutBox.SetWidth(layoutBox.GetWidth() - floatRendererArea.GetWidth());
+                    }
+                }
+            }
+        }
+
+        internal virtual void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+             layoutBox, float extremalRightBorder, float? blockWidth, MarginsCollapseHandler marginsCollapseHandler
+            ) {
+            foreach (Rectangle floatRenderer in floatRendererAreas) {
+                FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                if (layoutBox.GetX() >= floatRenderer.GetX() && layoutBox.GetX() < floatRenderer.GetX() + floatRenderer.GetWidth
+                    ()) {
+                    layoutBox.MoveRight(floatRenderer.GetWidth());
+                    float freeSpace = extremalRightBorder - layoutBox.GetX() - layoutBox.GetWidth();
+                    if (freeSpace < 0) {
+                        layoutBox.SetWidth(layoutBox.GetWidth() + freeSpace);
+                    }
+                }
+                else {
+                    if (FloatPropertyValue.RIGHT.Equals(floatPropertyValue)) {
+                        float freeSpace = extremalRightBorder - layoutBox.GetX() - layoutBox.GetWidth();
+                        if (freeSpace < 0) {
+                            layoutBox.SetWidth(layoutBox.GetWidth() + freeSpace);
+                        }
+                    }
+                }
+            }
+            if (blockWidth != null && blockWidth + layoutBox.GetX() > extremalRightBorder) {
+                float minFloatY = int.MaxValue;
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRendererArea = floatRendererAreas[i];
+                    layoutBox.MoveLeft(floatRendererArea.GetWidth());
+                    floatRendererAreas.JRemoveAt(i);
+                    if (floatRendererArea.GetY() < minFloatY) {
+                        minFloatY = floatRendererArea.GetY();
+                    }
+                }
+                layoutBox.SetWidth((float)blockWidth);
+                float topMargin = GetMargins()[0];
+                float topPadding = GetPaddings()[0];
+                minFloatY -= topMargin + topPadding;
+                if (minFloatY < int.MaxValue) {
+                    layoutBox.SetHeight(minFloatY - layoutBox.GetY());
+                    if (marginsCollapseHandler != null) {
+                        marginsCollapseHandler.StartMarginsCollapse(layoutBox);
+                    }
+                }
+            }
+        }
+
+        internal virtual float CalculateClearHeightCorrection(IList<Rectangle> floatRendererAreas, Rectangle parentBBox
+            ) {
+            ClearPropertyValue? clearPropertyValue = this.GetProperty<ClearPropertyValue?>(Property.CLEAR);
+            float clearHeightCorrection = 0;
+            if (floatRendererAreas.Count > 0 && clearPropertyValue != null) {
+                float maxFloatHeight = 0;
+                Rectangle theLowestFloatRectangle = null;
+                float criticalPoint = parentBBox.GetX() + parentBBox.GetWidth();
+                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
+                    Rectangle floatRenderer = floatRendererAreas[i];
+                    if (((clearPropertyValue.Equals(ClearPropertyValue.LEFT) && floatRenderer.GetX() < criticalPoint) || (clearPropertyValue
+                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() + floatRenderer.GetWidth() > criticalPoint))
+                         || clearPropertyValue.Equals(ClearPropertyValue.BOTH)) {
+                        floatRendererAreas.JRemoveAt(i);
+                        if (clearPropertyValue.Equals(ClearPropertyValue.LEFT) || clearPropertyValue.Equals(ClearPropertyValue.BOTH
+                            )) {
+                            if (floatRenderer.GetY() + floatRenderer.GetHeight() <= parentBBox.GetY() + parentBBox.GetHeight() && floatRenderer
+                                .GetX() < parentBBox.GetX()) {
+                                parentBBox.MoveLeft(floatRenderer.GetWidth());
+                                parentBBox.SetWidth(parentBBox.GetWidth() + floatRenderer.GetWidth());
+                            }
+                        }
+                        if (maxFloatHeight < floatRenderer.GetHeight()) {
+                            theLowestFloatRectangle = floatRenderer;
+                            maxFloatHeight = floatRenderer.GetHeight();
+                        }
+                    }
+                }
+                if (theLowestFloatRectangle != null) {
+                    clearHeightCorrection = theLowestFloatRectangle.GetHeight() + theLowestFloatRectangle.GetY() - parentBBox.
+                        GetY() - parentBBox.GetHeight();
+                    parentBBox.DecreaseHeight(theLowestFloatRectangle.GetHeight() - clearHeightCorrection);
+                }
+            }
+            return clearHeightCorrection;
+        }
+
+        internal virtual void AdjustLayoutAreaIfClearPropertyPresent(float clearHeightCorrection, LayoutArea area, 
+            FloatPropertyValue? floatPropertyValue) {
+            if (clearHeightCorrection > 0) {
+                Rectangle rect = area.GetBBox();
+                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                    rect.MoveUp(occupiedArea.GetBBox().GetHeight() - clearHeightCorrection);
+                }
+                else {
+                    rect.MoveDown(clearHeightCorrection);
+                }
+            }
+        }
+
+        internal virtual float CalculateFreeSpaceIfFloatPropertyPresent(float freeSpace, IRenderer childRenderer, 
+            Rectangle currentArea) {
+            return freeSpace - (childRenderer.GetOccupiedArea().GetBBox().GetX() - currentArea.GetX());
+        }
+
+        /// <summary>Tries to get document from the root renderer if there is any.</summary>
+        /// <returns/>
+        internal virtual Document GetDocument() {
+            IRenderer parent = GetParent();
+            iText.Layout.Renderer.AbstractRenderer currentRenderer = this;
+            while (parent != null) {
+                if (parent is iText.Layout.Renderer.AbstractRenderer) {
+                    currentRenderer = (iText.Layout.Renderer.AbstractRenderer)parent;
+                    parent = currentRenderer.GetParent();
+                }
+                else {
+                    if (currentRenderer is DocumentRenderer) {
+                        return ((DocumentRenderer)currentRenderer).document;
+                    }
+                }
+            }
+            if (currentRenderer is DocumentRenderer) {
+                return ((DocumentRenderer)currentRenderer).document;
+            }
+            return null;
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
@@ -1197,8 +1425,10 @@ namespace iText.Layout.Renderer {
             return fc;
         }
 
+        // This method is intended to get first valid PdfFont in this renderer, based of font property.
+        // It is usually done for counting some layout characteristics like ascender or descender.
+        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         internal virtual PdfFont ResolveFirstPdfFont() {
-            // TODO this mechanism does not take text into account
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
                 return (PdfFont)font;
@@ -1211,11 +1441,47 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily((String)font), fc).BestMatch().GetPdfFont
-                        (provider);
+                    return ResolveFirstPdfFont((String)font, provider, fc);
                 }
                 else {
                     throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
+                }
+            }
+        }
+
+        // This method is intended to get first valid PdfFont described in font string,
+        // with specific FontCharacteristics with the help of specified font provider.
+        // This method is intended to be called from previous method that deals with Font Property.
+        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
+        // TODO this mechanism does not take text into account
+        internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
+            return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
+                ());
+        }
+
+        internal static void ApplyGeneratedAccessibleAttributes(TagTreePointer tagPointer, PdfDictionary attributes
+            ) {
+            if (attributes == null) {
+                return;
+            }
+            // TODO if taggingPointer.getProperties will always write directly to struct elem, use it instead (add addAttributes overload with index)
+            PdfStructElem structElem = tagPointer.GetDocument().GetTagStructureContext().GetPointerStructElem(tagPointer
+                );
+            PdfObject structElemAttr = structElem.GetAttributes(false);
+            if (structElemAttr == null || !structElemAttr.IsDictionary() && !structElemAttr.IsArray()) {
+                structElem.SetAttributes(attributes);
+            }
+            else {
+                if (structElemAttr.IsDictionary()) {
+                    PdfArray attrArr = new PdfArray();
+                    attrArr.Add(attributes);
+                    attrArr.Add(structElemAttr);
+                    structElem.SetAttributes(attrArr);
+                }
+                else {
+                    // isArray
+                    PdfArray attrArr = (PdfArray)structElemAttr;
+                    attrArr.Add(0, attributes);
                 }
             }
         }

@@ -59,8 +59,11 @@ namespace iText.Kernel.Pdf {
             this.directOnly = directOnly;
         }
 
+        /// <summary>Initialize PdfPrimitiveObject from the passed bytes.</summary>
+        /// <param name="content">byte content, shall not be null.</param>
         protected internal PdfPrimitiveObject(byte[] content)
             : this() {
+            System.Diagnostics.Debug.Assert(content != null);
             this.content = content;
         }
 

@@ -74,7 +74,6 @@ namespace iText.IO.Font.Cmap {
         /// <param name="cidBytes"/>
         /// <param name="offset"/>
         /// <param name="length"/>
-        /// <returns/>
         public virtual String DecodeSequence(byte[] cidBytes, int offset, int length) {
             StringBuilder sb = new StringBuilder();
             CMapByteCid.Cursor cursor = new CMapByteCid.Cursor(offset, length);

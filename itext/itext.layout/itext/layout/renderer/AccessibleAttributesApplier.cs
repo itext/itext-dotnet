@@ -59,14 +59,28 @@ namespace iText.Layout.Renderer {
     /// and renderer layout result.
     /// </summary>
     public class AccessibleAttributesApplier {
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
         public static void ApplyLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDocument doc) {
+            PdfDictionary layoutAttributes = GetLayoutAttributes(role, renderer, doc.GetTagStructureContext().GetAutoTaggingPointer
+                ());
+            if (layoutAttributes != null) {
+                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
+                    ();
+                RemoveSameAttributesTypeIfPresent(properties, PdfName.Layout);
+                properties.AddAttributes(layoutAttributes);
+            }
+        }
+
+        public static PdfDictionary GetLayoutAttributes(PdfName role, AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
+            // TODO taggingPointer is needed here and in other methods for the future changes which are currently in the separate branch
+            PdfDocument doc = taggingPointer.GetDocument();
             if (!(renderer.GetModelElement() is IAccessibleElement)) {
-                return;
+                return null;
             }
             int tagType = PdfStructElem.IdentifyType(doc, role);
             PdfDictionary attributes = new PdfDictionary();
-            PdfName attributesType = PdfName.Layout;
-            attributes.Put(PdfName.O, attributesType);
+            attributes.Put(PdfName.O, PdfName.Layout);
             PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
             if (roleMap.ContainsKey(role)) {
                 role = roleMap.GetAsName(role);
@@ -82,42 +96,52 @@ namespace iText.Layout.Renderer {
             if (tagType == PdfStructElem.Illustration) {
                 ApplyIllustrationLayoutAttributes(renderer, attributes);
             }
-            if (attributes.Size() > 1) {
+            return attributes.Size() > 1 ? attributes : null;
+        }
+
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
+        public static void ApplyListAttributes(AbstractRenderer renderer) {
+            PdfDictionary listAttributes = GetListAttributes(renderer, null);
+            if (listAttributes != null) {
                 AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
                     ();
-                RemoveSameAttributesTypeIfPresent(properties, attributesType);
-                properties.AddAttributes(attributes);
+                RemoveSameAttributesTypeIfPresent(properties, PdfName.List);
+                properties.AddAttributes(listAttributes);
             }
         }
 
-        public static void ApplyListAttributes(AbstractRenderer renderer) {
+        public static PdfDictionary GetListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
             if (!(renderer.GetModelElement() is List)) {
-                return;
+                return null;
             }
             PdfDictionary attributes = new PdfDictionary();
-            PdfName attributesType = PdfName.List;
-            attributes.Put(PdfName.O, attributesType);
+            attributes.Put(PdfName.O, PdfName.List);
             Object listSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
             if (listSymbol is ListNumberingType) {
                 ListNumberingType numberingType = (ListNumberingType)listSymbol;
                 attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType));
             }
-            if (attributes.Size() > 1) {
+            return attributes.Size() > 1 ? attributes : null;
+        }
+
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
+        public static void ApplyTableAttributes(AbstractRenderer renderer) {
+            PdfDictionary tableAttributes = GetTableAttributes(renderer, null);
+            if (tableAttributes != null) {
                 AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
                     ();
-                RemoveSameAttributesTypeIfPresent(properties, attributesType);
-                properties.AddAttributes(attributes);
+                RemoveSameAttributesTypeIfPresent(properties, PdfName.Table);
+                properties.AddAttributes(tableAttributes);
             }
         }
 
-        public static void ApplyTableAttributes(AbstractRenderer renderer) {
+        public static PdfDictionary GetTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
             if (!(renderer.GetModelElement() is IAccessibleElement)) {
-                return;
+                return null;
             }
             IAccessibleElement accessibleElement = (IAccessibleElement)renderer.GetModelElement();
             PdfDictionary attributes = new PdfDictionary();
-            PdfName attributesType = PdfName.Table;
-            attributes.Put(PdfName.O, attributesType);
+            attributes.Put(PdfName.O, PdfName.Table);
             if (accessibleElement is Cell) {
                 Cell cell = (Cell)accessibleElement;
                 if (cell.GetRowspan() != 1) {
@@ -127,11 +151,7 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.ColSpan, new PdfNumber(cell.GetColspan()));
                 }
             }
-            if (attributes.Size() > 1) {
-                AccessibilityProperties properties = accessibleElement.GetAccessibilityProperties();
-                RemoveSameAttributesTypeIfPresent(properties, attributesType);
-                properties.AddAttributes(attributes);
-            }
+            return attributes.Size() > 1 ? attributes : null;
         }
 
         private static void ApplyCommonLayoutAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
@@ -184,10 +204,8 @@ namespace iText.Layout.Renderer {
                 //for table cells there is an InlineAlign attribute (see below)
                 attributes.Put(PdfName.TextAlign, TransformTextAlignmentValueToName(textAlignment));
             }
-            bool connectedToTag = doc.GetTagStructureContext().IsElementConnectedToTag((IAccessibleElement)renderer.GetModelElement
-                ());
-            bool elementIsOnSinglePage = !connectedToTag && renderer.isLastRendererForModelElement;
-            if (elementIsOnSinglePage) {
+            // attributes are applied only on the first renderer
+            if (renderer.isLastRendererForModelElement) {
                 Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
@@ -224,7 +242,7 @@ namespace iText.Layout.Renderer {
             if (underlines != null) {
                 float? fontSize = renderer.GetPropertyAsFloat(Property.FONT_SIZE);
                 Underline underline = null;
-                if (underlines is IList && !((IList<Object>)underlines).IsEmpty() && ((IList)underlines)[0] is Underline) {
+                if (underlines is IList && ((IList)underlines).Count > 0 && ((IList)underlines)[0] is Underline) {
                     // in standard attributes only one text decoration could be described for an element. That's why we take only the first underline from the list.
                     underline = (Underline)((IList)underlines)[0];
                 }
@@ -301,7 +319,7 @@ namespace iText.Layout.Renderer {
                 if (generalBorderColor is DeviceRgb) {
                     attributes.Put(PdfName.BorderColor, new PdfArray(generalBorderColor.GetColorValue()));
                     attributes.Put(PdfName.BorderStyle, TransformBorderTypeToName(borderType));
-                    attributes.Put(PdfName.BorderThikness, new PdfNumber(borderWidth));
+                    attributes.Put(PdfName.BorderThickness, new PdfNumber(borderWidth));
                 }
             }
             if (specificBorderProperties) {
@@ -362,10 +380,10 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.BorderStyle, borderTypes);
                 }
                 if (allWidthsEqual) {
-                    attributes.Put(PdfName.BorderThikness, borderWidths.Get(0));
+                    attributes.Put(PdfName.BorderThickness, borderWidths.Get(0));
                 }
                 else {
-                    attributes.Put(PdfName.BorderThikness, borderWidths);
+                    attributes.Put(PdfName.BorderThickness, borderWidths);
                 }
             }
         }
@@ -524,6 +542,7 @@ namespace iText.Layout.Renderer {
         /// In that case it will already have attributes which belong to the previous positioning on the page, and because of
         /// that we want to remove those old irrelevant attributes.
         /// </remarks>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
         private static void RemoveSameAttributesTypeIfPresent(AccessibilityProperties properties, PdfName attributesType
             ) {
             IList<PdfDictionary> attributesList = properties.GetAttributesList();

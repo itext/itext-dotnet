@@ -77,7 +77,7 @@ namespace iText.IO.Font {
             try {
                 LoadRegistry();
                 foreach (String font in registryNames.Get(FONTS_PROP)) {
-                    allCidFonts[font] = ReadFontProperties(font);
+                    allCidFonts.Put(font, ReadFontProperties(font));
                 }
             }
             catch (Exception) {
@@ -175,7 +175,7 @@ namespace iText.IO.Font {
             if (fontFound != null) {
                 return fontFound;
             }
-            fontCache[key] = font;
+            fontCache.Put(key, font);
             return font;
         }
 
@@ -194,7 +194,7 @@ namespace iText.IO.Font {
                             set.Add(s);
                         }
                     }
-                    registryNames[(String)entry.Key] = set;
+                    registryNames.Put((String)entry.Key, set);
                 }
             }
             finally {
@@ -212,10 +212,10 @@ namespace iText.IO.Font {
                 p.Load(resource);
                 IDictionary<String, Object> fontProperties = new Dictionary<String, Object>();
                 foreach (KeyValuePair<Object, Object> entry in p) {
-                    fontProperties[(String)entry.Key] = entry.Value;
+                    fontProperties.Put((String)entry.Key, entry.Value);
                 }
-                fontProperties[W_PROP] = CreateMetric((String)fontProperties.Get(W_PROP));
-                fontProperties[W2_PROP] = CreateMetric((String)fontProperties.Get(W2_PROP));
+                fontProperties.Put(W_PROP, CreateMetric((String)fontProperties.Get(W_PROP)));
+                fontProperties.Put(W2_PROP, CreateMetric((String)fontProperties.Get(W2_PROP)));
                 return fontProperties;
             }
             finally {

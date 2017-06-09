@@ -284,7 +284,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                                 LocationTextExtractionStrategy.TextChunkMarks currentMarks = marks.Get(textChunks[baseInd]);
                                 if (currentMarks == null) {
                                     currentMarks = new LocationTextExtractionStrategy.TextChunkMarks();
-                                    marks[textChunks[baseInd]] = currentMarks;
+                                    marks.Put(textChunks[baseInd], currentMarks);
                                 }
                                 if (markInd < baseInd) {
                                     currentMarks.preceding.Add(textChunks[markInd]);

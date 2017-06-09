@@ -174,7 +174,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <returns>the existing registered handler, if any</returns>
         public virtual IXObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, IXObjectDoHandler handler
             ) {
-            return xobjectDoHandlers[xobjectSubType] = handler;
+            return xobjectDoHandlers.Put(xobjectSubType, handler);
         }
 
         /// <summary>Registers a content operator that will be called when the specified operator string is encountered during content processing.
@@ -189,7 +189,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <param name="operator">the operator that will receive notification when the operator is encountered</param>
         /// <returns>the existing registered operator, if any</returns>
         public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator @operator) {
-            return operators[operatorString] = @operator;
+            return operators.Put(operatorString, @operator);
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
             if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
-                cachedFonts[n] = new WeakReference(font);
+                cachedFonts.Put(n, new WeakReference(font));
             }
             return font;
         }
@@ -490,9 +490,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>This is a proxy to pass only those events to the event listener which are supported by it.</summary>
         /// <param name="data">event data</param>
         /// <param name="type">event type</param>
-        private void EventOccurred(IEventData data, EventType type) {
+        protected internal virtual void EventOccurred(IEventData data, EventType type) {
             if (supportedEvents == null || supportedEvents.Contains(type)) {
                 eventListener.EventOccurred(data, type);
+            }
+            if (data is TextRenderInfo) {
+                ((TextRenderInfo)data).ReleaseGraphicsState();
+            }
+            else {
+                if (data is PathRenderInfo) {
+                    ((PathRenderInfo)data).ReleaseGraphicsState();
+                }
             }
         }
 
@@ -501,8 +509,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private void DisplayPdfString(PdfString @string) {
             TextRenderInfo renderInfo = new TextRenderInfo(@string, GetGraphicsState(), textMatrix, markedContentStack
                 );
-            EventOccurred(renderInfo, EventType.RENDER_TEXT);
             textMatrix = new Matrix(renderInfo.GetUnscaledWidth(), 0).Multiply(textMatrix);
+            EventOccurred(renderInfo, EventType.RENDER_TEXT);
         }
 
         /// <summary>Displays an XObject using the registered handler for this XObject's subtype</summary>
@@ -797,7 +805,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 }
                 PdfDictionary gsDic = extGState.GetAsDictionary(dictionaryName);
                 if (gsDic == null) {
-                    throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
+                    gsDic = extGState.GetAsStream(dictionaryName);
+                    if (gsDic == null) {
+                        throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
+                    }
                 }
                 // at this point, all we care about is the FONT entry in the GS dictionary TODO merge the whole gs dictionary
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);

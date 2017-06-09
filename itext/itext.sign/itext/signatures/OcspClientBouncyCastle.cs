@@ -85,7 +85,7 @@ namespace iText.Signatures {
                 if (ocspResponse == null) {
                     return null;
                 }
-                if (ocspResponse.Status != OcspRespStatus.Successful) {
+                if (ocspResponse.Status != Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful) {
                     return null;
                 }
                 BasicOcspResp basicResponse = (BasicOcspResp)ocspResponse.GetResponseObject();

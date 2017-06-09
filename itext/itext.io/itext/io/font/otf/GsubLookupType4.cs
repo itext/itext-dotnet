@@ -127,7 +127,7 @@ namespace iText.IO.Font.Otf {
                     }
                     components.Add(component);
                 }
-                ligatures[coverageGlyphIds[k]] = components;
+                ligatures.Put(coverageGlyphIds[k], components);
             }
         }
     }

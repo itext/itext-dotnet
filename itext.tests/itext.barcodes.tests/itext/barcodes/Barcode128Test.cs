@@ -99,5 +99,11 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeRawValueGenerationTest01() {
+            NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { 103, 17, 18, 19, 20, 
+                21, 17, 18, 19, 20, 21 }), Barcode128.GetRawText("1234512345", false, Barcode128.Barcode128CodeSet.A));
+        }
     }
 }

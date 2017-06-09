@@ -1129,7 +1129,7 @@ namespace iText.IO.Font {
                     GetDictItem();
                     if (key == "FullName") {
                         //System.err.println("getting fullname sid = "+((Integer)args[0]).intValue());
-                        fonts[j].fullName = GetString((char)((int?)args[0]));
+                        fonts[j].fullName = GetString((char)((int?)args[0]).Value);
                     }
                     else {
                         //System.err.println("got it");
@@ -1138,12 +1138,12 @@ namespace iText.IO.Font {
                         }
                         else {
                             if (key == "Private") {
-                                fonts[j].privateLength = (int)((int?)args[0]);
-                                fonts[j].privateOffset = (int)((int?)args[1]);
+                                fonts[j].privateLength = (int)((int?)args[0]).Value;
+                                fonts[j].privateOffset = (int)((int?)args[1]).Value;
                             }
                             else {
                                 if (key == "charset") {
-                                    fonts[j].charsetOffset = (int)((int?)args[0]);
+                                    fonts[j].charsetOffset = (int)((int?)args[0]).Value;
                                 }
                                 else {
                                     //                else if (key=="Encoding"){
@@ -1154,7 +1154,7 @@ namespace iText.IO.Font {
                                     //                    }
                                     //                }
                                     if (key == "CharStrings") {
-                                        fonts[j].charstringsOffset = (int)((int?)args[0]);
+                                        fonts[j].charstringsOffset = (int)((int?)args[0]).Value;
                                         //System.err.println("charstrings "+fonts[j].charstringsOffset);
                                         // Added by Oren & Ygal
                                         int p = GetPosition();
@@ -1163,15 +1163,15 @@ namespace iText.IO.Font {
                                     }
                                     else {
                                         if (key == "FDArray") {
-                                            fonts[j].fdarrayOffset = (int)((int?)args[0]);
+                                            fonts[j].fdarrayOffset = (int)((int?)args[0]).Value;
                                         }
                                         else {
                                             if (key == "FDSelect") {
-                                                fonts[j].fdselectOffset = (int)((int?)args[0]);
+                                                fonts[j].fdselectOffset = (int)((int?)args[0]).Value;
                                             }
                                             else {
                                                 if (key == "CharstringType") {
-                                                    fonts[j].CharstringType = (int)((int?)args[0]);
+                                                    fonts[j].CharstringType = (int)((int?)args[0]).Value;
                                                 }
                                             }
                                         }
@@ -1190,7 +1190,7 @@ namespace iText.IO.Font {
                         if (key == "Subrs") {
                             //Add the private offset to the lsubrs since the offset is
                             // relative to the beginning of the PrivateDict
-                            fonts[j].privateSubrs = (int)((int?)args[0]) + fonts[j].privateOffset;
+                            fonts[j].privateSubrs = (int)((int?)args[0]).Value + fonts[j].privateOffset;
                         }
                     }
                 }
@@ -1205,8 +1205,8 @@ namespace iText.IO.Font {
                         while (GetPosition() < fdarrayOffsets[k + 1]) {
                             GetDictItem();
                             if (key == "Private") {
-                                fonts[j].fdprivateLengths[k] = (int)((int?)args[0]);
-                                fonts[j].fdprivateOffsets[k] = (int)((int?)args[1]);
+                                fonts[j].fdprivateLengths[k] = (int)((int?)args[0]).Value;
+                                fonts[j].fdprivateOffsets[k] = (int)((int?)args[1]).Value;
                             }
                         }
                     }

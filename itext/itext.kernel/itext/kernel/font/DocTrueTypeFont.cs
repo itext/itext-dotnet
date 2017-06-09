@@ -81,10 +81,10 @@ namespace iText.Kernel.Font {
             int glyphsWithWidths = 0;
             for (int i = 0; i < 256; i++) {
                 Glyph glyph = new Glyph(i, widths[i], fontEncoding.GetUnicode(i));
-                fontProgram.codeToGlyph[i] = glyph;
+                fontProgram.codeToGlyph.Put(i, glyph);
                 //FontEncoding.codeToUnicode table has higher priority
                 if (glyph.HasValidUnicode() && fontEncoding.ConvertToByte(glyph.GetUnicode()) == i) {
-                    fontProgram.unicodeToGlyph[glyph.GetUnicode()] = glyph;
+                    fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
                 }
                 if (widths[i] > 0) {
                     glyphsWithWidths++;
@@ -111,9 +111,9 @@ namespace iText.Kernel.Font {
                     int width = widths.ContainsKey(cid) ? widths.Get(cid) : dw;
                     Glyph glyph = new Glyph(cid, width, toUnicode.Lookup(cid));
                     if (glyph.HasValidUnicode()) {
-                        fontProgram.unicodeToGlyph[glyph.GetUnicode()] = glyph;
+                        fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
                     }
-                    fontProgram.codeToGlyph[cid] = glyph;
+                    fontProgram.codeToGlyph.Put(cid, glyph);
                     fontProgram.avgWidth += width;
                 }
                 if (fontProgram.codeToGlyph.Count != 0) {
@@ -121,8 +121,8 @@ namespace iText.Kernel.Font {
                 }
             }
             if (fontProgram.codeToGlyph.Get(0) == null) {
-                fontProgram.codeToGlyph[0] = new Glyph(0, widths != null && widths.ContainsKey(0) ? widths.Get(0) : dw, -1
-                    );
+                fontProgram.codeToGlyph.Put(0, new Glyph(0, widths != null && widths.ContainsKey(0) ? widths.Get(0) : dw, 
+                    -1));
             }
             return fontProgram;
         }
