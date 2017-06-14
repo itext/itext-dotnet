@@ -199,8 +199,8 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Makes the
-        /// <see cref="Border.transparentColor">color of the border</see>
-        /// darker and returns the result
+        /// <see cref="Border.transparentColor"/>
+        /// color of the border darker and returns the result
         /// </summary>
         protected internal virtual Color GetDarkerColor() {
             Color color = this.transparentColor.GetColor();

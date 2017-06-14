@@ -53,9 +53,9 @@ namespace iText.Layout.Splitting {
         /// </remarks>
         /// <param name="glyphPos">
         /// the position of
-        /// <seealso>Glyph</seealso>
+        /// <see cref="iText.IO.Font.Otf.Glyph"/>
         /// in the
-        /// <seealso>GlyphLine</seealso>
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// </param>
         /// <param name="text">an array of unicode char codes which represent current text</param>
         bool IsSplitCharacter(GlyphLine text, int glyphPos);

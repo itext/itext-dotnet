@@ -203,7 +203,7 @@ namespace iText.IO {
 
         public const String PageNumberMustBeGtEq1 = "Page number must be >= 1.";
 
-        [System.ObsoleteAttribute(@"because naming clash with Com itextpdf io font PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
+        [System.ObsoleteAttribute(@"because naming clash with iText.IO.Font.PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
             )]
         public const String PdfEncodings = "Pdf encodings.";
 

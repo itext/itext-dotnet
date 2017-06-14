@@ -178,9 +178,8 @@ namespace iText.IO.Font {
             /// <c>int[2]</c>
             /// where position 0
             /// is the glyph number and position 1 is the glyph width normalized to 1000 units.
-            /// <seealso>TrueTypeFont.UNITS_NORMALIZATION</seealso>
-            /// .
             /// </remarks>
+            /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap10;
 
             /// <summary>The map containing the code information for the table 'cmap', encoding 3.1 in Unicode.</summary>
@@ -190,9 +189,8 @@ namespace iText.IO.Font {
             /// <c>int[2]</c>
             /// where position 0
             /// is the glyph number and position 1 is the glyph width normalized to 1000 units.
-            /// <seealso>TrueTypeFont.UNITS_NORMALIZATION</seealso>
-            /// .
             /// </remarks>
+            /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap31;
 
             internal IDictionary<int, int[]> cmapExt;

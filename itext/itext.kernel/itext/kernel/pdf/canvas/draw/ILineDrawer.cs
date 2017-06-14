@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
     /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
     /// <p/>
     /// This interface allows to customize the 'empty' space in a
-    /// <see cref="com.itextpdf.layout.element.Tabstop">TabStop</see>
+    /// <c>com.itextpdf.layout.element.TabStop</c>
     /// through a Strategy design
     /// pattern
     /// </summary>

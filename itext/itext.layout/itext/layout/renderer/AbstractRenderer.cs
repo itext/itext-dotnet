@@ -741,8 +741,8 @@ namespace iText.Layout.Renderer {
         /// <summary>Returns margins of the renderer</summary>
         /// <returns>
         /// a
-        /// <see>float[] margins</see>
-        /// of the renderer
+        /// <c>float[]</c>
+        /// margins of the renderer
         /// </returns>
         protected internal virtual float[] GetMargins() {
             return new float[] { (float)this.GetPropertyAsFloat(Property.MARGIN_TOP), (float)this.GetPropertyAsFloat(Property
@@ -753,8 +753,8 @@ namespace iText.Layout.Renderer {
         /// <summary>Returns paddings of the renderer</summary>
         /// <returns>
         /// a
-        /// <see>float[] paddings</see>
-        /// of the renderer
+        /// <c>float[]</c>
+        /// paddings of the renderer
         /// </returns>
         protected internal virtual float[] GetPaddings() {
             return new float[] { (float)this.GetPropertyAsFloat(Property.PADDING_TOP), (float)this.GetPropertyAsFloat(
@@ -960,7 +960,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
         /// <returns>
         /// a
-        /// <see>boolean</see>
+        /// <c>boolean</c>
         /// </returns>
         protected internal virtual bool IsPositioned() {
             return !IsStaticLayout();
@@ -969,7 +969,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
         /// <returns>
         /// a
-        /// <see>boolean</see>
+        /// <c>boolean</c>
         /// </returns>
         protected internal virtual bool IsFixedLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);

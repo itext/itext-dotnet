@@ -46,8 +46,8 @@ using iText.IO.Font.Otf;
 namespace iText.Layout.Splitting {
     /// <summary>
     /// The default implementation of
-    /// <seealso>ISplitCharacters interface</seealso>
-    /// .
+    /// <see cref="ISplitCharacters"/>
+    /// interface.
     /// </summary>
     public class DefaultSplitCharacters : ISplitCharacters {
         public virtual bool IsSplitCharacter(GlyphLine text, int glyphPos) {

@@ -1905,7 +1905,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>List all newly added or loaded fonts</summary>
         /// <returns>
         /// List of
-        /// <seealso>PdfFonts</seealso>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// .
         /// </returns>
         protected internal virtual ICollection<PdfFont> GetDocumentFonts() {

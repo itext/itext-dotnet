@@ -539,7 +539,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// to this annotation which will be performed in response to
         /// the specific trigger event defined by
-        /// 
+        /// <paramref name="key"/>
         /// . See ISO-320001 12.6.3, "Trigger Events".
         /// </summary>
         /// <param name="key">

@@ -827,7 +827,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see>IOException).</see>
+        /// <see cref="System.IO.IOException"/>
+        /// .
         /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
@@ -854,7 +855,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see>IOException).</see>
+        /// <see cref="System.IO.IOException"/>
+        /// .
         /// </exception>
         public virtual byte[] GetStreamBytes(int index) {
             return GetContentStream(index).GetBytes();
@@ -921,8 +923,10 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>
         /// the
-        /// <see>List<PdfAnnotation></see>
-        /// containing all page's annotations.
+        /// <see cref="System.Collections.IList{E}"/>
+        /// &lt;
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// &gt; containing all page's annotations.
         /// </returns>
         public virtual IList<PdfAnnotation> GetAnnotations() {
             IList<PdfAnnotation> annotations = new List<PdfAnnotation>();

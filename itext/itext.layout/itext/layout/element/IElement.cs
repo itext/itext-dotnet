@@ -56,7 +56,7 @@ namespace iText.Layout.Element {
     public interface IElement : IPropertyContainer {
         /// <summary>
         /// Overrides the
-        /// <seealso>IRenderer</seealso>
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// instance which will be returned by the next call to the
         /// <see cref="GetRenderer()"/>
         /// .

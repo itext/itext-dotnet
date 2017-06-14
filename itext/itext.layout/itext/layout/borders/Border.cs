@@ -340,7 +340,7 @@ namespace iText.Layout.Borders {
         /// <param name="x1">the abscissa of the left-bottom point</param>
         /// <param name="y1">the ordinate of the left-bottom point</param>
         /// <param name="x2">the abscissa of the right-top point</param>
-        /// <param name="y1">the ordinate of the right-top point</param>
+        /// <param name="y2">the ordinate of the right-top point</param>
         /// <returns>
         /// the corresponded
         /// <see cref="Side">side</see>

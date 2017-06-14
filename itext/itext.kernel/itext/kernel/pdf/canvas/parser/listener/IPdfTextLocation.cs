@@ -49,12 +49,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// somewhere on a page in a pdf document.
     /// </summary>
     public interface IPdfTextLocation {
-        /// <summary>Get the visual rectangle in which the text is located</summary>
-        /// <returns/>
+        /// <returns>
+        /// the visual
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// in which the text is located
+        /// </returns>
         Rectangle GetRectangle();
 
-        /// <summary>Get the text</summary>
-        /// <returns/>
+        /// <returns>the text</returns>
         String GetText();
 
         /// <summary>Get the page number of the page on which the text is located</summary>
