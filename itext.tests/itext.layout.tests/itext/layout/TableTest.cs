@@ -1812,6 +1812,60 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1320")]
+        public virtual void NestedTableLostContent() {
+            // When the test was created, only first line of text was displayed on the first page
+            String testName = "nestedTableLostContent.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            String text = "abacaba absa ";
+            for (int i = 0; i < 7; i++) {
+                text += text;
+            }
+            Table innerTable = new Table(UnitValue.CreatePointArray(new float[] { 50 }));
+            innerTable.AddCell(text);
+            Table outerTable = new Table(UnitValue.CreatePercentArray(new float[] { 1, 1 }));
+            outerTable.AddCell(new Cell().Add(innerTable));
+            outerTable.AddCell(new Cell().SetBackgroundColor(Color.RED).Add(new Div().SetMinHeight(850).SetKeepTogether
+                (true)));
+            doc.Add(outerTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1321")]
+        public virtual void NestedTableMinMaxWidthException() {
+            // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
+            // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
+            String testName = "nestedTableMinMaxWidthException.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            String text = "abacaba absa ";
+            for (int i = 0; i < 9; i++) {
+                text += text;
+            }
+            Table innerTable = new Table(UnitValue.CreatePointArray(new float[] { 50 }));
+            innerTable.AddCell("Small text");
+            innerTable.AddCell(new Cell().Add(text).SetKeepTogether(true));
+            Table outerTable = new Table(UnitValue.CreatePercentArray(new float[] { 1 }));
+            outerTable.AddCell(new Cell().Add(innerTable));
+            doc.Add(outerTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
