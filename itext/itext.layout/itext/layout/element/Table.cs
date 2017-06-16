@@ -122,7 +122,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <param name="largeTable">
         /// whether parts of the table will be written before all data is added.
-        /// Note, large table does not support auto layout. Table width must be specified.
+        /// Note, large table does not support auto layout, table width shall not be removed.
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -164,7 +164,10 @@ namespace iText.Layout.Element {
         /// preferable column widths, points and/or percents.  Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
         /// </param>
-        /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
+        /// <param name="largeTable">
+        /// whether parts of the table will be written before all data is added.
+        /// Note, large table does not support auto layout, table width shall not be removed.
+        /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         public Table(UnitValue[] columnWidths, bool largeTable) {
@@ -265,7 +268,7 @@ namespace iText.Layout.Element {
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <param name="largeTable">
         /// whether parts of the table will be written before all data is added.
-        /// Note, large table does not support auto layout. Table width must be specified.
+        /// Note, large table does not support auto layout, table width shall not be removed.
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
@@ -373,7 +376,7 @@ namespace iText.Layout.Element {
         /// <c>width/colspan</c>
         /// .
         /// <br/>
-        /// 2.2 If some columns already have width, equal remain width will be added
+        /// 2.2 If some columns already have width, equal remain (original width minus existed) width will be added
         /// <c>remainWidth/colspan</c>
         /// to each column.
         /// <br/>
@@ -394,7 +397,7 @@ namespace iText.Layout.Element {
         /// <summary>Set auto layout.</summary>
         /// <remarks>
         /// Set auto layout. Analog of
-        /// <c>table-layout:fixed</c>
+        /// <c>table-layout:auto</c>
         /// CSS property. <br />
         /// Note, large table does not support auto layout.
         /// <p/>
