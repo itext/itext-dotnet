@@ -213,6 +213,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest03() {
             String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
@@ -288,7 +289,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest01() {
             String fileName = "rotationInfiniteLoopTest01.pdf";
@@ -322,6 +322,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest02() {
             String outFileName = destinationFolder + "tableRotationTest02.pdf";
@@ -332,8 +333,8 @@ namespace iText.Layout {
             table.SetWidth(100);
             table.AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle((Math.PI / 2)))).AddCell(new Cell
                 ().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph
-                ("cell 2, 1").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph("cell 2, 2").SetRotationAngle
-                ((Math.PI))));
+                ("cell 2, 1").SetRotationAngle((Math.PI * 2 / 3)))).AddCell(new Cell().Add(new Paragraph("cell 2, 2").
+                SetRotationAngle((Math.PI))));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -342,7 +343,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest03() {
             String outFileName = destinationFolder + "tableRotationTest03.pdf";
@@ -383,7 +384,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1241")]
         public virtual void CellRotationTest02() {
             String outFileName = destinationFolder + "cellRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest02.pdf";
@@ -402,7 +402,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1241")]
         public virtual void CellRotationTest03() {
             String outFileName = destinationFolder + "cellRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest03.pdf";
@@ -562,7 +561,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest01() {
-            //TODO: currently is incorrect. See DEVSIX-988
             String outFileName = destinationFolder + "fixedWidthRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest01.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
@@ -581,7 +579,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest02() {
-            //TODO: currently is incorrect. See DEVSIX-988
             String outFileName = destinationFolder + "fixedWidthRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest02.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));

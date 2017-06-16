@@ -947,14 +947,16 @@ namespace iText.Layout.Renderer {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
 
-        [System.ObsoleteAttribute(@"Use IsNotFittingLayoutArea(iText.Layout.Layout.LayoutArea) instead.")]
         protected internal virtual bool IsNotFittingHeight(LayoutArea layoutArea) {
-            return IsNotFittingLayoutArea(layoutArea);
+            return !IsPositioned() && occupiedArea.GetBBox().GetHeight() > layoutArea.GetBBox().GetHeight();
+        }
+
+        protected internal virtual bool IsNotFittingWidth(LayoutArea layoutArea) {
+            return !IsPositioned() && occupiedArea.GetBBox().GetWidth() > layoutArea.GetBBox().GetWidth();
         }
 
         protected internal virtual bool IsNotFittingLayoutArea(LayoutArea layoutArea) {
-            return !IsPositioned() && (occupiedArea.GetBBox().GetHeight() > layoutArea.GetBBox().GetHeight() || occupiedArea
-                .GetBBox().GetWidth() > layoutArea.GetBBox().GetWidth());
+            return IsNotFittingHeight(layoutArea) || IsNotFittingWidth(layoutArea);
         }
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>

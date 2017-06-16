@@ -200,7 +200,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotatedLinkInnerRotation() {
             String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
