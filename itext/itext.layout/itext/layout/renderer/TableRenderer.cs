@@ -1081,7 +1081,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row, bool hasContent) {
-            return Split(row, false, false);
+            return Split(row, hasContent, false);
         }
 
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row, bool hasContent, bool cellWithBigRowspanAdded
