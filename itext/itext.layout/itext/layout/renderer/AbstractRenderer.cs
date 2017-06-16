@@ -943,7 +943,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
 

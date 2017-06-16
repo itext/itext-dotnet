@@ -674,7 +674,7 @@ namespace iText.Layout.Renderer {
             return parentWidth - parentBBox.GetWidth();
         }
 
-        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             Rectangle area = new Rectangle(availableWidth, AbstractRenderer.INF);
             float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings());
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, availableWidth);
