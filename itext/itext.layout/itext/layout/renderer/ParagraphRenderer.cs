@@ -93,6 +93,7 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
+            bool notAllKidsAreFloats = false;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
@@ -145,6 +146,9 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = areas[0].Clone();
             lines = new List<LineRenderer>();
             foreach (IRenderer child in childRenderers) {
+                // TODO refactor to one-line
+                FloatPropertyValue? property = child.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                notAllKidsAreFloats = notAllKidsAreFloats || property == null || property.Equals(FloatPropertyValue.NONE);
                 currentRenderer.AddChild(child);
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
@@ -287,7 +291,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             if (marginsCollapsingEnabled) {
-                                if (anythingPlaced) {
+                                if (anythingPlaced && notAllKidsAreFloats) {
                                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                                 }
                                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
@@ -363,15 +367,19 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
+                    bool lineHasContent = processedRenderer.GetOccupiedArea().GetBBox().GetHeight() > 0;
+                    // could be false if e.g. line contains only floats
                     if (leading != null) {
                         processedRenderer.ApplyLeading(deltaY, floatsDeltaY);
                         // TODO for floats, leading check on page overflow is not checked
-                        if (processedRenderer.GetOccupiedArea().GetBBox().GetHeight() > 0) {
+                        if (lineHasContent) {
                             lastYLine = processedRenderer.GetYLine();
                         }
                     }
-                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
-                        ().GetBBox()));
+                    if (lineHasContent) {
+                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
+                            ().GetBBox()));
+                    }
                     firstLineInBox = false;
                     layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     lines.Add(processedRenderer);
@@ -381,7 +389,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (marginsCollapsingEnabled) {
-                if (childRenderers.Count > 0) {
+                if (childRenderers.Count > 0 && notAllKidsAreFloats) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
