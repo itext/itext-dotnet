@@ -215,8 +215,14 @@ namespace iText.Layout.Renderer {
                 CalculateColumnWidths(layoutBox.GetWidth() - margins[1] - margins[3]);
             }
             float tableWidth = GetTableWidth();
+            MarginsCollapseHandler marginsCollapseHandler = null;
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
+            }
             IList<Rectangle> siblingFloatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox);
+            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox, marginsCollapseHandler
+                );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue);
@@ -224,10 +230,7 @@ namespace iText.Layout.Renderer {
             else {
                 AdjustLineAreaAccordingToFloatRenderers(siblingFloatRendererAreas, layoutBox, tableWidth);
             }
-            MarginsCollapseHandler marginsCollapseHandler = null;
-            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(layoutBox);
             }
             ApplyMargins(layoutBox, false);
@@ -888,7 +891,7 @@ namespace iText.Layout.Renderer {
             RemoveUnnecessaryFloatRendererAreas(siblingFloatRendererAreas);
             // TODO parent floats? it seems inconsistent at the moment
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(siblingFloatRendererAreas, layoutContext.GetArea()
-                .GetBBox(), clearHeightCorrection);
+                .GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 

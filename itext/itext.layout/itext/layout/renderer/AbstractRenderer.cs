@@ -61,6 +61,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -1228,7 +1229,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, Rectangle
-             parentBBox, float clearHeightCorrection) {
+             parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
             LayoutArea editedArea = occupiedArea;
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
@@ -1238,9 +1239,8 @@ namespace iText.Layout.Renderer {
                 editedArea.GetBBox().SetHeight(0);
             }
             else {
-                if (clearHeightCorrection > 0) {
+                if (clearHeightCorrection > 0 && !marginsCollapsingEnabled) {
                     editedArea = occupiedArea.Clone();
-                    editedArea.GetBBox().MoveDown(clearHeightCorrection);
                     editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
                 }
             }
@@ -1345,6 +1345,7 @@ namespace iText.Layout.Renderer {
                 currY = floatRendererAreas[floatRendererAreas.Count - 1].GetTop();
             }
             else {
+                // e.g. if clear was applied on float and current top of layoutBox is lower than last float renderer
                 currY = layoutBox.GetTop();
             }
             Rectangle[] lastLeftAndRightBoxes = null;
@@ -1417,13 +1418,20 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual float CalculateClearHeightCorrection(IList<Rectangle> floatRendererAreas, Rectangle parentBBox
-            ) {
+            , MarginsCollapseHandler marginsCollapseHandler) {
             ClearPropertyValue? clearPropertyValue = this.GetProperty<ClearPropertyValue?>(Property.CLEAR);
             float clearHeightCorrection = 0;
             if (clearPropertyValue == null || floatRendererAreas.IsEmpty()) {
                 return clearHeightCorrection;
             }
-            IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, parentBBox.GetTop());
+            float currY;
+            if (floatRendererAreas[floatRendererAreas.Count - 1].GetTop() < parentBBox.GetTop()) {
+                currY = floatRendererAreas[floatRendererAreas.Count - 1].GetTop();
+            }
+            else {
+                currY = parentBBox.GetTop();
+            }
+            IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, currY);
             Rectangle[] lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(parentBBox, boxesAtYLevel);
             float lowestFloatBottom = float.MaxValue;
             bool isBoth = clearPropertyValue.Equals(ClearPropertyValue.BOTH);
@@ -1445,15 +1453,12 @@ namespace iText.Layout.Renderer {
             if (lowestFloatBottom < float.MaxValue) {
                 clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
                 FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE) || marginsCollapseHandler
+                     == null) {
                     parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY());
                 }
                 else {
-                    float? topMargin = GetModelElement().GetProperty<float?>(Property.MARGIN_TOP);
-                    if (topMargin != null && topMargin < clearHeightCorrection) {
-                        // TODO take into account collapsing margins in future
-                        parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY() + topMargin);
-                    }
+                    marginsCollapseHandler.ApplyClearance(clearHeightCorrection);
                 }
             }
             return clearHeightCorrection;

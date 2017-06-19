@@ -72,6 +72,8 @@ namespace iText.Layout.Margincollapse {
 
         private MarginsCollapseInfo backupCollapseInfo;
 
+        private bool lastKidCollapsedAfterHasClearanceApplied;
+
         public MarginsCollapseHandler(IRenderer renderer, MarginsCollapseInfo marginsCollapseInfo) {
             // Layout box and collapse info are saved before processing the next kid, in order to be able to restore it in case
             // the next kid is not placed. These values are not null only between startChildMarginsHandling and endChildMarginsHandling calls.
@@ -104,6 +106,14 @@ namespace iText.Layout.Margincollapse {
                 childMarginInfo = CreateMarginsInfoForBlockChild(childIndex);
             }
             return this.childMarginInfo;
+        }
+
+        public virtual void ApplyClearance(float clearHeightCorrection) {
+            // Actually, clearance is applied only in case margins were not enough,
+            // however I wasn't able to notice difference in browsers behaviour.
+            // Also, iText behaviour concerning margins self collapsing and clearance differs from browsers in some cases.
+            collapseInfo.SetClearanceApplied(true);
+            collapseInfo.GetCollapseBefore().JoinMargin(clearHeightCorrection);
         }
 
         private MarginsCollapseInfo CreateMarginsInfoForBlockChild(int childIndex) {
@@ -146,9 +156,17 @@ namespace iText.Layout.Margincollapse {
                     firstNotEmptyKidIndex = childIndex + 1;
                 }
                 collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && childMarginInfo.IsSelfCollapsing());
+                lastKidCollapsedAfterHasClearanceApplied = childMarginInfo.IsSelfCollapsing() && childMarginInfo.IsClearanceApplied
+                    ();
             }
             else {
+                lastKidCollapsedAfterHasClearanceApplied = false;
                 collapseInfo.SetSelfCollapsing(false);
+            }
+            if (prevChildMarginInfo != null) {
+                // TODO check this in develop
+                FixPrevChildOccupiedArea(childIndex);
+                UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetOwnCollapseAfter());
             }
             if (firstNotEmptyKidIndex == childIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                 if (!collapseInfo.IsSelfCollapsing()) {
@@ -157,10 +175,6 @@ namespace iText.Layout.Margincollapse {
                         ProcessUsedChildBufferSpaceOnTop(layoutBox);
                     }
                 }
-            }
-            if (prevChildMarginInfo != null) {
-                FixPrevChildOccupiedArea(childIndex);
-                UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetOwnCollapseAfter());
             }
             prevChildMarginInfo = childMarginInfo;
             childMarginInfo = null;
@@ -192,7 +206,7 @@ namespace iText.Layout.Margincollapse {
                 UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetCollapseAfter());
             }
             bool couldBeSelfCollapsing = iText.Layout.Margincollapse.MarginsCollapseHandler.MarginsCouldBeSelfCollapsing
-                (renderer);
+                (renderer) && !lastKidCollapsedAfterHasClearanceApplied;
             bool blockHasNoKidsWithContent = collapseInfo.IsSelfCollapsing();
             if (FirstChildMarginAdjoinedToParent(renderer)) {
                 if (blockHasNoKidsWithContent && !couldBeSelfCollapsing) {
@@ -200,9 +214,12 @@ namespace iText.Layout.Margincollapse {
                 }
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
+            if (!blockHasNoKidsWithContent && lastKidCollapsedAfterHasClearanceApplied) {
+                ApplySelfCollapsedKidMarginWithClearance(layoutBox);
+            }
             MarginsCollapse ownCollapseAfter;
             bool lastChildMarginJoinedToParent = prevChildMarginInfo != null && prevChildMarginInfo.IsIgnoreOwnMarginBottom
-                ();
+                () && !lastKidCollapsedAfterHasClearanceApplied;
             if (lastChildMarginJoinedToParent) {
                 ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
             }
@@ -400,6 +417,17 @@ namespace iText.Layout.Margincollapse {
             // Even though all kids have been already drawn, we still need to adjust layout box here
             // in order to make it represent the available area for element content (e.g. needed for fixed height elements).
             ApplyTopMargin(layoutBox, indentTop);
+        }
+
+        // TODO In general, this also should be taken into account when layouting every next kid and assuming it's the last one on page.
+        private void ApplySelfCollapsedKidMarginWithClearance(Rectangle layoutBox) {
+            // Self-collapsed kid margin with clearance will not be applied to parent top margin
+            // if parent is not self-collapsing. It's self-collapsing kid, thus we just can
+            // add this area to occupied area of parent.
+            float clearedKidMarginWithClearance = prevChildMarginInfo.GetOwnCollapseAfter().GetCollapsedMarginsSize();
+            renderer.GetOccupiedArea().GetBBox().IncreaseHeight(clearedKidMarginWithClearance).MoveDown(clearedKidMarginWithClearance
+                );
+            layoutBox.DecreaseHeight(clearedKidMarginWithClearance);
         }
 
         private IRenderer GetRendererChild(int index) {

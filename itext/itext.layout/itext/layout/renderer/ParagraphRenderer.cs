@@ -88,9 +88,15 @@ namespace iText.Layout.Renderer {
             bool firstLineInBox = true;
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            MarginsCollapseHandler marginsCollapseHandler = null;
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
+            }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
+                );
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
@@ -105,10 +111,7 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            MarginsCollapseHandler marginsCollapseHandler = null;
-            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             Border[] borders = GetBorders();
@@ -401,7 +404,7 @@ namespace iText.Layout.Renderer {
             }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(layoutContext.GetFloatRendererAreas(), layoutContext
-                .GetArea().GetBBox(), clearHeightCorrection);
+                .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth
                     );

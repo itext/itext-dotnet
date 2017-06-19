@@ -107,7 +107,8 @@ namespace iText.Layout.Renderer {
                 ApplyAbsolutePosition(layoutBox);
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
+            // TODO test it
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
@@ -247,7 +248,7 @@ namespace iText.Layout.Renderer {
             }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                (), clearHeightCorrection);
+                (), clearHeightCorrection, false);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

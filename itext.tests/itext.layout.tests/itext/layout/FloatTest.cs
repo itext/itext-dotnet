@@ -198,6 +198,10 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatDivTest03() {
+            //
+            // TODO probably we shouldn't review forced placement applying on floated elements
+            // May be check if there are any floated elements already on page
+            //
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
             String outFile = destinationFolder + "floatDivTest03.pdf";
             PdfWriter writer = new PdfWriter(outFile);

@@ -75,16 +75,19 @@ namespace iText.Layout.Renderer {
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
+            MarginsCollapseHandler marginsCollapseHandler = null;
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
+            }
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
+                );
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
-            MarginsCollapseHandler marginsCollapseHandler = null;
-            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             bool isCellRenderer = this is CellRenderer;
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 if (!isCellRenderer) {
                     marginsCollapseHandler.StartMarginsCollapse(parentBBox);
                 }
@@ -380,7 +383,7 @@ namespace iText.Layout.Renderer {
             ApplyVerticalAlignment();
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(layoutContext.GetFloatRendererAreas(), layoutContext
-                .GetArea().GetBBox(), clearHeightCorrection);
+                .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
                 // TODO anything like this on any other floated renderer?
                 Document document = GetDocument();

@@ -62,6 +62,8 @@ namespace iText.Layout.Margincollapse {
 
         private float usedBufferSpaceOnBottom;
 
+        private bool clearanceApplied;
+
         internal MarginsCollapseInfo() {
             // MarginCollapse instance which contains margin-after of the element without next sibling or parent margins (only element's margin and element's kids)
             // when a parent has a fixed height these fields tells kid how much free space parent has for the margin collapsed with kid
@@ -74,6 +76,7 @@ namespace iText.Layout.Margincollapse {
             this.bufferSpaceOnBottom = 0;
             this.usedBufferSpaceOnTop = 0;
             this.usedBufferSpaceOnBottom = 0;
+            this.clearanceApplied = false;
         }
 
         internal MarginsCollapseInfo(bool ignoreOwnMarginTop, bool ignoreOwnMarginBottom, MarginsCollapse collapseBefore
@@ -87,6 +90,7 @@ namespace iText.Layout.Margincollapse {
             this.bufferSpaceOnBottom = 0;
             this.usedBufferSpaceOnTop = 0;
             this.usedBufferSpaceOnBottom = 0;
+            this.clearanceApplied = false;
         }
 
         public virtual void CopyTo(iText.Layout.Margincollapse.MarginsCollapseInfo destInfo) {
@@ -100,6 +104,7 @@ namespace iText.Layout.Margincollapse {
             destInfo.SetBufferSpaceOnBottom(bufferSpaceOnBottom);
             destInfo.SetUsedBufferSpaceOnTop(usedBufferSpaceOnTop);
             destInfo.SetUsedBufferSpaceOnBottom(usedBufferSpaceOnBottom);
+            destInfo.SetClearanceApplied(clearanceApplied);
         }
 
         internal virtual MarginsCollapse GetCollapseBefore() {
@@ -168,6 +173,14 @@ namespace iText.Layout.Margincollapse {
 
         internal virtual void SetUsedBufferSpaceOnBottom(float usedBufferSpaceOnBottom) {
             this.usedBufferSpaceOnBottom = usedBufferSpaceOnBottom;
+        }
+
+        public virtual bool IsClearanceApplied() {
+            return clearanceApplied;
+        }
+
+        internal virtual void SetClearanceApplied(bool clearanceApplied) {
+            this.clearanceApplied = clearanceApplied;
         }
     }
 }
