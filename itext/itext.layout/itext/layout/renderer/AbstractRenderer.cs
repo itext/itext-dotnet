@@ -1343,7 +1343,7 @@ namespace iText.Layout.Renderer {
                 float childrenMaxWidthWithEps = minMaxWidth.GetChildrenMaxWidth() + EPS;
                 // TODO adding eps in order to workaround precision issues
                 if (childrenMaxWidthWithEps > parentBBox.GetWidth()) {
-                    childrenMaxWidthWithEps = parentBBox.GetWidth();
+                    childrenMaxWidthWithEps = parentBBox.GetWidth() - minMaxWidth.GetAdditionalWidth() + EPS;
                 }
                 floatElemWidth = childrenMaxWidthWithEps + minMaxWidth.GetAdditionalWidth();
                 blockWidth = childrenMaxWidthWithEps;
