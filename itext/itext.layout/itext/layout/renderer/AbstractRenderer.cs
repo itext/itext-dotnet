@@ -1220,11 +1220,9 @@ namespace iText.Layout.Renderer {
         /// <summary>This method removes unnecessary float renderer areas.</summary>
         /// <param name="floatRendererAreas"/>
         internal virtual void RemoveUnnecessaryFloatRendererAreas(IList<Rectangle> floatRendererAreas) {
-            // TODO floats inside floats should be supported better on different level
-            if (!HasProperty(Property.FLOAT) && !parent.HasProperty(Property.FLOAT)) {
+            if (!IsRendererFloating(this)) {
                 for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
-                    Rectangle floatRendererArea = floatRendererAreas[i];
-                    if (floatRendererArea.GetY() >= occupiedArea.GetBBox().GetY()) {
+                    if (floatRendererAreas[i].GetY() >= occupiedArea.GetBBox().GetY()) {
                         floatRendererAreas.JRemoveAt(i);
                     }
                 }
