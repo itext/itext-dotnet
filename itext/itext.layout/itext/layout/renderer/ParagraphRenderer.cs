@@ -90,6 +90,10 @@ namespace iText.Layout.Renderer {
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            float? blockWidth = null;
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) == null || floatPropertyValue != null) {
+                blockWidth = RetrieveWidth(parentBBox.GetWidth());
+            }
             if (floatPropertyValue != null) {
                 if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
                     SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
@@ -105,13 +109,11 @@ namespace iText.Layout.Renderer {
                 currentRenderer = null;
             }
             bool isPositioned = IsPositioned();
-            float? blockWidth;
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
-                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
-            }
-            else {
-                blockWidth = RetrieveWidth(parentBBox.GetWidth());
+                if (floatPropertyValue == null) {
+                    blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
+                }
             }
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
