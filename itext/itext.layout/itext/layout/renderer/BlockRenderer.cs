@@ -184,6 +184,9 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
+                                if (IsRendererFloating(this) || isCellRenderer) {
+                                    IncludeChildFloatsInOccupiedArea(floatRendererAreas);
+                                }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
@@ -327,7 +330,7 @@ namespace iText.Layout.Renderer {
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this) || isCellRenderer) {
                 IncludeChildFloatsInOccupiedArea(floatRendererAreas);
             }
             IRenderer overflowRenderer_1 = null;
@@ -496,23 +499,45 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void ApplyVerticalAlignment() {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
-            if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers.Count > 0) {
-                LayoutArea lastChildOccupiedArea = childRenderers[childRenderers.Count - 1].GetOccupiedArea();
-                float deltaY = lastChildOccupiedArea.GetBBox().GetY() - GetInnerAreaBBox().GetY();
-                switch (verticalAlignment) {
-                    case VerticalAlignment.BOTTOM: {
-                        foreach (IRenderer child in childRenderers) {
-                            child.Move(0, -deltaY);
-                        }
+            if (verticalAlignment == null || verticalAlignment == VerticalAlignment.TOP || childRenderers.IsEmpty()) {
+                return;
+            }
+            float lowestChildBottom = float.MaxValue;
+            if (IsRendererFloating(this) || this is CellRenderer) {
+                // include floats in vertical alignment
+                foreach (IRenderer child in childRenderers) {
+                    if (child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
+                        lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
+                    }
+                }
+            }
+            else {
+                int lastChildIndex = childRenderers.Count - 1;
+                while (lastChildIndex >= 0) {
+                    IRenderer child = childRenderers[lastChildIndex--];
+                    if (!IsRendererFloating(child)) {
+                        lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
                         break;
                     }
+                }
+            }
+            if (lowestChildBottom == float.MaxValue) {
+                return;
+            }
+            float deltaY = lowestChildBottom - GetInnerAreaBBox().GetY();
+            switch (verticalAlignment) {
+                case VerticalAlignment.BOTTOM: {
+                    foreach (IRenderer child in childRenderers) {
+                        child.Move(0, -deltaY);
+                    }
+                    break;
+                }
 
-                    case VerticalAlignment.MIDDLE: {
-                        foreach (IRenderer child in childRenderers) {
-                            child.Move(0, -deltaY / 2);
-                        }
-                        break;
+                case VerticalAlignment.MIDDLE: {
+                    foreach (IRenderer child in childRenderers) {
+                        child.Move(0, -deltaY / 2);
                     }
+                    break;
                 }
             }
         }

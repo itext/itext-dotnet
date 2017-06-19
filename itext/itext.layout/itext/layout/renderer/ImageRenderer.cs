@@ -106,7 +106,7 @@ namespace iText.Layout.Renderer {
                 AdjustFloatedBlockLayoutBox(layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue);
             }
             else {
-                // TODO what if image not fitting because of width and floats on line? pass image width here just as with table??
+                // TODO what if image not fitting because of width and floats on line? pass image width here just as with table?
                 AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             }
             this.width = retrievedWidth;
