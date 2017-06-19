@@ -1417,9 +1417,15 @@ namespace iText.Layout.Renderer {
 
         internal virtual MinMaxWidth CalculateMinMaxWidthForFloat(iText.Layout.Renderer.AbstractRenderer renderer, 
             FloatPropertyValue? floatPropertyVal) {
-            SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
+            bool floatPropIsRendererOwn = renderer.HasOwnProperty(Property.FLOAT);
+            renderer.SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
             MinMaxWidth kidMinMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
-            SetProperty(Property.FLOAT, floatPropertyVal);
+            if (floatPropIsRendererOwn) {
+                renderer.SetProperty(Property.FLOAT, floatPropertyVal);
+            }
+            else {
+                renderer.DeleteOwnProperty(Property.FLOAT);
+            }
             return kidMinMaxWidth;
         }
 
