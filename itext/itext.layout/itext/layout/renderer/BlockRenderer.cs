@@ -80,8 +80,8 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
-                );
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
+            ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection);
             if (IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
@@ -384,7 +384,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyVerticalAlignment();
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(layoutContext.GetFloatRendererAreas(), layoutContext
+            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(layoutContext.GetFloatRendererAreas(), layoutContext
                 .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
                 // TODO anything like this on any other floated renderer?

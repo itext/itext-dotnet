@@ -100,14 +100,15 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (IsRendererFloating(this, floatPropertyValue)) {
+                layoutBox.DecreaseHeight(clearHeightCorrection);
                 AdjustFloatedBlockLayoutBox(layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue);
             }
             else {
-                // TODO what if image not fitting because of width and floats on line? pass image width here just as with table?
-                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+                clearHeightCorrection = AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth, clearHeightCorrection
+                    , null);
             }
             this.width = retrievedWidth;
             height = RetrieveHeight();
@@ -243,8 +244,8 @@ namespace iText.Layout.Renderer {
                 }
             }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                (), clearHeightCorrection, false);
+            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(floatRendererAreas, layoutContext.GetArea
+                ().GetBBox(), clearHeightCorrection, false);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

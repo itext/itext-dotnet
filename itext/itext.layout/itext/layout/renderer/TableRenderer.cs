@@ -221,14 +221,15 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
             IList<Rectangle> siblingFloatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox, marginsCollapseHandler
-                );
+            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (IsRendererFloating(this, floatPropertyValue)) {
+                layoutBox.DecreaseHeight(clearHeightCorrection);
                 AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas);
             }
             else {
-                AdjustLineAreaAccordingToFloatRenderers(siblingFloatRendererAreas, layoutBox, tableWidth);
+                clearHeightCorrection = AdjustLayoutBoxAccordingToFloats(siblingFloatRendererAreas, layoutBox, tableWidth, 
+                    clearHeightCorrection, marginsCollapseHandler);
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(layoutBox);
@@ -316,7 +317,6 @@ namespace iText.Layout.Renderer {
             IList<bool> rowsHasCellWithSetHeight = new List<bool>();
             for (row = 0; row < rows.Count; row++) {
                 IList<Rectangle> childFloatRendererAreas = new List<Rectangle>();
-                // TODO may be revert it
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
                 if (row == 1 && true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
@@ -888,8 +888,8 @@ namespace iText.Layout.Renderer {
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             RemoveUnnecessaryFloatRendererAreas(siblingFloatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(siblingFloatRendererAreas, layoutContext.GetArea()
-                .GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(siblingFloatRendererAreas, layoutContext.
+                GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 

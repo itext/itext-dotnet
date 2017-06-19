@@ -96,8 +96,8 @@ namespace iText.Layout.Renderer {
             bool notAllKidsAreFloats = false;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
-                );
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
+            ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection);
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
@@ -428,7 +428,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(layoutContext.GetFloatRendererAreas(), layoutContext
+            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(layoutContext.GetFloatRendererAreas(), layoutContext
                 .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth

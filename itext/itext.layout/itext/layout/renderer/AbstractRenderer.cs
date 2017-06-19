@@ -1234,8 +1234,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, Rectangle
-             parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
+        internal virtual LayoutArea AdjustResultOccupiedAreaForFloatAndClear(IList<Rectangle> floatRendererAreas, 
+            Rectangle parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
             LayoutArea editedArea = occupiedArea;
             if (IsRendererFloating(this)) {
                 editedArea = occupiedArea.Clone();
@@ -1265,13 +1265,14 @@ namespace iText.Layout.Renderer {
             bBox.SetHeight(bBox.GetTop() - lowestFloatBottom).SetY(lowestFloatBottom);
         }
 
-        internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
-             layoutBox) {
-            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, null);
+        internal virtual void AdjustLineAreaAccordingToFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
+            ) {
+            AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, null, 0, null);
         }
 
-        internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
-             layoutBox, float? tableWidth) {
+        internal virtual float AdjustLayoutBoxAccordingToFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
+            , float? boxWidth, float clearHeightCorrection, MarginsCollapseHandler marginsCollapseHandler) {
+            float topShift = clearHeightCorrection;
             float left;
             float right;
             Rectangle[] lastLeftAndRightBoxes = null;
@@ -1279,23 +1280,27 @@ namespace iText.Layout.Renderer {
                 if (lastLeftAndRightBoxes != null) {
                     float bottomLeft = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetBottom() : float.MaxValue;
                     float bottomRight = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetBottom() : float.MaxValue;
-                    layoutBox.SetHeight(Math.Min(bottomLeft, bottomRight) - layoutBox.GetY());
+                    float updatedHeight = Math.Min(bottomLeft, bottomRight) - layoutBox.GetY();
+                    topShift = layoutBox.GetHeight() - updatedHeight;
                 }
-                IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop());
+                IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop() - topShift);
                 if (boxesAtYLevel.IsEmpty()) {
-                    return;
+                    ApplyClearance(layoutBox, marginsCollapseHandler, topShift);
+                    return topShift;
                 }
                 lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
                 left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
                 right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
             }
-            while (tableWidth != null && tableWidth > right - left);
+            while (boxWidth != null && boxWidth > right - left);
             if (layoutBox.GetLeft() < left) {
                 layoutBox.SetX(left);
             }
             if (layoutBox.GetRight() > right && layoutBox.GetLeft() <= right) {
                 layoutBox.SetWidth(right - layoutBox.GetLeft());
             }
+            ApplyClearance(layoutBox, marginsCollapseHandler, topShift);
+            return topShift;
         }
 
         internal virtual float? CalculateLineShiftUnderFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
@@ -1455,7 +1460,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual float CalculateClearHeightCorrection(IList<Rectangle> floatRendererAreas, Rectangle parentBBox
-            , MarginsCollapseHandler marginsCollapseHandler) {
+            ) {
             ClearPropertyValue? clearPropertyValue = this.GetProperty<ClearPropertyValue?>(Property.CLEAR);
             float clearHeightCorrection = 0;
             if (clearPropertyValue == null || floatRendererAreas.IsEmpty()) {
@@ -1489,14 +1494,21 @@ namespace iText.Layout.Renderer {
             }
             if (lowestFloatBottom < float.MaxValue) {
                 clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
-                if (IsRendererFloating(this) || marginsCollapseHandler == null) {
-                    parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY());
-                }
-                else {
-                    marginsCollapseHandler.ApplyClearance(clearHeightCorrection);
-                }
             }
             return clearHeightCorrection;
+        }
+
+        internal virtual void ApplyClearance(Rectangle layoutBox, MarginsCollapseHandler marginsCollapseHandler, float
+             clearHeightAdjustment) {
+            if (clearHeightAdjustment <= 0) {
+                return;
+            }
+            if (marginsCollapseHandler == null || IsRendererFloating(this)) {
+                layoutBox.DecreaseHeight(clearHeightAdjustment);
+            }
+            else {
+                marginsCollapseHandler.ApplyClearance(clearHeightAdjustment);
+            }
         }
 
         internal static bool IsRendererFloating(IRenderer renderer) {

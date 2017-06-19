@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             if (floatRendererAreas != null) {
-                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+                AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
@@ -356,8 +356,9 @@ namespace iText.Layout.Renderer {
                             LineRenderer[] split = Split();
                             split[0].childRenderers.AddAll(childRenderers.SubList(0, childPos));
                             split[0].childRenderers.RemoveAll(overflowFloats);
+                            // If result variable is null up until now but not everything was placed - there is no
+                            // content overflow, only floats are overflowing.
                             split[1].childRenderers.AddAll(overflowFloats);
-                            // TODO what about childRenderers.subList ?
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                         }
                         else {
@@ -696,7 +697,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // TODO move prev kids?.. or may be they are reordered later? occupied area?
+        // TODO
         private IRenderer GetLastChildRenderer() {
             return childRenderers[childRenderers.Count - 1];
         }
