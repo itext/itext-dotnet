@@ -1189,9 +1189,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            float? height = this.GetProperty<float?>(Property.HEIGHT);
-            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
-            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            float? height = this.GetPropertyAsFloat(Property.HEIGHT);
+            float? maxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
+            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
             if (null != height) {
                 if (null == maxHeight || height < maxHeight) {
                     maxHeight = height;
