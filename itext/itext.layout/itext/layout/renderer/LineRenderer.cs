@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             if (floatRendererAreas != null) {
-                AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
+                FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
@@ -141,12 +141,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 FloatPropertyValue? kidFloatPropertyVal = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                bool isChildFloating = childRenderer is AbstractRenderer && IsRendererFloating(childRenderer, kidFloatPropertyVal
-                    );
+                bool isChildFloating = childRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(childRenderer
+                    , kidFloatPropertyVal);
                 if (isChildFloating) {
                     childResult = null;
-                    MinMaxWidth kidMinMaxWidth = CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, kidFloatPropertyVal
-                        );
+                    MinMaxWidth kidMinMaxWidth = FloatingHelper.CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, 
+                        kidFloatPropertyVal);
                     float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth() + kidMinMaxWidth.GetAdditionalWidth();
                     // TODO width will be recalculated on float layout;
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
@@ -605,7 +605,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual LineRenderer AdjustChildrenYLine() {
             float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
             foreach (IRenderer renderer in childRenderers) {
-                if (IsRendererFloating(renderer)) {
+                if (FloatingHelper.IsRendererFloating(renderer)) {
                     continue;
                 }
                 if (renderer is ILeafElementRenderer) {
@@ -622,7 +622,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyLeading(float deltaY) {
             occupiedArea.GetBBox().MoveUp(deltaY);
             foreach (IRenderer child in childRenderers) {
-                if (!IsRendererFloating(child)) {
+                if (!FloatingHelper.IsRendererFloating(child)) {
                     child.Move(0, deltaY);
                 }
             }
@@ -634,7 +634,7 @@ namespace iText.Layout.Renderer {
             IRenderer lastRenderer = null;
             while (--lastIndex >= 0) {
                 lastRenderer = childRenderers[lastIndex];
-                if (!IsRendererFloating(lastRenderer)) {
+                if (!FloatingHelper.IsRendererFloating(lastRenderer)) {
                     break;
                 }
             }
@@ -684,7 +684,7 @@ namespace iText.Layout.Renderer {
                 if (ltr) {
                     for (int i = 0; i < childPos; ++i) {
                         IRenderer prevChild = childRenderers[i];
-                        if (!IsRendererFloating(prevChild)) {
+                        if (!FloatingHelper.IsRendererFloating(prevChild)) {
                             prevChild.GetOccupiedArea().GetBBox().MoveRight(floatWidth);
                         }
                     }
@@ -813,7 +813,7 @@ namespace iText.Layout.Renderer {
         private int TrimFirst() {
             int totalNumberOfTrimmedGlyphs = 0;
             foreach (IRenderer renderer in childRenderers) {
-                if (IsRendererFloating(renderer)) {
+                if (FloatingHelper.IsRendererFloating(renderer)) {
                     continue;
                 }
                 if (renderer is TextRenderer) {

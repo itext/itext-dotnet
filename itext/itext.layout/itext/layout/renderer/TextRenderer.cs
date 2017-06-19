@@ -149,8 +149,8 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (IsRendererFloating(this, floatPropertyValue)) {
-                AdjustFloatedBlockLayoutBox(layoutBox, null, floatRendererAreas, floatPropertyValue);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
             }
             float[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
@@ -444,7 +444,7 @@ namespace iText.Layout.Renderer {
                     result.SetStatus(LayoutResult.FULL);
                 }
             }
-            if (IsRendererFloating(this, floatPropertyValue)) {
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 if (result.GetStatus() == LayoutResult.FULL) {
                     if (occupiedArea.GetBBox().GetWidth() > 0) {
                         floatRendererAreas.Add(occupiedArea.GetBBox());

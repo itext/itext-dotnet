@@ -80,10 +80,13 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
-            ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection);
-            if (IsRendererFloating(this, floatPropertyValue)) {
-                blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, parentBBox
+                );
+            FloatingHelper.ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection, FloatingHelper.IsRendererFloating
+                (this));
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                blockWidth = FloatingHelper.AdjustFloatedBlockLayoutBox(this, parentBBox, blockWidth, floatRendererAreas, 
+                    floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
             bool isCellRenderer = this is CellRenderer;
@@ -184,8 +187,8 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
-                                if (IsRendererFloating(this) || isCellRenderer) {
-                                    IncludeChildFloatsInOccupiedArea(floatRendererAreas);
+                                if (FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
+                                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
                                 }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -301,7 +304,7 @@ namespace iText.Layout.Renderer {
                 }
                 anythingPlaced = true;
                 if (result.GetOccupiedArea() != null) {
-                    if (!IsRendererFloating(childRenderer)) {
+                    if (!FloatingHelper.IsRendererFloating(childRenderer)) {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
@@ -330,8 +333,8 @@ namespace iText.Layout.Renderer {
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
-            if (IsRendererFloating(this) || isCellRenderer) {
-                IncludeChildFloatsInOccupiedArea(floatRendererAreas);
+            if (FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
+                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
             }
             IRenderer overflowRenderer_1 = null;
             float? blockMinHeight = RetrieveMinHeight();
@@ -383,9 +386,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyVerticalAlignment();
-            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(layoutContext.GetFloatRendererAreas(), layoutContext
-                .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
                 // TODO anything like this on any other floated renderer?
                 Document document = GetDocument();
@@ -503,7 +506,7 @@ namespace iText.Layout.Renderer {
                 return;
             }
             float lowestChildBottom = float.MaxValue;
-            if (IsRendererFloating(this) || this is CellRenderer) {
+            if (FloatingHelper.IsRendererFloating(this) || this is CellRenderer) {
                 // include floats in vertical alignment
                 foreach (IRenderer child in childRenderers) {
                     if (child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
@@ -515,7 +518,7 @@ namespace iText.Layout.Renderer {
                 int lastChildIndex = childRenderers.Count - 1;
                 while (lastChildIndex >= 0) {
                     IRenderer child = childRenderers[lastChildIndex--];
-                    if (!IsRendererFloating(child)) {
+                    if (!FloatingHelper.IsRendererFloating(child)) {
                         lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
                         break;
                     }

@@ -100,15 +100,17 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
+                );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (IsRendererFloating(this, floatPropertyValue)) {
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 layoutBox.DecreaseHeight(clearHeightCorrection);
-                AdjustFloatedBlockLayoutBox(layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue);
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue
+                    );
             }
             else {
-                clearHeightCorrection = AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth, clearHeightCorrection
-                    , null);
+                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth
+                    , clearHeightCorrection, null);
             }
             this.width = retrievedWidth;
             height = RetrieveHeight();
@@ -243,9 +245,9 @@ namespace iText.Layout.Renderer {
                     minMaxWidth.SetChildrenMinWidth(0);
                 }
             }
-            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(floatRendererAreas, layoutContext.GetArea
-                ().GetBBox(), clearHeightCorrection, false);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, floatRendererAreas, 
+                layoutContext.GetArea().GetBBox(), clearHeightCorrection, false);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

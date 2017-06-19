@@ -96,11 +96,14 @@ namespace iText.Layout.Renderer {
             bool notAllKidsAreFloats = false;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
-            ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection);
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, parentBBox
+                );
+            FloatingHelper.ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection, FloatingHelper.IsRendererFloating
+                (this));
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            if (IsRendererFloating(this, floatPropertyValue)) {
-                blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                blockWidth = FloatingHelper.AdjustFloatedBlockLayoutBox(this, parentBBox, blockWidth, floatRendererAreas, 
+                    floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
             if (0 == childRenderers.Count) {
@@ -145,7 +148,7 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = areas[0].Clone();
             lines = new List<LineRenderer>();
             foreach (IRenderer child in childRenderers) {
-                notAllKidsAreFloats = notAllKidsAreFloats || !IsRendererFloating(child);
+                notAllKidsAreFloats = notAllKidsAreFloats || !FloatingHelper.IsRendererFloating(child);
                 currentRenderer.AddChild(child);
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
@@ -167,7 +170,7 @@ namespace iText.Layout.Renderer {
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas)));
                 if (result.GetStatus() == LayoutResult.NOTHING) {
-                    float? lineShiftUnderFloats = CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
+                    float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
                         layoutBox.DecreaseHeight(lineShiftUnderFloats);
                         firstLineInBox = true;
@@ -352,8 +355,8 @@ namespace iText.Layout.Renderer {
                 }
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
-            if (IsRendererFloating(this, floatPropertyValue)) {
-                IncludeChildFloatsInOccupiedArea(floatRendererAreas);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
             }
             float moveDown = Math.Min((lastLineLeading - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox
                 .GetY());
@@ -393,9 +396,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(layoutContext.GetFloatRendererAreas(), layoutContext
-                .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, null).SetMinMaxWidth(minMaxWidth
                     );

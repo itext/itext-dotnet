@@ -221,15 +221,17 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
             IList<Rectangle> siblingFloatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox);
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, siblingFloatRendererAreas
+                , layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (IsRendererFloating(this, floatPropertyValue)) {
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 layoutBox.DecreaseHeight(clearHeightCorrection);
-                AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas);
+                FloatingHelper.AdjustFloatedTableLayoutBox(this, layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue
+                    );
             }
             else {
-                clearHeightCorrection = AdjustLayoutBoxAccordingToFloats(siblingFloatRendererAreas, layoutBox, tableWidth, 
-                    clearHeightCorrection, marginsCollapseHandler);
+                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(siblingFloatRendererAreas, layoutBox
+                    , tableWidth, clearHeightCorrection, marginsCollapseHandler);
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(layoutBox);
@@ -887,9 +889,9 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            RemoveUnnecessaryFloatRendererAreas(siblingFloatRendererAreas);
-            LayoutArea editedArea = AdjustResultOccupiedAreaForFloatAndClear(siblingFloatRendererAreas, layoutContext.
-                GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+                , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
