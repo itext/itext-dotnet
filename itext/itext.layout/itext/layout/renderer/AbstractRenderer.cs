@@ -1321,8 +1321,11 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void AdjustFloatedTableLayoutBox(Rectangle layoutBox, float? tableWidth, IList<Rectangle>
-             floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
-            AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth);
+             floatRendererAreas) {
+            SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
+            float[] margins = GetMargins();
+            AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1] + margins[
+                3]);
         }
 
         internal virtual float? AdjustFloatedBlockLayoutBox(Rectangle parentBBox, float? blockWidth, IList<Rectangle
@@ -1352,8 +1355,8 @@ namespace iText.Layout.Renderer {
             return blockWidth;
         }
 
-        internal virtual void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
-             layoutBox, float blockWidth) {
+        private void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
+            , float blockWidth) {
             bool isFloatLeft = FloatPropertyValue.LEFT.Equals(this.GetProperty<FloatPropertyValue?>(Property.FLOAT));
             if (floatRendererAreas.IsEmpty()) {
                 if (!isFloatLeft) {

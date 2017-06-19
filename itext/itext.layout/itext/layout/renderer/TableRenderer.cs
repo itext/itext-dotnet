@@ -225,7 +225,7 @@ namespace iText.Layout.Renderer {
                 );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (IsRendererFloating(this, floatPropertyValue)) {
-                AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue);
+                AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas);
             }
             else {
                 AdjustLineAreaAccordingToFloatRenderers(siblingFloatRendererAreas, layoutBox, tableWidth);
