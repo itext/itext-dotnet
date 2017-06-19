@@ -197,11 +197,8 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("block level floating elements page-overflow and splitting not supported yet")]
         public virtual void FloatDivTest03() {
-            //
-            // TODO probably we shouldn't review forced placement applying on floated elements
-            // May be check if there are any floated elements already on page
-            //
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
             String outFile = destinationFolder + "floatDivTest03.pdf";
             PdfWriter writer = new PdfWriter(outFile);
@@ -260,7 +257,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1254")]
+        [NUnit.Framework.Ignore("block level floating elements page-overflow and splitting not supported yet")]
         public virtual void FloatingImageToNextPage() {
             String cmpFileName = sourceFolder + "cmp_floatingImageToNextPage.pdf";
             String outFile = destinationFolder + "floatingImageToNextPage.pdf";
@@ -287,7 +284,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1254")]
         public virtual void InlineFloatingImageToNextPage() {
             String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
             String outFile = destinationFolder + "inlineFloatingImageToNextPage.pdf";
@@ -315,7 +311,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1254")]
         public virtual void FloatingTwoImages() {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImages.pdf";
             String outFile = destinationFolder + "floatingTwoImages.pdf";
@@ -340,7 +335,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1254")]
         public virtual void FloatingTwoImagesLR() {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImagesLR.pdf";
             String outFile = destinationFolder + "floatingTwoImagesLR.pdf";
@@ -365,7 +359,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1254")]
         public virtual void FloatingImageInParagraph() {
             String cmpFileName = sourceFolder + "cmp_floatingImageInParagraph.pdf";
             String outFile = destinationFolder + "floatingImageInParagraph.pdf";
@@ -379,7 +372,7 @@ namespace iText.Layout {
             Paragraph p = new Paragraph();
             p.Add(img1).Add(text);
             document.Add(p);
-            // Image floats on the right inside the paragraph - BROKEN
+            // Image floats on the right inside the paragraph
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
             img2.SetMarginLeft(10);
