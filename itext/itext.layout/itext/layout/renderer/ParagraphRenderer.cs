@@ -100,7 +100,6 @@ namespace iText.Layout.Renderer {
                 );
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (IsRendererFloating(this, floatPropertyValue)) {
-                // TODO may be remove width setting, as parentBBox width is adjusted instead
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
@@ -260,12 +259,7 @@ namespace iText.Layout.Renderer {
                 // could be false if e.g. line contains only floats
                 bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
-                float floatsDeltaY = 0;
                 if (!doesNotFit) {
-                    if (!firstLineInBox) {
-                        floatsDeltaY = -lastLineLeading / 2;
-                    }
-                    // TODO review
                     if (lineHasContent) {
                         lastLineLeading = leadingValue;
                         lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
@@ -369,8 +363,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (leading != null) {
-                        processedRenderer.ApplyLeading(deltaY, floatsDeltaY);
-                        // TODO for floats, leading check on page overflow is not checked
+                        processedRenderer.ApplyLeading(deltaY);
                         if (lineHasContent) {
                             lastYLine = processedRenderer.GetYLine();
                         }
@@ -393,8 +386,7 @@ namespace iText.Layout.Renderer {
                 }
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                // TODO review?
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 IncludeChildFloatsInOccupiedArea(floatRendererAreas);
             }
             float moveDown = Math.Min((lastLineLeading - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox

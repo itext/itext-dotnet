@@ -83,7 +83,6 @@ namespace iText.Layout.Renderer {
             bool anythingPlaced = false;
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
-            // TODO may be merge with anythingPlaced
             bool floatsPlaced = false;
             IList<IRenderer> overflowFloats = new List<IRenderer>();
             int lastTabIndex = 0;
@@ -149,9 +148,10 @@ namespace iText.Layout.Renderer {
                     MinMaxWidth kidMinMaxWidth = CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, kidFloatPropertyVal
                         );
                     float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth() + kidMinMaxWidth.GetAdditionalWidth();
-                    // TODO width will be recalculated on float layout; also not setting it results in differences with html, when floating span is split on other line
+                    // TODO width will be recalculated on float layout;
+                    // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
+                    // when floating span is split on other line;
                     // TODO may be process floating spans as inline blocks always?
-                    //                childRenderer.setProperty(Property.WIDTH, UnitValue.createPointValue(kidMinMaxWidth.getMaxWidth()));
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                             ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas));
@@ -172,6 +172,7 @@ namespace iText.Layout.Renderer {
                             minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
                                 );
                         }
+                        // TODO if percents width was used, max width might be huge
                         maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
                             );
                     }
@@ -184,14 +185,13 @@ namespace iText.Layout.Renderer {
                         if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                             floatsPlaced = true;
                             LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
-                            IRenderer splitRenderer = split[0].GetChildRenderers()[split[0].GetChildRenderers().Count - 1];
+                            IRenderer splitRenderer = childResult.GetSplitRenderer();
                             if (splitRenderer is TextRenderer) {
                                 ((TextRenderer)splitRenderer).TrimFirst();
                                 ((TextRenderer)splitRenderer).TrimLast();
                             }
                             // ensure no other thing (like text wrapping the float) will occupy the line
                             splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
-                            // TODO we might want to preserve width for the overflow renderer
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                             break;
                         }
@@ -307,10 +307,6 @@ namespace iText.Layout.Renderer {
                             split[0].AddChild(childResult.GetSplitRenderer());
                             anythingPlaced = true;
                         }
-                        // TODO it seems that if overflow renderer is image, layout result cannot be PARTIAL
-                        //                    if (childResult.getStatus() == LayoutResult.PARTIAL && childResult.getOverflowRenderer() instanceof ImageRenderer) {
-                        //                        ((ImageRenderer) childResult.getOverflowRenderer()).autoScale(layoutContext.getArea());
-                        //                    }
                         if (null != childResult.GetOverflowRenderer()) {
                             split[1].childRenderers.Add(childResult.GetOverflowRenderer());
                         }
@@ -361,6 +357,7 @@ namespace iText.Layout.Renderer {
                             split[0].childRenderers.AddAll(childRenderers.SubList(0, childPos));
                             split[0].childRenderers.RemoveAll(overflowFloats);
                             split[1].childRenderers.AddAll(overflowFloats);
+                            // TODO what about childRenderers.subList ?
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                         }
                         else {
@@ -469,19 +466,6 @@ namespace iText.Layout.Renderer {
                 processed.AdjustChildrenYLine().TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
-            else {
-                if (floatRendererAreas.Count > 0) {
-                }
-            }
-            // TODO what do we do here? TEST inline with big height?
-            //            float maxFloatHeight = 0;
-            //            for (Rectangle floatRenderer : floatRendererAreas) {
-            //                if (floatRenderer.getRight() == occupiedArea.getBBox().getLeft() && floatRenderer.getTop() >= occupiedArea.getBBox().getY() && maxFloatHeight < floatRenderer.getHeight()) {
-            //                    maxFloatHeight = floatRenderer.getHeight();
-            //                }
-            //            }
-            //            processed.getOccupiedArea().getBBox().setHeight(maxFloatHeight);
-            //            processed.getOccupiedArea().getBBox().moveDown(maxFloatHeight); // TODO move down on complete height? what's with line height when it contains floats? if it's empty?
             return result;
         }
 
@@ -634,8 +618,7 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        // TODO review this method
-        protected internal virtual void ApplyLeading(float deltaY, float floatsDeltaY) {
+        protected internal virtual void ApplyLeading(float deltaY) {
             occupiedArea.GetBBox().MoveUp(deltaY);
             foreach (IRenderer child in childRenderers) {
                 if (!IsRendererFloating(child)) {
@@ -644,7 +627,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        //                child.move(0, floatsDeltaY); // TODO
+        // TODO for floats we don't apply any leading for the moment (and therefore line-height for pdf2html is not entirely supported in terms of floats)
         protected internal virtual LineRenderer TrimLast() {
             int lastIndex = childRenderers.Count;
             IRenderer lastRenderer = null;
@@ -680,10 +663,7 @@ namespace iText.Layout.Renderer {
             LineRenderer[] split = Split();
             split[0].childRenderers.AddAll(childRenderers.SubList(0, childPos));
             split[0].childRenderers.Add(childResult.GetSplitRenderer());
-            IRenderer overflowFloatPart = childResult.GetOverflowRenderer();
-            // TODO not working at the moment
-            //                    overflowFloatPart.setProperty(Property.WIDTH, childResult.getOccupiedArea().getBBox().getWidth());
-            split[1].childRenderers.Add(overflowFloatPart);
+            split[1].childRenderers.Add(childResult.GetOverflowRenderer());
             split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
             return split;
         }

@@ -175,7 +175,7 @@ namespace iText.Layout.Margincollapse {
             this.usedBufferSpaceOnBottom = usedBufferSpaceOnBottom;
         }
 
-        public virtual bool IsClearanceApplied() {
+        internal virtual bool IsClearanceApplied() {
             return clearanceApplied;
         }
 

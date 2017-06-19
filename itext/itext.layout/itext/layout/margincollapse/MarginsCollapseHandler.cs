@@ -164,7 +164,6 @@ namespace iText.Layout.Margincollapse {
                 collapseInfo.SetSelfCollapsing(false);
             }
             if (prevChildMarginInfo != null) {
-                // TODO check this in develop
                 FixPrevChildOccupiedArea(childIndex);
                 UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetOwnCollapseAfter());
             }
@@ -419,7 +418,14 @@ namespace iText.Layout.Margincollapse {
             ApplyTopMargin(layoutBox, indentTop);
         }
 
-        // TODO In general, this also should be taken into account when layouting every next kid and assuming it's the last one on page.
+        // Actually, this should be taken into account when layouting a kid and assuming it's the last one on page.
+        // However it's not feasible, because
+        // - before kid layout, we don't know if it's self-collapsing or if we have applied clearance to it;
+        // - this might be very difficult to correctly change kid and parent occupy area, based on if it's
+        // the last kid on page or not;
+        // - in the worst case scenario (which is kinda rare) page last kid (self-collapsed and with clearance)
+        // margin applying would result in margins page overflow, which will not be visible except
+        // margins would be visually less than expected.
         private void ApplySelfCollapsedKidMarginWithClearance(Rectangle layoutBox) {
             // Self-collapsed kid margin with clearance will not be applied to parent top margin
             // if parent is not self-collapsing. It's self-collapsing kid, thus we just can

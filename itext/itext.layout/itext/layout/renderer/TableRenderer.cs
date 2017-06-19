@@ -542,7 +542,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, childFloatRendererAreas);
-                // TODO seems to not work correctly always
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -889,7 +888,6 @@ namespace iText.Layout.Renderer {
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             RemoveUnnecessaryFloatRendererAreas(siblingFloatRendererAreas);
-            // TODO parent floats? it seems inconsistent at the moment
             LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(siblingFloatRendererAreas, layoutContext.GetArea()
                 .GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
@@ -1324,9 +1322,6 @@ namespace iText.Layout.Renderer {
 
         private float CalculateRowHeightIfFloatRendererPresent(float rowHeight, IList<Rectangle> floatRenderers) {
             float maxHeight = 0;
-            if (IsRendererFloating(this)) {
-                return rowHeight;
-            }
             foreach (Rectangle floatRenderer in floatRenderers) {
                 float floatRendererHeight = floatRenderer.GetHeight();
                 if (floatRendererHeight > maxHeight) {
@@ -1336,6 +1331,7 @@ namespace iText.Layout.Renderer {
             return rowHeight + maxHeight;
         }
 
+        // TODO well..
         private void ApplyFixedXOrYPosition(bool isXPosition, Rectangle layoutBox) {
             if (IsPositioned()) {
                 if (IsFixedLayout()) {

@@ -485,12 +485,17 @@ namespace iText.Layout.Renderer {
                         DocumentRenderer documentRenderer = (DocumentRenderer)document.GetRenderer();
                         if (documentRenderer != null) {
                             documentRenderer.waitingDrawingElements.Add(child);
+                            continue;
                         }
                     }
+                    waitingRenderers.Add(child);
                 }
                 else {
                     child.Draw(drawContext);
                 }
+            }
+            foreach (IRenderer waitingRenderer in waitingRenderers) {
+                waitingRenderer.Draw(drawContext);
             }
         }
 
@@ -1234,7 +1239,9 @@ namespace iText.Layout.Renderer {
             LayoutArea editedArea = occupiedArea;
             if (IsRendererFloating(this)) {
                 editedArea = occupiedArea.Clone();
-                floatRendererAreas.Add(occupiedArea.GetBBox());
+                if (occupiedArea.GetBBox().GetWidth() > 0) {
+                    floatRendererAreas.Add(occupiedArea.GetBBox());
+                }
                 editedArea.GetBBox().SetY(parentBBox.GetTop());
                 editedArea.GetBBox().SetHeight(0);
             }
@@ -1298,10 +1305,8 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             Rectangle[] lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
-            float left;
-            float right;
-            left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
-            right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
+            float left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
+            float right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
             if (layoutBox.GetLeft() < left || layoutBox.GetRight() > right) {
                 float maxLastFloatBottom;
                 if (lastLeftAndRightBoxes[0] != null && lastLeftAndRightBoxes[1] != null) {
@@ -1344,7 +1349,6 @@ namespace iText.Layout.Renderer {
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(this, floatPropertyValue);
                 float childrenMaxWidthWithEps = minMaxWidth.GetChildrenMaxWidth() + EPS;
-                // TODO adding eps in order to workaround precision issues
                 if (childrenMaxWidthWithEps > parentBBox.GetWidth()) {
                     childrenMaxWidthWithEps = parentBBox.GetWidth() - minMaxWidth.GetAdditionalWidth() + EPS;
                 }
@@ -1355,6 +1359,7 @@ namespace iText.Layout.Renderer {
             return blockWidth;
         }
 
+        // Float boxes shall be ordered by addition; No zero-width boxes shall be in the list.
         private void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
             , float blockWidth) {
             bool isFloatLeft = FloatPropertyValue.LEFT.Equals(this.GetProperty<FloatPropertyValue?>(Property.FLOAT));
@@ -1364,8 +1369,6 @@ namespace iText.Layout.Renderer {
                 }
                 return;
             }
-            // TODO ensure zero-width boxes are not in the list
-            // TODO float boxes are ordered by addition
             float currY;
             if (floatRendererAreas[floatRendererAreas.Count - 1].GetTop() < layoutBox.GetTop()) {
                 currY = floatRendererAreas[floatRendererAreas.Count - 1].GetTop();
@@ -1409,17 +1412,9 @@ namespace iText.Layout.Renderer {
 
         internal virtual MinMaxWidth CalculateMinMaxWidthForFloat(iText.Layout.Renderer.AbstractRenderer renderer, 
             FloatPropertyValue? floatPropertyVal) {
-            float? minHeightProperty = this.GetProperty<float?>(Property.MIN_HEIGHT);
             SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
             MinMaxWidth kidMinMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
             SetProperty(Property.FLOAT, floatPropertyVal);
-            if (minHeightProperty != null) {
-                SetProperty(Property.MIN_HEIGHT, minHeightProperty);
-            }
-            else {
-                DeleteProperty(Property.MIN_HEIGHT);
-            }
-            // TODO ensure why this bunch of code is used
             return kidMinMaxWidth;
         }
 
