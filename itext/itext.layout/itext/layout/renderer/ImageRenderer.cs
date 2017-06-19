@@ -98,17 +98,19 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            width = RetrieveWidth(layoutBox.GetWidth());
-            height = RetrieveHeight();
+            float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
-                AdjustFloatedBlockLayoutBox(layoutBox, width, floatRendererAreas, floatPropertyValue);
+                AdjustFloatedBlockLayoutBox(layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue);
             }
             else {
+                // TODO what if image not fitting because of width and floats on line? pass image width here just as with table??
                 AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             }
+            this.width = retrievedWidth;
+            height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
