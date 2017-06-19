@@ -77,8 +77,8 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        internal static void AdjustFloatedTableLayoutBox(TableRenderer tableRenderer, Rectangle layoutBox, float? 
-            tableWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
+        internal static void AdjustFloatedTableLayoutBox(TableRenderer tableRenderer, Rectangle layoutBox, float tableWidth
+            , IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
             tableRenderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float[] margins = tableRenderer.GetMargins();
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1] + margins[
@@ -96,7 +96,7 @@ namespace iText.Layout.Renderer {
                 float bordersWidth = (borders[1] != null ? borders[1].GetWidth() : 0) + (borders[3] != null ? borders[3].GetWidth
                     () : 0);
                 float additionalWidth = margins[1] + margins[3] + bordersWidth + paddings[1] + paddings[3];
-                floatElemWidth = blockWidth + additionalWidth;
+                floatElemWidth = (float)blockWidth + additionalWidth;
             }
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(renderer, floatPropertyValue);

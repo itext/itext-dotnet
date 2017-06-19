@@ -172,7 +172,7 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
-                        layoutBox.DecreaseHeight(lineShiftUnderFloats);
+                        layoutBox.DecreaseHeight((float)lineShiftUnderFloats);
                         firstLineInBox = true;
                         continue;
                     }
