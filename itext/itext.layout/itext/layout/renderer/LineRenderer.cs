@@ -174,6 +174,14 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     childPos++;
+                    if (!anythingPlaced && childResult != null && childResult.GetStatus() == LayoutResult.NOTHING && floatRendererAreas
+                        .IsEmpty()) {
+                        if (IsFirstOnRootArea()) {
+                            // Current line is empty, kid returns nothing and neither floats nor content
+                            // were met on root area (e.g. page) - return NOTHING, don't layout other line content, expect FORCED_PLACEMENT to be set.
+                            break;
+                        }
+                    }
                     // TODO width is not restored, moreover, we might set in some cases these widths and want to preserve them for the overflow renderer
                     continue;
                 }
@@ -324,7 +332,7 @@ namespace iText.Layout.Renderer {
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                         }
                         else {
-                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, this);
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, overflowFloats[0]);
                         }
                     }
                 }

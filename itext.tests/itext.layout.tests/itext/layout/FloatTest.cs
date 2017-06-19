@@ -288,6 +288,34 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1254")]
+        public virtual void InlineFloatingImageToNextPage() {
+            String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
+            String outFile = destinationFolder + "inlineFloatingImageToNextPage.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
+                (100, 500);
+            img1.SetMarginLeft(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            img2.SetMarginRight(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(img1);
+            document.Add(new Paragraph(text));
+            document.Add(new Paragraph(text));
+            Paragraph p = new Paragraph();
+            p.Add(img2).Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff08_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1254")]
         public virtual void FloatingTwoImages() {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImages.pdf";
             String outFile = destinationFolder + "floatingTwoImages.pdf";
@@ -306,7 +334,7 @@ namespace iText.Layout {
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff08_"));
+                "diff09_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -331,7 +359,7 @@ namespace iText.Layout {
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff09_"));
+                "diff10_"));
         }
 
         /// <exception cref="System.IO.IOException"/>

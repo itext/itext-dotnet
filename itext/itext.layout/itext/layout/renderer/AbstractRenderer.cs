@@ -1506,6 +1506,25 @@ namespace iText.Layout.Renderer {
             return clearHeightCorrection;
         }
 
+        internal virtual bool IsFirstOnRootArea() {
+            bool isFirstOnRootArea = true;
+            iText.Layout.Renderer.AbstractRenderer ancestor = this;
+            while (isFirstOnRootArea && ancestor.GetParent() != null) {
+                IRenderer parent = ancestor.GetParent();
+                if (parent is RootRenderer) {
+                    isFirstOnRootArea = ((RootRenderer)parent).GetCurrentArea().IsEmptyArea();
+                }
+                else {
+                    isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                }
+                if (!(parent is iText.Layout.Renderer.AbstractRenderer)) {
+                    break;
+                }
+                ancestor = (iText.Layout.Renderer.AbstractRenderer)parent;
+            }
+            return isFirstOnRootArea;
+        }
+
         /// <summary>Tries to get document from the root renderer if there is any.</summary>
         /// <returns/>
         internal virtual Document GetDocument() {
