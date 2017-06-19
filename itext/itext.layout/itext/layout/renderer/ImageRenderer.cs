@@ -107,6 +107,7 @@ namespace iText.Layout.Renderer {
                 ApplyAbsolutePosition(layoutBox);
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
             if (floatPropertyValue != null) {
@@ -119,7 +120,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);

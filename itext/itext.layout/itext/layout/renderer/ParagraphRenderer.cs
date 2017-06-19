@@ -90,6 +90,7 @@ namespace iText.Layout.Renderer {
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
@@ -126,7 +127,6 @@ namespace iText.Layout.Renderer {
                 parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);

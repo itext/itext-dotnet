@@ -1247,13 +1247,29 @@ namespace iText.Layout.Renderer {
 
         internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
              layoutBox) {
-            IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop());
-            if (boxesAtYLevel.IsEmpty()) {
-                return;
+            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, null);
+        }
+
+        internal virtual void AdjustLineAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
+             layoutBox, float? tableWidth) {
+            float left;
+            float right;
+            Rectangle[] lastLeftAndRightBoxes = null;
+            do {
+                if (lastLeftAndRightBoxes != null) {
+                    float bottomLeft = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetBottom() : float.MaxValue;
+                    float bottomRight = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetBottom() : float.MaxValue;
+                    layoutBox.SetHeight(Math.Min(bottomLeft, bottomRight) - layoutBox.GetY());
+                }
+                IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop());
+                if (boxesAtYLevel.IsEmpty()) {
+                    return;
+                }
+                lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
+                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
+                right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
             }
-            Rectangle[] lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
-            float left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
-            float right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
+            while (tableWidth != null && tableWidth > right - left);
             layoutBox.SetX(left);
             layoutBox.SetWidth(right - left);
         }
@@ -1317,7 +1333,13 @@ namespace iText.Layout.Renderer {
             }
             // TODO ensure zero-width boxes are not in the list
             // TODO float boxes are ordered by addition
-            float currY = floatRendererAreas[floatRendererAreas.Count - 1].GetTop();
+            float currY;
+            if (floatRendererAreas[floatRendererAreas.Count - 1].GetTop() < layoutBox.GetTop()) {
+                currY = floatRendererAreas[floatRendererAreas.Count - 1].GetTop();
+            }
+            else {
+                currY = layoutBox.GetTop();
+            }
             Rectangle[] lastLeftAndRightBoxes = null;
             float left = 0;
             float right = 0;
@@ -1375,35 +1397,40 @@ namespace iText.Layout.Renderer {
             ) {
             ClearPropertyValue? clearPropertyValue = this.GetProperty<ClearPropertyValue?>(Property.CLEAR);
             float clearHeightCorrection = 0;
-            if (floatRendererAreas.Count > 0 && clearPropertyValue != null) {
-                float maxFloatHeight = 0;
-                Rectangle theLowestFloatRectangle = null;
-                float criticalPoint = parentBBox.GetX() + parentBBox.GetWidth();
-                for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
-                    Rectangle floatRenderer = floatRendererAreas[i];
-                    if (((clearPropertyValue.Equals(ClearPropertyValue.LEFT) && floatRenderer.GetX() < criticalPoint) || (clearPropertyValue
-                        .Equals(ClearPropertyValue.RIGHT) && floatRenderer.GetX() + floatRenderer.GetWidth() > criticalPoint))
-                         || clearPropertyValue.Equals(ClearPropertyValue.BOTH)) {
-                        floatRendererAreas.JRemoveAt(i);
-                        if (clearPropertyValue.Equals(ClearPropertyValue.LEFT) || clearPropertyValue.Equals(ClearPropertyValue.BOTH
-                            )) {
-                            if (floatRenderer.GetY() + floatRenderer.GetHeight() <= parentBBox.GetY() + parentBBox.GetHeight() && floatRenderer
-                                .GetX() < parentBBox.GetX()) {
-                                parentBBox.MoveLeft(floatRenderer.GetWidth());
-                                parentBBox.SetWidth(parentBBox.GetWidth() + floatRenderer.GetWidth());
-                            }
-                        }
-                        if (maxFloatHeight < floatRenderer.GetHeight()) {
-                            theLowestFloatRectangle = floatRenderer;
-                            maxFloatHeight = floatRenderer.GetHeight();
-                        }
+            if (clearPropertyValue == null || floatRendererAreas.IsEmpty()) {
+                return clearHeightCorrection;
+            }
+            IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, parentBBox.GetTop());
+            Rectangle[] lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(parentBBox, boxesAtYLevel);
+            float lowestFloatBottom = float.MaxValue;
+            bool isBoth = clearPropertyValue.Equals(ClearPropertyValue.BOTH);
+            if ((clearPropertyValue.Equals(ClearPropertyValue.LEFT) || isBoth) && lastLeftAndRightBoxes[0] != null) {
+                foreach (Rectangle floatBox in floatRendererAreas) {
+                    if (floatBox.GetBottom() < lowestFloatBottom && floatBox.GetLeft() <= lastLeftAndRightBoxes[0].GetLeft()) {
+                        lowestFloatBottom = floatBox.GetBottom();
                     }
                 }
-                if (theLowestFloatRectangle != null) {
-                    float contentAlongFloatHeight = theLowestFloatRectangle.GetHeight() + theLowestFloatRectangle.GetY() - parentBBox
-                        .GetY() - parentBBox.GetHeight();
-                    clearHeightCorrection = theLowestFloatRectangle.GetHeight() - contentAlongFloatHeight;
-                    parentBBox.DecreaseHeight(clearHeightCorrection);
+            }
+            if ((clearPropertyValue.Equals(ClearPropertyValue.RIGHT) || isBoth) && lastLeftAndRightBoxes[1] != null) {
+                foreach (Rectangle floatBox in floatRendererAreas) {
+                    if (floatBox.GetBottom() < lowestFloatBottom && floatBox.GetRight() >= lastLeftAndRightBoxes[1].GetRight()
+                        ) {
+                        lowestFloatBottom = floatBox.GetBottom();
+                    }
+                }
+            }
+            if (lowestFloatBottom < float.MaxValue) {
+                clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
+                FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                    parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY());
+                }
+                else {
+                    float? topMargin = GetModelElement().GetProperty<float?>(Property.MARGIN_TOP);
+                    if (topMargin != null && topMargin < clearHeightCorrection) {
+                        // TODO take into account collapsing margins in future
+                        parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY() + topMargin);
+                    }
                 }
             }
             return clearHeightCorrection;

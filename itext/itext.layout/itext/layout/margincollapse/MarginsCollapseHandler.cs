@@ -498,7 +498,7 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static void IgnoreModelTopMargin(IRenderer renderer) {
-            renderer.SetProperty(Property.MARGIN_TOP, 0);
+            renderer.SetProperty(Property.MARGIN_TOP, 0f);
         }
 
         private static void OverrideModelTopMargin(IRenderer renderer, float collapsedMargins) {
@@ -511,7 +511,7 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static void IgnoreModelBottomMargin(IRenderer renderer) {
-            renderer.SetProperty(Property.MARGIN_BOTTOM, 0);
+            renderer.SetProperty(Property.MARGIN_BOTTOM, 0f);
         }
 
         private static void OverrideModelBottomMargin(IRenderer renderer, float collapsedMargins) {

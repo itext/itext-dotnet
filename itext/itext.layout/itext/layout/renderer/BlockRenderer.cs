@@ -75,11 +75,11 @@ namespace iText.Layout.Renderer {
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
-            // TODO absolutely wrong, because we still need this in clearCorrection
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             bool isCellRenderer = this is CellRenderer;
@@ -105,7 +105,6 @@ namespace iText.Layout.Renderer {
                 parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox);
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);

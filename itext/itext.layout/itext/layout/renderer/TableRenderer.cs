@@ -216,13 +216,13 @@ namespace iText.Layout.Renderer {
             }
             float tableWidth = GetTableWidth();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 AdjustFloatedTableLayoutBox(layoutBox, tableWidth, floatRendererAreas, floatPropertyValue);
             }
             else {
-                // TODO, we already have width, what do we do? we need to lower?
-                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth);
             }
             floatRendererAreas = new List<Rectangle>();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -238,7 +238,6 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             if (layoutBox.GetWidth() > tableWidth) {
                 layoutBox.SetWidth((float)tableWidth + bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth
                     () / 2);
