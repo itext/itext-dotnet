@@ -940,6 +940,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName MCR = CreateDirectName("MCR");
 
+        public static readonly iText.Kernel.Pdf.PdfName MD5 = CreateDirectName("MD5");
+
         public static readonly iText.Kernel.Pdf.PdfName Measure = CreateDirectName("Measure");
 
         public static readonly iText.Kernel.Pdf.PdfName MediaBox = CreateDirectName("MediaBox");
