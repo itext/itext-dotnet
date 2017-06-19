@@ -44,6 +44,7 @@ using System;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -410,6 +411,42 @@ namespace iText.Layout {
             p.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             document.Add(p);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff10_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnCanvas() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnCanvas.pdf";
+            String outFile = destinationFolder + "floatsOnCanvas.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas pdfCanvas = new PdfCanvas(page);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins(36
+                , 36, 36, 36, false));
+            Div div = new Div().SetBackgroundColor(Color.RED);
+            Div fDiv = new Div().SetBackgroundColor(Color.BLUE).SetWidth(200).SetHeight(200);
+            fDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Div fInnerDiv1 = new Div().SetWidth(50).SetHeight(50);
+            fInnerDiv1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            fInnerDiv1.SetBackgroundColor(Color.YELLOW);
+            Div fInnerDiv2 = new Div().SetWidth(50).SetHeight(50);
+            fInnerDiv2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            fInnerDiv2.SetBackgroundColor(Color.CYAN);
+            fDiv.Add(fInnerDiv1);
+            fDiv.Add(fInnerDiv2);
+            fDiv.Add(new Paragraph("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add"
+                ));
+            div.Add(fDiv).Add(new Paragraph("Hello"));
+            canvas.Add(div);
+            div = new Div().SetBackgroundColor(Color.GREEN);
+            div.Add(new Paragraph("World"));
+            canvas.Add(div);
+            canvas.Add(div);
+            canvas.Close();
+            pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff10_"));
         }

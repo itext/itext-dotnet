@@ -8,7 +8,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    public class FloatingHelper {
+    internal class FloatingHelper {
         private FloatingHelper() {
         }
 

@@ -391,11 +391,14 @@ namespace iText.Layout.Renderer {
                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
                 // TODO anything like this on any other floated renderer?
-                Document document = GetDocument();
-                float bottomMargin = document == null ? 0 : document.GetBottomMargin();
-                if (occupiedArea.GetBBox().GetY() < bottomMargin) {
-                    layoutContext.GetFloatRendererAreas().Clear();
-                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, null);
+                RootRenderer rootRenderer = GetRootRenderer();
+                if (rootRenderer is DocumentRenderer) {
+                    Document document = (Document)(rootRenderer).GetModelElement();
+                    float bottomMargin = document.GetBottomMargin();
+                    if (occupiedArea.GetBBox().GetY() < bottomMargin) {
+                        layoutContext.GetFloatRendererAreas().Clear();
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, null);
+                    }
                 }
             }
             if (null == overflowRenderer_1) {

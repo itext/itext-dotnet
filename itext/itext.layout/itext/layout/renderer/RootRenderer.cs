@@ -57,6 +57,8 @@ namespace iText.Layout.Renderer {
 
         protected internal int currentPageNumber;
 
+        protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
+
         private IRenderer keepWithNextHangingRenderer;
 
         private LayoutResult keepWithNextHangingRendererLayoutResult;
@@ -274,6 +276,7 @@ namespace iText.Layout.Renderer {
             if (!immediateFlush) {
                 Flush();
             }
+            FlushWaitingDrawingElements();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -291,6 +294,14 @@ namespace iText.Layout.Renderer {
         protected internal abstract void FlushSingleRenderer(IRenderer resultRenderer);
 
         protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
+
+        protected internal virtual void FlushWaitingDrawingElements() {
+            for (int i = 0; i < waitingDrawingElements.Count; ++i) {
+                IRenderer waitingDrawingElement = waitingDrawingElements[i];
+                FlushSingleRenderer(waitingDrawingElement);
+            }
+            waitingDrawingElements.Clear();
+        }
 
         protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {

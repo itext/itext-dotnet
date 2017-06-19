@@ -479,15 +479,14 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (FloatingHelper.IsRendererFloating(child)) {
-                    Document document = GetDocument();
-                    if (document != null) {
-                        DocumentRenderer documentRenderer = (DocumentRenderer)document.GetRenderer();
-                        if (documentRenderer != null) {
-                            documentRenderer.waitingDrawingElements.Add(child);
-                            continue;
-                        }
+                    RootRenderer rootRenderer = GetRootRenderer();
+                    if (rootRenderer != null) {
+                        rootRenderer.waitingDrawingElements.Add(child);
+                        child.SetProperty(Property.FLOAT, null);
                     }
-                    waitingRenderers.Add(child);
+                    else {
+                        waitingRenderers.Add(child);
+                    }
                 }
                 else {
                     child.Draw(drawContext);
@@ -1240,24 +1239,13 @@ namespace iText.Layout.Renderer {
             return isFirstOnRootArea;
         }
 
-        /// <summary>Tries to get document from the root renderer if there is any.</summary>
-        /// <returns/>
-        internal virtual Document GetDocument() {
-            IRenderer parent = GetParent();
-            iText.Layout.Renderer.AbstractRenderer currentRenderer = this;
-            while (parent != null) {
-                if (parent is iText.Layout.Renderer.AbstractRenderer) {
-                    currentRenderer = (iText.Layout.Renderer.AbstractRenderer)parent;
-                    parent = currentRenderer.GetParent();
+        internal virtual RootRenderer GetRootRenderer() {
+            IRenderer currentRenderer = this;
+            while (currentRenderer is iText.Layout.Renderer.AbstractRenderer) {
+                if (currentRenderer is RootRenderer) {
+                    return (RootRenderer)currentRenderer;
                 }
-                else {
-                    if (currentRenderer is DocumentRenderer) {
-                        return ((DocumentRenderer)currentRenderer).document;
-                    }
-                }
-            }
-            if (currentRenderer is DocumentRenderer) {
-                return ((DocumentRenderer)currentRenderer).document;
+                currentRenderer = ((iText.Layout.Renderer.AbstractRenderer)currentRenderer).GetParent();
             }
             return null;
         }
