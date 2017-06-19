@@ -100,10 +100,7 @@ namespace iText.Layout.Renderer {
                 );
             FloatingHelper.ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection, FloatingHelper.IsRendererFloating
                 (this));
-            float? blockWidth = null;
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) == null || FloatingHelper.IsRendererFloating(this)) {
-                blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            }
+            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = FloatingHelper.AdjustFloatedBlockLayoutBox(this, parentBBox, blockWidth, floatRendererAreas, 
                     floatPropertyValue);
@@ -114,7 +111,8 @@ namespace iText.Layout.Renderer {
                 currentRenderer = null;
             }
             bool isPositioned = IsPositioned();
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+            float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (rotation != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
                 if (!FloatingHelper.IsRendererFloating(this)) {
                     blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
@@ -126,8 +124,7 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
             float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned || this.GetProperty<float?>(
-                Property.ROTATION_ANGLE) != null)) {
+            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned || rotation != null)) {
                 parentBBox.SetWidth((float)blockWidth);
             }
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
@@ -395,7 +392,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+            if (rotation != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
