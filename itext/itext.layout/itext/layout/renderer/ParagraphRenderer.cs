@@ -163,6 +163,40 @@ namespace iText.Layout.Renderer {
                 Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox.GetY(), childBBoxWidth, 
                     layoutBox.GetHeight());
                 bool childAffectedByFloat = floatRendererAreas.Count > 0;
+                if (childAffectedByFloat) {
+                    currentRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, childLayoutBox), layoutContext.GetMarginsCollapseInfo
+                        (), floatRendererAreas));
+                    float bottom = currentRenderer.GetOccupiedArea().GetBBox().GetBottom();
+                    float top = currentRenderer.GetOccupiedArea().GetBBox().GetTop();
+                    float left = currentRenderer.GetOccupiedArea().GetBBox().GetLeft();
+                    float right = currentRenderer.GetOccupiedArea().GetBBox().GetRight();
+                    bool childLayoutBoxWasAdjusted;
+                    float rightBorder = childLayoutBox.GetRight();
+                    float curRendWidth = currentRenderer.GetOccupiedAreaBBox().GetWidth();
+                    do {
+                        childLayoutBoxWasAdjusted = false;
+                        foreach (Rectangle floatRendereArea in floatRendererAreas) {
+                            if ((bottom > floatRendereArea.GetBottom() && bottom < floatRendereArea.GetTop()) || (top > floatRendereArea
+                                .GetBottom() && top < floatRendereArea.GetTop())) {
+                                if ((left >= floatRendereArea.GetLeft() && left < floatRendereArea.GetRight()) || (right > floatRendereArea
+                                    .GetLeft() && right < floatRendereArea.GetRight()) || (left > floatRendereArea.GetLeft() && right < floatRendereArea
+                                    .GetRight())) {
+                                    childLayoutBox.SetX(floatRendereArea.GetRight());
+                                    if (childLayoutBox.GetLeft() + curRendWidth > rightBorder) {
+                                        childLayoutBox.SetWidth(rightBorder - childLayoutBox.GetLeft());
+                                    }
+                                    else {
+                                        childLayoutBox.SetWidth(curRendWidth);
+                                    }
+                                    left = childLayoutBox.GetLeft();
+                                    right = childLayoutBox.GetRight();
+                                    childLayoutBoxWasAdjusted = true;
+                                }
+                            }
+                        }
+                    }
+                    while (childLayoutBoxWasAdjusted);
+                }
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox), layoutContext.GetMarginsCollapseInfo(), floatRendererAreas
                     )));

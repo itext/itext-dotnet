@@ -84,7 +84,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Close() {
-            if (waitingDrawingElements.Count > 0) {
+            while (waitingDrawingElements.Count > 0) {
                 IRenderer waitingDrawingElement = waitingDrawingElements[0];
                 waitingDrawingElements.JRemoveAt(0);
                 FlushSingleRenderer(waitingDrawingElement);
@@ -103,7 +103,7 @@ namespace iText.Layout.Renderer {
             else {
                 MoveToNextPage();
             }
-            if (waitingDrawingElements.Count > 0) {
+            while (waitingDrawingElements.Count > 0) {
                 IRenderer renderer = waitingDrawingElements[0];
                 waitingDrawingElements.JRemoveAt(0);
                 FlushSingleRenderer(renderer);
@@ -140,12 +140,13 @@ namespace iText.Layout.Renderer {
                         pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage);
                     }
                     PdfCanvas pageCanvas = new PdfCanvas(correspondingPage, wrapOldContent);
+                    IList<IRenderer> elementsReadyForDrawing = new List<IRenderer>(waitingDrawingElements);
                     resultRenderer.Draw(new DrawContext(pdfDocument, pageCanvas, pdfDocument.IsTagged()));
-                    if (waitingDrawingElements.Count > 0) {
-                        foreach (IRenderer renderer in waitingDrawingElements) {
+                    if (elementsReadyForDrawing.Count > 0) {
+                        foreach (IRenderer renderer in elementsReadyForDrawing) {
                             renderer.Draw(new DrawContext(pdfDocument, pageCanvas, pdfDocument.IsTagged()));
                         }
-                        waitingDrawingElements.Clear();
+                        waitingDrawingElements.RemoveAll(elementsReadyForDrawing);
                     }
                 }
             }

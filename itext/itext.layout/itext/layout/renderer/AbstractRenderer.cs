@@ -480,14 +480,17 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (child.HasProperty(Property.FLOAT)) {
-                    waitingRenderers.Add(child);
+                    Document document = GetDocument();
+                    if (document != null) {
+                        DocumentRenderer documentRenderer = (DocumentRenderer)document.GetRenderer();
+                        if (documentRenderer != null) {
+                            documentRenderer.waitingDrawingElements.Add(child);
+                        }
+                    }
                 }
                 else {
                     child.Draw(drawContext);
                 }
-            }
-            foreach (IRenderer waitingRenderer in waitingRenderers) {
-                waitingRenderer.Draw(drawContext);
             }
         }
 
@@ -1286,7 +1289,7 @@ namespace iText.Layout.Renderer {
             if (layoutBox.GetLeft() < left) {
                 layoutBox.SetX(left);
             }
-            if (layoutBox.GetRight() > right) {
+            if (layoutBox.GetRight() > right && layoutBox.GetLeft() <= right) {
                 layoutBox.SetWidth(right - layoutBox.GetLeft());
             }
         }
