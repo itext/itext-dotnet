@@ -224,7 +224,7 @@ namespace iText.Layout.Renderer {
             float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox, marginsCollapseHandler
                 );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue);
             }
             else {
@@ -1324,7 +1324,7 @@ namespace iText.Layout.Renderer {
 
         private float CalculateRowHeightIfFloatRendererPresent(float rowHeight, IList<Rectangle> floatRenderers) {
             float maxHeight = 0;
-            if (HasProperty(Property.FLOAT)) {
+            if (IsRendererFloating(this)) {
                 return rowHeight;
             }
             foreach (Rectangle floatRenderer in floatRenderers) {

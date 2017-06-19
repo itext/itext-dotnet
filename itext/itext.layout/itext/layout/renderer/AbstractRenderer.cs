@@ -479,7 +479,7 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (child.HasProperty(Property.FLOAT)) {
+                if (IsRendererFloating(child)) {
                     Document document = GetDocument();
                     if (document != null) {
                         DocumentRenderer documentRenderer = (DocumentRenderer)document.GetRenderer();
@@ -1234,8 +1234,7 @@ namespace iText.Layout.Renderer {
         internal virtual LayoutArea ApplyFloatPropertyOnCurrentArea(IList<Rectangle> floatRendererAreas, Rectangle
              parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
             LayoutArea editedArea = occupiedArea;
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this)) {
                 editedArea = occupiedArea.Clone();
                 floatRendererAreas.Add(occupiedArea.GetBBox());
                 editedArea.GetBBox().SetY(parentBBox.GetTop());
@@ -1494,9 +1493,7 @@ namespace iText.Layout.Renderer {
             }
             if (lowestFloatBottom < float.MaxValue) {
                 clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
-                FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE) || marginsCollapseHandler
-                     == null) {
+                if (IsRendererFloating(this) || marginsCollapseHandler == null) {
                     parentBBox.SetHeight(lowestFloatBottom - parentBBox.GetY());
                 }
                 else {
@@ -1504,6 +1501,17 @@ namespace iText.Layout.Renderer {
                 }
             }
             return clearHeightCorrection;
+        }
+
+        internal static bool IsRendererFloating(IRenderer renderer) {
+            return IsRendererFloating(renderer, renderer.GetProperty<FloatPropertyValue?>(Property.FLOAT));
+        }
+
+        internal static bool IsRendererFloating(IRenderer renderer, FloatPropertyValue? kidFloatPropertyVal) {
+            int? position = renderer.GetProperty<int?>(Property.POSITION);
+            bool notAbsolutePos = position == null || position != LayoutPosition.ABSOLUTE;
+            return notAbsolutePos && kidFloatPropertyVal != null && !kidFloatPropertyVal.Equals(FloatPropertyValue.NONE
+                );
         }
 
         internal virtual bool IsFirstOnRootArea() {

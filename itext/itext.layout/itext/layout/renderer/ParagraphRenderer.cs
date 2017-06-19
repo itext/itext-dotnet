@@ -99,7 +99,7 @@ namespace iText.Layout.Renderer {
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
                 );
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 // TODO may be remove width setting, as parentBBox width is adjusted instead
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
@@ -146,9 +146,7 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = areas[0].Clone();
             lines = new List<LineRenderer>();
             foreach (IRenderer child in childRenderers) {
-                // TODO refactor to one-line
-                FloatPropertyValue? property = child.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                notAllKidsAreFloats = notAllKidsAreFloats || property == null || property.Equals(FloatPropertyValue.NONE);
+                notAllKidsAreFloats = notAllKidsAreFloats || !IsRendererFloating(child);
                 currentRenderer.AddChild(child);
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();

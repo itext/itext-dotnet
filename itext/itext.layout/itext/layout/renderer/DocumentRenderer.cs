@@ -121,8 +121,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            FloatPropertyValue? value = resultRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (value != null) {
+            if (IsRendererFloating(resultRenderer)) {
                 waitingDrawingElements.Add(resultRenderer);
                 resultRenderer.SetProperty(Property.FLOAT, null);
             }

@@ -149,7 +149,7 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 AdjustFloatedBlockLayoutBox(layoutBox, null, floatRendererAreas, floatPropertyValue);
             }
             float[] margins = GetMargins();

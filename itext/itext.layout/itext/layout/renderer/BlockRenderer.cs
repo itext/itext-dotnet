@@ -82,7 +82,7 @@ namespace iText.Layout.Renderer {
             }
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
                 );
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 // TODO may be remove width setting, as parentBBox width is adjusted instead
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
@@ -299,8 +299,7 @@ namespace iText.Layout.Renderer {
                 }
                 anythingPlaced = true;
                 if (result.GetOccupiedArea() != null) {
-                    FloatPropertyValue? childFloatProp = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                    if (childFloatProp == null || childFloatProp.Equals(FloatPropertyValue.NONE)) {
+                    if (!IsRendererFloating(childRenderer)) {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));

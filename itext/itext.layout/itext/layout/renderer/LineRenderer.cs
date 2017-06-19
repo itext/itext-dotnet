@@ -142,8 +142,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 FloatPropertyValue? kidFloatPropertyVal = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                bool isChildFloating = childRenderer is AbstractRenderer && kidFloatPropertyVal != null && !kidFloatPropertyVal
-                    .Equals(FloatPropertyValue.NONE);
+                bool isChildFloating = childRenderer is AbstractRenderer && IsRendererFloating(childRenderer, kidFloatPropertyVal
+                    );
                 if (isChildFloating) {
                     childResult = null;
                     MinMaxWidth kidMinMaxWidth = CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, kidFloatPropertyVal
@@ -609,8 +609,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual LineRenderer AdjustChildrenYLine() {
             float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
             foreach (IRenderer renderer in childRenderers) {
-                FloatPropertyValue? floatVal = renderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                if (floatVal != null && !floatVal.Equals(FloatPropertyValue.NONE)) {
+                if (IsRendererFloating(renderer)) {
                     continue;
                 }
                 if (renderer is ILeafElementRenderer) {
@@ -628,8 +627,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyLeading(float deltaY, float floatsDeltaY) {
             occupiedArea.GetBBox().MoveUp(deltaY);
             foreach (IRenderer child in childRenderers) {
-                FloatPropertyValue? childFloatVal = child.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                if (childFloatVal == null || childFloatVal.Equals(FloatPropertyValue.NONE)) {
+                if (!IsRendererFloating(child)) {
                     child.Move(0, deltaY);
                 }
             }
@@ -690,8 +688,7 @@ namespace iText.Layout.Renderer {
                 if (ltr) {
                     for (int i = 0; i < childPos; ++i) {
                         IRenderer prevChild = childRenderers[i];
-                        FloatPropertyValue? prevFloatVal = prevChild.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-                        if (prevFloatVal == null || prevFloatVal.Equals(FloatPropertyValue.NONE)) {
+                        if (!IsRendererFloating(prevChild)) {
                             prevChild.GetOccupiedArea().GetBBox().MoveRight(floatWidth);
                         }
                     }

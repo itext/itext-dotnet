@@ -102,7 +102,7 @@ namespace iText.Layout.Renderer {
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+            if (IsRendererFloating(this, floatPropertyValue)) {
                 AdjustFloatedBlockLayoutBox(layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue);
             }
             else {
