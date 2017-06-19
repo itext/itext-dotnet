@@ -116,8 +116,7 @@ namespace iText.Layout.Renderer {
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 Rectangle layoutBox = layoutContext.GetArea().GetBBox();
                 float extremalRightBorder = layoutBox.GetX() + layoutBox.GetWidth();
-                AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, extremalRightBorder, blockWidth, 
-                    marginsCollapseHandler);
+                AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, extremalRightBorder, blockWidth);
                 if (parentBBox.GetWidth() < childrenMaxWidth) {
                     childrenMaxWidth = parentBBox.GetWidth();
                 }
@@ -326,7 +325,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                         ()));
                 }
-                if (marginsCollapsingEnabled && !childRenderer.HasProperty(Property.FLOAT)) {
+                if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox_1);
                 }
                 if (result.GetStatus() == LayoutResult.FULL) {

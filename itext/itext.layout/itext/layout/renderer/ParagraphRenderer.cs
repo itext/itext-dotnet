@@ -124,7 +124,7 @@ namespace iText.Layout.Renderer {
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
                 Rectangle layoutBox = layoutContext.GetArea().GetBBox();
                 AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, layoutBox.GetX() + layoutBox.GetWidth
-                    (), blockWidth, marginsCollapseHandler);
+                    (), blockWidth);
             }
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);

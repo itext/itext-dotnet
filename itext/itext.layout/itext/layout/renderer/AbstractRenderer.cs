@@ -61,7 +61,6 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
-using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -1269,8 +1268,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
-             layoutBox, float extremalRightBorder, float? blockWidth, MarginsCollapseHandler marginsCollapseHandler
-            ) {
+             layoutBox, float extremalRightBorder, float? blockWidth) {
             foreach (Rectangle floatRenderer in floatRendererAreas) {
                 FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
                 if (layoutBox.GetX() >= floatRenderer.GetX() && layoutBox.GetX() < floatRenderer.GetX() + floatRenderer.GetWidth
@@ -1302,13 +1300,11 @@ namespace iText.Layout.Renderer {
                 }
                 layoutBox.SetWidth((float)blockWidth);
                 float topMargin = GetMargins()[0];
+                // TODO already ignored for collapsing
                 float topPadding = GetPaddings()[0];
                 minFloatY -= topMargin + topPadding;
                 if (minFloatY < int.MaxValue) {
                     layoutBox.SetHeight(minFloatY - layoutBox.GetY());
-                    if (marginsCollapseHandler != null) {
-                        marginsCollapseHandler.StartMarginsCollapse(layoutBox);
-                    }
                 }
             }
         }
