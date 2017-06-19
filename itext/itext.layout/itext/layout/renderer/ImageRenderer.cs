@@ -100,26 +100,21 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             width = RetrieveWidth(layoutBox.GetWidth());
             height = RetrieveHeight();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE)) {
+                AdjustFloatedBlockLayoutBox(layoutBox, width, floatRendererAreas, floatPropertyValue);
+            }
+            else {
+                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
+            }
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             if (IsAbsolutePosition()) {
+                // TODO applying it after floats processing here and everywhere. is it correct?
                 ApplyAbsolutePosition(layoutBox);
-            }
-            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox, null);
-            // TODO test it
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
-            if (floatPropertyValue != null) {
-                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
-                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
-                }
-                else {
-                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
-                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
-                    }
-                }
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));

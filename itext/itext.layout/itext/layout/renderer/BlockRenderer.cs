@@ -83,6 +83,7 @@ namespace iText.Layout.Renderer {
             float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, parentBBox, marginsCollapseHandler
                 );
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                // TODO may be remove width setting, as parentBBox width is adjusted instead
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }

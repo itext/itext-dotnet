@@ -99,6 +99,7 @@ namespace iText.Layout.Renderer {
                 );
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                // TODO may be remove width setting, as parentBBox width is adjusted instead
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
