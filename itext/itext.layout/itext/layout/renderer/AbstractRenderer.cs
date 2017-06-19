@@ -1342,18 +1342,12 @@ namespace iText.Layout.Renderer {
                 floatElemWidth = blockWidth + additionalWidth;
             }
             else {
-                float? minHeightProperty = this.GetProperty<float?>(Property.MIN_HEIGHT);
-                SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
-                MinMaxWidth minMaxWidth = GetMinMaxWidth(parentBBox.GetWidth());
-                SetProperty(Property.FLOAT, floatPropertyValue);
-                if (minHeightProperty != null) {
-                    SetProperty(Property.MIN_HEIGHT, minHeightProperty);
-                }
-                else {
-                    DeleteProperty(Property.MIN_HEIGHT);
-                }
+                MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(this, floatPropertyValue);
                 float childrenMaxWidthWithEps = minMaxWidth.GetChildrenMaxWidth() + EPS;
                 // TODO adding eps in order to workaround precision issues
+                if (childrenMaxWidthWithEps > parentBBox.GetWidth()) {
+                    childrenMaxWidthWithEps = parentBBox.GetWidth();
+                }
                 floatElemWidth = childrenMaxWidthWithEps + minMaxWidth.GetAdditionalWidth();
                 blockWidth = childrenMaxWidthWithEps;
             }
@@ -1411,6 +1405,22 @@ namespace iText.Layout.Renderer {
             if (!isFloatLeft) {
                 AdjustBoxForFloatRight(layoutBox, blockWidth);
             }
+        }
+
+        internal virtual MinMaxWidth CalculateMinMaxWidthForFloat(iText.Layout.Renderer.AbstractRenderer renderer, 
+            FloatPropertyValue? floatPropertyVal) {
+            float? minHeightProperty = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
+            MinMaxWidth kidMinMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+            SetProperty(Property.FLOAT, floatPropertyVal);
+            if (minHeightProperty != null) {
+                SetProperty(Property.MIN_HEIGHT, minHeightProperty);
+            }
+            else {
+                DeleteProperty(Property.MIN_HEIGHT);
+            }
+            // TODO ensure why this bunch of code is used
+            return kidMinMaxWidth;
         }
 
         private void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {

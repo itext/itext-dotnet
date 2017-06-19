@@ -146,10 +146,10 @@ namespace iText.Layout.Renderer {
                     .Equals(FloatPropertyValue.NONE);
                 if (isChildFloating) {
                     childResult = null;
-                    MinMaxWidth kidMinMaxWidth = CalculateMinMaxWidthForFloat(layoutContext, (AbstractRenderer)childRenderer, 
-                        kidFloatPropertyVal);
+                    MinMaxWidth kidMinMaxWidth = CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, kidFloatPropertyVal
+                        );
                     float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth() + kidMinMaxWidth.GetAdditionalWidth();
-                    // TODO width will be recalculated on float layout
+                    // TODO width will be recalculated on float layout; also not setting it results in differences with html, when floating span is split on other line
                     //                childRenderer.setProperty(Property.WIDTH, UnitValue.createPointValue(kidMinMaxWidth.getMaxWidth()));
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
@@ -632,24 +632,6 @@ namespace iText.Layout.Renderer {
             LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
                 new Rectangle(availableWidth, AbstractRenderer.INF)))));
             return result.GetNotNullMinMaxWidth(availableWidth);
-        }
-
-        // TODO use this method in other floating functionality
-        private MinMaxWidth CalculateMinMaxWidthForFloat(LayoutContext layoutContext, AbstractRenderer childRenderer
-            , FloatPropertyValue? kidFloatPropertyVal) {
-            float? minHeightProperty = this.GetProperty<float?>(Property.MIN_HEIGHT);
-            SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
-            // TODO we need to pass here BIG width, and only than build assumptions on it
-            MinMaxWidth kidMinMaxWidth = childRenderer.GetMinMaxWidth(layoutContext.GetArea().GetBBox().GetWidth());
-            SetProperty(Property.FLOAT, kidFloatPropertyVal);
-            if (minHeightProperty != null) {
-                SetProperty(Property.MIN_HEIGHT, minHeightProperty);
-            }
-            else {
-                DeleteProperty(Property.MIN_HEIGHT);
-            }
-            // TODO ensure why this bunch of code is used
-            return kidMinMaxWidth;
         }
 
         private LineRenderer[] SplitNotFittingFloat(int childPos, LayoutResult childResult) {
