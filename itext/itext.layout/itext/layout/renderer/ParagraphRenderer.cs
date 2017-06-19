@@ -255,6 +255,9 @@ namespace iText.Layout.Renderer {
                 if (processedRenderer != null && processedRenderer.ContainsImage()) {
                     leadingValue -= previousDescent;
                 }
+                bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
+                    () > 0;
+                // could be false if e.g. line contains only floats
                 bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
                 float floatsDeltaY = 0;
@@ -263,7 +266,7 @@ namespace iText.Layout.Renderer {
                         floatsDeltaY = -lastLineLeading / 2;
                     }
                     // TODO review
-                    if (leadingValue > 0) {
+                    if (lineHasContent) {
                         lastLineLeading = leadingValue;
                         lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
                         deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
@@ -365,8 +368,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    bool lineHasContent = processedRenderer.GetOccupiedArea().GetBBox().GetHeight() > 0;
-                    // could be false if e.g. line contains only floats
                     if (leading != null) {
                         processedRenderer.ApplyLeading(deltaY, floatsDeltaY);
                         // TODO for floats, leading check on page overflow is not checked
