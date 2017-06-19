@@ -1294,6 +1294,35 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal virtual float? CalculateLineShiftUnderFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
+            ) {
+            IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop());
+            if (boxesAtYLevel.IsEmpty()) {
+                return null;
+            }
+            Rectangle[] lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
+            float left;
+            float right;
+            left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
+            right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
+            if (layoutBox.GetLeft() < left || layoutBox.GetRight() > right) {
+                float maxLastFloatBottom;
+                if (lastLeftAndRightBoxes[0] != null && lastLeftAndRightBoxes[1] != null) {
+                    maxLastFloatBottom = Math.Max(lastLeftAndRightBoxes[0].GetBottom(), lastLeftAndRightBoxes[1].GetBottom());
+                }
+                else {
+                    if (lastLeftAndRightBoxes[0] != null) {
+                        maxLastFloatBottom = lastLeftAndRightBoxes[0].GetBottom();
+                    }
+                    else {
+                        maxLastFloatBottom = lastLeftAndRightBoxes[1].GetBottom();
+                    }
+                }
+                return layoutBox.GetTop() - maxLastFloatBottom;
+            }
+            return null;
+        }
+
         internal virtual void AdjustFloatedTableLayoutBox(Rectangle layoutBox, float? tableWidth, IList<Rectangle>
              floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth);

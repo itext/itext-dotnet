@@ -103,7 +103,6 @@ namespace iText.Layout.Renderer {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
-            // TODO what about inline images as floats?
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
@@ -152,6 +151,7 @@ namespace iText.Layout.Renderer {
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
             float leadingValue = 0;
             float lastLineHeight = 0;
+            float lastLineLeading = 0;
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -163,10 +163,9 @@ namespace iText.Layout.Renderer {
                 float childBBoxWidth = layoutBox.GetWidth() - lineIndent;
                 Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox.GetY(), childBBoxWidth, 
                     layoutBox.GetHeight());
-                bool childAffectedByFloat = floatRendererAreas.Count > 0;
-                if (childAffectedByFloat) {
-                    currentRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, childLayoutBox), layoutContext.GetMarginsCollapseInfo
-                        (), floatRendererAreas));
+                if (false) {
+                    // TODO
+                    currentRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, childLayoutBox)));
                     float bottom = currentRenderer.GetOccupiedArea().GetBBox().GetBottom();
                     float top = currentRenderer.GetOccupiedArea().GetBBox().GetTop();
                     float left = currentRenderer.GetOccupiedArea().GetBBox().GetLeft();
@@ -199,14 +198,13 @@ namespace iText.Layout.Renderer {
                     while (childLayoutBoxWasAdjusted);
                 }
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
-                    (new LayoutArea(pageNumber, childLayoutBox), layoutContext.GetMarginsCollapseInfo(), floatRendererAreas
-                    )));
-                if (result.GetStatus() != LayoutResult.FULL && result.GetSplitRenderer() != null) {
-                    for (int i = floatRendererAreas.Count - 1; i >= 0; i--) {
-                        Rectangle floatRendererArea = floatRendererAreas[i];
-                        if (floatRendererArea.GetY() > result.GetSplitRenderer().GetOccupiedArea().GetBBox().GetY()) {
-                            floatRendererAreas.JRemoveAt(i);
-                        }
+                    (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas)));
+                if (result.GetStatus() == LayoutResult.NOTHING) {
+                    float? lineShiftUnderFloats = CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
+                    if (lineShiftUnderFloats != null) {
+                        layoutBox.DecreaseHeight(lineShiftUnderFloats);
+                        firstLineInBox = true;
+                        continue;
                     }
                 }
                 float minChildWidth = 0;
@@ -224,21 +222,6 @@ namespace iText.Layout.Renderer {
                 else {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         processedRenderer = (LineRenderer)result.GetSplitRenderer();
-                    }
-                    else {
-                        if (childAffectedByFloat) {
-                            processedRenderer = (LineRenderer)result.GetSplitRenderer();
-                            float borderTotalHeight = 0;
-                            if (borders[0] != null) {
-                                borderTotalHeight += borders[0].GetWidth();
-                            }
-                            if (borders[2] != null) {
-                                borderTotalHeight += borders[2].GetWidth();
-                            }
-                            processedRenderer.GetOccupiedArea().GetBBox().MoveUp(borderTotalHeight);
-                            processedRenderer.GetOccupiedArea().GetBBox().SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetHeight
-                                () - borderTotalHeight);
-                        }
                     }
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
@@ -272,9 +255,17 @@ namespace iText.Layout.Renderer {
                 }
                 bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
+                float floatsDeltaY = 0;
                 if (!doesNotFit) {
-                    lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                    deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
+                    if (!firstLineInBox) {
+                        floatsDeltaY = -lastLineLeading / 2;
+                    }
+                    // TODO review
+                    if (leadingValue > 0) {
+                        lastLineLeading = leadingValue;
+                        lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                        deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
+                    }
                     // for the first and last line in a paragraph, leading is smaller
                     if (firstLineInBox) {
                         deltaY = -(leadingValue - lastLineHeight) / 2;
@@ -373,16 +364,15 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (leading != null) {
-                        processedRenderer.Move(0, deltaY);
-                        lastYLine = processedRenderer.GetYLine();
-                    }
-                    if (result.GetStatus() != LayoutResult.NOTHING || !childAffectedByFloat) {
-                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
-                            ().GetBBox()));
-                        if (firstLineInBox) {
-                            firstLineInBox = false;
+                        processedRenderer.ApplyLeading(deltaY, floatsDeltaY);
+                        // TODO for floats, leading check on page overflow is not checked
+                        if (processedRenderer.GetOccupiedArea().GetBBox().GetHeight() > 0) {
+                            lastYLine = processedRenderer.GetYLine();
                         }
                     }
+                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
+                        ().GetBBox()));
+                    firstLineInBox = false;
                     layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     lines.Add(processedRenderer);
                     anythingPlaced = true;
@@ -397,10 +387,11 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                // TODO review?
                 IncludeChildFloatsInOccupiedArea(floatRendererAreas);
             }
-            float moveDown = Math.Min((leadingValue - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox.GetY
-                ());
+            float moveDown = Math.Min((lastLineLeading - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox
+                .GetY());
             occupiedArea.GetBBox().MoveDown(moveDown);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             IRenderer overflowRenderer = null;
