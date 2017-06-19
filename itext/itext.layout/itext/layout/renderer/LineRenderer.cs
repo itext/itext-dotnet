@@ -155,15 +155,37 @@ namespace iText.Layout.Renderer {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                             ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas));
                     }
+                    // Get back child width so that it's not lost
+                    if (childWidthWasReplaced) {
+                        if (childRendererHasOwnWidthProperty) {
+                            childRenderer.SetProperty(Property.WIDTH, childWidth);
+                        }
+                        else {
+                            childRenderer.DeleteOwnProperty(Property.WIDTH);
+                        }
+                    }
+                    float minChildWidth = 0;
+                    float maxChildWidth = 0;
+                    if (childResult is MinMaxWidthLayoutResult) {
+                        if (!childWidthWasReplaced) {
+                            minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
+                                );
+                        }
+                        maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
+                            );
+                    }
+                    widthHandler.UpdateMinChildWidth(minChildWidth);
+                    widthHandler.UpdateMaxChildWidth(maxChildWidth);
                     if (childResult == null || childResult.GetStatus() == LayoutResult.NOTHING) {
                         overflowFloats.Add(childRenderer);
                     }
                     else {
                         if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                             // if partial - float is the only kid on line. otherwise width calculations are wrong
-                            // TODO ensure no other thing (like text wrapping the float) will occupy the line
+                            // TODO ensure no other thing (like text wrapping the float) will occupy the line. a solution might be setting width as mentioned above
                             floatsPlaced = true;
                             LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
+                            // TODO we might want to preserve width for the overflow renderer
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                             break;
                         }
@@ -182,7 +204,6 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                     }
-                    // TODO width is not restored, moreover, we might set in some cases these widths and want to preserve them for the overflow renderer
                     continue;
                 }
                 childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
@@ -196,15 +217,15 @@ namespace iText.Layout.Renderer {
                         childRenderer.DeleteOwnProperty(Property.WIDTH);
                     }
                 }
-                float minChildWidth = 0;
-                float maxChildWidth = 0;
+                float minChildWidth_1 = 0;
+                float maxChildWidth_1 = 0;
                 if (childResult is MinMaxWidthLayoutResult) {
                     if (!childWidthWasReplaced) {
-                        minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
-                            );
+                        minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth
+                            ();
                     }
-                    maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
-                        );
+                    maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth
+                        ();
                 }
                 float childAscent = 0;
                 float childDescent = 0;
@@ -242,15 +263,15 @@ namespace iText.Layout.Renderer {
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
-                    widthHandler.UpdateMinChildWidth(minChildWidth);
-                    widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth);
+                    widthHandler.UpdateMinChildWidth(minChildWidth_1);
+                    widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth_1);
                     hangingTabStop = null;
                 }
                 else {
                     if (null == hangingTabStop) {
                         curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
-                        widthHandler.UpdateMinChildWidth(minChildWidth);
-                        widthHandler.UpdateMaxChildWidth(maxChildWidth);
+                        widthHandler.UpdateMinChildWidth(minChildWidth_1);
+                        widthHandler.UpdateMaxChildWidth(maxChildWidth_1);
                     }
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
@@ -433,7 +454,7 @@ namespace iText.Layout.Renderer {
             }
             LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
                 ();
-            if (anythingPlaced) {
+            if (anythingPlaced || floatsPlaced) {
                 processed.AdjustChildrenYLine().TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
