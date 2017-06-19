@@ -1300,7 +1300,7 @@ namespace iText.Layout.Renderer {
                 }
                 layoutBox.SetWidth((float)blockWidth);
                 float topMargin = GetMargins()[0];
-                // TODO already ignored for collapsing
+                // TODO most likely it's best to adjust area before applying marginsBordersPadding
                 float topPadding = GetPaddings()[0];
                 minFloatY -= topMargin + topPadding;
                 if (minFloatY < int.MaxValue) {

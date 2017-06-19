@@ -85,9 +85,17 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer child, Rectangle layoutBox) {
+            if (backupLayoutBox != null) {
+                // this should happen only if previous kid was floated
+                RestoreLayoutBoxAfterFailedLayoutAttempt(layoutBox);
+                RemoveRendererChild(--processedChildrenNum);
+                childMarginInfo = null;
+            }
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
-            bool childIsBlockElement = IsBlockElement(child);
+            // If renderer is floated, prepare layout box as if it was inline,
+            // however it will be restored from backup when next kid processing will start.
+            bool childIsBlockElement = !RendererIsFloated(child) && IsBlockElement(child);
             backupLayoutBox = layoutBox.Clone();
             backupCollapseInfo = new MarginsCollapseInfo();
             collapseInfo.CopyTo(backupCollapseInfo);
@@ -130,6 +138,9 @@ namespace iText.Layout.Margincollapse {
 
         public virtual void EndChildMarginsHandling(Rectangle layoutBox) {
             int childIndex = processedChildrenNum - 1;
+            if (RendererIsFloated(GetRendererChild(childIndex))) {
+                return;
+            }
             if (childMarginInfo != null) {
                 if (firstNotEmptyKidIndex == childIndex && childMarginInfo.IsSelfCollapsing()) {
                     firstNotEmptyKidIndex = childIndex + 1;
@@ -395,24 +406,28 @@ namespace iText.Layout.Margincollapse {
             return rendererChildren[index];
         }
 
+        private IRenderer RemoveRendererChild(int index) {
+            return rendererChildren.JRemoveAt(index);
+        }
+
         private void GetRidOfCollapseArtifactsAtopOccupiedArea() {
             Rectangle bBox = renderer.GetOccupiedArea().GetBBox();
             bBox.SetHeight(bBox.GetHeight() - collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize());
         }
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
-            return !(renderer is TableRenderer) && !HasBottomBorders(renderer) && !HasTopBorders(renderer) && !HasBottomPadding
-                (renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
+            return !(renderer is TableRenderer) && !RendererIsFloated(renderer) && !HasBottomBorders(renderer) && !HasTopBorders
+                (renderer) && !HasBottomPadding(renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
         }
 
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !HasTopBorders
-                (parent) && !HasTopPadding(parent);
+            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
+                (parent) && !HasTopBorders(parent) && !HasTopPadding(parent);
         }
 
         private static bool LastChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !HasBottomBorders
-                (parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
+            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
+                (parent) && !HasBottomBorders(parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
         }
 
         private static bool IsBlockElement(IRenderer renderer) {
@@ -470,6 +485,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool RendererIsFloated(IRenderer renderer) {
+            if (renderer == null) {
+                return false;
+            }
             FloatPropertyValue? floatPropertyValue = renderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             return floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE);
         }
