@@ -445,7 +445,14 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                floatRendererAreas.Add(occupiedArea.GetBBox());
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    floatRendererAreas.Add(occupiedArea.GetBBox());
+                }
+                else {
+                    if (result.GetStatus() == LayoutResult.PARTIAL) {
+                        floatRendererAreas.Add(result.GetSplitRenderer().GetOccupiedArea().GetBBox());
+                    }
+                }
             }
             result.SetMinMaxWidth(countedMinMaxWidth);
             return result;
@@ -638,7 +645,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_676();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_680();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -702,8 +709,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_676 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_676() {
+        private sealed class _IGlyphLineFilter_680 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_680() {
             }
 
             public bool Accept(Glyph glyph) {

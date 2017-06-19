@@ -150,6 +150,7 @@ namespace iText.Layout.Renderer {
                         );
                     float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth() + kidMinMaxWidth.GetAdditionalWidth();
                     // TODO width will be recalculated on float layout; also not setting it results in differences with html, when floating span is split on other line
+                    // TODO may be process floating spans as inline blocks always?
                     //                childRenderer.setProperty(Property.WIDTH, UnitValue.createPointValue(kidMinMaxWidth.getMaxWidth()));
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
@@ -181,16 +182,25 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (childResult.GetStatus() == LayoutResult.PARTIAL) {
-                            // if partial - float is the only kid on line. otherwise width calculations are wrong
-                            // TODO ensure no other thing (like text wrapping the float) will occupy the line. a solution might be setting width as mentioned above
                             floatsPlaced = true;
                             LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
+                            IRenderer splitRenderer = split[0].GetChildRenderers()[split[0].GetChildRenderers().Count - 1];
+                            if (splitRenderer is TextRenderer) {
+                                ((TextRenderer)splitRenderer).TrimFirst();
+                                ((TextRenderer)splitRenderer).TrimLast();
+                            }
+                            // ensure no other thing (like text wrapping the float) will occupy the line
+                            splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
                             // TODO we might want to preserve width for the overflow renderer
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
                             break;
                         }
                         else {
                             floatsPlaced = true;
+                            if (childRenderer is TextRenderer) {
+                                ((TextRenderer)childRenderer).TrimFirst();
+                                ((TextRenderer)childRenderer).TrimLast();
+                            }
                             AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childRenderer.GetOccupiedArea().GetBBox(
                                 ));
                         }
@@ -200,7 +210,8 @@ namespace iText.Layout.Renderer {
                         .IsEmpty()) {
                         if (IsFirstOnRootArea()) {
                             // Current line is empty, kid returns nothing and neither floats nor content
-                            // were met on root area (e.g. page) - return NOTHING, don't layout other line content, expect FORCED_PLACEMENT to be set.
+                            // were met on root area (e.g. page area) - return NOTHING, don't layout other line content,
+                            // expect FORCED_PLACEMENT to be set.
                             break;
                         }
                     }
@@ -635,11 +646,15 @@ namespace iText.Layout.Renderer {
 
         //                child.move(0, floatsDeltaY); // TODO
         protected internal virtual LineRenderer TrimLast() {
-            // TODO trim last non-float?
-            // TODO trim first non-float?
-            // TODO trim first/last floats separately?
-            IRenderer lastRenderer = childRenderers.Count > 0 ? childRenderers[childRenderers.Count - 1] : null;
-            if (lastRenderer is TextRenderer) {
+            int lastIndex = childRenderers.Count;
+            IRenderer lastRenderer = null;
+            while (--lastIndex >= 0) {
+                lastRenderer = childRenderers[lastIndex];
+                if (!IsRendererFloating(lastRenderer)) {
+                    break;
+                }
+            }
+            if (lastRenderer is TextRenderer && lastIndex >= 0) {
                 float trimmedSpace = ((TextRenderer)lastRenderer).TrimLast();
                 occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - trimmedSpace);
             }
@@ -817,6 +832,9 @@ namespace iText.Layout.Renderer {
         private int TrimFirst() {
             int totalNumberOfTrimmedGlyphs = 0;
             foreach (IRenderer renderer in childRenderers) {
+                if (IsRendererFloating(renderer)) {
+                    continue;
+                }
                 if (renderer is TextRenderer) {
                     TextRenderer textRenderer = (TextRenderer)renderer;
                     GlyphLine currentText = textRenderer.GetText();
