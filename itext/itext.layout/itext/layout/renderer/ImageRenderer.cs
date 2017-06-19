@@ -98,7 +98,21 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            width = RetrieveWidth(layoutBox.GetWidth());
+            float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
+                );
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                layoutBox.DecreaseHeight(clearHeightCorrection);
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue
+                    );
+            }
+            else {
+                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth
+                    , clearHeightCorrection, null);
+            }
+            this.width = retrievedWidth;
             height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
@@ -106,20 +120,6 @@ namespace iText.Layout.Renderer {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
-            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
-            if (floatPropertyValue != null) {
-                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
-                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
-                }
-                else {
-                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
-                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
-                    }
-                }
-            }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
@@ -245,10 +245,9 @@ namespace iText.Layout.Renderer {
                     minMaxWidth.SetChildrenMinWidth(0);
                 }
             }
-            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                ().GetWidth(), null);
-            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, floatRendererAreas, 
+                layoutContext.GetArea().GetBBox(), clearHeightCorrection, false);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

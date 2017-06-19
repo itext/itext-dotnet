@@ -189,37 +189,8 @@ namespace iText.Layout.Renderer {
             // key is column number (there can be only one move during one split)
             // value is the previous row number of the cell
             IDictionary<int, int?> rowMoves = new Dictionary<int, int?>();
-            MarginsCollapseHandler marginsCollapseHandler = null;
-            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
-            if (marginsCollapsingEnabled) {
-                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
-                marginsCollapseHandler.StartMarginsCollapse(layoutBox);
-            }
-            ApplyMargins(layoutBox, false);
             int row;
             int col;
-            ApplyFixedXOrYPosition(true, layoutBox);
-            if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
-                Property.FORCED_PLACEMENT))) {
-                layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
-                wasHeightClipped = true;
-            }
-            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
-            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox);
-            }
-            if (floatPropertyValue != null) {
-                if (floatPropertyValue.Equals(FloatPropertyValue.LEFT)) {
-                    SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.LEFT);
-                }
-                else {
-                    if (floatPropertyValue.Equals(FloatPropertyValue.RIGHT)) {
-                        SetProperty(Property.HORIZONTAL_ALIGNMENT, HorizontalAlignment.RIGHT);
-                    }
-                }
-            }
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
@@ -240,9 +211,38 @@ namespace iText.Layout.Renderer {
                 CorrectRowRange();
             }
             if (IsOriginalRenderer()) {
-                CalculateColumnWidths(layoutBox.GetWidth());
+                float[] margins = GetMargins();
+                CalculateColumnWidths(layoutBox.GetWidth() - margins[1] - margins[3]);
             }
             float tableWidth = GetTableWidth();
+            MarginsCollapseHandler marginsCollapseHandler = null;
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
+            }
+            IList<Rectangle> siblingFloatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, siblingFloatRendererAreas
+                , layoutBox);
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                layoutBox.DecreaseHeight(clearHeightCorrection);
+                FloatingHelper.AdjustFloatedTableLayoutBox(this, layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue
+                    );
+            }
+            else {
+                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(siblingFloatRendererAreas, layoutBox
+                    , tableWidth, clearHeightCorrection, marginsCollapseHandler);
+            }
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.StartMarginsCollapse(layoutBox);
+            }
+            ApplyMargins(layoutBox, false);
+            ApplyFixedXOrYPosition(true, layoutBox);
+            if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
+                Property.FORCED_PLACEMENT))) {
+                layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                wasHeightClipped = true;
+            }
             if (layoutBox.GetWidth() > tableWidth) {
                 layoutBox.SetWidth((float)tableWidth + bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth
                     () / 2);
@@ -318,6 +318,7 @@ namespace iText.Layout.Renderer {
             // if this is the last renderer, we will use that information to enlarge rows proportionally
             IList<bool> rowsHasCellWithSetHeight = new List<bool>();
             for (row = 0; row < rows.Count; row++) {
+                IList<Rectangle> childFloatRendererAreas = new List<Rectangle>();
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
                 if (row == 1 && true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
@@ -402,7 +403,7 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
-                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRendererAreas
+                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         ));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
@@ -543,7 +544,6 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
-                rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, floatRendererAreas);
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -889,10 +889,9 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            RemoveUnnecessaryFloatRendererAreas(floatRendererAreas);
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(floatRendererAreas, layoutContext.GetArea().GetBBox
-                ().GetWidth(), null);
-            AdjustLayoutAreaIfClearPropertyPresent(clearHeightCorrection, editedArea, floatPropertyValue);
+            FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
+            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+                , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 
@@ -1321,20 +1320,6 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
-        }
-
-        private float CalculateRowHeightIfFloatRendererPresent(float rowHeight, IList<Rectangle> floatRenderers) {
-            float maxHeight = 0;
-            if (HasProperty(Property.FLOAT)) {
-                return rowHeight;
-            }
-            foreach (Rectangle floatRenderer in floatRenderers) {
-                float floatRendererHeight = floatRenderer.GetHeight();
-                if (floatRendererHeight > maxHeight) {
-                    maxHeight = floatRendererHeight;
-                }
-            }
-            return rowHeight + maxHeight;
         }
 
         private void ApplyFixedXOrYPosition(bool isXPosition, Rectangle layoutBox) {

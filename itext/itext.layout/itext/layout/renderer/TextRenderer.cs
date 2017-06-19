@@ -146,8 +146,14 @@ namespace iText.Layout.Renderer {
                 text = GetGlyphlineWithSpacesInsteadOfTabs(text);
             }
             LayoutArea area = layoutContext.GetArea();
+            Rectangle layoutBox = area.GetBBox().Clone();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
+            }
             float[] margins = GetMargins();
-            Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
+            ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox
@@ -438,6 +444,18 @@ namespace iText.Layout.Renderer {
                     result.SetStatus(LayoutResult.FULL);
                 }
             }
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    if (occupiedArea.GetBBox().GetWidth() > 0) {
+                        floatRendererAreas.Add(occupiedArea.GetBBox());
+                    }
+                }
+                else {
+                    if (result.GetStatus() == LayoutResult.PARTIAL) {
+                        floatRendererAreas.Add(result.GetSplitRenderer().GetOccupiedArea().GetBBox());
+                    }
+                }
+            }
             result.SetMinMaxWidth(countedMinMaxWidth);
             return result;
         }
@@ -629,7 +647,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_662();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_682();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -693,8 +711,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_662 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_662() {
+        private sealed class _IGlyphLineFilter_682 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_682() {
             }
 
             public bool Accept(Glyph glyph) {
