@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea initialCurrentArea;
 
-        private IList<Rectangle> floatRendererAreas = new List<Rectangle>();
+        private IList<Rectangle> floatRendererAreas;
 
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
@@ -307,14 +307,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal override float CalculateFreeSpaceIfFloatPropertyPresent(float freeSpace, IRenderer childRenderer, 
-            Rectangle currentArea) {
-            for (int i = 0; i < floatRendererAreas.Count - 1; i++) {
-                freeSpace -= floatRendererAreas[i].GetWidth();
-            }
-            return freeSpace;
-        }
-
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
             AlignChildHorizontally(renderer, currentArea.GetBBox());
             if (immediateFlush) {
@@ -415,6 +407,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void UpdateCurrentAndInitialArea(LayoutResult overflowResult) {
+            floatRendererAreas = new List<Rectangle>();
             UpdateCurrentArea(overflowResult);
             initialCurrentArea = currentArea == null ? null : currentArea.Clone();
         }

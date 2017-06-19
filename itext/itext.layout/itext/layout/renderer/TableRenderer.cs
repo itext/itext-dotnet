@@ -215,16 +215,15 @@ namespace iText.Layout.Renderer {
                 CalculateColumnWidths(layoutBox.GetWidth() - margins[1] - margins[3]);
             }
             float tableWidth = GetTableWidth();
-            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            float clearHeightCorrection = CalculateClearHeightCorrection(floatRendererAreas, layoutBox);
+            IList<Rectangle> siblingFloatRendererAreas = layoutContext.GetFloatRendererAreas();
+            float clearHeightCorrection = CalculateClearHeightCorrection(siblingFloatRendererAreas, layoutBox);
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
-                AdjustFloatedTableLayoutBox(layoutBox, tableWidth, floatRendererAreas, floatPropertyValue);
+                AdjustFloatedTableLayoutBox(layoutBox, tableWidth, siblingFloatRendererAreas, floatPropertyValue);
             }
             else {
-                AdjustLineAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth);
+                AdjustLineAreaAccordingToFloatRenderers(siblingFloatRendererAreas, layoutBox, tableWidth);
             }
-            floatRendererAreas = new List<Rectangle>();
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
@@ -312,6 +311,7 @@ namespace iText.Layout.Renderer {
             int[] targetOverflowRowIndex = new int[numberOfColumns];
             // if this is the last renderer, we will use that information to enlarge rows proportionally
             IList<bool> rowsHasCellWithSetHeight = new List<bool>();
+            IList<Rectangle> childFloatRendererAreas = new List<Rectangle>();
             for (row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
@@ -397,7 +397,7 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
-                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, floatRendererAreas
+                    LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         ));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
@@ -538,8 +538,8 @@ namespace iText.Layout.Renderer {
                             (cellIndents) - rowspanOffset);
                     }
                 }
-                rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, floatRendererAreas);
-                // TODO child floats
+                rowHeight = CalculateRowHeightIfFloatRendererPresent(rowHeight, childFloatRendererAreas);
+                // TODO seems to not work correctly always
                 if (hasContent) {
                     heights.Add(rowHeight);
                     rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
@@ -885,11 +885,10 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            RemoveUnnecessaryFloatRendererAreas(layoutContext.GetFloatRendererAreas());
-            // TODO parent floats
-            // TODO parent floats
-            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(layoutContext.GetFloatRendererAreas(), layoutContext
-                .GetArea().GetBBox(), clearHeightCorrection);
+            RemoveUnnecessaryFloatRendererAreas(siblingFloatRendererAreas);
+            // TODO parent floats? it seems inconsistent at the moment
+            LayoutArea editedArea = ApplyFloatPropertyOnCurrentArea(siblingFloatRendererAreas, layoutContext.GetArea()
+                .GetBBox(), clearHeightCorrection);
             return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
         }
 

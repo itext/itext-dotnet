@@ -96,6 +96,7 @@ namespace iText.Layout.Renderer {
                 blockWidth = AdjustFloatedBlockLayoutBox(parentBBox, blockWidth, floatRendererAreas, floatPropertyValue);
                 floatRendererAreas = new List<Rectangle>();
             }
+            // TODO what about inline images as floats?
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
@@ -356,6 +357,9 @@ namespace iText.Layout.Renderer {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+            }
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                IncludeChildFloatsInOccupiedArea(floatRendererAreas);
             }
             float moveDown = Math.Min((leadingValue - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox.GetY
                 ());

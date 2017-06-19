@@ -295,8 +295,12 @@ namespace iText.Layout.Renderer {
                 }
                 anythingPlaced = true;
                 if (result.GetOccupiedArea() != null) {
-                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                        ()));
+                    FloatPropertyValue? childFloatProp = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                    if (childFloatProp == null || childFloatProp.Equals(FloatPropertyValue.NONE)) {
+                        // this check is needed only if margins collapsing is enabled
+                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                            ()));
+                    }
                 }
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
@@ -320,6 +324,9 @@ namespace iText.Layout.Renderer {
             }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
+            }
+            if (floatPropertyValue != null && !FloatPropertyValue.NONE.Equals(floatPropertyValue)) {
+                IncludeChildFloatsInOccupiedArea(floatRendererAreas);
             }
             IRenderer overflowRenderer_1 = null;
             float? blockMinHeight = RetrieveMinHeight();
@@ -361,7 +368,7 @@ namespace iText.Layout.Renderer {
                 }
                 ApplyBorderBox(area.GetBBox(), true);
             }
-            Rectangle rect = ApplyMargins(occupiedArea.GetBBox(), true);
+            ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
