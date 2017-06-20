@@ -174,6 +174,8 @@ namespace iText.IO {
 
         public const String InvalidJpeg2000File = "Invalid JPEG2000 file.";
 
+        public const String InvalidWoffFile = "Invalid WOFF font file.";
+
         [Obsolete]
         public const String InvalidMagicValueForBmpFile = "Invalid magic value for bmp file. Must be 'BM'";
 

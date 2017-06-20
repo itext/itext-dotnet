@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -193,6 +195,9 @@ namespace iText.IO.Font {
             if (name == null) {
                 if (fontProgram != null) {
                     try {
+                        if (WoffConverter.IsWoffFont(fontProgram)) {
+                            fontProgram = WoffConverter.Convert(fontProgram);
+                        }
                         fontBuilt = new TrueTypeFont(fontProgram);
                     }
                     catch (Exception) {
@@ -216,7 +221,19 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
+                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf") || baseName
+                            .ToLowerInvariant().EndsWith(".woff")) {
+                            if (baseName.ToLowerInvariant().EndsWith(".woff")) {
+                                if (fontProgram == null) {
+                                    fontProgram = StreamUtil.InputStreamToArray(new FileStream(baseName, FileMode.Open, FileAccess.Read));
+                                }
+                                try {
+                                    fontProgram = WoffConverter.Convert(fontProgram);
+                                }
+                                catch (ArgumentException woffException) {
+                                    throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
+                                }
+                            }
                             if (fontProgram != null) {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
