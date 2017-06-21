@@ -103,7 +103,13 @@ namespace iText.Layout.Renderer {
             float[] paddings = GetPaddings();
             ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned || rotation != null)) {
-                parentBBox.SetWidth((float)blockWidth);
+                // TODO DEVSIX-1174
+                UnitValue widthVal = this.GetProperty<UnitValue>(Property.WIDTH);
+                if (widthVal != null && widthVal.IsPercentValue() && widthVal.GetValue() == 100) {
+                }
+                else {
+                    parentBBox.SetWidth((float)blockWidth);
+                }
             }
             float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
