@@ -381,6 +381,11 @@ namespace iText.Layout.Renderer {
                 if (children != null) {
                     bool newLineFound = false;
                     IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph>();
+                    // We shouldn't forget about images, float, inline-blocks that has to be inserted somewhere.
+                    // TODO determine correct place to insert this content
+                    IDictionary<TextRenderer, IRenderer> insertAfter = new Dictionary<TextRenderer, IRenderer>();
+                    IList<IRenderer> starterNonTextRenderers = new List<IRenderer>();
+                    TextRenderer lastTextRenderer = null;
                     foreach (IRenderer child in children) {
                         if (newLineFound) {
                             break;
@@ -393,6 +398,15 @@ namespace iText.Layout.Renderer {
                                     break;
                                 }
                                 lineGlyphs.Add(new LineRenderer.RendererGlyph(childLine.Get(i), (TextRenderer)child));
+                            }
+                            lastTextRenderer = (TextRenderer)child;
+                        }
+                        else {
+                            if (lastTextRenderer != null) {
+                                insertAfter.Put(lastTextRenderer, child);
+                            }
+                            else {
+                                starterNonTextRenderers.Add(child);
                             }
                         }
                     }
@@ -407,10 +421,20 @@ namespace iText.Layout.Renderer {
                         int initialPos = 0;
                         bool reversed = false;
                         int offset = 0;
+                        // Insert non-text renderers
+                        foreach (IRenderer child in starterNonTextRenderers) {
+                            children.Add(child);
+                        }
                         while (pos < lineGlyphs.Count) {
                             IRenderer renderer = lineGlyphs[pos].renderer;
                             TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer).RemoveReversedRanges();
                             children.Add(newRenderer);
+                            // Insert non-text renderers
+                            if ((pos == lineGlyphs.Count - 1 || lineGlyphs[pos + 1].renderer != renderer) && insertAfter.ContainsKey((
+                                TextRenderer)renderer)) {
+                                children.Add(insertAfter.Get((TextRenderer)renderer));
+                                insertAfter.JRemove((TextRenderer)renderer);
+                            }
                             newRenderer.line = new GlyphLine(newRenderer.line);
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
                             while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer) {
@@ -442,10 +466,17 @@ namespace iText.Layout.Renderer {
                         }
                         float currentXPos = occupiedArea.GetBBox().GetLeft();
                         foreach (IRenderer child in children) {
-                            float currentWidth = ((TextRenderer)child).CalculateLineWidth();
-                            float[] margins = ((TextRenderer)child).GetMargins();
-                            currentWidth += margins[1] + margins[3];
-                            ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
+                            float currentWidth;
+                            if (child is TextRenderer) {
+                                currentWidth = ((TextRenderer)child).CalculateLineWidth();
+                                float[] margins = ((TextRenderer)child).GetMargins();
+                                currentWidth += margins[1] + margins[3];
+                                ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
+                            }
+                            else {
+                                currentWidth = child.GetOccupiedArea().GetBBox().GetWidth();
+                                child.GetOccupiedArea().GetBBox().SetX(currentXPos);
+                            }
                             currentXPos += currentWidth;
                         }
                     }
