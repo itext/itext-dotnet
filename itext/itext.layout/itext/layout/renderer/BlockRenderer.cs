@@ -665,7 +665,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void EndRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            if (angle != null) {
+            if (angle != null && HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                 canvas.RestoreState();
             }
         }

@@ -146,6 +146,11 @@ namespace iText.Layout.Renderer {
                 backup.RestoreProperty(Property.HEIGHT);
                 backup.RestoreProperty(Property.MIN_HEIGHT);
                 backup.RestoreProperty(Property.MAX_HEIGHT);
+                Rectangle additions = new Rectangle(0, 0);
+                //TODO: This method is expected to return content width. This may change during DEVSIX-1174
+                renderer.ApplyMargins(additions, true);
+                renderer.ApplyBorderBox(additions, true);
+                renderer.ApplyPaddings(additions, true);
                 if (layoutResult.GetOccupiedArea() != null) {
                     double area = layoutResult.GetOccupiedArea().GetBBox().GetWidth() * layoutResult.GetOccupiedArea().GetBBox
                         ().GetHeight();
@@ -153,10 +158,10 @@ namespace iText.Layout.Renderer {
                     if (result != null) {
                         backup.RestoreProperty(Property.ROTATION_ANGLE);
                         if (result.GetMaxWidthHeight() > result.GetMinWidthHeight()) {
-                            return (float)result.GetMinWidthOrigin() + MinMaxWidthUtils.GetEps();
+                            return (float)(result.GetMinWidthOrigin() - additions.GetWidth() + MinMaxWidthUtils.GetEps());
                         }
                         else {
-                            return (float)result.GetMaxWidthOrigin() + MinMaxWidthUtils.GetEps();
+                            return (float)(result.GetMaxWidthOrigin() - additions.GetWidth() + MinMaxWidthUtils.GetEps());
                         }
                     }
                 }

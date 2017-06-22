@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -598,7 +599,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest03() {
-            //TODO: currently is incorrect. See DEVSIX-988
             String outFileName = destinationFolder + "fixedWidthRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest03.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
@@ -608,6 +608,52 @@ namespace iText.Layout {
             Div d1 = new Div().Add(new Paragraph(text)).SetWidth(500).SetRotationAngle(Math.PI * 5 / 8).SetBorder(new 
                 SolidBorder(Color.BLUE, 5));
             doc.Add(d.Add(d1));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageInRotatedBlockTest01() {
+            String outFileName = destinationFolder + "imageInRotatedBlockTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageInRotatedBlockTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            image.SetWidth(200);
+            Div div = new Div();
+            div.SetRotationAngle(Math.PI / 2);
+            div.SetBorder(new SolidBorder(Color.BLUE, 1));
+            div.Add(image);
+            doc.Add(div);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, Count = 2)]
+        public virtual void ImageInRotatedBlockTest02() {
+            String outFileName = destinationFolder + "imageInRotatedBlockTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageInRotatedBlockTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetWidth(200);
+            Div div = new Div();
+            div.SetHeight(100);
+            div.SetRotationAngle(Math.PI / 2);
+            div.SetBorder(new SolidBorder(Color.BLUE, 1));
+            div.Add(image);
+            doc.Add(div);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
