@@ -561,8 +561,10 @@ namespace iText.Kernel.Pdf.Action {
 
         /// <summary>
         /// Adds an additional action to the provided
-        /// <see>PdfObjectWrapper<PdfDictionary></see>
-        /// wrapper.
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
+        /// &lt;
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// &gt; wrapper.
         /// </summary>
         /// <param name="wrapper">the wrapper to add an additional action to</param>
         /// <param name="key">

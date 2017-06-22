@@ -41,9 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
@@ -174,6 +176,27 @@ namespace iText.Layout {
                  + "Save time in Word with new buttons that show up where you need them. To change the way a picture fits in your document, click it and a button for layout options appears next to it. When you work on a table, click where you want to add a row or a column, and then click the plus sign.\n"
                  + "Reading is easier, too, in the new Reading view. You can collapse parts of the document and focus on the text you want. If you need to stop reading before you reach the end, Word remembers where you left off - even on another device.\n"
                 );
+            document.Add(paragraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void JustifyAllTest02() {
+            String outFileName = destinationFolder + "justifyAllTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_justifyAllTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            PdfFont type0 = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
+                );
+            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", true);
+            Paragraph paragraph = new Paragraph().SetSpacingRatio(1).SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
+            paragraph.Add("If you need to stop reading before you reach the end");
+            document.Add(paragraph.SetFont(type0));
+            paragraph.SetFont(simpleFont);
             document.Add(paragraph);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

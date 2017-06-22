@@ -162,6 +162,10 @@ namespace iText.Kernel.Pdf {
         private LinkedDictionary<PdfPage, IList<PdfLinkAnnotation>> linkAnnotations = new LinkedDictionary<PdfPage
             , IList<PdfLinkAnnotation>>();
 
+        /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
+        internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
+            , byte[]>();
+
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader) {
@@ -909,7 +913,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageTo">1-based end of the range of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage, IPdfPageExtraCopier copier) {
@@ -946,7 +955,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end of the range of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be null.</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages.</returns>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , IPdfPageExtraCopier copier) {
@@ -979,7 +993,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="pagesToCopy">list of pages to be copied. TreeSet for the order of the pages to be natural.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
-        /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of new copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             int insertBeforePage, IPdfPageExtraCopier copier) {
@@ -1077,11 +1096,28 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="pagesToCopy">list of pages to be copied. TreeSet for the order of the pages to be natural.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
-        /// <param name="copier">a copier which bears a special copy logic</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
         /// <returns>list of copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             IPdfPageExtraCopier copier) {
             return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier);
+        }
+
+        /// <summary>Flush all copied objects and remove them from copied cache.</summary>
+        /// <remarks>
+        /// Flush all copied objects and remove them from copied cache.
+        /// Note, if you will copy objects from the same document, doublicated objects will be created.
+        /// </remarks>
+        /// <param name="sourceDoc">source document</param>
+        public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc) {
+            if (GetWriter() != null) {
+                GetWriter().FlushCopiedObjects(sourceDoc.GetDocumentId());
+            }
         }
 
         /// <summary>
@@ -1865,7 +1901,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>List all newly added or loaded fonts</summary>
         /// <returns>
         /// List of
-        /// <seealso>PdfFonts</seealso>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// .
         /// </returns>
         protected internal virtual ICollection<PdfFont> GetDocumentFonts() {
@@ -2143,11 +2179,11 @@ namespace iText.Kernel.Pdf {
         /// an unique object key during the copy process.
         /// </remarks>
         internal class IndirectRefDescription {
-            private long docId;
+            internal readonly long docId;
 
-            private int objNr;
+            internal readonly int objNr;
 
-            private int genNr;
+            internal readonly int genNr;
 
             internal IndirectRefDescription(PdfIndirectReference reference) {
                 this.docId = reference.GetDocument().GetDocumentId();

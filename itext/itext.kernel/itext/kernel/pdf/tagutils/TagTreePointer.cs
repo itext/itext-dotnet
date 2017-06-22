@@ -433,7 +433,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// <br /><br />
         /// If
-        /// 
+        /// <paramref name="keepWaiting"/>
         /// is true then a newly created tag will retain the connection with given
         /// accessible element. See
         /// <see cref="MoveToTag(IAccessibleElement)"/>

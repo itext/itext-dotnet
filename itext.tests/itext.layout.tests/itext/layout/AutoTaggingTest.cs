@@ -49,6 +49,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -264,8 +265,6 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
-            String outFileName = destinationFolder + "tableTest05.pdf";
-            String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -340,6 +339,56 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Close();
             CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void LinkInsideTable() {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
+            pdf.SetTagged();
+            Document doc = new Document(pdf);
+            Table table = new Table(new float[] { 1, 2, 3 }).SetFixedLayout().SetWidth(400);
+            table.AddCell("1x");
+            table.AddCell("2x");
+            table.AddCell("3x");
+            table.SetProperty(Property.LINK_ANNOTATION, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0))
+                .SetAction(PdfAction.CreateURI("http://itextpdf.com/"))));
+            doc.Add(table);
+            doc.Close();
+            CompareResult("linkInsideTable.pdf", "cmp_linkInsideTable.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void TableTest08() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(new UnitValue[5], true);
+            doc.Add(table);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
+            table.AddHeaderCell(cell);
+            for (int i = 0; i < 5; ++i) {
+                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+            }
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
+            table.AddFooterCell(cell);
+            table.SetSkipFirstHeader(true);
+            table.SetSkipLastFooter(true);
+            for (int i = 0; i < 350; i++) {
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
+                table.Flush();
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>

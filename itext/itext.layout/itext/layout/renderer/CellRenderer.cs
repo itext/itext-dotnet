@@ -59,6 +59,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
+            System.Diagnostics.Debug.Assert(modelElement != null);
             SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }

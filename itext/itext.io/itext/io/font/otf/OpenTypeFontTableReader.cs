@@ -186,7 +186,7 @@ namespace iText.IO.Font.Otf {
 
         /// <exception cref="System.IO.IOException"/>
         protected internal OtfClass ReadClassDefinition(int classLocation) {
-            return new OtfClass(rf, classLocation);
+            return OtfClass.Create(rf, classLocation);
         }
 
         /// <exception cref="System.IO.IOException"/>

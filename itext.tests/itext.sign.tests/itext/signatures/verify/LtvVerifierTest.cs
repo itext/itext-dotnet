@@ -76,5 +76,17 @@ namespace iText.Signatures.Verify {
             IList<VerificationOK> verificationMessages = verifier.Verify(null);
             NUnit.Framework.Assert.AreEqual(7, verificationMessages.Count);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void ValidLtvDocTest02() {
+            String ltvTsFileName = sourceFolder + "ltvDoc.pdf";
+            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(ltvTsFileName)));
+            verifier.SetCertificateOption(LtvVerification.CertificateOption.WHOLE_CHAIN);
+            verifier.SetRootStore(Pkcs12FileHelper.InitStore(certsSrc + "rootStore.p12", password));
+            IList<VerificationOK> verificationMessages = verifier.Verify(null);
+            NUnit.Framework.Assert.AreEqual(7, verificationMessages.Count);
+        }
     }
 }

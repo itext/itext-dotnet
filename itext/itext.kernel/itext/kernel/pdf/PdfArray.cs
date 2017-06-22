@@ -177,6 +177,17 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Create a new PdfArray.</summary>
+        /// <remarks>Create a new PdfArray. The PdfObjects in the iterable object will be added to the PdfArray.</remarks>
+        /// <param name="objects">List of PdfObjects to be added to this PdfArray</param>
+        /// <param name="initialCapacity">Initial capacity of this PdfArray</param>
+        public PdfArray(IEnumerable<PdfObject> objects, int initialCapacity) {
+            list = new List<PdfObject>(initialCapacity);
+            foreach (PdfObject element in objects) {
+                Add(element);
+            }
+        }
+
         public virtual int Size() {
             return list.Count;
         }

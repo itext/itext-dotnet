@@ -732,11 +732,11 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
-        /// <wrap>
-        /// error message into
+        /// <exception cref="iText.IO.IOException">
+        /// wrap error message into
         /// <c>PdfRuntimeException</c>
         /// and add position in file.
-        /// </wrap>
+        /// </exception>
         public virtual void ThrowError(String error, params Object[] messageParams) {
             try {
                 throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams

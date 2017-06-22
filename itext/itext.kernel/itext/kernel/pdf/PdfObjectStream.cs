@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.IO;
 using iText.IO.Source;
 using iText.Kernel;
 
@@ -53,16 +54,11 @@ namespace iText.Kernel.Pdf {
         protected internal PdfNumber size = new PdfNumber(0);
 
         /// <summary>Stream containing object indices, a heading part of object stream.</summary>
-        protected internal PdfOutputStream indexStream = new PdfOutputStream(new ByteArrayOutputStream());
+        protected internal PdfOutputStream indexStream;
 
         public PdfObjectStream(PdfDocument doc)
-            : base() {
-            //avoid reuse existed references
-            MakeIndirect(doc, doc.GetXref().CreateNewIndirectReference(doc));
-            GetOutputStream().document = doc;
-            Put(PdfName.Type, PdfName.ObjStm);
-            Put(PdfName.N, size);
-            Put(PdfName.First, new PdfNumber(indexStream.GetCurrentPos()));
+            : this(doc, new ByteArrayOutputStream()) {
+            indexStream = new PdfOutputStream(new ByteArrayOutputStream());
         }
 
         /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
@@ -72,13 +68,21 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="prev">previous PdfObjectStream.</param>
         internal PdfObjectStream(iText.Kernel.Pdf.PdfObjectStream prev)
-            : this(prev.GetIndirectReference().GetDocument()) {
-            ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream().GetOutputStream();
-            prevOutputStream.JReset();
-            InitOutputStream(prevOutputStream);
-            ByteArrayOutputStream prevIndexStream = ((ByteArrayOutputStream)indexStream.GetOutputStream());
-            prevIndexStream.JReset();
-            indexStream = new PdfOutputStream(prevIndexStream);
+            : this(prev.GetIndirectReference().GetDocument(), prev.GetOutputStream().GetOutputStream()) {
+            indexStream = new PdfOutputStream(prev.indexStream.GetOutputStream());
+            ((ByteArrayOutputStream)outputStream.GetOutputStream()).JReset();
+            ((ByteArrayOutputStream)indexStream.GetOutputStream()).JReset();
+            prev.ReleaseContent(true);
+        }
+
+        private PdfObjectStream(PdfDocument doc, Stream outputStream)
+            : base(outputStream) {
+            //avoid reuse existed references, create new, opposite to get next reference
+            MakeIndirect(doc, doc.GetXref().CreateNewIndirectReference(doc));
+            GetOutputStream().document = doc;
+            Put(PdfName.Type, PdfName.ObjStm);
+            Put(PdfName.N, size);
+            Put(PdfName.First, new PdfNumber(0));
         }
 
         /// <summary>Adds object to the object stream.</summary>
@@ -95,7 +99,7 @@ namespace iText.Kernel.Pdf {
             @object.GetIndirectReference().SetIndex(size.IntValue());
             outputStream.WriteSpace();
             size.Increment();
-            ((PdfNumber)Get(PdfName.First)).SetValue(indexStream.GetCurrentPos());
+            GetAsNumber(PdfName.First).SetValue(indexStream.GetCurrentPos());
         }
 
         /// <summary>Gets object stream size (number of objects inside).</summary>
@@ -114,14 +118,9 @@ namespace iText.Kernel.Pdf {
 
         private void ReleaseContent(bool close) {
             if (close) {
-                base.ReleaseContent();
-                try {
-                    indexStream.Dispose();
-                }
-                catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.IoException, e);
-                }
+                outputStream = null;
                 indexStream = null;
+                base.ReleaseContent();
             }
         }
     }

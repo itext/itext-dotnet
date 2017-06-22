@@ -67,7 +67,7 @@ internal static class KernelExtensions {
     }
 
     public static void JReset(this MemoryStream stream) {
-        stream.Position = 0;
+        stream.SetLength(0);
     }
 
     public static void Write(this Stream stream, int value) {

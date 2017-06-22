@@ -103,7 +103,7 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
-        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
                 , AbstractRenderer.INF))));
             if (errorResult != null) {

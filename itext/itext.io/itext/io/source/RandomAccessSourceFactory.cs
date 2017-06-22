@@ -153,7 +153,7 @@ namespace iText.IO.Source
 		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(Uri url) {
 #if !NETSTANDARD1_6
-            WebRequest wr = WebRequest.Create(url);
+            WebRequest wr = WebRequest.Create(Uri.UnescapeDataString(url.AbsoluteUri));
             wr.Credentials = CredentialCache.DefaultCredentials;
             Stream isp = wr.GetResponse().GetResponseStream();
 #else

@@ -166,7 +166,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_linkInRotatedCell.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 2 }));
             Link chunk = new Link("Click here", PdfAction.CreateURI("http://itextpdf.com/"));
             table.AddCell(new Cell().Add(new Paragraph().Add(chunk)).SetRotationAngle(Math.PI / 2));
             chunk = new Link("Click here 2", PdfAction.CreateURI("http://itextpdf.com/"));
@@ -194,8 +194,8 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void RotatedLinkInnerRotation() {
             String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLinkInnerRotation.pdf";

@@ -57,6 +57,8 @@ namespace iText.Layout.Renderer {
 
         protected internal int currentPageNumber;
 
+        protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
+
         private IRenderer keepWithNextHangingRenderer;
 
         private LayoutResult keepWithNextHangingRendererLayoutResult;
@@ -65,7 +67,7 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea initialCurrentArea;
 
-        private IList<Rectangle> floatRendererAreas = new List<Rectangle>();
+        private IList<Rectangle> floatRendererAreas;
 
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
@@ -99,7 +101,7 @@ namespace iText.Layout.Renderer {
                 LayoutArea storedArea = null;
                 LayoutArea nextStoredArea = null;
                 MarginsCollapseInfo childMarginsInfo = null;
-                if (marginsCollapsingEnabled && currentArea != null && renderer != null && floatRendererAreas.Count == 0) {
+                if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
@@ -189,7 +191,7 @@ namespace iText.Layout.Renderer {
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
                 }
-                if (marginsCollapsingEnabled && floatRendererAreas.Count == 0) {
+                if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                 }
                 if (null != result && null != result.GetSplitRenderer()) {
@@ -274,6 +276,7 @@ namespace iText.Layout.Renderer {
             if (!immediateFlush) {
                 Flush();
             }
+            FlushWaitingDrawingElements();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -292,6 +295,14 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
 
+        protected internal virtual void FlushWaitingDrawingElements() {
+            for (int i = 0; i < waitingDrawingElements.Count; ++i) {
+                IRenderer waitingDrawingElement = waitingDrawingElements[i];
+                FlushSingleRenderer(waitingDrawingElement);
+            }
+            waitingDrawingElements.Clear();
+        }
+
         protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {
             if (currentArea != null) {
@@ -305,14 +316,6 @@ namespace iText.Layout.Renderer {
             if (!immediateFlush) {
                 childRenderers.AddAll(resultRenderers);
             }
-        }
-
-        internal override float CalculateFreeSpaceIfFloatPropertyPresent(float freeSpace, IRenderer childRenderer, 
-            Rectangle currentArea) {
-            for (int i = 0; i < floatRendererAreas.Count - 1; i++) {
-                freeSpace -= floatRendererAreas[i].GetWidth();
-            }
-            return freeSpace;
         }
 
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
@@ -415,6 +418,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void UpdateCurrentAndInitialArea(LayoutResult overflowResult) {
+            floatRendererAreas = new List<Rectangle>();
             UpdateCurrentArea(overflowResult);
             initialCurrentArea = currentArea == null ? null : currentArea.Clone();
         }

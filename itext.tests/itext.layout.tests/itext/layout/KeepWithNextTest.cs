@@ -46,6 +46,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -280,6 +281,25 @@ namespace iText.Layout {
                 list.Add("item");
             }
             document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void KeepWithNextTest11() {
+            String outFileName = destinationFolder + "keepWithNextTest11.pdf";
+            String cmpFileName = sourceFolder + "cmp_keepWithNextTest11.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            Style style = new Style();
+            style.SetProperty(Property.KEEP_WITH_NEXT, true);
+            document.Add(new Paragraph("A").AddStyle(style));
+            Table table = new Table(1).SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(2));
+            table.AddCell("Body").AddHeaderCell("Header");
+            document.Add(table);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

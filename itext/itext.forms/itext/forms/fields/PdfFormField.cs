@@ -2311,8 +2311,10 @@ namespace iText.Forms.Fields {
                         DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
                     }
                     appearance.GetResources().AddFont(GetDocument(), localFont);
+                    appearance.SetModified();
                     PdfDictionary ap = new PdfDictionary();
                     ap.Put(PdfName.N, appearance.GetPdfObject());
+                    ap.SetModified();
                     Put(PdfName.AP, ap);
                     return true;
                 }
@@ -2430,13 +2432,18 @@ namespace iText.Forms.Fields {
         /// <summary>According to spec (ISO-32000-1, 12.7.3.3) zero font size should interpretaded as auto size.</summary>
         private float NormalizeFontSize(float fs, PdfFont localFont, PdfArray bBox, String value) {
             if (fs == 0) {
-                float height = bBox.ToRectangle().GetHeight() - borderWidth * 2;
-                int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-                fs = height / ((fontBbox[2] - fontBbox[1]) / FontProgram.UNITS_NORMALIZATION);
-                float baseWidth = localFont.GetWidth(value, 1);
-                float offsetX = Math.Max(borderWidth + X_OFFSET, 1);
-                if (baseWidth != 0) {
-                    fs = Math.Min(fs, (bBox.ToRectangle().GetWidth() - X_OFFSET * 2 * offsetX) / baseWidth);
+                if (IsMultiline()) {
+                    fontSize = DEFAULT_FONT_SIZE;
+                }
+                else {
+                    float height = bBox.ToRectangle().GetHeight() - borderWidth * 2;
+                    int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
+                    fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
+                    float baseWidth = localFont.GetWidth(value, 1);
+                    float offsetX = Math.Max(borderWidth + X_OFFSET, 1);
+                    if (baseWidth != 0) {
+                        fs = Math.Min(fs, (bBox.ToRectangle().GetWidth() - X_OFFSET * 2 * offsetX) / baseWidth);
+                    }
                 }
             }
             if (fs < MIN_FONT_SIZE) {

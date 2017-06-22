@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -57,6 +59,12 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/FloatTest/";
+
+        private const String text = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document. "
+             + "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries. "
+             + "Themes and styles also help keep your document coordinated. When you click Design and choose a new Theme, the pictures, charts, and SmartArt graphics change to match your new theme. When you apply styles, your headings change to match the new theme. "
+             + "Save time in Word with new buttons that show up where you need them. To change the way a picture fits in your document, click it and a button for layout options appears next to it. When you work on a table, click where you want to add a row or a column, and then click the plus sign. "
+             + "Reading is easier, too, in the new Reading view. You can collapse parts of the document and focus on the text you want. If you need to stop reading before you reach the end, Word remembers where you left off - even on another device. ";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -92,7 +100,7 @@ namespace iText.Layout {
             doc.Add(p2);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff01_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -126,7 +134,7 @@ namespace iText.Layout {
             doc.Add(p3);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff02_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -150,7 +158,7 @@ namespace iText.Layout {
             doc.Add(new Paragraph("div2"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff03_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -185,12 +193,13 @@ namespace iText.Layout {
             doc.Add(coloredDiv);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff04_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("block level floating elements page-overflow and splitting not supported yet")]
         public virtual void FloatDivTest03() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
             String outFile = destinationFolder + "floatDivTest03.pdf";
@@ -217,7 +226,7 @@ namespace iText.Layout {
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff05_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -244,7 +253,203 @@ namespace iText.Layout {
             document.Add(table);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff"));
+                "diff06_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("block level floating elements page-overflow and splitting not supported yet")]
+        public virtual void FloatingImageToNextPage() {
+            String cmpFileName = sourceFolder + "cmp_floatingImageToNextPage.pdf";
+            String outFile = destinationFolder + "floatingImageToNextPage.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
+                (100, 500);
+            img1.SetMarginLeft(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            img2.SetMarginRight(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(img1);
+            document.Add(new Paragraph(text));
+            document.Add(new Paragraph(text));
+            document.Add(img2);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff07_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineFloatingImageToNextPage() {
+            String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
+            String outFile = destinationFolder + "inlineFloatingImageToNextPage.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
+                (100, 500);
+            img1.SetMarginLeft(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            img2.SetMarginRight(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(img1);
+            document.Add(new Paragraph(text));
+            document.Add(new Paragraph(text));
+            Paragraph p = new Paragraph();
+            p.Add(img2).Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff08_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatingTwoImages() {
+            String cmpFileName = sourceFolder + "cmp_floatingTwoImages.pdf";
+            String outFile = destinationFolder + "floatingTwoImages.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (400, 400);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (400, 400);
+            img1.SetMarginRight(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            img2.SetMarginRight(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(img1);
+            document.Add(img2);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff09_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatingTwoImagesLR() {
+            String cmpFileName = sourceFolder + "cmp_floatingTwoImagesLR.pdf";
+            String outFile = destinationFolder + "floatingTwoImagesLR.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (350, 350);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (350, 350);
+            img1.SetMarginLeft(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            img2.SetMarginRight(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(img1);
+            document.Add(img2);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff10_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatingImageInParagraph() {
+            String cmpFileName = sourceFolder + "cmp_floatingImageInParagraph.pdf";
+            String outFile = destinationFolder + "floatingImageInParagraph.pdf";
+            String imageSrc = sourceFolder + "itis.jpg";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            // Image floats on the left inside the paragraph
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img1.SetMarginRight(10);
+            img1.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Paragraph p = new Paragraph();
+            p.Add(img1).Add(text);
+            document.Add(p);
+            // Image floats on the right inside the paragraph
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img2.SetMarginLeft(10);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            p = new Paragraph();
+            p.Add(img2).Add(text);
+            document.Add(p);
+            // Paragraph containing image floats on the right inside the paragraph
+            iText.Layout.Element.Image img3 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img3.SetMarginLeft(10);
+            p = new Paragraph();
+            p.Add(img3);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(p);
+            document.Add(new Paragraph(text));
+            // Image floats on the left inside short paragraph
+            iText.Layout.Element.Image img4 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img4.SetMarginRight(10);
+            img4.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p = new Paragraph();
+            p.Add(img4).Add("A little text.");
+            document.Add(p);
+            document.Add(new Paragraph(text));
+            // Image floats on the left inside short paragraph
+            iText.Layout.Element.Image img5 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
+                (100, 100);
+            img5.SetMarginRight(10);
+            img5.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p = new Paragraph();
+            p.Add(img4).Add("A little text.");
+            document.Add(p);
+            p = new Paragraph(text);
+            p.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff10_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnCanvas() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnCanvas.pdf";
+            String outFile = destinationFolder + "floatsOnCanvas.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas pdfCanvas = new PdfCanvas(page);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins<Rectangle
+                >(36, 36, 36, 36, false));
+            Div div = new Div().SetBackgroundColor(Color.RED);
+            Div fDiv = new Div().SetBackgroundColor(Color.BLUE).SetWidth(200).SetHeight(200);
+            fDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Div fInnerDiv1 = new Div().SetWidth(50).SetHeight(50);
+            fInnerDiv1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            fInnerDiv1.SetBackgroundColor(Color.YELLOW);
+            Div fInnerDiv2 = new Div().SetWidth(50).SetHeight(50);
+            fInnerDiv2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            fInnerDiv2.SetBackgroundColor(Color.CYAN);
+            fDiv.Add(fInnerDiv1);
+            fDiv.Add(fInnerDiv2);
+            fDiv.Add(new Paragraph("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add"
+                ));
+            div.Add(fDiv).Add(new Paragraph("Hello"));
+            canvas.Add(div);
+            div = new Div().SetBackgroundColor(Color.GREEN);
+            div.Add(new Paragraph("World"));
+            canvas.Add(div);
+            canvas.Add(div);
+            canvas.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff10_"));
         }
     }
 }

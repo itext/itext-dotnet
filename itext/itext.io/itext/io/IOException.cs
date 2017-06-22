@@ -174,6 +174,8 @@ namespace iText.IO {
 
         public const String InvalidJpeg2000File = "Invalid JPEG2000 file.";
 
+        public const String InvalidWoffFile = "Invalid WOFF font file.";
+
         [Obsolete]
         public const String InvalidMagicValueForBmpFile = "Invalid magic value for bmp file. Must be 'BM'";
 
@@ -203,7 +205,7 @@ namespace iText.IO {
 
         public const String PageNumberMustBeGtEq1 = "Page number must be >= 1.";
 
-        [System.ObsoleteAttribute(@"because naming clash with Com itextpdf io font PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
+        [System.ObsoleteAttribute(@"because naming clash with iText.IO.Font.PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
             )]
         public const String PdfEncodings = "Pdf encodings.";
 

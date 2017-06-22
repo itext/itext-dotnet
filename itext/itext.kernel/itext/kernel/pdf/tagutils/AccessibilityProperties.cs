@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -171,16 +172,16 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal virtual void SetToStructElem(PdfStructElem elem) {
             if (GetActualText() != null) {
-                elem.SetActualText(new PdfString(GetActualText()));
+                elem.SetActualText(new PdfString(GetActualText(), PdfEncodings.UNICODE_BIG));
             }
             if (GetAlternateDescription() != null) {
-                elem.SetAlt(new PdfString(GetAlternateDescription()));
+                elem.SetAlt(new PdfString(GetAlternateDescription(), PdfEncodings.UNICODE_BIG));
             }
             if (GetExpansion() != null) {
-                elem.SetE(new PdfString(GetExpansion()));
+                elem.SetE(new PdfString(GetExpansion(), PdfEncodings.UNICODE_BIG));
             }
             if (GetLanguage() != null) {
-                elem.SetLang(new PdfString(GetLanguage()));
+                elem.SetLang(new PdfString(GetLanguage(), PdfEncodings.UNICODE_BIG));
             }
             IList<PdfDictionary> newAttributesList = GetAttributesList();
             if (newAttributesList.Count > 0) {

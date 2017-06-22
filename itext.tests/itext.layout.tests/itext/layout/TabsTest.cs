@@ -42,11 +42,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -79,6 +82,9 @@ namespace iText.Layout {
              + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
              + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
+        private const String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t65#1094.6177##1128\n\t65.7#463\n\t68750.25121\n\t393#19.6#418#31\n\t7#811";
+
+        // private static final String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t";
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
@@ -157,8 +163,8 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnchorTabStopsTest() {
-            String fileName = "anchorTabStopsTest.pdf";
+        public virtual void AnchorTabStopsTest01() {
+            String fileName = "anchorTabStopsTest01.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
             Document doc = InitDocument(outFileName);
@@ -175,6 +181,29 @@ namespace iText.Layout {
             AddTabbedTextToParagraph(p, text2, positions1, alignments1, leaders1, anchors1);
             doc.Add(p);
             DrawTabStopsPositions(positions1, doc, 1, 0, 120);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + outFileName));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AnchorTabStopsTest02() {
+            String fileName = "anchorTabStopsTest02.pdf";
+            String outFileName = destinationFolder + fileName;
+            String cmpFileName = sourceFolder + "cmp_" + fileName;
+            Document doc = InitDocument(outFileName);
+            float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 2;
+            float[] positions1 = new float[] { tabInterval };
+            TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.ANCHOR };
+            ILineDrawer[] leaders1 = new ILineDrawer[] { new DottedLine() };
+            char?[] anchors1 = new char?[] { '.' };
+            Paragraph p = new Paragraph();
+            p.SetFontSize(8);
+            AddTabbedTextToParagraph(p, text3, positions1, alignments1, leaders1, anchors1);
+            doc.Add(p);
+            DrawTabStopsPositions(positions1, doc, 1, 0, 200);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff" + outFileName));
@@ -267,6 +296,39 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TabsInParagraphTest01() {
+            String outFileName = destinationFolder + "tabsInParagraphTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabsInParagraphTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            float tabWidth = pdfDoc.GetDefaultPageSize().GetWidth() - doc.GetLeftMargin() - doc.GetRightMargin();
+            Paragraph p = new Paragraph();
+            p.AddTabStops(new TabStop(tabWidth, TabAlignment.RIGHT)).Add("There is a right-aligned tab after me. And then three chunks of text."
+                ).Add(new Tab()).Add("Text1").Add("Text2").Add("Text3");
+            doc.Add(p);
+            p = new Paragraph();
+            p.AddTabStops(new TabStop(tabWidth, TabAlignment.RIGHT)).Add("There is a right-aligned tab after me. And then three chunks of text."
+                ).Add(new Tab()).Add("Text1").Add("Tex\nt2").Add("Text3");
+            doc.Add(p);
+            p = new Paragraph();
+            p.AddTabStops(new TabStop(tabWidth, TabAlignment.RIGHT)).Add("There is a right-aligned tab after me. And then three chunks of text."
+                ).Add(new Tab()).Add("Long Long Long Long Long Long Long Text1").Add("Tex\nt2").Add("Text3");
+            doc.Add(p);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
+                )));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            p = new Paragraph();
+            p.AddTabStops(new TabStop(tabWidth, TabAlignment.RIGHT)).Add("There is a right-aligned tab after me. And then texts and an image."
+                ).Add(new Tab()).Add("Text1").Add(image).Add("Text3");
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
@@ -302,7 +364,10 @@ namespace iText.Layout {
             p.AddTabStops(tabStops);
             foreach (String line in iText.IO.Util.StringUtil.Split(text, "\n")) {
                 foreach (String chunk in iText.IO.Util.StringUtil.Split(line, "\t")) {
-                    p.Add(chunk).Add(new Tab());
+                    foreach (String piece in iText.IO.Util.StringUtil.Split(chunk, "#")) {
+                        p.Add(piece);
+                    }
+                    p.Add(new Tab());
                 }
                 p.Add("\n");
             }

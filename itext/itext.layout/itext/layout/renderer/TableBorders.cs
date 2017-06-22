@@ -69,6 +69,9 @@ namespace iText.Layout.Renderer {
         protected internal int largeTableIndexOffset = 0;
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders) {
+            // Zero-based, inclusive
+            // Zero-based, inclusive. The last border will have index (finishRow+1) because the number of borders is greater
+            // by one than the number of rows
             this.rows = rows;
             this.numberOfColumns = numberOfColumns;
             SetTableBoundingBorders(tableBoundingBorders);

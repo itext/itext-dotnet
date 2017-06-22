@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <summary>
         /// Create instance of graphics state parameter dictionary wrapper
         /// by existed
-        /// <seealso>PdfDictionary</seealso>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// object
         /// </summary>
         /// <param name="pdfObject">instance of graphics state parameter dictionary</param>

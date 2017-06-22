@@ -113,7 +113,6 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithSmallRotatedParagraph() {
             String outFileName = destinationFolder + "divSmallRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedParagraphTest01.pdf";
@@ -137,7 +136,6 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithBigRotatedParagraph() {
             String outFileName = destinationFolder + "divBigRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divBigRotatedParagraphTest01.pdf";
@@ -161,7 +159,6 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithSmallRotatedDiv() {
             String outFileName = destinationFolder + "divSmallRotatedDivTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedDivTest01.pdf";

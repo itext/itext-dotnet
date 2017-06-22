@@ -44,8 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -208,6 +210,9 @@ namespace iText.Layout.Element {
             newCell.row = row;
             newCell.col = col;
             newCell.properties = new Dictionary<int, Object>(properties);
+            if (null != styles) {
+                newCell.styles = new LinkedHashSet<Style>(styles);
+            }
             if (includeContent) {
                 newCell.childElements = new List<IElement>(childElements);
             }

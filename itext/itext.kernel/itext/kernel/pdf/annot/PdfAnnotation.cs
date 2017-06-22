@@ -541,7 +541,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// to this annotation which will be performed in response to
         /// the specific trigger event defined by
-        /// 
+        /// <paramref name="key"/>
         /// . See ISO-320001 12.6.3, "Trigger Events".
         /// </summary>
         /// <param name="key">
@@ -606,7 +606,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents) {
-            return SetContents(new PdfString(contents));
+            return SetContents(new PdfString(contents, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>

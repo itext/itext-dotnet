@@ -1085,7 +1085,7 @@ namespace iText.Signatures {
                 loc.Add(new PdfNumber(0));
                 loc.Add(new PdfNumber(0));
                 reference.Put(PdfName.DigestLocation, loc);
-                reference.Put(PdfName.DigestMethod, new PdfName("MD5"));
+                reference.Put(PdfName.DigestMethod, PdfName.MD5);
             }
             else {
                 if (IsDocumentPdf2()) {

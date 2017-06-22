@@ -62,8 +62,8 @@ namespace iText.IO.Font {
                 }
             }
             try {
-                if (isBuiltinFonts14 || fontName.ToLowerInvariant().EndsWith(".afm") || fontName.ToLowerInvariant().EndsWith
-                    (".pfm")) {
+                String fontNameLowerCase = fontName.ToLowerInvariant();
+                if (isBuiltinFonts14 || fontNameLowerCase.EndsWith(".afm") || fontNameLowerCase.EndsWith(".pfm")) {
                     fontDescriptor = FetchType1FontDescriptor(fontName, null);
                 }
                 else {
@@ -71,11 +71,11 @@ namespace iText.IO.Font {
                         fontDescriptor = FetchCidFontDescriptor(fontName);
                     }
                     else {
-                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
+                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf")) {
                             fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
                         }
                         else {
-                            fontDescriptor = FetchTTCDescriptor(baseName);
+                            fontDescriptor = FetchTTCDescriptor(fontName);
                         }
                     }
                 }

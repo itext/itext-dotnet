@@ -93,15 +93,7 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public LtvVerifier(PdfDocument document)
             : base(null) {
-            this.document = document;
-            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
-            this.sgnUtil = new SignatureUtil(document);
-            IList<String> names = sgnUtil.GetSignatureNames();
-            signatureName = names[names.Count - 1];
-            this.signDate = DateTimeUtil.GetCurrentUtcTime();
-            pkcs7 = CoversWholeDocument();
-            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
-                ));
+            InitLtvVerifier(document);
         }
 
         /// <summary>Sets an extra verifier.</summary>
@@ -120,30 +112,6 @@ namespace iText.Signatures {
         /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
         public virtual void SetVerifyRootCertificate(bool verifyRootCertificate) {
             this.verifyRootCertificate = verifyRootCertificate;
-        }
-
-        /// <summary>
-        /// Checks if the signature covers the whole document
-        /// and throws an exception if the document was altered
-        /// </summary>
-        /// <returns>a PdfPKCS7 object</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        protected internal virtual PdfPKCS7 CoversWholeDocument() {
-            PdfPKCS7 pkcs7 = sgnUtil.VerifySignature(signatureName);
-            if (sgnUtil.SignatureCoversWholeDocument(signatureName)) {
-                LOGGER.Info("The timestamp covers whole document.");
-            }
-            else {
-                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
-            }
-            if (pkcs7.Verify()) {
-                LOGGER.Info("The signed document has not been modified.");
-                return pkcs7;
-            }
-            else {
-                throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
-                    );
-            }
         }
 
         /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
@@ -339,6 +307,43 @@ namespace iText.Signatures {
                 }
             }
             return ocsps;
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        protected internal virtual void InitLtvVerifier(PdfDocument document) {
+            this.document = document;
+            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+            this.sgnUtil = new SignatureUtil(document);
+            IList<String> names = sgnUtil.GetSignatureNames();
+            signatureName = names[names.Count - 1];
+            this.signDate = DateTimeUtil.GetCurrentUtcTime();
+            pkcs7 = CoversWholeDocument();
+            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
+                ));
+        }
+
+        /// <summary>
+        /// Checks if the signature covers the whole document
+        /// and throws an exception if the document was altered
+        /// </summary>
+        /// <returns>a PdfPKCS7 object</returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        protected internal virtual PdfPKCS7 CoversWholeDocument() {
+            PdfPKCS7 pkcs7 = sgnUtil.VerifySignature(signatureName);
+            if (sgnUtil.SignatureCoversWholeDocument(signatureName)) {
+                LOGGER.Info("The timestamp covers whole document.");
+            }
+            else {
+                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
+            }
+            if (pkcs7.Verify()) {
+                LOGGER.Info("The signed document has not been modified.");
+                return pkcs7;
+            }
+            else {
+                throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
+                    );
+            }
         }
     }
 }

@@ -1047,7 +1047,6 @@ namespace iText.Kernel.Pdf {
                             }
                             else {
                                 newReference = new PdfIndirectReference(pdfDocument, @base, field3, 0);
-                                newReference.SetFree();
                             }
                             break;
                         }
@@ -1068,6 +1067,11 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     if (xref.Get(@base) == null) {
+                        // we should postpone freeing reference, because if we won't add it to xref,
+                        // it will be removed from xref in any case inside setFree() method.
+                        if (type == 0) {
+                            newReference.SetFree();
+                        }
                         xref.Add(newReference);
                     }
                     else {

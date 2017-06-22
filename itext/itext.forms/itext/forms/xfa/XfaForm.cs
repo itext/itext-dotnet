@@ -42,9 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -159,9 +161,6 @@ namespace iText.Forms.Xfa
 		        throw new ArgumentException("XfaForm, PdfAcroForm and PdfAcroForm's document shall not be null");
 		    }
 		    PdfDocument document = acroForm.GetPdfDocument();
-			if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming.DEPRECATED_XFA_FORMS)) {
-				return;
-			}
 		    PdfObject xfa = GetXfaObject(acroForm);
 			if (xfa != null && xfa.IsArray())
 			{
@@ -494,7 +493,16 @@ namespace iText.Forms.Xfa
             XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
             XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
             xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
-            XmlReader reader = XmlReader.Create(@is, new XmlReaderSettings(), new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			XmlReaderSettings readerSettings = new XmlReaderSettings();
+			readerSettings.DtdProcessing = DtdProcessing.Ignore;
+			XmlReader reader = XmlReader.Create(@is, readerSettings, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			try {
+				// Prevents Exception "Reference to undeclared entity 'question'"
+				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				propertyInfo.SetValue(reader, true, null);
+			} catch (Exception exc) {
+			}
             
             FillXfaForm(reader, readOnly);
 		}
@@ -657,6 +665,7 @@ namespace iText.Forms.Xfa
 		        XmlWriterSettings settings = new XmlWriterSettings {
 		            Encoding = new UTF8Encoding(false),
 		            OmitXmlDeclaration = true,
+			        NewLineChars = "\n",
 		        };
 		        XmlWriter writer = XmlWriter.Create(fout, settings);
 		        n.WriteTo(writer);
@@ -706,7 +715,17 @@ namespace iText.Forms.Xfa
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(Stream inputStream)
 		{
-			SetDomDocument(XDocument.Load(inputStream, LoadOptions.PreserveWhitespace));
+			XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+			xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
+			XmlReader reader = XmlReader.Create(inputStream, xmlReaderSettings);
+			try {
+				// Prevents Exception "Reference to undeclared entity 'question'"
+				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				propertyInfo.SetValue(reader, true, null);
+			} catch (Exception exc) {
+			}
+			SetDomDocument(XDocument.Load(reader, LoadOptions.PreserveWhitespace));
 			xfaPresent = true;
 		}
 

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -62,7 +63,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties SetLanguage(String language) {
-            GetBackingElem().SetLang(new PdfString(language));
+            GetBackingElem().SetLang(new PdfString(language, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
@@ -71,7 +72,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties SetActualText(String actualText) {
-            GetBackingElem().SetActualText(new PdfString(actualText));
+            GetBackingElem().SetActualText(new PdfString(actualText, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
@@ -80,7 +81,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties SetAlternateDescription(String alternateDescription) {
-            GetBackingElem().SetAlt(new PdfString(alternateDescription));
+            GetBackingElem().SetAlt(new PdfString(alternateDescription, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
@@ -89,7 +90,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties SetExpansion(String expansion) {
-            GetBackingElem().SetE(new PdfString(expansion));
+            GetBackingElem().SetE(new PdfString(expansion, PdfEncodings.UNICODE_BIG));
             return this;
         }
 

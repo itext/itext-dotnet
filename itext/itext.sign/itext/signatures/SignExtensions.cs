@@ -167,20 +167,6 @@ namespace iText.Signatures {
             signer.BlockUpdate(data, offset, count);
         }
 
-        public static String GetAlgorithm(this ICipherParameters cp) {
-            String algorithm;
-            if (cp is RsaKeyParameters)
-                algorithm = "RSA";
-            else if (cp is DsaKeyParameters)
-                algorithm = "DSA";
-            else if (cp is ECKeyParameters)
-                algorithm = "ECDSA";
-            else
-                throw new PdfException("unknown.key.algorithm {0}").SetMessageParams(cp.ToString());
-
-            return algorithm;
-        }
-
         public static void Update(this IDigest dgst, byte[] input) {
             dgst.Update(input, 0, input.Length);
         }
