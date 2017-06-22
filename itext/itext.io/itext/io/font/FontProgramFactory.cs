@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using iText.IO.Util;
+using iText.IO.Source;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -217,7 +216,7 @@ namespace iText.IO.Font {
                             )) {
                             if (".woff".Equals(fontFileExtension)) {
                                 if (fontProgram == null) {
-                                    fontProgram = StreamUtil.InputStreamToArray(new FileStream(name, FileMode.Open, FileAccess.Read));
+                                    fontProgram = ReadBytesFromPath(name);
                                 }
                                 try {
                                     fontProgram = WoffConverter.Convert(fontProgram);
@@ -562,6 +561,20 @@ namespace iText.IO.Font {
 
         public static void ClearRegisteredFontFamilies() {
             fontRegisterProvider.ClearRegisteredFontFamilies();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static byte[] ReadBytesFromPath(String path) {
+            RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
+                (path));
+            int bufLen = (int)raf.Length();
+            if (bufLen < raf.Length()) {
+                throw new iText.IO.IOException(String.Format("Source data from \"{0}\" is bigger than byte array can hold."
+                    , path));
+            }
+            byte[] buf = new byte[bufLen];
+            raf.ReadFully(buf);
+            return buf;
         }
     }
 }
