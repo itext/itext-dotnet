@@ -277,7 +277,7 @@ namespace iText.Layout.Renderer {
                 for (int i = 0; i < widths.Length; i++) {
                     if (widths[i].isPercent) {
                         if (sumOfPercents < 100 && sumOfPercents + widths[i].width > 100) {
-                            widths[i].width -= sumOfPercents + widths[i].width - 100;
+                            widths[i].width = sumOfPercents - 100;
                             sumOfPercents += widths[i].width;
                             Warn100percent();
                         }
