@@ -20,16 +20,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         internal virtual PdfStructElem MakeSingleStandardRootTag(IList<IPdfStructElem> rootKids) {
-            if (document.GetStructTreeRoot().GetPdfObject().GetIndirectReference() == null) {
-                document.GetStructTreeRoot().MakeIndirect(document);
-            }
+            document.GetStructTreeRoot().MakeIndirect(document);
             if (rootTagElement == null) {
                 CreateNewRootTag();
             }
             else {
-                if (!rootTagElement.GetPdfObject().IsIndirect()) {
-                    rootTagElement.MakeIndirect(document);
-                }
+                rootTagElement.MakeIndirect(document);
                 document.GetStructTreeRoot().AddKid(rootTagElement);
                 EnsureExistingRootTagIsDocument();
             }

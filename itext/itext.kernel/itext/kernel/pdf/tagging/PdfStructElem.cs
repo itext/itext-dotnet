@@ -61,7 +61,6 @@ namespace iText.Kernel.Pdf.Tagging {
     /// <see cref="PdfStructTreeRoot"/>
     /// ). Immediate children of the structure tree root
     /// are structure elements. Structure elements are other structure elements or content items.
-    /// </p>
     /// </remarks>
     public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
         [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]

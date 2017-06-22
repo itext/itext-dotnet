@@ -204,9 +204,7 @@ namespace iText.Kernel.Pdf.Tagging {
             StructureTreeCopier.StructElemCopyingParams structElemCopyingParams = new StructureTreeCopier.StructElemCopyingParams
                 (objectsToCopy, destDocument, page2pageDictionaries, copyFromDestDocument);
             PdfStructTreeRoot destStructTreeRoot = destDocument.GetStructTreeRoot();
-            if (!destStructTreeRoot.GetPdfObject().IsIndirect()) {
-                destStructTreeRoot.MakeIndirect(destDocument);
-            }
+            destStructTreeRoot.MakeIndirect(destDocument);
             foreach (PdfDictionary top in topsInOriginalOrder) {
                 PdfDictionary copied = CopyObject(top, structElemCopyingParams);
                 destStructTreeRoot.AddKidObject(insertIndex, copied);
