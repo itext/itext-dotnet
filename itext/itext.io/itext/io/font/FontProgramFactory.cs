@@ -71,12 +71,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -97,12 +94,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -124,12 +118,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -150,12 +141,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -212,8 +200,12 @@ namespace iText.IO.Font {
                 }
             }
             else {
-                if (isBuiltinFonts14 || name.ToLowerInvariant().EndsWith(".afm") || name.ToLowerInvariant().EndsWith(".pfm"
-                    )) {
+                String fontFileExtension = null;
+                int extensionBeginIndex = name.LastIndexOf('.');
+                if (extensionBeginIndex > 0) {
+                    fontFileExtension = name.Substring(extensionBeginIndex).ToLowerInvariant();
+                }
+                if (isBuiltinFonts14 || ".afm".Equals(fontFileExtension) || ".pfm".Equals(fontFileExtension)) {
                     fontBuilt = new Type1Font(name, null, null, null);
                 }
                 else {
@@ -221,11 +213,11 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf") || baseName
-                            .ToLowerInvariant().EndsWith(".woff")) {
-                            if (baseName.ToLowerInvariant().EndsWith(".woff")) {
+                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension) || ".woff".Equals(fontFileExtension
+                            )) {
+                            if (".woff".Equals(fontFileExtension)) {
                                 if (fontProgram == null) {
-                                    fontProgram = StreamUtil.InputStreamToArray(new FileStream(baseName, FileMode.Open, FileAccess.Read));
+                                    fontProgram = StreamUtil.InputStreamToArray(new FileStream(name, FileMode.Open, FileAccess.Read));
                                 }
                                 try {
                                     fontProgram = WoffConverter.Convert(fontProgram);
@@ -242,13 +234,13 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                            int ttcSplit = name.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
                             if (ttcSplit > 0) {
                                 try {
-                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
-                                    //count(.ttc) = 4
-                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
-                                    //count(.ttc,) = 5)
+                                    String ttcName = name.JSubstring(0, ttcSplit + 4);
+                                    // count(.ttc) = 4
+                                    int ttcIndex = System.Convert.ToInt32(name.Substring(ttcSplit + 5));
+                                    // count(.ttc,) = 5)
                                     fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                 }
                                 catch (FormatException nfe) {

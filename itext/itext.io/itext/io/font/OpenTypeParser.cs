@@ -278,11 +278,10 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         public OpenTypeParser(String name) {
-            String nameBase = FontProgram.GetBaseName(name);
-            String ttcName = GetTTCName(nameBase);
+            String ttcName = GetTTCName(name);
             this.fileName = ttcName;
-            if (ttcName.Length < nameBase.Length) {
-                ttcIndex = System.Convert.ToInt32(nameBase.Substring(ttcName.Length + 1));
+            if (ttcName.Length < name.Length) {
+                ttcIndex = System.Convert.ToInt32(name.Substring(ttcName.Length + 1));
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
             InitializeSfntTables();
