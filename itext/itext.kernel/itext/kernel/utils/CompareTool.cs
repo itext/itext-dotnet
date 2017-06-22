@@ -121,7 +121,7 @@ namespace iText.Kernel.Utils {
 
         private IList<PdfIndirectReference> cmpPagesRef;
 
-        private int compareByContentErrorsLimit = 1;
+        private int compareByContentErrorsLimit = 1000;
 
         private bool generateCompareByContentXmlReport = false;
 
