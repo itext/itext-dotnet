@@ -297,7 +297,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (lowestFloatBottom < float.MaxValue) {
-                clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
+                clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom + AbstractRenderer.EPS;
             }
             return clearHeightCorrection;
         }
@@ -355,7 +355,7 @@ namespace iText.Layout.Renderer {
         private static IList<Rectangle> GetBoxesAtYLevel(IList<Rectangle> floatRendererAreas, float currY) {
             IList<Rectangle> yLevelBoxes = new List<Rectangle>();
             foreach (Rectangle box in floatRendererAreas) {
-                if (box.GetBottom() < currY && box.GetTop() >= currY) {
+                if (box.GetBottom() < currY && box.GetTop() + AbstractRenderer.EPS >= currY) {
                     yLevelBoxes.Add(box);
                 }
             }
