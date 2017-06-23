@@ -51,6 +51,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class FloatTest : ExtendedITextTest {
@@ -413,7 +414,7 @@ namespace iText.Layout {
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff10_"));
+                "diff11_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -449,7 +450,61 @@ namespace iText.Layout {
             canvas.Close();
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff10_"));
+                "diff12_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        public virtual void FloatFixedHeightContentNotFit() {
+            String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
+            String outFile = destinationFolder + "floatFixedHeightContentNotFit.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div.")).Add(new Paragraph(text));
+            div.SetHeight(200).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            document.Add(new Paragraph(text));
+            Paragraph p = new Paragraph("Floating p.\n" + text).SetBorder(new SolidBorder(Color.RED, 2));
+            p.SetHeight(200).SetWidth(100);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(p);
+            document.Add(new Paragraph(text));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 0.3f, 0.7f })).SetBorder(new SolidBorder
+                (Color.RED, 2));
+            table.AddCell(new Paragraph("Floating table.")).AddCell(new Paragraph(text));
+            table.SetHeight(200).SetWidth(300);
+            table.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(table);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff13_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(200).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared div.")).Add(new Paragraph(text));
+            divClear.SetHeight(400);
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(divClear);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff13_"));
         }
     }
 }

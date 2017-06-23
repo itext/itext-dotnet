@@ -772,7 +772,9 @@ namespace iText.Layout.Renderer {
                             }
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
-                            return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
+                            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+                                , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                            return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
                             ApplyFixedXOrYPosition(false, layoutBox);
@@ -786,8 +788,13 @@ namespace iText.Layout.Renderer {
                             if (HasProperty(Property.MAX_HEIGHT)) {
                                 splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
                             }
-                            return new LayoutResult(status, status != LayoutResult.NOTHING ? occupiedArea : null, splitResult[0], splitResult
-                                [1], null == firstCauseOfNothing ? this : firstCauseOfNothing);
+                            LayoutArea editedArea = null;
+                            if (status != LayoutResult.NOTHING) {
+                                editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas, layoutContext
+                                    .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                            }
+                            return new LayoutResult(status, editedArea, splitResult[0], splitResult[1], null == firstCauseOfNothing ? 
+                                this : firstCauseOfNothing);
                         }
                     }
                 }
@@ -900,9 +907,9 @@ namespace iText.Layout.Renderer {
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
-            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+            LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
                 , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
-            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
+            return new LayoutResult(LayoutResult.FULL, editedArea_1, null, null, null);
         }
 
         /// <summary><inheritDoc/></summary>
