@@ -200,9 +200,9 @@ namespace iText.IO.Font {
             }
             else {
                 String fontFileExtension = null;
-                int extensionBeginIndex = name.LastIndexOf('.');
+                int extensionBeginIndex = baseName.LastIndexOf('.');
                 if (extensionBeginIndex > 0) {
-                    fontFileExtension = name.Substring(extensionBeginIndex).ToLowerInvariant();
+                    fontFileExtension = baseName.Substring(extensionBeginIndex).ToLowerInvariant();
                 }
                 if (isBuiltinFonts14 || ".afm".Equals(fontFileExtension) || ".pfm".Equals(fontFileExtension)) {
                     fontBuilt = new Type1Font(name, null, null, null);
@@ -216,7 +216,7 @@ namespace iText.IO.Font {
                             )) {
                             if (".woff".Equals(fontFileExtension)) {
                                 if (fontProgram == null) {
-                                    fontProgram = ReadBytesFromPath(name);
+                                    fontProgram = ReadFontBytesFromPath(baseName);
                                 }
                                 try {
                                     fontProgram = WoffConverter.Convert(fontProgram);
@@ -233,12 +233,12 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = name.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
                             if (ttcSplit > 0) {
                                 try {
-                                    String ttcName = name.JSubstring(0, ttcSplit + 4);
+                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                     // count(.ttc) = 4
-                                    int ttcIndex = System.Convert.ToInt32(name.Substring(ttcSplit + 5));
+                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                                     // count(.ttc,) = 5)
                                     fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                 }
@@ -564,7 +564,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static byte[] ReadBytesFromPath(String path) {
+        internal static byte[] ReadFontBytesFromPath(String path) {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (path));
             int bufLen = (int)raf.Length();

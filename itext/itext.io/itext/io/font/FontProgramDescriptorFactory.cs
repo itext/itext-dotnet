@@ -62,7 +62,7 @@ namespace iText.IO.Font {
                 }
             }
             try {
-                String fontNameLowerCase = fontName.ToLowerInvariant();
+                String fontNameLowerCase = baseName.ToLowerInvariant();
                 if (isBuiltinFonts14 || fontNameLowerCase.EndsWith(".afm") || fontNameLowerCase.EndsWith(".pfm")) {
                     fontDescriptor = FetchType1FontDescriptor(fontName, null);
                 }
@@ -71,11 +71,18 @@ namespace iText.IO.Font {
                         fontDescriptor = FetchCidFontDescriptor(fontName);
                     }
                     else {
-                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf")) {
-                            fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
+                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf") || fontNameLowerCase.EndsWith
+                            (".woff")) {
+                            if (fontNameLowerCase.EndsWith(".woff")) {
+                                byte[] fontProgram = WoffConverter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                                fontDescriptor = FetchTrueTypeFontDescriptor(fontProgram);
+                            }
+                            else {
+                                fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
+                            }
                         }
                         else {
-                            fontDescriptor = FetchTTCDescriptor(fontName);
+                            fontDescriptor = FetchTTCDescriptor(baseName);
                         }
                     }
                 }
@@ -137,11 +144,11 @@ namespace iText.IO.Font {
                 int ttcIndex;
                 try {
                     ttcName = baseName.JSubstring(0, ttcSplit + 4);
-                    //count(.ttc) = 4
+                    // count(.ttc) = 4
                     ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                 }
                 catch (FormatException nfe) {
-                    //count(.ttc,) = 5)
+                    // count(.ttc,) = 5)
                     throw new iText.IO.IOException(nfe.Message, nfe);
                 }
                 OpenTypeParser parser = new OpenTypeParser(ttcName, ttcIndex);
