@@ -1276,6 +1276,34 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1320")]
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest17() {
+            String testName = "tableWithHeaderFooterTest17.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            Table table = new Table(2);
+            table.SetKeepTogether(true);
+            int bigRowspan = 5;
+            table.AddCell(new Cell(bigRowspan, 1).Add("Big cell").SetBorder(new SolidBorder(Color.GREEN, 20)));
+            for (int i = 0; i < bigRowspan; i++) {
+                table.AddCell(i + " " + textByron);
+            }
+            doc.Add(new Paragraph("Try to break me!"));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
