@@ -724,7 +724,7 @@ namespace iText.Layout.Renderer {
                     for (int i = 0; i < childPos; ++i) {
                         IRenderer prevChild = childRenderers[i];
                         if (!FloatingHelper.IsRendererFloating(prevChild)) {
-                            prevChild.GetOccupiedArea().GetBBox().MoveRight(floatWidth);
+                            prevChild.Move(floatWidth, 0);
                         }
                     }
                 }
