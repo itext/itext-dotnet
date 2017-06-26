@@ -529,8 +529,7 @@ namespace iText.Layout.Renderer {
                             TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer).RemoveReversedRanges();
                             children.Add(newRenderer);
                             // Insert non-text renderers
-                            if ((pos == lineGlyphs.Count - 1 || lineGlyphs[pos + 1].renderer != renderer) && insertAfter.ContainsKey((
-                                TextRenderer)renderer)) {
+                            if (insertAfter.ContainsKey((TextRenderer)renderer)) {
                                 children.Add(insertAfter.Get((TextRenderer)renderer));
                                 insertAfter.JRemove((TextRenderer)renderer);
                             }
@@ -574,7 +573,12 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 currentWidth = child.GetOccupiedArea().GetBBox().GetWidth();
-                                child.GetOccupiedArea().GetBBox().SetX(currentXPos);
+                                if (child is AbstractRenderer) {
+                                    child.Move(currentXPos - child.GetOccupiedArea().GetBBox().GetX(), 0);
+                                }
+                                else {
+                                    child.GetOccupiedArea().GetBBox().SetX(currentXPos);
+                                }
                             }
                             currentXPos += currentWidth;
                         }
