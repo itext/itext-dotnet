@@ -691,6 +691,14 @@ namespace iText.Layout.Renderer {
             return result.GetNotNullMinMaxWidth(availableWidth);
         }
 
+        internal virtual float GetTopLeadingIndent(Leading leading) {
+            return (GetLeadingValue(leading) - occupiedArea.GetBBox().GetHeight()) / 2;
+        }
+
+        internal virtual float GetBottomLeadingIndent(Leading leading) {
+            return (GetLeadingValue(leading) - occupiedArea.GetBBox().GetHeight()) / 2;
+        }
+
         private LineRenderer[] SplitNotFittingFloat(int childPos, LayoutResult childResult) {
             LineRenderer[] split = Split();
             split[0].childRenderers.AddAll(childRenderers.SubList(0, childPos));
