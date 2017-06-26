@@ -959,6 +959,10 @@ namespace iText.Layout.Renderer {
             return GetYLine();
         }
 
+        protected internal override float? GetLastYLineRecursively() {
+            return GetYLine();
+        }
+
         /// <summary>
         /// Returns the length of the
         /// <see cref="line">line</see>

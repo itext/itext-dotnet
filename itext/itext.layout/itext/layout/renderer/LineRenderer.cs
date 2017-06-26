@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font.Otf;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
@@ -57,6 +58,14 @@ namespace iText.Layout.Renderer {
         protected internal float maxAscent;
 
         protected internal float maxDescent;
+
+        private float maxTextAscent;
+
+        private float maxTextDescent;
+
+        private float maxBlockAscent;
+
+        private float maxBlockDescent;
 
         protected internal byte[] levels;
 
@@ -72,6 +81,10 @@ namespace iText.Layout.Renderer {
             float curWidth = 0;
             maxAscent = 0;
             maxDescent = 0;
+            maxTextAscent = 0;
+            maxTextDescent = 0;
+            maxBlockAscent = -1e20f;
+            maxBlockDescent = 1e20f;
             int childPos = 0;
             MinMaxWidth minMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
@@ -88,7 +101,7 @@ namespace iText.Layout.Renderer {
             int lastTabIndex = 0;
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
-                LayoutResult childResult;
+                LayoutResult childResult = null;
                 Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
                     , layoutBox.GetHeight());
                 if (childRenderer is TextRenderer) {
@@ -217,8 +230,37 @@ namespace iText.Layout.Renderer {
                     }
                     continue;
                 }
-                childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
-                    ), bbox)));
+                MinMaxWidth childBlockMinMaxWidth = null;
+                bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
+                if (!childWidthWasReplaced) {
+                    if (isInlineBlockChild && childRenderer is AbstractRenderer) {
+                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(layoutContext.GetArea().GetBBox()
+                            .GetWidth());
+                        // TODO fix eps?
+                        float eps = 0.001f;
+                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + eps;
+                        // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
+                        // TODO DEVSIX-1174 fix depending on box-sizing
+                        if (childBlockMinMaxWidth != null) {
+                            if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
+                                childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
+                            }
+                            else {
+                                if (bbox.GetWidth() == layoutContext.GetArea().GetBBox().GetWidth() && childBlockMinMaxWidth.GetMinWidth()
+                                     > layoutContext.GetArea().GetBBox().GetWidth()) {
+                                    LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
+                                        );
+                                    childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
+                                }
+                                bbox.SetWidth(childMaxWidth);
+                            }
+                        }
+                    }
+                }
+                if (childResult == null) {
+                    childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
+                        ), bbox)));
+                }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
                     if (childRendererHasOwnWidthProperty) {
@@ -238,14 +280,55 @@ namespace iText.Layout.Renderer {
                     maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth
                         ();
                 }
+                else {
+                    if (childBlockMinMaxWidth != null) {
+                        minChildWidth_1 = childBlockMinMaxWidth.GetMinWidth();
+                        maxChildWidth_1 = childBlockMinMaxWidth.GetMaxWidth();
+                    }
+                }
                 float childAscent = 0;
                 float childDescent = 0;
-                if (childRenderer is ILeafElementRenderer) {
+                if (childRenderer is ILeafElementRenderer && childResult.GetStatus() != LayoutResult.NOTHING) {
                     childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
                     childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
                 }
+                else {
+                    if (isInlineBlockChild && childResult.GetStatus() != LayoutResult.NOTHING) {
+                        if (childRenderer is AbstractRenderer) {
+                            float? yLine = ((AbstractRenderer)childRenderer).GetLastYLineRecursively();
+                            if (yLine == null) {
+                                childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                            }
+                            else {
+                                childAscent = childRenderer.GetOccupiedArea().GetBBox().GetTop() - (float)yLine;
+                                childDescent = -((float)yLine - childRenderer.GetOccupiedArea().GetBBox().GetBottom());
+                            }
+                        }
+                        else {
+                            childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                        }
+                    }
+                }
                 maxAscent = Math.Max(maxAscent, childAscent);
+                // TODO treat images as blocks
+                if (childRenderer is TextRenderer || childRenderer is ImageRenderer) {
+                    maxTextAscent = Math.Max(maxTextAscent, childAscent);
+                }
+                else {
+                    if (!isChildFloating) {
+                        maxBlockAscent = Math.Max(maxBlockAscent, childAscent);
+                    }
+                }
                 maxDescent = Math.Min(maxDescent, childDescent);
+                // TODO treat images as blocks
+                if (childRenderer is TextRenderer || childRenderer is ImageRenderer) {
+                    maxTextDescent = Math.Min(maxTextDescent, childDescent);
+                }
+                else {
+                    if (!isChildFloating) {
+                        maxBlockDescent = Math.Min(maxBlockDescent, childDescent);
+                    }
+                }
                 float maxHeight = maxAscent - maxDescent;
                 bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
                     ());
@@ -280,7 +363,9 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (null == hangingTabStop) {
-                        curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                        if (childResult.GetOccupiedArea() != null && childResult.GetOccupiedArea().GetBBox() != null) {
+                            curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                        }
                         widthHandler.UpdateMinChildWidth(minChildWidth_1);
                         widthHandler.UpdateMaxChildWidth(maxChildWidth_1);
                     }
@@ -303,12 +388,26 @@ namespace iText.Layout.Renderer {
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                     }
                     else {
-                        if (childResult.GetStatus() == LayoutResult.PARTIAL || childResult.GetStatus() == LayoutResult.FULL) {
+                        bool forcePlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
+                        bool isInlineBlockAndFirstOnRootArea = isInlineBlockChild && IsFirstOnRootArea();
+                        if (childResult.GetStatus() == LayoutResult.PARTIAL && (!isInlineBlockChild || forcePlacement || isInlineBlockAndFirstOnRootArea
+                            ) || childResult.GetStatus() == LayoutResult.FULL) {
                             split[0].AddChild(childResult.GetSplitRenderer());
                             anythingPlaced = true;
                         }
                         if (null != childResult.GetOverflowRenderer()) {
-                            split[1].childRenderers.Add(childResult.GetOverflowRenderer());
+                            if (isInlineBlockChild && !forcePlacement && !isInlineBlockAndFirstOnRootArea) {
+                                split[1].childRenderers.Add(childRenderer);
+                            }
+                            else {
+                                if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().Count == 0) {
+                                    LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
+                                        );
+                                }
+                                else {
+                                    split[1].childRenderers.Add(childResult.GetOverflowRenderer());
+                                }
+                            }
                         }
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                     }
@@ -516,11 +615,11 @@ namespace iText.Layout.Renderer {
         public virtual float GetLeadingValue(Leading leading) {
             switch (leading.GetLeadingType()) {
                 case Leading.FIXED: {
-                    return leading.GetValue();
+                    return Math.Max(leading.GetValue(), maxBlockAscent - maxBlockDescent);
                 }
 
                 case Leading.MULTIPLIED: {
-                    return occupiedArea.GetBBox().GetHeight() * leading.GetValue();
+                    return GetTopLeadingIndent(leading) + GetBottomLeadingIndent(leading);
                 }
 
                 default: {
@@ -534,6 +633,10 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetFirstYLineRecursively() {
+            return GetYLine();
+        }
+
+        protected internal override float? GetLastYLineRecursively() {
             return GetYLine();
         }
 
@@ -625,6 +728,10 @@ namespace iText.Layout.Renderer {
             splitRenderer.parent = parent;
             splitRenderer.maxAscent = maxAscent;
             splitRenderer.maxDescent = maxDescent;
+            splitRenderer.maxTextAscent = maxTextAscent;
+            splitRenderer.maxTextDescent = maxTextDescent;
+            splitRenderer.maxBlockAscent = maxBlockAscent;
+            splitRenderer.maxBlockDescent = maxBlockDescent;
             splitRenderer.levels = levels;
             splitRenderer.AddAllProperties(GetOwnProperties());
             LineRenderer overflowRenderer = CreateOverflowRenderer();
@@ -644,7 +751,10 @@ namespace iText.Layout.Renderer {
                     renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
                 }
                 else {
-                    renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
+                    float? yLine = IsInlineBlockChild(renderer) && renderer is AbstractRenderer ? ((AbstractRenderer)renderer)
+                        .GetLastYLineRecursively() : null;
+                    renderer.Move(0, actualYLine - (yLine == null ? renderer.GetOccupiedArea().GetBBox().GetBottom() : (float)
+                        yLine));
                 }
             }
             return this;
@@ -692,11 +802,49 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual float GetTopLeadingIndent(Leading leading) {
-            return (GetLeadingValue(leading) - occupiedArea.GetBBox().GetHeight()) / 2;
+            switch (leading.GetLeadingType()) {
+                case Leading.FIXED: {
+                    return (Math.Max(leading.GetValue(), maxBlockAscent - maxBlockDescent) - occupiedArea.GetBBox().GetHeight(
+                        )) / 2;
+                }
+
+                case Leading.MULTIPLIED: {
+                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    // TODO contains image to be removed
+                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent)
+                         != 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
+                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent
+                        ) != 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                    return Math.Max(textAscent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, maxBlockAscent) 
+                        - maxAscent;
+                }
+
+                default: {
+                    throw new InvalidOperationException();
+                }
+            }
         }
 
         internal virtual float GetBottomLeadingIndent(Leading leading) {
-            return (GetLeadingValue(leading) - occupiedArea.GetBBox().GetHeight()) / 2;
+            switch (leading.GetLeadingType()) {
+                case Leading.FIXED: {
+                    return (Math.Max(leading.GetValue(), maxBlockAscent - maxBlockDescent) - occupiedArea.GetBBox().GetHeight(
+                        )) / 2;
+                }
+
+                case Leading.MULTIPLIED: {
+                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    // TODO contains image to be removed
+                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
+                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                    return Math.Max(-textDescent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, -maxBlockDescent
+                        ) + maxDescent;
+                }
+
+                default: {
+                    throw new InvalidOperationException();
+                }
+            }
         }
 
         private LineRenderer[] SplitNotFittingFloat(int childPos, LayoutResult childResult) {
@@ -940,6 +1088,10 @@ namespace iText.Layout.Renderer {
             if (updateChildRendrers) {
                 childRenderers = newChildRenderers;
             }
+        }
+
+        private bool IsInlineBlockChild(IRenderer child) {
+            return child is BlockRenderer || child is TableRenderer;
         }
 
         internal class RendererGlyph {

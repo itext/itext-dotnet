@@ -712,6 +712,22 @@ namespace iText.Layout.Renderer {
             return ((iText.Layout.Renderer.AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
         }
 
+        protected internal virtual float? GetLastYLineRecursively() {
+            if (childRenderers.Count == 0) {
+                return null;
+            }
+            for (int i = childRenderers.Count - 1; i >= 0; i--) {
+                IRenderer child = childRenderers[i];
+                if (child is iText.Layout.Renderer.AbstractRenderer) {
+                    float? lastYLine = ((iText.Layout.Renderer.AbstractRenderer)child).GetLastYLineRecursively();
+                    if (lastYLine != null) {
+                        return lastYLine;
+                    }
+                }
+            }
+            return null;
+        }
+
         /// <summary>Applies margins of the renderer on the given rectangle</summary>
         /// <param name="rect">a rectangle margins will be applied on.</param>
         /// <param name="reverse">

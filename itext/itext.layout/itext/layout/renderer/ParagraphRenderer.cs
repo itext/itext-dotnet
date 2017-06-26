@@ -490,6 +490,19 @@ namespace iText.Layout.Renderer {
             return lines[0].GetFirstYLineRecursively();
         }
 
+        protected internal override float? GetLastYLineRecursively() {
+            if (lines == null || lines.Count == 0) {
+                return null;
+            }
+            for (int i = lines.Count - 1; i >= 0; i--) {
+                float? yLine = lines[i].GetLastYLineRecursively();
+                if (yLine != null) {
+                    return yLine;
+                }
+            }
+            return null;
+        }
+
         [Obsolete]
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
             return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();

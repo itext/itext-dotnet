@@ -110,6 +110,11 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        public virtual iText.Layout.Element.Paragraph Add(IBlockElement element) {
+            childElements.Add(element);
+            return this;
+        }
+
         /// <summary>
         /// Adds a
         /// <see cref="System.Collections.IList{E}"/>
