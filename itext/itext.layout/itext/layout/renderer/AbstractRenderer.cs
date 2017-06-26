@@ -713,9 +713,6 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float? GetLastYLineRecursively() {
-            if (childRenderers.Count == 0) {
-                return null;
-            }
             for (int i = childRenderers.Count - 1; i >= 0; i--) {
                 IRenderer child = childRenderers[i];
                 if (child is iText.Layout.Renderer.AbstractRenderer) {

@@ -237,24 +237,21 @@ namespace iText.Layout.Renderer {
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
                 if (!childWidthWasReplaced) {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(layoutContext.GetArea().GetBBox()
-                            .GetWidth());
+                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
                         float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                         // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
                         // TODO DEVSIX-1174 fix depending on box-sizing
-                        if (childBlockMinMaxWidth != null) {
-                            if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
-                                childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
+                        if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
+                            childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
+                        }
+                        else {
+                            if (bbox.GetWidth() == layoutContext.GetArea().GetBBox().GetWidth() && childBlockMinMaxWidth.GetMinWidth()
+                                 > layoutContext.GetArea().GetBBox().GetWidth()) {
+                                LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
+                                    );
+                                childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
-                            else {
-                                if (bbox.GetWidth() == layoutContext.GetArea().GetBBox().GetWidth() && childBlockMinMaxWidth.GetMinWidth()
-                                     > layoutContext.GetArea().GetBBox().GetWidth()) {
-                                    LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
-                                        );
-                                    childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
-                                }
-                                bbox.SetWidth(childMaxWidth);
-                            }
+                            bbox.SetWidth(Math.Min(childMaxWidth, layoutContext.GetArea().GetBBox().GetWidth()));
                         }
                     }
                 }
@@ -480,7 +477,7 @@ namespace iText.Layout.Renderer {
                     IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph>();
                     // We shouldn't forget about images, float, inline-blocks that has to be inserted somewhere.
                     // TODO determine correct place to insert this content. Probably consider inline floats separately.
-                    IDictionary<TextRenderer, IRenderer> insertAfter = new Dictionary<TextRenderer, IRenderer>();
+                    IDictionary<TextRenderer, IList<IRenderer>> insertAfter = new Dictionary<TextRenderer, IList<IRenderer>>();
                     IList<IRenderer> starterNonTextRenderers = new List<IRenderer>();
                     TextRenderer lastTextRenderer = null;
                     foreach (IRenderer child in children) {
@@ -500,7 +497,10 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             if (lastTextRenderer != null) {
-                                insertAfter.Put(lastTextRenderer, child);
+                                if (!insertAfter.ContainsKey(lastTextRenderer)) {
+                                    insertAfter.Put(lastTextRenderer, new List<IRenderer>());
+                                }
+                                insertAfter.Get(lastTextRenderer).Add(child);
                             }
                             else {
                                 starterNonTextRenderers.Add(child);
@@ -528,7 +528,7 @@ namespace iText.Layout.Renderer {
                             children.Add(newRenderer);
                             // Insert non-text renderers
                             if (insertAfter.ContainsKey((TextRenderer)renderer)) {
-                                children.Add(insertAfter.Get((TextRenderer)renderer));
+                                children.AddAll(insertAfter.Get((TextRenderer)renderer));
                                 insertAfter.JRemove((TextRenderer)renderer);
                             }
                             newRenderer.line = new GlyphLine(newRenderer.line);
