@@ -157,9 +157,7 @@ namespace iText.Layout.Renderer {
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
-            float leadingValue = 0;
-            float lastLineHeight = 0;
-            float lastLineLeading = 0;
+            float lastLineBottomLeadingIndent = 0;
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -222,11 +220,6 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                leadingValue = processedRenderer != null && leading != null ? processedRenderer.GetLeadingValue(leading) : 
-                    0;
-                if (processedRenderer != null && processedRenderer.ContainsImage()) {
-                    leadingValue -= previousDescent;
-                }
                 bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
                     () > 0;
                 // could be false if e.g. line contains only floats
@@ -234,13 +227,23 @@ namespace iText.Layout.Renderer {
                 float deltaY = 0;
                 if (!doesNotFit) {
                     if (lineHasContent) {
-                        lastLineLeading = leadingValue;
-                        lastLineHeight = processedRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                        deltaY = lastYLine - leadingValue - processedRenderer.GetYLine();
+                        float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
+                            .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
+                        // TODO this is a workaround. To be refactored
+                        if (processedRenderer != null && processedRenderer.ContainsImage()) {
+                            indentFromLastLine += previousDescent;
+                        }
+                        deltaY = lastYLine + indentFromLastLine - processedRenderer.GetYLine();
+                        lastLineBottomLeadingIndent = leading != null ? processedRenderer.GetBottomLeadingIndent(leading) : 0;
+                        // TODO this is a workaround. To be refactored
+                        if (lastLineBottomLeadingIndent < 0 && processedRenderer.ContainsImage()) {
+                            lastLineBottomLeadingIndent = 0;
+                        }
                     }
                     // for the first and last line in a paragraph, leading is smaller
                     if (firstLineInBox) {
-                        deltaY = -(leadingValue - lastLineHeight) / 2;
+                        deltaY = processedRenderer != null && leading != null ? -processedRenderer.GetTopLeadingIndent(leading) : 
+                            0;
                     }
                     doesNotFit = leading != null && processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY < layoutBox.
                         GetY();
@@ -365,8 +368,7 @@ namespace iText.Layout.Renderer {
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
             }
-            float moveDown = Math.Min((lastLineLeading - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox
-                .GetY());
+            float moveDown = Math.Min(lastLineBottomLeadingIndent, occupiedArea.GetBBox().GetY() - layoutBox.GetY());
             occupiedArea.GetBBox().MoveDown(moveDown);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             IRenderer overflowRenderer = null;
@@ -489,6 +491,19 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             return lines[0].GetFirstYLineRecursively();
+        }
+
+        protected internal override float? GetLastYLineRecursively() {
+            if (lines == null || lines.Count == 0) {
+                return null;
+            }
+            for (int i = lines.Count - 1; i >= 0; i--) {
+                float? yLine = lines[i].GetLastYLineRecursively();
+                if (yLine != null) {
+                    return yLine;
+                }
+            }
+            return null;
         }
 
         [Obsolete]

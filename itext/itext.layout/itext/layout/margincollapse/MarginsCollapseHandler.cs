@@ -451,9 +451,12 @@ namespace iText.Layout.Margincollapse {
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
             return !(renderer is TableRenderer) && !RendererIsFloated(renderer) && !HasBottomBorders(renderer) && !HasTopBorders
-                (renderer) && !HasBottomPadding(renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
+                (renderer) && !HasBottomPadding(renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer) 
+                && !(IsBlockElement(renderer) && renderer is AbstractRenderer && ((AbstractRenderer)renderer).GetParent
+                () is LineRenderer);
         }
 
+        // inline block
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
             return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
                 (parent) && !HasTopBorders(parent) && !HasTopPadding(parent);

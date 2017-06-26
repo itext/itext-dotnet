@@ -1193,6 +1193,10 @@ namespace iText.Layout.Renderer {
             return new MinMaxWidth(additionalWidth, availableWidth, minWidth, maxColTotalWidth);
         }
 
+        protected internal override float? GetLastYLineRecursively() {
+            return null;
+        }
+
         private void InitializeTableLayoutBorders() {
             bordersHandler = new CollapsedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns(), GetBorders
                 ());
