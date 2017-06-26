@@ -311,7 +311,7 @@ namespace iText.Layout.Renderer {
                 }
                 maxAscent = Math.Max(maxAscent, childAscent);
                 // TODO treat images as blocks
-                if (childRenderer is TextRenderer || childRenderer is ImageRenderer) {
+                if (childRenderer is TextRenderer) {
                     maxTextAscent = Math.Max(maxTextAscent, childAscent);
                 }
                 else {
@@ -321,7 +321,7 @@ namespace iText.Layout.Renderer {
                 }
                 maxDescent = Math.Min(maxDescent, childDescent);
                 // TODO treat images as blocks
-                if (childRenderer is TextRenderer || childRenderer is ImageRenderer) {
+                if (childRenderer is TextRenderer) {
                     maxTextDescent = Math.Min(maxTextDescent, childDescent);
                 }
                 else {
