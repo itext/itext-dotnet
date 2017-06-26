@@ -667,19 +667,20 @@ namespace iText.Layout.Renderer {
                                 if (1 == minRowspan) {
                                     // Here we use the same cell, but create a new renderer which doesn't have any children,
                                     // therefore it won't have any content.
-                                    Cell overflowCell = ((Cell)currentRow[col].GetModelElement()).Clone(true);
+                                    CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
+                                        ();
                                     // we will change properties
-                                    CellRenderer originalCellRenderer = currentRow[col];
+                                    overflowCell.SetParent(this);
+                                    overflowCell.DeleteProperty(Property.HEIGHT);
+                                    overflowCell.DeleteProperty(Property.MIN_HEIGHT);
+                                    overflowCell.DeleteProperty(Property.MAX_HEIGHT);
+                                    overflowRows.SetCell(0, col, null);
+                                    overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
                                     currentRow[col].isLastRendererForModelElement = false;
                                     childRenderers.Add(currentRow[col]);
+                                    CellRenderer originalCell = currentRow[col];
                                     currentRow[col] = null;
-                                    rows[targetOverflowRowIndex[col]][col] = originalCellRenderer;
-                                    overflowRows.SetCell(0, col, null);
-                                    overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, (CellRenderer)overflowCell.GetRenderer().SetParent
-                                        (this));
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.HEIGHT);
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.MIN_HEIGHT);
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.MAX_HEIGHT);
+                                    rows[targetOverflowRowIndex[col]][col] = originalCell;
                                 }
                                 else {
                                     childRenderers.Add(currentRow[col]);
@@ -688,15 +689,20 @@ namespace iText.Layout.Renderer {
                                     for (; i < row + minRowspan && i + 1 < rows.Count && splitResult[1].rows[i + 1 - row][col] != null; i++) {
                                         overflowRows.SetCell(i - row, col, splitResult[1].rows[i + 1 - row][col]);
                                         overflowRows.SetCell(i + 1 - row, col, null);
+                                        rows[i][col] = rows[i + 1][col];
+                                        rows[i + 1][col] = null;
                                     }
                                     // the number of cells behind is less then minRowspan-1
                                     // so we should process the last cell in the column as in the case 1 == minRowspan
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
-                                        Cell overflowCell = ((Cell)rows[i][col].GetModelElement());
-                                        overflowRows.GetCell(i - row, col).isLastRendererForModelElement = false;
+                                        CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
+                                            );
+                                        rows[i][col].isLastRendererForModelElement = false;
                                         overflowRows.SetCell(i - row, col, null);
-                                        overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, (CellRenderer)overflowCell.GetRenderer().SetParent
-                                            (this));
+                                        overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
+                                        CellRenderer originalCell = rows[i][col];
+                                        rows[i][col] = null;
+                                        rows[targetOverflowRowIndex[col]][col] = originalCell;
                                     }
                                 }
                                 overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;

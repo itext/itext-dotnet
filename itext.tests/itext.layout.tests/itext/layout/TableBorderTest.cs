@@ -1276,10 +1276,10 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-1320")]
         [NUnit.Framework.Test]
-        public virtual void TableWithHeaderFooterTest17() {
-            String testName = "tableWithHeaderFooterTest17.pdf";
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SplitRowspanKeepTogetherTest() {
+            String testName = "splitRowspanKeepTogetherTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
