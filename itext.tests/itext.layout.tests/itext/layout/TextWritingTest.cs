@@ -132,6 +132,22 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void LeadingTest02() {
+            String outFileName = destinationFolder + "leadingTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_leadingTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Paragraph p1 = new Paragraph().Add(new Text("Abdgsdfds ffs f dds").SetFontSize(60)).Add(new Text("fsd f dsf ds fds f ds"
+                ).SetFontSize(22)).SetMultipliedLeading(1);
+            document.Add(p1);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FirstLineIndentTest01() {
             String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
