@@ -59,6 +59,10 @@ namespace iText.Layout.Renderer {
 
         protected internal float maxDescent;
 
+        protected internal byte[] levels;
+
+        private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
+
         private float maxTextAscent;
 
         private float maxTextDescent;
@@ -67,9 +71,8 @@ namespace iText.Layout.Renderer {
 
         private float maxBlockDescent;
 
-        protected internal byte[] levels;
-
         // bidi levels
+        // AbstractRenderer.EPS is not enough here
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
@@ -236,9 +239,7 @@ namespace iText.Layout.Renderer {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
                         childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(layoutContext.GetArea().GetBBox()
                             .GetWidth());
-                        // TODO fix eps?
-                        float eps = 0.001f;
-                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + eps;
+                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                         // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
                         // TODO DEVSIX-1174 fix depending on box-sizing
                         if (childBlockMinMaxWidth != null) {
@@ -310,7 +311,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 maxAscent = Math.Max(maxAscent, childAscent);
-                // TODO treat images as blocks
                 if (childRenderer is TextRenderer) {
                     maxTextAscent = Math.Max(maxTextAscent, childAscent);
                 }
@@ -320,7 +320,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 maxDescent = Math.Min(maxDescent, childDescent);
-                // TODO treat images as blocks
                 if (childRenderer is TextRenderer) {
                     maxTextDescent = Math.Min(maxTextDescent, childDescent);
                 }
@@ -467,7 +466,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
-                // TODO what about float inlines?
                 IList<IRenderer> children = null;
                 if (result.GetStatus() == LayoutResult.PARTIAL) {
                     children = result.GetSplitRenderer().GetChildRenderers();
@@ -481,7 +479,7 @@ namespace iText.Layout.Renderer {
                     bool newLineFound = false;
                     IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph>();
                     // We shouldn't forget about images, float, inline-blocks that has to be inserted somewhere.
-                    // TODO determine correct place to insert this content
+                    // TODO determine correct place to insert this content. Probably consider inline floats separately.
                     IDictionary<TextRenderer, IRenderer> insertAfter = new Dictionary<TextRenderer, IRenderer>();
                     IList<IRenderer> starterNonTextRenderers = new List<IRenderer>();
                     TextRenderer lastTextRenderer = null;
@@ -814,7 +812,10 @@ namespace iText.Layout.Renderer {
 
                 case Leading.MULTIPLIED: {
                     float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
-                    // TODO contains image to be removed
+                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
+                    // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
+                    // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
+                    // between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent)
                          != 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent
@@ -838,7 +839,10 @@ namespace iText.Layout.Renderer {
 
                 case Leading.MULTIPLIED: {
                     float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
-                    // TODO contains image to be removed
+                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
+                    // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
+                    // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
+                    // between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
                     return Math.Max(-textDescent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, -maxBlockDescent
