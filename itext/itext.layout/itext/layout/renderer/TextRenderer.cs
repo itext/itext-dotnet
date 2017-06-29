@@ -516,7 +516,8 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                logger.Error(String.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, "Drawing won't be performed."
+                    ));
                 return;
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
@@ -647,7 +648,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_682();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_683();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -711,8 +712,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_682 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_682() {
+        private sealed class _IGlyphLineFilter_683 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_683() {
             }
 
             public bool Accept(Glyph glyph) {
