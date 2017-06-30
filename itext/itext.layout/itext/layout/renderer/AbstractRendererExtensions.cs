@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
@@ -64,18 +65,7 @@ namespace iText.Layout.Renderer
         public static float? GetPropertyAsFloat(this AbstractRenderer renderer, int property)
         {
             Object value = renderer.GetProperty<Object>(property);
-            return (value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal)
-                ? Convert.ToSingle(value) : (float?)null;
+            return NumberUtil.AsFloat(value);
         }
 
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>
@@ -90,20 +80,8 @@ namespace iText.Layout.Renderer
         /// </returns>
         public static float? GetPropertyAsFloat(this AbstractRenderer renderer, int property, float? defaultValue)
         {
-
             Object value = renderer.GetProperty<Object>(property, defaultValue);
-            return (value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal)
-                ? Convert.ToSingle(value) : (float?)null;
+            return NumberUtil.AsFloat(value);
         }
 
         /// <summary>Returns a property with a certain key, as an integer value.</summary>
@@ -118,18 +96,7 @@ namespace iText.Layout.Renderer
         public static int? GetPropertyAsInteger(this AbstractRenderer renderer, int property)
         {
             Object value = renderer.GetProperty<Object>(property);
-            return (value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal)
-                ? Convert.ToInt32(value) : (int?)null;
+            return NumberUtil.AsInteger(value);
         }
     }
 }
