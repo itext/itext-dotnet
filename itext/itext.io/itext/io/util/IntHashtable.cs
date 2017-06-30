@@ -116,10 +116,10 @@ namespace iText.IO.Util {
         /// </exception>
         public IntHashtable(int initialCapacity, float loadFactor) {
             if (initialCapacity < 0) {
-                throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity));
+                throw new ArgumentException(MessageFormatUtil.Format("Illegal Capacity: {0}", initialCapacity));
             }
             if (loadFactor <= 0) {
-                throw new ArgumentException(String.Format("Illegal Load: {0}", loadFactor));
+                throw new ArgumentException(MessageFormatUtil.Format("Illegal Load: {0}", loadFactor));
             }
             if (initialCapacity == 0) {
                 initialCapacity = 1;
@@ -380,7 +380,7 @@ namespace iText.IO.Util {
             }
 
             public override String ToString() {
-                return String.Format("{0}={1}", key, value);
+                return MessageFormatUtil.Format("{0}={1}", key, value);
             }
         }
 

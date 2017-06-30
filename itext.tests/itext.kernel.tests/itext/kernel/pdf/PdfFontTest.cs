@@ -902,8 +902,8 @@ namespace iText.Kernel.Pdf {
             catch (iText.IO.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(String.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font), message
-                );
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font
+                ), message);
         }
 
         /// <exception cref="System.IO.IOException"/>

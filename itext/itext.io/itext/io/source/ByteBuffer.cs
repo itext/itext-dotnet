@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.IO.Source {
     public class ByteBuffer {
@@ -123,7 +124,7 @@ namespace iText.IO.Source {
 
         public virtual byte Get(int index) {
             if (index >= count) {
-                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, count));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format("Index: {0}, Size: {1}", index, count));
             }
             return buffer[index];
         }

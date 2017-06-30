@@ -46,6 +46,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -190,8 +191,8 @@ namespace iText.Signatures.Sign {
                 }
             }
             float foundFontSize = float.Parse(fontSize, System.Globalization.CultureInfo.InvariantCulture);
-            NUnit.Framework.Assert.IsTrue(Math.Abs(foundFontSize - expectedFontSize) < 0.1 * expectedFontSize, String.
-                Format("Font size: exptected {0}, found {1}", expectedFontSize, fontSize));
+            NUnit.Framework.Assert.IsTrue(Math.Abs(foundFontSize - expectedFontSize) < 0.1 * expectedFontSize, MessageFormatUtil
+                .Format("Font size: exptected {0}, found {1}", expectedFontSize, fontSize));
         }
     }
 }

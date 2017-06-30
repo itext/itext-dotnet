@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.IO;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Pdf.Filters;
@@ -165,7 +165,8 @@ namespace iText.Kernel.Pdf {
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key
+                        ));
                     value = PdfNull.PDF_NULL;
                 }
                 if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject.LITERAL || value.GetObjectType

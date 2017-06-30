@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Action;
 using iText.Test;
 
@@ -63,7 +64,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest01.pdf"), true);
             document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
-            System.Console.Out.WriteLine(String.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
                 , destinationFolder + "actionTest01.pdf", "http://itextpdf.com"));
         }
 
@@ -73,7 +74,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest02.pdf"), false);
             document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
-            System.Console.Out.WriteLine(String.Format("Please open document {0} at page 2 and make sure that you're automatically redirected to {1} site."
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} at page 2 and make sure that you're automatically redirected to {1} site."
                 , destinationFolder + "actionTest02.pdf", "http://itextpdf.com"));
         }
 

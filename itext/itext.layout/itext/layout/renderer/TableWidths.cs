@@ -865,8 +865,8 @@ namespace iText.Layout.Renderer {
             }
 
             public override String ToString() {
-                String str = String.Format("row={0}, col={1}, rowspan={2}, colspan={3}, ", GetRow(), GetCol(), GetRowspan(
-                    ), GetColspan());
+                String str = MessageFormatUtil.Format("row={0}, col={1}, rowspan={2}, colspan={3}, ", GetRow(), GetCol(), 
+                    GetRowspan(), GetColspan());
                 if (region == HEADER) {
                     str += "header";
                 }

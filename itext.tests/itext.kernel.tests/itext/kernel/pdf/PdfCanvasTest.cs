@@ -599,7 +599,7 @@ namespace iText.Kernel.Pdf {
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
-                canvas.ShowText(String.Format("Page_{0}", i + 1));
+                canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
                 canvas.Release();
                 page1.Flush();
@@ -692,14 +692,14 @@ namespace iText.Kernel.Pdf {
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
-                canvas.ShowText(String.Format("Page_{0}", i + 1));
+                canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
                 canvas.Release();
             }
             pdfDoc1.Close();
             pdfDoc1 = new PdfDocument(new PdfReader(file1));
             for (int i = 0; i < 5; i++) {
-                PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + String.Format("copyPages4_{0}.pdf"
+                PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + MessageFormatUtil.Format("copyPages4_{0}.pdf"
                     , i + 2)));
                 PdfPage page2 = pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
@@ -712,8 +712,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 5; i++) {
                 PdfDictionary page1 = doc1.GetPage(i + 1).GetPdfObject();
-                PdfDocument doc2 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages4_{0}.pdf", i
-                     + 2)));
+                PdfDocument doc2 = new PdfDocument(new PdfReader(destinationFolder + MessageFormatUtil.Format("copyPages4_{0}.pdf"
+                    , i + 2)));
                 PdfDictionary page = doc2.GetPage(1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page));
                 doc2.Close();
@@ -727,7 +727,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CopyPagesTest5() {
             int documentCount = 3;
             for (int i = 0; i < documentCount; i++) {
-                PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + String.Format("copyPages5_{0}.pdf"
+                PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + MessageFormatUtil.Format("copyPages5_{0}.pdf"
                     , i + 1)));
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
@@ -736,14 +736,14 @@ namespace iText.Kernel.Pdf {
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
-                canvas.ShowText(String.Format("Page_{0}", i + 1));
+                canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
                 canvas.Release();
                 pdfDoc1.Close();
             }
             IList<PdfDocument> docs = new List<PdfDocument>();
             for (int i = 0; i < documentCount; i++) {
-                PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf"
+                PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + MessageFormatUtil.Format("copyPages5_{0}.pdf"
                     , i + 1)));
                 docs.Add(pdfDoc1);
             }
@@ -757,7 +757,8 @@ namespace iText.Kernel.Pdf {
             }
             CompareTool cmpTool = new CompareTool();
             for (int i = 0; i < 3; i++) {
-                PdfReader reader1 = new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf", i + 1));
+                PdfReader reader1 = new PdfReader(destinationFolder + MessageFormatUtil.Format("copyPages5_{0}.pdf", i + 1
+                    ));
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
                 PdfReader reader2 = new PdfReader(destinationFolder + "copyPages5_4.pdf");

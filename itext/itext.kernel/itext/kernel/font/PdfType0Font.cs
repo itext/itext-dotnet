@@ -130,7 +130,7 @@ namespace iText.Kernel.Font {
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                        logger.Error(String.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
                 fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
@@ -161,8 +161,8 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (fontProgram == null) {
-                    throw new PdfException(String.Format("Cannot recognise document font {0} with {1} encoding", cidFontName, 
-                        cmap));
+                    throw new PdfException(MessageFormatUtil.Format("Cannot recognise document font {0} with {1} encoding", cidFontName
+                        , cmap));
                 }
                 cidFontType = CID_FONT_TYPE_0;
             }
@@ -603,7 +603,8 @@ namespace iText.Kernel.Font {
                 Glyph glyph = fontProgram.GetGlyphByCode(glyphCode);
                 if (glyph == null) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                    logger.Warn(String.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode
+                        ));
                 }
                 width += glyph != null ? glyph.GetWidth() : notdef.GetWidth();
             }
@@ -810,8 +811,8 @@ namespace iText.Kernel.Font {
                 if (style.Length > 0) {
                     name += "-" + style;
                 }
-                GetPdfObject().Put(PdfName.BaseFont, new PdfName(String.Format("{0}-{1}", name, cmapEncoding.GetCmapName()
-                    )));
+                GetPdfObject().Put(PdfName.BaseFont, new PdfName(MessageFormatUtil.Format("{0}-{1}", name, cmapEncoding.GetCmapName
+                    ())));
                 GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
                 PdfDictionary fontDescriptor = GetFontDescriptor(name);
                 int[][] metrics = longTag.Values.ToArray(new int[0][]);
@@ -845,8 +846,8 @@ namespace iText.Kernel.Font {
                         fontStream = GetPdfFontStream(cffBytes, new int[] { cffBytes.Length });
                         fontStream.Put(PdfName.Subtype, new PdfName("CIDFontType0C"));
                         // The PDF Reference manual advises to add -cmap in case CIDFontType0
-                        GetPdfObject().Put(PdfName.BaseFont, new PdfName(String.Format("{0}-{1}", fontName, cmapEncoding.GetCmapName
-                            ())));
+                        GetPdfObject().Put(PdfName.BaseFont, new PdfName(MessageFormatUtil.Format("{0}-{1}", fontName, cmapEncoding
+                            .GetCmapName())));
                         fontDescriptor.Put(PdfName.FontFile3, fontStream);
                     }
                     else {

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfIndirectReference : PdfObject, IComparable<iText.Kernel.Pdf.PdfIndirectReference> {
@@ -231,7 +232,7 @@ namespace iText.Kernel.Pdf {
             if (CheckState(READ_ONLY)) {
                 states.Append("ReadOnly; ");
             }
-            return String.Format("{0} {1} R{2}", iText.IO.Util.JavaUtil.IntegerToString(GetObjNumber()), iText.IO.Util.JavaUtil.IntegerToString
+            return MessageFormatUtil.Format("{0} {1} R{2}", iText.IO.Util.JavaUtil.IntegerToString(GetObjNumber()), iText.IO.Util.JavaUtil.IntegerToString
                 (GetGenNumber()), states.JSubstring(0, states.Length - 1));
         }
 

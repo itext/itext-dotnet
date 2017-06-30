@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Events;
 using iText.Kernel.Geom;
@@ -193,7 +194,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
             if (index >= count || index < 0) {
-                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, count));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format("Index: {0}, Size: {1}", index, count));
             }
             PdfObject contents = GetPdfObject().Get(PdfName.Contents);
             if (contents is PdfStream) {

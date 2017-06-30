@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -1201,19 +1202,20 @@ namespace iText.Layout {
             Table table = new Table(new float[3]);
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddHeaderCell(new Cell().Add(String.Format("header row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
-                        ));
+                    table.AddHeaderCell(new Cell().Add(MessageFormatUtil.Format("header row {0} col {1}", r, c)).SetBorder(Border
+                        .NO_BORDER));
                 }
             }
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddCell(new Cell().Add(String.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER));
+                    table.AddCell(new Cell().Add(MessageFormatUtil.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
+                        ));
                 }
             }
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddFooterCell(new Cell().Add(String.Format("footer row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
-                        ));
+                    table.AddFooterCell(new Cell().Add(MessageFormatUtil.Format("footer row {0} col {1}", r, c)).SetBorder(Border
+                        .NO_BORDER));
                 }
             }
             table.GetHeader().SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(1));

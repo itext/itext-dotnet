@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Test;
 using iText.Test.Attributes;
@@ -133,7 +134,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 PdfPage page = document.GetPage(i);
                 byte[] content = page.GetFirstContentStream().GetBytes();
-                NUnit.Framework.Assert.AreEqual(String.Format(contentTemplate, i), iText.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(contentTemplate, i), iText.IO.Util.JavaUtil.GetStringForBytes
                     (content), "Page content " + i);
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -590,23 +591,23 @@ namespace iText.Kernel.Pdf {
                 document.GetPage(-30);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30
+                    ), e.Message);
             }
             try {
                 document.GetPage(0);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0)
+                    , e.Message);
             }
             document.GetPage(1);
             try {
                 document.GetPage(25);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25
+                    ), e.Message);
             }
             document.Close();
         }

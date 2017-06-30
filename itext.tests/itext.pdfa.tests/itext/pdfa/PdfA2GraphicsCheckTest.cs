@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -377,15 +378,15 @@ namespace iText.Pdfa {
             PdfCanvas canvas;
             for (int i = 1; i < 5; ++i) {
                 canvas = new PdfCanvas(doc.AddNewPage());
-                canvas.AddImage(ImageDataFactory.Create(String.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.ToString())
-                    ), 300, 300, false);
+                canvas.AddImage(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.
+                    ToString())), 300, 300, false);
             }
             canvas = new PdfCanvas(doc.AddNewPage());
             canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file6.jp2"), 300, 300, false);
             for (int i = 8; i < 10; ++i) {
                 canvas = new PdfCanvas(doc.AddNewPage());
-                canvas.AddImage(ImageDataFactory.Create(String.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.ToString())
-                    ), 300, 300, false);
+                canvas.AddImage(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.
+                    ToString())), 300, 300, false);
             }
             doc.Close();
             CompareResult(outPdf, cmpPdf);

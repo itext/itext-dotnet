@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
@@ -132,7 +133,7 @@ namespace iText.Layout.Renderer {
                                 ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                 result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                                 ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && result.GetAreaBreak() == null) {
@@ -140,7 +141,7 @@ namespace iText.Layout.Renderer {
                                         ) {
                                         result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                        logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
+                                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
                                         if (storedArea != null) {
                                             nextStoredArea = currentArea;
@@ -160,13 +161,13 @@ namespace iText.Layout.Renderer {
                                             }
                                             theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                             ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                            logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
+                                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
                                                 ));
                                         }
                                         else {
                                             result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                                             ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                            logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                         }
                                     }
                                 }

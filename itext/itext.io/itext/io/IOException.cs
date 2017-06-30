@@ -348,7 +348,7 @@ namespace iText.IO {
                     return base.Message;
                 }
                 else {
-                    return String.Format(base.Message, GetMessageParams());
+                    return MessageFormatUtil.Format(base.Message, GetMessageParams());
                 }
             }
         }

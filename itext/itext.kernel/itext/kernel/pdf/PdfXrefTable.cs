@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -338,7 +339,7 @@ namespace iText.Kernel.Pdf {
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(String.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
         }
 
         private void EnsureCount(int count) {

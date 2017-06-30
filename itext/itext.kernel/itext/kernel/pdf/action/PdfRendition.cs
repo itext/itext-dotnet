@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -65,7 +66,7 @@ namespace iText.Kernel.Pdf.Action {
         public PdfRendition(String file, PdfFileSpec fs, String mimeType)
             : this(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.S, PdfName.MR);
-            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Rendition for {0}", file)));
+            GetPdfObject().Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
             GetPdfObject().Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType).GetPdfObject());
         }
 

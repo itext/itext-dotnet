@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -569,7 +570,7 @@ namespace iText.IO.Font {
                 (path));
             int bufLen = (int)raf.Length();
             if (bufLen < raf.Length()) {
-                throw new iText.IO.IOException(String.Format("Source data from \"{0}\" is bigger than byte array can hold."
+                throw new iText.IO.IOException(MessageFormatUtil.Format("Source data from \"{0}\" is bigger than byte array can hold."
                     , path));
             }
             byte[] buf = new byte[bufLen];

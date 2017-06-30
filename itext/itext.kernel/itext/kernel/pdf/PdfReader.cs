@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf.Filters;
 
@@ -705,8 +706,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                                logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr(), tokens
-                                    .GetGenNr()));
+                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                                    (), tokens.GetGenNr()));
                                 return new PdfNull();
                             }
                             else {

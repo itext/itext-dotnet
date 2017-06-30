@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontProgramTest {
@@ -52,7 +53,8 @@ namespace iText.IO.Font {
                 FontProgramFactory.CreateFont(font);
             }
             catch (iText.IO.IOException ex) {
-                NUnit.Framework.Assert.AreEqual(String.Format(iText.IO.IOException.FontFile1NotFound, font), ex.Message);
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.FontFile1NotFound, font), ex
+                    .Message);
             }
         }
 

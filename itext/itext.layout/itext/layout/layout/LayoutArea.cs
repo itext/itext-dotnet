@@ -135,7 +135,7 @@ namespace iText.Layout.Layout {
 
         /// <summary><inheritDoc/></summary>
         public override String ToString() {
-            return String.Format("{0}, page {1}", bBox.ToString(), pageNumber);
+            return MessageFormatUtil.Format("{0}, page {1}", bBox.ToString(), pageNumber);
         }
     }
 }
