@@ -239,14 +239,10 @@ namespace iText.Layout.Renderer {
 
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
             ) {
-            Rectangle bBox = renderer.GetOccupiedArea().GetBBox();
-            float lowestFloatBottom = bBox.GetBottom();
             foreach (Rectangle floatBox in floatRendererAreas) {
-                if (floatBox.GetBottom() < lowestFloatBottom) {
-                    lowestFloatBottom = floatBox.GetBottom();
-                }
+                renderer.GetOccupiedArea().SetBBox(Rectangle.GetCommonRectangle(renderer.GetOccupiedArea().GetBBox(), floatBox
+                    ));
             }
-            bBox.SetHeight(bBox.GetTop() - lowestFloatBottom).SetY(lowestFloatBottom);
         }
 
         internal static MinMaxWidth CalculateMinMaxWidthForFloat(AbstractRenderer renderer, FloatPropertyValue? floatPropertyVal

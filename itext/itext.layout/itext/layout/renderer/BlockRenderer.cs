@@ -323,12 +323,6 @@ namespace iText.Layout.Renderer {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
                     }
-                    else {
-                        if (IsAbsolutePosition() && childRenderer.GetOccupiedArea() != null) {
-                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), childRenderer.GetOccupiedArea().
-                                GetBBox()));
-                        }
-                    }
                 }
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
@@ -353,7 +347,7 @@ namespace iText.Layout.Renderer {
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
-            if (FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
+            if (IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
             }
             IRenderer overflowRenderer_1 = null;
