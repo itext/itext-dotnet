@@ -118,9 +118,6 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            if (IsAbsolutePosition()) {
-                ApplyAbsolutePosition(layoutBox);
-            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
@@ -249,6 +246,7 @@ namespace iText.Layout.Renderer {
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, floatRendererAreas, 
                 layoutContext.GetArea().GetBBox(), clearHeightCorrection, false);
+            ApplyAbsolutePositionIfNeeded(layoutContext);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }

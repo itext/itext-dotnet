@@ -335,6 +335,33 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<TransparentColor>(property);
         }
 
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property) {
+            return NumberUtil.AsFloat(this.GetProperty<Object>(property));
+        }
+
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <param name="defaultValue">default value to be returned if property is not found</param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property, float? defaultValue) {
+            return NumberUtil.AsFloat(this.GetProperty<Object>(property, defaultValue));
+        }
+
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
         /// <param name="property">
         /// an
@@ -346,6 +373,19 @@ namespace iText.Layout.Renderer {
         /// </returns>
         public virtual bool? GetPropertyAsBoolean(int property) {
             return this.GetProperty<bool?>(property);
+        }
+
+        /// <summary>Returns a property with a certain key, as an integer value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="int?"/>
+        /// </returns>
+        public virtual int? GetPropertyAsInteger(int property) {
+            return NumberUtil.AsInteger(this.GetProperty<Object>(property));
         }
 
         /// <summary>Returns a string representation of the renderer.</summary>
@@ -857,52 +897,36 @@ namespace iText.Layout.Renderer {
             return rect.ApplyMargins<Rectangle>(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
         }
 
-        protected internal virtual void ApplyAbsolutePosition(Rectangle rect) {
+        protected internal virtual void ApplyAbsolutePosition(Rectangle parentRect) {
             float? top = this.GetPropertyAsFloat(Property.TOP);
             float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
             float? left = this.GetPropertyAsFloat(Property.LEFT);
             float? right = this.GetPropertyAsFloat(Property.RIGHT);
-            float initialHeight = rect.GetHeight();
-            float initialWidth = rect.GetWidth();
-            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
-            if (minHeight != null && rect.GetHeight() < (float)minHeight) {
-                float difference = (float)minHeight - rect.GetHeight();
-                rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
+            if (left == null && right == null && BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property
+                .BASE_DIRECTION))) {
+                right = 0f;
             }
-            if (top != null) {
-                rect.SetHeight(rect.GetHeight() - (float)top);
+            if (top == null && bottom == null) {
+                top = 0f;
             }
-            if (left != null) {
-                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - (float)left);
-            }
-            if (right != null) {
-                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
-                if (left == null && width != null) {
-                    float widthValue = width.IsPointValue() ? width.GetValue() : (width.GetValue() * initialWidth);
-                    float placeLeft = rect.GetWidth() - widthValue;
-                    if (placeLeft > 0) {
-                        float computedRight = Math.Min(placeLeft, (float)right);
-                        rect.SetX(rect.GetX() + rect.GetWidth() - computedRight - widthValue);
-                    }
+            try {
+                if (right != null) {
+                    Move(parentRect.GetRight() - (float)right - occupiedArea.GetBBox().GetRight(), 0);
                 }
-                else {
-                    if (width == null) {
-                        rect.SetWidth(rect.GetWidth() - (float)right);
-                    }
+                if (left != null) {
+                    Move(parentRect.GetLeft() + (float)left - occupiedArea.GetBBox().GetLeft(), 0);
+                }
+                if (top != null) {
+                    Move(0, parentRect.GetTop() - (float)top - occupiedArea.GetBBox().GetTop());
+                }
+                if (bottom != null) {
+                    Move(0, parentRect.GetBottom() + (float)bottom - occupiedArea.GetBBox().GetBottom());
                 }
             }
-            if (bottom != null) {
-                if (minHeight != null) {
-                    rect.SetHeight((float)minHeight + (float)bottom);
-                }
-                else {
-                    float minHeightValue = rect.GetHeight() - (float)bottom;
-                    float? currentMaxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
-                    if (currentMaxHeight != null) {
-                        minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
-                    }
-                    SetProperty(Property.MIN_HEIGHT, minHeightValue);
-                }
+            catch (ArgumentNullException) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                    "Absolute positioning might be applied incorrectly."));
             }
         }
 
@@ -1211,9 +1235,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            float? height = this.GetPropertyAsFloat(Property.HEIGHT);
-            float? maxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
-            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+            float? height = this.GetPropertyAsFloat<float>(Property.HEIGHT);
+            float? maxHeight = this.GetPropertyAsFloat<float>(Property.MAX_HEIGHT);
+            float? minHeight = this.GetPropertyAsFloat<float>(Property.MIN_HEIGHT);
             if (null != height) {
                 if (null == maxHeight || height < maxHeight) {
                     maxHeight = height;
@@ -1269,6 +1293,37 @@ namespace iText.Layout.Renderer {
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
+        }
+
+        internal static float? GetPropertyAsFloat(IRenderer renderer, int property) {
+            return NumberUtil.AsFloat(renderer.GetProperty<Object>(property));
+        }
+
+        internal static void ApplyGeneratedAccessibleAttributes(TagTreePointer tagPointer, PdfDictionary attributes
+            ) {
+            if (attributes == null) {
+                return;
+            }
+            // TODO if taggingPointer.getProperties will always write directly to struct elem, use it instead (add addAttributes overload with index)
+            PdfStructElem structElem = tagPointer.GetDocument().GetTagStructureContext().GetPointerStructElem(tagPointer
+                );
+            PdfObject structElemAttr = structElem.GetAttributes(false);
+            if (structElemAttr == null || !structElemAttr.IsDictionary() && !structElemAttr.IsArray()) {
+                structElem.SetAttributes(attributes);
+            }
+            else {
+                if (structElemAttr.IsDictionary()) {
+                    PdfArray attrArr = new PdfArray();
+                    attrArr.Add(attributes);
+                    attrArr.Add(structElemAttr);
+                    structElem.SetAttributes(attrArr);
+                }
+                else {
+                    // isArray
+                    PdfArray attrArr = (PdfArray)structElemAttr;
+                    attrArr.Add(0, attributes);
+                }
+            }
         }
 
         internal virtual void ShrinkOccupiedAreaForAbsolutePosition() {
@@ -1335,29 +1390,58 @@ namespace iText.Layout.Renderer {
                 ());
         }
 
-        internal static void ApplyGeneratedAccessibleAttributes(TagTreePointer tagPointer, PdfDictionary attributes
-            ) {
-            if (attributes == null) {
-                return;
+        internal virtual void ApplyAbsolutePositionIfNeeded(LayoutContext layoutContext) {
+            if (IsAbsolutePosition()) {
+                ApplyAbsolutePosition(layoutContext is PositionedLayoutContext ? ((PositionedLayoutContext)layoutContext).
+                    GetParentOccupiedArea().GetBBox() : layoutContext.GetArea().GetBBox());
             }
-            // TODO if taggingPointer.getProperties will always write directly to struct elem, use it instead (add addAttributes overload with index)
-            PdfStructElem structElem = tagPointer.GetDocument().GetTagStructureContext().GetPointerStructElem(tagPointer
-                );
-            PdfObject structElemAttr = structElem.GetAttributes(false);
-            if (structElemAttr == null || !structElemAttr.IsDictionary() && !structElemAttr.IsArray()) {
-                structElem.SetAttributes(attributes);
+        }
+
+        internal virtual void PreparePositionedRendererAndAreaForLayout(IRenderer childPositionedRenderer, Rectangle
+             fullBbox, Rectangle parentBbox) {
+            float? left = GetPropertyAsFloat(childPositionedRenderer, Property.LEFT);
+            float? right = GetPropertyAsFloat(childPositionedRenderer, Property.RIGHT);
+            float? top = GetPropertyAsFloat(childPositionedRenderer, Property.TOP);
+            float? bottom = GetPropertyAsFloat(childPositionedRenderer, Property.BOTTOM);
+            childPositionedRenderer.SetParent(this);
+            AdjustPositionedRendererLayoutBoxWidth(childPositionedRenderer, fullBbox, left, right);
+            if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property
+                .POSITION))) {
+                UpdateMinHeightForAbsolutelyPositionedRenderer(childPositionedRenderer, parentBbox, top, bottom);
             }
-            else {
-                if (structElemAttr.IsDictionary()) {
-                    PdfArray attrArr = new PdfArray();
-                    attrArr.Add(attributes);
-                    attrArr.Add(structElemAttr);
-                    structElem.SetAttributes(attrArr);
+        }
+
+        private void UpdateMinHeightForAbsolutelyPositionedRenderer(IRenderer renderer, Rectangle parentRendererBox
+            , float? top, float? bottom) {
+            if (top != null && bottom != null && !renderer.HasProperty(Property.HEIGHT)) {
+                float? currentMaxHeight = GetPropertyAsFloat(renderer, Property.MAX_HEIGHT);
+                float? currentMinHeight = GetPropertyAsFloat(renderer, Property.MIN_HEIGHT);
+                float resolvedMinHeight = Math.Max(0, parentRendererBox.GetTop() - (float)top - parentRendererBox.GetBottom
+                    () - (float)bottom);
+                if (currentMinHeight != null) {
+                    resolvedMinHeight = Math.Max(resolvedMinHeight, (float)currentMinHeight);
                 }
-                else {
-                    // isArray
-                    PdfArray attrArr = (PdfArray)structElemAttr;
-                    attrArr.Add(0, attributes);
+                if (currentMaxHeight != null) {
+                    resolvedMinHeight = Math.Min(resolvedMinHeight, (float)currentMaxHeight);
+                }
+                renderer.SetProperty(Property.MIN_HEIGHT, resolvedMinHeight);
+            }
+        }
+
+        private void AdjustPositionedRendererLayoutBoxWidth(IRenderer renderer, Rectangle fullBbox, float? left, float?
+             right) {
+            if (left != null) {
+                fullBbox.SetWidth(fullBbox.GetWidth() - (float)left).SetX(fullBbox.GetX() + (float)left);
+            }
+            if (right != null) {
+                fullBbox.SetWidth(fullBbox.GetWidth() - (float)right);
+            }
+            if (left == null && right == null && !renderer.HasProperty(Property.WIDTH)) {
+                // Other, non-block renderers won't occupy full width anyway
+                MinMaxWidth minMaxWidth = renderer is BlockRenderer ? ((BlockRenderer)renderer).GetMinMaxWidth(MinMaxWidthUtils
+                    .GetMax()) : null;
+                if (minMaxWidth != null && minMaxWidth.GetMaxWidth() < fullBbox.GetWidth()) {
+                    fullBbox.SetWidth(minMaxWidth.GetMaxWidth() + iText.Layout.Renderer.AbstractRenderer.EPS);
                 }
             }
         }

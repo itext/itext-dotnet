@@ -236,7 +236,10 @@ namespace iText.Layout.Renderer {
                 else {
                     layoutArea = new LayoutArea((int)positionedPageNumber, initialCurrentArea.GetBBox().Clone());
                 }
-                renderer.SetParent(this).Layout(new LayoutContext(layoutArea));
+                Rectangle fullBbox = layoutArea.GetBBox().Clone();
+                PreparePositionedRendererAndAreaForLayout(renderer, fullBbox, layoutArea.GetBBox());
+                renderer.Layout(new PositionedLayoutContext(new LayoutArea(layoutArea.GetPageNumber(), fullBbox), layoutArea
+                    ));
                 if (immediateFlush) {
                     FlushSingleRenderer(renderer);
                     positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
