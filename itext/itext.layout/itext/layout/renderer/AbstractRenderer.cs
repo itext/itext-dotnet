@@ -923,7 +923,7 @@ namespace iText.Layout.Renderer {
                     Move(0, parentRect.GetBottom() + (float)bottom - occupiedArea.GetBBox().GetBottom());
                 }
             }
-            catch (ArgumentNullException) {
+            catch (Exception) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Absolute positioning might be applied incorrectly."));
@@ -1082,7 +1082,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                catch (ArgumentNullException) {
+                catch (Exception) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the children might not end up aligned horizontally."));
