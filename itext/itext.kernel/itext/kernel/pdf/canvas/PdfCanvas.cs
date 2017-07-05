@@ -345,7 +345,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Concatenates the 2x3 affine transformation matrix to the current matrix
         /// in the content stream managed by this Canvas.
         /// Contrast with
-        /// <see cref="SetTextMatrix(float, float)"/>
+        /// <see cref="SetTextMatrix(iText.Kernel.Geom.AffineTransform)"/>
         /// </remarks>
         /// <param name="a">operand 1,1 in the matrix.</param>
         /// <param name="b">operand 1,2 in the matrix.</param>
@@ -593,6 +593,19 @@ namespace iText.Kernel.Pdf.Canvas {
             contentStream.GetOutputStream().WriteFloat(a).WriteSpace().WriteFloat(b).WriteSpace().WriteFloat(c).WriteSpace
                 ().WriteFloat(d).WriteSpace().WriteFloat(x).WriteSpace().WriteFloat(y).WriteSpace().WriteBytes(Tm);
             return this;
+        }
+
+        /// <summary>Replaces the text matrix.</summary>
+        /// <remarks>
+        /// Replaces the text matrix. Contrast with
+        /// <see cref="ConcatMatrix(iText.Kernel.Pdf.PdfArray)"/>
+        /// </remarks>
+        /// <param name="transform">new textmatrix as transformation</param>
+        /// <returns>current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(AffineTransform transform) {
+            float[] matrix = new float[6];
+            transform.GetMatrix(matrix);
+            return SetTextMatrix(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
         }
 
         /// <summary>Changes the text matrix.</summary>
