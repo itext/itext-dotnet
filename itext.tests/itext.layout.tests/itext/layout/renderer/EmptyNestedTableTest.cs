@@ -19,14 +19,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
             CreateDestinationFolder(destinationFolder);
-            String outFileName = destinationFolder + "emptNestedTableTest.pdf";
-            String cmpFileName = sourceFolder + "cmp_emptNestedTableTest.pdf";
+            String outFileName = destinationFolder + "emptyNestedTableTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_emptyNestedTableTest.pdf";
             // setup document
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetTagged();
             Document layoutDocument = new Document(pdfDocument);
             // add table to document
-            Table x = new Table(1).AddCell(new Cell().Add(new Table(1)));
+            Table x = new Table(new float[] { 1f }).AddCell(new Cell().Add(new Table(new float[] { 1f })));
             layoutDocument.Add(x);
             // close document
             layoutDocument.Close();
