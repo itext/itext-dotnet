@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -17,6 +18,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
+            CreateDestinationFolder(destinationFolder);
             String outFileName = destinationFolder + "emptNestedTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_emptNestedTableTest.pdf";
             // setup document
