@@ -13,11 +13,15 @@ namespace iText.Layout.Renderer {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/EmptyNestedTableTest/";
 
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateDestinationFolder(destinationFolder);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
-            CreateDestinationFolder(destinationFolder);
             String outFileName = destinationFolder + "emptyNestedTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyNestedTableTest.pdf";
             // setup document
