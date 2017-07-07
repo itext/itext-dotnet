@@ -78,15 +78,24 @@ namespace iText.Layout.Renderer {
                     return topShift;
                 }
                 lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
-                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
-                right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
+                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : float.MinValue;
+                right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : float.MaxValue;
+                if (left > right || left > layoutBox.GetRight() || right < layoutBox.GetLeft()) {
+                    left = layoutBox.GetLeft();
+                    right = left;
+                }
+                else {
+                    if (right > layoutBox.GetRight()) {
+                        right = layoutBox.GetRight();
+                    }
+                    if (left < layoutBox.GetLeft()) {
+                        left = layoutBox.GetLeft();
+                    }
+                }
             }
             while (boxWidth != null && boxWidth > right - left);
-            if (layoutBox.GetLeft() < left) {
-                layoutBox.SetX(left);
-            }
-            if (layoutBox.GetRight() > right && layoutBox.GetLeft() <= right) {
-                layoutBox.SetWidth(right - layoutBox.GetLeft());
+            if (layoutBox.GetWidth() > right - left) {
+                layoutBox.SetX(left).SetWidth(right - left);
             }
             ApplyClearance(layoutBox, marginsCollapseHandler, topShift, false);
             return topShift;
