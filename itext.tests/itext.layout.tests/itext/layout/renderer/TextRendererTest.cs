@@ -84,5 +84,22 @@ namespace iText.Layout.Renderer {
             rend.SetText(val);
             NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
+        public virtual void SetFontAsText() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteBufferOutputStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            Text txt = new Text("text");
+            txt.SetProperty(Property.POSITION, LayoutPosition.ABSOLUTE);
+            txt.SetProperty(Property.TOP, 5f);
+            FontProvider fp = new FontProvider();
+            fp.AddFont("Helvetica");
+            txt.SetProperty(Property.FONT_PROVIDER, fp);
+            txt.SetFont("Helvetica");
+            doc.Add(new Paragraph().Add(txt));
+            doc.Close();
+        }
     }
 }
