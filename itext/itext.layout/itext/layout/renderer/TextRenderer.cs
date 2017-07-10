@@ -1233,7 +1233,14 @@ namespace iText.Layout.Renderer {
 
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
-                font = ResolveFirstPdfFont();
+                try {
+                    font = GetPropertyAsFont(Property.FONT);
+                }
+                catch (InvalidCastException) {
+                    font = ResolveFirstPdfFont();
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                    logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                }
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
                 strToBeConverted = null;

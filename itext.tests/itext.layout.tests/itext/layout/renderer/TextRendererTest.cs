@@ -49,6 +49,7 @@ using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class TextRendererTest : ExtendedITextTest {
@@ -71,6 +72,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
         public virtual void SetTextException() {
             String val = "other text";
             String fontName = "Helvetica";
