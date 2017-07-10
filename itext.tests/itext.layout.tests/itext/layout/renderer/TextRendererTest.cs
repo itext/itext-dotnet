@@ -85,6 +85,12 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
         }
 
+        /// <summary>
+        /// This test assumes that absolute positioning for
+        /// <see cref="iText.Layout.Element.Text"/>
+        /// elements is
+        /// not supported. Adding this support is the subject of DEVSIX-1393.
+        /// </summary>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
         public virtual void SetFontAsText() {
