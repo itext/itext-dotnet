@@ -1233,7 +1233,7 @@ namespace iText.Layout.Renderer {
 
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
-                font = GetPropertyAsFont(Property.FONT);
+                font = ResolveFirstPdfFont();
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
                 strToBeConverted = null;

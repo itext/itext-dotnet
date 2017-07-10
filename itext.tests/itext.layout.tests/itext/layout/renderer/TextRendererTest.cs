@@ -40,11 +40,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
@@ -65,6 +68,19 @@ namespace iText.Layout.Renderer {
             LayoutResult result1 = textRenderer1.Layout(layoutContext);
             LayoutResult result2 = textRenderer2.Layout(layoutContext);
             NUnit.Framework.Assert.AreEqual(result1.GetOccupiedArea(), result2.GetOccupiedArea());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetTextException() {
+            String val = "other text";
+            String fontName = "Helvetica";
+            TextRenderer rend = (TextRenderer)new Text("basic text").GetRenderer();
+            FontProvider fp = new FontProvider();
+            fp.AddFont(fontName);
+            rend.SetProperty(Property.FONT_PROVIDER, fp);
+            rend.SetProperty(Property.FONT, fontName);
+            rend.SetText(val);
+            NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
         }
     }
 }
