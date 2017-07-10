@@ -40,12 +40,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class TextRendererTest : ExtendedITextTest {
@@ -65,6 +69,43 @@ namespace iText.Layout.Renderer {
             LayoutResult result1 = textRenderer1.Layout(layoutContext);
             LayoutResult result2 = textRenderer2.Layout(layoutContext);
             NUnit.Framework.Assert.AreEqual(result1.GetOccupiedArea(), result2.GetOccupiedArea());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
+        public virtual void SetTextException() {
+            String val = "other text";
+            String fontName = "Helvetica";
+            TextRenderer rend = (TextRenderer)new Text("basic text").GetRenderer();
+            FontProvider fp = new FontProvider();
+            fp.AddFont(fontName);
+            rend.SetProperty(Property.FONT_PROVIDER, fp);
+            rend.SetProperty(Property.FONT, fontName);
+            rend.SetText(val);
+            NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
+        }
+
+        /// <summary>
+        /// This test assumes that absolute positioning for
+        /// <see cref="iText.Layout.Element.Text"/>
+        /// elements is
+        /// not supported. Adding this support is the subject of DEVSIX-1393.
+        /// </summary>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
+        public virtual void SetFontAsText() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteBufferOutputStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            Text txt = new Text("text");
+            txt.SetProperty(Property.POSITION, LayoutPosition.ABSOLUTE);
+            txt.SetProperty(Property.TOP, 5f);
+            FontProvider fp = new FontProvider();
+            fp.AddFont("Helvetica");
+            txt.SetProperty(Property.FONT_PROVIDER, fp);
+            txt.SetFont("Helvetica");
+            doc.Add(new Paragraph().Add(txt));
+            doc.Close();
         }
     }
 }
