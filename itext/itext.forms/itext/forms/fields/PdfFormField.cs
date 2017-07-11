@@ -1578,12 +1578,12 @@ namespace iText.Forms.Fields {
                     ());
                 PdfString pName = parentField.GetFieldName();
                 if (pName != null) {
-                    parentName = pName.GetValue() + ".";
+                    parentName = pName.ToUnicodeString() + ".";
                 }
             }
             PdfString name = GetPdfObject().GetAsString(PdfName.T);
             if (name != null) {
-                name = new PdfString(parentName + name.GetValue());
+                name = new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
             }
             return name;
         }
