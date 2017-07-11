@@ -121,10 +121,20 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> formFields = form.GetFormFields();
-            byte[] result = new byte[] { (byte)0xFE, (byte)0xFF, (byte)0x5E, (byte)0x10, (byte)0x53, (byte)0xF7, (byte
-                )0x00, (byte)0x31 };
+            String fieldName = "\u5E10\u53F71";
             // 帐号1: account number 1
-            NUnit.Framework.Assert.AreEqual(formFields.Keys.ToArray(new String[1])[0].GetBytes(), result);
+            NUnit.Framework.Assert.AreEqual(formFields.Keys.ToArray(new String[1])[0], fieldName);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void UnicodeFormFieldTest2() {
+            String filename = sourceFolder + "unicodeFormFieldFile.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String fieldName = "\u5E10\u53F71";
+            // 帐号1: account number 1
+            NUnit.Framework.Assert.IsNotNull(form.GetField(fieldName));
         }
 
         /// <exception cref="System.IO.IOException"/>
