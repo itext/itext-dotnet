@@ -123,7 +123,7 @@ namespace iText.Forms {
             IDictionary<String, PdfFormField> formFields = form.GetFormFields();
             String fieldName = "\u5E10\u53F71";
             // 帐号1: account number 1
-            NUnit.Framework.Assert.AreEqual(formFields.Keys.ToArray(new String[1])[0], fieldName);
+            NUnit.Framework.Assert.AreEqual(fieldName, formFields.Keys.ToArray(new String[1])[0]);
         }
 
         /// <exception cref="System.IO.IOException"/>
