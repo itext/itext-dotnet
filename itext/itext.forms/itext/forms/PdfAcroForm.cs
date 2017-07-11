@@ -952,11 +952,11 @@ namespace iText.Forms {
                             parentField = PdfFormField.MakeFormField(parentField.GetParent(), document);
                         }
                     }
-                    name = fieldName.ToUnicodeString() + "." + index;
+                    name = fieldName.ToString() + "." + index;
                     index++;
                 }
                 else {
-                    name = fieldName.ToUnicodeString();
+                    name = fieldName.ToString();
                 }
                 fields.Put(name, formField);
                 if (formField.GetKids() != null) {
