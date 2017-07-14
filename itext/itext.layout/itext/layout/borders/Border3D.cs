@@ -190,6 +190,11 @@ namespace iText.Layout.Borders {
             canvas.RestoreState();
         }
 
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, float
+             borderWidthBefore, float borderWidthAfter) {
+        }
+
+        // TODO
         /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
