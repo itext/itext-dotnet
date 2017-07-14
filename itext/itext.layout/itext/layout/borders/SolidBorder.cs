@@ -255,16 +255,5 @@ namespace iText.Layout.Borders {
             transparentColor.ApplyStrokeTransparency(canvas);
             canvas.SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
-
-        private Point GetIntersectionPoint(Point lineBeg, Point lineEnd, Point clipLineBeg, Point clipLineEnd) {
-            double A1 = lineBeg.GetY() - lineEnd.GetY();
-            double A2 = clipLineBeg.GetY() - clipLineEnd.GetY();
-            double B1 = lineEnd.GetX() - lineBeg.GetX();
-            double B2 = clipLineEnd.GetX() - clipLineBeg.GetX();
-            double C1 = lineBeg.GetX() * lineEnd.GetY() - lineBeg.GetY() * lineEnd.GetX();
-            double C2 = clipLineBeg.GetX() * clipLineEnd.GetY() - clipLineBeg.GetY() * clipLineEnd.GetX();
-            double M = B1 * A2 - B2 * A1;
-            return new Point((B2 * C1 - B1 * C2) / M, (C2 * A1 - C1 * A2) / M);
-        }
     }
 }

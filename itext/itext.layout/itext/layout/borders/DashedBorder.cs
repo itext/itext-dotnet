@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
@@ -154,6 +155,7 @@ namespace iText.Layout.Borders {
             if (adjustedGap > dash) {
                 adjustedGap -= dash;
             }
+            // Points (x0, y0) and (x3, y3) are used to produce Bezier curve
             float x0 = x1;
             float y0 = y1;
             float x3 = x2;
@@ -165,6 +167,9 @@ namespace iText.Layout.Borders {
             canvas.SaveState().SetLineWidth(width).SetStrokeColor(transparentColor.GetColor());
             transparentColor.ApplyStrokeTransparency(canvas);
             canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2);
+            Point clipPoint1;
+            Point clipPoint2;
+            Point clipPoint;
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
             switch (borderSide) {
                 case Border.Side.TOP: {
@@ -172,6 +177,21 @@ namespace iText.Layout.Borders {
                     y0 -= innerRadius;
                     x3 += borderWidthAfter / 2;
                     y3 -= innerRadius;
+                    clipPoint1 = GetIntersectionPoint(new Point(x1 - borderWidthBefore, y1 + width), new Point(x1, y1), new Point
+                        (x0, y0), new Point(x0 + 10, y0));
+                    clipPoint2 = GetIntersectionPoint(new Point(x2 + borderWidthAfter, y2 + width), new Point(x2, y2), new Point
+                        (x3, y3), new Point(x3 - 10, y3));
+                    if (clipPoint1.x > clipPoint2.x) {
+                        clipPoint = GetIntersectionPoint(new Point(x1 - borderWidthBefore, y1 + width), clipPoint1, clipPoint2, new 
+                            Point(x2 + borderWidthAfter, y2 + width));
+                        canvas.MoveTo(x1 - borderWidthBefore, y1 + width).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 + borderWidthAfter
+                            , y2 + width).LineTo(x1 - borderWidthBefore, y1 + width);
+                    }
+                    else {
+                        canvas.MoveTo(x1 - borderWidthBefore, y1 + width).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
+                            clipPoint2.y).LineTo(x2 + borderWidthAfter, y2 + width).LineTo(x1 - borderWidthBefore, y1 + width);
+                    }
+                    canvas.Clip().NewPath();
                     x1 += innerRadiusBefore;
                     y1 += widthHalf;
                     x2 -= innerRadiusAfter;
@@ -186,6 +206,22 @@ namespace iText.Layout.Borders {
                     y0 += borderWidthBefore / 2;
                     x3 -= innerRadius;
                     y3 -= borderWidthAfter;
+                    clipPoint1 = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), new Point(x1, y1), new Point
+                        (x0, y0), new Point(x0, y0 - 10));
+                    clipPoint2 = GetIntersectionPoint(new Point(x2 + width, y2 - borderWidthAfter), new Point(x2, y2), new Point
+                        (x3, y3), new Point(x3, y3 - 10));
+                    if (clipPoint1.y < clipPoint2.y) {
+                        clipPoint = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), clipPoint1, clipPoint2, new 
+                            Point(x2 + width, y2 - borderWidthAfter));
+                        canvas.MoveTo(x1 + width, y1 + borderWidthBefore).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 + width, y2 -
+                             borderWidthAfter).LineTo(x1 + width, y1 + borderWidthBefore).Clip().NewPath();
+                    }
+                    else {
+                        canvas.MoveTo(x1 + width, y1 + borderWidthBefore).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
+                            clipPoint2.y).LineTo(x2 + width, y2 - borderWidthAfter).LineTo(x1 + width, y1 + borderWidthBefore).Clip
+                            ().NewPath();
+                    }
+                    canvas.Clip().NewPath();
                     x1 += widthHalf;
                     y1 -= innerRadiusBefore;
                     x2 += widthHalf;
@@ -200,6 +236,21 @@ namespace iText.Layout.Borders {
                     y0 += innerRadius;
                     x3 -= borderWidthAfter / 2;
                     y3 += innerRadius;
+                    clipPoint1 = GetIntersectionPoint(new Point(x1 + borderWidthBefore, y1 - width), new Point(x1, y1), new Point
+                        (x0, y0), new Point(x0 - 10, y0));
+                    clipPoint2 = GetIntersectionPoint(new Point(x2 - borderWidthAfter, y2 - width), new Point(x2, y2), new Point
+                        (x3, y3), new Point(x3 + 10, y3));
+                    if (clipPoint1.x < clipPoint2.x) {
+                        clipPoint = GetIntersectionPoint(new Point(x1 + borderWidthBefore, y1 - width), clipPoint1, clipPoint2, new 
+                            Point(x2 - borderWidthAfter, y2 - width));
+                        canvas.MoveTo(x1 + borderWidthBefore, y1 - width).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 - borderWidthAfter
+                            , y2 - width).LineTo(x1 + borderWidthBefore, y1 - width);
+                    }
+                    else {
+                        canvas.MoveTo(x1 + borderWidthBefore, y1 - width).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
+                            clipPoint2.y).LineTo(x2 - borderWidthAfter, y2 - width).LineTo(x1 + borderWidthBefore, y1 - width);
+                    }
+                    canvas.Clip().NewPath();
                     x1 -= innerRadiusBefore;
                     y1 -= widthHalf;
                     x2 += innerRadiusAfter;
@@ -213,7 +264,22 @@ namespace iText.Layout.Borders {
                     x0 += innerRadius;
                     y0 -= borderWidthBefore / 2;
                     x3 += innerRadius;
-                    y3 -= borderWidthAfter;
+                    y3 += borderWidthAfter;
+                    clipPoint1 = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), new Point(x1, y1), new Point
+                        (x0, y0), new Point(x0, y0 + 10));
+                    clipPoint2 = GetIntersectionPoint(new Point(x2 - width, y2 + borderWidthAfter), new Point(x2, y2), new Point
+                        (x3, y3), new Point(x3, y3 + 10));
+                    if (clipPoint1.y > clipPoint2.y) {
+                        clipPoint = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), clipPoint1, clipPoint2, new 
+                            Point(x2 - width, y2 + borderWidthAfter));
+                        canvas.MoveTo(x1 - width, y1 - borderWidthBefore).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 - width, y2 +
+                             borderWidthAfter).LineTo(x1 - width, y1 - borderWidthBefore);
+                    }
+                    else {
+                        canvas.MoveTo(x1 - width, y1 - borderWidthBefore).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
+                            clipPoint2.y).LineTo(x2 - width, y2 + borderWidthAfter).LineTo(x1 - width, y1 - borderWidthBefore);
+                    }
+                    canvas.Clip().NewPath();
                     x1 -= widthHalf;
                     y1 += innerRadiusBefore;
                     x2 -= widthHalf;

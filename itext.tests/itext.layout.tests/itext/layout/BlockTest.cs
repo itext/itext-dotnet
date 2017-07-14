@@ -312,11 +312,29 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(500).SetWidth(500).SetBorderTop(new SolidBorder(Color.RED, 20)).SetBorderRight(new SolidBorder
-                (Color.YELLOW, 20)).SetBackgroundColor(Color.BLUE).SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue
-                (50));
-            // .setBorder(new SolidBorder(10))
-            //.setBorderLeft(Border.NO_BORDER)
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.BLUE);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(50));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new SolidBorder(Color.RED, 20)).SetBorderRight(new SolidBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new DashedBorder(Color.RED, 20)).SetBorderRight(new DashedBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new DottedBorder(Color.RED, 20)).SetBorderRight(new DottedBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new RoundDotsBorder(Color.RED, 20)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 20));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -331,8 +349,21 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_borderRadiusTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
+            // width and height > 2 * radius
             Div div = new Div();
             div.SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
+                .CreatePointValue(100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // 2 * radius > width and height > radius
+            div = new Div();
+            div.SetHeight(150).SetWidth(150).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
+                .CreatePointValue(100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // radius > width and height
+            div = new Div();
+            div.SetHeight(50).SetWidth(50).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
                 .CreatePointValue(100));
             doc.Add(div);
             doc.Close();
@@ -349,9 +380,34 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN).SetBorder(new SolidBorder(Color.BLACK, 100
-                )).SetBorderTop(new SolidBorder(Color.RED, 100)).SetBorderRight(new SolidBorder(Color.BLUE, 100)).SetProperty
-                (Property.BORDER_RADIUS, UnitValue.CreatePointValue(200));
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(200));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new SolidBorder(Color.MAGENTA, 100)).SetBorderBottom(new SolidBorder(Color.BLACK, 100)).
+                SetBorderTop(new SolidBorder(Color.RED, 100)).SetBorderRight(new SolidBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new DashedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DashedBorder(Color.BLACK, 100)
+                ).SetBorderTop(new DashedBorder(Color.RED, 100)).SetBorderRight(new DashedBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new DottedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DottedBorder(Color.BLACK, 100)
+                ).SetBorderTop(new DottedBorder(Color.RED, 100)).SetBorderRight(new DottedBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new RoundDotsBorder(Color.MAGENTA, 100)).SetBorderBottom(new RoundDotsBorder(Color.BLACK
+                , 100)).SetBorderTop(new RoundDotsBorder(Color.RED, 100)).SetBorderRight(new RoundDotsBorder(Color.BLUE
+                , 100));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -367,10 +423,34 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(120).SetWidth(120).SetBackgroundColor(Color.MAGENTA).SetBorderBottom(new SolidBorder(Color.RED
-                , 30)).SetBorderLeft(new SolidBorder(Color.GREEN, 15)).SetBorderTop(new SolidBorder(Color.BLACK, 60)).
-                SetBorderRight(new SolidBorder(Color.BLUE, 150)).SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue
-                (90));
+            Style divStyle = new Style().SetHeight(120).SetWidth(120).SetBackgroundColor(Color.MAGENTA);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(90));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.GREEN, 15)).SetBorderTop
+                (new SolidBorder(Color.BLACK, 60)).SetBorderRight(new SolidBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.GREEN, 15)).SetBorderTop
+                (new DashedBorder(Color.BLACK, 60)).SetBorderRight(new DashedBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.GREEN, 15)).SetBorderTop
+                (new DottedBorder(Color.BLACK, 60)).SetBorderRight(new DottedBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.GREEN, 15)
+                ).SetBorderTop(new RoundDotsBorder(Color.BLACK, 60)).SetBorderRight(new RoundDotsBorder(Color.BLUE, 150
+                ));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -386,10 +466,34 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(460).SetWidth(360).SetBackgroundColor(Color.MAGENTA).SetBorderBottom(new DashedBorder(Color.
-                RED, 30)).SetBorderLeft(new DashedBorder(Color.BLUE, 15)).SetBorderTop(new DashedBorder(Color.GREEN, 60
-                )).SetBorderRight(new DashedBorder(Color.YELLOW, 150)).SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue
-                (100));
+            Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(Color.MAGENTA);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(100));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.BLUE, 15)).SetBorderTop
+                (new SolidBorder(Color.GREEN, 60)).SetBorderRight(new SolidBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.BLUE, 15)).SetBorderTop
+                (new DashedBorder(Color.GREEN, 60)).SetBorderRight(new DashedBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.BLUE, 15)).SetBorderTop
+                (new DottedBorder(Color.GREEN, 60)).SetBorderRight(new DottedBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.BLUE, 15))
+                .SetBorderTop(new RoundDotsBorder(Color.GREEN, 60)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 150
+                ));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

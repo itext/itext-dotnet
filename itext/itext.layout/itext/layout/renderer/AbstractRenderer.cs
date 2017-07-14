@@ -547,16 +547,29 @@ namespace iText.Layout.Renderer {
                 float y4 = top - radius;
                 PdfCanvas canvas = drawContext.GetCanvas();
                 canvas.SaveState();
-                canvas.MoveTo(x1, top).CurveTo(x1 + radius * curv, top, right, y1 + radius * curv, right, y1).LineTo(right
-                    , y2).CurveTo(right, y2 - radius * curv, x2 + radius * curv, bottom, x2, bottom).LineTo(x3, bottom).CurveTo
-                    (x3 - radius * curv, bottom, left, y3 - radius * curv, left, y3).LineTo(left, y4).CurveTo(left, y4 + radius
-                     * curv, x4 - radius * curv, top, x4, top).LineTo(x1, top);
+                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + radius * curv, top, right, y1 + radius * curv, right
+                    , y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - radius * curv, x2 + radius * curv, bottom, 
+                    x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - radius * curv, bottom, left, y3 - radius * curv
+                    , left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + radius * curv, x4 - radius * curv, top, x4
+                    , top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                canvas.Clip().NewPath();
                 Border[] borders = GetBorders();
                 float radiusTop = radius;
                 float radiusRight = radius;
                 float radiusBottom = radius;
                 float radiusLeft = radius;
+                float deltaTop = 0;
+                float deltaRight = 0;
+                float deltaBottom = 0;
+                float deltaLeft = 0;
                 if (borders[0] != null) {
+                    deltaTop = borders[0].GetWidth();
                     top = top - borders[0].GetWidth();
                     if (y1 > top) {
                         y1 = top;
@@ -565,6 +578,7 @@ namespace iText.Layout.Renderer {
                     radiusTop = Math.Max(0, radiusTop - borders[0].GetWidth());
                 }
                 if (borders[1] != null) {
+                    deltaRight = borders[1].GetWidth();
                     right = right - borders[1].GetWidth();
                     if (x1 > right) {
                         x1 = right;
@@ -573,6 +587,7 @@ namespace iText.Layout.Renderer {
                     radiusRight = Math.Max(0, radiusRight - borders[1].GetWidth());
                 }
                 if (borders[2] != null) {
+                    deltaBottom = borders[2].GetWidth();
                     bottom = bottom + borders[2].GetWidth();
                     if (x3 < left) {
                         x3 = left;
@@ -581,17 +596,34 @@ namespace iText.Layout.Renderer {
                     radiusBottom = Math.Max(0, radiusBottom - borders[2].GetWidth());
                 }
                 if (borders[3] != null) {
+                    deltaLeft = borders[3].GetWidth();
                     left = left + borders[3].GetWidth();
                     radiusLeft = Math.Max(0, radiusLeft - borders[3].GetWidth());
                 }
                 canvas.MoveTo(x1, top).CurveTo(x1 + Math.Min(radiusTop, radiusRight) * curv, top, right, y1 + Math.Min(radiusTop
-                    , radiusRight) * curv, right, y1).LineTo(right, y2).CurveTo(right, y2 - Math.Min(radiusRight, radiusBottom
-                    ) * curv, x2 + Math.Min(radiusRight, radiusBottom) * curv, bottom, x2, bottom).LineTo(x3, bottom).CurveTo
-                    (x3 - Math.Min(radiusBottom, radiusLeft) * curv, bottom, left, y3 - Math.Min(radiusBottom, radiusLeft)
-                     * curv, left, y3).LineTo(left, y4).CurveTo(left, y4 + Math.Min(radiusLeft, radiusTop) * curv, x4 - Math
-                    .Min(radiusLeft, radiusTop) * curv, top, x4, top).LineTo(x1, top);
-                canvas.EoClip();
-                canvas.NewPath();
+                    , radiusRight) * curv, right, y1).LineTo(x4, y1).LineTo(x4, top).LineTo(x1, top).LineTo(x1, top + deltaTop
+                    ).LineTo(left - deltaLeft, top + deltaTop).LineTo(left - deltaLeft, bottom - deltaBottom).LineTo(right
+                     + deltaRight, bottom - deltaBottom).LineTo(right + deltaRight, top + deltaTop).LineTo(x1, top + deltaTop
+                    );
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, y2).CurveTo(right, y2 - Math.Min(radiusRight, radiusBottom) * curv, x2 + Math.Min(radiusRight
+                    , radiusBottom) * curv, bottom, x2, bottom).LineTo(x2, y1).LineTo(right, y1).LineTo(right, y2).LineTo(
+                    right + deltaRight, y2).LineTo(right + deltaRight, top + deltaTop).LineTo(left - deltaLeft, top + deltaTop
+                    ).LineTo(left - deltaLeft, bottom - deltaBottom).LineTo(right + deltaRight, bottom - deltaBottom).LineTo
+                    (right + deltaRight, y2);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(x3, bottom).CurveTo(x3 - Math.Min(radiusBottom, radiusLeft) * curv, bottom, left, y3 - Math.
+                    Min(radiusBottom, radiusLeft) * curv, left, y3).LineTo(x2, y3).LineTo(x2, bottom).LineTo(x3, bottom).LineTo
+                    (x3, bottom - deltaBottom).LineTo(right + deltaRight, bottom - deltaBottom).LineTo(right + deltaRight, 
+                    top + deltaTop).LineTo(left - deltaLeft, top + deltaTop).LineTo(left - deltaLeft, bottom - deltaBottom
+                    ).LineTo(x3, bottom - deltaBottom);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(left, y4).CurveTo(left, y4 + Math.Min(radiusLeft, radiusTop) * curv, x4 - Math.Min(radiusLeft
+                    , radiusTop) * curv, top, x4, top).LineTo(x4, y3).LineTo(left, y3).LineTo(left, y4).LineTo(left - deltaLeft
+                    , y4).LineTo(left - deltaLeft, bottom - deltaBottom).LineTo(right + deltaRight, bottom - deltaBottom).
+                    LineTo(right + deltaRight, top + deltaTop).LineTo(left - deltaLeft, top + deltaTop).LineTo(left - deltaLeft
+                    , y4);
+                canvas.Clip().NewPath();
             }
             return 0 != radius;
         }
@@ -615,21 +647,30 @@ namespace iText.Layout.Renderer {
                 float right = outerBorderBox.GetRight();
                 float bottom = outerBorderBox.GetBottom();
                 float left = outerBorderBox.GetLeft();
+                float verticalRadius = Math.Min(outerBorderBox.GetHeight() / 2, radius);
+                float horizontalRadius = Math.Min(outerBorderBox.GetWidth() / 2, radius);
                 // radius border bbox
-                float x1 = right - radius;
-                float y1 = top - radius;
-                float x2 = right - radius;
-                float y2 = bottom + radius;
-                float x3 = left + radius;
-                float y3 = bottom + radius;
-                float x4 = left + radius;
-                float y4 = top - radius;
+                float x1 = right - horizontalRadius;
+                float y1 = top - verticalRadius;
+                float x2 = right - horizontalRadius;
+                float y2 = bottom + verticalRadius;
+                float x3 = left + horizontalRadius;
+                float y3 = bottom + verticalRadius;
+                float x4 = left + horizontalRadius;
+                float y4 = top - verticalRadius;
                 PdfCanvas canvas = drawContext.GetCanvas();
                 canvas.SaveState();
-                canvas.MoveTo(x1, top).CurveTo(x1 + radius * curv, top, right, y1 + radius * curv, right, y1).LineTo(right
-                    , y2).CurveTo(right, y2 - radius * curv, x2 + radius * curv, bottom, x2, bottom).LineTo(x3, bottom).CurveTo
-                    (x3 - radius * curv, bottom, left, y3 - radius * curv, left, y3).LineTo(left, y4).CurveTo(left, y4 + radius
-                     * curv, x4 - radius * curv, top, x4, top).LineTo(x1, top);
+                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + horizontalRadius * curv, top, right, y1 + verticalRadius
+                     * curv, right, y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - verticalRadius * curv, x2 + horizontalRadius
+                     * curv, bottom, x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - horizontalRadius * curv, bottom, left, y3 - verticalRadius
+                     * curv, left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + verticalRadius * curv, x4 - horizontalRadius
+                     * curv, top, x4, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
                 canvas.Clip().NewPath();
             }
             return 0 != radius;
@@ -699,7 +740,8 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
                 }
-                bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true));
+                bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins()
+                    , true));
                 UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
                 float radius = 0;
                 if (null != borderRadius) {
