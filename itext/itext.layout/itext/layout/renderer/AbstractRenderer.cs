@@ -747,7 +747,7 @@ namespace iText.Layout.Renderer {
                     canvas.OpenTag(new CanvasArtifact());
                 }
                 bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins()
-                    , true));
+                    , false));
                 UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
                 float radius = 0;
                 if (null != borderRadius) {

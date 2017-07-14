@@ -108,6 +108,7 @@ namespace iText.Layout.Borders {
         /// <summary>The hash value for the border.</summary>
         private int hash;
 
+        [Obsolete]
         private Border.Side tmpSide = Border.Side.NONE;
 
         /// <summary>
@@ -265,47 +266,8 @@ namespace iText.Layout.Borders {
         /// </param>
         /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
         /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
-        public virtual void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
-             side, float borderWidthBefore, float borderWidthAfter) {
-            tmpSide = side;
-            Draw(canvas, x1, y1, x2, y2, borderRadius, borderWidthBefore, borderWidthAfter);
-            tmpSide = Border.Side.NONE;
-        }
-
-        /// <summary>
-        /// <p>
-        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
-        /// drawing direction.
-        /// </summary>
-        /// <remarks>
-        /// <p>
-        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
-        /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
-        /// </p>
-        /// <p>
-        /// Given points specify the line which lies on the border of the content area,
-        /// therefore the border itself should be drawn to the left from the drawing direction.
-        /// </p>
-        /// <p>
-        /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
-        /// define the widths of the borders that are before and after the current border, e.g. for
-        /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
-        /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
-        /// of border joins.
-        /// </p>
-        /// </remarks>
-        /// <param name="canvas">PdfCanvas to be written to</param>
-        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
-        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
-        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
-        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
-        /// <param name="borderRadius">border radius</param>
-        /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
-        /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0. use Draw(iText.Kernel.Pdf.Canvas.PdfCanvas, float, float, float, float, float, Side, float, float) instead"
-            )]
-        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, float
-             borderWidthBefore, float borderWidthAfter);
+        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
+             side, float borderWidthBefore, float borderWidthAfter);
 
         /// <summary>Draws the border of a cell.</summary>
         /// <param name="canvas">PdfCanvas to be written to</param>
@@ -423,7 +385,14 @@ namespace iText.Layout.Borders {
         /// the corresponded
         /// <see cref="Side">side</see>
         /// </returns>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0. use GetBorderSide(float, float, float, float, Side) instead"
+            )]
         protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2) {
+            return GetBorderSide(x1, y1, x2, y2, tmpSide);
+        }
+
+        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2, Border.Side tempSide
+            ) {
             bool isLeft = false;
             bool isRight = false;
             if (Math.Abs(y2 - y1) > 0.0005f) {
@@ -454,7 +423,7 @@ namespace iText.Layout.Borders {
                     }
                 }
             }
-            return tmpSide;
+            return tempSide;
         }
 
         /// <summary>Enumerates the different sides of the rectangle.</summary>
