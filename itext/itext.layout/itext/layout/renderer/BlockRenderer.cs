@@ -357,6 +357,7 @@ namespace iText.Layout.Renderer {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
             }
+            float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
             if (marginsCollapsingEnabled && !isCellRenderer) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
@@ -413,7 +414,6 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
-            float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             if (positionedRenderers.Count > 0) {

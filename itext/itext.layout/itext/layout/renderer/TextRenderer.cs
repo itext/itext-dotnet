@@ -192,7 +192,7 @@ namespace iText.Layout.Renderer {
             TextLayoutResult result = null;
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowPropertyValue? overflowY = null == RetrieveMaxHeight() && !layoutContext.GetArea().IsClippedHeight
-                () ? null : this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+                () ? OverflowPropertyValue.FIT : this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
             // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line

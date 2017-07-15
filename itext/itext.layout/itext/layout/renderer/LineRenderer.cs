@@ -271,11 +271,14 @@ namespace iText.Layout.Renderer {
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
                 if (childResult == null) {
+                    if (childPos > 0) {
+                        SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                    }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
-                        ), bbox)));
-                }
-                if (childPos > 0) {
-                    DeleteOwnProperty(Property.OVERFLOW_X);
+                        ), bbox, wasParentsHeightClipped)));
+                    if (childPos > 0) {
+                        DeleteOwnProperty(Property.OVERFLOW_X);
+                    }
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {

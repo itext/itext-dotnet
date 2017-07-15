@@ -1275,23 +1275,25 @@ namespace iText.Layout.Renderer {
                 );
             if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                try {
-                    switch (horizontalAlignment) {
-                        case HorizontalAlignment.RIGHT: {
-                            childRenderer.Move(freeSpace, 0);
-                            break;
-                        }
+                if (freeSpace > 0) {
+                    try {
+                        switch (horizontalAlignment) {
+                            case HorizontalAlignment.RIGHT: {
+                                childRenderer.Move(freeSpace, 0);
+                                break;
+                            }
 
-                        case HorizontalAlignment.CENTER: {
-                            childRenderer.Move(freeSpace / 2, 0);
-                            break;
+                            case HorizontalAlignment.CENTER: {
+                                childRenderer.Move(freeSpace / 2, 0);
+                                break;
+                            }
                         }
                     }
-                }
-                catch (Exception) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                        "Some of the children might not end up aligned horizontally."));
+                    catch (ArgumentNullException) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                            "Some of the children might not end up aligned horizontally."));
+                    }
                 }
             }
         }
