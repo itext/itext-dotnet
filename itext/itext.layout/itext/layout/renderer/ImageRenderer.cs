@@ -326,26 +326,8 @@ namespace iText.Layout.Renderer {
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
             BeginElementOpacityApplying(drawContext);
-            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            bool processOverflow = OverflowPropertyValue.HIDDEN.Equals(overflowX) || OverflowPropertyValue.HIDDEN.Equals
-                (overflowY);
-            if (processOverflow) {
-                drawContext.GetCanvas().SaveState();
-                Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowX)) {
-                    clippedArea.SetX(occupiedArea.GetBBox().GetX()).SetWidth(occupiedArea.GetBBox().GetWidth());
-                }
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowY)) {
-                    clippedArea.SetY(occupiedArea.GetBBox().GetY()).SetHeight(occupiedArea.GetBBox().GetHeight());
-                }
-                drawContext.GetCanvas().Rectangle(clippedArea).Clip().NewPath();
-            }
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
-            if (processOverflow) {
-                drawContext.GetCanvas().RestoreState();
-            }
             EndElementOpacityApplying(drawContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();

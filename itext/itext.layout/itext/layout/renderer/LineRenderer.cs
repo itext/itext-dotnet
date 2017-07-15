@@ -178,7 +178,7 @@ namespace iText.Layout.Renderer {
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
                     // TODO may be process floating spans as inline blocks always?
-                    if (childPos > 0) {
+                    if (!wasXOverflowChanged && childPos > 0) {
                         oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
                         wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
@@ -274,7 +274,7 @@ namespace iText.Layout.Renderer {
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
                 if (childResult == null) {
-                    if (childPos > 0) {
+                    if (!wasXOverflowChanged && childPos > 0) {
                         oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
                         wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
@@ -397,8 +397,14 @@ namespace iText.Layout.Renderer {
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                     bool wordWasSplitAndItWillFitOntoNextLine = false;
                     if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit()) {
+                        if (wasXOverflowChanged) {
+                            SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                        }
                         LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
                             ().GetPageNumber(), layoutBox, wasParentsHeightClipped)));
+                        if (wasXOverflowChanged) {
+                            SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                        }
                         if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
                             wordWasSplitAndItWillFitOntoNextLine = true;
                         }

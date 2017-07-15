@@ -172,7 +172,8 @@ namespace iText.Layout.Renderer {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
                             occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                                 ()));
-                            if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth()) {
+                            if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
+                                .FIT.Equals(overflowX))) {
                                 occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
                             }
                         }
@@ -335,7 +336,8 @@ namespace iText.Layout.Renderer {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
-                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth()) {
+                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
+                            .FIT.Equals(overflowX))) {
                             occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
                         }
                     }
@@ -442,6 +444,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyVerticalAlignment();
+            if (wasHeightClipped) {
+                occupiedArea.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
+            }
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
@@ -456,10 +461,6 @@ namespace iText.Layout.Renderer {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, null);
                     }
                 }
-            }
-            if (wasHeightClipped) {
-                editedArea_1.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
-                occupiedArea.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
             }
             if (null == overflowRenderer_1) {
                 return new LayoutResult(LayoutResult.FULL, editedArea_1, null, null, causeOfNothing);

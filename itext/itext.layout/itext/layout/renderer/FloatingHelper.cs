@@ -228,8 +228,9 @@ namespace iText.Layout.Renderer {
         internal static LayoutArea AdjustResultOccupiedAreaForFloatAndClear(IRenderer renderer, IList<Rectangle> floatRendererAreas
             , Rectangle parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
             LayoutArea occupiedArea = renderer.GetOccupiedArea();
-            LayoutArea editedArea = occupiedArea.Clone();
+            LayoutArea editedArea = occupiedArea;
             if (IsRendererFloating(renderer)) {
+                editedArea = occupiedArea.Clone();
                 if (occupiedArea.GetBBox().GetWidth() > 0) {
                     floatRendererAreas.Add(occupiedArea.GetBBox());
                 }
@@ -238,6 +239,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (clearHeightCorrection > 0 && !marginsCollapsingEnabled) {
+                    editedArea = occupiedArea.Clone();
                     editedArea.GetBBox().IncreaseHeight(clearHeightCorrection);
                 }
             }

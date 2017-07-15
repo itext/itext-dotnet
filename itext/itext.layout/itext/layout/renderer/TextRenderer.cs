@@ -152,8 +152,6 @@ namespace iText.Layout.Renderer {
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
             }
-            bool isFirstOnLine = parent is LineRenderer && null != parent.GetOccupiedArea() && parent.GetOccupiedArea(
-                ).GetBBox().GetX() == layoutBox.GetX();
             float[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
@@ -278,7 +276,7 @@ namespace iText.Layout.Renderer {
                          + textRise;
                     previousCharPos = ind;
                     if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
-                        if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX)) || !isFirstOnLine) {
+                        if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX))) {
                             // we have extracted all the information we wanted and we do not want to continue.
                             // we will have to split the word anyway.
                             break;
@@ -373,11 +371,11 @@ namespace iText.Layout.Renderer {
                                 line.start = currentTextPos;
                             }
                             currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
-                                ) || !isFirstOnLine) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
+                                )) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
                             line.end = Math.Max(line.end, currentTextPos);
                             wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
                             if (wordSplit || !(forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
-                                ) || !isFirstOnLine)) {
+                                ))) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
@@ -660,7 +658,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_692();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_690();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -724,8 +722,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_692 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_692() {
+        private sealed class _IGlyphLineFilter_690 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_690() {
             }
 
             public bool Accept(Glyph glyph) {
