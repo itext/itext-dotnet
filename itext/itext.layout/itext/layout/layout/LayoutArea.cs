@@ -62,6 +62,9 @@ namespace iText.Layout.Layout {
         /// <summary>Indicates whether the area already has some placed content or not.</summary>
         protected internal bool emptyArea = true;
 
+        /// <summary>Indicates whether the height is clipped or not.</summary>
+        protected internal bool clippedHeight = false;
+
         /// <summary>
         /// Creates the area for content
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
@@ -69,9 +72,21 @@ namespace iText.Layout.Layout {
         /// </summary>
         /// <param name="pageNumber">the number of page on which the area is located.</param>
         /// <param name="bBox">the area's bounding box</param>
-        public LayoutArea(int pageNumber, Rectangle bBox) {
+        public LayoutArea(int pageNumber, Rectangle bBox)
+            : this(pageNumber, bBox, false) {
+        }
+
+        /// <summary>
+        /// Creates the area for content
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// </summary>
+        /// <param name="pageNumber">the number of page on which the area is located.</param>
+        /// <param name="bBox">the area's bounding box</param>
+        public LayoutArea(int pageNumber, Rectangle bBox, bool isClippedHeight) {
             this.pageNumber = pageNumber;
             this.bBox = bBox;
+            this.clippedHeight = isClippedHeight;
         }
 
         /// <summary>Gets the number of page on which the area is located.</summary>
@@ -108,6 +123,17 @@ namespace iText.Layout.Layout {
         /// <summary>Defines whether the area already has some placed content or not.</summary>
         public virtual void SetEmptyArea(bool emptyArea) {
             this.emptyArea = emptyArea;
+        }
+
+        /// <summary>Indicates whether the height is clipped or not.</summary>
+        /// <returns>whether the area is empty or not</returns>
+        public virtual bool IsClippedHeight() {
+            return clippedHeight;
+        }
+
+        /// <summary>Defines whether the height is clipped or not.</summary>
+        public virtual void SetClippedHeight(bool clippedHeight) {
+            this.clippedHeight = clippedHeight;
         }
 
         /// <summary><inheritDoc/></summary>

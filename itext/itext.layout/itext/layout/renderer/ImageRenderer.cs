@@ -119,9 +119,11 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            bool processOverflow = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX)) || (null != overflowY
-                 && !OverflowPropertyValue.FIT.Equals(overflowY));
+            OverflowPropertyValue? overflowY = (null == RetrieveMaxHeight() || RetrieveMaxHeight() > layoutBox.GetHeight
+                ()) && !layoutContext.GetArea().IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent.GetProperty
+                <OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
+            bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
@@ -210,7 +212,8 @@ namespace iText.Layout.Renderer {
             // indicates whether the placement is forced
             bool isPlacingForced = false;
             if (width > layoutBox.GetWidth() || height > layoutBox.GetHeight()) {
-                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || processOverflow) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || (width > layoutBox.GetWidth() && processOverflowX
+                    ) || (height > layoutBox.GetHeight() && processOverflowY)) {
                     isPlacingForced = true;
                 }
                 else {

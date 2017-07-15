@@ -191,7 +191,8 @@ namespace iText.Layout.Renderer {
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            OverflowPropertyValue? overflowY = null == RetrieveMaxHeight() && !layoutContext.GetArea().IsClippedHeight
+                () ? null : this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
             // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
@@ -371,11 +372,12 @@ namespace iText.Layout.Renderer {
                             if (line.start == -1) {
                                 line.start = currentTextPos;
                             }
-                            currentTextPos = (null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX) || !isFirstOnLine) ? firstCharacterWhichExceedsAllowedWidth
-                                 : nonBreakablePartEnd + 1;
+                            currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
+                                ) || !isFirstOnLine) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
                             line.end = Math.Max(line.end, currentTextPos);
                             wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
-                            if (wordSplit) {
+                            if (wordSplit || !(forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
+                                ) || !isFirstOnLine)) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);

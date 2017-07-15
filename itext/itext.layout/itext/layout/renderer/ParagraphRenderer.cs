@@ -83,6 +83,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
             bool wasHeightClipped = false;
+            bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
             bool firstLineInBox = true;
@@ -113,7 +114,9 @@ namespace iText.Layout.Renderer {
             bool isPositioned = IsPositioned();
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            float? blockMaxHeight = RetrieveMaxHeight();
+            OverflowPropertyValue? overflowY = (null == blockMaxHeight || blockMaxHeight > parentBBox.GetHeight()) && 
+                !wasParentsHeightClipped ? null : this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             if (rotation != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
                 if (!FloatingHelper.IsRendererFloating(this)) {
@@ -132,7 +135,6 @@ namespace iText.Layout.Renderer {
             }
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
-            float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && (blockMaxHeight < parentBBox.GetHeight() || (null != overflowY
                  && !OverflowPropertyValue.FIT.Equals(overflowY))) && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT
                 ))) {
@@ -145,7 +147,6 @@ namespace iText.Layout.Renderer {
                 }
                 parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
             }
-            Rectangle contentBoxToFit = parentBBox.Clone();
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -180,7 +181,8 @@ namespace iText.Layout.Renderer {
                 currentRenderer.SetProperty(Property.OVERFLOW_X, overflowX);
                 currentRenderer.SetProperty(Property.OVERFLOW_Y, overflowY);
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
-                    (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas)));
+                    (new LayoutArea(pageNumber, childLayoutBox, wasHeightClipped || wasParentsHeightClipped), null, floatRendererAreas
+                    )));
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
@@ -325,9 +327,10 @@ namespace iText.Layout.Renderer {
                                 else {
                                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
-                                            ).GetBBox()).SetWidth(occupiedArea.GetBBox().GetWidth()));
-                                        // TODO parentBBox width
-                                        editedArea.SetBBox(Rectangle.GetCommonRectangle(editedArea.GetBBox(), occupiedArea.GetBBox()));
+                                            ).GetBBox()));
+                                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth()) {
+                                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
+                                        }
                                         parent.SetProperty(Property.FULL, true);
                                         lines.Add(currentRenderer);
                                         // Force placement of children we have and do not force placement of the others
@@ -362,9 +365,11 @@ namespace iText.Layout.Renderer {
                     }
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
-                            ().GetBBox()).SetWidth(occupiedArea.GetBBox().GetWidth()));
+                            ().GetBBox()));
+                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth()) {
+                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
+                        }
                     }
-                    // TODO parentBBox width
                     firstLineInBox = false;
                     layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     lines.Add(processedRenderer);
@@ -413,7 +418,7 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
-            float overflowPartHeight = GetOverflowPartHeight(overflowY, contentBoxToFit);
+            float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -436,6 +441,7 @@ namespace iText.Layout.Renderer {
             LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             if (wasHeightClipped) {
+                editedArea_1.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
                 occupiedArea.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
             }
             if (null == overflowRenderer) {

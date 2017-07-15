@@ -75,10 +75,15 @@ namespace iText.Layout.Renderer {
         // AbstractRenderer.EPS is not enough here
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
+            bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             if (floatRendererAreas != null) {
                 FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
+                if (0 != floatRendererAreas.Count) {
+                    SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                }
             }
+            // TODO
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
             float curWidth = 0;
@@ -116,7 +121,8 @@ namespace iText.Layout.Renderer {
                     if (childRenderer is TabRenderer) {
                         if (hangingTabStop != null) {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
-                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
+                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox, wasParentsHeightClipped
+                                )));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
                             widthHandler.UpdateMaxChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
@@ -168,9 +174,15 @@ namespace iText.Layout.Renderer {
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
                     // TODO may be process floating spans as inline blocks always?
+                    if (childPos > 0) {
+                        SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                    }
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
-                            ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas));
+                            ), layoutContext.GetArea().GetBBox().Clone(), wasParentsHeightClipped), null, floatRendererAreas));
+                    }
+                    if (childPos > 0) {
+                        DeleteOwnProperty(Property.OVERFLOW_X);
                     }
                     // Get back child width so that it's not lost
                     if (childWidthWasReplaced) {
@@ -255,9 +267,15 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+                if (childPos > 0) {
+                    SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                }
                 if (childResult == null) {
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox)));
+                }
+                if (childPos > 0) {
+                    DeleteOwnProperty(Property.OVERFLOW_X);
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
@@ -335,7 +353,8 @@ namespace iText.Layout.Renderer {
                     IList<IRenderer> affectedRenderers = new List<IRenderer>();
                     affectedRenderers.AddAll(childRenderers.SubList(lastTabIndex + 1, childPos + 1));
                     float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, affectedRenderers, tabRenderer);
-                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
+                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox, wasParentsHeightClipped
+                        )));
                     float sumOfAffectedRendererWidths = 0;
                     foreach (IRenderer renderer in affectedRenderers) {
                         renderer.GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths);
@@ -374,7 +393,7 @@ namespace iText.Layout.Renderer {
                     bool wordWasSplitAndItWillFitOntoNextLine = false;
                     if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit()) {
                         LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
-                            ().GetPageNumber(), layoutBox)));
+                            ().GetPageNumber(), layoutBox, wasParentsHeightClipped)));
                         if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
                             wordWasSplitAndItWillFitOntoNextLine = true;
                         }
@@ -598,6 +617,18 @@ namespace iText.Layout.Renderer {
             if (anythingPlaced || floatsPlaced) {
                 processed.AdjustChildrenYLine().TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
+            }
+            if (floatRendererAreas != null) {
+                if (0 != floatRendererAreas.Count) {
+                    DeleteOwnProperty(Property.OVERFLOW_X);
+                    // TODO
+                    if (null != result.GetSplitRenderer()) {
+                        result.GetSplitRenderer().DeleteOwnProperty(Property.OVERFLOW_X);
+                    }
+                    if (null != result.GetOverflowRenderer()) {
+                        result.GetOverflowRenderer().DeleteOwnProperty(Property.OVERFLOW_X);
+                    }
+                }
             }
             return result;
         }

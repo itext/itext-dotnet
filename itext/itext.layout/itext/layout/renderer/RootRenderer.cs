@@ -311,8 +311,9 @@ namespace iText.Layout.Renderer {
             , LayoutResult result) {
             if (currentArea != null) {
                 OverflowPropertyValue? overflowY = renderer.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-                float resultRendererHeight = null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY) ? result.GetOccupiedArea
-                    ().GetBBox().GetHeight() : renderer.GetOccupiedArea().GetBBox().GetHeight();
+                float resultRendererHeight = null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY) || FloatingHelper
+                    .IsRendererFloating(renderer) ? result.GetOccupiedArea().GetBBox().GetHeight() : renderer.GetOccupiedArea
+                    ().GetBBox().GetHeight();
                 currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultRendererHeight);
                 if (currentArea.IsEmptyArea() && resultRendererHeight > 0) {
                     currentArea.SetEmptyArea(false);
