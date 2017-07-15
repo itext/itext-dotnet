@@ -83,7 +83,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
             bool wasHeightClipped = false;
-            bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
+            bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
             bool firstLineInBox = true;
@@ -181,7 +181,7 @@ namespace iText.Layout.Renderer {
                 currentRenderer.SetProperty(Property.OVERFLOW_X, overflowX);
                 currentRenderer.SetProperty(Property.OVERFLOW_Y, overflowY);
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
-                    (new LayoutArea(pageNumber, childLayoutBox, wasHeightClipped || wasParentsHeightClipped), null, floatRendererAreas
+                    (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped
                     )));
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);

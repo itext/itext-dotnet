@@ -120,8 +120,8 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(layoutBox, borders, false);
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowPropertyValue? overflowY = (null == RetrieveMaxHeight() || RetrieveMaxHeight() > layoutBox.GetHeight
-                ()) && !layoutContext.GetArea().IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent.GetProperty
-                <OverflowPropertyValue?>(Property.OVERFLOW_Y);
+                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent.GetProperty<OverflowPropertyValue?
+                >(Property.OVERFLOW_Y);
             bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
             bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {

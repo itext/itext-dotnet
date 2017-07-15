@@ -66,7 +66,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
             bool wasHeightClipped = false;
-            bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
+            bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool isPositioned = IsPositioned();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
@@ -154,7 +154,7 @@ namespace iText.Layout.Renderer {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
                 }
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
-                    , wasHeightClipped || wasParentsHeightClipped), childMarginsInfo, floatRendererAreas))).GetStatus() !=
+                    ), childMarginsInfo, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped))).GetStatus() !=
                      LayoutResult.FULL) {
                     if (marginsCollapsingEnabled) {
                         if (result.GetStatus() != LayoutResult.NOTHING) {
@@ -418,15 +418,6 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-            if (positionedRenderers.Count > 0) {
-                LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone(), wasHeightClipped
-                     || wasParentsHeightClipped);
-                ApplyBorderBox(area.GetBBox(), false);
-                foreach (IRenderer childPositionedRenderer in positionedRenderers) {
-                    childPositionedRenderer.SetParent(this).Layout(new LayoutContext(area));
-                }
-                ApplyBorderBox(area.GetBBox(), true);
-            }
             ApplyMargins(occupiedArea.GetBBox(), true);
             ApplyAbsolutePositionIfNeeded(layoutContext);
             if (rotation != null) {
@@ -744,8 +735,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual float GetOverflowPartHeight(OverflowPropertyValue? overflowY, Rectangle parentBox
-            ) {
+        internal virtual float GetOverflowPartHeight(OverflowPropertyValue? overflowY, Rectangle parentBox) {
             float difference = 0;
             if (null != overflowY && OverflowPropertyValue.FIT != overflowY) {
                 if (occupiedArea.GetBBox().GetBottom() < parentBox.GetBottom()) {

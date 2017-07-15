@@ -75,7 +75,7 @@ namespace iText.Layout.Renderer {
         // AbstractRenderer.EPS is not enough here
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
-            bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
+            bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             OverflowPropertyValue? oldXOverflow = null;
             bool wasXOverflowChanged = false;
@@ -125,8 +125,8 @@ namespace iText.Layout.Renderer {
                     if (childRenderer is TabRenderer) {
                         if (hangingTabStop != null) {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
-                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox, wasParentsHeightClipped
-                                )));
+                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
+                                ));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
                             widthHandler.UpdateMaxChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
@@ -185,7 +185,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
-                            ), layoutContext.GetArea().GetBBox().Clone(), wasParentsHeightClipped), null, floatRendererAreas));
+                            ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas, wasParentsHeightClipped));
                     }
                     // Get back child width so that it's not lost
                     if (childWidthWasReplaced) {
@@ -270,9 +270,6 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                if (childPos > 0) {
-                    SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-                }
                 if (childResult == null) {
                     if (!wasXOverflowChanged && childPos > 0) {
                         oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
@@ -280,7 +277,7 @@ namespace iText.Layout.Renderer {
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
-                        ), bbox, wasParentsHeightClipped)));
+                        ), bbox), wasParentsHeightClipped));
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
@@ -358,8 +355,8 @@ namespace iText.Layout.Renderer {
                     IList<IRenderer> affectedRenderers = new List<IRenderer>();
                     affectedRenderers.AddAll(childRenderers.SubList(lastTabIndex + 1, childPos + 1));
                     float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, affectedRenderers, tabRenderer);
-                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox, wasParentsHeightClipped
-                        )));
+                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
+                        ));
                     float sumOfAffectedRendererWidths = 0;
                     foreach (IRenderer renderer in affectedRenderers) {
                         renderer.GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths);
@@ -401,7 +398,7 @@ namespace iText.Layout.Renderer {
                             SetProperty(Property.OVERFLOW_X, oldXOverflow);
                         }
                         LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
-                            ().GetPageNumber(), layoutBox, wasParentsHeightClipped)));
+                            ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
                         if (wasXOverflowChanged) {
                             SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                         }
