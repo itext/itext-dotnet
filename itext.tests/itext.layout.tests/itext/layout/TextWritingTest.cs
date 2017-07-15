@@ -253,6 +253,45 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void BigWordTest01() {
+            String outFileName = destinationFolder + "bigWordTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_bigWordTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Paragraph p = new Paragraph();
+            p.SetWidth(150);
+            p.SetBackgroundColor(Color.RED);
+            p.Add("Hello ho ho ho ");
+            p.Add("LongWordThatDoNotFitInALine");
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            p = new Paragraph();
+            p.SetWidth(150);
+            p.SetBackgroundColor(Color.RED);
+            p.Add("LongWordThatDoNotFitInALine World");
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            p = new Paragraph();
+            p.SetWidth(150);
+            p.SetBackgroundColor(Color.RED);
+            p.Add("World LongWordThatDoNotFitInALine");
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            p = new Paragraph();
+            p.SetWidth(150);
+            p.SetBackgroundColor(Color.RED);
+            p.Add("World ");
+            p.Add("LongWordThatDoNotFitInALine");
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
             String outFileName = destinationFolder + "underline.pdf";
             String cmpFileName = sourceFolder + "cmp_underline.pdf";

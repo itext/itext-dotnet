@@ -62,6 +62,20 @@ namespace iText.Layout.Element {
         protected internal BlockElement() {
         }
 
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case Property.OVERFLOW:
+                case Property.OVERFLOW_X:
+                case Property.OVERFLOW_Y: {
+                    return (T1)(Object)OverflowPropertyValue.FIT;
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
+        }
+
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
         public virtual float? GetMarginLeft() {
@@ -337,6 +351,34 @@ namespace iText.Layout.Element {
         public virtual T SetMinHeight(float minHeight) {
             SetProperty(Property.MIN_HEIGHT, minHeight);
             return (T)(Object)this;
+        }
+
+        /// <summary>Sets the overflow-x value.</summary>
+        /// 
+        /// <returns>this element</returns>
+        public virtual T SetOverflowX(OverflowPropertyValue? overflow) {
+            SetProperty(Property.OVERFLOW_X, overflow);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the overflow-y value.</summary>
+        /// 
+        /// <returns>this element</returns>
+        public virtual T SetOverflowY(OverflowPropertyValue? overflow) {
+            SetProperty(Property.OVERFLOW_Y, overflow);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Gets the overflow-x value of the element.</summary>
+        /// <returns>the overflow-x value of the element.</returns>
+        public virtual OverflowPropertyValue? GetOverflowX() {
+            return this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+        }
+
+        /// <summary>Gets the overflow-y value of the element.</summary>
+        /// <returns>the overflow-y value of the element.</returns>
+        public virtual OverflowPropertyValue? GetOverflowY() {
+            return this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
         }
 
         public abstract AccessibilityProperties GetAccessibilityProperties();

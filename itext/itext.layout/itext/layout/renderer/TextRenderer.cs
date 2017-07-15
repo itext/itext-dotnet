@@ -152,6 +152,8 @@ namespace iText.Layout.Renderer {
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
             }
+            bool isFirstOnLine = parent is LineRenderer && null != parent.GetOccupiedArea() && parent.GetOccupiedArea(
+                ).GetBBox().GetX() == layoutBox.GetX();
             float[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
@@ -188,6 +190,8 @@ namespace iText.Layout.Renderer {
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
+            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflowY = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
             // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
@@ -273,9 +277,11 @@ namespace iText.Layout.Renderer {
                          + textRise;
                     previousCharPos = ind;
                     if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
-                        // we have extracted all the information we wanted and we do not want to continue.
-                        // we will have to split the word anyway.
-                        break;
+                        if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX)) || !isFirstOnLine) {
+                            // we have extracted all the information we wanted and we do not want to continue.
+                            // we will have to split the word anyway.
+                            break;
+                        }
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
                         (text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
@@ -302,7 +308,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     // check if line height exceeds the allowed height
-                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight()) {
+                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight() && (null == overflowY ||
+                         OverflowPropertyValue.FIT.Equals(overflowY))) {
                         ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                         ApplyMargins(occupiedArea.GetBBox(), margins, true);
                         // Force to place what we can
@@ -361,12 +368,13 @@ namespace iText.Layout.Renderer {
                         if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || (forcePartialSplitOnFirstChar
                             )) {
                             // if the word is too long for a single line we will have to split it
-                            wordSplit = !forcePartialSplitOnFirstChar;
                             if (line.start == -1) {
                                 line.start = currentTextPos;
                             }
-                            currentTextPos = firstCharacterWhichExceedsAllowedWidth;
-                            line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth);
+                            currentTextPos = (null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX) || !isFirstOnLine) ? firstCharacterWhichExceedsAllowedWidth
+                                 : nonBreakablePartEnd + 1;
+                            line.end = Math.Max(line.end, currentTextPos);
+                            wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
                             if (wordSplit) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
@@ -400,7 +408,8 @@ namespace iText.Layout.Renderer {
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
             if (currentLineHeight > layoutBox.GetHeight()) {
-                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (null == overflowY || OverflowPropertyValue
+                    .FIT.Equals(overflowY))) {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
                     return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
@@ -649,7 +658,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_684();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_692();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -713,8 +722,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_684 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_684() {
+        private sealed class _IGlyphLineFilter_692 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_692() {
             }
 
             public bool Accept(Glyph glyph) {

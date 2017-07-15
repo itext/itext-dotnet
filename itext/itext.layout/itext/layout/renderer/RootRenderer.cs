@@ -310,7 +310,9 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {
             if (currentArea != null) {
-                float resultRendererHeight = result.GetOccupiedArea().GetBBox().GetHeight();
+                OverflowPropertyValue? overflowY = renderer.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+                float resultRendererHeight = null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY) ? result.GetOccupiedArea
+                    ().GetBBox().GetHeight() : renderer.GetOccupiedArea().GetBBox().GetHeight();
                 currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultRendererHeight);
                 if (currentArea.IsEmptyArea() && resultRendererHeight > 0) {
                     currentArea.SetEmptyArea(false);
