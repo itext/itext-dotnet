@@ -77,13 +77,17 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             bool wasParentsHeightClipped = layoutContext.GetArea().IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            OverflowPropertyValue? oldXOverflow = null;
+            bool wasXOverflowChanged = false;
             if (floatRendererAreas != null) {
+                float layoutWidth = layoutBox.GetWidth();
                 FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
-                if (0 != floatRendererAreas.Count) {
+                if (layoutWidth > layoutBox.GetWidth()) {
+                    oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                    wasXOverflowChanged = true;
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
             }
-            // TODO
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
             float curWidth = 0;
@@ -175,14 +179,13 @@ namespace iText.Layout.Renderer {
                     // when floating span is split on other line;
                     // TODO may be process floating spans as inline blocks always?
                     if (childPos > 0) {
+                        oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                        wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
                     if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                             ), layoutContext.GetArea().GetBBox().Clone(), wasParentsHeightClipped), null, floatRendererAreas));
-                    }
-                    if (childPos > 0) {
-                        DeleteOwnProperty(Property.OVERFLOW_X);
                     }
                     // Get back child width so that it's not lost
                     if (childWidthWasReplaced) {
@@ -272,13 +275,12 @@ namespace iText.Layout.Renderer {
                 }
                 if (childResult == null) {
                     if (childPos > 0) {
+                        oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                        wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox, wasParentsHeightClipped)));
-                    if (childPos > 0) {
-                        DeleteOwnProperty(Property.OVERFLOW_X);
-                    }
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
@@ -621,16 +623,13 @@ namespace iText.Layout.Renderer {
                 processed.AdjustChildrenYLine().TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
-            if (floatRendererAreas != null) {
-                if (0 != floatRendererAreas.Count) {
-                    DeleteOwnProperty(Property.OVERFLOW_X);
-                    // TODO
-                    if (null != result.GetSplitRenderer()) {
-                        result.GetSplitRenderer().DeleteOwnProperty(Property.OVERFLOW_X);
-                    }
-                    if (null != result.GetOverflowRenderer()) {
-                        result.GetOverflowRenderer().DeleteOwnProperty(Property.OVERFLOW_X);
-                    }
+            if (wasXOverflowChanged) {
+                SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                if (null != result.GetSplitRenderer()) {
+                    result.GetSplitRenderer().SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                }
+                if (null != result.GetOverflowRenderer()) {
+                    result.GetOverflowRenderer().SetProperty(Property.OVERFLOW_X, oldXOverflow);
                 }
             }
             return result;

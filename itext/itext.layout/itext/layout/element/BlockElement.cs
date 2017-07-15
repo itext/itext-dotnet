@@ -353,34 +353,6 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the overflow-x value.</summary>
-        /// 
-        /// <returns>this element</returns>
-        public virtual T SetOverflowX(OverflowPropertyValue? overflow) {
-            SetProperty(Property.OVERFLOW_X, overflow);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Sets the overflow-y value.</summary>
-        /// 
-        /// <returns>this element</returns>
-        public virtual T SetOverflowY(OverflowPropertyValue? overflow) {
-            SetProperty(Property.OVERFLOW_Y, overflow);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Gets the overflow-x value of the element.</summary>
-        /// <returns>the overflow-x value of the element.</returns>
-        public virtual OverflowPropertyValue? GetOverflowX() {
-            return this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-        }
-
-        /// <summary>Gets the overflow-y value of the element.</summary>
-        /// <returns>the overflow-y value of the element.</returns>
-        public virtual OverflowPropertyValue? GetOverflowY() {
-            return this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-        }
-
         public abstract AccessibilityProperties GetAccessibilityProperties();
 
         public abstract PdfName GetRole();
