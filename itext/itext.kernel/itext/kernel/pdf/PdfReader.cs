@@ -891,7 +891,7 @@ namespace iText.Kernel.Pdf {
                     tokens.NextValidToken();
                     int gen = tokens.GetIntValue();
                     tokens.NextValidToken();
-                    if (pos == 0L && gen == 65535 && num == 1) {
+                    if (pos == 0L && gen == 65535 && num == 1 && start != 0) {
                         // Very rarely can an XREF have an incorrect start number. (SUP-1557)
                         // e.g.
                         // xref
