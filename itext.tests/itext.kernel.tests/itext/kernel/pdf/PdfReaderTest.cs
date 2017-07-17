@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -1335,6 +1336,25 @@ namespace iText.Kernel.Pdf {
             //Assert.assertFalse(pdfDoc.getReader().fixedXref);
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().rebuiltXref);
             pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FreeReferencesTest02() {
+            String cmpFile = sourceFolder + "cmp_freeReferences02.pdf";
+            String outputFile = destinationFolder + "freeReferences02.pdf";
+            String inputFile = sourceFolder + "freeReferences02.pdf";
+            PdfWriter writer = new PdfWriter(outputFile);
+            PdfReader reader = new PdfReader(inputFile);
+            PdfDocument inputPdfDocument = new PdfDocument(reader);
+            PdfDocument outputPdfDocument = new PdfDocument(writer);
+            int lastPage = inputPdfDocument.GetNumberOfPages();
+            inputPdfDocument.CopyPagesTo(lastPage, lastPage, outputPdfDocument);
+            inputPdfDocument.Close();
+            outputPdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, destinationFolder, "diff_"
+                ));
         }
 
         /// <exception cref="System.IO.IOException"/>
