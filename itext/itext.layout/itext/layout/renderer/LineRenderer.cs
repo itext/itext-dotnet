@@ -142,15 +142,7 @@ namespace iText.Layout.Renderer {
                 if (childWidth is UnitValue && ((UnitValue)childWidth).IsPercentValue()) {
                     float normalizedChildWidth = ((UnitValue)childWidth).GetValue() / 100 * layoutContext.GetArea().GetBBox().
                         GetWidth();
-                    // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
-                    // TODO DEVSIX-1174 fix depending of box-sizing
-                    if (childRenderer is AbstractRenderer) {
-                        Rectangle dummyRect = new Rectangle(normalizedChildWidth, 0);
-                        ((AbstractRenderer)childRenderer).ApplyMargins(dummyRect, false);
-                        ((AbstractRenderer)childRenderer).ApplyBorderBox(dummyRect, false);
-                        ((AbstractRenderer)childRenderer).ApplyPaddings(dummyRect, false);
-                        normalizedChildWidth = dummyRect.GetWidth();
-                    }
+                    normalizedChildWidth = DecreaseRelativeWidthByChildAdditionalWidth(childRenderer, normalizedChildWidth);
                     if (normalizedChildWidth > 0) {
                         childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(normalizedChildWidth));
                         childWidthWasReplaced = true;
@@ -163,7 +155,7 @@ namespace iText.Layout.Renderer {
                     childResult = null;
                     MinMaxWidth kidMinMaxWidth = FloatingHelper.CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, 
                         kidFloatPropertyVal);
-                    float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth() + kidMinMaxWidth.GetAdditionalWidth();
+                    float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth();
                     // TODO width will be recalculated on float layout;
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
@@ -239,8 +231,6 @@ namespace iText.Layout.Renderer {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
                         childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
                         float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
-                        // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
-                        // TODO DEVSIX-1174 fix depending on box-sizing
                         if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
                             childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
                         }
@@ -1096,6 +1086,23 @@ namespace iText.Layout.Renderer {
             if (updateChildRendrers) {
                 childRenderers = newChildRenderers;
             }
+        }
+
+        private float DecreaseRelativeWidthByChildAdditionalWidth(IRenderer childRenderer, float normalizedChildWidth
+            ) {
+            // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits.
+            // TODO Actually, from html/css point of view - this is wrong, however we still do it, in order to avoid NOTHING due to
+            // horizontal overflow. Probably remove this when overflow-x is supported.
+            if (childRenderer is AbstractRenderer) {
+                Rectangle dummyRect = new Rectangle(normalizedChildWidth, 0);
+                ((AbstractRenderer)childRenderer).ApplyMargins(dummyRect, false);
+                if (!IsBorderBoxSizing(childRenderer)) {
+                    ((AbstractRenderer)childRenderer).ApplyBorderBox(dummyRect, false);
+                    ((AbstractRenderer)childRenderer).ApplyPaddings(dummyRect, false);
+                }
+                normalizedChildWidth = dummyRect.GetWidth();
+            }
+            return normalizedChildWidth;
         }
 
         private bool IsInlineBlockChild(IRenderer child) {

@@ -112,11 +112,11 @@ namespace iText.Layout.Renderer {
             }
             bool isPositioned = IsPositioned();
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            if (rotation != null) {
+            if (rotation != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
-                if (!FloatingHelper.IsRendererFloating(this)) {
-                    blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
-                }
+            }
+            if (rotation != null && !FloatingHelper.IsRendererFloating(this)) {
+                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
@@ -124,20 +124,11 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
             float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned || rotation != null)) {
-                parentBBox.SetWidth((float)blockWidth);
-            }
+            ApplyWidth(parentBBox, blockWidth);
+            float? blockMaxHeight = RetrieveMaxHeight();
+            wasHeightClipped = ApplyHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
-            float? blockMaxHeight = RetrieveMaxHeight();
-            if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
-                float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
-                if (marginsCollapsingEnabled) {
-                    marginsCollapseHandler.ProcessFixedHeightAdjustment(heightDelta);
-                }
-                parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
-                wasHeightClipped = true;
-            }
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -279,16 +270,13 @@ namespace iText.Layout.Renderer {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
                             if (HasProperty(Property.MAX_HEIGHT)) {
-                                if (isPositioned) {
-                                    CorrectPositionedLayout(layoutBox);
-                                }
-                                split[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
+                                split[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
                             }
                             if (HasProperty(Property.MIN_HEIGHT)) {
-                                split[1].SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
+                                split[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
                             }
                             if (HasProperty(Property.HEIGHT)) {
-                                split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                                split[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
                             }
                             if (wasHeightClipped) {
                                 split[0].GetOccupiedArea().GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).
@@ -296,6 +284,7 @@ namespace iText.Layout.Renderer {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
                                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                             }
+                            CorrectPositionedLayout(layoutBox);
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -372,7 +361,7 @@ namespace iText.Layout.Renderer {
             float moveDown = Math.Min(lastLineBottomLeadingIndent, occupiedArea.GetBBox().GetY() - layoutBox.GetY());
             occupiedArea.GetBBox().MoveDown(moveDown);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
-            IRenderer overflowRenderer = null;
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = null;
             float? blockMinHeight = RetrieveMinHeight();
             if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
                 float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
@@ -384,17 +373,14 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                         ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
                     overflowRenderer = CreateOverflowRenderer(parent);
-                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
-                        ());
+                    overflowRenderer.UpdateMinHeight((float)blockMinHeight - occupiedArea.GetBBox().GetHeight());
                     if (HasProperty(Property.HEIGHT)) {
-                        overflowRenderer.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                        overflowRenderer.UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
                     }
                 }
                 ApplyVerticalAlignment();
             }
-            if (isPositioned) {
-                CorrectPositionedLayout(layoutBox);
-            }
+            CorrectPositionedLayout(layoutBox);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -534,18 +520,24 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            MinMaxWidth minMaxWidth = new MinMaxWidth(0, availableWidth);
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
-            SetProperty(Property.ROTATION_ANGLE, null);
-            MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
-                (availableWidth, AbstractRenderer.INF))));
-            if (restoreRotation) {
-                SetProperty(Property.ROTATION_ANGLE, rotation);
+            if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
+                bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
+                SetProperty(Property.ROTATION_ANGLE, null);
+                MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
+                    (availableWidth, AbstractRenderer.INF))));
+                if (restoreRotation) {
+                    SetProperty(Property.ROTATION_ANGLE, rotation);
+                }
+                else {
+                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
+                minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
             }
             else {
-                DeleteOwnProperty(Property.ROTATION_ANGLE);
+                minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));
             }
-            MinMaxWidth minMaxWidth = CorrectMinMaxWidth(result.GetNotNullMinMaxWidth(availableWidth));
             return rotation != null ? RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this) : minMaxWidth;
         }
 

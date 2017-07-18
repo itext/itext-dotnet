@@ -662,6 +662,28 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void BlockWithBorderBoxSizingTest01() {
+            String outFileName = destinationFolder + "blockWithBorderBoxSizingTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockWithBorderBoxSizingTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            div.SetRotationAngle(Math.PI / 3);
+            div.SetBorder(new SolidBorder(Color.BLUE, 50));
+            div.Add(new Paragraph("Long long long Long long long Long long long Long long long Long long long Long long long text"
+                ));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            div.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void MarginsRotatedTest01() {
             //TODO: currently is incorrect. See DEVSIX-989
             String outFileName = destinationFolder + "marginsRotatedTest01.pdf";

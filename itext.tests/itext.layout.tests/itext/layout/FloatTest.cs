@@ -506,5 +506,27 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff13_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatInlineBlockTest01() {
+            String cmpFileName = sourceFolder + "cmp_floatInlineBlockTest01.pdf";
+            String outFile = destinationFolder + "floatInlineBlockTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            Paragraph p = new Paragraph().SetBorder(new SolidBorder(1));
+            p.Add("Float with large borders shall fit on first line with this text. ");
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 40));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph("Floating div."));
+            p.Add(div);
+            p.Add("Inline block with large borders floating. Inline block with large borders floating. " + "Inline block with large borders floating. Inline block with large borders floating."
+                );
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff14_"));
+        }
     }
 }

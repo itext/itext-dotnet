@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
-using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
@@ -141,22 +140,16 @@ namespace iText.Layout.Renderer {
             renderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float floatElemWidth;
             if (blockWidth != null) {
-                float[] margins = renderer.GetMargins();
-                Border[] borders = renderer.GetBorders();
-                float[] paddings = renderer.GetPaddings();
-                float bordersWidth = (borders[1] != null ? borders[1].GetWidth() : 0) + (borders[3] != null ? borders[3].GetWidth
-                    () : 0);
-                float additionalWidth = margins[1] + margins[3] + bordersWidth + paddings[1] + paddings[3];
-                floatElemWidth = (float)blockWidth + additionalWidth;
+                floatElemWidth = (float)blockWidth + AbstractRenderer.CalculateAdditionalWidth(renderer);
             }
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(renderer, floatPropertyValue);
-                float childrenMaxWidthWithEps = minMaxWidth.GetChildrenMaxWidth() + AbstractRenderer.EPS;
-                if (childrenMaxWidthWithEps > parentBBox.GetWidth()) {
-                    childrenMaxWidthWithEps = parentBBox.GetWidth() - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
+                float maxWidth = minMaxWidth.GetMaxWidth();
+                if (maxWidth > parentBBox.GetWidth()) {
+                    maxWidth = parentBBox.GetWidth();
                 }
-                floatElemWidth = childrenMaxWidthWithEps + minMaxWidth.GetAdditionalWidth();
-                blockWidth = childrenMaxWidthWithEps;
+                floatElemWidth = maxWidth + AbstractRenderer.EPS;
+                blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
             }
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, floatElemWidth, FloatPropertyValue
                 .LEFT.Equals(floatPropertyValue));
