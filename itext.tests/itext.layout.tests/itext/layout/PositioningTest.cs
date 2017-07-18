@@ -52,6 +52,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class PositioningTest : ExtendedITextTest {
@@ -152,6 +153,54 @@ namespace iText.Layout {
             Paragraph p = new Paragraph("Hello").SetBackgroundColor(Color.BLUE).SetHeight(100).SetFixedPosition(1, 300
                 , 300, 100);
             document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        public virtual void FixedPositioningTest03() {
+            String outFileName = destinationFolder + "fixedPositioningTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_fixedPositioningTest03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            document.GetPdfDocument().AddNewPage();
+            Paragraph p = new Paragraph("Hello,  this is fairly long text. Lorem ipsum dolor sit amet, " + "consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
+                 + "aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex " + 
+                "ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu "
+                 + "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
+                 + "mollit anim id est laborum.").SetMargin(0).SetBackgroundColor(Color.LIGHT_GRAY).SetHeight(100).SetFixedPosition
+                (1, 300, 300, 100);
+            document.Add(p);
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(Color.BLACK).Rectangle(300, 300, 100, 100
+                ).Stroke().Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        public virtual void FixedPositioningTest04() {
+            String outFileName = destinationFolder + "fixedPositioningTest04.pdf";
+            String cmpFileName = sourceFolder + "cmp_fixedPositioningTest04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            document.GetPdfDocument().AddNewPage();
+            Div div = new Div().SetBackgroundColor(Color.LIGHT_GRAY).SetHeight(100).SetFixedPosition(1, 300, 300, 100)
+                .Add(new Paragraph("Hello,  this is fairly long text. Lorem ipsum dolor sit amet, " + "consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
+                 + "aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex " + 
+                "ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu "
+                 + "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
+                 + "mollit anim id est laborum.").SetMargin(0));
+            document.Add(div);
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(Color.BLACK).Rectangle(300, 300, 100, 100
+                ).Stroke().Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

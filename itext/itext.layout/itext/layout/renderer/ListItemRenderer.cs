@@ -80,7 +80,7 @@ namespace iText.Layout.Renderer {
                 float[] ascenderDescender = CalculateAscenderDescender();
                 float minHeight = Math.Max(symbolRenderer.GetOccupiedArea().GetBBox().GetHeight(), ascenderDescender[0] - 
                     ascenderDescender[1]);
-                SetProperty(Property.MIN_HEIGHT, minHeight);
+                UpdateMinHeight(minHeight);
             }
             ApplyListSymbolPosition();
             LayoutResult result = base.Layout(layoutContext);

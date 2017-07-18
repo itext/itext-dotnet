@@ -139,6 +139,11 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+            // Do nothing here. Tables don't have padding.
+            return rect;
+        }
+
         internal virtual Table GetTable() {
             return (Table)GetModelElement();
         }
@@ -786,17 +791,17 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
+                            if (HasProperty(Property.HEIGHT)) {
+                                splitResult[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
+                            if (HasProperty(Property.MIN_HEIGHT)) {
+                                splitResult[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
+                            if (HasProperty(Property.MAX_HEIGHT)) {
+                                splitResult[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
-                            if (HasProperty(Property.HEIGHT)) {
-                                splitResult[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
                             LayoutArea editedArea = null;
                             if (status != LayoutResult.NOTHING) {
                                 editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas, layoutContext

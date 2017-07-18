@@ -147,10 +147,9 @@ namespace iText.Layout.Renderer {
                 backup.RestoreProperty(Property.MIN_HEIGHT);
                 backup.RestoreProperty(Property.MAX_HEIGHT);
                 Rectangle additions = new Rectangle(0, 0);
-                //TODO: This method is expected to return content width. This may change during DEVSIX-1174
-                renderer.ApplyMargins(additions, true);
-                renderer.ApplyBorderBox(additions, true);
                 renderer.ApplyPaddings(additions, true);
+                renderer.ApplyBorderBox(additions, true);
+                renderer.ApplyMargins(additions, true);
                 if (layoutResult.GetOccupiedArea() != null) {
                     double area = layoutResult.GetOccupiedArea().GetBBox().GetWidth() * layoutResult.GetOccupiedArea().GetBBox
                         ().GetHeight();

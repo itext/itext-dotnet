@@ -778,7 +778,6 @@ namespace iText.Layout.Renderer {
 
         private static readonly UnitValue ZeroWidth = UnitValue.CreatePointValue(0);
 
-        //TODO DEVSIX-1174, box-sizing property
         internal UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
             UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
             //zero has special meaning in fixed layout, we shall not add padding to zero value
@@ -794,15 +793,17 @@ namespace iText.Layout.Renderer {
                         return widthValue;
                     }
                     else {
-                        Border[] borders = cell.GetBorders();
-                        if (borders[1] != null) {
-                            widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                        if (!AbstractRenderer.IsBorderBoxSizing(cell)) {
+                            Border[] borders = cell.GetBorders();
+                            if (borders[1] != null) {
+                                widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                            }
+                            if (borders[3] != null) {
+                                widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                            }
+                            float[] paddings = cell.GetPaddings();
+                            widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
                         }
-                        if (borders[3] != null) {
-                            widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
-                        }
-                        float[] paddings = cell.GetPaddings();
-                        widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
                         return widthValue;
                     }
                 }

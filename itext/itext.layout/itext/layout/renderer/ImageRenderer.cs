@@ -113,7 +113,7 @@ namespace iText.Layout.Renderer {
                 clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth
                     , clearHeightCorrection, null);
             }
-            this.width = retrievedWidth;
+            width = retrievedWidth;
             height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
@@ -361,6 +361,10 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+            return rect;
+        }
+
         public override void Move(float dxRight, float dyUp) {
             base.Move(dxRight, dyUp);
             if (initialOccupiedAreaBBox != null) {
@@ -387,8 +391,8 @@ namespace iText.Layout.Renderer {
             // if rotation was applied, width would be equal to the width of rectangle bounding the rotated image
             float angleScaleCoef = imageWidth / (float)width;
             if (width > angleScaleCoef * area.GetWidth()) {
-                SetProperty(Property.HEIGHT, area.GetWidth() / width * imageHeight);
-                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
+                UpdateHeight(area.GetWidth() / width * imageHeight);
+                UpdateWidth(UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
         }

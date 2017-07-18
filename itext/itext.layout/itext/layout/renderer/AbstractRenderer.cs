@@ -899,20 +899,138 @@ namespace iText.Layout.Renderer {
             ApplyLinkAnnotation(drawContext.GetDocument());
         }
 
+        internal static bool IsBorderBoxSizing(IRenderer renderer) {
+            BoxSizingPropertyValue? boxSizing = renderer.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING);
+            return boxSizing != null && boxSizing.Equals(BoxSizingPropertyValue.BORDER_BOX);
+        }
+
+        /// <summary>Retrieves element's fixed content box width, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box width, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="parentBoxWidth">
+        /// width of the parent element content box.
+        /// If element has relative width, it will be
+        /// calculated relatively to this parameter.
+        /// </param>
+        /// <returns>element's fixed content box width or null if it's not set.</returns>
         protected internal virtual float? RetrieveWidth(float parentBoxWidth) {
-            return RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+            float? width = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+            if (width != null && IsBorderBoxSizing(this)) {
+                width = Math.Max(0, (float)width - CalculatePaddingBorderWidth(this));
+            }
+            return width;
         }
 
+        /// <summary>Updates fixed content box width value for this renderer.</summary>
+        /// <remarks>
+        /// Updates fixed content box width value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedWidthValue">element's new fixed content box width.</param>
+        protected internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
+            if (updatedWidthValue.IsPointValue() && IsBorderBoxSizing(this)) {
+                updatedWidthValue.SetValue(updatedWidthValue.GetValue() + CalculatePaddingBorderWidth(this));
+            }
+            SetProperty(Property.WIDTH, updatedWidthValue);
+        }
+
+        /// <summary>Retrieves element's fixed content box height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's fixed content box height or null if it's not set.</returns>
         protected internal virtual float? RetrieveHeight() {
-            return this.GetProperty<float?>(Property.HEIGHT);
+            float? height = this.GetProperty<float?>(Property.HEIGHT);
+            if (height != null && IsBorderBoxSizing(this)) {
+                height = Math.Max(0, (float)height - CalculatePaddingBorderHeight(this));
+            }
+            return height;
         }
 
+        /// <summary>Updates fixed content box height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates fixed content box height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedHeightValue">element's new fixed content box height, shall be not null.</param>
+        protected internal virtual void UpdateHeight(float? updatedHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.HEIGHT, updatedHeightValue);
+        }
+
+        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's content box max-height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's content box max-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMaxHeight() {
-            return this.GetProperty<float?>(Property.MAX_HEIGHT);
+            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
+            if (maxHeight != null && IsBorderBoxSizing(this)) {
+                maxHeight = Math.Max(0, (float)maxHeight - CalculatePaddingBorderHeight(this));
+            }
+            return maxHeight;
         }
 
+        /// <summary>Updates content box max-height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates content box max-height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedMaxHeightValue">element's new content box max-height, shall be not null.</param>
+        protected internal virtual void UpdateMaxHeight(float? updatedMaxHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedMaxHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.MAX_HEIGHT, updatedMaxHeightValue);
+        }
+
+        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's content box max-height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's content box min-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMinHeight() {
-            return this.GetProperty<float?>(Property.MIN_HEIGHT);
+            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            if (minHeight != null && IsBorderBoxSizing(this)) {
+                minHeight = Math.Max(0, (float)minHeight - CalculatePaddingBorderHeight(this));
+            }
+            return minHeight;
+        }
+
+        /// <summary>Updates content box min-height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates content box min-height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedMinHeightValue">element's new content box min-height, shall be not null.</param>
+        protected internal virtual void UpdateMinHeight(float? updatedMinHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedMinHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.MIN_HEIGHT, updatedMinHeightValue);
         }
 
         protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
@@ -1194,6 +1312,17 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+        }
+
+        protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
+            UnitValue widthProp = this.GetProperty<UnitValue>(Property.WIDTH);
+            float? width = RetrieveWidth(0);
+            if (width != null && widthProp != null && !widthProp.IsPercentValue()) {
+                minMaxWidth.SetChildrenMaxWidth((float)width);
+                minMaxWidth.SetChildrenMinWidth((float)width);
+                return true;
+            }
+            return false;
         }
 
         protected internal virtual bool IsNotFittingHeight(LayoutArea layoutArea) {
@@ -1498,6 +1627,14 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+        internal static float CalculateAdditionalWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyMargins(dummy, true);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetWidth();
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
@@ -1652,6 +1789,20 @@ namespace iText.Layout.Renderer {
                     fullBbox.SetWidth(minMaxWidth.GetMaxWidth() + iText.Layout.Renderer.AbstractRenderer.EPS);
                 }
             }
+        }
+
+        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetWidth();
+        }
+
+        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetHeight();
         }
 
         public abstract IRenderer GetNextRenderer();

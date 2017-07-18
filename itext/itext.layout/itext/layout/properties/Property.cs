@@ -96,6 +96,8 @@ namespace iText.Layout.Properties {
 
         public const int BOTTOM = 14;
 
+        public const int BOX_SIZING = 105;
+
         public const int CHARACTER_SPACING = 15;
 
         public const int CLEAR = 100;
