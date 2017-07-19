@@ -143,7 +143,8 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UpdateFontAndText();
             if (null != text) {
-                text = GetGlyphlineWithSpacesInsteadOfTabs(text);
+                // if text != null => font != null
+                text = ReplaceSpecialWhitespaceGlyphs(text, font);
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
@@ -658,7 +659,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_690();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_691();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -722,8 +723,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_690 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_690() {
+        private sealed class _IGlyphLineFilter_691 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_691() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1106,8 +1107,10 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(GetGlyphlineWithSpacesInsteadOfTabs(new GlyphLine
-                            (strategy.NextGlyphs())), strategy.GetCurrentFont());
+                        GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
+                        PdfFont currentFont = strategy.GetCurrentFont();
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont
+                            ), currentFont);
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1273,19 +1276,50 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private GlyphLine GetGlyphlineWithSpacesInsteadOfTabs(GlyphLine line) {
+        private static GlyphLine ReplaceSpecialWhitespaceGlyphs(GlyphLine line, PdfFont font) {
             if (null != line) {
-                Glyph space = new Glyph(ResolveFirstPdfFont().GetGlyph('\u0020'));
-                space.SetXAdvance((short)(3 * space.GetWidth()));
+                Glyph space = font.GetGlyph('\u0020');
                 Glyph glyph;
                 for (int i = 0; i < line.Size(); i++) {
                     glyph = line.Get(i);
-                    if ('\t' == glyph.GetUnicode()) {
-                        line.Set(i, space);
+                    int? xAdvance = GetSpecialWhitespaceXAdvance(glyph, space, font.GetFontProgram().GetFontMetrics().IsFixedPitch
+                        ());
+                    if (xAdvance != null) {
+                        Glyph newGlyph = new Glyph(space, glyph.GetUnicode());
+                        System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
+                        newGlyph.SetXAdvance((short)(int)xAdvance);
+                        line.Set(i, newGlyph);
                     }
                 }
             }
             return line;
+        }
+
+        private static int? GetSpecialWhitespaceXAdvance(Glyph glyph, Glyph spaceGlyph, bool isMonospaceFont) {
+            if (glyph.GetCode() > 0) {
+                return null;
+            }
+            switch (glyph.GetUnicode()) {
+                case '\u2002': {
+                    // ensp
+                    return isMonospaceFont ? 0 : 500 - spaceGlyph.GetWidth();
+                }
+
+                case '\u2003': {
+                    // emsp
+                    return isMonospaceFont ? 0 : 1000 - spaceGlyph.GetWidth();
+                }
+
+                case '\u2009': {
+                    // thinsp
+                    return isMonospaceFont ? 0 : 200 - spaceGlyph.GetWidth();
+                }
+
+                case '\t': {
+                    return 3 * spaceGlyph.GetWidth();
+                }
+            }
+            return null;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
