@@ -926,7 +926,13 @@ namespace iText.Forms {
         /// of field dictionaries
         /// </returns>
         protected internal virtual PdfArray GetFields() {
-            return GetPdfObject().GetAsArray(PdfName.Fields);
+            PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
+            if (fields == null) {
+                logger.Warn(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                fields = new PdfArray();
+                GetPdfObject().Put(PdfName.Fields, fields);
+            }
+            return fields;
         }
 
         protected override bool IsWrappedObjectMustBeIndirect() {

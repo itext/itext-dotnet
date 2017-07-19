@@ -48,6 +48,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
     public class PdfFormFieldTest : ExtendedITextTest {
@@ -295,6 +296,25 @@ namespace iText.Forms {
             PdfFormField field = PdfFormField.CreateText(pdfDoc, new Rectangle(36, 786, 80, 20), "name", "TestValueAndALittleMore"
                 );
             form.AddField(field.SetFontSizeAutoScale());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM)]
+        public virtual void AcroFieldDictionaryNoFields() {
+            String outPdf = destinationFolder + "acroFieldDictionaryNoFields.pdf";
+            String cmpPdf = sourceFolder + "cmp_acroFieldDictionaryNoFields.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "acroFieldDictionaryNoFields.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
