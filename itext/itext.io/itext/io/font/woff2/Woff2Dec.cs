@@ -761,7 +761,7 @@ namespace iText.IO.Font.Woff2 {
                     remain -= read;
                 }
                 //check that we read stream fully
-                if (stream.Read() != -1) {
+                if (stream.ReadByte() != -1) {
                     throw new FontCompressionException(FontCompressionException.BROTLI_DECODING_FAILED);
                 }
             }

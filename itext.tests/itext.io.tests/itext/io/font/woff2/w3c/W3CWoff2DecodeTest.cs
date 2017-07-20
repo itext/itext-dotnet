@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using iText.IO.Font.Woff2;
 
 namespace iText.IO.Font.Woff2.W3c {
@@ -31,12 +32,12 @@ namespace iText.IO.Font.Woff2.W3c {
 
         private String GetDestinationFolder() {
             String localPackage = GetLocalPackage();
-            return baseDestinationFolder + localPackage + System.IO.Path.DirectorySeparatorChar + GetTestClassName() + System.IO.Path.DirectorySeparatorChar;
+            return baseDestinationFolder + localPackage + Path.DirectorySeparatorChar + GetTestClassName() + Path.DirectorySeparatorChar;
         }
 
         private String GetSourceFolder() {
             String localPackage = GetLocalPackage();
-            return baseSourceFolder + localPackage + System.IO.Path.DirectorySeparatorChar;
+            return baseSourceFolder + localPackage + Path.DirectorySeparatorChar;
         }
 
         private String GetTestClassName() {
@@ -46,7 +47,7 @@ namespace iText.IO.Font.Woff2.W3c {
         private String GetLocalPackage() {
             String packageName = GetType().Namespace.ToString();
             String basePackageName = typeof(W3CWoff2DecodeTest).Namespace.ToString();
-            return packageName.Substring(basePackageName.Length).Replace('.', System.IO.Path.DirectorySeparatorChar);
+            return packageName.Substring(basePackageName.Length).Replace('.', Path.DirectorySeparatorChar);
         }
     }
 }
