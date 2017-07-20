@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.Brotli.Dec;
+using iText.IO.Codec.Brotli.Dec;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Woff2 {
@@ -425,7 +425,7 @@ namespace iText.IO.Font.Woff2 {
             }
         }
 
-        private static void Pad4(WOFF2Out @out) {
+        private static void Pad4(Woff2Out @out) {
             byte[] zeroes = new byte[] { 0, 0, 0 };
             if (@out.Size() + 3 < @out.Size()) {
                 throw new FontCompressionException(FontCompressionException.PADDING_OVERFLOW);
@@ -437,7 +437,7 @@ namespace iText.IO.Font.Woff2 {
         }
 
         // Build TrueType loca table. Returns loca_checksum
-        private static int StoreLoca(int[] loca_values, int index_format, WOFF2Out @out) {
+        private static int StoreLoca(int[] loca_values, int index_format, Woff2Out @out) {
             // TODO(user) figure out what index format to use based on whether max
             // offset fits into uint16_t or not
             long loca_size = loca_values.Length;
@@ -463,7 +463,7 @@ namespace iText.IO.Font.Woff2 {
 
         // Reconstruct entire glyf table based on transformed original
         private static Woff2Dec.Checksums ReconstructGlyf(byte[] data, int data_offset, Woff2Common.Table glyf_table
-            , int glyph_checksum, Woff2Common.Table loca_table, int loca_checksum, Woff2Dec.WOFF2FontInfo info, WOFF2Out
+            , int glyph_checksum, Woff2Common.Table loca_table, int loca_checksum, Woff2Dec.WOFF2FontInfo info, Woff2Out
              @out) {
             int kNumSubStreams = 7;
             Buffer file = new Buffer(data, data_offset, glyf_table.transform_length);
@@ -678,7 +678,7 @@ namespace iText.IO.Font.Woff2 {
         }
 
         private static int ReconstructTransformedHmtx(byte[] transformed_buf, int transformed_offset, int transformed_size
-            , int num_glyphs, int num_hmetrics, short[] x_mins, WOFF2Out @out) {
+            , int num_glyphs, int num_hmetrics, short[] x_mins, Woff2Out @out) {
             //uint16
             //uint16
             Buffer hmtx_buff_in = new Buffer(transformed_buf, transformed_offset, transformed_size);
@@ -879,7 +879,7 @@ namespace iText.IO.Font.Woff2 {
         }
 
         private static void ReconstructFont(byte[] transformed_buf, int transformed_buf_offset, int transformed_buf_size
-            , Woff2Dec.RebuildMetadata metadata, Woff2Dec.WOFF2Header hdr, int font_index, WOFF2Out @out) {
+            , Woff2Dec.RebuildMetadata metadata, Woff2Dec.WOFF2Header hdr, int font_index, Woff2Out @out) {
             int dest_offset = @out.Size();
             byte[] table_entry = new byte[12];
             Woff2Dec.WOFF2FontInfo info = metadata.font_infos[font_index];
@@ -1123,7 +1123,7 @@ namespace iText.IO.Font.Woff2 {
 
         // Write everything before the actual table data
         private static void WriteHeaders(byte[] data, int length, Woff2Dec.RebuildMetadata metadata, Woff2Dec.WOFF2Header
-             hdr, WOFF2Out @out) {
+             hdr, Woff2Out @out) {
             long firstTableOffset = ComputeOffsetToFirstTable(hdr);
             System.Diagnostics.Debug.Assert(firstTableOffset <= int.MaxValue);
             byte[] output = new byte[(int)firstTableOffset];
@@ -1216,14 +1216,14 @@ namespace iText.IO.Font.Woff2 {
         public static void ConvertWOFF2ToTTF(byte[] result, int result_length, byte[] data, int length) {
             // Decompresses the font into the target buffer. The result_length should
             // be the same as determined by ComputeFinalSize().
-            WOFF2MemoryOut @out = new WOFF2MemoryOut(result, result_length);
+            Woff2MemoryOut @out = new Woff2MemoryOut(result, result_length);
             ConvertWOFF2ToTTF(data, length, @out);
         }
 
         // Decompresses the font into out. Returns true on success.
         // Works even if WOFF2Header totalSfntSize is wrong.
         // Please prefer this API.
-        public static void ConvertWOFF2ToTTF(byte[] data, int length, WOFF2Out @out) {
+        public static void ConvertWOFF2ToTTF(byte[] data, int length, Woff2Out @out) {
             Woff2Dec.RebuildMetadata metadata = new Woff2Dec.RebuildMetadata();
             Woff2Dec.WOFF2Header hdr = new Woff2Dec.WOFF2Header();
             ReadWOFF2Header(data, length, hdr);

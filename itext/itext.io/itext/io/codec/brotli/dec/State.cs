@@ -3,21 +3,21 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	internal sealed class State
 	{
-		internal int runningState = Org.Brotli.Dec.RunningState.Uninitialized;
+		internal int runningState = iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized;
 
 		internal int nextRunningState;
 
-		internal readonly Org.Brotli.Dec.BitReader br = new Org.Brotli.Dec.BitReader();
+		internal readonly iText.IO.Codec.Brotli.Dec.BitReader br = new iText.IO.Codec.Brotli.Dec.BitReader();
 
 		internal byte[] ringBuffer;
 
-		internal readonly int[] blockTypeTrees = new int[3 * Org.Brotli.Dec.Huffman.HuffmanMaxTableSize];
+		internal readonly int[] blockTypeTrees = new int[3 * iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize];
 
-		internal readonly int[] blockLenTrees = new int[3 * Org.Brotli.Dec.Huffman.HuffmanMaxTableSize];
+		internal readonly int[] blockLenTrees = new int[3 * iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize];
 
 		internal int metaBlockLength;
 
@@ -27,11 +27,11 @@ namespace Org.Brotli.Dec
 
 		internal bool isMetadata;
 
-		internal readonly Org.Brotli.Dec.HuffmanTreeGroup hGroup0 = new Org.Brotli.Dec.HuffmanTreeGroup();
+		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup0 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
 
-		internal readonly Org.Brotli.Dec.HuffmanTreeGroup hGroup1 = new Org.Brotli.Dec.HuffmanTreeGroup();
+		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup1 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
 
-		internal readonly Org.Brotli.Dec.HuffmanTreeGroup hGroup2 = new Org.Brotli.Dec.HuffmanTreeGroup();
+		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup2 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
 
 		internal readonly int[] blockLength = new int[3];
 
@@ -113,18 +113,18 @@ namespace Org.Brotli.Dec
 
 		// Current meta-block header information.
 		// TODO: Update to current spec.
-		private static int DecodeWindowBits(Org.Brotli.Dec.BitReader br)
+		private static int DecodeWindowBits(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
-			if (Org.Brotli.Dec.BitReader.ReadBits(br, 1) == 0)
+			if (iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 1) == 0)
 			{
 				return 16;
 			}
-			int n = Org.Brotli.Dec.BitReader.ReadBits(br, 3);
+			int n = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 3);
 			if (n != 0)
 			{
 				return 17 + n;
 			}
-			n = Org.Brotli.Dec.BitReader.ReadBits(br, 3);
+			n = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 3);
 			if (n != 0)
 			{
 				return 8 + n;
@@ -135,37 +135,37 @@ namespace Org.Brotli.Dec
 		/// <summary>Associate input with decoder state.</summary>
 		/// <param name="state">uninitialized state without associated input</param>
 		/// <param name="input">compressed data source</param>
-		internal static void SetInput(Org.Brotli.Dec.State state, System.IO.Stream input)
+		internal static void SetInput(iText.IO.Codec.Brotli.Dec.State state, System.IO.Stream input)
 		{
-			if (state.runningState != Org.Brotli.Dec.RunningState.Uninitialized)
+			if (state.runningState != iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized)
 			{
 				throw new System.InvalidOperationException("State MUST be uninitialized");
 			}
-			Org.Brotli.Dec.BitReader.Init(state.br, input);
+			iText.IO.Codec.Brotli.Dec.BitReader.Init(state.br, input);
 			int windowBits = DecodeWindowBits(state.br);
 			if (windowBits == 9)
 			{
 				/* Reserved case for future expansion. */
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Invalid 'windowBits' code");
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Invalid 'windowBits' code");
 			}
 			state.maxRingBufferSize = 1 << windowBits;
 			state.maxBackwardDistance = state.maxRingBufferSize - 16;
-			state.runningState = Org.Brotli.Dec.RunningState.BlockStart;
+			state.runningState = iText.IO.Codec.Brotli.Dec.RunningState.BlockStart;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		internal static void Close(Org.Brotli.Dec.State state)
+		internal static void Close(iText.IO.Codec.Brotli.Dec.State state)
 		{
-			if (state.runningState == Org.Brotli.Dec.RunningState.Uninitialized)
+			if (state.runningState == iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized)
 			{
 				throw new System.InvalidOperationException("State MUST be initialized");
 			}
-			if (state.runningState == Org.Brotli.Dec.RunningState.Closed)
+			if (state.runningState == iText.IO.Codec.Brotli.Dec.RunningState.Closed)
 			{
 				return;
 			}
-			state.runningState = Org.Brotli.Dec.RunningState.Closed;
-			Org.Brotli.Dec.BitReader.Close(state.br);
+			state.runningState = iText.IO.Codec.Brotli.Dec.RunningState.Closed;
+			iText.IO.Codec.Brotli.Dec.BitReader.Close(state.br);
 		}
 	}
 }

@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>Contains a collection of huffman trees with the same alphabet size.</summary>
 	internal sealed class HuffmanTreeGroup
@@ -25,25 +25,25 @@ namespace Org.Brotli.Dec
 		/// <param name="group">POJO to be initialised</param>
 		/// <param name="alphabetSize">the maximal alphabet size in this group</param>
 		/// <param name="n">number of Huffman codes</param>
-		internal static void Init(Org.Brotli.Dec.HuffmanTreeGroup group, int alphabetSize, int n)
+		internal static void Init(iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup group, int alphabetSize, int n)
 		{
 			group.alphabetSize = alphabetSize;
-			group.codes = new int[n * Org.Brotli.Dec.Huffman.HuffmanMaxTableSize];
+			group.codes = new int[n * iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize];
 			group.trees = new int[n];
 		}
 
 		/// <summary>Decodes Huffman trees from input stream and constructs lookup tables.</summary>
 		/// <param name="group">target POJO</param>
 		/// <param name="br">data source</param>
-		internal static void Decode(Org.Brotli.Dec.HuffmanTreeGroup group, Org.Brotli.Dec.BitReader br)
+		internal static void Decode(iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup group, iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			int next = 0;
 			int n = group.trees.Length;
 			for (int i = 0; i < n; i++)
 			{
 				group.trees[i] = next;
-				Org.Brotli.Dec.Decode.ReadHuffmanCode(group.alphabetSize, group.codes, next, br);
-				next += Org.Brotli.Dec.Huffman.HuffmanMaxTableSize;
+				iText.IO.Codec.Brotli.Dec.Decode.ReadHuffmanCode(group.alphabetSize, group.codes, next, br);
+				next += iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize;
 			}
 		}
 	}

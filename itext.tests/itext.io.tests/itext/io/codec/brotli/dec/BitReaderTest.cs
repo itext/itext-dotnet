@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// Tests for
@@ -15,14 +15,14 @@ namespace Org.Brotli.Dec
 		[NUnit.Framework.Test]
 		public virtual void TestReadAfterEos()
 		{
-			Org.Brotli.Dec.BitReader reader = new Org.Brotli.Dec.BitReader();
-			Org.Brotli.Dec.BitReader.Init(reader, new System.IO.MemoryStream(new byte[1]));
-			Org.Brotli.Dec.BitReader.ReadBits(reader, 9);
+			iText.IO.Codec.Brotli.Dec.BitReader reader = new iText.IO.Codec.Brotli.Dec.BitReader();
+			iText.IO.Codec.Brotli.Dec.BitReader.Init(reader, new System.IO.MemoryStream(new byte[1]));
+			iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(reader, 9);
 			try
 			{
-				Org.Brotli.Dec.BitReader.CheckHealth(reader, false);
+				iText.IO.Codec.Brotli.Dec.BitReader.CheckHealth(reader, false);
 			}
-			catch (Org.Brotli.Dec.BrotliRuntimeException)
+			catch (iText.IO.Codec.Brotli.Dec.BrotliRuntimeException)
 			{
 				// This exception is expected.
 				return;

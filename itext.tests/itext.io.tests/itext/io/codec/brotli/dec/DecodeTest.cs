@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// Tests for
@@ -18,7 +18,7 @@ namespace Org.Brotli.Dec
 			byte[] buffer = new byte[65536];
 			System.IO.MemoryStream input = new System.IO.MemoryStream(data);
 			System.IO.MemoryStream output = new System.IO.MemoryStream();
-			Org.Brotli.Dec.BrotliInputStream brotliInput = new Org.Brotli.Dec.BrotliInputStream(input);
+			iText.IO.Codec.Brotli.Dec.BrotliInputStream brotliInput = new iText.IO.Codec.Brotli.Dec.BrotliInputStream(input);
 			if (byByte)
 			{
 				byte[] oneByte = new byte[1];
@@ -55,7 +55,7 @@ namespace Org.Brotli.Dec
 			byte[] buffer = new byte[65536];
 			System.IO.MemoryStream input = new System.IO.MemoryStream(data);
 			System.IO.MemoryStream output = new System.IO.MemoryStream();
-			Org.Brotli.Dec.BrotliInputStream brotliInput = new Org.Brotli.Dec.BrotliInputStream(input, Org.Brotli.Dec.BrotliInputStream.DefaultInternalBufferSize, dictionary);
+			iText.IO.Codec.Brotli.Dec.BrotliInputStream brotliInput = new iText.IO.Codec.Brotli.Dec.BrotliInputStream(input, iText.IO.Codec.Brotli.Dec.BrotliInputStream.DefaultInternalBufferSize, dictionary);
 			while (true)
 			{
 				int len = brotliInput.Read(buffer, 0, buffer.Length);
@@ -72,9 +72,9 @@ namespace Org.Brotli.Dec
 		/// <exception cref="System.IO.IOException"/>
 		private void CheckDecodeResourceWithDictionary(string expected, string compressed, string dictionary)
 		{
-			byte[] expectedBytes = Org.Brotli.Dec.Transform.ReadUniBytes(expected);
-			byte[] compressedBytes = Org.Brotli.Dec.Transform.ReadUniBytes(compressed);
-			byte[] dictionaryBytes = Org.Brotli.Dec.Transform.ReadUniBytes(dictionary);
+			byte[] expectedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(expected);
+			byte[] compressedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(compressed);
+			byte[] dictionaryBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(dictionary);
 			byte[] actual = DecompressWithDictionary(compressedBytes, dictionaryBytes);
 			NUnit.Framework.Assert.AreEqual(expectedBytes, actual);
 		}
@@ -82,8 +82,8 @@ namespace Org.Brotli.Dec
 		/// <exception cref="System.IO.IOException"/>
 		private void CheckDecodeResource(string expected, string compressed)
 		{
-			byte[] expectedBytes = Org.Brotli.Dec.Transform.ReadUniBytes(expected);
-			byte[] compressedBytes = Org.Brotli.Dec.Transform.ReadUniBytes(compressed);
+			byte[] expectedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(expected);
+			byte[] compressedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(compressed);
 			byte[] actual = Decompress(compressedBytes, false);
 			NUnit.Framework.Assert.AreEqual(expectedBytes, actual);
 			byte[] actualByByte = Decompress(compressedBytes, true);
@@ -161,11 +161,11 @@ namespace Org.Brotli.Dec
 		[NUnit.Framework.Test]
 		public virtual void TestUtils()
 		{
-			new Org.Brotli.Dec.Context();
-			new Org.Brotli.Dec.Decode();
-			new Org.Brotli.Dec.Dictionary();
-			new Org.Brotli.Dec.Huffman();
-			new Org.Brotli.Dec.Prefix();
+			new iText.IO.Codec.Brotli.Dec.Context();
+			new iText.IO.Codec.Brotli.Dec.Decode();
+			new iText.IO.Codec.Brotli.Dec.Dictionary();
+			new iText.IO.Codec.Brotli.Dec.Huffman();
+			new iText.IO.Codec.Brotli.Dec.Prefix();
 		}
 	}
 }

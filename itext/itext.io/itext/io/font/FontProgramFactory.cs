@@ -241,13 +241,12 @@ namespace iText.IO.Font {
                                     }
                                 }
                                 else {
-                                    if (".woff2".Equals(fontFileExtension)) {
-                                        try {
-                                            fontProgram = Woff2Converter.Convert(fontProgram);
-                                        }
-                                        catch (FontCompressionException woff2Exception) {
-                                            throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
-                                        }
+                                    // ".woff2".equals(fontFileExtension)
+                                    try {
+                                        fontProgram = Woff2Converter.Convert(fontProgram);
+                                    }
+                                    catch (FontCompressionException woff2Exception) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
                                     }
                                 }
                                 fontBuilt = new TrueTypeFont(fontProgram);

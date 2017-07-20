@@ -22,21 +22,15 @@ namespace iText.IO.Font.Woff2 {
     /// supported so a 'loca' table can be built up while writing glyphs.
     /// By default limits size to kDefaultMaxSize.
     /// </remarks>
-    internal abstract class WOFF2Out {
-        public const int kDefaultMaxSize = 30 * 1024 * 1024;
-
-        // Suggested max size for output.
+    internal interface Woff2Out {
         // Append n bytes of data from buf.
         // Return true if all written, false otherwise.
-        public abstract void Write(byte[] buf, int buff_offset, int n);
+        void Write(byte[] buf, int buff_offset, int n);
 
         // Write n bytes of data from buf at offset.
         // Return true if all written, false otherwise.
-        public abstract void Write(byte[] buf, int buff_offset, int offset, int n);
+        void Write(byte[] buf, int buff_offset, int offset, int n);
 
-        public abstract int Size();
-    }
-
-    internal static class WOFF2OutConstants {
+        int Size();
     }
 }

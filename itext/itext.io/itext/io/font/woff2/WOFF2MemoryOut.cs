@@ -17,24 +17,24 @@ using System;
 
 namespace iText.IO.Font.Woff2 {
     /// <summary>Fixed memory block for woff2 out.</summary>
-    internal class WOFF2MemoryOut : WOFF2Out {
+    internal class Woff2MemoryOut : Woff2Out {
         private byte[] buf_;
 
         private int buf_size_;
 
         private int offset_;
 
-        public WOFF2MemoryOut(byte[] buf_, int buf_size_) {
+        public Woff2MemoryOut(byte[] buf_, int buf_size_) {
             this.buf_ = buf_;
             this.buf_size_ = buf_size_;
             this.offset_ = 0;
         }
 
-        public override void Write(byte[] buf, int buff_offset, int n) {
+        public virtual void Write(byte[] buf, int buff_offset, int n) {
             Write(buf, buff_offset, offset_, n);
         }
 
-        public override void Write(byte[] buf, int buff_offset, int offset, int n) {
+        public virtual void Write(byte[] buf, int buff_offset, int offset, int n) {
             if (offset > buf_size_ || n > buf_size_ - offset) {
                 throw new FontCompressionException(FontCompressionException.WRITE_FAILED);
             }
@@ -42,7 +42,7 @@ namespace iText.IO.Font.Woff2 {
             offset_ = Math.Max(offset_, offset + n);
         }
 
-        public override int Size() {
+        public virtual int Size() {
             return offset_;
         }
     }

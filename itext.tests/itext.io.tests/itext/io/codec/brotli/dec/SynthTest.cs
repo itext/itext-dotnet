@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// Tests for
@@ -18,7 +18,7 @@ namespace Org.Brotli.Dec
 			byte[] buffer = new byte[65536];
 			System.IO.MemoryStream input = new System.IO.MemoryStream(data);
 			System.IO.MemoryStream output = new System.IO.MemoryStream();
-			Org.Brotli.Dec.BrotliInputStream brotliInput = new Org.Brotli.Dec.BrotliInputStream(input);
+			iText.IO.Codec.Brotli.Dec.BrotliInputStream brotliInput = new iText.IO.Codec.Brotli.Dec.BrotliInputStream(input);
 			while (true)
 			{
 				int len = brotliInput.Read(buffer, 0, buffer.Length);
@@ -34,7 +34,7 @@ namespace Org.Brotli.Dec
 
 		private void CheckSynth(byte[] compressed, bool expectSuccess, string expectedOutput)
 		{
-			byte[] expected = Org.Brotli.Dec.Transform.ReadUniBytes(expectedOutput);
+			byte[] expected = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(expectedOutput);
 			try
 			{
 				byte[] actual = Decompress(compressed);

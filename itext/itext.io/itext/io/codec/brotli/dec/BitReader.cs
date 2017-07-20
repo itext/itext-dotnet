@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>Bit reading helpers.</summary>
 	internal sealed class BitReader
@@ -26,7 +26,7 @@ namespace Org.Brotli.Dec
 
 		private readonly int[] intBuffer = new int[IntBufferSize];
 
-		private readonly Org.Brotli.Dec.IntReader intReader = new Org.Brotli.Dec.IntReader();
+		private readonly iText.IO.Codec.Brotli.Dec.IntReader intReader = new iText.IO.Codec.Brotli.Dec.IntReader();
 
 		private System.IO.Stream input;
 
@@ -52,7 +52,7 @@ namespace Org.Brotli.Dec
 		/// <p> After encountering the end of the input stream, 64 additional zero bytes are copied to the
 		/// buffer.
 		/// </remarks>
-		internal static void ReadMoreInput(Org.Brotli.Dec.BitReader br)
+		internal static void ReadMoreInput(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			// TODO: Split to check and read; move read outside of decoding loop.
 			if (br.intOffset <= Capacity - 9)
@@ -65,7 +65,7 @@ namespace Org.Brotli.Dec
 				{
 					return;
 				}
-				throw new Org.Brotli.Dec.BrotliRuntimeException("No more input");
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("No more input");
 			}
 			int readOffset = br.intOffset << 2;
 			int bytesRead = ByteReadSize - readOffset;
@@ -89,12 +89,12 @@ namespace Org.Brotli.Dec
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
 			}
-			Org.Brotli.Dec.IntReader.Convert(br.intReader, bytesRead >> 2);
+			iText.IO.Codec.Brotli.Dec.IntReader.Convert(br.intReader, bytesRead >> 2);
 		}
 
-		internal static void CheckHealth(Org.Brotli.Dec.BitReader br, bool endOfStream)
+		internal static void CheckHealth(iText.IO.Codec.Brotli.Dec.BitReader br, bool endOfStream)
 		{
 			if (!br.endOfStreamReached)
 			{
@@ -103,16 +103,16 @@ namespace Org.Brotli.Dec
 			int byteOffset = (br.intOffset << 2) + ((br.bitOffset + 7) >> 3) - 8;
 			if (byteOffset > br.tailBytes)
 			{
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Read after end");
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Read after end");
 			}
 			if (endOfStream && (byteOffset != br.tailBytes))
 			{
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Unused bytes after end");
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unused bytes after end");
 			}
 		}
 
 		/// <summary>Advances the Read buffer by 5 bytes to make room for reading next 24 bits.</summary>
-		internal static void FillBitWindow(Org.Brotli.Dec.BitReader br)
+		internal static void FillBitWindow(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			if (br.bitOffset >= 32)
 			{
@@ -122,7 +122,7 @@ namespace Org.Brotli.Dec
 		}
 
 		/// <summary>Reads the specified number of bits from Read Buffer.</summary>
-		internal static int ReadBits(Org.Brotli.Dec.BitReader br, int n)
+		internal static int ReadBits(iText.IO.Codec.Brotli.Dec.BitReader br, int n)
 		{
 			FillBitWindow(br);
 			int val = (int)((long)(((ulong)br.accumulator) >> br.bitOffset)) & ((1 << n) - 1);
@@ -138,13 +138,13 @@ namespace Org.Brotli.Dec
 		/// </remarks>
 		/// <param name="br">BitReader POJO</param>
 		/// <param name="input">data source</param>
-		internal static void Init(Org.Brotli.Dec.BitReader br, System.IO.Stream input)
+		internal static void Init(iText.IO.Codec.Brotli.Dec.BitReader br, System.IO.Stream input)
 		{
 			if (br.input != null)
 			{
 				throw new System.InvalidOperationException("Bit reader already has associated input stream");
 			}
-			Org.Brotli.Dec.IntReader.Init(br.intReader, br.byteBuffer, br.intBuffer);
+			iText.IO.Codec.Brotli.Dec.IntReader.Init(br.intReader, br.byteBuffer, br.intBuffer);
 			br.input = input;
 			br.accumulator = 0;
 			br.bitOffset = 64;
@@ -153,7 +153,7 @@ namespace Org.Brotli.Dec
 			Prepare(br);
 		}
 
-		private static void Prepare(Org.Brotli.Dec.BitReader br)
+		private static void Prepare(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			ReadMoreInput(br);
 			CheckHealth(br, false);
@@ -161,7 +161,7 @@ namespace Org.Brotli.Dec
 			FillBitWindow(br);
 		}
 
-		internal static void Reload(Org.Brotli.Dec.BitReader br)
+		internal static void Reload(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			if (br.bitOffset == 64)
 			{
@@ -170,7 +170,7 @@ namespace Org.Brotli.Dec
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		internal static void Close(Org.Brotli.Dec.BitReader br)
+		internal static void Close(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			System.IO.Stream @is = br.input;
 			br.input = null;
@@ -180,20 +180,20 @@ namespace Org.Brotli.Dec
 			}
 		}
 
-		internal static void JumpToByteBoundary(Org.Brotli.Dec.BitReader br)
+		internal static void JumpToByteBoundary(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			int padding = (64 - br.bitOffset) & 7;
 			if (padding != 0)
 			{
-				int paddingBits = Org.Brotli.Dec.BitReader.ReadBits(br, padding);
+				int paddingBits = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, padding);
 				if (paddingBits != 0)
 				{
-					throw new Org.Brotli.Dec.BrotliRuntimeException("Corrupted padding bits");
+					throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Corrupted padding bits");
 				}
 			}
 		}
 
-		internal static int IntAvailable(Org.Brotli.Dec.BitReader br)
+		internal static int IntAvailable(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			int limit = Capacity;
 			if (br.endOfStreamReached)
@@ -203,11 +203,11 @@ namespace Org.Brotli.Dec
 			return limit - br.intOffset;
 		}
 
-		internal static void CopyBytes(Org.Brotli.Dec.BitReader br, byte[] data, int offset, int length)
+		internal static void CopyBytes(iText.IO.Codec.Brotli.Dec.BitReader br, byte[] data, int offset, int length)
 		{
 			if ((br.bitOffset & 7) != 0)
 			{
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Unaligned copyBytes");
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unaligned copyBytes");
 			}
 			// Drain accumulator.
 			while ((br.bitOffset != 64) && (length != 0))
@@ -256,7 +256,7 @@ namespace Org.Brotli.Dec
 					int len = br.input.Read(data, offset, length);
 					if (len == -1)
 					{
-						throw new Org.Brotli.Dec.BrotliRuntimeException("Unexpected end of input");
+						throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unexpected end of input");
 					}
 					offset += len;
 					length -= len;
@@ -264,7 +264,7 @@ namespace Org.Brotli.Dec
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new Org.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
+				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
 			}
 		}
 	}

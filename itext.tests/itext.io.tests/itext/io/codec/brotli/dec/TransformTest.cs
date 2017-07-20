@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// Tests for
@@ -33,8 +33,8 @@ namespace Org.Brotli.Dec
 			byte[] output = new byte[2];
 			byte[] input = new byte[] { 119, 111, 114, 100 };
 			// "word"
-			Org.Brotli.Dec.Transform transform = new Org.Brotli.Dec.Transform("[", Org.Brotli.Dec.WordTransformType.OmitFirst5, "]");
-			Org.Brotli.Dec.Transform.TransformDictionaryWord(output, 0, input, 0, input.Length, transform);
+			iText.IO.Codec.Brotli.Dec.Transform transform = new iText.IO.Codec.Brotli.Dec.Transform("[", iText.IO.Codec.Brotli.Dec.WordTransformType.OmitFirst5, "]");
+			iText.IO.Codec.Brotli.Dec.Transform.TransformDictionaryWord(output, 0, input, 0, input.Length, transform);
 			byte[] expectedOutput = new byte[] { 91, 93 };
 			// "[]"
 			NUnit.Framework.Assert.AreEqual(expectedOutput, output);
@@ -46,8 +46,8 @@ namespace Org.Brotli.Dec
 			byte[] output = new byte[8];
 			byte[] input = new byte[] { 113, unchecked((byte)(-61)), unchecked((byte)(-90)), unchecked((byte)(-32)), unchecked((byte)(-92)), unchecked((byte)(-86)) };
 			// "qæप"
-			Org.Brotli.Dec.Transform transform = new Org.Brotli.Dec.Transform("[", Org.Brotli.Dec.WordTransformType.UppercaseAll, "]");
-			Org.Brotli.Dec.Transform.TransformDictionaryWord(output, 0, input, 0, input.Length, transform);
+			iText.IO.Codec.Brotli.Dec.Transform transform = new iText.IO.Codec.Brotli.Dec.Transform("[", iText.IO.Codec.Brotli.Dec.WordTransformType.UppercaseAll, "]");
+			iText.IO.Codec.Brotli.Dec.Transform.TransformDictionaryWord(output, 0, input, 0, input.Length, transform);
 			byte[] expectedOutput = new byte[] { 91, 81, unchecked((byte)(-61)), unchecked((byte)(-122)), unchecked((byte)(-32)), unchecked((byte)(-92)), unchecked((byte)(-81)), 93 };
 			// "[QÆय]"
 			NUnit.Framework.Assert.AreEqual(expectedOutput, output);
@@ -62,9 +62,9 @@ namespace Org.Brotli.Dec
 			byte[] testWord = new byte[] { 111, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102 };
 			byte[] output = new byte[2259];
 			int offset = 0;
-			for (int i = 0; i < Org.Brotli.Dec.Transform.Transforms.Length; ++i)
+			for (int i = 0; i < iText.IO.Codec.Brotli.Dec.Transform.Transforms.Length; ++i)
 			{
-				offset += Org.Brotli.Dec.Transform.TransformDictionaryWord(output, offset, testWord, 0, testWord.Length, Org.Brotli.Dec.Transform.Transforms[i]);
+				offset += iText.IO.Codec.Brotli.Dec.Transform.TransformDictionaryWord(output, offset, testWord, 0, testWord.Length, iText.IO.Codec.Brotli.Dec.Transform.Transforms[i]);
 				output[offset++] = unchecked((byte)(-1));
 			}
 			NUnit.Framework.Assert.AreEqual(output.Length, offset);

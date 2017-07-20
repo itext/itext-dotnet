@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// Tests for
@@ -30,7 +30,7 @@ namespace Org.Brotli.Dec
 		[NUnit.Framework.Test]
 		public virtual void TestGetData()
 		{
-			NUnit.Framework.Assert.AreEqual(37084801881332636L, Crc64(Org.Brotli.Dec.Dictionary.GetData()));
+			NUnit.Framework.Assert.AreEqual(37084801881332636L, Crc64(iText.IO.Codec.Brotli.Dec.Dictionary.GetData()));
 		}
 	}
 }

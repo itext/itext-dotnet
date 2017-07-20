@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
 	/// <see cref="System.IO.Stream"/>
@@ -24,7 +24,7 @@ namespace Org.Brotli.Dec
 		private int bufferOffset;
 
 		/// <summary>Decoder state.</summary>
-		private readonly Org.Brotli.Dec.State state = new Org.Brotli.Dec.State();
+		private readonly iText.IO.Codec.Brotli.Dec.State state = new iText.IO.Codec.Brotli.Dec.State();
 
 		/// <summary>
 		/// Creates a
@@ -101,15 +101,15 @@ namespace Org.Brotli.Dec
 			this.bufferOffset = 0;
 			try
 			{
-				Org.Brotli.Dec.State.SetInput(state, source);
+				iText.IO.Codec.Brotli.Dec.State.SetInput(state, source);
 			}
-			catch (Org.Brotli.Dec.BrotliRuntimeException ex)
+			catch (iText.IO.Codec.Brotli.Dec.BrotliRuntimeException ex)
 			{
 				throw new System.IO.IOException("Brotli decoder initialization failed", ex);
 			}
 			if (customDictionary != null)
 			{
-				Org.Brotli.Dec.Decode.SetCustomDictionary(state, customDictionary);
+				iText.IO.Codec.Brotli.Dec.Decode.SetCustomDictionary(state, customDictionary);
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace Org.Brotli.Dec
 		/// <exception cref="System.IO.IOException"/>
 		public override void Close()
 		{
-			Org.Brotli.Dec.State.Close(state);
+			iText.IO.Codec.Brotli.Dec.State.Close(state);
 		}
 
 		/// <summary><inheritDoc/></summary>
@@ -175,14 +175,14 @@ namespace Org.Brotli.Dec
 				state.outputOffset = destOffset;
 				state.outputLength = destLen;
 				state.outputUsed = 0;
-				Org.Brotli.Dec.Decode.Decompress(state);
+				iText.IO.Codec.Brotli.Dec.Decode.Decompress(state);
 				if (state.outputUsed == 0)
 				{
 					return -1;
 				}
 				return state.outputUsed + copyLen;
 			}
-			catch (Org.Brotli.Dec.BrotliRuntimeException ex)
+			catch (iText.IO.Codec.Brotli.Dec.BrotliRuntimeException ex)
 			{
 				throw new System.IO.IOException("Brotli stream decoding failed", ex);
 			}

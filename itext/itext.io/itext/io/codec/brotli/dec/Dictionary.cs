@@ -3,7 +3,7 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace Org.Brotli.Dec
+namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>Collection of static dictionary words.</summary>
 	/// <remarks>
@@ -58,7 +58,7 @@ namespace Org.Brotli.Dec
 			static DataHolder()
 			{
 				Data = new byte[122784];
-				string[] chunks = new string[] { Org.Brotli.Dec.Dictionary.DataHolder0.GetData(), Org.Brotli.Dec.Dictionary.DataHolder1.GetData(), Org.Brotli.Dec.Dictionary.DataHolder2.GetData() };
+				string[] chunks = new string[] { iText.IO.Codec.Brotli.Dec.Dictionary.DataHolder0.GetData(), iText.IO.Codec.Brotli.Dec.Dictionary.DataHolder1.GetData(), iText.IO.Codec.Brotli.Dec.Dictionary.DataHolder2.GetData() };
 				int sum = 0;
 				foreach (string chunk in chunks)
 				{
@@ -81,7 +81,7 @@ namespace Org.Brotli.Dec
 
 		internal static byte[] GetData()
 		{
-			return Org.Brotli.Dec.Dictionary.DataHolder.Data;
+			return iText.IO.Codec.Brotli.Dec.Dictionary.DataHolder.Data;
 		}
 
 		internal static readonly int[] OffsetsByLength = new int[] { 0, 0, 0, 0, 0, 4096, 9216, 21504, 35840, 44032, 53248, 63488, 74752, 87040, 93696, 100864, 104704, 106752, 108928, 113536, 115968, 118528, 119872, 121280, 122016 };
