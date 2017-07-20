@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Woff2;
 
 namespace iText.IO.Font {
     public sealed class FontProgramDescriptorFactory {
@@ -71,18 +72,23 @@ namespace iText.IO.Font {
                         fontDescriptor = FetchCidFontDescriptor(fontName);
                     }
                     else {
-                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf") || fontNameLowerCase.EndsWith
-                            (".woff")) {
-                            if (fontNameLowerCase.EndsWith(".woff")) {
-                                byte[] fontProgram = WoffConverter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf")) {
+                            fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
+                        }
+                        else {
+                            if (fontNameLowerCase.EndsWith(".woff") || fontNameLowerCase.EndsWith(".woff2")) {
+                                byte[] fontProgram;
+                                if (fontNameLowerCase.EndsWith(".woff")) {
+                                    fontProgram = WoffConverter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                                }
+                                else {
+                                    fontProgram = Woff2Converter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                                }
                                 fontDescriptor = FetchTrueTypeFontDescriptor(fontProgram);
                             }
                             else {
-                                fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
+                                fontDescriptor = FetchTTCDescriptor(baseName);
                             }
-                        }
-                        else {
-                            fontDescriptor = FetchTTCDescriptor(baseName);
                         }
                     }
                 }
