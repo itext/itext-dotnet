@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Woff2;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -186,6 +187,11 @@ namespace iText.IO.Font {
                         if (WoffConverter.IsWoffFont(fontProgram)) {
                             fontProgram = WoffConverter.Convert(fontProgram);
                         }
+                        else {
+                            if (Woff2Converter.IsWoff2Font(fontProgram)) {
+                                fontProgram = Woff2Converter.Convert(fontProgram);
+                            }
+                        }
                         fontBuilt = new TrueTypeFont(fontProgram);
                     }
                     catch (Exception) {
@@ -213,19 +219,7 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension) || ".woff".Equals(fontFileExtension
-                            )) {
-                            if (".woff".Equals(fontFileExtension)) {
-                                if (fontProgram == null) {
-                                    fontProgram = ReadFontBytesFromPath(baseName);
-                                }
-                                try {
-                                    fontProgram = WoffConverter.Convert(fontProgram);
-                                }
-                                catch (ArgumentException woffException) {
-                                    throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
-                                }
-                            }
+                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension)) {
                             if (fontProgram != null) {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
@@ -234,17 +228,43 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
-                            if (ttcSplit > 0) {
-                                try {
-                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
-                                    // count(.ttc) = 4
-                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
-                                    // count(.ttc,) = 5)
-                                    fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                            if (".woff".Equals(fontFileExtension) || ".woff2".Equals(fontFileExtension)) {
+                                if (fontProgram == null) {
+                                    fontProgram = ReadFontBytesFromPath(baseName);
                                 }
-                                catch (FormatException nfe) {
-                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                if (".woff".Equals(fontFileExtension)) {
+                                    try {
+                                        fontProgram = WoffConverter.Convert(fontProgram);
+                                    }
+                                    catch (ArgumentException woffException) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
+                                    }
+                                }
+                                else {
+                                    if (".woff2".Equals(fontFileExtension)) {
+                                        try {
+                                            fontProgram = Woff2Converter.Convert(fontProgram);
+                                        }
+                                        catch (FontCompressionException woff2Exception) {
+                                            throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
+                                        }
+                                    }
+                                }
+                                fontBuilt = new TrueTypeFont(fontProgram);
+                            }
+                            else {
+                                int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                                if (ttcSplit > 0) {
+                                    try {
+                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                                        // count(.ttc) = 4
+                                        int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        // count(.ttc,) = 5)
+                                        fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                                    }
+                                    catch (FormatException nfe) {
+                                        throw new iText.IO.IOException(nfe.Message, nfe);
+                                    }
                                 }
                             }
                         }
