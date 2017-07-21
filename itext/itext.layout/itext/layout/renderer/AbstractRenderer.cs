@@ -1509,8 +1509,7 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
-                String[] transform = renderer.GetProperty<String[]>(Property.TRANSFORM);
-                if (transform != null) {
+                if (renderer.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
                     if (renderer is BlockRenderer) {
                         BlockRenderer blockRenderer = (BlockRenderer)renderer;
                         AffineTransform rotationTransform = blockRenderer.CreateTransformationInsideOccupiedArea();
@@ -1864,25 +1863,30 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private float[] GetCssTransformMatrix(float width, float height) {
-            String[] strings = this.GetProperty<String[]>(Property.TRANSFORM);
-            float[] floats = new float[6];
-            for (int i = 0; i < 6; i++) {
-                if (i == 4 || i == 5) {
-                    int indexOfPercent = strings[i].IndexOf('%');
-                    if (indexOfPercent > 0) {
-                        floats[i] = float.Parse(strings[i].JSubstring(0, indexOfPercent), System.Globalization.CultureInfo.InvariantCulture
-                            ) / 100 * (i == 4 ? width : height);
+        private AffineTransform GetCssTransformMatrix(float width, float height) {
+            IList<String[]> multipleTransform = this.GetProperty<IList<String[]>>(Property.TRANSFORM);
+            AffineTransform affineTransform = new AffineTransform();
+            for (int k = multipleTransform.Count - 1; k >= 0; k--) {
+                String[] transform = multipleTransform[k];
+                float[] floats = new float[6];
+                for (int i = 0; i < 6; i++) {
+                    if (i == 4 || i == 5) {
+                        int indexOfPercent = transform[i].IndexOf('%');
+                        if (indexOfPercent > 0) {
+                            floats[i] = float.Parse(transform[i].JSubstring(0, indexOfPercent), System.Globalization.CultureInfo.InvariantCulture
+                                ) / 100 * (i == 4 ? width : height);
+                        }
+                        else {
+                            floats[i] = float.Parse(transform[i], System.Globalization.CultureInfo.InvariantCulture);
+                        }
                     }
                     else {
-                        floats[i] = float.Parse(strings[i], System.Globalization.CultureInfo.InvariantCulture);
+                        floats[i] = float.Parse(transform[i], System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
-                else {
-                    floats[i] = float.Parse(strings[i], System.Globalization.CultureInfo.InvariantCulture);
-                }
+                affineTransform.PreConcatenate(new AffineTransform(floats));
             }
-            return floats;
+            return affineTransform;
         }
 
         public abstract IRenderer GetNextRenderer();
