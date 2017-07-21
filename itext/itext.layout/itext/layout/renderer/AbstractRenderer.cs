@@ -691,7 +691,7 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty(Property.TRANSFORM) != null) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<String[]>(Property.TRANSFORM) != null) {
                     RootRenderer rootRenderer = GetRootRenderer();
                     if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                         rootRenderer.waitingDrawingElements.Add(child);
@@ -1509,7 +1509,7 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
-                float[] transform = renderer.GetProperty<float[]>(Property.TRANSFORM);
+                String[] transform = renderer.GetProperty<String[]>(Property.TRANSFORM);
                 if (transform != null) {
                     if (renderer is BlockRenderer) {
                         BlockRenderer blockRenderer = (BlockRenderer)renderer;
@@ -1846,22 +1846,43 @@ namespace iText.Layout.Renderer {
             float width = backgroundArea.GetWidth();
             AffineTransform transform = AffineTransform.GetTranslateInstance(-1 * (x + width / 2), -1 * (y + height / 
                 2));
-            transform.PreConcatenate((new AffineTransform((float[])this.GetProperty(Property.TRANSFORM))));
+            transform.PreConcatenate(new AffineTransform(this.GetCssTransformMatrix(width, height)));
             transform.PreConcatenate(AffineTransform.GetTranslateInstance(x + width / 2, y + height / 2));
             return transform;
         }
 
         protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty(Property.TRANSFORM) != null) {
+            if (this.GetProperty<String[]>(Property.TRANSFORM) != null) {
                 AffineTransform transform = CreateTransformationInsideOccupiedArea();
                 canvas.SaveState().ConcatMatrix(transform);
             }
         }
 
         protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty(Property.TRANSFORM) != null) {
+            if (this.GetProperty<String[]>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }
+        }
+
+        private float[] GetCssTransformMatrix(float width, float height) {
+            String[] strings = this.GetProperty<String[]>(Property.TRANSFORM);
+            float[] floats = new float[6];
+            for (int i = 0; i < 6; i++) {
+                if (i == 4 || i == 5) {
+                    int indexOfPercent = strings[i].IndexOf('%');
+                    if (indexOfPercent > 0) {
+                        floats[i] = float.Parse(strings[i].JSubstring(0, indexOfPercent), System.Globalization.CultureInfo.InvariantCulture
+                            ) / 100 * (i == 4 ? width : height);
+                    }
+                    else {
+                        floats[i] = float.Parse(strings[i], System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+                else {
+                    floats[i] = float.Parse(strings[i], System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
+            return floats;
         }
 
         public abstract IRenderer GetNextRenderer();

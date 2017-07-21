@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.IO.Log;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
@@ -99,7 +100,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
             if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || resultRenderer.GetProperty(Property.TRANSFORM) != null)) {
+                 || resultRenderer.GetProperty<String[]>(Property.TRANSFORM) != null)) {
                 waitingDrawingElements.Add(resultRenderer);
                 return;
             }
