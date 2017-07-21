@@ -691,8 +691,7 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<IList<String[]>>(Property.TRANSFORM) != 
-                    null) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
                     RootRenderer rootRenderer = GetRootRenderer();
                     if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                         rootRenderer.waitingDrawingElements.Add(child);
@@ -1510,7 +1509,7 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
-                if (renderer.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
+                if (renderer.GetProperty<Transform>(Property.TRANSFORM) != null) {
                     if (renderer is BlockRenderer || renderer is ImageRenderer || renderer is TableRenderer) {
                         AffineTransform rotationTransform = renderer.CreateTransformationInsideOccupiedArea();
                         TransformPoints(contentBoxPoints, rotationTransform);
@@ -1831,48 +1830,23 @@ namespace iText.Layout.Renderer {
             float width = backgroundArea.GetWidth();
             AffineTransform transform = AffineTransform.GetTranslateInstance(-1 * (x + width / 2), -1 * (y + height / 
                 2));
-            transform.PreConcatenate(new AffineTransform(this.GetTransformMatrix(width, height)));
+            transform.PreConcatenate(Transform.GetAffineTransform(this.GetProperty<Transform>(Property.TRANSFORM), width
+                , height));
             transform.PreConcatenate(AffineTransform.GetTranslateInstance(x + width / 2, y + height / 2));
             return transform;
         }
 
         protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
+            if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 AffineTransform transform = CreateTransformationInsideOccupiedArea();
                 canvas.SaveState().ConcatMatrix(transform);
             }
         }
 
         protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
+            if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }
-        }
-
-        private AffineTransform GetTransformMatrix(float width, float height) {
-            IList<String[]> multipleTransform = this.GetProperty<IList<String[]>>(Property.TRANSFORM);
-            AffineTransform affineTransform = new AffineTransform();
-            for (int k = multipleTransform.Count - 1; k >= 0; k--) {
-                String[] transform = multipleTransform[k];
-                float[] floats = new float[6];
-                for (int i = 0; i < 6; i++) {
-                    if (i == 4 || i == 5) {
-                        int indexOfPercent = transform[i].IndexOf('%');
-                        if (indexOfPercent > 0) {
-                            floats[i] = float.Parse(transform[i].JSubstring(0, indexOfPercent), System.Globalization.CultureInfo.InvariantCulture
-                                ) / 100 * (i == 4 ? width : height);
-                        }
-                        else {
-                            floats[i] = float.Parse(transform[i], System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                    }
-                    else {
-                        floats[i] = float.Parse(transform[i], System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                }
-                affineTransform.PreConcatenate(new AffineTransform(floats));
-            }
-            return affineTransform;
         }
 
         public abstract IRenderer GetNextRenderer();
