@@ -1511,24 +1511,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (renderer.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
-                    if (renderer is BlockRenderer) {
-                        BlockRenderer blockRenderer = (BlockRenderer)renderer;
-                        AffineTransform rotationTransform = blockRenderer.CreateTransformationInsideOccupiedArea();
+                    if (renderer is BlockRenderer || renderer is ImageRenderer || renderer is TableRenderer) {
+                        AffineTransform rotationTransform = renderer.CreateTransformationInsideOccupiedArea();
                         TransformPoints(contentBoxPoints, rotationTransform);
-                    }
-                    else {
-                        if (renderer is ImageRenderer) {
-                            ImageRenderer imageRenderer = (ImageRenderer)renderer;
-                            AffineTransform rotationTransform = imageRenderer.CreateTransformationInsideOccupiedArea();
-                            TransformPoints(contentBoxPoints, rotationTransform);
-                        }
-                        else {
-                            if (renderer is TableRenderer) {
-                                TableRenderer tableRenderer = (TableRenderer)renderer;
-                                AffineTransform rotationTransform = tableRenderer.CreateTransformationInsideOccupiedArea();
-                                TransformPoints(contentBoxPoints, rotationTransform);
-                            }
-                        }
                     }
                 }
                 renderer = (iText.Layout.Renderer.AbstractRenderer)renderer.parent;
@@ -1838,7 +1823,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
         /// that transforms the content and places it inside occupied area.
         /// </returns>
-        protected internal virtual AffineTransform CreateTransformationInsideOccupiedArea() {
+        private AffineTransform CreateTransformationInsideOccupiedArea() {
             Rectangle backgroundArea = ApplyMargins(occupiedArea.Clone().GetBBox(), false);
             float x = backgroundArea.GetX();
             float y = backgroundArea.GetY();
@@ -1846,7 +1831,7 @@ namespace iText.Layout.Renderer {
             float width = backgroundArea.GetWidth();
             AffineTransform transform = AffineTransform.GetTranslateInstance(-1 * (x + width / 2), -1 * (y + height / 
                 2));
-            transform.PreConcatenate(new AffineTransform(this.GetCssTransformMatrix(width, height)));
+            transform.PreConcatenate(new AffineTransform(this.GetTransformMatrix(width, height)));
             transform.PreConcatenate(AffineTransform.GetTranslateInstance(x + width / 2, y + height / 2));
             return transform;
         }
@@ -1864,7 +1849,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private AffineTransform GetCssTransformMatrix(float width, float height) {
+        private AffineTransform GetTransformMatrix(float width, float height) {
             IList<String[]> multipleTransform = this.GetProperty<IList<String[]>>(Property.TRANSFORM);
             AffineTransform affineTransform = new AffineTransform();
             for (int k = multipleTransform.Count - 1; k >= 0; k--) {
