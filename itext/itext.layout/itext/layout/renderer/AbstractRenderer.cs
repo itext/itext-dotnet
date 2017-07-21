@@ -691,7 +691,8 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<String[]>(Property.TRANSFORM) != null) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<IList<String[]>>(Property.TRANSFORM) != 
+                    null) {
                     RootRenderer rootRenderer = GetRootRenderer();
                     if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                         rootRenderer.waitingDrawingElements.Add(child);
@@ -1851,14 +1852,14 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty<String[]>(Property.TRANSFORM) != null) {
+            if (this.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
                 AffineTransform transform = CreateTransformationInsideOccupiedArea();
                 canvas.SaveState().ConcatMatrix(transform);
             }
         }
 
         protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
-            if (this.GetProperty<String[]>(Property.TRANSFORM) != null) {
+            if (this.GetProperty<IList<String[]>>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }
         }
