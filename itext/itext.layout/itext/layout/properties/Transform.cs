@@ -67,11 +67,11 @@ namespace iText.Layout.Properties {
                 this.ty = ty;
             }
 
-            private float[] GetFloats() {
+            public virtual float[] GetFloats() {
                 return new float[] { a, b, c, d };
             }
 
-            private UnitValue[] GetUnitValues() {
+            public virtual UnitValue[] GetUnitValues() {
                 return new UnitValue[] { tx, ty };
             }
         }
