@@ -691,11 +691,10 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child)) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty(Property.TRANSFORM) != null) {
                     RootRenderer rootRenderer = GetRootRenderer();
-                    if (rootRenderer != null) {
+                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                         rootRenderer.waitingDrawingElements.Add(child);
-                        child.SetProperty(Property.FLOAT, null);
                     }
                     else {
                         waitingRenderers.Add(child);
@@ -1510,6 +1509,28 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
+                float[] transform = renderer.GetProperty<float[]>(Property.TRANSFORM);
+                if (transform != null) {
+                    if (renderer is BlockRenderer) {
+                        BlockRenderer blockRenderer = (BlockRenderer)renderer;
+                        AffineTransform rotationTransform = blockRenderer.CreateTransformationInsideOccupiedArea();
+                        TransformPoints(contentBoxPoints, rotationTransform);
+                    }
+                    else {
+                        if (renderer is ImageRenderer) {
+                            ImageRenderer imageRenderer = (ImageRenderer)renderer;
+                            AffineTransform rotationTransform = imageRenderer.CreateTransformationInsideOccupiedArea();
+                            TransformPoints(contentBoxPoints, rotationTransform);
+                        }
+                        else {
+                            if (renderer is TableRenderer) {
+                                TableRenderer tableRenderer = (TableRenderer)renderer;
+                                AffineTransform rotationTransform = tableRenderer.CreateTransformationInsideOccupiedArea();
+                                TransformPoints(contentBoxPoints, rotationTransform);
+                            }
+                        }
+                    }
+                }
                 renderer = (iText.Layout.Renderer.AbstractRenderer)renderer.parent;
             }
             return CalculateBBox(contentBoxPoints);
@@ -1803,6 +1824,44 @@ namespace iText.Layout.Renderer {
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetHeight();
+        }
+
+        /// <summary>
+        /// This method creates
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance that could be used
+        /// to transform content inside the occupied area,
+        /// considering the centre of the occupiedArea as the origin of a coordinate system for transformation.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that transforms the content and places it inside occupied area.
+        /// </returns>
+        protected internal virtual AffineTransform CreateTransformationInsideOccupiedArea() {
+            Rectangle backgroundArea = ApplyMargins(occupiedArea.Clone().GetBBox(), false);
+            float x = backgroundArea.GetX();
+            float y = backgroundArea.GetY();
+            float height = backgroundArea.GetHeight();
+            float width = backgroundArea.GetWidth();
+            AffineTransform transform = AffineTransform.GetTranslateInstance(-1 * (x + width / 2), -1 * (y + height / 
+                2));
+            transform.PreConcatenate((new AffineTransform((float[])this.GetProperty(Property.TRANSFORM))));
+            transform.PreConcatenate(AffineTransform.GetTranslateInstance(x + width / 2, y + height / 2));
+            return transform;
+        }
+
+        protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
+            if (this.GetProperty(Property.TRANSFORM) != null) {
+                AffineTransform transform = CreateTransformationInsideOccupiedArea();
+                canvas.SaveState().ConcatMatrix(transform);
+            }
+        }
+
+        protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
+            if (this.GetProperty(Property.TRANSFORM) != null) {
+                canvas.RestoreState();
+            }
         }
 
         public abstract IRenderer GetNextRenderer();

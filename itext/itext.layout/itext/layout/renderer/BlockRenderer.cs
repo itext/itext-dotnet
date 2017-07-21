@@ -492,6 +492,7 @@ namespace iText.Layout.Renderer {
                     isTagged = false;
                 }
             }
+            BeginTranformationIfApplied(drawContext.GetCanvas());
             ApplyDestinationsAndAnnotation(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
@@ -534,6 +535,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             flushed = true;
+            EndTranformationIfApplied(drawContext.GetCanvas());
         }
 
         public override Rectangle GetOccupiedAreaBBox() {

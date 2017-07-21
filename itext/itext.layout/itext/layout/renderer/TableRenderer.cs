@@ -949,7 +949,9 @@ namespace iText.Layout.Renderer {
                     PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
                     ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
                 }
+                BeginTranformationIfApplied(drawContext.GetCanvas());
                 base.Draw(drawContext);
+                EndTranformationIfApplied(drawContext.GetCanvas());
                 tagPointer.MoveToParent();
                 bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
@@ -957,7 +959,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             else {
+                BeginTranformationIfApplied(drawContext.GetCanvas());
                 base.Draw(drawContext);
+                EndTranformationIfApplied(drawContext.GetCanvas());
             }
         }
 

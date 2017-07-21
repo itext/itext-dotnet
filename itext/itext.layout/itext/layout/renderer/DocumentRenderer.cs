@@ -106,9 +106,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            if (FloatingHelper.IsRendererFloating(resultRenderer)) {
+            if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
+                 || resultRenderer.GetProperty(Property.TRANSFORM) != null)) {
                 waitingDrawingElements.Add(resultRenderer);
-                resultRenderer.SetProperty(Property.FLOAT, null);
                 return;
             }
             if (!resultRenderer.IsFlushed()) {
