@@ -202,6 +202,10 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("block level floating elements page-overflow and splitting not supported yet")]
         public virtual void FloatDivTest03() {
+            //
+            // TODO probably we shouldn't review forced placement applying on floated elements
+            // May be check if there are any floated elements already on page
+            //
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
             String outFile = destinationFolder + "floatDivTest03.pdf";
             PdfWriter writer = new PdfWriter(outFile);

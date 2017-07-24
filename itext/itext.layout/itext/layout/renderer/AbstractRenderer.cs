@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Java.Lang;
 using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -335,6 +336,35 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<TransparentColor>(property);
         }
 
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property) {
+            Number value = this.GetProperty<Number>(property);
+            return value != null ? value : null;
+        }
+
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <param name="defaultValue">default value to be returned if property is not found</param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property, float? defaultValue) {
+            Number value = this.GetProperty<Number>(property, defaultValue);
+            return value != null ? value : null;
+        }
+
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
         /// <param name="property">
         /// an
@@ -346,6 +376,20 @@ namespace iText.Layout.Renderer {
         /// </returns>
         public virtual bool? GetPropertyAsBoolean(int property) {
             return this.GetProperty<bool?>(property);
+        }
+
+        /// <summary>Returns a property with a certain key, as an integer value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="int?"/>
+        /// </returns>
+        public virtual int? GetPropertyAsInteger(int property) {
+            Number value = GetProperty(property);
+            return value != null ? value : null;
         }
 
         /// <summary>Returns a string representation of the renderer.</summary>
@@ -476,7 +520,6 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawChildren(DrawContext drawContext) {
-            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (FloatingHelper.IsRendererFloating(child)) {
                     RootRenderer rootRenderer = GetRootRenderer();
@@ -484,16 +527,10 @@ namespace iText.Layout.Renderer {
                         rootRenderer.waitingDrawingElements.Add(child);
                         child.SetProperty(Property.FLOAT, null);
                     }
-                    else {
-                        waitingRenderers.Add(child);
-                    }
                 }
                 else {
                     child.Draw(drawContext);
                 }
-            }
-            foreach (IRenderer waitingRenderer in waitingRenderers) {
-                waitingRenderer.Draw(drawContext);
             }
         }
 
@@ -1211,9 +1248,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            float? height = this.GetPropertyAsFloat(Property.HEIGHT);
-            float? maxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
-            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+            float? height = this.GetPropertyAsFloat<float>(Property.HEIGHT);
+            float? maxHeight = this.GetPropertyAsFloat<float>(Property.MAX_HEIGHT);
+            float? minHeight = this.GetPropertyAsFloat<float>(Property.MIN_HEIGHT);
             if (null != height) {
                 if (null == maxHeight || height < maxHeight) {
                     maxHeight = height;

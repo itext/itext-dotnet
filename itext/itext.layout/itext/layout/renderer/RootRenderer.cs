@@ -70,6 +70,8 @@ namespace iText.Layout.Renderer {
 
         private IList<Rectangle> floatRendererAreas;
 
+        private IList<IRenderer> waitingRenderers = new List<IRenderer>();
+
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
             // so we use this generic mechanism of determining which renderers have been just added.
@@ -77,6 +79,10 @@ namespace iText.Layout.Renderer {
             int numberOfPositionedChildRenderers = positionedRenderers.Count;
             base.AddChild(renderer);
             IList<IRenderer> addedRenderers = new List<IRenderer>(1);
+            if (currentArea != null && currentArea.GetPageNumber() > 1) {
+                addedRenderers.AddAll(waitingRenderers);
+                waitingRenderers.Clear();
+            }
             IList<IRenderer> addedPositionedRenderers = new List<IRenderer>(1);
             while (childRenderers.Count > numberOfChildRenderers) {
                 addedRenderers.Add(childRenderers[numberOfChildRenderers]);
@@ -94,7 +100,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             // Static layout
-            for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
+            for (int i = 0; currentArea != null && i < l; i++) {
                 renderer = addedRenderers[i];
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
@@ -105,21 +111,28 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
+                FloatPropertyValue? floatPropertyValue = renderer.GetProperty(Property.FLOAT);
+                bool rendererIsFloat = floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE);
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
                     (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
-                        if (result.GetOverflowRenderer() is ImageRenderer) {
-                            ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                        if (rendererIsFloat) {
+                            waitingRenderers.Add(result.GetOverflowRenderer());
                         }
                         else {
-                            ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
-                            if (nextStoredArea != null) {
-                                currentArea = nextStoredArea;
-                                currentPageNumber = nextStoredArea.GetPageNumber();
-                                nextStoredArea = null;
+                            if (result.GetOverflowRenderer() is ImageRenderer) {
+                                ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                             }
                             else {
-                                UpdateCurrentAndInitialArea(result);
+                                ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
+                                if (nextStoredArea != null) {
+                                    currentArea = nextStoredArea;
+                                    currentPageNumber = nextStoredArea.GetPageNumber();
+                                    nextStoredArea = null;
+                                }
+                                else {
+                                    UpdateCurrentAndInitialArea(result);
+                                }
                             }
                         }
                     }
@@ -185,7 +198,19 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    renderer = result.GetOverflowRenderer();
+                    if (rendererIsFloat && result.GetStatus() != LayoutResult.NOTHING) {
+                        renderer = null;
+                        continue;
+                    }
+                    if (!waitingRenderers.IsEmpty()) {
+                        renderer = waitingRenderers.JRemoveAt(0);
+                        addedRenderers.AddAll(waitingRenderers);
+                        addedRenderers.Add(result.GetOverflowRenderer());
+                        l += waitingRenderers.Count + 1;
+                    }
+                    else {
+                        renderer = result.GetOverflowRenderer();
+                    }
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                         marginsCollapseHandler = new MarginsCollapseHandler(this, null);

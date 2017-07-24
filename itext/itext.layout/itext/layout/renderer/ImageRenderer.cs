@@ -119,6 +119,7 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             if (IsAbsolutePosition()) {
+                // TODO applying it after floats processing here and everywhere. is it correct?
                 ApplyAbsolutePosition(layoutBox);
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
