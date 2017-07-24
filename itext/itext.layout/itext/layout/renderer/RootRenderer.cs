@@ -301,24 +301,6 @@ namespace iText.Layout.Renderer {
             FlushWaitingDrawingElements();
         }
 
-        private void AddAllWaitingNextPageRenderers() {
-            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
-            while (!waitingNextPageRenderers.IsEmpty()) {
-                if (marginsCollapsingEnabled) {
-                    marginsCollapseHandler = new MarginsCollapseHandler(this, null);
-                }
-                UpdateCurrentAndInitialArea(null);
-            }
-        }
-
-        private void AddWaitingNextPageRenderers() {
-            IList<IRenderer> waitingFloatRenderers = new List<IRenderer>(waitingNextPageRenderers);
-            waitingNextPageRenderers.Clear();
-            foreach (IRenderer renderer in waitingFloatRenderers) {
-                AddChild(renderer);
-            }
-        }
-
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             throw new InvalidOperationException("Layout is not supported for root renderers.");
@@ -464,6 +446,24 @@ namespace iText.Layout.Renderer {
             initialCurrentArea = currentArea == null ? null : currentArea.Clone();
             // TODO how bout currentArea == null ?
             AddWaitingNextPageRenderers();
+        }
+
+        private void AddAllWaitingNextPageRenderers() {
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            while (!waitingNextPageRenderers.IsEmpty()) {
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler = new MarginsCollapseHandler(this, null);
+                }
+                UpdateCurrentAndInitialArea(null);
+            }
+        }
+
+        private void AddWaitingNextPageRenderers() {
+            IList<IRenderer> waitingFloatRenderers = new List<IRenderer>(waitingNextPageRenderers);
+            waitingNextPageRenderers.Clear();
+            foreach (IRenderer renderer in waitingFloatRenderers) {
+                AddChild(renderer);
+            }
         }
     }
 }
