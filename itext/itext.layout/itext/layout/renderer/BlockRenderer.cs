@@ -137,7 +137,7 @@ namespace iText.Layout.Renderer {
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
             IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
-            for (int childPos = 0; childPos < length; childPos++) {
+            for (int childPos = 0; childPos < childRenderers.Count; childPos++) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult result;
                 childRenderer.SetParent(this);
@@ -343,7 +343,6 @@ namespace iText.Layout.Renderer {
                                             ().GetLeft());
                                     }
                                     childRenderers.JRemoveAt(childPos);
-                                    length--;
                                     childPos--;
                                     waitingOverflowRenderers.Add(result.GetOverflowRenderer());
                                     break;

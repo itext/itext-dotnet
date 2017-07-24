@@ -423,7 +423,7 @@ namespace iText.Layout.Renderer {
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], causeOfNothing);
                         }
                         else {
-                            result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], causeOfNothing);
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], null);
                         }
                     }
                     if (newLineOccurred) {

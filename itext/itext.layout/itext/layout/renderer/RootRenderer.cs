@@ -100,7 +100,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             // Static layout
-            for (int i = 0; currentArea != null && i < l; i++) {
+            for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
                 renderer = addedRenderers[i];
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
@@ -206,7 +206,6 @@ namespace iText.Layout.Renderer {
                         renderer = waitingRenderers.JRemoveAt(0);
                         addedRenderers.AddAll(waitingRenderers);
                         addedRenderers.Add(result.GetOverflowRenderer());
-                        l += waitingRenderers.Count + 1;
                     }
                     else {
                         renderer = result.GetOverflowRenderer();
@@ -334,7 +333,8 @@ namespace iText.Layout.Renderer {
             if (currentArea != null) {
                 float resultRendererHeight = result.GetOccupiedArea().GetBBox().GetHeight();
                 currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultRendererHeight);
-                if (currentArea.IsEmptyArea() && resultRendererHeight > 0) {
+                if (currentArea.IsEmptyArea() && (resultRendererHeight > 0 || FloatingHelper.IsRendererFloating(renderer))
+                    ) {
                     currentArea.SetEmptyArea(false);
                 }
                 ProcessRenderer(renderer, resultRenderers);

@@ -317,8 +317,8 @@ namespace iText.Layout.Renderer {
             int[] targetOverflowRowIndex = new int[numberOfColumns];
             // if this is the last renderer, we will use that information to enlarge rows proportionally
             IList<bool> rowsHasCellWithSetHeight = new List<bool>();
-            IList<Rectangle> childFloatRendererAreas = new List<Rectangle>();
             for (row = 0; row < rows.Count; row++) {
+                IList<Rectangle> childFloatRendererAreas = new List<Rectangle>();
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
                 if (row == 1 && true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {

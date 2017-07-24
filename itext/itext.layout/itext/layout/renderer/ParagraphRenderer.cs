@@ -169,38 +169,6 @@ namespace iText.Layout.Renderer {
                 float childBBoxWidth = layoutBox.GetWidth() - lineIndent;
                 Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox.GetY(), childBBoxWidth, 
                     layoutBox.GetHeight());
-                //            if (childAffectedByFloat) {
-                //                currentRenderer.layout(new LayoutContext(new LayoutArea(pageNumber, childLayoutBox), layoutContext.getMarginsCollapseInfo(), floatRendererAreas));
-                //                float bottom = currentRenderer.getOccupiedArea().getBBox().getBottom();
-                //                float top = currentRenderer.getOccupiedArea().getBBox().getTop();
-                //                float left = currentRenderer.getOccupiedArea().getBBox().getLeft();
-                //                float right = currentRenderer.getOccupiedArea().getBBox().getRight();
-                //                boolean childLayoutBoxWasAdjusted;
-                //                float rightBorder = childLayoutBox.getRight();
-                //                float curRendWidth = currentRenderer.getOccupiedAreaBBox().getWidth();
-                //                do {
-                //                    childLayoutBoxWasAdjusted = false;
-                //                    for (Rectangle floatRendereArea : floatRendererAreas) {
-                //                        if ((bottom > floatRendereArea.getBottom() && bottom < floatRendereArea.getTop()) || (top > floatRendereArea.getBottom() && top < floatRendereArea.getTop())) {
-                //                            if ((left >= floatRendereArea.getLeft() && left < floatRendereArea.getRight()) ||
-                //                                    (right > floatRendereArea.getLeft() && right < floatRendereArea.getRight()) ||
-                //                                    (left > floatRendereArea.getLeft() && right < floatRendereArea.getRight())) {
-                //                                childLayoutBox.setX(floatRendereArea.getRight());
-                //
-                //
-                //                                if (childLayoutBox.getLeft() + curRendWidth > rightBorder) {
-                //                                    childLayoutBox.setWidth(rightBorder - childLayoutBox.getLeft());
-                //                                } else {
-                //                                    childLayoutBox.setWidth(curRendWidth);
-                //                                }
-                //                                left = childLayoutBox.getLeft();
-                //                                right = childLayoutBox.getRight();
-                //                                childLayoutBoxWasAdjusted = true;
-                //                            }
-                //                        }
-                //                    }
-                //                } while(childLayoutBoxWasAdjusted);
-                //            }
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas)));
                 if (result.GetStatus() == LayoutResult.NOTHING) {

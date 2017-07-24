@@ -520,6 +520,7 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawChildren(DrawContext drawContext) {
+            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (FloatingHelper.IsRendererFloating(child)) {
                     RootRenderer rootRenderer = GetRootRenderer();
@@ -527,10 +528,16 @@ namespace iText.Layout.Renderer {
                         rootRenderer.waitingDrawingElements.Add(child);
                         child.SetProperty(Property.FLOAT, null);
                     }
+                    else {
+                        waitingRenderers.Add(child);
+                    }
                 }
                 else {
                     child.Draw(drawContext);
                 }
+            }
+            foreach (IRenderer waitingRenderer in waitingRenderers) {
+                waitingRenderer.Draw(drawContext);
             }
         }
 
