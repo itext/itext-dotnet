@@ -210,6 +210,7 @@ namespace iText.Layout.Renderer {
                     isPlacingForced = true;
                 }
                 else {
+                    occupiedArea.GetBBox().SetHeight(initialOccupiedAreaBBox.GetHeight());
                     return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }

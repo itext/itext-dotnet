@@ -326,6 +326,14 @@ namespace iText.Layout.Renderer {
                 );
         }
 
+        internal static bool IsFloatAffectedByClear(FloatPropertyValue? floatPropertyValue, ClearPropertyValue? clearPropertyValue
+            ) {
+            return !(clearPropertyValue == null || clearPropertyValue.Equals(ClearPropertyValue.NONE)) && (clearPropertyValue
+                .Equals(ClearPropertyValue.BOTH) || (floatPropertyValue.Equals(FloatPropertyValue.LEFT) && clearPropertyValue
+                .Equals(ClearPropertyValue.LEFT)) || (floatPropertyValue.Equals(FloatPropertyValue.RIGHT) && clearPropertyValue
+                .Equals(ClearPropertyValue.RIGHT)));
+        }
+
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {
             layoutBox.SetX(layoutBox.GetRight() - blockWidth);
             layoutBox.SetWidth(blockWidth);

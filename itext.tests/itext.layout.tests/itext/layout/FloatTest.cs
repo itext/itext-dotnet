@@ -259,7 +259,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatingImageToNextPage() {
             String cmpFileName = sourceFolder + "cmp_floatingImageToNextPage.pdf";
             String outFile = destinationFolder + "floatingImageToNextPage.pdf";
