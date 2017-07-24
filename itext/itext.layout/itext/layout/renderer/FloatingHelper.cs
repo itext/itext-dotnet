@@ -326,12 +326,20 @@ namespace iText.Layout.Renderer {
                 );
         }
 
-        internal static bool IsFloatAffectedByClear(FloatPropertyValue? floatPropertyValue, ClearPropertyValue? clearPropertyValue
+        internal static bool IsClearanceApplied(IList<IRenderer> floatingRenderers, ClearPropertyValue? clearPropertyValue
             ) {
-            return !(clearPropertyValue == null || clearPropertyValue.Equals(ClearPropertyValue.NONE)) && (clearPropertyValue
-                .Equals(ClearPropertyValue.BOTH) || (floatPropertyValue.Equals(FloatPropertyValue.LEFT) && clearPropertyValue
-                .Equals(ClearPropertyValue.LEFT)) || (floatPropertyValue.Equals(FloatPropertyValue.RIGHT) && clearPropertyValue
-                .Equals(ClearPropertyValue.RIGHT)));
+            if (clearPropertyValue == null || clearPropertyValue.Equals(ClearPropertyValue.NONE)) {
+                return false;
+            }
+            foreach (IRenderer floatingRenderer in floatingRenderers) {
+                FloatPropertyValue? floatPropertyValue = floatingRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                if (clearPropertyValue.Equals(ClearPropertyValue.BOTH) || (floatPropertyValue.Equals(FloatPropertyValue.LEFT
+                    ) && clearPropertyValue.Equals(ClearPropertyValue.LEFT)) || (floatPropertyValue.Equals(FloatPropertyValue
+                    .RIGHT) && clearPropertyValue.Equals(ClearPropertyValue.RIGHT))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {

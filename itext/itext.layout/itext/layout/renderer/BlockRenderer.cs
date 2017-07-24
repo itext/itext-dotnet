@@ -64,8 +64,8 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
+            IDictionary<int, IRenderer> waitingFloatsSplitRenderers = new LinkedDictionary<int, IRenderer>();
             IList<IRenderer> waitingOverflowFloatRenderers = new List<IRenderer>();
-            IList<IRenderer> waitingSplitFloatRenderers = new List<IRenderer>();
             bool wasHeightClipped = false;
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool isPositioned = IsPositioned();
@@ -137,19 +137,18 @@ namespace iText.Layout.Renderer {
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
             IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
-            IList<IRenderer> ignoredChildRenderers = new List<IRenderer>();
             for (int childPos = 0; childPos < childRenderers.Count; childPos++) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult result;
                 childRenderer.SetParent(this);
                 MarginsCollapseInfo childMarginsInfo = null;
-                if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsFloatAffectedByClear(waitingOverflowFloatRenderers
-                    [waitingOverflowFloatRenderers.Count - 1].GetProperty<FloatPropertyValue?>(Property.FLOAT), childRenderer
-                    .GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
-                    return SplitIfClearRendererIsPresentAfterFloatRendererWasSplitted(childPos, waitingSplitFloatRenderers, waitingOverflowFloatRenderers
+                // TODO process correctly for floats with clear
+                if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsClearanceApplied(waitingOverflowFloatRenderers
+                    , childRenderer.GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
+                    return SplitIfClearRendererIsPresentAfterFloatRendererWasSplit(childPos, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers
                         , blockMaxHeight, wasHeightClipped, marginsCollapseHandler, layoutContext.GetArea().GetBBox(), clearHeightCorrection
                         , marginsCollapsingEnabled, isCellRenderer, paddings, borders, layoutContext.GetFloatRendererAreas(), 
-                        causeOfNothing);
+                        causeOfNothing, layoutBox);
                 }
                 if (marginsCollapsingEnabled) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
@@ -210,18 +209,14 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
-                                AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, ignoredChildRenderers
-                                    , result, childRenderer, floatRendererAreas, layoutContext.GetArea().GetBBox(), clearHeightCorrection, 
-                                    marginsCollapsingEnabled, waitingSplitFloatRenderers, waitingOverflowFloatRenderers, LayoutResult.PARTIAL
-                                    );
-                                AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
-                                splitRenderer.childRenderers.Add(result.GetSplitRenderer());
-                                FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(childRenderer, floatRendererAreas, parentBBox, clearHeightCorrection
-                                    , marginsCollapsingEnabled);
-                                if (splitAndOverflowRenderers.Length == 1) {
-                                    waitingSplitFloatRenderers = splitRenderer.childRenderers;
+                                AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, waitingFloatsSplitRenderers
+                                    , result, childRenderer, waitingOverflowFloatRenderers, LayoutResult.PARTIAL);
+                                if (splitAndOverflowRenderers == null) {
+                                    waitingFloatsSplitRenderers.Put(childPos, result.GetSplitRenderer());
                                     break;
                                 }
+                                AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
+                                splitRenderer.childRenderers.Add(result.GetSplitRenderer());
                                 AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
                                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
                                 if (HasProperty(Property.MAX_HEIGHT)) {
@@ -244,14 +239,13 @@ namespace iText.Layout.Renderer {
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), true);
+                                LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                                    (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                                 if (wasHeightClipped) {
-                                    LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
-                                        (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                                     return new LayoutResult(LayoutResult.FULL, editedArea, splitRenderer, null);
                                 }
                                 else {
-                                    return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer, causeOfNothing
-                                        );
+                                    return new LayoutResult(LayoutResult.PARTIAL, editedArea, splitRenderer, overflowRenderer, causeOfNothing);
                                 }
                             }
                             else {
@@ -265,15 +259,13 @@ namespace iText.Layout.Renderer {
                             if (result.GetStatus() == LayoutResult.NOTHING) {
                                 bool keepTogether = IsKeepTogether();
                                 int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
-                                AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, ignoredChildRenderers
-                                    , result, childRenderer, floatRendererAreas, layoutContext.GetArea().GetBBox(), clearHeightCorrection, 
-                                    marginsCollapsingEnabled, waitingSplitFloatRenderers, waitingOverflowFloatRenderers, layoutResult);
-                                AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
-                                waitingSplitFloatRenderers = splitRenderer.childRenderers;
-                                if (splitAndOverflowRenderers.Length == 1) {
-                                    ignoredChildRenderers.Add(childRenderer);
+                                AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, waitingFloatsSplitRenderers
+                                    , result, childRenderer, waitingOverflowFloatRenderers, layoutResult);
+                                if (splitAndOverflowRenderers == null) {
+                                    waitingFloatsSplitRenderers.Put(childPos, null);
                                     break;
                                 }
+                                AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                                 AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
                                 if (IsRelativePosition() && positionedRenderers.Count > 0) {
                                     overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
@@ -308,11 +300,15 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
-                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null, null);
+                                    LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                                        (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                                    return new LayoutResult(LayoutResult.FULL, editedArea, splitRenderer, null, null);
                                 }
                                 else {
                                     if (layoutResult != LayoutResult.NOTHING) {
-                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
+                                        LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                                            (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                                        return new LayoutResult(layoutResult, editedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
                                             .GetAreaBreak());
                                     }
                                     else {
@@ -335,8 +331,7 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
-                if (result.GetStatus() == LayoutResult.FULL && (waitingOverflowFloatRenderers.IsEmpty() || !FloatingHelper
-                    .IsRendererFloating(childRenderer))) {
+                if (result.GetStatus() == LayoutResult.FULL) {
                     layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     if (childRenderer.GetOccupiedArea() != null) {
                         // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
@@ -423,22 +418,39 @@ namespace iText.Layout.Renderer {
                 overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
                 overflowRenderer_1.GetChildRenderers().AddAll(waitingOverflowFloatRenderers);
             }
-            IRenderer splitRenderer_1;
-            if (!waitingSplitFloatRenderers.IsEmpty()) {
+            AbstractRenderer splitRenderer_1 = this;
+            if (!waitingFloatsSplitRenderers.IsEmpty()) {
                 splitRenderer_1 = CreateSplitRenderer(LayoutResult.PARTIAL);
-                splitRenderer_1.GetChildRenderers().AddAll(waitingSplitFloatRenderers);
+                splitRenderer_1.childRenderers = new List<IRenderer>(childRenderers);
+                ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer_1);
+            }
+            LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
+                (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            if (overflowRenderer_1 == null) {
+                return new LayoutResult(LayoutResult.FULL, editedArea_1, splitRenderer_1, null, causeOfNothing);
             }
             else {
-                splitRenderer_1 = this;
-            }
-            if (null == overflowRenderer_1) {
-                LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
-                    (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
-                return new LayoutResult(LayoutResult.FULL, editedArea, splitRenderer_1, null, causeOfNothing);
-            }
-            else {
-                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer_1, overflowRenderer_1, causeOfNothing
+                //            assert splitRenderer != this; // TODO review
+                return new LayoutResult(LayoutResult.PARTIAL, editedArea_1, splitRenderer_1, overflowRenderer_1, causeOfNothing
                     );
+            }
+        }
+
+        private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IRenderer
+             splitRenderer) {
+            foreach (KeyValuePair<int, IRenderer> waitingSplitRenderer in waitingFloatsSplitRenderers) {
+                if (waitingSplitRenderer.Value != null) {
+                    splitRenderer.GetChildRenderers()[waitingSplitRenderer.Key] = waitingSplitRenderer.Value;
+                }
+                else {
+                    //                splitRenderer.getChildRenderers().remove((int)waitingSplitRenderer.getKey());
+                    splitRenderer.GetChildRenderers()[(int)waitingSplitRenderer.Key] = null;
+                }
+            }
+            for (int i = splitRenderer.GetChildRenderers().Count - 1; i >= 0; --i) {
+                if (splitRenderer.GetChildRenderers()[i] == null) {
+                    splitRenderer.GetChildRenderers().JRemoveAt(i);
+                }
             }
         }
 
@@ -752,18 +764,24 @@ namespace iText.Layout.Renderer {
             return minMaxWidth;
         }
 
-        private LayoutResult SplitIfClearRendererIsPresentAfterFloatRendererWasSplitted(int childPos, IList<IRenderer
-            > waitingSplitRenderers, IList<IRenderer> waitingOverflowRenderers, float? blockMaxHeight, bool wasHeightClipped
-            , MarginsCollapseHandler marginsCollapseHandler, Rectangle parentBBox, float clearHeightCorrection, bool
-             marginsCollapsingEnabled, bool isCellRenderer, float[] paddings, Border[] borders, IList<Rectangle> floatRendererAreas
-            , IRenderer causeOfNothing) {
+        private LayoutResult SplitIfClearRendererIsPresentAfterFloatRendererWasSplit(int childPos, IDictionary<int
+            , IRenderer> waitingFloatsSplitRenderers, IList<IRenderer> waitingFloatsOverflowRenderers, float? blockMaxHeight
+            , bool wasHeightClipped, MarginsCollapseHandler marginsCollapseHandler, Rectangle parentBBox, float clearHeightCorrection
+            , bool marginsCollapsingEnabled, bool isCellRenderer, float[] paddings, Border[] borders, IList<Rectangle
+            > floatRendererAreas, IRenderer causeOfNothing, Rectangle layoutBox) {
+            if (marginsCollapsingEnabled && !isCellRenderer) {
+                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+            }
             AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
+            Rectangle splitRendererOccupiedArea = splitRenderer.GetOccupiedArea().GetBBox();
+            splitRendererOccupiedArea.IncreaseHeight(splitRendererOccupiedArea.GetY() - layoutBox.GetY()).SetY(layoutBox
+                .GetY());
             splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
-            splitRenderer.childRenderers = waitingSplitRenderers;
+            ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer);
             AbstractRenderer overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
             // Apply forced placement only on split renderer
             overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
-            overflowRenderer.childRenderers.AddAll(waitingOverflowRenderers);
+            overflowRenderer.childRenderers.AddAll(waitingFloatsOverflowRenderers);
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos, childRenderers.Count));
             if (HasProperty(Property.MAX_HEIGHT)) {
                 overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
@@ -782,9 +800,6 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
                     )blockMaxHeight);
             }
-            if (marginsCollapsingEnabled && !isCellRenderer) {
-                marginsCollapseHandler.EndMarginsCollapse(occupiedArea.GetBBox());
-            }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -798,22 +813,18 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, IList<IRenderer> ignoredChildRenderers
-            , LayoutResult result, IRenderer childRenderer, IList<Rectangle> floatRendererAreas, Rectangle parentBBox
-            , float clearHeightCorrection, bool marginsCollapsingEnabled, IList<IRenderer> waitingSplitFloatRenderers
-            , IList<IRenderer> waitingOverflowFloatRenderers, int layoutStatus) {
+        private AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, IDictionary<int, IRenderer> waitingFloatsSplitRenderers
+            , LayoutResult result, IRenderer childRenderer, IList<IRenderer> waitingOverflowFloatRenderers, int layoutStatus
+            ) {
             AbstractRenderer splitRenderer = CreateSplitRenderer(layoutStatus);
             splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
-            foreach (IRenderer ignoredRenderer in ignoredChildRenderers) {
-                splitRenderer.childRenderers.Remove(ignoredRenderer);
-            }
+            ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer);
             foreach (IRenderer renderer in splitRenderer.childRenderers) {
                 renderer.SetParent(splitRenderer);
             }
             if (FloatingHelper.IsRendererFloating(childRenderer)) {
-                //            ignoredChildRenderers.add(childRenderer);
                 waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
-                return new AbstractRenderer[] { splitRenderer };
+                return null;
             }
             AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutStatus);
             overflowRenderer.childRenderers.AddAll(waitingOverflowFloatRenderers);
