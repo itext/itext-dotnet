@@ -1131,9 +1131,6 @@ namespace iText.Layout.Renderer {
             splitRenderer.totalWidthForColumns = totalWidthForColumns;
             iText.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer(new Table.RowRange(rowRange.
                 GetStartRow() + row, rowRange.GetFinishRow()));
-            if (0 == row && !(hasContent || cellWithBigRowspanAdded) && 0 == rowRange.GetStartRow()) {
-                overflowRenderer.isOriginalNonSplitRenderer = true;
-            }
             overflowRenderer.rows = rows.SubList(row, rows.Count);
             splitRenderer.occupiedArea = occupiedArea;
             overflowRenderer.bordersHandler = bordersHandler;

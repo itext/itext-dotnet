@@ -1862,7 +1862,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1321")]
         public virtual void NestedTableMinMaxWidthException() {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
