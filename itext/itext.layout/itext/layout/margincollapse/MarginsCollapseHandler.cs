@@ -221,9 +221,6 @@ namespace iText.Layout.Margincollapse {
                 () && !lastKidCollapsedAfterHasClearanceApplied;
             if (lastChildMarginJoinedToParent) {
                 ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
-                if (ownCollapseAfter == null) {
-                    ownCollapseAfter = new MarginsCollapse();
-                }
             }
             else {
                 ownCollapseAfter = new MarginsCollapse();
