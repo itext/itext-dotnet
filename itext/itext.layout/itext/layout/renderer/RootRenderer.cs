@@ -72,7 +72,6 @@ namespace iText.Layout.Renderer {
 
         private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
-        // TODO process floats with clear
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
             // so we use this generic mechanism of determining which renderers have been just added.

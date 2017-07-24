@@ -69,7 +69,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -503,6 +503,466 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff13_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit02() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit02.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared floating div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(divClear);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff14_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit03() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit03.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(divClear);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff15_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearanceApplyingPageSplit04() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit04.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit04.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            // TODO Adding float at the end of the page, it doesn't fit at all.
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(divClear);
+            // TODO Adding cleared element which shall be after the previous float.
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff16_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearanceApplyingPageSplit05() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit05.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit05.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            // TODO Adding float at the end of the page, it is split.
+            Div divClear = new Div();
+            divClear.SetBorder(new SolidBorder(Color.GREEN, 2));
+            //
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            document.Add(divClear);
+            // TODO Adding empty element with clearance - it shall be placed after the overflow part of the float.
+            document.Add(new Paragraph(text));
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff15_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearanceApplyingPageSplit06() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit06.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit06.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared floating div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            containerDiv.Add(divClear);
+            // TODO Float with clear shall be drawn under the previous float on second page.
+            containerDiv.Add(new Paragraph(text));
+            // TODO text shall start on the first page.
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff23_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit07() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit07.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit07.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(divClear);
+            containerDiv.Add(new Paragraph(text));
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff24_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit08() {
+            // TODO process NOTHING case - only floats with nothing overflowed, clear is met
+            // TODO avoid possible infinite loop in this case.
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit08.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit08.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(divClear);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff25_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearanceApplyingPageSplit09() {
+            String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit09.pdf";
+            String outFile = destinationFolder + "clearanceApplyingPageSplit09.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div divClear = new Div();
+            divClear.SetBorder(new SolidBorder(Color.GREEN, 2));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(divClear);
+            containerDiv.Add(new Paragraph(text));
+            containerDiv.Add(new Paragraph(text));
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff26_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit01() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit01.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            document.Add(img);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff17_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void FloatsOnPageSplit02() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit02.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(200);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            document.Add(img);
+            // TODO Image shall have overflowed to the next page.
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff18_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit03() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit03.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph(text).SetWidth(250));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400).SetWidth(250);
+            document.Add(img);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff19_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit04() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit04.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit04.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff20_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void FloatsOnPageSplit05() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit05.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit05.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            // TODO Adding float that doesn't fit on first page.
+            Div div2 = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div2.Add(new Paragraph(text)).SetWidth(300);
+            div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div2);
+            // TODO Adding float that shall be after the previous float.
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff21_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit06() {
+            // TODO what if overflow renderer is not null already?? at the end of blockRenderer
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit06.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.SetHeight(600);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(img);
+            div.Add(new Paragraph("some small text"));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff22_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit07() {
+            // TODO floats with nothing overflowed, next normal kid returned NOTHING
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit07.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit07.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            containerDiv.Add(img);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff27_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit08() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit08.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            containerDiv.Add(img);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff28_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void FloatsOnPageSplit09() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit09.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit09.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div.Add(new Paragraph(text).SetWidth(250));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            // TODO Adding float that will be split.
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400).SetWidth(250);
+            containerDiv.Add(img);
+            // TODO Adding image that will not fit on first page. containerDiv shall return PARTIAL status
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff29_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit10() {
+            // TODO what if only floats are kids and all returned NOTHING - should return NOTHING
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit10.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit10.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff30_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit11() {
+            // TODO if some float returned NOTHING - all other floats should not be placed
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit11.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit11.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            div.Add(img);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div div2 = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            div2.Add(new Paragraph(text)).SetWidth(300);
+            div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div2);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff21_"));
         }
     }
 }

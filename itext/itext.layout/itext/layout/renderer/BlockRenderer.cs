@@ -142,7 +142,6 @@ namespace iText.Layout.Renderer {
                 LayoutResult result;
                 childRenderer.SetParent(this);
                 MarginsCollapseInfo childMarginsInfo = null;
-                // TODO process correctly for floats with clear
                 if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsClearanceApplied(waitingOverflowFloatRenderers
                     , childRenderer.GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
                     if (marginsCollapsingEnabled && !isCellRenderer) {
@@ -394,7 +393,6 @@ namespace iText.Layout.Renderer {
             ApplyVerticalAlignment();
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             if (!waitingOverflowFloatRenderers.IsEmpty()) {
-                // TODO what if overflow renderer is not null already?
                 overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
                 overflowRenderer_1.GetChildRenderers().AddAll(waitingOverflowFloatRenderers);
             }
