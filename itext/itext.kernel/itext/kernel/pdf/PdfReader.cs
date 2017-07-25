@@ -931,7 +931,7 @@ namespace iText.Kernel.Pdf {
                     else {
                         if (tokens.TokenValueEqualsTo(PdfTokenizer.F)) {
                             if (xref.Get(num) == null) {
-                                reference.SetFree();
+                                xref.FreeReference(reference, true);
                                 xref.Add(reference);
                             }
                         }

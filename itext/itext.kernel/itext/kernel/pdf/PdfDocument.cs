@@ -710,12 +710,16 @@ namespace iText.Kernel.Pdf {
                         FlushFonts();
                         writer.FlushWaitingObjects();
                         // flush unused objects
-                        if (IsFlushUnusedObjects()) {
-                            for (int i = 0; i < xref.Size(); i++) {
-                                PdfIndirectReference indirectReference = xref.Get(i);
-                                if (!indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED)) {
+                        for (int i = 0; i < xref.Size(); i++) {
+                            PdfIndirectReference indirectReference = xref.Get(i);
+                            if (indirectReference != null && !indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED
+                                )) {
+                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM)) {
                                     PdfObject @object = indirectReference.GetRefersTo();
                                     @object.Flush();
+                                }
+                                else {
+                                    indirectReference.SetFree();
                                 }
                             }
                         }

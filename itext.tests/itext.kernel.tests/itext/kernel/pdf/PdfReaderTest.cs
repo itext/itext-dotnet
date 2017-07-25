@@ -315,7 +315,7 @@ namespace iText.Kernel.Pdf {
             PdfPage testPage = document.RemovePage(1000);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
                 String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
