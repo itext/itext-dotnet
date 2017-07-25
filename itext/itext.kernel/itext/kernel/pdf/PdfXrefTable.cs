@@ -158,7 +158,6 @@ namespace iText.Kernel.Pdf {
             foreach (int? objNr in freeReferences) {
                 xref[(int)objNr].genNr++;
             }
-            freeReferences.Clear();
             for (int i = count; i > 0; --i) {
                 PdfIndirectReference lastRef = xref[i];
                 if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef.CheckState(PdfObject
@@ -276,7 +275,18 @@ namespace iText.Kernel.Pdf {
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
                     for (int i = first; i < first + len; i++) {
                         PdfIndirectReference reference = xrefTable.Get(i);
-                        StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
+                        StringBuilder off = new StringBuilder("0000000000");
+                        if (reference.IsFree()) {
+                            if (!freeReferences.IsEmpty()) {
+                                off.Append(freeReferences.PollFirst());
+                            }
+                        }
+                        else {
+                            /* if (freeReferences.isEmpty()), then we are at the
+                            last free reference. Its referral value must be object 0.
+                            */
+                            off.Append(reference.GetOffset());
+                        }
                         StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
                         writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen
                             .Length - 5, gen.Length)).WriteSpace();
@@ -307,6 +317,7 @@ namespace iText.Kernel.Pdf {
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
+            freeReferences.Clear();
             WriteKeyInfo(writer);
             writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
             xref = null;
