@@ -241,7 +241,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.IsFree()) {
                             xrefStream.GetOutputStream().Write(0);
                             //NOTE The object number of the next free object should be at this position due to spec.
-                            xrefStream.GetOutputStream().Write(IntToBytes(0));
+                            System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
+                            xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
                             xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
                         }
                         else {
