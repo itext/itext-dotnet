@@ -25,10 +25,12 @@ namespace iText.Kernel.Pdf {
                  + @out));
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
-            String[] expected = new String[] { "xref\n" + "0 4\n" + "0000000000 65535 f \n" + "0000000269 00000 n \n" 
-                + "0000000561 00000 n \n" + "0000000314 00000 n \n" + "12 3\n" + "0000000133 00000 n \n" + "0000000015 00000 n \n"
-                 + "0000000613 00000 n \n" };
+            String[] expected = new String[] { "xref\n" + "0 5\n" + "0000000010 65535 f \n" + "0000000269 00000 n \n" 
+                + "0000000561 00000 n \n" + "0000000314 00000 n \n" + "0000000011 65535 f \n" + "10 5\n" + "0000000000 00001 f \n"
+                 + "0000000000 00002 f \n" + "0000000133 00000 n \n" + "0000000015 00000 n \n" + "0000000613 00000 n \n"
+                 };
             // TODO first xref shall have no subsections
+            // TODO linked list of refs is invalid
             NUnit.Framework.Assert.AreEqual(expected, xrefString);
         }
 
@@ -40,6 +42,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), new PdfWriter(destinationFolder
                  + @out), new StampingProperties().UseAppendMode());
             pdfDocument.Close();
+            // TODO exception is thrown on attempt to read free reference
             String[] xrefString = ExtractXrefTableAsStrings(@out);
             String[] expected = new String[] { "xref\n" + "0 5\n" + "0000000010 65535 f \n" + "0000000269 00000 n \n" 
                 + "0000000569 00000 n \n" + "0000000314 00000 n \n" + "0000000000 65535 f \n" + "10 5\n" + "0000000011 00000 f \n"
@@ -63,9 +66,8 @@ namespace iText.Kernel.Pdf {
                 + "0000000564 00000 n \n" + "0000000310 00000 n \n" + "0000000132 00000 n \n" + "0000000015 00001 n \n"
                  + "0000000476 00000 n \n", "xref\n" + "0 1\n" + "0000000005 65535 n \n" + "3 3\n" + "0000000923 00000 n \n"
                  + "0000001170 00000 n \n" + "0000000000 00002 f \n" + "7 1\n" + "0000001303 00000 n \n", "xref\n" + "1 3\n"
-                 + "0000001706 00000 n \n" + "0000001998 00000 n \n" + "0000001751 00000 n \n" + "5 1\n" + "0000002055 00002 n \n"
-                 + "8 1\n" + "0000002156 00000 n \n" };
-            // TODO fifth object is no longer free, however zero obj not updated
+                 + "0000001706 00000 n \n" + "0000001998 00000 n \n" + "0000001751 00000 n \n" + "8 2\n" + "0000002055 00000 n \n"
+                 + "0000002156 00000 n \n" };
             NUnit.Framework.Assert.AreEqual(expected, xrefString);
         }
 
@@ -82,6 +84,7 @@ namespace iText.Kernel.Pdf {
             contentsRef.SetFree();
             PdfObject freedContentsRefRefersTo = contentsRef.GetRefersTo();
             NUnit.Framework.Assert.IsNull(freedContentsRefRefersTo);
+            // TODO assertion fails. Free reference should not be reread, see freeReferencesTest02
             pdfDocument.Close();
         }
 
@@ -126,10 +129,9 @@ namespace iText.Kernel.Pdf {
             pdfDocument.AddNewPage();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
-            String[] expected = new String[] { "xref\n" + "0 4\n" + "0000000000 65535 f \n" + "0000000203 00000 n \n" 
-                + "0000000414 00000 n \n" + "0000000248 00000 n \n" + "5 2\n" + "0000000088 00000 n \n" + "0000000015 00000 n \n"
-                 };
-            // TODO first xref shall have no subsections
+            String[] expected = new String[] { "xref\n" + "0 7\n" + "0000000004 65535 f \n" + "0000000203 00000 n \n" 
+                + "0000000414 00000 n \n" + "0000000248 00000 n \n" + "0000000000 00001 f \n" + "0000000088 00000 n \n"
+                 + "0000000015 00000 n \n" };
             NUnit.Framework.Assert.AreEqual(expected, xrefString);
         }
 
