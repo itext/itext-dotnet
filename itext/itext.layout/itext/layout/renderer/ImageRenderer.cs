@@ -118,10 +118,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflowX = parent != null ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : null;
             OverflowPropertyValue? overflowY = (null == RetrieveMaxHeight() || RetrieveMaxHeight() > layoutBox.GetHeight
-                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent.GetProperty<OverflowPropertyValue?
-                >(Property.OVERFLOW_Y);
+                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : (parent != null ? parent.GetProperty
+                <OverflowPropertyValue?>(Property.OVERFLOW_Y) : null);
             bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
             bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
@@ -398,25 +399,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this), availableWidth);
-            if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
-                float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
-                float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
-                if (minWidth == null || maxWidth == null) {
-                    minMaxWidth = ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                        , AbstractRenderer.INF))))).GetMinMaxWidth();
-                }
-                if (minWidth != null) {
-                    minMaxWidth.SetChildrenMinWidth((float)minWidth);
-                }
-                if (maxWidth != null) {
-                    minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
-                }
-                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
-                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
-                }
-            }
-            return minMaxWidth;
+            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
+                AbstractRenderer.INF))))).GetMinMaxWidth();
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
