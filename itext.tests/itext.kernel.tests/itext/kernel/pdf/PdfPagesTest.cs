@@ -162,7 +162,7 @@ namespace iText.Kernel.Pdf {
             PdfPage testPage = document.RemovePage(1000);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
             for (int i = 0; i < pages.Length; i++) {
                 NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i]), "Remove page");
                 document.AddPage(i + 1, pages[i]);

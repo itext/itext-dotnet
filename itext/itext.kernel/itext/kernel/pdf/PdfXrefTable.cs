@@ -103,21 +103,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Creates next available indirect reference.</summary>
         /// <returns>created indirect reference.</returns>
         protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
-            PdfIndirectReference reference;
-            if (freeReferences.Count > 0) {
-                int num = (int)freeReferences.PollFirst();
-                reference = xref[num];
-                if (reference == null) {
-                    reference = new PdfIndirectReference(document, num);
-                    xref[num] = reference;
-                }
-                reference.SetOffset(0);
-                reference.ClearState(PdfObject.FREE);
-            }
-            else {
-                reference = new PdfIndirectReference(document, ++count);
-                Add(reference);
-            }
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
