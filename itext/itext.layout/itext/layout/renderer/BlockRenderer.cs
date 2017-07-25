@@ -96,9 +96,7 @@ namespace iText.Layout.Renderer {
             }
             bool isCellRenderer = this is CellRenderer;
             if (marginsCollapsingEnabled) {
-                if (!isCellRenderer) {
-                    marginsCollapseHandler.StartMarginsCollapse(parentBBox);
-                }
+                marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
@@ -141,9 +139,7 @@ namespace iText.Layout.Renderer {
                         if (result.GetStatus() != LayoutResult.NOTHING) {
                             marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                         }
-                        if (!isCellRenderer) {
-                            marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-                        }
+                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
                         (Property.FILL_AVAILABLE_AREA))) {
@@ -338,7 +334,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
-            if (marginsCollapsingEnabled && !isCellRenderer) {
+            if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
