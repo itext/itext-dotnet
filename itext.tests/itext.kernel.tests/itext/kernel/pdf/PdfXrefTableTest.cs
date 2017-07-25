@@ -17,7 +17,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -31,11 +31,10 @@ namespace iText.Kernel.Pdf {
             // create XMP metadata
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
-            pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updated));
             PdfXrefTable xref = pdfDocument.GetXref();
-            PdfIndirectReference freeRef = xref.Get(xref.Size() - 2);
-            // 6
+            PdfIndirectReference ref0 = xref.Get(0);
+            PdfIndirectReference freeRef = xref.Get(6);
+            pdfDocument.Close();
             /*
             Current xref structure:
             xref
@@ -50,9 +49,8 @@ namespace iText.Kernel.Pdf {
             0000000561 00000 n
             */
             NUnit.Framework.Assert.IsTrue(freeRef.IsFree());
-            NUnit.Framework.Assert.AreEqual(xref.Get(0).offsetOrIndex, freeRef.objNr);
+            NUnit.Framework.Assert.AreEqual(ref0.offsetOrIndex, freeRef.objNr);
             NUnit.Framework.Assert.AreEqual(1, freeRef.genNr);
-            pdfDocument.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -69,13 +67,11 @@ namespace iText.Kernel.Pdf {
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain));
-            pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updatedAgain));
             PdfXrefTable xref = pdfDocument.GetXref();
-            PdfIndirectReference freeRef1 = xref.Get(xref.Size() - 3);
-            // 6
-            PdfIndirectReference freeRef2 = xref.Get(xref.Size() - 2);
-            // 7
+            PdfIndirectReference ref0 = xref.Get(0);
+            PdfIndirectReference freeRef1 = xref.Get(6);
+            PdfIndirectReference freeRef2 = xref.Get(7);
+            pdfDocument.Close();
             /*
             Current xref structure:
             xref
@@ -86,13 +82,13 @@ namespace iText.Kernel.Pdf {
             0000000263 00000 n
             0000000088 00000 n
             0000000015 00000 n
-            0000000007 00002 f % this is object 6; 7 refers to free object 7; note generation number
+            0000000007 00001 f % this is object 6; 7 refers to free object 7; note generation number
             0000000000 00001 f % this is object 7; 0 refers to free object 0; note generation number
             0000000561 00000 n
             */
             NUnit.Framework.Assert.IsTrue(freeRef1.IsFree());
-            NUnit.Framework.Assert.AreEqual(xref.Get(0).offsetOrIndex, freeRef1.objNr);
-            NUnit.Framework.Assert.AreEqual(2, freeRef1.genNr);
+            NUnit.Framework.Assert.AreEqual(ref0.offsetOrIndex, freeRef1.objNr);
+            NUnit.Framework.Assert.AreEqual(1, freeRef1.genNr);
             NUnit.Framework.Assert.IsTrue(freeRef2.IsFree());
             NUnit.Framework.Assert.AreEqual(freeRef1.offsetOrIndex, freeRef2.objNr);
             NUnit.Framework.Assert.AreEqual(1, freeRef2.genNr);

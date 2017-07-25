@@ -254,11 +254,8 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
-        // NOTE In append mode object could be OriginalObjectStream, but not Modified,
-        // so information about this reference would not be added to the new Cross-Reference table.
-        // In stamp mode without append the reference will be free.
         protected internal virtual bool IsFree() {
-            return CheckState(FREE) || CheckState(ORIGINAL_OBJECT_STREAM);
+            return CheckState(FREE);
         }
 
         protected internal override PdfObject NewInstance() {
