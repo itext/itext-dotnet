@@ -225,7 +225,9 @@ namespace iText.Layout.Margincollapse {
             else {
                 ownCollapseAfter = new MarginsCollapse();
             }
-            ownCollapseAfter.JoinMargin(GetModelBottomMargin(renderer));
+            if (ownCollapseAfter != null) {
+                ownCollapseAfter.JoinMargin(GetModelBottomMargin(renderer));
+            }
             collapseInfo.SetOwnCollapseAfter(ownCollapseAfter);
             if (collapseInfo.IsSelfCollapsing()) {
                 if (prevChildMarginInfo != null) {
@@ -268,7 +270,8 @@ namespace iText.Layout.Margincollapse {
         }
 
         private void UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(MarginsCollapse collapseAfter) {
-            if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
+            if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop() && collapseAfter 
+                != null) {
                 // prevChildMarginInfo.isIgnoreOwnMarginTop() is true only if it's the first kid and is adjoined to parent margin
                 collapseInfo.GetCollapseBefore().JoinMargin(collapseAfter);
             }
