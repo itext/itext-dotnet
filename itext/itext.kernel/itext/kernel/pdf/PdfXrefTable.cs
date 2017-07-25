@@ -116,7 +116,6 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
-            reference.SetOffset(0);
             reference.SetState(PdfObject.FREE);
             if (!reference.CheckState(PdfObject.FLUSHED)) {
                 if (reference.refersTo != null) {
