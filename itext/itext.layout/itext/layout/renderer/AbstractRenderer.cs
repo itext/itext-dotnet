@@ -940,7 +940,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             else {
-                width = maxWidth;
+                if (maxWidth != null) {
+                    width = maxWidth < parentBoxWidth ? maxWidth : null;
+                }
             }
             if (width != null && IsBorderBoxSizing(this)) {
                 width -= CalculatePaddingBorderWidth(this);

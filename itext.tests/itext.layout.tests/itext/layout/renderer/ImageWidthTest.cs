@@ -126,7 +126,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(0.0, minMaxWidth.GetMaxWidth() - minMaxWidth.GetMinWidth(), EPSILON);
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePercentValue(50));
             minMaxWidth = renderer.GetMinMaxWidth(5000);
-            NUnit.Framework.Assert.AreEqual(2500.0, minMaxWidth.GetMaxWidth(), EPSILON);
+            NUnit.Framework.Assert.AreEqual(1024.0, minMaxWidth.GetMaxWidth(), EPSILON);
             minMaxWidth = renderer.GetMinMaxWidth(500);
             NUnit.Framework.Assert.AreEqual(250.0, minMaxWidth.GetMaxWidth(), EPSILON);
             image.SetProperty(Property.MAX_HEIGHT, 100f);
@@ -137,12 +137,12 @@ namespace iText.Layout.Renderer {
             image.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(2000));
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(3000));
             minMaxWidth = renderer.GetMinMaxWidth(5000);
-            NUnit.Framework.Assert.AreEqual(3000.0, minMaxWidth.GetMaxWidth(), EPSILON);
+            NUnit.Framework.Assert.AreEqual(2000.0, minMaxWidth.GetMaxWidth(), EPSILON);
             NUnit.Framework.Assert.AreEqual(0.0, minMaxWidth.GetMaxWidth() - minMaxWidth.GetMinWidth(), EPSILON);
             image.SetProperty(Property.MIN_HEIGHT, 100f);
             image.SetProperty(Property.HEIGHT, 100f);
             minMaxWidth = renderer.GetMinMaxWidth(5000);
-            NUnit.Framework.Assert.AreEqual(3000, minMaxWidth.GetMaxWidth(), EPSILON);
+            NUnit.Framework.Assert.AreEqual(100.0 * 1024.0 / 768.0, minMaxWidth.GetMaxWidth(), EPSILON);
         }
     }
 }
