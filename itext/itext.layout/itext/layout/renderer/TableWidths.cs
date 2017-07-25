@@ -69,7 +69,11 @@ namespace iText.Layout.Renderer {
 
         private bool fixedTableLayout = false;
 
+        private float layoutMinWidth;
+
         private float tableMinWidth;
+
+        private float tableMaxWidth;
 
         internal TableWidths(TableRenderer tableRenderer, float availableWidth, bool calculateTableMaxWidth, float
              rightBorderMaxWidth, float leftBorderMaxWidth) {
@@ -95,7 +99,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal float GetMinWidth() {
-            return tableMinWidth;
+            return layoutMinWidth;
         }
 
         internal float[] AutoLayout() {
@@ -307,9 +311,14 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (tableWidthBasedOnPercents <= tableWidth) {
-                        tableWidth = tableWidthBasedOnPercents;
-                        //we don't need more space, columns are done based on column's max width.
-                        toBalance = false;
+                        if (tableWidthBasedOnPercents >= minTableWidth) {
+                            tableWidth = tableWidthBasedOnPercents;
+                            //we don't need more space, columns are done based on column's max width.
+                            toBalance = false;
+                        }
+                        else {
+                            tableWidth = minTableWidth;
+                        }
                     }
                 }
                 if (sumOfPercents > 0 && sumOfPercents < 100 && totalNonPercent == 0) {
@@ -433,6 +442,7 @@ namespace iText.Layout.Renderer {
                                 else {
                                     float totalFixed = 0;
                                     float totalFlexible = 0;
+                                    float flexibleCount = 0;
                                     for (int i = 0; i < numberOfColumns; i++) {
                                         if (widths[i].isFixed) {
                                             widths[i].finalWidth = widths[i].width;
@@ -441,13 +451,15 @@ namespace iText.Layout.Renderer {
                                         else {
                                             if (!widths[i].isPercent) {
                                                 totalFlexible += widths[i].width;
+                                                flexibleCount++;
                                             }
                                         }
                                     }
+                                    System.Diagnostics.Debug.Assert(totalFlexible > 0 || flexibleCount > 0);
                                     extraWidth = tableWidth - totalPercent - totalFixed;
                                     for (int i = 0; i < numberOfColumns; i++) {
                                         if (!widths[i].isPercent && !widths[i].isFixed) {
-                                            widths[i].finalWidth = widths[i].width * extraWidth / totalFlexible;
+                                            widths[i].finalWidth = totalFlexible > 0 ? widths[i].width * extraWidth / totalFlexible : extraWidth / flexibleCount;
                                         }
                                     }
                                 }
@@ -554,13 +566,13 @@ namespace iText.Layout.Renderer {
             UnitValue width = tableRenderer.GetProperty<UnitValue>(Property.WIDTH);
             if (fixedTableLayout && width != null && width.GetValue() >= 0) {
                 fixedTableWidth = true;
-                tableWidth = RetrieveTableWidth(width, availableWidth);
-                tableMinWidth = width.IsPercentValue() ? 0 : tableWidth;
+                tableWidth = (float)RetrieveTableWidth(width, availableWidth);
+                layoutMinWidth = width.IsPercentValue() ? 0 : tableWidth;
             }
             else {
                 fixedTableLayout = false;
                 //min width will initialize later
-                tableMinWidth = -1;
+                layoutMinWidth = -1;
                 if (calculateTableMaxWidth) {
                     fixedTableWidth = false;
                     tableWidth = RetrieveTableWidth(availableWidth);
@@ -568,7 +580,7 @@ namespace iText.Layout.Renderer {
                 else {
                     if (width != null && width.GetValue() >= 0) {
                         fixedTableWidth = true;
-                        tableWidth = RetrieveTableWidth(width, availableWidth);
+                        tableWidth = (float)RetrieveTableWidth(width, availableWidth);
                     }
                     else {
                         fixedTableWidth = false;
@@ -576,9 +588,25 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            float? min = RetrieveTableWidth(tableRenderer.GetProperty<UnitValue>(Property.MIN_WIDTH), availableWidth);
+            float? max = RetrieveTableWidth(tableRenderer.GetProperty<UnitValue>(Property.MAX_WIDTH), availableWidth);
+            tableMinWidth = min != null ? (float)min : layoutMinWidth;
+            tableMaxWidth = max != null ? (float)max : tableWidth;
+            if (tableMinWidth > tableMaxWidth) {
+                tableMaxWidth = tableMinWidth;
+            }
+            if (tableMinWidth > tableWidth) {
+                tableWidth = tableMinWidth;
+            }
+            if (tableMaxWidth < tableWidth) {
+                tableWidth = tableMaxWidth;
+            }
         }
 
-        private float RetrieveTableWidth(UnitValue width, float availableWidth) {
+        private float? RetrieveTableWidth(UnitValue width, float availableWidth) {
+            if (width == null) {
+                return null;
+            }
             return RetrieveTableWidth(width.IsPercentValue() ? width.GetValue() * availableWidth / 100 : width.GetValue
                 ());
         }
@@ -679,13 +707,13 @@ namespace iText.Layout.Renderer {
 
         private float[] ExtractWidths() {
             float actualWidth = 0;
-            tableMinWidth = 0;
+            layoutMinWidth = 0;
             float[] columnWidths = new float[widths.Length];
             for (int i = 0; i < widths.Length; i++) {
                 System.Diagnostics.Debug.Assert(widths[i].finalWidth >= 0);
                 columnWidths[i] = widths[i].finalWidth;
                 actualWidth += widths[i].finalWidth;
-                tableMinWidth += widths[i].min;
+                layoutMinWidth += widths[i].min;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));

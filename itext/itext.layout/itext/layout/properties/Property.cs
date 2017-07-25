@@ -216,7 +216,11 @@ namespace iText.Layout.Properties {
 
         public const int MAX_HEIGHT = 84;
 
+        public const int MAX_WIDTH = 107;
+
         public const int MIN_HEIGHT = 85;
+
+        public const int MIN_WIDTH = 108;
 
         public const int OPACITY = 92;
 

@@ -99,7 +99,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
+            float? retrievedWidth = HasProperty(Property.WIDTH) ? RetrieveWidth(layoutBox.GetWidth()) : null;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
@@ -118,10 +118,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflowX = parent != null ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : null;
             OverflowPropertyValue? overflowY = (null == RetrieveMaxHeight() || RetrieveMaxHeight() > layoutBox.GetHeight
-                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent.GetProperty<OverflowPropertyValue?
-                >(Property.OVERFLOW_Y);
+                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : (parent != null ? parent.GetProperty
+                <OverflowPropertyValue?>(Property.OVERFLOW_Y) : null);
             bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
             bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
@@ -175,14 +176,30 @@ namespace iText.Layout.Renderer {
                     height *= (float)verticalScaling;
                 }
             }
-            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
-                width *= RetrieveMinHeight() / height;
-                height = RetrieveMinHeight();
+            // Constrain width and height according to min/max width
+            float? minWidth = RetrieveMinWidth(layoutBox.GetWidth());
+            float? maxWidth = RetrieveMaxWidth(layoutBox.GetWidth());
+            if (null != minWidth && width < minWidth) {
+                height *= minWidth / width;
+                width = minWidth;
             }
             else {
-                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
-                    width *= RetrieveMaxHeight() / height;
-                    height = RetrieveMaxHeight();
+                if (null != maxWidth && width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            }
+            // Constrain width and height according to min/max height, which has precedence over width settings
+            float? minHeight = RetrieveMinHeight();
+            float? maxHeight = RetrieveMaxHeight();
+            if (null != minHeight && height < minHeight) {
+                width *= minHeight / height;
+                height = minHeight;
+            }
+            else {
+                if (null != maxHeight && height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
                 }
                 else {
                     if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {

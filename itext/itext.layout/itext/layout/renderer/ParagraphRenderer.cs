@@ -130,7 +130,7 @@ namespace iText.Layout.Renderer {
             float[] paddings = GetPaddings();
             float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             ApplyWidth(parentBBox, blockWidth, overflowX);
-            wasHeightClipped = ApplyHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
+            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
@@ -548,17 +548,30 @@ namespace iText.Layout.Renderer {
             MinMaxWidth minMaxWidth = new MinMaxWidth(0, availableWidth);
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
-                bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
-                SetProperty(Property.ROTATION_ANGLE, null);
-                MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
-                    (availableWidth, AbstractRenderer.INF))));
-                if (restoreRotation) {
-                    SetProperty(Property.ROTATION_ANGLE, rotation);
+                float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
+                float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
+                if (minWidth == null || maxWidth == null) {
+                    bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
+                    SetProperty(Property.ROTATION_ANGLE, null);
+                    MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
+                        (availableWidth, AbstractRenderer.INF))));
+                    if (restoreRotation) {
+                        SetProperty(Property.ROTATION_ANGLE, rotation);
+                    }
+                    else {
+                        DeleteOwnProperty(Property.ROTATION_ANGLE);
+                    }
+                    minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
                 }
-                else {
-                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                if (minWidth != null) {
+                    minMaxWidth.SetChildrenMinWidth((float)minWidth);
                 }
-                minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
+                if (maxWidth != null) {
+                    minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
+                }
+                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
+                }
             }
             else {
                 minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));

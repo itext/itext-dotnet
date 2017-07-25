@@ -97,9 +97,7 @@ namespace iText.Layout.Renderer {
             }
             bool isCellRenderer = this is CellRenderer;
             if (marginsCollapsingEnabled) {
-                if (!isCellRenderer) {
-                    marginsCollapseHandler.StartMarginsCollapse(parentBBox);
-                }
+                marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
@@ -110,7 +108,7 @@ namespace iText.Layout.Renderer {
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property
                 .OVERFLOW_Y);
             ApplyWidth(parentBBox, blockWidth, overflowX);
-            wasHeightClipped = ApplyHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, isCellRenderer, wasParentsHeightClipped
+            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, isCellRenderer, wasParentsHeightClipped
                 , overflowY);
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -181,7 +179,7 @@ namespace iText.Layout.Renderer {
                         waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
                         break;
                     }
-                    if (marginsCollapsingEnabled && !isCellRenderer) {
+                    if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
@@ -332,7 +330,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
-            if (marginsCollapsingEnabled && !isCellRenderer) {
+            if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
@@ -725,14 +723,23 @@ namespace iText.Layout.Renderer {
 
         internal virtual void ApplyWidth(Rectangle parentBBox, float? blockWidth, OverflowPropertyValue? overflowX
             ) {
+            // maxWidth has already taken in attention in blockWidth,
+            // therefore only `parentBBox > minWidth` needs to be checked.
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (null
                  != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX)))) {
                 parentBBox.SetWidth((float)blockWidth);
             }
+            else {
+                float? minWidth = RetrieveMinWidth(parentBBox.GetWidth());
+                //Shall we check overflow-x here?
+                if (minWidth != null && minWidth > parentBBox.GetWidth()) {
+                    parentBBox.SetWidth((float)minWidth);
+                }
+            }
         }
 
-        internal virtual bool ApplyHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
+        internal virtual bool ApplyMaxHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
             , bool isCellRenderer, bool wasParentsHeightClipped, OverflowPropertyValue? overflowY) {
             if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (null == overflowY || OverflowPropertyValue
                 .FIT.Equals(overflowY)))) {
@@ -775,18 +782,31 @@ namespace iText.Layout.Renderer {
         protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this), availableWidth);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
-                AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
-                foreach (IRenderer childRenderer in childRenderers) {
-                    MinMaxWidth childMinMaxWidth;
-                    childRenderer.SetParent(this);
-                    if (childRenderer is AbstractRenderer) {
-                        childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(availableWidth);
+                float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
+                float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
+                if (minWidth == null || maxWidth == null) {
+                    AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+                    foreach (IRenderer childRenderer in childRenderers) {
+                        MinMaxWidth childMinMaxWidth;
+                        childRenderer.SetParent(this);
+                        if (childRenderer is AbstractRenderer) {
+                            childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(availableWidth);
+                        }
+                        else {
+                            childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, availableWidth);
+                        }
+                        handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
+                        handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
                     }
-                    else {
-                        childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, availableWidth);
-                    }
-                    handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
-                    handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
+                }
+                if (minWidth != null) {
+                    minMaxWidth.SetChildrenMinWidth((float)minWidth);
+                }
+                if (maxWidth != null) {
+                    minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
+                }
+                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
                 }
             }
             if (this.GetPropertyAsFloat(Property.ROTATION_ANGLE) != null) {

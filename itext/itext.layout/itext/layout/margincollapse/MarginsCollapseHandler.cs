@@ -531,7 +531,8 @@ namespace iText.Layout.Margincollapse {
 
         private static float GetModelTopMargin(IRenderer renderer) {
             float? margin = renderer.GetModelElement().GetProperty<float?>(Property.MARGIN_TOP);
-            return margin != null ? (float)margin : 0;
+            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
+            return margin != null && !(renderer is CellRenderer) ? (float)margin : 0;
         }
 
         private static void IgnoreModelTopMargin(IRenderer renderer) {
@@ -544,7 +545,8 @@ namespace iText.Layout.Margincollapse {
 
         private static float GetModelBottomMargin(IRenderer renderer) {
             float? margin = renderer.GetModelElement().GetProperty<float?>(Property.MARGIN_BOTTOM);
-            return margin != null ? (float)margin : 0;
+            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
+            return margin != null && !(renderer is CellRenderer) ? (float)margin : 0;
         }
 
         private static void IgnoreModelBottomMargin(IRenderer renderer) {
