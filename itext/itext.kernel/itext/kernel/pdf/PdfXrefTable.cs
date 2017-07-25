@@ -198,7 +198,7 @@ namespace iText.Kernel.Pdf {
                 sections.Add(first);
                 sections.Add(len);
             }
-            if (document.properties.appendMode && sections.Count == 2 && sections[0] == 0 && sections[1] == 1) {
+            if (document.properties.appendMode && sections.Count == 2 && sections[1] == 1) {
                 // no modifications.
                 xref = null;
                 return;
