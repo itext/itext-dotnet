@@ -714,7 +714,7 @@ namespace iText.Kernel.Pdf {
                             PdfIndirectReference indirectReference = xref.Get(i);
                             if (indirectReference != null && !indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED
                                 )) {
-                                if (IsFlushUnusedObjects()) {
+                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM)) {
                                     PdfObject @object = indirectReference.GetRefersTo();
                                     @object.Flush();
                                 }
