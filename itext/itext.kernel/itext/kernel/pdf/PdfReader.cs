@@ -917,7 +917,12 @@ namespace iText.Kernel.Pdf {
                             reference.ClearState(PdfObject.READING);
                         }
                         else {
-                            continue;
+                            if (reference.objNr == 0 && pos != 0L) {
+                                reference.SetIndex(pos);
+                            }
+                            else {
+                                continue;
+                            }
                         }
                     }
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.N)) {
