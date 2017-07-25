@@ -945,7 +945,7 @@ namespace iText.Layout.Renderer {
             if (width != null && IsBorderBoxSizing(this)) {
                 width -= CalculatePaddingBorderWidth(this);
             }
-            return width != null ? (float?) Math.Max(0, (float)width) : null;
+            return width != null ? (float?)Math.Max(0, (float)width) : null;
         }
 
         /// <summary>Retrieves element's fixed content box max width, if it's set.</summary>
