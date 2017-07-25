@@ -1396,11 +1396,13 @@ namespace iText.Layout.Renderer {
         protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
             // retrieve returns max width, if there is no width.
             if (HasAbsoluteUnitValue(Property.WIDTH)) {
+                //Renderer may override retrieveWidth, double check is required.
                 float? width = RetrieveWidth(0);
-                System.Diagnostics.Debug.Assert(width != null);
-                minMaxWidth.SetChildrenMaxWidth((float)width);
-                minMaxWidth.SetChildrenMinWidth((float)width);
-                return true;
+                if (width != null) {
+                    minMaxWidth.SetChildrenMaxWidth((float)width);
+                    minMaxWidth.SetChildrenMinWidth((float)width);
+                    return true;
+                }
             }
             return false;
         }
