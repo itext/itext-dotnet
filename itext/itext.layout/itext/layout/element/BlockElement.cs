@@ -353,6 +353,16 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        public virtual T SetMaxWidth(float maxWidth) {
+            SetProperty(Property.MAX_WIDTH, maxWidth);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMinWidth(float minWidth) {
+            SetProperty(Property.MIN_WIDTH, minWidth);
+            return (T)(Object)this;
+        }
+
         public abstract AccessibilityProperties GetAccessibilityProperties();
 
         public abstract PdfName GetRole();
