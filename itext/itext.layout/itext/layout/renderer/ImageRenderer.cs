@@ -99,7 +99,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
+            float? retrievedWidth = HasProperty(Property.WIDTH) ? RetrieveWidth(layoutBox.GetWidth()) : null;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
