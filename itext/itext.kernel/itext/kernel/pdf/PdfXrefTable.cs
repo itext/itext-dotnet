@@ -139,7 +139,6 @@ namespace iText.Kernel.Pdf {
                 if (reference.GetGenNumber() < MAX_GENERATION) {
                     freeReferences.Add(reference.GetObjNumber());
                     EnsureCount(Math.Max(this.count, reference.GetObjNumber()));
-                    xref[reference.GetObjNumber()] = null;
                 }
             }
         }
@@ -155,16 +154,9 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
-            if (document.IsAppendMode()) {
-                // Increment generation number for all freed references.
-                foreach (int? objNr in freeReferences) {
-                    xref[(int)objNr].genNr++;
-                }
-            }
-            else {
-                foreach (int? objNr in freeReferences) {
-                    xref[(int)objNr] = null;
-                }
+            // Increment generation number for all freed references.
+            foreach (int? objNr in freeReferences) {
+                xref[(int)objNr].genNr++;
             }
             freeReferences.Clear();
             for (int i = count; i > 0; --i) {
@@ -187,8 +179,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i < Size(); i++) {
                 PdfIndirectReference reference = xref[i];
                 if (reference != null) {
-                    if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
-                         reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED))) {
+                    if (document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) {
                         reference = null;
                     }
                 }

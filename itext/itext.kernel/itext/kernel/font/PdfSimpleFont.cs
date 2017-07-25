@@ -112,12 +112,7 @@ namespace iText.Kernel.Font {
                         processed++;
                     }
                     else {
-                        if (glyph == null && TextUtil.IsWhitespaceOrNonPrintable((int)text[i])) {
-                            processed++;
-                        }
-                        else {
-                            break;
-                        }
+                        break;
                     }
                 }
             }
