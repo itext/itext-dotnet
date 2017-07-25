@@ -442,6 +442,7 @@ namespace iText.Layout.Renderer {
                                 else {
                                     float totalFixed = 0;
                                     float totalFlexible = 0;
+                                    float flexibleCount = 0;
                                     for (int i = 0; i < numberOfColumns; i++) {
                                         if (widths[i].isFixed) {
                                             widths[i].finalWidth = widths[i].width;
@@ -450,13 +451,15 @@ namespace iText.Layout.Renderer {
                                         else {
                                             if (!widths[i].isPercent) {
                                                 totalFlexible += widths[i].width;
+                                                flexibleCount++;
                                             }
                                         }
                                     }
+                                    System.Diagnostics.Debug.Assert(totalFlexible > 0 || flexibleCount > 0);
                                     extraWidth = tableWidth - totalPercent - totalFixed;
                                     for (int i = 0; i < numberOfColumns; i++) {
                                         if (!widths[i].isPercent && !widths[i].isFixed) {
-                                            widths[i].finalWidth = widths[i].width * extraWidth / totalFlexible;
+                                            widths[i].finalWidth = totalFlexible > 0 ? widths[i].width * extraWidth / totalFlexible : extraWidth / flexibleCount;
                                         }
                                     }
                                 }
