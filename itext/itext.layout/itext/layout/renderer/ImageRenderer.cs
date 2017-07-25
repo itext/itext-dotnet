@@ -175,14 +175,30 @@ namespace iText.Layout.Renderer {
                     height *= (float)verticalScaling;
                 }
             }
-            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
-                width *= RetrieveMinHeight() / height;
-                height = RetrieveMinHeight();
+            // Constrain width and height according to min/max width
+            float? minWidth = RetrieveMinWidth(layoutBox.GetWidth());
+            float? maxWidth = RetrieveMaxWidth(layoutBox.GetWidth());
+            if (null != minWidth && width < minWidth) {
+                height *= minWidth / width;
+                width = minWidth;
             }
             else {
-                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
-                    width *= RetrieveMaxHeight() / height;
-                    height = RetrieveMaxHeight();
+                if (null != maxWidth && width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            }
+            // Constrain width and height according to min/max height, which has precedence over width settings
+            float? minHeight = RetrieveMinHeight();
+            float? maxHeight = RetrieveMaxHeight();
+            if (null != minHeight && height < minHeight) {
+                width *= minHeight / height;
+                height = minHeight;
+            }
+            else {
+                if (null != maxHeight && height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
                 }
                 else {
                     if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
@@ -382,8 +398,25 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
-                AbstractRenderer.INF))))).GetMinMaxWidth();
+            MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this), availableWidth);
+            if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
+                float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
+                float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
+                if (minWidth == null || maxWidth == null) {
+                    minMaxWidth = ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
+                        , AbstractRenderer.INF))))).GetMinMaxWidth();
+                }
+                if (minWidth != null) {
+                    minMaxWidth.SetChildrenMinWidth((float)minWidth);
+                }
+                if (maxWidth != null) {
+                    minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
+                }
+                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
+                }
+            }
+            return minMaxWidth;
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {

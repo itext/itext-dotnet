@@ -798,6 +798,9 @@ namespace iText.Layout.Renderer {
                 if (maxWidth != null) {
                     minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
                 }
+                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
+                }
             }
             if (this.GetPropertyAsFloat(Property.ROTATION_ANGLE) != null) {
                 return RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this);

@@ -569,6 +569,9 @@ namespace iText.Layout.Renderer {
                 if (maxWidth != null) {
                     minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
                 }
+                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
+                }
             }
             else {
                 minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));
