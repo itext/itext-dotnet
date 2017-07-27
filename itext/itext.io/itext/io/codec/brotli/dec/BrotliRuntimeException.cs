@@ -6,7 +6,6 @@ See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>Unchecked exception used internally.</summary>
-	[System.Serializable]
 	internal class BrotliRuntimeException : System.Exception
 	{
 		internal BrotliRuntimeException(string message)

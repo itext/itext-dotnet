@@ -176,7 +176,7 @@ namespace iText.IO.Codec.Brotli.Dec
 			br.input = null;
 			if (@is != null)
 			{
-				@is.Close();
+				@is.Dispose();
 			}
 		}
 
