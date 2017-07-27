@@ -59,5 +59,25 @@ namespace iText.Kernel.Geom {
             Matrix m = new Matrix(2, 3, 4, 5, 6, 7);
             NUnit.Framework.Assert.AreEqual(-2f, m.GetDeterminant(), .001f);
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestSubtract() {
+            Matrix m1 = new Matrix(1, 2, 3, 4, 5, 6);
+            Matrix m2 = new Matrix(6, 5, 4, 3, 2, 1);
+            Matrix shouldBe = new Matrix(-5, -3, 0, -1, 1, 0, 3, 5, 0);
+            Matrix rslt = m1.Subtract(m2);
+            NUnit.Framework.Assert.AreEqual(shouldBe, rslt);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestAdd() {
+            Matrix m1 = new Matrix(1, 2, 3, 4, 5, 6);
+            Matrix m2 = new Matrix(6, 5, 4, 3, 2, 1);
+            Matrix shouldBe = new Matrix(7, 7, 0, 7, 7, 0, 7, 7, 2);
+            Matrix rslt = m1.Add(m2);
+            NUnit.Framework.Assert.AreEqual(shouldBe, rslt);
+        }
     }
 }

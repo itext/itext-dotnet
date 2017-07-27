@@ -88,11 +88,15 @@ namespace iText.Layout.Properties {
 
         public const int BORDER_LEFT = 11;
 
+        public const int BORDER_RADIUS = 101;
+
         public const int BORDER_RIGHT = 12;
 
         public const int BORDER_TOP = 13;
 
         public const int BOTTOM = 14;
+
+        public const int BOX_SIZING = 105;
 
         public const int CHARACTER_SPACING = 15;
 
@@ -212,9 +216,19 @@ namespace iText.Layout.Properties {
 
         public const int MAX_HEIGHT = 84;
 
+        public const int MAX_WIDTH = 107;
+
         public const int MIN_HEIGHT = 85;
 
+        public const int MIN_WIDTH = 108;
+
         public const int OPACITY = 92;
+
+        public const int OVERFLOW = 102;
+
+        public const int OVERFLOW_X = 103;
+
+        public const int OVERFLOW_Y = 104;
 
         public const int PADDING_BOTTOM = 47;
 
@@ -277,6 +291,8 @@ namespace iText.Layout.Properties {
         public const int TEXT_RISE = 72;
 
         public const int TOP = 73;
+
+        public const int TRANSFORM = 106;
 
         public const int UNDERLINE = 74;
 

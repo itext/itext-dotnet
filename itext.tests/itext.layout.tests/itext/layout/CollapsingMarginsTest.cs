@@ -193,7 +193,7 @@ namespace iText.Layout {
             p.Add("When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
                  + "To do good to Mankind is the chivalrous plan,\n");
-            p.Add(new Text("small text").SetFontSize(6));
+            p.Add(new Text("small text").SetFontSize(5.1f));
             p.Add("\nAnd is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n" + "And, if not shot or hanged, you'll get knighted."
                 );
             Div div1 = new Div();

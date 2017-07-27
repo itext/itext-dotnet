@@ -113,7 +113,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <param name="tabLeader">
         /// the
-        /// <ILineDrawer/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
         /// value, a pattern drawing object
         /// </param>
         public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader) {

@@ -764,13 +764,13 @@ namespace iText.Kernel.Utils {
                 IList<PdfLinkAnnotation> outLinks = GetLinkAnnotations(i + 1, outDocument);
                 IList<PdfLinkAnnotation> cmpLinks = GetLinkAnnotations(i + 1, cmpDocument);
                 if (cmpLinks.Count != outLinks.Count) {
-                    message = String.Format("Different number of links on page {0}.", i + 1);
+                    message = MessageFormatUtil.Format("Different number of links on page {0}.", i + 1);
                     break;
                 }
                 for (int j = 0; j < cmpLinks.Count; j++) {
                     if (!CompareLinkAnnotations(cmpLinks[j], outLinks[j], cmpDocument, outDocument)) {
-                        message = String.Format("Different links on page {0}.\n{1}\n{2}", i + 1, cmpLinks[j].ToString(), outLinks[
-                            j].ToString());
+                        message = MessageFormatUtil.Format("Different links on page {0}.\n{1}\n{2}", i + 1, cmpLinks[j].ToString()
+                            , outLinks[j].ToString());
                         break;
                     }
                 }
@@ -1245,8 +1245,8 @@ namespace iText.Kernel.Utils {
                         PdfObject outObj = outDict.Get(key);
                         if (!outObj.IsName() || outObj.ToString().IndexOf('+') == -1) {
                             if (compareResult != null && currentPath != null) {
-                                compareResult.AddError(currentPath, String.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}", key
-                                    .ToString(), cmpObj.ToString(), outObj.ToString()));
+                                compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
+                                    , key.ToString(), cmpObj.ToString(), outObj.ToString()));
                             }
                             dictsAreSame = false;
                         }
@@ -1255,8 +1255,8 @@ namespace iText.Kernel.Utils {
                             String outName = outObj.ToString().Substring(outObj.ToString().IndexOf('+'));
                             if (!cmpName.Equals(outName)) {
                                 if (compareResult != null && currentPath != null) {
-                                    compareResult.AddError(currentPath, String.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}", key
-                                        .ToString(), cmpObj.ToString(), outObj.ToString()));
+                                    compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
+                                        , key.ToString(), cmpObj.ToString(), outObj.ToString()));
                                 }
                                 dictsAreSame = false;
                             }
@@ -1387,8 +1387,8 @@ namespace iText.Kernel.Utils {
                 }
                 else {
                     if (cmpDirectObj.GetObjectType() != outDirectObj.GetObjectType()) {
-                        compareResult.AddError(currentPath, String.Format("Types do not match. Expected: {0}. Found: {1}.", cmpDirectObj
-                            .GetType().Name, outDirectObj.GetType().Name));
+                        compareResult.AddError(currentPath, MessageFormatUtil.Format("Types do not match. Expected: {0}. Found: {1}."
+                            , cmpDirectObj.GetType().Name, outDirectObj.GetType().Name));
                         return false;
                     }
                     else {
@@ -1441,7 +1441,7 @@ namespace iText.Kernel.Utils {
                     return true;
                 }
                 if (compareResult != null && currentPath != null) {
-                    compareResult.AddError(currentPath, String.Format("The dictionaries refer to different pages. Expected page number: {0}. Found: {1}"
+                    compareResult.AddError(currentPath, MessageFormatUtil.Format("The dictionaries refer to different pages. Expected page number: {0}. Found: {1}"
                         , cmpPagesRef.IndexOf(cmpRefKey), outPagesRef.IndexOf(outRefKey)));
                 }
                 return false;
@@ -1516,8 +1516,8 @@ namespace iText.Kernel.Utils {
             else {
                 StringBuilder errorMessage = new StringBuilder();
                 if (cmpStreamBytes.Length != outStreamBytes.Length) {
-                    errorMessage.Append(String.Format("PdfStream. Lengths are different. Expected: {0}. Found: {1}\n", cmpStreamBytes
-                        .Length, outStreamBytes.Length));
+                    errorMessage.Append(MessageFormatUtil.Format("PdfStream. Lengths are different. Expected: {0}. Found: {1}\n"
+                        , cmpStreamBytes.Length, outStreamBytes.Length));
                 }
                 else {
                     errorMessage.Append("PdfStream. Bytes are different.\n");
@@ -1561,14 +1561,14 @@ namespace iText.Kernel.Utils {
                     ] });
                 String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(outStreamBytes
                     , lOut, rOut - lOut), "\\r|\\n", " ");
-                bytesDifference = String.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
+                bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
                     , iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours
                     , outByte, outBytesNeighbours, numberOfDifferentBytes);
             }
             else {
                 // lengths are different
                 firstDifferenceOffset = minLength;
-                bytesDifference = String.Format("Bytes of the shorter array are the same as the first {0} bytes of the longer one."
+                bytesDifference = MessageFormatUtil.Format("Bytes of the shorter array are the same as the first {0} bytes of the longer one."
                     , minLength);
             }
             errorMessage.Append(bytesDifference);
@@ -1586,7 +1586,7 @@ namespace iText.Kernel.Utils {
             else {
                 if (outArray.Size() != cmpArray.Size()) {
                     if (compareResult != null && currentPath != null) {
-                        compareResult.AddError(currentPath, String.Format("PdfArrays. Lengths are different. Expected: {0}. Found: {1}."
+                        compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfArrays. Lengths are different. Expected: {0}. Found: {1}."
                             , cmpArray.Size(), outArray.Size()));
                     }
                     return false;
@@ -1617,8 +1617,8 @@ namespace iText.Kernel.Utils {
             }
             else {
                 if (compareResult != null && currentPath != null) {
-                    compareResult.AddError(currentPath, String.Format("PdfName. Expected: {0}. Found: {1}", cmpName.ToString()
-                        , outName.ToString()));
+                    compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfName. Expected: {0}. Found: {1}", cmpName
+                        .ToString(), outName.ToString()));
                 }
                 return false;
             }
@@ -1631,8 +1631,8 @@ namespace iText.Kernel.Utils {
             }
             else {
                 if (compareResult != null && currentPath != null) {
-                    compareResult.AddError(currentPath, String.Format("PdfNumber. Expected: {0}. Found: {1}", cmpNumber, outNumber
-                        ));
+                    compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfNumber. Expected: {0}. Found: {1}", cmpNumber
+                        , outNumber));
                 }
                 return false;
             }
@@ -1649,8 +1649,8 @@ namespace iText.Kernel.Utils {
                 String outStr = outString.ToUnicodeString();
                 StringBuilder errorMessage = new StringBuilder();
                 if (cmpStr.Length != outStr.Length) {
-                    errorMessage.Append(String.Format("PdfString. Lengths are different. Expected: {0}. Found: {1}\n", cmpStr.
-                        Length, outStr.Length));
+                    errorMessage.Append(MessageFormatUtil.Format("PdfString. Lengths are different. Expected: {0}. Found: {1}\n"
+                        , cmpStr.Length, outStr.Length));
                 }
                 else {
                     errorMessage.Append("PdfString. Characters are different.\n");
@@ -1691,14 +1691,14 @@ namespace iText.Kernel.Utils {
                 String outByte = outString[firstDifferenceOffset].ToString();
                 String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), "\\r|\\n"
                     , " ");
-                stringDifference = String.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
+                stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
                     , iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours
                     , outByte, outBytesNeighbours, numberOfDifferentChars);
             }
             else {
                 // lengths are different
                 firstDifferenceOffset = minLength;
-                stringDifference = String.Format("All characters of the shorter string are the same as the first {0} characters of the longer one."
+                stringDifference = MessageFormatUtil.Format("All characters of the shorter string are the same as the first {0} characters of the longer one."
                     , minLength);
             }
             errorMessage.Append(stringDifference);
@@ -1725,8 +1725,8 @@ namespace iText.Kernel.Utils {
             }
             else {
                 if (compareResult != null && currentPath != null) {
-                    compareResult.AddError(currentPath, String.Format("PdfBoolean. Expected: {0}. Found: {1}.", cmpBoolean.GetValue
-                        (), outBoolean.GetValue()));
+                    compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfBoolean. Expected: {0}. Found: {1}.", cmpBoolean
+                        .GetValue(), outBoolean.GetValue()));
                 }
                 return false;
             }
@@ -2165,10 +2165,10 @@ namespace iText.Kernel.Utils {
             public virtual XmlElement ToXmlNode(XmlDocument document) {
                 XmlElement element = document.CreateElement("path");
                 XmlElement baseNode = document.CreateElement("base");
-                baseNode.SetAttribute("cmp", String.Format("{0} {1} obj", baseCmpObject.GetObjNumber(), baseCmpObject.GetGenNumber
-                    ()));
-                baseNode.SetAttribute("out", String.Format("{0} {1} obj", baseOutObject.GetObjNumber(), baseOutObject.GetGenNumber
-                    ()));
+                baseNode.SetAttribute("cmp", MessageFormatUtil.Format("{0} {1} obj", baseCmpObject.GetObjNumber(), baseCmpObject
+                    .GetGenNumber()));
+                baseNode.SetAttribute("out", MessageFormatUtil.Format("{0} {1} obj", baseOutObject.GetObjNumber(), baseOutObject
+                    .GetGenNumber()));
                 element.AppendChild(baseNode);
                 Stack<CompareTool.ObjectPath.LocalPathItem> pathClone = (Stack<CompareTool.ObjectPath.LocalPathItem>)path.
                     Clone();
@@ -2186,7 +2186,7 @@ namespace iText.Kernel.Utils {
             /// <returns>string representation of the direct path stored in this ObjectPath instance.</returns>
             public override String ToString() {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(String.Format("Base cmp object: {0} obj. Base out object: {1} obj", baseCmpObject, baseOutObject
+                sb.Append(MessageFormatUtil.Format("Base cmp object: {0} obj. Base out object: {1} obj", baseCmpObject, baseOutObject
                     ));
                 Stack<CompareTool.ObjectPath.LocalPathItem> pathClone = (Stack<CompareTool.ObjectPath.LocalPathItem>)path.
                     Clone();

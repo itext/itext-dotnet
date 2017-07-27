@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Utils;
@@ -76,7 +77,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Launch")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Launch")));
 ;
         }
 
@@ -95,7 +96,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Hide")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Hide")));
 ;
         }
 
@@ -114,7 +115,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Sound")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Sound")));
 ;
         }
 
@@ -133,7 +134,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Movie")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Movie")));
 ;
         }
 
@@ -152,7 +153,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "ResetForm")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "ResetForm")));
 ;
         }
 
@@ -171,7 +172,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "ImportData")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "ImportData")));
 ;
         }
 
@@ -190,7 +191,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "JavaScript")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "JavaScript")));
 ;
         }
 
@@ -229,7 +230,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "SetOCGState")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "SetOCGState")));
 ;
         }
 
@@ -248,7 +249,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Rendition")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Rendition")));
 ;
         }
 
@@ -267,7 +268,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Trans")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "Trans")));
 ;
         }
 
@@ -286,7 +287,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OpenAction, openActions);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException._1ActionsAreNotAllowed, "GoTo3DView")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException._1ActionsAreNotAllowed, "GoTo3DView")));
 ;
         }
 

@@ -98,13 +98,32 @@ namespace iText.Kernel.Geom {
             vals[I32] = ty;
         }
 
-        /// <summary>Creates a Matrix with 6 specified entries</summary>
-        /// <param name="a"/>
-        /// <param name="b"/>
-        /// <param name="c"/>
-        /// <param name="d"/>
-        /// <param name="e"/>
-        /// <param name="f"/>
+        /// <summary>Creates a Matrix with 9 specified entries</summary>
+        /// <param name="e11">element at position (1,1)</param>
+        public Matrix(float e11, float e12, float e13, float e21, float e22, float e23, float e31, float e32, float
+             e33) {
+            vals[I11] = e11;
+            vals[I12] = e12;
+            vals[I13] = e13;
+            vals[I21] = e21;
+            vals[I22] = e22;
+            vals[I23] = e23;
+            vals[I31] = e31;
+            vals[I32] = e32;
+            vals[I33] = e33;
+        }
+
+        /// <summary>
+        /// Creates a Matrix with 6 specified entries
+        /// The third column will always be [0 0 1]
+        /// (row, column)
+        /// </summary>
+        /// <param name="a">element at (1,1)</param>
+        /// <param name="b">element at (1,2)</param>
+        /// <param name="c">element at (2,1)</param>
+        /// <param name="d">element at (2,2)</param>
+        /// <param name="e">element at (3,1)</param>
+        /// <param name="f">element at (3,2)</param>
         public Matrix(float a, float b, float c, float d, float e, float f) {
             vals[I11] = a;
             vals[I12] = b;
@@ -151,6 +170,26 @@ namespace iText.Kernel.Geom {
             c[I31] = a[I31] * b[I11] + a[I32] * b[I21] + a[I33] * b[I31];
             c[I32] = a[I31] * b[I12] + a[I32] * b[I22] + a[I33] * b[I32];
             c[I33] = a[I31] * b[I13] + a[I32] * b[I23] + a[I33] * b[I33];
+            return rslt;
+        }
+
+        /// <summary>adds a matrix from this matrix and returns the results</summary>
+        /// <param name="arg">the matrix to subtract from this matrix</param>
+        /// <returns>a Matrix object</returns>
+        public virtual iText.Kernel.Geom.Matrix Add(iText.Kernel.Geom.Matrix arg) {
+            iText.Kernel.Geom.Matrix rslt = new iText.Kernel.Geom.Matrix();
+            float[] a = vals;
+            float[] b = arg.vals;
+            float[] c = rslt.vals;
+            c[I11] = a[I11] + b[I11];
+            c[I12] = a[I12] + b[I12];
+            c[I13] = a[I13] + b[I13];
+            c[I21] = a[I21] + b[I21];
+            c[I22] = a[I22] + b[I22];
+            c[I23] = a[I23] + b[I23];
+            c[I31] = a[I31] + b[I31];
+            c[I32] = a[I32] + b[I32];
+            c[I33] = a[I33] + b[I33];
             return rslt;
         }
 

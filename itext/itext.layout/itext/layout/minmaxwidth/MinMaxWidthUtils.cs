@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -59,6 +60,10 @@ namespace iText.Layout.Minmaxwidth {
 
         public static float GetMax() {
             return max;
+        }
+
+        public static bool IsEqual(double x, double y) {
+            return Math.Abs(x - y) < eps;
         }
 
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {

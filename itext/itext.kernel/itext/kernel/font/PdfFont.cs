@@ -84,7 +84,7 @@ namespace iText.Kernel.Font {
         /// <param name="unicode">a unicode code point</param>
         /// <returns>
         /// 
-        /// <seealso>Glyph</seealso>
+        /// <see cref="iText.IO.Font.Otf.Glyph"/>
         /// if it exists or .NOTDEF if supported, otherwise
         /// <see langword="null"/>
         /// .

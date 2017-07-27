@@ -64,6 +64,9 @@ namespace iText.Layout.Layout {
 
         protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
 
+        /// <summary>Indicates whether the height is clipped or not.</summary>
+        protected internal bool clippedHeight = false;
+
         public LayoutContext(LayoutArea area) {
             this.area = area;
         }
@@ -79,6 +82,20 @@ namespace iText.Layout.Layout {
             if (floatedRendererAreas != null) {
                 this.floatRendererAreas = floatedRendererAreas;
             }
+        }
+
+        public LayoutContext(LayoutArea area, bool clippedHeight)
+            : this(area) {
+            this.clippedHeight = clippedHeight;
+        }
+
+        public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
+            , bool clippedHeight)
+            : this(area, marginsCollapseInfo) {
+            if (floatedRendererAreas != null) {
+                this.floatRendererAreas = floatedRendererAreas;
+            }
+            this.clippedHeight = clippedHeight;
         }
 
         /// <summary>
@@ -97,6 +114,17 @@ namespace iText.Layout.Layout {
 
         public virtual IList<Rectangle> GetFloatRendererAreas() {
             return floatRendererAreas;
+        }
+
+        /// <summary>Indicates whether the layout area's height is clipped or not.</summary>
+        /// <returns>whether the layout area's height is clipped or not.</returns>
+        public virtual bool IsClippedHeight() {
+            return clippedHeight;
+        }
+
+        /// <summary>Defines whether the layout area's height is clipped or not.</summary>
+        public virtual void SetClippedHeight(bool clippedHeight) {
+            this.clippedHeight = clippedHeight;
         }
 
         /// <summary><inheritDoc/></summary>

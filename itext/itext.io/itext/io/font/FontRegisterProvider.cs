@@ -314,7 +314,7 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                LOGGER.Trace(String.Format("Registered {0}", path));
+                LOGGER.Trace(MessageFormatUtil.Format("Registered {0}", path));
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.IOException(e);
@@ -346,7 +346,7 @@ namespace iText.IO.Font {
         /// <param name="scanSubdirectories">recursively scan subdirectories if <code>true</true></param>
         /// <returns>the number of fonts registered</returns>
         internal virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
-            LOGGER.Debug(String.Format("Registering directory {0}, looking for fonts", dir));
+            LOGGER.Debug(MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));
             int count = 0;
             try {
                 String[] files = FileUtil.ListFilesInDirectory(dir, scanSubdirectories);

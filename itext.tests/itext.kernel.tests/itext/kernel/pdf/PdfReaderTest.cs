@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -133,7 +135,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 PdfPage page = document.GetPage(i);
                 byte[] content = page.GetFirstContentStream().GetBytes();
-                NUnit.Framework.Assert.AreEqual(String.Format(contentTemplate, i), iText.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(contentTemplate, i), iText.IO.Util.JavaUtil.GetStringForBytes
                     (content), "Page content " + i);
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -313,7 +315,7 @@ namespace iText.Kernel.Pdf {
             PdfPage testPage = document.RemovePage(1000);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
                 String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
@@ -590,23 +592,23 @@ namespace iText.Kernel.Pdf {
                 document.GetPage(-30);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30
+                    ), e.Message);
             }
             try {
                 document.GetPage(0);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0)
+                    , e.Message);
             }
             document.GetPage(1);
             try {
                 document.GetPage(25);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25
+                    ), e.Message);
             }
             document.Close();
         }
@@ -1334,6 +1336,25 @@ namespace iText.Kernel.Pdf {
             //Assert.assertFalse(pdfDoc.getReader().fixedXref);
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().rebuiltXref);
             pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FreeReferencesTest02() {
+            String cmpFile = sourceFolder + "cmp_freeReferences02.pdf";
+            String outputFile = destinationFolder + "freeReferences02.pdf";
+            String inputFile = sourceFolder + "freeReferences02.pdf";
+            PdfWriter writer = new PdfWriter(outputFile);
+            PdfReader reader = new PdfReader(inputFile);
+            PdfDocument inputPdfDocument = new PdfDocument(reader);
+            PdfDocument outputPdfDocument = new PdfDocument(writer);
+            int lastPage = inputPdfDocument.GetNumberOfPages();
+            inputPdfDocument.CopyPagesTo(lastPage, lastPage, outputPdfDocument);
+            inputPdfDocument.Close();
+            outputPdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, destinationFolder, "diff_"
+                ));
         }
 
         /// <exception cref="System.IO.IOException"/>

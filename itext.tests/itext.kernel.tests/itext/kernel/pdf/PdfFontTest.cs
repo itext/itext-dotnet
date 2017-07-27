@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String author = "Alexander Chingarev";
 
-        internal const String creator = "iText 6";
+        internal const String creator = "iText 7";
 
         internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf {
             String testString = "A A A A E E E ~ \u00E9";
             // A A A A E E E ~ é
             //writing type3 font characters
-            String title = "Type3 font iText 6 Document";
+            String title = "Type3 font iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -280,7 +280,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithHelveticaOblique() {
             String filename = destinationFolder + "DocumentWithHelveticaOblique.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaOblique.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -305,7 +305,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithHelveticaBoldOblique() {
             String filename = destinationFolder + "DocumentWithHelveticaBoldOblique.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaBoldOblique.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -330,7 +330,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithCourierBold() {
             String filename = destinationFolder + "DocumentWithCourierBold.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCourierBold.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -355,7 +355,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithType1FontAfm() {
             String filename = destinationFolder + "DocumentWithCMR10Afm.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -387,7 +387,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithType1FontPfm() {
             String filename = destinationFolder + "DocumentWithCMR10Pfm.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Pfm.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -412,7 +412,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithTrueTypeFont1() {
             String filename = destinationFolder + "DocumentWithTrueTypeFont1.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -443,7 +443,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithTrueTypeOtfFont() {
             String filename = destinationFolder + "DocumentWithTrueTypeOtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFont.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -480,7 +480,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithType0OtfFont() {
             String filename = destinationFolder + "DocumentWithType0OtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithType0OtfFont.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -518,7 +518,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName = sourceFolder + "type3Font.pdf";
             String outputFileName = destinationFolder + "type3Font_update.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_update.pdf";
-            String title = "Type3 font iText 6 Document";
+            String title = "Type3 font iText 7 Document";
             PdfReader reader = new PdfReader(inputFileName);
             PdfWriter writer = new PdfWriter(outputFileName);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -549,7 +549,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName = sourceFolder + "type3Font.pdf";
             String outputFileName = destinationFolder + "type3Font_new.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
-            String title = "Type3 font iText 6 Document";
+            String title = "Type3 font iText 7 Document";
             PdfReader reader = new PdfReader(inputFileName);
             PdfWriter pdfWriter = new PdfWriter(outputFileName);
             pdfWriter.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -583,7 +583,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithCMR10Afm.pdf";
             String filename = destinationFolder + "DocumentWithCMR10Afm_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm_new.pdf";
-            String title = "Type 1 font iText 6 Document";
+            String title = "Type 1 font iText 7 Document";
             PdfReader reader1 = new PdfReader(inputFileName1);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
@@ -639,7 +639,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeFont2.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeFont2_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont2_new.pdf";
-            String title = "True Type font iText 6 Document";
+            String title = "True Type font iText 7 Document";
             PdfReader reader1 = new PdfReader(inputFileName1);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
@@ -692,7 +692,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithKozmin.pdf";
             String filename = destinationFolder + "DocumentWithKozmin_update.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin_update.pdf";
-            String title = "Type0 font iText 6 Document";
+            String title = "Type0 font iText 7 Document";
             PdfReader reader = new PdfReader(inputFileName1);
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -719,7 +719,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithKozmin.pdf";
             String filename = destinationFolder + "DocumentWithKozmin_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin_new.pdf";
-            String title = "Type0 font iText 6 Document";
+            String title = "Type0 font iText 7 Document";
             PdfReader reader1 = new PdfReader(inputFileName1);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(6);
@@ -747,7 +747,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeAsType0.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeAsType0_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0_new.pdf";
-            String title = "Type0 font iText 6 Document";
+            String title = "Type0 font iText 7 Document";
             PdfReader reader1 = new PdfReader(inputFileName1);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(6);
@@ -775,7 +775,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeAsType0.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeAsType0_update.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0_update.pdf";
-            String title = "Type0 font iText 6 Document";
+            String title = "Type0 font iText 7 Document";
             PdfReader reader = new PdfReader(inputFileName1);
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -801,7 +801,7 @@ namespace iText.Kernel.Pdf {
             String inputFileName1 = sourceFolder + "fontWithToUnicode.pdf";
             String filename = destinationFolder + "fontWithToUnicode_new.pdf";
             String cmpFilename = sourceFolder + "cmp_fontWithToUnicode_new.pdf";
-            String title = "Type1 font iText 6 Document";
+            String title = "Type1 font iText 7 Document";
             PdfReader reader1 = new PdfReader(inputFileName1);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
@@ -902,8 +902,8 @@ namespace iText.Kernel.Pdf {
             catch (iText.IO.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(String.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font), message
-                );
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font
+                ), message);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -994,7 +994,7 @@ namespace iText.Kernel.Pdf {
         public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
-            String title = "Empty iText 6 Document";
+            String title = "Empty iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -1035,6 +1035,24 @@ namespace iText.Kernel.Pdf {
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H", true);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(japanese).EndText().RestoreState
+                ();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestWoffFont() {
+            String filename = destinationFolder + "testWoffFont.pdf";
+            String cmpFilename = sourceFolder + "cmp_testWoffFont.pdf";
+            String helloWorld = "Hello world";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "Amaranth-Regular.woff", "Identity-H", true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(helloWorld).EndText().RestoreState
                 ();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 

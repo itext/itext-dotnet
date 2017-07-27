@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
@@ -73,7 +74,8 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TabRenderer));
-                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                    "Drawing won't be performed."));
                 return;
             }
             ILineDrawer leader = this.GetProperty<ILineDrawer>(Property.TAB_LEADER);

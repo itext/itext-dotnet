@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -110,7 +111,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
             if (pageNum < 1 || pageNum > GetNumberOfPages()) {
-                throw new IndexOutOfRangeException(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, pageNum));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
+                    pageNum));
             }
             --pageNum;
             PdfPage pdfPage = pages[pageNum];

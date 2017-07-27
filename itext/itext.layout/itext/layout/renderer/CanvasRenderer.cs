@@ -98,6 +98,11 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
+            if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
+                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null)) {
+                waitingDrawingElements.Add(resultRenderer);
+                return;
+            }
             if (!resultRenderer.IsFlushed()) {
                 bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();
                 TagTreePointer tagPointer = null;

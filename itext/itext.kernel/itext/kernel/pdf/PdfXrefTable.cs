@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -67,6 +68,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfXrefTable(int capacity) {
+            // TODO not using this collection for now
             if (capacity < 1) {
                 capacity = INITIAL_CAPACITY;
             }
@@ -102,21 +104,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Creates next available indirect reference.</summary>
         /// <returns>created indirect reference.</returns>
         protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
-            PdfIndirectReference reference;
-            if (freeReferences.Count > 0) {
-                int num = (int)freeReferences.PollFirst();
-                reference = xref[num];
-                if (reference == null) {
-                    reference = new PdfIndirectReference(document, num);
-                    xref[num] = reference;
-                }
-                reference.SetOffset(0);
-                reference.ClearState(PdfObject.FREE);
-            }
-            else {
-                reference = new PdfIndirectReference(document, ++count);
-                Add(reference);
-            }
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
@@ -128,6 +117,10 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
+            FreeReference(reference, false);
+        }
+
+        internal virtual void FreeReference(PdfIndirectReference reference, bool readingFreeReference) {
             reference.SetOffset(0);
             reference.SetState(PdfObject.FREE);
             if (!reference.CheckState(PdfObject.FLUSHED)) {
@@ -135,11 +128,9 @@ namespace iText.Kernel.Pdf {
                     reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
                     reference.refersTo = null;
                 }
-                if (reference.GetGenNumber() < MAX_GENERATION) {
-                    freeReferences.Add(reference.GetObjNumber());
-                    EnsureCount(Math.Max(this.count, reference.GetObjNumber()));
-                    xref[reference.GetObjNumber()] = null;
-                }
+            }
+            if (!readingFreeReference && reference.GetGenNumber() < MAX_GENERATION) {
+                reference.genNr++;
             }
         }
 
@@ -154,18 +145,6 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
-            if (document.IsAppendMode()) {
-                // Increment generation number for all freed references.
-                foreach (int? objNr in freeReferences) {
-                    xref[(int)objNr].genNr++;
-                }
-            }
-            else {
-                foreach (int? objNr in freeReferences) {
-                    xref[(int)objNr] = null;
-                }
-            }
-            freeReferences.Clear();
             for (int i = count; i > 0; --i) {
                 PdfIndirectReference lastRef = xref[i];
                 if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef.CheckState(PdfObject
@@ -176,18 +155,25 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
             }
+            int lastFreeObjNr = 0;
+            for (int i = count; i >= 0; --i) {
+                PdfIndirectReference @ref = xref[i];
+                if (@ref == null) {
+                    @ref = ((PdfIndirectReference)new PdfIndirectReference(document, i, 0).SetState(PdfObject.FREE));
+                    xref[i] = @ref;
+                }
+                if (@ref.IsFree()) {
+                    @ref.SetOffset(lastFreeObjNr);
+                    lastFreeObjNr = i;
+                }
+            }
             IList<int> sections = new List<int>();
             int first = 0;
             int len = 1;
-            if (document.IsAppendMode()) {
-                first = 1;
-                len = 0;
-            }
             for (int i = 1; i < Size(); i++) {
                 PdfIndirectReference reference = xref[i];
                 if (reference != null) {
-                    if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
-                         reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED))) {
+                    if (document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED) && !reference.IsFree()) {
                         reference = null;
                     }
                 }
@@ -212,7 +198,7 @@ namespace iText.Kernel.Pdf {
                 sections.Add(first);
                 sections.Add(len);
             }
-            if (document.properties.appendMode && sections.Count == 0) {
+            if (document.properties.appendMode && sections.Count == 2 && sections[1] == 1) {
                 // no modifications.
                 xref = null;
                 return;
@@ -255,7 +241,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.IsFree()) {
                             xrefStream.GetOutputStream().Write(0);
                             //NOTE The object number of the next free object should be at this position due to spec.
-                            xrefStream.GetOutputStream().Write(IntToBytes(0));
+                            System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
+                            xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
                             xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
                         }
                         else {
@@ -338,7 +325,7 @@ namespace iText.Kernel.Pdf {
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(String.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
         }
 
         private void EnsureCount(int count) {

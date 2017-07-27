@@ -236,7 +236,7 @@ namespace iText.IO.Image {
                 }
                 png.genBWMask = (!png.palShades && (pal0 > 1 || png.transRedGray >= 0));
                 if (!png.palShades && !png.genBWMask && pal0 == 1) {
-                    png.additional.Put("Mask", String.Format("[{0} {1}]", palIdx, palIdx));
+                    png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1}]", palIdx, palIdx));
                 }
                 bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType & 4) != 0) || png.
                     palShades || png.genBWMask;
@@ -443,7 +443,7 @@ namespace iText.IO.Image {
                                         png.transRedGray = gray;
                                     }
                                     else {
-                                        png.additional.Put("Mask", String.Format("[{0} {1}]", gray, gray));
+                                        png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1}]", gray, gray));
                                     }
                                 }
                                 break;
@@ -461,7 +461,8 @@ namespace iText.IO.Image {
                                         png.transBlue = blue;
                                     }
                                     else {
-                                        png.additional.Put("Mask", String.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue, blue));
+                                        png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue
+                                            , blue));
                                     }
                                 }
                                 break;

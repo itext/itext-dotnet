@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
@@ -68,7 +69,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_destinationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Text text = new Text(String.Format("Page {0}", 10));
+            Text text = new Text(MessageFormatUtil.Format("Page {0}", 10));
             text.SetProperty(Property.DESTINATION, "p10");
             doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40).SetMargin(0));
             doc.Close();

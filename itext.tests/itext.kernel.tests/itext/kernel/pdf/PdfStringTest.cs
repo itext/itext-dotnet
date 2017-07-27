@@ -85,5 +85,14 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
                  + "cmp_" + fileName, destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestUnicodeString() {
+            String unicode = "Привет!";
+            PdfString @string = new PdfString(unicode);
+            NUnit.Framework.Assert.AreNotEqual(unicode, @string.ToUnicodeString());
+        }
     }
 }

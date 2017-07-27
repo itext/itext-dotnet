@@ -49,11 +49,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// that returns a collection of rectangles as result of its work.
     /// </summary>
     public interface ILocationExtractionStrategy : IEventListener {
-        /// <summary>Returns the rectangles that have been processed so far.</summary>
+        /// <summary>
+        /// Returns the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// s that have been processed so far.
+        /// </summary>
         /// <returns>
         /// 
-        /// <see>Collection<IPdfTextLocation></see>
-        /// instance with the current resultant IPdfTextLocations
+        /// <see cref="System.Collections.ICollection{E}"/>
+        /// &lt;
+        /// <see cref="IPdfTextLocation"/>
+        /// &gt; instance with the current resultant IPdfTextLocations
         /// </returns>
         ICollection<IPdfTextLocation> GetResultantLocations();
     }

@@ -63,11 +63,8 @@ namespace iText.Signatures {
         /// Create
         /// <c>OcspClient</c>
         /// </summary>
-        /// <param name="verifier">
-        /// will be used for response verification.
-        /// <seealso>OCSPVerifier</seealso>
-        /// .
-        /// </param>
+        /// <param name="verifier">will be used for response verification.</param>
+        /// <seealso cref="OCSPVerifier"/>
         public OcspClientBouncyCastle(OCSPVerifier verifier) {
             this.verifier = verifier;
         }
@@ -75,8 +72,8 @@ namespace iText.Signatures {
         /// <summary>Gets OCSP response.</summary>
         /// <remarks>
         /// Gets OCSP response. If
-        /// <seealso>OCSPVerifier</seealso>
-        /// was setted, the response will be checked.
+        /// <see cref="OCSPVerifier"/>
+        /// was set, the response will be checked.
         /// </remarks>
         public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String 
             url) {

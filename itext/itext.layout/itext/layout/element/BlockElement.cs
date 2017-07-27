@@ -62,6 +62,20 @@ namespace iText.Layout.Element {
         protected internal BlockElement() {
         }
 
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case Property.OVERFLOW:
+                case Property.OVERFLOW_X:
+                case Property.OVERFLOW_Y: {
+                    return (T1)(Object)OverflowPropertyValue.FIT;
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
+        }
+
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
         public virtual float? GetMarginLeft() {
@@ -336,6 +350,16 @@ namespace iText.Layout.Element {
 
         public virtual T SetMinHeight(float minHeight) {
             SetProperty(Property.MIN_HEIGHT, minHeight);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMaxWidth(float maxWidth) {
+            SetProperty(Property.MAX_WIDTH, maxWidth);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMinWidth(float minWidth) {
+            SetProperty(Property.MIN_WIDTH, minWidth);
             return (T)(Object)this;
         }
 

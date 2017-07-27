@@ -143,11 +143,18 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UpdateFontAndText();
             if (null != text) {
-                text = GetGlyphlineWithSpacesInsteadOfTabs(text);
+                // if text != null => font != null
+                text = ReplaceSpecialWhitespaceGlyphs(text, font);
             }
             LayoutArea area = layoutContext.GetArea();
+            Rectangle layoutBox = area.GetBBox().Clone();
+            IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
+            FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
+            }
             float[] margins = GetMargins();
-            Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
+            ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox
@@ -182,6 +189,9 @@ namespace iText.Layout.Renderer {
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
+            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflowY = !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent
+                .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
             // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
@@ -229,7 +239,8 @@ namespace iText.Layout.Renderer {
                     }
                     Glyph currentGlyph = text.Get(ind);
                     if (NoPrint(currentGlyph)) {
-                        if (splitCharacters.IsSplitCharacter(text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
+                        if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind + 1) && TextUtil.IsSpaceOrWhitespace
+                            (text.Get(ind + 1))) {
                             nonBreakablePartEnd = ind;
                             break;
                         }
@@ -266,9 +277,11 @@ namespace iText.Layout.Renderer {
                          + textRise;
                     previousCharPos = ind;
                     if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
-                        // we have extracted all the information we wanted and we do not want to continue.
-                        // we will have to split the word anyway.
-                        break;
+                        if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX))) {
+                            // we have extracted all the information we wanted and we do not want to continue.
+                            // we will have to split the word anyway.
+                            break;
+                        }
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
                         (text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
@@ -295,7 +308,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     // check if line height exceeds the allowed height
-                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight()) {
+                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight() && (null == overflowY ||
+                         OverflowPropertyValue.FIT.Equals(overflowY))) {
                         ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                         ApplyMargins(occupiedArea.GetBBox(), margins, true);
                         // Force to place what we can
@@ -354,13 +368,15 @@ namespace iText.Layout.Renderer {
                         if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || (forcePartialSplitOnFirstChar
                             )) {
                             // if the word is too long for a single line we will have to split it
-                            wordSplit = !forcePartialSplitOnFirstChar;
                             if (line.start == -1) {
                                 line.start = currentTextPos;
                             }
-                            currentTextPos = firstCharacterWhichExceedsAllowedWidth;
-                            line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth);
-                            if (wordSplit) {
+                            currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
+                                )) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
+                            line.end = Math.Max(line.end, currentTextPos);
+                            wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
+                            if (wordSplit || !(forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
+                                ))) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
@@ -393,7 +409,8 @@ namespace iText.Layout.Renderer {
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
             if (currentLineHeight > layoutBox.GetHeight()) {
-                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (null == overflowY || OverflowPropertyValue
+                    .FIT.Equals(overflowY))) {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
                     return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
@@ -436,6 +453,18 @@ namespace iText.Layout.Renderer {
                 else {
                     // LayoutResult with partial status should have non-null overflow renderer
                     result.SetStatus(LayoutResult.FULL);
+                }
+            }
+            if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    if (occupiedArea.GetBBox().GetWidth() > 0) {
+                        floatRendererAreas.Add(occupiedArea.GetBBox());
+                    }
+                }
+                else {
+                    if (result.GetStatus() == LayoutResult.PARTIAL) {
+                        floatRendererAreas.Add(result.GetSplitRenderer().GetOccupiedArea().GetBBox());
+                    }
                 }
             }
             result.SetMinMaxWidth(countedMinMaxWidth);
@@ -498,7 +527,8 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                    "Drawing won't be performed."));
                 return;
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
@@ -629,7 +659,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_662();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_691();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -693,8 +723,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_662 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_662() {
+        private sealed class _IGlyphLineFilter_691 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_691() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -941,6 +971,10 @@ namespace iText.Layout.Renderer {
             return GetYLine();
         }
 
+        protected internal override float? GetLastYLineRecursively() {
+            return GetYLine();
+        }
+
         /// <summary>
         /// Returns the length of the
         /// <see cref="line">line</see>
@@ -962,7 +996,7 @@ namespace iText.Layout.Renderer {
             return count;
         }
 
-        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             TextLayoutResult result = (TextLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
                 , AbstractRenderer.INF))));
             return result.GetNotNullMinMaxWidth(availableWidth);
@@ -1073,8 +1107,10 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(GetGlyphlineWithSpacesInsteadOfTabs(new GlyphLine
-                            (strategy.NextGlyphs())), strategy.GetCurrentFont());
+                        GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
+                        PdfFont currentFont = strategy.GetCurrentFont();
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont
+                            ), currentFont);
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1215,7 +1251,14 @@ namespace iText.Layout.Renderer {
 
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
-                font = GetPropertyAsFont(Property.FONT);
+                try {
+                    font = GetPropertyAsFont(Property.FONT);
+                }
+                catch (InvalidCastException) {
+                    font = ResolveFirstPdfFont();
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                    logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                }
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
@@ -1233,19 +1276,50 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private GlyphLine GetGlyphlineWithSpacesInsteadOfTabs(GlyphLine line) {
+        private static GlyphLine ReplaceSpecialWhitespaceGlyphs(GlyphLine line, PdfFont font) {
             if (null != line) {
-                Glyph space = new Glyph(ResolveFirstPdfFont().GetGlyph('\u0020'));
-                space.SetXAdvance((short)(3 * space.GetWidth()));
+                Glyph space = font.GetGlyph('\u0020');
                 Glyph glyph;
                 for (int i = 0; i < line.Size(); i++) {
                     glyph = line.Get(i);
-                    if ('\t' == glyph.GetUnicode()) {
-                        line.Set(i, space);
+                    int? xAdvance = GetSpecialWhitespaceXAdvance(glyph, space, font.GetFontProgram().GetFontMetrics().IsFixedPitch
+                        ());
+                    if (xAdvance != null) {
+                        Glyph newGlyph = new Glyph(space, glyph.GetUnicode());
+                        System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
+                        newGlyph.SetXAdvance((short)(int)xAdvance);
+                        line.Set(i, newGlyph);
                     }
                 }
             }
             return line;
+        }
+
+        private static int? GetSpecialWhitespaceXAdvance(Glyph glyph, Glyph spaceGlyph, bool isMonospaceFont) {
+            if (glyph.GetCode() > 0) {
+                return null;
+            }
+            switch (glyph.GetUnicode()) {
+                case '\u2002': {
+                    // ensp
+                    return isMonospaceFont ? 0 : 500 - spaceGlyph.GetWidth();
+                }
+
+                case '\u2003': {
+                    // emsp
+                    return isMonospaceFont ? 0 : 1000 - spaceGlyph.GetWidth();
+                }
+
+                case '\u2009': {
+                    // thinsp
+                    return isMonospaceFont ? 0 : 200 - spaceGlyph.GetWidth();
+                }
+
+                case '\t': {
+                    return 3 * spaceGlyph.GetWidth();
+                }
+            }
+            return null;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {

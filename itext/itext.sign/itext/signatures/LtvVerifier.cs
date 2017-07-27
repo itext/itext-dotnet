@@ -252,8 +252,8 @@ namespace iText.Signatures {
                 names = sgnUtil.GetSignatureNames();
                 signatureName = names[names.Count - 1];
                 pkcs7 = CoversWholeDocument();
-                LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
-                    ));
+                LOGGER.Info(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
+                     : "", signatureName));
             }
             else {
                 LOGGER.Info("No signatures in revision");
@@ -318,8 +318,8 @@ namespace iText.Signatures {
             signatureName = names[names.Count - 1];
             this.signDate = DateTimeUtil.GetCurrentUtcTime();
             pkcs7 = CoversWholeDocument();
-            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
-                ));
+            LOGGER.Info(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
+                 : "", signatureName));
         }
 
         /// <summary>

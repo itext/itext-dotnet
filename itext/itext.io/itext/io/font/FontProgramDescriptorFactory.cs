@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Woff2;
 
 namespace iText.IO.Font {
     public sealed class FontProgramDescriptorFactory {
@@ -62,8 +63,8 @@ namespace iText.IO.Font {
                 }
             }
             try {
-                if (isBuiltinFonts14 || fontName.ToLowerInvariant().EndsWith(".afm") || fontName.ToLowerInvariant().EndsWith
-                    (".pfm")) {
+                String fontNameLowerCase = baseName.ToLowerInvariant();
+                if (isBuiltinFonts14 || fontNameLowerCase.EndsWith(".afm") || fontNameLowerCase.EndsWith(".pfm")) {
                     fontDescriptor = FetchType1FontDescriptor(fontName, null);
                 }
                 else {
@@ -71,11 +72,23 @@ namespace iText.IO.Font {
                         fontDescriptor = FetchCidFontDescriptor(fontName);
                     }
                     else {
-                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
+                        if (fontNameLowerCase.EndsWith(".ttf") || fontNameLowerCase.EndsWith(".otf")) {
                             fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
                         }
                         else {
-                            fontDescriptor = FetchTTCDescriptor(baseName);
+                            if (fontNameLowerCase.EndsWith(".woff") || fontNameLowerCase.EndsWith(".woff2")) {
+                                byte[] fontProgram;
+                                if (fontNameLowerCase.EndsWith(".woff")) {
+                                    fontProgram = WoffConverter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                                }
+                                else {
+                                    fontProgram = Woff2Converter.Convert(FontProgramFactory.ReadFontBytesFromPath(baseName));
+                                }
+                                fontDescriptor = FetchTrueTypeFontDescriptor(fontProgram);
+                            }
+                            else {
+                                fontDescriptor = FetchTTCDescriptor(baseName);
+                            }
                         }
                     }
                 }
@@ -137,11 +150,11 @@ namespace iText.IO.Font {
                 int ttcIndex;
                 try {
                     ttcName = baseName.JSubstring(0, ttcSplit + 4);
-                    //count(.ttc) = 4
+                    // count(.ttc) = 4
                     ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                 }
                 catch (FormatException nfe) {
-                    //count(.ttc,) = 5)
+                    // count(.ttc,) = 5)
                     throw new iText.IO.IOException(nfe.Message, nfe);
                 }
                 OpenTypeParser parser = new OpenTypeParser(ttcName, ttcIndex);

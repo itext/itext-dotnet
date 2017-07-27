@@ -298,7 +298,7 @@ namespace iText.IO.Image {
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiX() != 0 && image.GetDpiX() != dx) {
                                     ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(String.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
+                                    logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
                                 }
                                 else {
                                     image.SetDpi(dx, image.GetDpiY());
@@ -309,7 +309,7 @@ namespace iText.IO.Image {
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiY() != 0 && image.GetDpiY() != dy) {
                                     ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(String.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
+                                    logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
                                 }
                                 else {
                                     image.SetDpi(image.GetDpiX(), dx);

@@ -290,8 +290,8 @@ namespace iText.IO.Font.Otf {
         /// <remarks>
         /// Gets a Unicode string corresponding to this glyph. In general case it might consist of many characters.
         /// If this glyph does not have a valid unicode (
-        /// <seealso>#hasValidUnicode()</seealso>
-        /// , then a string consisting of a special
+        /// <see cref="HasValidUnicode()"/>
+        /// ), then a string consisting of a special
         /// Unicode '\ufffd' character is returned.
         /// </remarks>
         /// <returns>the Unicode string that corresponds to this glyph</returns>
@@ -308,8 +308,9 @@ namespace iText.IO.Font.Otf {
         /// <remarks>
         /// Gets Unicode char sequence corresponding to this glyph. In general case it might consist of many characters.
         /// If this glyph does not have a valid unicode (
-        /// <seealso>#hasValidUnicode()</seealso>
-        /// , then a special Unicode '\ufffd' character is returned.
+        /// <see cref="HasValidUnicode()"/>
+        /// ), then a special
+        /// Unicode '\ufffd' character is returned.
         /// </remarks>
         /// <returns>the Unicode char sequence that corresponds to this glyph</returns>
         public virtual char[] GetUnicodeChars() {
@@ -322,7 +323,7 @@ namespace iText.IO.Font.Otf {
         }
 
         public override String ToString() {
-            return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
+            return MessageFormatUtil.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
                 (chars) : "null", ToHex(unicode), width);
         }
 

@@ -43,6 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Woff2;
+using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -69,12 +72,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -95,12 +95,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -122,12 +119,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -148,12 +142,9 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font or
         /// a CJK font from the Adobe Asian Font Pack.
-        /// TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -193,6 +184,14 @@ namespace iText.IO.Font {
             if (name == null) {
                 if (fontProgram != null) {
                     try {
+                        if (WoffConverter.IsWoffFont(fontProgram)) {
+                            fontProgram = WoffConverter.Convert(fontProgram);
+                        }
+                        else {
+                            if (Woff2Converter.IsWoff2Font(fontProgram)) {
+                                fontProgram = Woff2Converter.Convert(fontProgram);
+                            }
+                        }
                         fontBuilt = new TrueTypeFont(fontProgram);
                     }
                     catch (Exception) {
@@ -207,8 +206,12 @@ namespace iText.IO.Font {
                 }
             }
             else {
-                if (isBuiltinFonts14 || name.ToLowerInvariant().EndsWith(".afm") || name.ToLowerInvariant().EndsWith(".pfm"
-                    )) {
+                String fontFileExtension = null;
+                int extensionBeginIndex = baseName.LastIndexOf('.');
+                if (extensionBeginIndex > 0) {
+                    fontFileExtension = baseName.Substring(extensionBeginIndex).ToLowerInvariant();
+                }
+                if (isBuiltinFonts14 || ".afm".Equals(fontFileExtension) || ".pfm".Equals(fontFileExtension)) {
                     fontBuilt = new Type1Font(name, null, null, null);
                 }
                 else {
@@ -216,7 +219,7 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
+                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension)) {
                             if (fontProgram != null) {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
@@ -225,17 +228,42 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
-                            if (ttcSplit > 0) {
-                                try {
-                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
-                                    //count(.ttc) = 4
-                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
-                                    //count(.ttc,) = 5)
-                                    fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                            if (".woff".Equals(fontFileExtension) || ".woff2".Equals(fontFileExtension)) {
+                                if (fontProgram == null) {
+                                    fontProgram = ReadFontBytesFromPath(baseName);
                                 }
-                                catch (FormatException nfe) {
-                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                if (".woff".Equals(fontFileExtension)) {
+                                    try {
+                                        fontProgram = WoffConverter.Convert(fontProgram);
+                                    }
+                                    catch (ArgumentException woffException) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
+                                    }
+                                }
+                                else {
+                                    // ".woff2".equals(fontFileExtension)
+                                    try {
+                                        fontProgram = Woff2Converter.Convert(fontProgram);
+                                    }
+                                    catch (FontCompressionException woff2Exception) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
+                                    }
+                                }
+                                fontBuilt = new TrueTypeFont(fontProgram);
+                            }
+                            else {
+                                int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                                if (ttcSplit > 0) {
+                                    try {
+                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                                        // count(.ttc) = 4
+                                        int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        // count(.ttc,) = 5)
+                                        fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                                    }
+                                    catch (FormatException nfe) {
+                                        throw new iText.IO.IOException(nfe.Message, nfe);
+                                    }
                                 }
                             }
                         }
@@ -553,6 +581,20 @@ namespace iText.IO.Font {
 
         public static void ClearRegisteredFontFamilies() {
             fontRegisterProvider.ClearRegisteredFontFamilies();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        internal static byte[] ReadFontBytesFromPath(String path) {
+            RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
+                (path));
+            int bufLen = (int)raf.Length();
+            if (bufLen < raf.Length()) {
+                throw new iText.IO.IOException(MessageFormatUtil.Format("Source data from \"{0}\" is bigger than byte array can hold."
+                    , path));
+            }
+            byte[] buf = new byte[bufLen];
+            raf.ReadFully(buf);
+            return buf;
         }
     }
 }

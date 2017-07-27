@@ -973,12 +973,12 @@ namespace iText.Signatures {
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
             if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_1_6) < 0) {
-                reference.Put(new PdfName("DigestValue"), new PdfString("aa"));
+                reference.Put(PdfName.DigestValue, new PdfString("aa"));
                 PdfArray loc = new PdfArray();
                 loc.Add(new PdfNumber(0));
                 loc.Add(new PdfNumber(0));
-                reference.Put(new PdfName("DigestLocation"), loc);
-                reference.Put(new PdfName("DigestMethod"), new PdfName("MD5"));
+                reference.Put(PdfName.DigestLocation, loc);
+                reference.Put(PdfName.DigestMethod, PdfName.MD5);
             }
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = new PdfArray();
@@ -1001,12 +1001,12 @@ namespace iText.Signatures {
             reference.Put(PdfName.TransformMethod, PdfName.FieldMDP);
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
-            reference.Put(new PdfName("DigestValue"), new PdfString("aa"));
+            reference.Put(PdfName.DigestValue, new PdfString("aa"));
             PdfArray loc = new PdfArray();
             loc.Add(new PdfNumber(0));
             loc.Add(new PdfNumber(0));
-            reference.Put(new PdfName("DigestLocation"), loc);
-            reference.Put(new PdfName("DigestMethod"), new PdfName("MD5"));
+            reference.Put(PdfName.DigestLocation, loc);
+            reference.Put(PdfName.DigestMethod, PdfName.MD5);
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = crypto.GetPdfObject().GetAsArray(PdfName.Reference);
             if (types == null) {

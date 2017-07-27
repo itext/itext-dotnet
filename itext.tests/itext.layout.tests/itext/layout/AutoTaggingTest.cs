@@ -44,6 +44,7 @@ using System;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -245,7 +246,7 @@ namespace iText.Layout {
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0) {
                     table.Flush();
@@ -640,7 +641,7 @@ namespace iText.Layout {
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0) {
                     table.Flush();

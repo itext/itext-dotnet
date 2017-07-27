@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Events;
 using iText.Kernel.Geom;
@@ -193,7 +194,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
             if (index >= count || index < 0) {
-                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, count));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format("Index: {0}, Size: {1}", index, count));
             }
             PdfObject contents = GetPdfObject().Get(PdfName.Contents);
             if (contents is PdfStream) {
@@ -827,7 +828,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see>IOException).</see>
+        /// <see cref="System.IO.IOException"/>
+        /// .
         /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
@@ -854,7 +856,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see>IOException).</see>
+        /// <see cref="System.IO.IOException"/>
+        /// .
         /// </exception>
         public virtual byte[] GetStreamBytes(int index) {
             return GetContentStream(index).GetBytes();
@@ -921,8 +924,10 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>
         /// the
-        /// <see>List<PdfAnnotation></see>
-        /// containing all page's annotations.
+        /// <see cref="System.Collections.IList{E}"/>
+        /// &lt;
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// &gt; containing all page's annotations.
         /// </returns>
         public virtual IList<PdfAnnotation> GetAnnotations() {
             IList<PdfAnnotation> annotations = new List<PdfAnnotation>();

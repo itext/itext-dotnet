@@ -126,8 +126,8 @@ namespace iText.Kernel.Font {
                     else {
                         if (currentNumber > 255) {
                             ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.DocFontEncoding));
-                            LOGGER.Warn(String.Format(iText.IO.LogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, ((PdfName)obj).GetValue
-                                ()));
+                            LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, ((PdfName
+                                )obj).GetValue()));
                         }
                         else {
                             /* don't return or break, because differences subarrays may

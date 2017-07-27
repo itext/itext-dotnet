@@ -264,10 +264,10 @@ namespace iText.Layout.Renderer {
                 return method.Invoke(target, args);
             }
             catch (MissingMethodException) {
-                logger.Warn(String.Format("Cannot find method {0} for class {1}", methodName, className));
+                logger.Warn(MessageFormatUtil.Format("Cannot find method {0} for class {1}", methodName, className));
             }
             catch (TypeLoadException) {
-                logger.Warn(String.Format("Cannot find class {0}", className));
+                logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (Exception e) {
                 throw new Exception(e.ToString(), e);
@@ -281,10 +281,10 @@ namespace iText.Layout.Renderer {
                 return constructor.Invoke(args);
             }
             catch (MissingMethodException) {
-                logger.Warn(String.Format("Cannot find constructor for class {0}", className));
+                logger.Warn(MessageFormatUtil.Format("Cannot find constructor for class {0}", className));
             }
             catch (TypeLoadException) {
-                logger.Warn(String.Format("Cannot find class {0}", className));
+                logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (Exception exc) {
                 throw new Exception(exc.ToString(), exc);

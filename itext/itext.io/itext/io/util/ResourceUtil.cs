@@ -203,8 +203,21 @@ namespace iText.IO.Util {
         private static void LoadITextResourceAssemblies() {
 #if !NETSTANDARD1_6
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where( a=> !a.IsDynamic).ToList();
-            var loadedPaths = loadedAssemblies.Select(a => a.Location).ToArray();
-            
+            List<string> loadedPaths = new List<string>();
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    var path = a.Location;
+                    loadedPaths.Add(path);
+                }
+                catch
+                {
+                    // to skip exceptions for dynamically loaded assemblies without location
+                    // such as anonymously hosted dynamicmethods assembly for example
+                }
+            }
+
             var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
             var toLoad = referencedPaths.Where(referencePath => !loadedPaths.Any(loadedPath => loadedPath.Equals(referencePath, StringComparison.OrdinalIgnoreCase))).ToList();
             foreach (String path in toLoad)

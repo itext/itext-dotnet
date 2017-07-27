@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -76,7 +77,7 @@ namespace iText.Kernel.Pdf.Action {
             dic.Put(PdfName.TF, TEMPACCESS);
             GetPdfObject().Put(PdfName.Type, PdfName.MediaClip);
             GetPdfObject().Put(PdfName.S, PdfName.MCD);
-            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Media clip for {0}", file)));
+            GetPdfObject().Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Media clip for {0}", file)));
             GetPdfObject().Put(PdfName.CT, new PdfString(mimeType));
             GetPdfObject().Put(PdfName.P, dic);
             GetPdfObject().Put(PdfName.D, fs.GetPdfObject());

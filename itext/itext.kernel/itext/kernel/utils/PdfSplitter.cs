@@ -228,7 +228,7 @@ namespace iText.Kernel.Utils {
         /// <remarks>
         /// This method is called when another split document is to be created.
         /// You can override this method and return your own
-        /// <seealso>PdfWriter</seealso>
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
         /// depending on your needs.
         /// </remarks>
         /// <param name="documentPageRange">the page range of the original document to be included in the document being created now.

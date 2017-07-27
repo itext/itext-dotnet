@@ -95,5 +95,85 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode03Test() {
+            String filename = "barcodeDataMatrix3.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            BarcodeDataMatrix barcode3 = new BarcodeDataMatrix();
+            barcode3.SetWidth(36);
+            barcode3.SetHeight(12);
+            barcode3.SetCode("AbcdFFghijklmnopqrstuWXSQ");
+            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode04Test() {
+            String filename = "barcodeDataMatrix4.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            BarcodeDataMatrix barcode3 = new BarcodeDataMatrix();
+            barcode3.SetWidth(36);
+            barcode3.SetHeight(12);
+            barcode3.SetCode("01AbcdefgAbcdefg123451231231234");
+            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode05Test() {
+            String filename = "barcodeDataMatrix5.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            BarcodeDataMatrix barcode3 = new BarcodeDataMatrix();
+            barcode3.SetWidth(40);
+            barcode3.SetHeight(40);
+            barcode3.SetCode("aaabbbcccdddAAABBBAAABBaaabbbcccdddaaa");
+            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode06Test() {
+            String filename = "barcodeDataMatrix6.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            BarcodeDataMatrix barcode3 = new BarcodeDataMatrix();
+            barcode3.SetWidth(36);
+            barcode3.SetHeight(12);
+            barcode3.SetCode(">>>\r>>>THIS VERY TEXT>>\r>");
+            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
     }
 }

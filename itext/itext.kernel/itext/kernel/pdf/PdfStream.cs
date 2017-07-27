@@ -67,7 +67,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="bytes">
         /// initial content of
-        /// <seealso>PdfOutputStream</seealso>
+        /// <see cref="PdfOutputStream"/>
         /// .
         /// </param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
@@ -403,11 +403,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Update length manually in case its correction.</summary>
-        /// <remarks>
-        /// Update length manually in case its correction.
-        /// <seealso>PdfReader.checkPdfStreamLength()</seealso>
-        /// method.
-        /// </remarks>
+        /// <seealso cref="PdfReader.CheckPdfStreamLength(PdfStream)"/>
         protected internal virtual void UpdateLength(int length) {
             this.length = length;
         }

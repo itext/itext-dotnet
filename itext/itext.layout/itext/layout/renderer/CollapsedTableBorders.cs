@@ -72,53 +72,55 @@ namespace iText.Layout.Renderer {
             CellRenderer[] currentRow;
             int[] rowspansToDeduct = new int[numberOfColumns];
             int numOfRowsToRemove = 0;
-            for (int row = startRow - largeTableIndexOffset; row <= finishRow - largeTableIndexOffset; row++) {
-                currentRow = rows[row];
-                bool hasCells = false;
-                for (int col = 0; col < numberOfColumns; col++) {
-                    if (null != currentRow[col]) {
-                        int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
-                        if (rowspansToDeduct[col] > 0) {
-                            int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
-                            if (rowspan < 1) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
-                                logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
-                                rowspan = 1;
+            if (!rows.IsEmpty()) {
+                for (int row = startRow - largeTableIndexOffset; row <= finishRow - largeTableIndexOffset; row++) {
+                    currentRow = rows[row];
+                    bool hasCells = false;
+                    for (int col = 0; col < numberOfColumns; col++) {
+                        if (null != currentRow[col]) {
+                            int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
+                            if (rowspansToDeduct[col] > 0) {
+                                int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
+                                if (rowspan < 1) {
+                                    ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                                    logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                                    rowspan = 1;
+                                }
+                                currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
+                                if (0 != numOfRowsToRemove) {
+                                    RemoveRows(row - numOfRowsToRemove, numOfRowsToRemove);
+                                    row -= numOfRowsToRemove;
+                                    numOfRowsToRemove = 0;
+                                }
                             }
-                            currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
-                            if (0 != numOfRowsToRemove) {
-                                RemoveRows(row - numOfRowsToRemove, numOfRowsToRemove);
-                                row -= numOfRowsToRemove;
-                                numOfRowsToRemove = 0;
+                            BuildBordersArrays(currentRow[col], row, col, rowspansToDeduct);
+                            hasCells = true;
+                            for (int i = 0; i < colspan; i++) {
+                                rowspansToDeduct[col + i] = 0;
+                            }
+                            col += colspan - 1;
+                        }
+                        else {
+                            if (horizontalBorders[row].Count <= col) {
+                                horizontalBorders[row].Add(null);
                             }
                         }
-                        BuildBordersArrays(currentRow[col], row, col, rowspansToDeduct);
-                        hasCells = true;
-                        for (int i = 0; i < colspan; i++) {
-                            rowspansToDeduct[col + i] = 0;
-                        }
-                        col += colspan - 1;
                     }
-                    else {
-                        if (horizontalBorders[row].Count <= col) {
-                            horizontalBorders[row].Add(null);
+                    if (!hasCells) {
+                        if (row == rows.Count - 1) {
+                            RemoveRows(row - rowspansToDeduct[0], rowspansToDeduct[0]);
+                            // delete current row
+                            rows.JRemoveAt(row - rowspansToDeduct[0]);
+                            SetFinishRow(finishRow - 1);
+                            ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                            logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                         }
-                    }
-                }
-                if (!hasCells) {
-                    if (row == rows.Count - 1) {
-                        RemoveRows(row - rowspansToDeduct[0], rowspansToDeduct[0]);
-                        // delete current row
-                        rows.JRemoveAt(row - rowspansToDeduct[0]);
-                        SetFinishRow(finishRow - 1);
-                        ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
-                    }
-                    else {
-                        for (int i = 0; i < numberOfColumns; i++) {
-                            rowspansToDeduct[i]++;
+                        else {
+                            for (int i = 0; i < numberOfColumns; i++) {
+                                rowspansToDeduct[i]++;
+                            }
+                            numOfRowsToRemove++;
                         }
-                        numOfRowsToRemove++;
                     }
                 }
             }

@@ -93,7 +93,7 @@ namespace iText.IO.Font.Otf {
                     }
                 }
                 else {
-                    throw new NotSupportedException(String.Format("Invalid coverage format: {0}", coverageFormat));
+                    throw new NotSupportedException(MessageFormatUtil.Format("Invalid coverage format: {0}", coverageFormat));
                 }
             }
             return JavaCollectionsUtil.UnmodifiableList(glyphIds);
