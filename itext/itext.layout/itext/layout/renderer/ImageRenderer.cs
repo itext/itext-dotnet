@@ -118,11 +118,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            OverflowPropertyValue? overflowX = parent != null ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
-                ) : null;
-            OverflowPropertyValue? overflowY = (null == RetrieveMaxHeight() || RetrieveMaxHeight() > layoutBox.GetHeight
-                ()) && !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : (parent != null ? parent.GetProperty
-                <OverflowPropertyValue?>(Property.OVERFLOW_Y) : null);
+            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : OverflowPropertyValue.FIT;
+            OverflowPropertyValue? overflowY = null == parent || ((null == RetrieveMaxHeight() || RetrieveMaxHeight() 
+                > layoutBox.GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty
+                <OverflowPropertyValue?>(Property.OVERFLOW_Y);
             bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
             bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
