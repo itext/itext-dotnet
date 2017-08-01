@@ -1569,6 +1569,33 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SkipHeaderTest01() {
+            String testName = "skipHeaderTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            // construct a table
+            Table table = new Table(1);
+            for (int i = 0; i < 2; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(i + " Hello").SetFontSize(18)));
+            }
+            table.AddHeaderCell(new Cell().Add(" Header"));
+            table.SetSkipFirstHeader(true);
+            // add meaningless text to occupy enough place
+            for (int i = 0; i < 29; i++) {
+                doc.Add(new Paragraph(i + " Hello"));
+            }
+            // add the table
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void TableSplitTest01() {
             String testName = "tableSplitTest01.pdf";
             String outFileName = destinationFolder + testName;
