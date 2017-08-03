@@ -87,6 +87,8 @@ namespace iText.Kernel {
 
         public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "Cannot close document with already flushed PDF Catalog.";
 
+        public const String CannotConvertPdfArrayToDoubleArray = "Cannot convert PdfArray to an array of double.";
+
         public const String CannotConvertPdfArrayToRectanle = "Cannot convert PdfArray to Rectangle.";
 
         public const String CannotCopyFlushedObject = "Cannot copy flushed object.";

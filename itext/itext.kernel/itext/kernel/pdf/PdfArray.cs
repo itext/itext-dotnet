@@ -527,6 +527,24 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Returns this array as an array of doubles.</summary>
+        /// <remarks>Returns this array as an array of doubles. Will throw a PdfException when it encounters an issue.
+        ///     </remarks>
+        /// <returns>this array as an array of doubles</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
+        public virtual double[] ToDoubleArray() {
+            try {
+                double[] rslt = new double[Size()];
+                for (int k = 0; k < rslt.Length; ++k) {
+                    rslt[k] = GetAsNumber(k).DoubleValue();
+                }
+                return rslt;
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.CannotConvertPdfArrayToDoubleArray, e, this);
+            }
+        }
+
         protected internal override PdfObject NewInstance() {
             return new iText.Kernel.Pdf.PdfArray();
         }
