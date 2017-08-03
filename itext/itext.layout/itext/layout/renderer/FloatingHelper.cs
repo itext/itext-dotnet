@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
-using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
@@ -78,15 +77,24 @@ namespace iText.Layout.Renderer {
                     return topShift;
                 }
                 lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
-                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : layoutBox.GetLeft();
-                right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : layoutBox.GetRight();
+                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : float.MinValue;
+                right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : float.MaxValue;
+                if (left > right || left > layoutBox.GetRight() || right < layoutBox.GetLeft()) {
+                    left = layoutBox.GetLeft();
+                    right = left;
+                }
+                else {
+                    if (right > layoutBox.GetRight()) {
+                        right = layoutBox.GetRight();
+                    }
+                    if (left < layoutBox.GetLeft()) {
+                        left = layoutBox.GetLeft();
+                    }
+                }
             }
             while (boxWidth != null && boxWidth > right - left);
-            if (layoutBox.GetLeft() < left) {
-                layoutBox.SetX(left);
-            }
-            if (layoutBox.GetRight() > right && layoutBox.GetLeft() <= right) {
-                layoutBox.SetWidth(right - layoutBox.GetLeft());
+            if (layoutBox.GetWidth() > right - left) {
+                layoutBox.SetX(left).SetWidth(right - left);
             }
             ApplyClearance(layoutBox, marginsCollapseHandler, topShift, false);
             return topShift;
@@ -132,22 +140,16 @@ namespace iText.Layout.Renderer {
             renderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float floatElemWidth;
             if (blockWidth != null) {
-                float[] margins = renderer.GetMargins();
-                Border[] borders = renderer.GetBorders();
-                float[] paddings = renderer.GetPaddings();
-                float bordersWidth = (borders[1] != null ? borders[1].GetWidth() : 0) + (borders[3] != null ? borders[3].GetWidth
-                    () : 0);
-                float additionalWidth = margins[1] + margins[3] + bordersWidth + paddings[1] + paddings[3];
-                floatElemWidth = (float)blockWidth + additionalWidth;
+                floatElemWidth = (float)blockWidth + AbstractRenderer.CalculateAdditionalWidth(renderer);
             }
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(renderer, floatPropertyValue);
-                float childrenMaxWidthWithEps = minMaxWidth.GetChildrenMaxWidth() + AbstractRenderer.EPS;
-                if (childrenMaxWidthWithEps > parentBBox.GetWidth()) {
-                    childrenMaxWidthWithEps = parentBBox.GetWidth() - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
+                float maxWidth = minMaxWidth.GetMaxWidth();
+                if (maxWidth > parentBBox.GetWidth()) {
+                    maxWidth = parentBBox.GetWidth();
                 }
-                floatElemWidth = childrenMaxWidthWithEps + minMaxWidth.GetAdditionalWidth();
-                blockWidth = childrenMaxWidthWithEps;
+                floatElemWidth = maxWidth + AbstractRenderer.EPS;
+                blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
             }
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, floatElemWidth, FloatPropertyValue
                 .LEFT.Equals(floatPropertyValue));
@@ -239,14 +241,10 @@ namespace iText.Layout.Renderer {
 
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
             ) {
-            Rectangle bBox = renderer.GetOccupiedArea().GetBBox();
-            float lowestFloatBottom = bBox.GetBottom();
             foreach (Rectangle floatBox in floatRendererAreas) {
-                if (floatBox.GetBottom() < lowestFloatBottom) {
-                    lowestFloatBottom = floatBox.GetBottom();
-                }
+                renderer.GetOccupiedArea().SetBBox(Rectangle.GetCommonRectangle(renderer.GetOccupiedArea().GetBBox(), floatBox
+                    ));
             }
-            bBox.SetHeight(bBox.GetTop() - lowestFloatBottom).SetY(lowestFloatBottom);
         }
 
         internal static MinMaxWidth CalculateMinMaxWidthForFloat(AbstractRenderer renderer, FloatPropertyValue? floatPropertyVal
@@ -297,7 +295,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (lowestFloatBottom < float.MaxValue) {
-                clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom;
+                clearHeightCorrection = parentBBox.GetTop() - lowestFloatBottom + AbstractRenderer.EPS;
             }
             return clearHeightCorrection;
         }
@@ -324,6 +322,22 @@ namespace iText.Layout.Renderer {
             bool notAbsolutePos = position == null || position != LayoutPosition.ABSOLUTE;
             return notAbsolutePos && kidFloatPropertyVal != null && !kidFloatPropertyVal.Equals(FloatPropertyValue.NONE
                 );
+        }
+
+        internal static bool IsClearanceApplied(IList<IRenderer> floatingRenderers, ClearPropertyValue? clearPropertyValue
+            ) {
+            if (clearPropertyValue == null || clearPropertyValue.Equals(ClearPropertyValue.NONE)) {
+                return false;
+            }
+            foreach (IRenderer floatingRenderer in floatingRenderers) {
+                FloatPropertyValue? floatPropertyValue = floatingRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+                if (clearPropertyValue.Equals(ClearPropertyValue.BOTH) || (floatPropertyValue.Equals(FloatPropertyValue.LEFT
+                    ) && clearPropertyValue.Equals(ClearPropertyValue.LEFT)) || (floatPropertyValue.Equals(FloatPropertyValue
+                    .RIGHT) && clearPropertyValue.Equals(ClearPropertyValue.RIGHT))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {
@@ -355,7 +369,7 @@ namespace iText.Layout.Renderer {
         private static IList<Rectangle> GetBoxesAtYLevel(IList<Rectangle> floatRendererAreas, float currY) {
             IList<Rectangle> yLevelBoxes = new List<Rectangle>();
             foreach (Rectangle box in floatRendererAreas) {
-                if (box.GetBottom() < currY && box.GetTop() >= currY) {
+                if (box.GetBottom() < currY && box.GetTop() + AbstractRenderer.EPS >= currY) {
                     yLevelBoxes.Add(box);
                 }
             }

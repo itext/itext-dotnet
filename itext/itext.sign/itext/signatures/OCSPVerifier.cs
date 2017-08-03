@@ -163,15 +163,15 @@ namespace iText.Signatures {
                 // check if the OCSP response was valid at the time of signing
                 if (resp[i].NextUpdate == null) {
                     DateTime nextUpdate = SignUtils.Add180Sec(resp[i].ThisUpdate);
-                    LOGGER.Info(String.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate));
+                    LOGGER.Info(MessageFormatUtil.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate));
                     if (signDate.After(nextUpdate)) {
-                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate));
+                        LOGGER.Info(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate));
                         continue;
                     }
                 }
                 else {
                     if (signDate.After(resp[i].NextUpdate)) {
-                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i].NextUpdate));
+                        LOGGER.Info(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i].NextUpdate));
                         continue;
                     }
                 }

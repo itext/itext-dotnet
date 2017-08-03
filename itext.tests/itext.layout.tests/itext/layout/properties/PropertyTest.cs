@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.Layout.Properties {
@@ -57,17 +58,17 @@ namespace iText.Layout.Properties {
                     int value = (int)field.GetValue(null);
                     maxFieldValue = Math.Max(maxFieldValue, value);
                     if (fieldValues.Contains(value)) {
-                        NUnit.Framework.Assert.Fail(String.Format("Multiple fields with same value: {0}", value));
+                        NUnit.Framework.Assert.Fail(MessageFormatUtil.Format("Multiple fields with same value: {0}", value));
                     }
                     fieldValues.Add(value);
                 }
             }
             for (int i = 1; i <= maxFieldValue; i++) {
                 if (!fieldValues.Contains(i)) {
-                    NUnit.Framework.Assert.Fail(String.Format("Missing value: {0}", i));
+                    NUnit.Framework.Assert.Fail(MessageFormatUtil.Format("Missing value: {0}", i));
                 }
             }
-            System.Console.Out.WriteLine(String.Format("Max field value: {0}", maxFieldValue));
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("Max field value: {0}", maxFieldValue));
         }
     }
 }

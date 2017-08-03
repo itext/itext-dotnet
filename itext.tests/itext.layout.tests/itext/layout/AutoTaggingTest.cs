@@ -44,6 +44,7 @@ using System;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -245,7 +246,7 @@ namespace iText.Layout {
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0) {
                     table.Flush();
@@ -659,7 +660,7 @@ namespace iText.Layout {
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0) {
                     table.Flush();
@@ -819,6 +820,32 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1463")]
+        public virtual void TableWithCaption01() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "tableWithCaption01.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            pdf.SetTagged();
+            Paragraph p;
+            p = new Paragraph("We try to create a Table with a Caption by creating a Div with two children: " + "a Div that is a caption and a Table. "
+                 + "To tag this correctly, I set the outer Div role to Table, the inner Div to Caption, and the " + "Table to null."
+                );
+            document.Add(p);
+            p = new Paragraph("This table is tagged correctly.");
+            document.Add(p);
+            document.Add(CreateTable(false));
+            p = new Paragraph("This table has a caption and is tagged incorrectly. ");
+            document.Add(p);
+            document.Add(CreateTable(true));
+            document.Close();
+            CompareResult("tableWithCaption01.pdf", "cmp_tableWithCaption01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
@@ -838,6 +865,34 @@ namespace iText.Layout {
             String longText = longTextBuilder.ToString();
             p = new Paragraph(longText);
             return p;
+        }
+
+        private IBlockElement CreateTable(bool useCaption) {
+            Table table = new Table(new float[3]).SetMarginTop(10).SetMarginBottom(10);
+            for (int r = 0; r < 2; r++) {
+                for (int c = 0; c < 3; c++) {
+                    String content = r + "," + c;
+                    Cell cell = new Cell();
+                    cell.Add(content);
+                    table.AddCell(cell);
+                }
+            }
+            if (useCaption) {
+                Div div = new Div();
+                div.SetRole(PdfName.Table);
+                Paragraph p = new Paragraph("Caption");
+                p.SetRole(null);
+                p.SetTextAlignment(TextAlignment.CENTER).SetBold();
+                Div caption = new Div().Add(p);
+                caption.SetRole(PdfName.Caption);
+                div.Add(caption);
+                table.SetRole(null);
+                div.Add(table);
+                return div;
+            }
+            else {
+                return table;
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>

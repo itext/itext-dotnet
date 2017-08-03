@@ -41,7 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
@@ -111,6 +113,134 @@ namespace iText.Layout.Borders {
                     y3 = y2 + borderWidthAfter;
                     x4 = x1 - width;
                     y4 = y1 - borderWidthBefore;
+                    break;
+                }
+            }
+            canvas.SaveState().SetFillColor(transparentColor.GetColor());
+            transparentColor.ApplyFillTransparency(canvas);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill().RestoreState();
+        }
+
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float outerRadius, Border.Side
+             side, float borderWidthBefore, float borderWidthAfter) {
+            float innerRadiusBefore = Math.Max(0, outerRadius - borderWidthBefore);
+            float innerRadius = Math.Max(0, outerRadius - width);
+            float innerRadiusAfter = Math.Max(0, outerRadius - borderWidthAfter);
+            float x3 = 0;
+            float y3 = 0;
+            float x4 = 0;
+            float y4 = 0;
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, side);
+            switch (borderSide) {
+                case Border.Side.TOP: {
+                    x3 = x2 + borderWidthAfter;
+                    y3 = y2 + width;
+                    x4 = x1 - borderWidthBefore;
+                    y4 = y1 + width;
+                    if (innerRadiusBefore > innerRadius) {
+                        x1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x4, y1 - innerRadius), new 
+                            Point(x1 + innerRadiusBefore, y1 - innerRadius)).GetX();
+                        y1 -= innerRadius;
+                    }
+                    else {
+                        y1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1 + innerRadiusBefore, y1
+                            ), new Point(x1 + innerRadiusBefore, y1 - innerRadius)).GetY();
+                        x1 += innerRadiusBefore;
+                    }
+                    if (innerRadiusAfter > innerRadius) {
+                        x2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2, y2 - innerRadius), new 
+                            Point(x2 - innerRadiusAfter, y2 - innerRadius)).GetX();
+                        y2 -= innerRadius;
+                    }
+                    else {
+                        y2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2 - innerRadiusAfter, y2
+                            ), new Point(x2 - innerRadiusAfter, y2 - innerRadius)).GetY();
+                        x2 -= innerRadiusAfter;
+                    }
+                    break;
+                }
+
+                case Border.Side.RIGHT: {
+                    x3 = x2 + width;
+                    y3 = y2 - borderWidthAfter;
+                    x4 = x1 + width;
+                    y4 = y1 + borderWidthBefore;
+                    if (innerRadius > innerRadiusBefore) {
+                        x1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1, y1 - innerRadiusBefore
+                            ), new Point(x1 - innerRadius, y1 - innerRadiusBefore)).GetX();
+                        y1 -= innerRadiusBefore;
+                    }
+                    else {
+                        y1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1 - innerRadius, y1), new 
+                            Point(x1 - innerRadius, y1 - innerRadiusBefore)).GetY();
+                        x1 -= innerRadius;
+                    }
+                    if (innerRadiusAfter > innerRadius) {
+                        y2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2 - innerRadius, y2), new 
+                            Point(x2 - innerRadius, y2 + innerRadiusAfter)).GetY();
+                        x2 -= innerRadius;
+                    }
+                    else {
+                        x2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2, y2 + innerRadiusAfter
+                            ), new Point(x2 - innerRadius, y2 + innerRadiusAfter)).GetX();
+                        y2 += innerRadiusAfter;
+                    }
+                    break;
+                }
+
+                case Border.Side.BOTTOM: {
+                    x3 = x2 - borderWidthAfter;
+                    y3 = y2 - width;
+                    x4 = x1 + borderWidthBefore;
+                    y4 = y1 - width;
+                    if (innerRadius > innerRadiusBefore) {
+                        y1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1 - innerRadiusBefore, y1
+                            ), new Point(x1 - innerRadiusBefore, y1 + innerRadius)).GetY();
+                        x1 -= innerRadiusBefore;
+                    }
+                    else {
+                        x1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1, y1 + innerRadius), new 
+                            Point(x1 - innerRadiusBefore, y1 + innerRadius)).GetX();
+                        y1 += innerRadius;
+                    }
+                    if (innerRadiusAfter > innerRadius) {
+                        x2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2, y2 + innerRadius), new 
+                            Point(x2 + innerRadiusAfter, y2 + innerRadius)).GetX();
+                        y2 += innerRadius;
+                    }
+                    else {
+                        y2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2 + innerRadiusAfter, y2
+                            ), new Point(x2 + innerRadiusAfter, y2 + innerRadius)).GetY();
+                        x2 += innerRadiusAfter;
+                    }
+                    break;
+                }
+
+                case Border.Side.LEFT: {
+                    x3 = x2 - width;
+                    y3 = y2 + borderWidthAfter;
+                    x4 = x1 - width;
+                    y4 = y1 - borderWidthBefore;
+                    if (innerRadius > innerRadiusBefore) {
+                        x1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1, y1 + innerRadiusBefore
+                            ), new Point(x1 + innerRadius, y1 + innerRadiusBefore)).GetX();
+                        y1 += innerRadiusBefore;
+                    }
+                    else {
+                        y1 = (float)GetIntersectionPoint(new Point(x1, y1), new Point(x4, y4), new Point(x1 + innerRadius, y1), new 
+                            Point(x1 + innerRadius, y1 + innerRadiusBefore)).GetY();
+                        x1 += innerRadius;
+                    }
+                    if (innerRadiusAfter > innerRadius) {
+                        y2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2 + innerRadius, y2), new 
+                            Point(x2 + innerRadius, y2 - innerRadiusAfter)).GetY();
+                        x2 += innerRadius;
+                    }
+                    else {
+                        x2 = (float)GetIntersectionPoint(new Point(x2, y2), new Point(x3, y3), new Point(x2, y2 - innerRadiusAfter
+                            ), new Point(x2 + innerRadius, y2 - innerRadiusAfter)).GetX();
+                        y2 -= innerRadiusAfter;
+                    }
                     break;
                 }
             }

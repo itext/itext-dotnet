@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -84,11 +85,32 @@ namespace iText.IO.Util {
         }
 
         public static String[] Split(String srcStr, String splitSequence) {
-            if (splitSequence.Length == 1) {
+            if (splitSequence.Length == 1)
                 return srcStr.Split(splitSequence.ToCharArray());
-            } else {
-                return Regex.Split(srcStr, splitSequence);
+            Regex regex = new Regex(splitSequence);
+            Match match = regex.Match(srcStr);
+            String[] result;
+            if (!match.Success)
+            {
+                result = new String[1];
+                result[0] = srcStr;
+                return result;
             }
+            List<String> al = new List<String>();
+            int prevat = 0;
+
+            for (;;)
+            {
+                if (match.Index != 0)
+                    al.Add(srcStr.Substring(prevat, match.Index - prevat));
+                prevat = match.Index + match.Length;
+                match = match.NextMatch();
+                if (!match.Success)
+                    break;
+            }
+            if (prevat != srcStr.Length)
+                al.Add(srcStr.Substring(prevat, srcStr.Length - prevat));
+            return al.ToArray();
         }
     }
 }

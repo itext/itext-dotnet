@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf.Filters;
 
@@ -705,8 +706,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                                logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr(), tokens
-                                    .GetGenNr()));
+                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                                    (), tokens.GetGenNr()));
                                 return new PdfNull();
                             }
                             else {
@@ -890,7 +891,7 @@ namespace iText.Kernel.Pdf {
                     tokens.NextValidToken();
                     int gen = tokens.GetIntValue();
                     tokens.NextValidToken();
-                    if (pos == 0L && gen == 65535 && num == 1) {
+                    if (pos == 0L && gen == 65535 && num == 1 && start != 0) {
                         // Very rarely can an XREF have an incorrect start number. (SUP-1557)
                         // e.g.
                         // xref
@@ -930,7 +931,7 @@ namespace iText.Kernel.Pdf {
                     else {
                         if (tokens.TokenValueEqualsTo(PdfTokenizer.F)) {
                             if (xref.Get(num) == null) {
-                                reference.SetFree();
+                                xref.FreeReference(reference, true);
                                 xref.Add(reference);
                             }
                         }

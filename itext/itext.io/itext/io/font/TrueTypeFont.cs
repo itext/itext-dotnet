@@ -302,8 +302,8 @@ namespace iText.IO.Font {
                 int index = cmap.Get(charCode)[0];
                 if (index >= maxGlyphId) {
                     ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.Warn(String.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName()
-                        , index));
+                    LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName
+                        (), index));
                     continue;
                 }
                 Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes[index] : null);

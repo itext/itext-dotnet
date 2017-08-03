@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Kernel.Log {
     /// <summary>
@@ -74,11 +75,11 @@ namespace iText.Kernel.Log {
         }
 
         public virtual void OnDocumentRead(long size) {
-            System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes read", name, size));
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes read", name, size));
         }
 
         public virtual void OnDocumentWritten(long size) {
-            System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes written", name, size));
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes written", name, size));
         }
     }
 }

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -98,7 +99,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            float? retrievedWidth = RetrieveWidth(layoutBox.GetWidth());
+            float? retrievedWidth = HasProperty(Property.WIDTH) ? RetrieveWidth(layoutBox.GetWidth()) : null;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
@@ -112,11 +113,18 @@ namespace iText.Layout.Renderer {
                 clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth
                     , clearHeightCorrection, null);
             }
-            this.width = retrievedWidth;
+            width = retrievedWidth;
             height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
+            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : OverflowPropertyValue.FIT;
+            OverflowPropertyValue? overflowY = null == parent || ((null == RetrieveMaxHeight() || RetrieveMaxHeight() 
+                > layoutBox.GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty
+                <OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
+            bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
@@ -168,14 +176,30 @@ namespace iText.Layout.Renderer {
                     height *= (float)verticalScaling;
                 }
             }
-            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
-                width *= RetrieveMinHeight() / height;
-                height = RetrieveMinHeight();
+            // Constrain width and height according to min/max width
+            float? minWidth = RetrieveMinWidth(layoutBox.GetWidth());
+            float? maxWidth = RetrieveMaxWidth(layoutBox.GetWidth());
+            if (null != minWidth && width < minWidth) {
+                height *= minWidth / width;
+                width = minWidth;
             }
             else {
-                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
-                    width *= RetrieveMaxHeight() / height;
-                    height = RetrieveMaxHeight();
+                if (null != maxWidth && width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            }
+            // Constrain width and height according to min/max height, which has precedence over width settings
+            float? minHeight = RetrieveMinHeight();
+            float? maxHeight = RetrieveMaxHeight();
+            if (null != minHeight && height < minHeight) {
+                width *= minHeight / height;
+                height = minHeight;
+            }
+            else {
+                if (null != maxHeight && height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
                 }
                 else {
                     if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
@@ -205,10 +229,12 @@ namespace iText.Layout.Renderer {
             // indicates whether the placement is forced
             bool isPlacingForced = false;
             if (width > layoutBox.GetWidth() || height > layoutBox.GetHeight()) {
-                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || (width > layoutBox.GetWidth() && processOverflowX
+                    ) || (height > layoutBox.GetHeight() && processOverflowY)) {
                     isPlacingForced = true;
                 }
                 else {
+                    occupiedArea.GetBBox().SetHeight(initialOccupiedAreaBBox.GetHeight());
                     return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }
@@ -248,6 +274,7 @@ namespace iText.Layout.Renderer {
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, floatRendererAreas, 
                 layoutContext.GetArea().GetBBox(), clearHeightCorrection, false);
+            ApplyAbsolutePositionIfNeeded(layoutContext);
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea, null, null, isPlacingForced ? this : null
                 ).SetMinMaxWidth(minMaxWidth);
         }
@@ -255,7 +282,8 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                    "Drawing won't be performed."));
                 return;
             }
             ApplyMargins(occupiedArea.GetBBox(), false);
@@ -293,6 +321,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            BeginTranformationIfApplied(drawContext.GetCanvas());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
                 fixedXPosition += rotatedDeltaX;
@@ -318,6 +347,7 @@ namespace iText.Layout.Renderer {
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
             EndElementOpacityApplying(drawContext);
+            EndTranformationIfApplied(drawContext.GetCanvas());
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
@@ -350,6 +380,10 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+            return rect;
+        }
+
         public override void Move(float dxRight, float dyUp) {
             base.Move(dxRight, dyUp);
             if (initialOccupiedAreaBBox != null) {
@@ -376,8 +410,8 @@ namespace iText.Layout.Renderer {
             // if rotation was applied, width would be equal to the width of rectangle bounding the rotated image
             float angleScaleCoef = imageWidth / (float)width;
             if (width > angleScaleCoef * area.GetWidth()) {
-                SetProperty(Property.HEIGHT, area.GetWidth() / width * imageHeight);
-                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
+                UpdateHeight(area.GetWidth() / width * imageHeight);
+                UpdateWidth(UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
         }

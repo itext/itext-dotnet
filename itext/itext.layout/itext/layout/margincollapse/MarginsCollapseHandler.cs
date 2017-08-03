@@ -451,9 +451,12 @@ namespace iText.Layout.Margincollapse {
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
             return !(renderer is TableRenderer) && !RendererIsFloated(renderer) && !HasBottomBorders(renderer) && !HasTopBorders
-                (renderer) && !HasBottomPadding(renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
+                (renderer) && !HasBottomPadding(renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer) 
+                && !(IsBlockElement(renderer) && renderer is AbstractRenderer && ((AbstractRenderer)renderer).GetParent
+                () is LineRenderer);
         }
 
+        // inline block
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
             return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
                 (parent) && !HasTopBorders(parent) && !HasTopPadding(parent);
@@ -528,7 +531,8 @@ namespace iText.Layout.Margincollapse {
 
         private static float GetModelTopMargin(IRenderer renderer) {
             float? margin = renderer.GetModelElement().GetProperty<float?>(Property.MARGIN_TOP);
-            return margin != null ? (float)margin : 0;
+            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
+            return margin != null && !(renderer is CellRenderer) ? (float)margin : 0;
         }
 
         private static void IgnoreModelTopMargin(IRenderer renderer) {
@@ -541,7 +545,8 @@ namespace iText.Layout.Margincollapse {
 
         private static float GetModelBottomMargin(IRenderer renderer) {
             float? margin = renderer.GetModelElement().GetProperty<float?>(Property.MARGIN_BOTTOM);
-            return margin != null ? (float)margin : 0;
+            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
+            return margin != null && !(renderer is CellRenderer) ? (float)margin : 0;
         }
 
         private static void IgnoreModelBottomMargin(IRenderer renderer) {

@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -76,7 +77,7 @@ namespace iText.Layout {
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 5; j++) {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0) {
                     table.Flush();
@@ -103,7 +104,7 @@ namespace iText.Layout {
             Table table = new Table(5, true).SetMargins(20, 20, 20, 20);
             doc.Add(table);
             for (int i = 0; i < 100; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}", i + 1))));
+                table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}", i + 1))));
                 if (i % 7 == 0) {
                     table.Flush();
                 }

@@ -60,6 +60,16 @@ namespace iText.Layout {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/BlockTest/";
 
+        private const String textByronNarrow = "When a man hath no freedom to fight for at home, " + "Let him combat for that of his neighbours; "
+             + "Let him think of the glories of Greece and of Rome, " + "And get knocked on the head for his labours. "
+             + "\n" + "To do good to Mankind is the chivalrous plan, " + "And is always as nobly requited; " + "Then battle for Freedom wherever you can, "
+             + "And, if not shot or hanged, you'll get knighted.";
+
+        private const String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
@@ -73,10 +83,6 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "blockWithSetHeightProperties01.pdf";
             String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph(textByron);
             for (int i = 0; i < 10; i++) {
@@ -127,10 +133,6 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "blockWithSetHeightProperties02.pdf";
             String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph(textByron);
             Div div = new Div();
@@ -172,6 +174,159 @@ namespace iText.Layout {
             div.DeleteOwnProperty(Property.MIN_HEIGHT);
             div.SetMaxHeight(2500);
             doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest01() {
+            // TODO DEVSIX-1373
+            String outFileName = destinationFolder + "overflowTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Paragraph explanation = new Paragraph("In this sample iText will not try to fit text in container's width, because overflow property is set. However no text is hidden."
+                );
+            doc.Add(explanation);
+            Paragraph p = new Paragraph(textByronNarrow);
+            p.SetWidth(200);
+            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+            Div div = new Div();
+            div.SetWidth(100);
+            div.SetBorder(new SolidBorder(Color.BLACK, 1));
+            div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            div.Add(p);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest02() {
+            String outFileName = destinationFolder + "overflowTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Paragraph p = new Paragraph();
+            p.SetWidth(200);
+            p.SetHeight(100);
+            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetBackgroundColor(Color.YELLOW);
+            for (int i = 0; i < 10; i++) {
+                p.Add(textByronNarrow);
+            }
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest03() {
+            String outFileName = destinationFolder + "overflowTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Paragraph p = new Paragraph();
+            p.SetWidth(1400);
+            p.SetHeight(1400);
+            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetBackgroundColor(Color.YELLOW);
+            for (int i = 0; i < 100; i++) {
+                p.Add(textByronNarrow);
+            }
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.Add(p);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1375")]
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest04() {
+            String outFileName = destinationFolder + "overflowTest04.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetWidth(200);
+            Document doc = new Document(pdfDocument);
+            Paragraph p = new Paragraph();
+            p.SetRotationAngle(Math.PI / 2);
+            p.SetWidth(100);
+            p.SetHeight(100);
+            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            p.Add(image);
+            doc.Add(p);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1373")]
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest05() {
+            String outFileName = destinationFolder + "overflowTest05.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest05.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            div.SetWidth(100);
+            div.SetHeight(150);
+            div.SetBackgroundColor(Color.GREEN);
+            div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            List list = new List();
+            list.Add("Make Greeeeeeeeeetzky Great Again");
+            list.Add("Greeeeeeeeeetzky Great Again Make");
+            list.Add("Great Again Make Greeeeeeeeeetzky");
+            list.Add("Again Make Greeeeeeeeeetzky Great");
+            div.Add(list);
+            doc.Add(div);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1373")]
+        [NUnit.Framework.Test]
+        public virtual void OverflowTest06() {
+            String outFileName = destinationFolder + "overflowTest06.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowTest06.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            div.SetWidth(100);
+            div.SetHeight(100);
+            div.SetBackgroundColor(Color.GREEN);
+            div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            div.Add(new Paragraph(textByron));
+            doc.Add(div);
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -298,6 +453,203 @@ namespace iText.Layout {
             Div div3 = new Div().SetBorder(new SolidBorder(6)).SetPaddingTop(400).SetPaddingBottom(400);
             doc.Add(div);
             doc.Add(div3);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest01() {
+            String outFileName = destinationFolder + "borderRadiusTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.BLUE);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(50));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new SolidBorder(Color.RED, 20)).SetBorderRight(new SolidBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new DashedBorder(Color.RED, 20)).SetBorderRight(new DashedBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new DottedBorder(Color.RED, 20)).SetBorderRight(new DottedBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderTop(new RoundDotsBorder(Color.RED, 20)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 20));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest02() {
+            String outFileName = destinationFolder + "borderRadiusTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            // width and height > 2 * radius
+            Div div = new Div();
+            div.SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
+                .CreatePointValue(100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // 2 * radius > width and height > radius
+            div = new Div();
+            div.SetHeight(150).SetWidth(150).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
+                .CreatePointValue(100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // radius > width and height
+            div = new Div();
+            div.SetHeight(50).SetWidth(50).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
+                .CreatePointValue(100));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest03() {
+            String outFileName = destinationFolder + "borderRadiusTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(200));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new SolidBorder(Color.MAGENTA, 100)).SetBorderBottom(new SolidBorder(Color.BLACK, 100)).
+                SetBorderTop(new SolidBorder(Color.RED, 100)).SetBorderRight(new SolidBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new DashedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DashedBorder(Color.BLACK, 100)
+                ).SetBorderTop(new DashedBorder(Color.RED, 100)).SetBorderRight(new DashedBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new DottedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DottedBorder(Color.BLACK, 100)
+                ).SetBorderTop(new DottedBorder(Color.RED, 100)).SetBorderRight(new DottedBorder(Color.BLUE, 100));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderLeft(new RoundDotsBorder(Color.MAGENTA, 100)).SetBorderBottom(new RoundDotsBorder(Color.BLACK
+                , 100)).SetBorderTop(new RoundDotsBorder(Color.RED, 100)).SetBorderRight(new RoundDotsBorder(Color.BLUE
+                , 100));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest04() {
+            String outFileName = destinationFolder + "borderRadiusTest04.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            Style divStyle = new Style().SetHeight(120).SetWidth(120).SetBackgroundColor(Color.MAGENTA);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(90));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.GREEN, 15)).SetBorderTop
+                (new SolidBorder(Color.BLACK, 60)).SetBorderRight(new SolidBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.GREEN, 15)).SetBorderTop
+                (new DashedBorder(Color.BLACK, 60)).SetBorderRight(new DashedBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.GREEN, 15)).SetBorderTop
+                (new DottedBorder(Color.BLACK, 60)).SetBorderRight(new DottedBorder(Color.BLUE, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.GREEN, 15)
+                ).SetBorderTop(new RoundDotsBorder(Color.BLACK, 60)).SetBorderRight(new RoundDotsBorder(Color.BLUE, 150
+                ));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest05() {
+            String outFileName = destinationFolder + "borderRadiusTest05.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest05.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(Color.MAGENTA);
+            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(100));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.BLUE, 15)).SetBorderTop
+                (new SolidBorder(Color.GREEN, 60)).SetBorderRight(new SolidBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.BLUE, 15)).SetBorderTop
+                (new DashedBorder(Color.GREEN, 60)).SetBorderRight(new DashedBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.BLUE, 15)).SetBorderTop
+                (new DottedBorder(Color.GREEN, 60)).SetBorderRight(new DottedBorder(Color.YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.BLUE, 15))
+                .SetBorderTop(new RoundDotsBorder(Color.GREEN, 60)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 150
+                ));
+            doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

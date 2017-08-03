@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -150,7 +151,8 @@ namespace iText.Forms {
                                         toPage.GetPdfObject().GetAsArray(PdfName.Annots).Add(clonedAnnot);
                                         toPage.RemoveAnnotation(annot);
                                         field = MergeFieldsWithTheSameName(PdfFormField.MakeFormField(clonedAnnot, toPage.GetDocument()));
-                                        logger.Warn(String.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
+                                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString
+                                            ));
                                         PdfArray kids = field.GetKids();
                                         if (kids != null) {
                                             field.GetPdfObject().Remove(PdfName.Kids);

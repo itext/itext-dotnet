@@ -452,6 +452,16 @@ namespace iText.Layout.Element {
             return (iText.Layout.Element.Image)(Object)this;
         }
 
+        public virtual iText.Layout.Element.Image SetMaxWidth(float maxWidth) {
+            SetProperty(Property.MAX_WIDTH, maxWidth);
+            return (iText.Layout.Element.Image)(Object)this;
+        }
+
+        public virtual iText.Layout.Element.Image SetMinWidth(float minWidth) {
+            SetProperty(Property.MIN_WIDTH, minWidth);
+            return (iText.Layout.Element.Image)(Object)this;
+        }
+
         /// <summary>Gets scaled width of the image.</summary>
         /// <returns>the current scaled width</returns>
         public virtual float GetImageScaledWidth() {

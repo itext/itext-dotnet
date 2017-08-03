@@ -364,12 +364,14 @@ namespace iText.Signatures {
                     ps.MakeIndirect(document);
                     crl.Add(ps);
                     crls.Add(ps);
+                    crls.SetModified();
                 }
                 foreach (byte[] b in validated.Get(vkey).ocsps) {
                     PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ocsp.Add(ps);
                     ocsps.Add(ps);
+                    ocsps.SetModified();
                 }
                 foreach (byte[] b in validated.Get(vkey).certs) {
                     PdfStream ps = new PdfStream(b);
@@ -377,6 +379,7 @@ namespace iText.Signatures {
                     ps.MakeIndirect(document);
                     cert.Add(ps);
                     certs.Add(ps);
+                    certs.SetModified();
                 }
                 if (ocsp.Size() > 0) {
                     ocsp.MakeIndirect(document);
@@ -394,6 +397,7 @@ namespace iText.Signatures {
                 vrim.Put(vkey, vri);
             }
             vrim.MakeIndirect(document);
+            vrim.SetModified();
             dss.Put(PdfName.VRI, vrim);
             if (ocsps.Size() > 0) {
                 ocsps.MakeIndirect(document);
@@ -408,6 +412,7 @@ namespace iText.Signatures {
                 dss.Put(PdfName.Certs, certs);
             }
             dss.MakeIndirect(document);
+            dss.SetModified();
             catalog.Put(PdfName.DSS, dss);
         }
 

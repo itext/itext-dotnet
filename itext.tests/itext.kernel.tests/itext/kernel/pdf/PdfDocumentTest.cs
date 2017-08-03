@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Text;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -278,6 +279,31 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "freeReference.pdf", 
                 sourceFolder + "cmp_freeReference.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FullCompressionAppendMode() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "fullCompressionAppendMode.pdf", new WriterProperties
+                ().SetFullCompressionMode(true).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "fullCompressionDoc.pdf"), writer, 
+                new StampingProperties().UseAppendMode());
+            PdfPage page = pdfDocument.GetPage(1);
+            PdfStream contentStream = new PdfStream();
+            String contentStr = iText.IO.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream(
+                ).GetBytes(), Encoding.ASCII);
+            contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(Encoding.ASCII));
+            page.GetPdfObject().Put(PdfName.Contents, contentStream);
+            page.SetModified();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "fullCompressionAppendMode.pdf"
+                , sourceFolder + "cmp_fullCompressionAppendMode.pdf", destinationFolder, "diff_"));
+            PdfDocument assertDoc = new PdfDocument(new PdfReader(destinationFolder + "fullCompressionAppendMode.pdf")
+                );
+            NUnit.Framework.Assert.IsTrue(assertDoc.GetPdfObject(9).IsStream());
+            NUnit.Framework.Assert.AreEqual(1, ((PdfDictionary)assertDoc.GetPdfObject(9)).GetAsNumber(PdfName.N).IntValue
+                ());
         }
 
         /// <exception cref="System.IO.IOException"/>

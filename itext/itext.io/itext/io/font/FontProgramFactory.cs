@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Woff2;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -185,6 +187,11 @@ namespace iText.IO.Font {
                         if (WoffConverter.IsWoffFont(fontProgram)) {
                             fontProgram = WoffConverter.Convert(fontProgram);
                         }
+                        else {
+                            if (Woff2Converter.IsWoff2Font(fontProgram)) {
+                                fontProgram = Woff2Converter.Convert(fontProgram);
+                            }
+                        }
                         fontBuilt = new TrueTypeFont(fontProgram);
                     }
                     catch (Exception) {
@@ -200,9 +207,9 @@ namespace iText.IO.Font {
             }
             else {
                 String fontFileExtension = null;
-                int extensionBeginIndex = name.LastIndexOf('.');
+                int extensionBeginIndex = baseName.LastIndexOf('.');
                 if (extensionBeginIndex > 0) {
-                    fontFileExtension = name.Substring(extensionBeginIndex).ToLowerInvariant();
+                    fontFileExtension = baseName.Substring(extensionBeginIndex).ToLowerInvariant();
                 }
                 if (isBuiltinFonts14 || ".afm".Equals(fontFileExtension) || ".pfm".Equals(fontFileExtension)) {
                     fontBuilt = new Type1Font(name, null, null, null);
@@ -212,19 +219,7 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension) || ".woff".Equals(fontFileExtension
-                            )) {
-                            if (".woff".Equals(fontFileExtension)) {
-                                if (fontProgram == null) {
-                                    fontProgram = ReadBytesFromPath(name);
-                                }
-                                try {
-                                    fontProgram = WoffConverter.Convert(fontProgram);
-                                }
-                                catch (ArgumentException woffException) {
-                                    throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
-                                }
-                            }
+                        if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension)) {
                             if (fontProgram != null) {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
@@ -233,17 +228,42 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = name.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
-                            if (ttcSplit > 0) {
-                                try {
-                                    String ttcName = name.JSubstring(0, ttcSplit + 4);
-                                    // count(.ttc) = 4
-                                    int ttcIndex = System.Convert.ToInt32(name.Substring(ttcSplit + 5));
-                                    // count(.ttc,) = 5)
-                                    fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                            if (".woff".Equals(fontFileExtension) || ".woff2".Equals(fontFileExtension)) {
+                                if (fontProgram == null) {
+                                    fontProgram = ReadFontBytesFromPath(baseName);
                                 }
-                                catch (FormatException nfe) {
-                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                if (".woff".Equals(fontFileExtension)) {
+                                    try {
+                                        fontProgram = WoffConverter.Convert(fontProgram);
+                                    }
+                                    catch (ArgumentException woffException) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
+                                    }
+                                }
+                                else {
+                                    // ".woff2".equals(fontFileExtension)
+                                    try {
+                                        fontProgram = Woff2Converter.Convert(fontProgram);
+                                    }
+                                    catch (FontCompressionException woff2Exception) {
+                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
+                                    }
+                                }
+                                fontBuilt = new TrueTypeFont(fontProgram);
+                            }
+                            else {
+                                int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                                if (ttcSplit > 0) {
+                                    try {
+                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                                        // count(.ttc) = 4
+                                        int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        // count(.ttc,) = 5)
+                                        fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                                    }
+                                    catch (FormatException nfe) {
+                                        throw new iText.IO.IOException(nfe.Message, nfe);
+                                    }
                                 }
                             }
                         }
@@ -564,12 +584,12 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static byte[] ReadBytesFromPath(String path) {
+        internal static byte[] ReadFontBytesFromPath(String path) {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (path));
             int bufLen = (int)raf.Length();
             if (bufLen < raf.Length()) {
-                throw new iText.IO.IOException(String.Format("Source data from \"{0}\" is bigger than byte array can hold."
+                throw new iText.IO.IOException(MessageFormatUtil.Format("Source data from \"{0}\" is bigger than byte array can hold."
                     , path));
             }
             byte[] buf = new byte[bufLen];

@@ -323,7 +323,7 @@ namespace iText.IO.Font.Otf {
         }
 
         public override String ToString() {
-            return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
+            return MessageFormatUtil.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
                 (chars) : "null", ToHex(unicode), width);
         }
 

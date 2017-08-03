@@ -1569,6 +1569,33 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SkipHeaderTest01() {
+            String testName = "skipHeaderTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            // construct a table
+            Table table = new Table(1);
+            for (int i = 0; i < 2; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(i + " Hello").SetFontSize(18)));
+            }
+            table.AddHeaderCell(new Cell().Add(" Header"));
+            table.SetSkipFirstHeader(true);
+            // add meaningless text to occupy enough place
+            for (int i = 0; i < 29; i++) {
+                doc.Add(new Paragraph(i + " Hello"));
+            }
+            // add the table
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void TableSplitTest01() {
             String testName = "tableSplitTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1862,7 +1889,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1321")]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableMinMaxWidthException() {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer

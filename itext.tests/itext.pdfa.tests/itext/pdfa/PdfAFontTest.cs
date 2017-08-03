@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -98,7 +99,7 @@ namespace iText.Pdfa {
                     ("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "FreeSans")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "FreeSans")));
 ;
         }
 
@@ -139,7 +140,7 @@ namespace iText.Pdfa {
                     ("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "Helvetica")));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "Helvetica")));
 ;
         }
 

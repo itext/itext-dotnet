@@ -334,6 +334,33 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<TransparentColor>(property);
         }
 
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property) {
+            return NumberUtil.AsFloat(this.GetProperty<Object>(property));
+        }
+
+        /// <summary>Returns a property with a certain key, as a floating point value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <param name="defaultValue">default value to be returned if property is not found</param>
+        /// <returns>
+        /// a
+        /// <see cref="float?"/>
+        /// </returns>
+        public virtual float? GetPropertyAsFloat(int property, float? defaultValue) {
+            return NumberUtil.AsFloat(this.GetProperty<Object>(property, defaultValue));
+        }
+
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
         /// <param name="property">
         /// an
@@ -345,6 +372,19 @@ namespace iText.Layout.Renderer {
         /// </returns>
         public virtual bool? GetPropertyAsBoolean(int property) {
             return this.GetProperty<bool?>(property);
+        }
+
+        /// <summary>Returns a property with a certain key, as an integer value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="int?"/>
+        /// </returns>
+        public virtual int? GetPropertyAsInteger(int property) {
+            return NumberUtil.AsInteger(this.GetProperty<Object>(property));
         }
 
         /// <summary>Returns a string representation of the renderer.</summary>
@@ -421,11 +461,13 @@ namespace iText.Layout.Renderer {
                 Rectangle backgroundArea = ApplyMargins(bBox, false);
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
-                        );
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
+                        ));
                     return;
                 }
+                bool backgroundAreaIsClipped = false;
                 if (background != null) {
+                    backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                     TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
                     drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
                     backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
@@ -435,12 +477,15 @@ namespace iText.Layout.Renderer {
                         ();
                 }
                 if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                    if (!backgroundAreaIsClipped) {
+                        backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
+                    }
                     ApplyBorderBox(backgroundArea, false);
                     Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
                         GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
                     if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
                             ));
                         return;
                     }
@@ -462,10 +507,178 @@ namespace iText.Layout.Renderer {
                     while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
                     drawContext.GetCanvas().RestoreState();
                 }
+                if (backgroundAreaIsClipped) {
+                    drawContext.GetCanvas().RestoreState();
+                }
                 if (isTagged) {
                     drawContext.GetCanvas().CloseTag();
                 }
             }
+        }
+
+        protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {
+            double curv = 0.4477f;
+            UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
+            float radius = 0;
+            if (null != borderRadius) {
+                if (borderRadius.IsPercentValue()) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
+                        ));
+                }
+                else {
+                    radius = borderRadius.GetValue();
+                }
+            }
+            if (0 != radius) {
+                float top = outerBorderBox.GetTop();
+                float right = outerBorderBox.GetRight();
+                float bottom = outerBorderBox.GetBottom();
+                float left = outerBorderBox.GetLeft();
+                float verticalRadius = Math.Min(outerBorderBox.GetHeight() / 2, radius);
+                float horizontalRadius = Math.Min(outerBorderBox.GetWidth() / 2, radius);
+                // radius border bbox
+                float x1 = right - horizontalRadius;
+                float y1 = top - verticalRadius;
+                float x2 = right - horizontalRadius;
+                float y2 = bottom + verticalRadius;
+                float x3 = left + horizontalRadius;
+                float y3 = bottom + verticalRadius;
+                float x4 = left + horizontalRadius;
+                float y4 = top - verticalRadius;
+                PdfCanvas canvas = drawContext.GetCanvas();
+                canvas.SaveState();
+                // right top corner
+                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + horizontalRadius * curv, top, right, y1 + verticalRadius
+                     * curv, right, y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                canvas.Clip().NewPath();
+                // right bottom corner
+                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - verticalRadius * curv, x2 + horizontalRadius
+                     * curv, bottom, x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                canvas.Clip().NewPath();
+                // left bottom corner
+                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - horizontalRadius * curv, bottom, left, y3 - verticalRadius
+                     * curv, left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                canvas.Clip().NewPath();
+                // left top corner
+                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + verticalRadius * curv, x4 - horizontalRadius
+                     * curv, top, x4, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                canvas.Clip().NewPath();
+                Border[] borders = GetBorders();
+                float radiusTop = verticalRadius;
+                float radiusRight = horizontalRadius;
+                float radiusBottom = verticalRadius;
+                float radiusLeft = horizontalRadius;
+                float topBorderWidth = 0;
+                float rightBorderWidth = 0;
+                float bottomBorderWidth = 0;
+                float leftBorderWidth = 0;
+                if (borders[0] != null) {
+                    topBorderWidth = borders[0].GetWidth();
+                    top = top - borders[0].GetWidth();
+                    if (y1 > top) {
+                        y1 = top;
+                        y4 = top;
+                    }
+                    radiusTop = Math.Max(0, radiusTop - borders[0].GetWidth());
+                }
+                if (borders[1] != null) {
+                    rightBorderWidth = borders[1].GetWidth();
+                    right = right - borders[1].GetWidth();
+                    if (x1 > right) {
+                        x1 = right;
+                        x2 = right;
+                    }
+                    radiusRight = Math.Max(0, radiusRight - borders[1].GetWidth());
+                }
+                if (borders[2] != null) {
+                    bottomBorderWidth = borders[2].GetWidth();
+                    bottom = bottom + borders[2].GetWidth();
+                    if (x3 < left) {
+                        x3 = left;
+                        x4 = left;
+                    }
+                    radiusBottom = Math.Max(0, radiusBottom - borders[2].GetWidth());
+                }
+                if (borders[3] != null) {
+                    leftBorderWidth = borders[3].GetWidth();
+                    left = left + borders[3].GetWidth();
+                    radiusLeft = Math.Max(0, radiusLeft - borders[3].GetWidth());
+                }
+                canvas.MoveTo(x1, top).CurveTo(x1 + Math.Min(radiusTop, radiusRight) * curv, top, right, y1 + Math.Min(radiusTop
+                    , radiusRight) * curv, right, y1).LineTo(right, y2).LineTo(x3, y2).LineTo(x3, top).LineTo(x1, top).LineTo
+                    (x1, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                    , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right
+                     + rightBorderWidth, top + topBorderWidth).LineTo(x1, top + topBorderWidth);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, y2).CurveTo(right, y2 - Math.Min(radiusRight, radiusBottom) * curv, x2 + Math.Min(radiusRight
+                    , radiusBottom) * curv, bottom, x2, bottom).LineTo(x3, bottom).LineTo(x3, y4).LineTo(right, y4).LineTo
+                    (right, y2).LineTo(right + rightBorderWidth, y2).LineTo(right + rightBorderWidth, top + topBorderWidth
+                    ).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth
+                    ).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, y2);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(x3, bottom).CurveTo(x3 - Math.Min(radiusBottom, radiusLeft) * curv, bottom, left, y3 - Math.
+                    Min(radiusBottom, radiusLeft) * curv, left, y3).LineTo(left, y4).LineTo(x1, y4).LineTo(x1, bottom).LineTo
+                    (x3, bottom).LineTo(x3, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth
+                    ).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
+                    ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x3, bottom - bottomBorderWidth);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(left, y4).CurveTo(left, y4 + Math.Min(radiusLeft, radiusTop) * curv, x4 - Math.Min(radiusLeft
+                    , radiusTop) * curv, top, x4, top).LineTo(x1, top).LineTo(x1, y2).LineTo(left, y2).LineTo(left, y4).LineTo
+                    (left - leftBorderWidth, y4).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right +
+                     rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).
+                    LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, y4);
+                canvas.Clip().NewPath();
+            }
+            return 0 != radius;
+        }
+
+        protected internal virtual bool ClipBackgroundArea(DrawContext drawContext, Rectangle outerBorderBox) {
+            double curv = 0.4477f;
+            UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
+            float radius = 0;
+            if (null != borderRadius) {
+                if (borderRadius.IsPercentValue()) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
+                        ));
+                }
+                else {
+                    radius = borderRadius.GetValue();
+                }
+            }
+            if (0 != radius) {
+                float top = outerBorderBox.GetTop();
+                float right = outerBorderBox.GetRight();
+                float bottom = outerBorderBox.GetBottom();
+                float left = outerBorderBox.GetLeft();
+                float verticalRadius = Math.Min(outerBorderBox.GetHeight() / 2, radius);
+                float horizontalRadius = Math.Min(outerBorderBox.GetWidth() / 2, radius);
+                // radius border bbox
+                float x1 = right - horizontalRadius;
+                float y1 = top - verticalRadius;
+                float x2 = right - horizontalRadius;
+                float y2 = bottom + verticalRadius;
+                float x3 = left + horizontalRadius;
+                float y3 = bottom + verticalRadius;
+                float x4 = left + horizontalRadius;
+                float y4 = top - verticalRadius;
+                PdfCanvas canvas = drawContext.GetCanvas();
+                canvas.SaveState();
+                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + horizontalRadius * curv, top, right, y1 + verticalRadius
+                     * curv, right, y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - verticalRadius * curv, x2 + horizontalRadius
+                     * curv, bottom, x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - horizontalRadius * curv, bottom, left, y3 - verticalRadius
+                     * curv, left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                canvas.Clip().NewPath();
+                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + verticalRadius * curv, x4 - horizontalRadius
+                     * curv, top, x4, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                canvas.Clip().NewPath();
+            }
+            return 0 != radius;
         }
 
         /// <summary>
@@ -477,11 +690,10 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child)) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
                     RootRenderer rootRenderer = GetRootRenderer();
-                    if (rootRenderer != null) {
+                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                         rootRenderer.waitingDrawingElements.Add(child);
-                        child.SetProperty(Property.FLOAT, null);
                     }
                     else {
                         waitingRenderers.Add(child);
@@ -520,7 +732,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bBox = GetBorderAreaBBox();
                 if (bBox.GetWidth() < 0 || bBox.GetHeight() < 0) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
                     return;
                 }
                 float x1 = bBox.GetX();
@@ -532,17 +744,50 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
                 }
-                if (borders[0] != null) {
-                    borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
+                bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins()
+                    , false));
+                UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
+                float radius = 0;
+                if (null != borderRadius) {
+                    if (borderRadius.IsPercentValue()) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
+                            ));
+                    }
+                    else {
+                        radius = borderRadius.GetValue();
+                    }
                 }
-                if (borders[1] != null) {
-                    borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
+                if (0 == radius) {
+                    if (borders[0] != null) {
+                        borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
+                    }
+                    if (borders[1] != null) {
+                        borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
+                    }
+                    if (borders[2] != null) {
+                        borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
+                    }
+                    if (borders[3] != null) {
+                        borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
+                    }
                 }
-                if (borders[2] != null) {
-                    borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
+                else {
+                    if (borders[0] != null) {
+                        borders[0].Draw(canvas, x1, y2, x2, y2, radius, Border.Side.TOP, leftWidth, rightWidth);
+                    }
+                    if (borders[1] != null) {
+                        borders[1].Draw(canvas, x2, y2, x2, y1, radius, Border.Side.RIGHT, topWidth, bottomWidth);
+                    }
+                    if (borders[2] != null) {
+                        borders[2].Draw(canvas, x2, y1, x1, y1, radius, Border.Side.BOTTOM, rightWidth, leftWidth);
+                    }
+                    if (borders[3] != null) {
+                        borders[3].Draw(canvas, x1, y1, x1, y2, radius, Border.Side.LEFT, bottomWidth, topWidth);
+                    }
                 }
-                if (borders[3] != null) {
-                    borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
+                if (isAreaClipped) {
+                    drawContext.GetCanvas().RestoreState();
                 }
                 if (isTagged) {
                     canvas.CloseTag();
@@ -652,35 +897,235 @@ namespace iText.Layout.Renderer {
             ApplyLinkAnnotation(drawContext.GetDocument());
         }
 
+        internal static bool IsBorderBoxSizing(IRenderer renderer) {
+            BoxSizingPropertyValue? boxSizing = renderer.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING);
+            return boxSizing != null && boxSizing.Equals(BoxSizingPropertyValue.BORDER_BOX);
+        }
+
+        /// <summary>Retrieves element's fixed content box width, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box width, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.MIN_WIDTH"/>
+        /// ,
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.MAX_WIDTH"/>
+        /// properties.
+        /// </remarks>
+        /// <param name="parentBoxWidth">
+        /// width of the parent element content box.
+        /// If element has relative width, it will be
+        /// calculated relatively to this parameter.
+        /// </param>
+        /// <returns>element's fixed content box width or null if it's not set.</returns>
+        /// <seealso cref="HasAbsoluteUnitValue(int)"/>
         protected internal virtual float? RetrieveWidth(float parentBoxWidth) {
-            return RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+            float? minWidth = RetrieveUnitValue(parentBoxWidth, Property.MIN_WIDTH);
+            float? maxWidth = RetrieveUnitValue(parentBoxWidth, Property.MAX_WIDTH);
+            if (maxWidth != null && minWidth != null && minWidth > maxWidth) {
+                maxWidth = minWidth;
+            }
+            float? width = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+            if (width != null) {
+                if (maxWidth != null) {
+                    width = width > maxWidth ? maxWidth : width;
+                }
+                else {
+                    if (minWidth != null) {
+                        width = width < minWidth ? minWidth : width;
+                    }
+                }
+            }
+            else {
+                if (maxWidth != null) {
+                    width = maxWidth < parentBoxWidth ? maxWidth : null;
+                }
+            }
+            if (width != null && IsBorderBoxSizing(this)) {
+                width -= CalculatePaddingBorderWidth(this);
+            }
+            return width != null ? (float?)Math.Max(0, (float)width) : null;
         }
 
+        /// <summary>Retrieves element's fixed content box max width, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box max width, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.MIN_WIDTH"/>
+        /// properties.
+        /// </remarks>
+        /// <param name="parentBoxWidth">
+        /// width of the parent element content box.
+        /// If element has relative width, it will be
+        /// calculated relatively to this parameter.
+        /// </param>
+        /// <returns>element's fixed content box max width or null if it's not set.</returns>
+        /// <seealso cref="HasAbsoluteUnitValue(int)"/>
+        protected internal virtual float? RetrieveMaxWidth(float parentBoxWidth) {
+            float? maxWidth = RetrieveUnitValue(parentBoxWidth, Property.MAX_WIDTH);
+            if (maxWidth != null) {
+                float? minWidth = RetrieveUnitValue(parentBoxWidth, Property.MIN_WIDTH);
+                if (minWidth != null && minWidth > maxWidth) {
+                    maxWidth = minWidth;
+                }
+                if (IsBorderBoxSizing(this)) {
+                    maxWidth -= CalculatePaddingBorderWidth(this);
+                }
+                return maxWidth > 0 ? maxWidth : 0;
+            }
+            else {
+                return null;
+            }
+        }
+
+        /// <summary>Retrieves element's fixed content box max width, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box max width, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="parentBoxWidth">
+        /// width of the parent element content box.
+        /// If element has relative width, it will be
+        /// calculated relatively to this parameter.
+        /// </param>
+        /// <returns>element's fixed content box max width or null if it's not set.</returns>
+        /// <seealso cref="HasAbsoluteUnitValue(int)"/>
+        protected internal virtual float? RetrieveMinWidth(float parentBoxWidth) {
+            float? minWidth = RetrieveUnitValue(parentBoxWidth, Property.MIN_WIDTH);
+            if (minWidth != null) {
+                if (IsBorderBoxSizing(this)) {
+                    minWidth -= CalculatePaddingBorderWidth(this);
+                }
+                return minWidth > 0 ? minWidth : 0;
+            }
+            else {
+                return null;
+            }
+        }
+
+        /// <summary>Updates fixed content box width value for this renderer.</summary>
+        /// <remarks>
+        /// Updates fixed content box width value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedWidthValue">element's new fixed content box width.</param>
+        internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
+            if (updatedWidthValue.IsPointValue() && IsBorderBoxSizing(this)) {
+                updatedWidthValue.SetValue(updatedWidthValue.GetValue() + CalculatePaddingBorderWidth(this));
+            }
+            SetProperty(Property.WIDTH, updatedWidthValue);
+        }
+
+        /// <summary>Retrieves element's fixed content box height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's fixed content box height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's fixed content box height or null if it's not set.</returns>
         protected internal virtual float? RetrieveHeight() {
-            return this.GetProperty<float?>(Property.HEIGHT);
+            float? height = this.GetProperty<float?>(Property.HEIGHT);
+            if (height != null && IsBorderBoxSizing(this)) {
+                height = Math.Max(0, (float)height - CalculatePaddingBorderHeight(this));
+            }
+            return height;
         }
 
+        /// <summary>Updates fixed content box height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates fixed content box height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedHeightValue">element's new fixed content box height, shall be not null.</param>
+        internal virtual void UpdateHeight(float? updatedHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.HEIGHT, updatedHeightValue);
+        }
+
+        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's content box max-height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's content box max-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMaxHeight() {
-            return this.GetProperty<float?>(Property.MAX_HEIGHT);
+            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
+            if (maxHeight != null && IsBorderBoxSizing(this)) {
+                maxHeight = Math.Max(0, (float)maxHeight - CalculatePaddingBorderHeight(this));
+            }
+            return maxHeight;
         }
 
+        /// <summary>Updates content box max-height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates content box max-height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedMaxHeightValue">element's new content box max-height, shall be not null.</param>
+        internal virtual void UpdateMaxHeight(float? updatedMaxHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedMaxHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.MAX_HEIGHT, updatedMaxHeightValue);
+        }
+
+        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <remarks>
+        /// Retrieves element's content box max-height, if it's set.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <returns>element's content box min-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMinHeight() {
-            return this.GetProperty<float?>(Property.MIN_HEIGHT);
+            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            if (minHeight != null && IsBorderBoxSizing(this)) {
+                minHeight = Math.Max(0, (float)minHeight - CalculatePaddingBorderHeight(this));
+            }
+            return minHeight;
+        }
+
+        /// <summary>Updates content box min-height value for this renderer.</summary>
+        /// <remarks>
+        /// Updates content box min-height value for this renderer.
+        /// Takes into account
+        /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
+        /// property value.
+        /// </remarks>
+        /// <param name="updatedMinHeightValue">element's new content box min-height, shall be not null.</param>
+        internal virtual void UpdateMinHeight(float? updatedMinHeightValue) {
+            if (IsBorderBoxSizing(this)) {
+                updatedMinHeightValue += CalculatePaddingBorderHeight(this);
+            }
+            SetProperty(Property.MIN_HEIGHT, updatedMinHeightValue);
         }
 
         protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
             UnitValue value = this.GetProperty<UnitValue>(property);
             if (value != null) {
-                if (value.GetUnitType() == UnitValue.POINT) {
-                    return value.GetValue();
+                if (value.GetUnitType() == UnitValue.PERCENT) {
+                    return value.GetValue() * basePercentValue / 100;
                 }
                 else {
-                    if (value.GetUnitType() == UnitValue.PERCENT) {
-                        return value.GetValue() * basePercentValue / 100;
-                    }
-                    else {
-                        throw new InvalidOperationException("invalid unit type");
-                    }
+                    System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
+                    return value.GetValue();
                 }
             }
             else {
@@ -709,6 +1154,19 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             return ((iText.Layout.Renderer.AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
+        }
+
+        protected internal virtual float? GetLastYLineRecursively() {
+            for (int i = childRenderers.Count - 1; i >= 0; i--) {
+                IRenderer child = childRenderers[i];
+                if (child is iText.Layout.Renderer.AbstractRenderer) {
+                    float? lastYLine = ((iText.Layout.Renderer.AbstractRenderer)child).GetLastYLineRecursively();
+                    if (lastYLine != null) {
+                        return lastYLine;
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>Applies margins of the renderer on the given rectangle</summary>
@@ -843,52 +1301,36 @@ namespace iText.Layout.Renderer {
             return rect.ApplyMargins<Rectangle>(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
         }
 
-        protected internal virtual void ApplyAbsolutePosition(Rectangle rect) {
+        protected internal virtual void ApplyAbsolutePosition(Rectangle parentRect) {
             float? top = this.GetPropertyAsFloat(Property.TOP);
             float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
             float? left = this.GetPropertyAsFloat(Property.LEFT);
             float? right = this.GetPropertyAsFloat(Property.RIGHT);
-            float initialHeight = rect.GetHeight();
-            float initialWidth = rect.GetWidth();
-            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
-            if (minHeight != null && rect.GetHeight() < (float)minHeight) {
-                float difference = (float)minHeight - rect.GetHeight();
-                rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
+            if (left == null && right == null && BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property
+                .BASE_DIRECTION))) {
+                right = 0f;
             }
-            if (top != null) {
-                rect.SetHeight(rect.GetHeight() - (float)top);
+            if (top == null && bottom == null) {
+                top = 0f;
             }
-            if (left != null) {
-                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - (float)left);
-            }
-            if (right != null) {
-                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
-                if (left == null && width != null) {
-                    float widthValue = width.IsPointValue() ? width.GetValue() : (width.GetValue() * initialWidth);
-                    float placeLeft = rect.GetWidth() - widthValue;
-                    if (placeLeft > 0) {
-                        float computedRight = Math.Min(placeLeft, (float)right);
-                        rect.SetX(rect.GetX() + rect.GetWidth() - computedRight - widthValue);
-                    }
+            try {
+                if (right != null) {
+                    Move(parentRect.GetRight() - (float)right - occupiedArea.GetBBox().GetRight(), 0);
                 }
-                else {
-                    if (width == null) {
-                        rect.SetWidth(rect.GetWidth() - (float)right);
-                    }
+                if (left != null) {
+                    Move(parentRect.GetLeft() + (float)left - occupiedArea.GetBBox().GetLeft(), 0);
+                }
+                if (top != null) {
+                    Move(0, parentRect.GetTop() - (float)top - occupiedArea.GetBBox().GetTop());
+                }
+                if (bottom != null) {
+                    Move(0, parentRect.GetBottom() + (float)bottom - occupiedArea.GetBBox().GetBottom());
                 }
             }
-            if (bottom != null) {
-                if (minHeight != null) {
-                    rect.SetHeight((float)minHeight + (float)bottom);
-                }
-                else {
-                    float minHeightValue = rect.GetHeight() - (float)bottom;
-                    float? currentMaxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
-                    if (currentMaxHeight != null) {
-                        minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
-                    }
-                    SetProperty(Property.MIN_HEIGHT, minHeightValue);
-                }
+            catch (Exception) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                    "Absolute positioning might be applied incorrectly."));
             }
         }
 
@@ -950,6 +1392,20 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+        }
+
+        protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
+            // retrieve returns max width, if there is no width.
+            if (HasAbsoluteUnitValue(Property.WIDTH)) {
+                //Renderer may override retrieveWidth, double check is required.
+                float? width = RetrieveWidth(0);
+                if (width != null) {
+                    minMaxWidth.SetChildrenMaxWidth((float)width);
+                    minMaxWidth.SetChildrenMinWidth((float)width);
+                    return true;
+                }
+            }
+            return false;
         }
 
         protected internal virtual bool IsNotFittingHeight(LayoutArea layoutArea) {
@@ -1031,22 +1487,25 @@ namespace iText.Layout.Renderer {
                 );
             if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
                 float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                try {
-                    switch (horizontalAlignment) {
-                        case HorizontalAlignment.RIGHT: {
-                            childRenderer.Move(freeSpace, 0);
-                            break;
-                        }
+                if (freeSpace > 0) {
+                    try {
+                        switch (horizontalAlignment) {
+                            case HorizontalAlignment.RIGHT: {
+                                childRenderer.Move(freeSpace, 0);
+                                break;
+                            }
 
-                        case HorizontalAlignment.CENTER: {
-                            childRenderer.Move(freeSpace / 2, 0);
-                            break;
+                            case HorizontalAlignment.CENTER: {
+                                childRenderer.Move(freeSpace / 2, 0);
+                                break;
+                            }
                         }
                     }
-                }
-                catch (ArgumentNullException) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                    catch (ArgumentNullException) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                            "Some of the children might not end up aligned horizontally."));
+                    }
                 }
             }
         }
@@ -1134,6 +1593,12 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
+                if (renderer.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                    if (renderer is BlockRenderer || renderer is ImageRenderer || renderer is TableRenderer) {
+                        AffineTransform rotationTransform = renderer.CreateTransformationInsideOccupiedArea();
+                        TransformPoints(contentBoxPoints, rotationTransform);
+                    }
+                }
                 renderer = (iText.Layout.Renderer.AbstractRenderer)renderer.parent;
             }
             return CalculateBBox(contentBoxPoints);
@@ -1196,9 +1661,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            float? height = this.GetPropertyAsFloat(Property.HEIGHT);
-            float? maxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
-            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+            float? height = GetPropertyAsFloat(Property.HEIGHT);
+            float? maxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
+            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
             if (null != height) {
                 if (null == maxHeight || height < maxHeight) {
                     maxHeight = height;
@@ -1219,6 +1684,17 @@ namespace iText.Layout.Renderer {
             if (null != minHeight) {
                 SetProperty(Property.MIN_HEIGHT, minHeight);
             }
+        }
+
+        /// <summary>Check if corresponding property has point value.</summary>
+        /// <param name="property">
+        /// 
+        /// <see cref="iText.Layout.Properties.Property"/>
+        /// </param>
+        /// <returns>false if property value either null, or percent, otherwise true.</returns>
+        protected internal virtual bool HasAbsoluteUnitValue(int property) {
+            UnitValue value = this.GetProperty<UnitValue>(property);
+            return value != null && value.IsPointValue();
         }
 
         internal virtual bool IsFirstOnRootArea() {
@@ -1251,9 +1727,21 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+        internal static float CalculateAdditionalWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyMargins(dummy, true);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetWidth();
+        }
+
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
+        }
+
+        internal static float? GetPropertyAsFloat(IRenderer renderer, int property) {
+            return NumberUtil.AsFloat(renderer.GetProperty<Object>(property));
         }
 
         internal virtual void ShrinkOccupiedAreaForAbsolutePosition() {
@@ -1318,6 +1806,115 @@ namespace iText.Layout.Renderer {
         internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
             return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
                 ());
+        }
+
+        internal virtual void ApplyAbsolutePositionIfNeeded(LayoutContext layoutContext) {
+            if (IsAbsolutePosition()) {
+                ApplyAbsolutePosition(layoutContext is PositionedLayoutContext ? ((PositionedLayoutContext)layoutContext).
+                    GetParentOccupiedArea().GetBBox() : layoutContext.GetArea().GetBBox());
+            }
+        }
+
+        internal virtual void PreparePositionedRendererAndAreaForLayout(IRenderer childPositionedRenderer, Rectangle
+             fullBbox, Rectangle parentBbox) {
+            float? left = GetPropertyAsFloat(childPositionedRenderer, Property.LEFT);
+            float? right = GetPropertyAsFloat(childPositionedRenderer, Property.RIGHT);
+            float? top = GetPropertyAsFloat(childPositionedRenderer, Property.TOP);
+            float? bottom = GetPropertyAsFloat(childPositionedRenderer, Property.BOTTOM);
+            childPositionedRenderer.SetParent(this);
+            AdjustPositionedRendererLayoutBoxWidth(childPositionedRenderer, fullBbox, left, right);
+            if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property
+                .POSITION))) {
+                UpdateMinHeightForAbsolutelyPositionedRenderer(childPositionedRenderer, parentBbox, top, bottom);
+            }
+        }
+
+        private void UpdateMinHeightForAbsolutelyPositionedRenderer(IRenderer renderer, Rectangle parentRendererBox
+            , float? top, float? bottom) {
+            if (top != null && bottom != null && !renderer.HasProperty(Property.HEIGHT)) {
+                float? currentMaxHeight = GetPropertyAsFloat(renderer, Property.MAX_HEIGHT);
+                float? currentMinHeight = GetPropertyAsFloat(renderer, Property.MIN_HEIGHT);
+                float resolvedMinHeight = Math.Max(0, parentRendererBox.GetTop() - (float)top - parentRendererBox.GetBottom
+                    () - (float)bottom);
+                if (currentMinHeight != null) {
+                    resolvedMinHeight = Math.Max(resolvedMinHeight, (float)currentMinHeight);
+                }
+                if (currentMaxHeight != null) {
+                    resolvedMinHeight = Math.Min(resolvedMinHeight, (float)currentMaxHeight);
+                }
+                renderer.SetProperty(Property.MIN_HEIGHT, resolvedMinHeight);
+            }
+        }
+
+        private void AdjustPositionedRendererLayoutBoxWidth(IRenderer renderer, Rectangle fullBbox, float? left, float?
+             right) {
+            if (left != null) {
+                fullBbox.SetWidth(fullBbox.GetWidth() - (float)left).SetX(fullBbox.GetX() + (float)left);
+            }
+            if (right != null) {
+                fullBbox.SetWidth(fullBbox.GetWidth() - (float)right);
+            }
+            if (left == null && right == null && !renderer.HasProperty(Property.WIDTH)) {
+                // Other, non-block renderers won't occupy full width anyway
+                MinMaxWidth minMaxWidth = renderer is BlockRenderer ? ((BlockRenderer)renderer).GetMinMaxWidth(MinMaxWidthUtils
+                    .GetMax()) : null;
+                if (minMaxWidth != null && minMaxWidth.GetMaxWidth() < fullBbox.GetWidth()) {
+                    fullBbox.SetWidth(minMaxWidth.GetMaxWidth() + iText.Layout.Renderer.AbstractRenderer.EPS);
+                }
+            }
+        }
+
+        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetWidth();
+        }
+
+        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Rectangle dummy = new Rectangle(0, 0);
+            renderer.ApplyBorderBox(dummy, true);
+            renderer.ApplyPaddings(dummy, true);
+            return dummy.GetHeight();
+        }
+
+        /// <summary>
+        /// This method creates
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance that could be used
+        /// to transform content inside the occupied area,
+        /// considering the centre of the occupiedArea as the origin of a coordinate system for transformation.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that transforms the content and places it inside occupied area.
+        /// </returns>
+        private AffineTransform CreateTransformationInsideOccupiedArea() {
+            Rectangle backgroundArea = ApplyMargins(occupiedArea.Clone().GetBBox(), false);
+            float x = backgroundArea.GetX();
+            float y = backgroundArea.GetY();
+            float height = backgroundArea.GetHeight();
+            float width = backgroundArea.GetWidth();
+            AffineTransform transform = AffineTransform.GetTranslateInstance(-1 * (x + width / 2), -1 * (y + height / 
+                2));
+            transform.PreConcatenate(Transform.GetAffineTransform(this.GetProperty<Transform>(Property.TRANSFORM), width
+                , height));
+            transform.PreConcatenate(AffineTransform.GetTranslateInstance(x + width / 2, y + height / 2));
+            return transform;
+        }
+
+        protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
+            if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                AffineTransform transform = CreateTransformationInsideOccupiedArea();
+                canvas.SaveState().ConcatMatrix(transform);
+            }
+        }
+
+        protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
+            if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                canvas.RestoreState();
+            }
         }
 
         public abstract IRenderer GetNextRenderer();

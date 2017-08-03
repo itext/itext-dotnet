@@ -60,6 +60,7 @@ namespace iText.Layout.Layout {
         protected internal Rectangle bBox;
 
         /// <summary>Indicates whether the area already has some placed content or not.</summary>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
         protected internal bool emptyArea = true;
 
         /// <summary>
@@ -101,11 +102,13 @@ namespace iText.Layout.Layout {
 
         /// <summary>Indicates whether the area already has some placed content or not.</summary>
         /// <returns>whether the area is empty or not</returns>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
         public virtual bool IsEmptyArea() {
             return emptyArea;
         }
 
         /// <summary>Defines whether the area already has some placed content or not.</summary>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
         public virtual void SetEmptyArea(bool emptyArea) {
             this.emptyArea = emptyArea;
         }
@@ -135,7 +138,7 @@ namespace iText.Layout.Layout {
 
         /// <summary><inheritDoc/></summary>
         public override String ToString() {
-            return String.Format("{0}, page {1}", bBox.ToString(), pageNumber);
+            return MessageFormatUtil.Format("{0}, page {1}", bBox.ToString(), pageNumber);
         }
     }
 }

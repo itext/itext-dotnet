@@ -54,6 +54,7 @@ namespace iText.Kernel.Font {
         public Type3FontProgram(bool colorized) {
             this.colorized = colorized;
             GetFontMetrics().SetBbox(0, 0, 0, 0);
+            fontNames = new FontNames();
         }
 
         public virtual Type3Glyph GetType3Glyph(int unicode) {

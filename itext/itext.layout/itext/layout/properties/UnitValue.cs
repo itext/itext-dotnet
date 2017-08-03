@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Layout.Properties {
     /// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
@@ -198,7 +199,7 @@ namespace iText.Layout.Properties {
         }
 
         public override String ToString() {
-            return value + (unitType == PERCENT ? "%" : "pt");
+            return MessageFormatUtil.Format((unitType == PERCENT ? "{0}%" : "{0}pt"), value);
         }
     }
 }

@@ -1583,7 +1583,7 @@ namespace iText.Forms.Fields {
             }
             PdfString name = GetPdfObject().GetAsString(PdfName.T);
             if (name != null) {
-                name = new PdfString(parentName + name.ToUnicodeString());
+                name = new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
             }
             return name;
         }

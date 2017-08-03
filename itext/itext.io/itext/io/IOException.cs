@@ -174,6 +174,8 @@ namespace iText.IO {
 
         public const String InvalidJpeg2000File = "Invalid JPEG2000 file.";
 
+        public const String InvalidWoff2File = "Invalid WOFF2 font file.";
+
         public const String InvalidWoffFile = "Invalid WOFF font file.";
 
         [Obsolete]
@@ -348,7 +350,7 @@ namespace iText.IO {
                     return base.Message;
                 }
                 else {
-                    return String.Format(base.Message, GetMessageParams());
+                    return MessageFormatUtil.Format(base.Message, GetMessageParams());
                 }
             }
         }

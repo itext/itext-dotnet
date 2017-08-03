@@ -66,7 +66,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().GetBoundingRectangle());
             }
             else {
-                throw new InvalidOperationException(String.Format("Event type not supported: {0}", type));
+                throw new InvalidOperationException(MessageFormatUtil.Format("Event type not supported: {0}", type));
             }
         }
 

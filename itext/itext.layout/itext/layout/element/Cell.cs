@@ -239,7 +239,8 @@ namespace iText.Layout.Element {
         }
 
         public override String ToString() {
-            return String.Format("Cell[row={0}, col={1}, rowspan={2}, colspan={3}]", row, col, rowspan, colspan);
+            return MessageFormatUtil.Format("Cell[row={0}, col={1}, rowspan={2}, colspan={3}]", row, col, rowspan, colspan
+                );
         }
 
         public override PdfName GetRole() {

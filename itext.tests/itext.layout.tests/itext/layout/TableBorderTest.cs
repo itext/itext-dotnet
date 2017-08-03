@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -1201,19 +1202,20 @@ namespace iText.Layout {
             Table table = new Table(new float[3]);
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddHeaderCell(new Cell().Add(String.Format("header row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
-                        ));
+                    table.AddHeaderCell(new Cell().Add(MessageFormatUtil.Format("header row {0} col {1}", r, c)).SetBorder(Border
+                        .NO_BORDER));
                 }
             }
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddCell(new Cell().Add(String.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER));
+                    table.AddCell(new Cell().Add(MessageFormatUtil.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
+                        ));
                 }
             }
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddFooterCell(new Cell().Add(String.Format("footer row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
-                        ));
+                    table.AddFooterCell(new Cell().Add(MessageFormatUtil.Format("footer row {0} col {1}", r, c)).SetBorder(Border
+                        .NO_BORDER));
                 }
             }
             table.GetHeader().SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(1));
@@ -1268,6 +1270,34 @@ namespace iText.Layout {
             table.GetFooter().SetBorderBottom(new SolidBorder(Color.YELLOW, 50));
             table.GetHeader().SetBorderTop(new SolidBorder(Color.YELLOW, 50));
             table.SetBackgroundColor(Color.MAGENTA);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SplitRowspanKeepTogetherTest() {
+            String testName = "splitRowspanKeepTogetherTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            Table table = new Table(2);
+            table.SetKeepTogether(true);
+            int bigRowspan = 5;
+            table.AddCell(new Cell(bigRowspan, 1).Add("Big cell").SetBorder(new SolidBorder(Color.GREEN, 20)));
+            for (int i = 0; i < bigRowspan; i++) {
+                table.AddCell(i + " " + textByron);
+            }
+            doc.Add(new Paragraph("Try to break me!"));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

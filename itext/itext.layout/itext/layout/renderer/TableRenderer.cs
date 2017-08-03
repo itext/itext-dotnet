@@ -139,6 +139,11 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+            // Do nothing here. Tables don't have padding.
+            return rect;
+        }
+
         internal virtual Table GetTable() {
             return (Table)GetModelElement();
         }
@@ -171,8 +176,9 @@ namespace iText.Layout.Renderer {
             OverrideHeightProperties();
             float? blockMinHeight = RetrieveMinHeight();
             float? blockMaxHeight = RetrieveMaxHeight();
-            bool wasHeightClipped = false;
             LayoutArea area = layoutContext.GetArea();
+            bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
+            bool wasHeightClipped = false;
             Rectangle layoutBox = area.GetBBox().Clone();
             Table tableModel = (Table)GetModelElement();
             if (!tableModel.IsComplete()) {
@@ -262,7 +268,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
-                    )));
+                    ), wasHeightClipped || wasParentsHeightClipped));
                 if (result.GetStatus() != LayoutResult.FULL) {
                     // we've changed it during footer initialization. However, now we need to process borders again as they were.
                     DeleteOwnProperty(Property.BORDER_BOTTOM);
@@ -295,7 +301,7 @@ namespace iText.Layout.Renderer {
                 topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
                 // first row own top border. We will use it while header processing
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
-                    )));
+                    ), wasHeightClipped || wasParentsHeightClipped));
                 if (result.GetStatus() != LayoutResult.FULL) {
                     // we've changed it during header initialization. However, now we need to process borders again as they were.
                     DeleteOwnProperty(Property.BORDER_TOP);
@@ -404,7 +410,7 @@ namespace iText.Layout.Renderer {
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
-                        ));
+                        , wasHeightClipped || wasParentsHeightClipped));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -475,7 +481,8 @@ namespace iText.Layout.Renderer {
                                     int savedStartRow = overflowRenderer.bordersHandler.startRow;
                                     overflowRenderer.bordersHandler.SetStartRow(row);
                                     PrepareFooterOrHeaderRendererForLayout(overflowRenderer, layoutBox.GetWidth());
-                                    LayoutResult res = overflowRenderer.Layout(new LayoutContext(potentialArea));
+                                    LayoutResult res = overflowRenderer.Layout(new LayoutContext(potentialArea, wasHeightClipped || wasParentsHeightClipped
+                                        ));
                                     bordersHandler.SetStartRow(savedStartRow);
                                     if (LayoutResult.FULL == res.GetStatus()) {
                                         footerRenderer = null;
@@ -589,7 +596,8 @@ namespace iText.Layout.Renderer {
                         footerRenderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(footerRenderer.GetBorders()[2], GetBorders
                             ()[2]), 2);
                     }
-                    footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)));
+                    footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox), wasHeightClipped 
+                        || wasParentsHeightClipped));
                     bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
                     float footerHeight = footerRenderer.GetOccupiedAreaBBox().GetHeight();
                     footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
@@ -667,19 +675,20 @@ namespace iText.Layout.Renderer {
                                 if (1 == minRowspan) {
                                     // Here we use the same cell, but create a new renderer which doesn't have any children,
                                     // therefore it won't have any content.
-                                    Cell overflowCell = ((Cell)currentRow[col].GetModelElement()).Clone(true);
+                                    CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
+                                        ();
                                     // we will change properties
-                                    CellRenderer originalCellRenderer = currentRow[col];
+                                    overflowCell.SetParent(this);
+                                    overflowCell.DeleteProperty(Property.HEIGHT);
+                                    overflowCell.DeleteProperty(Property.MIN_HEIGHT);
+                                    overflowCell.DeleteProperty(Property.MAX_HEIGHT);
+                                    overflowRows.SetCell(0, col, null);
+                                    overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
                                     currentRow[col].isLastRendererForModelElement = false;
                                     childRenderers.Add(currentRow[col]);
+                                    CellRenderer originalCell = currentRow[col];
                                     currentRow[col] = null;
-                                    rows[targetOverflowRowIndex[col]][col] = originalCellRenderer;
-                                    overflowRows.SetCell(0, col, null);
-                                    overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, (CellRenderer)overflowCell.GetRenderer().SetParent
-                                        (this));
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.HEIGHT);
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.MIN_HEIGHT);
-                                    overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).DeleteProperty(Property.MAX_HEIGHT);
+                                    rows[targetOverflowRowIndex[col]][col] = originalCell;
                                 }
                                 else {
                                     childRenderers.Add(currentRow[col]);
@@ -688,15 +697,20 @@ namespace iText.Layout.Renderer {
                                     for (; i < row + minRowspan && i + 1 < rows.Count && splitResult[1].rows[i + 1 - row][col] != null; i++) {
                                         overflowRows.SetCell(i - row, col, splitResult[1].rows[i + 1 - row][col]);
                                         overflowRows.SetCell(i + 1 - row, col, null);
+                                        rows[i][col] = rows[i + 1][col];
+                                        rows[i + 1][col] = null;
                                     }
                                     // the number of cells behind is less then minRowspan-1
                                     // so we should process the last cell in the column as in the case 1 == minRowspan
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
-                                        Cell overflowCell = ((Cell)rows[i][col].GetModelElement());
-                                        overflowRows.GetCell(i - row, col).isLastRendererForModelElement = false;
+                                        CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
+                                            );
+                                        rows[i][col].isLastRendererForModelElement = false;
                                         overflowRows.SetCell(i - row, col, null);
-                                        overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, (CellRenderer)overflowCell.GetRenderer().SetParent
-                                            (this));
+                                        overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
+                                        CellRenderer originalCell = rows[i][col];
+                                        rows[i][col] = null;
+                                        rows[targetOverflowRowIndex[col]][col] = originalCell;
                                     }
                                 }
                                 overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
@@ -772,22 +786,29 @@ namespace iText.Layout.Renderer {
                             }
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
-                            return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
+                            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+                                , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                            return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
+                            if (HasProperty(Property.HEIGHT)) {
+                                splitResult[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
+                            if (HasProperty(Property.MIN_HEIGHT)) {
+                                splitResult[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
+                            if (HasProperty(Property.MAX_HEIGHT)) {
+                                splitResult[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
-                            if (HasProperty(Property.HEIGHT)) {
-                                splitResult[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            LayoutArea editedArea = null;
+                            if (status != LayoutResult.NOTHING) {
+                                editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas, layoutContext
+                                    .GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                             }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            return new LayoutResult(status, status != LayoutResult.NOTHING ? occupiedArea : null, splitResult[0], splitResult
-                                [1], null == firstCauseOfNothing ? this : firstCauseOfNothing);
+                            return new LayoutResult(status, editedArea, splitResult[0], splitResult[1], null == firstCauseOfNothing ? 
+                                this : firstCauseOfNothing);
                         }
                     }
                 }
@@ -821,7 +842,8 @@ namespace iText.Layout.Renderer {
                         headerRenderer.bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
                     }
                 }
-                footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)));
+                footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox), wasHeightClipped 
+                    || wasParentsHeightClipped));
                 bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
                 float footerHeight = footerRenderer.GetOccupiedAreaBBox().GetHeight();
                 footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
@@ -900,9 +922,9 @@ namespace iText.Layout.Renderer {
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
-            LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
+            LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
                 , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
-            return new LayoutResult(LayoutResult.FULL, editedArea, null, null, null);
+            return new LayoutResult(LayoutResult.FULL, editedArea_1, null, null, null);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -928,7 +950,9 @@ namespace iText.Layout.Renderer {
                         ));
                     waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
                 }
+                BeginTranformationIfApplied(drawContext.GetCanvas());
                 base.Draw(drawContext);
+                EndTranformationIfApplied(drawContext.GetCanvas());
                 tagPointer.MoveToParent();
                 bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
@@ -936,7 +960,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             else {
+                BeginTranformationIfApplied(drawContext.GetCanvas());
                 base.Draw(drawContext);
+                EndTranformationIfApplied(drawContext.GetCanvas());
             }
         }
 
@@ -1107,7 +1133,7 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer(new Table.RowRange(rowRange.
                 GetStartRow() + row, rowRange.GetFinishRow()));
             if (0 == row && !(hasContent || cellWithBigRowspanAdded) && 0 == rowRange.GetStartRow()) {
-                overflowRenderer.isOriginalNonSplitRenderer = true;
+                overflowRenderer.isOriginalNonSplitRenderer = isOriginalNonSplitRenderer;
             }
             overflowRenderer.rows = rows.SubList(row, rows.Count);
             splitRenderer.occupiedArea = occupiedArea;
@@ -1179,6 +1205,10 @@ namespace iText.Layout.Renderer {
             float additionalWidth = (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT) + (float)this.GetPropertyAsFloat
                 (Property.MARGIN_LEFT) + rightMaxBorder / 2 + leftMaxBorder / 2;
             return new MinMaxWidth(additionalWidth, availableWidth, minWidth, maxColTotalWidth);
+        }
+
+        protected internal override float? GetLastYLineRecursively() {
+            return null;
         }
 
         private void InitializeTableLayoutBorders() {

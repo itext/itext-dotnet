@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     /// <summary>This class represents all official PDF versions.</summary>
@@ -81,11 +82,11 @@ namespace iText.Kernel.Pdf {
         }
 
         public override String ToString() {
-            return String.Format("PDF-{0}.{1}", major, minor);
+            return MessageFormatUtil.Format("PDF-{0}.{1}", major, minor);
         }
 
         public virtual PdfName ToPdfName() {
-            return new PdfName(String.Format("{0}.{1}", major, minor));
+            return new PdfName(MessageFormatUtil.Format("{0}.{1}", major, minor));
         }
 
         /// <summary>
