@@ -54,8 +54,7 @@ namespace iText.Kernel.Font {
         protected internal DocFontEncoding() {
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode, bool fillStandardEncoding
-            ) {
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode) {
             if (encoding != null) {
                 if (encoding.IsName()) {
                     return FontEncoding.CreateFontEncoding(((PdfName)encoding).GetValue());
@@ -64,8 +63,7 @@ namespace iText.Kernel.Font {
                     if (encoding.IsDictionary()) {
                         iText.Kernel.Font.DocFontEncoding fontEncoding = new iText.Kernel.Font.DocFontEncoding();
                         fontEncoding.differences = new String[256];
-                        FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding), fillStandardEncoding
-                            );
+                        FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding));
                         FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences), toUnicode);
                         return fontEncoding;
                     }
@@ -83,7 +81,7 @@ namespace iText.Kernel.Font {
         }
 
         private static void FillBaseEncoding(iText.Kernel.Font.DocFontEncoding fontEncoding, PdfName baseEncodingName
-            , bool fillStandardEncoding) {
+            ) {
             if (baseEncodingName != null) {
                 fontEncoding.baseEncoding = baseEncodingName.GetValue();
             }
@@ -107,9 +105,9 @@ namespace iText.Kernel.Font {
                 fontEncoding.FillNamedEncoding();
             }
             else {
-                if (fillStandardEncoding) {
-                    fontEncoding.FillStandardEncoding();
-                }
+                // Actually, font's built in encoding should be used if font file is embedded
+                // and standard encoding should be used otherwise
+                fontEncoding.FillStandardEncoding();
             }
         }
 
