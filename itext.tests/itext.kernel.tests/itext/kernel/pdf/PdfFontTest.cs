@@ -1062,7 +1062,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Invalid subset")]
         public virtual void NotoSansCJKjpTest() {
             String filename = destinationFolder + "NotoSansCJKjpTest.pdf";
             String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest.pdf";
@@ -1082,7 +1081,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Invalid subset")]
         public virtual void SourceHanSansHWTest() {
             String filename = destinationFolder + "SourceHanSansHWTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSansHWTest.pdf";
@@ -1090,7 +1088,6 @@ namespace iText.Kernel.Pdf {
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSansHW-Regular.otf", "Identity-H");
-            // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
                 ("12").EndText().RestoreState();
