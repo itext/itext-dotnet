@@ -1028,15 +1028,17 @@ namespace iText.IO.Font {
             int Size = NewOffsets[NewOffsets.Length - 1];
             // Calc the Offsize
             byte Offsize;
-            if (Size <= 0xff) {
+            // Previously the condition wasn't strict. However while writing offsets iText adds 1 to them.
+            // That can cause overflow (f.e., offset 0xffff will result in 0x0000).
+            if (Size < 0xff) {
                 Offsize = 1;
             }
             else {
-                if (Size <= 0xffff) {
+                if (Size < 0xffff) {
                     Offsize = 2;
                 }
                 else {
-                    if (Size <= 0xffffff) {
+                    if (Size < 0xffffff) {
                         Offsize = 3;
                     }
                     else {
