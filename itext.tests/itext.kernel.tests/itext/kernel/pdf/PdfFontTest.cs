@@ -1100,6 +1100,26 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void NotoSansCJKjpTest03() {
+            String filename = destinationFolder + "NotoSansCJKjpTest03.pdf";
+            String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest03.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
+            // font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
+                ("\u0BA4").EndText().RestoreState();
+            // there is no such glyph in provided cff
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SourceHanSansHWTest() {
             String filename = destinationFolder + "SourceHanSansHWTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSansHWTest.pdf";
