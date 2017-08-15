@@ -1065,23 +1065,35 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Ignore("Invalid subset")]
         public virtual void NotoSansCJKjpTest() {
             String filename = destinationFolder + "NotoSansCJKjpTest.pdf";
-            String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
+            String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
             // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
-            //        canvas.saveState()
-            //                .setFillColor(DeviceRgb.GREEN)
-            //                .beginText()
-            //                .moveText(36, 700)
-            //                .setFontAndSize(font, 12)
-            //                .showText(pangramme)
-            //                .endText()
-            //                .restoreState();
             canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
                 ("1").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("Invalid subset")]
+        public virtual void SourceHanSansHWTest() {
+            String filename = destinationFolder + "SourceHanSansHWTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_SourceHanSansHWTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSansHW-Regular.otf", "Identity-H");
+            // font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
+                ("12").EndText().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
