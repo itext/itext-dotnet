@@ -298,7 +298,7 @@ namespace iText.Kernel.Font {
                     else {
                         //getCode() could be either -1 or 0
                         int nullCode = cmapEncoding.GetCmapCode(0);
-                        buffer.Append((int)(((uint)nullCode) >> 8));
+                        buffer.Append(nullCode >> 8);
                         buffer.Append(nullCode);
                     }
                 }
@@ -780,7 +780,7 @@ namespace iText.Kernel.Font {
             if (longTag.Get(code) == null) {
                 longTag.Put(code, new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph.GetUnicode() : 0 });
             }
-            result[offset] = (byte)((int)(((uint)cmapCode) >> 8));
+            result[offset] = (byte)(cmapCode >> 8);
             result[offset + 1] = (byte)cmapCode;
             return offset + 2;
         }
@@ -791,7 +791,7 @@ namespace iText.Kernel.Font {
             if (longTag.Get(code) == null) {
                 longTag.Put(code, new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph.GetUnicode() : 0 });
             }
-            result.Append((int)(((uint)cmapCode) >> 8));
+            result.Append(cmapCode >> 8);
             result.Append(cmapCode);
         }
 
