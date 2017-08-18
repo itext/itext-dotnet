@@ -711,7 +711,8 @@ namespace iText.Kernel.Pdf {
                                 return new PdfNull();
                             }
                             else {
-                                throw new PdfException(PdfException.InvalidIndirectReference1);
+                                throw new PdfException(PdfException.InvalidIndirectReference1, MessageFormatUtil.Format("{0} {1} R", reference
+                                    .GetObjNumber(), reference.GetGenNumber()));
                             }
                         }
                     }
