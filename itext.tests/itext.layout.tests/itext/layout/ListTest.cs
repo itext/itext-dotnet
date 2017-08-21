@@ -497,5 +497,27 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1001")]
+        public virtual void ListSymbolForcedPlacement01() {
+            String outFileName = destinationFolder + "listSymbolForcedPlacement01.pdf";
+            String cmpFileName = sourceFolder + "cmp_listSymbolForcedPlacement01.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            // This may seem like a contrived example, but in real life, this happened
+            // with a two-column layout. The key is that the label is wider than the column.
+            pdf.SetDefaultPageSize(PageSize.A7);
+            document.Add(new Paragraph("Before list."));
+            List l = new List();
+            ListItem li = new ListItem().SetListSymbol("Aircraft of comparable role, configuration and era");
+            l.Add(li);
+            document.Add(l);
+            document.Add(new Paragraph("After list."));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
     }
 }

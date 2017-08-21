@@ -180,9 +180,19 @@ namespace iText.Layout.Renderer {
                                                 ));
                                         }
                                         else {
-                                            result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                            if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                                                result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
+                                                ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                            }
+                                            else {
+                                                // FORCED_PLACEMENT was already set to the renderer and
+                                                // LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA message was logged.
+                                                // This else-clause should never be hit, otherwise there is a bug in FORCED_PLACEMENT implementation.
+                                                System.Diagnostics.Debug.Assert(false);
+                                                // Still handling this case in order to avoid nasty infinite loops.
+                                                break;
+                                            }
                                         }
                                     }
                                 }
