@@ -500,7 +500,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1001")]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ListSymbolForcedPlacement01() {
             String outFileName = destinationFolder + "listSymbolForcedPlacement01.pdf";
             String cmpFileName = sourceFolder + "cmp_listSymbolForcedPlacement01.pdf";
@@ -516,6 +516,7 @@ namespace iText.Layout {
             document.Add(l);
             document.Add(new Paragraph("After list."));
             document.Close();
+            // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
         }
