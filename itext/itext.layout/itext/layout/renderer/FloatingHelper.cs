@@ -122,7 +122,7 @@ namespace iText.Layout.Renderer {
                         maxLastFloatBottom = lastLeftAndRightBoxes[1].GetBottom();
                     }
                 }
-                return layoutBox.GetTop() - maxLastFloatBottom;
+                return layoutBox.GetTop() - maxLastFloatBottom + AbstractRenderer.EPS;
             }
             return null;
         }
@@ -369,7 +369,7 @@ namespace iText.Layout.Renderer {
         private static IList<Rectangle> GetBoxesAtYLevel(IList<Rectangle> floatRendererAreas, float currY) {
             IList<Rectangle> yLevelBoxes = new List<Rectangle>();
             foreach (Rectangle box in floatRendererAreas) {
-                if (box.GetBottom() < currY && box.GetTop() + AbstractRenderer.EPS >= currY) {
+                if (box.GetBottom() + AbstractRenderer.EPS < currY && box.GetTop() + AbstractRenderer.EPS >= currY) {
                     yLevelBoxes.Add(box);
                 }
             }
