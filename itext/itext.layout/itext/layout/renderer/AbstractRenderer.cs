@@ -224,8 +224,7 @@ namespace iText.Layout.Renderer {
         /// otherwise
         /// </returns>
         public virtual bool HasOwnOrModelProperty(int property) {
-            return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasProperty(property
-                ));
+            return HasOwnOrModelProperty(this, property);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1209,9 +1208,7 @@ namespace iText.Layout.Renderer {
         /// margins of the renderer
         /// </returns>
         protected internal virtual float[] GetMargins() {
-            return new float[] { (float)this.GetPropertyAsFloat(Property.MARGIN_TOP), (float)this.GetPropertyAsFloat(Property
-                .MARGIN_RIGHT), (float)this.GetPropertyAsFloat(Property.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat
-                (Property.MARGIN_LEFT) };
+            return GetMargins(this);
         }
 
         /// <summary>Returns paddings of the renderer</summary>
@@ -1221,9 +1218,7 @@ namespace iText.Layout.Renderer {
         /// paddings of the renderer
         /// </returns>
         protected internal virtual float[] GetPaddings() {
-            return new float[] { (float)this.GetPropertyAsFloat(Property.PADDING_TOP), (float)this.GetPropertyAsFloat(
-                Property.PADDING_RIGHT), (float)this.GetPropertyAsFloat(Property.PADDING_BOTTOM), (float)this.GetPropertyAsFloat
-                (Property.PADDING_LEFT) };
+            return GetPaddings(this);
         }
 
         /// <summary>Applies paddings of the renderer on the given rectangle</summary>
@@ -1519,25 +1514,7 @@ namespace iText.Layout.Renderer {
         /// on position of this border
         /// </returns>
         protected internal virtual Border[] GetBorders() {
-            Border border = this.GetProperty<Border>(Property.BORDER);
-            Border topBorder = this.GetProperty<Border>(Property.BORDER_TOP);
-            Border rightBorder = this.GetProperty<Border>(Property.BORDER_RIGHT);
-            Border bottomBorder = this.GetProperty<Border>(Property.BORDER_BOTTOM);
-            Border leftBorder = this.GetProperty<Border>(Property.BORDER_LEFT);
-            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
-            if (!HasOwnOrModelProperty(Property.BORDER_TOP)) {
-                borders[0] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_RIGHT)) {
-                borders[1] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_BOTTOM)) {
-                borders[2] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_LEFT)) {
-                borders[3] = border;
-            }
-            return borders;
+            return GetBorders(this);
         }
 
         protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders(Border border, int borderNumber
@@ -1864,6 +1841,13 @@ namespace iText.Layout.Renderer {
                 float? currentMinHeight = GetPropertyAsFloat(renderer, Property.MIN_HEIGHT);
                 float resolvedMinHeight = Math.Max(0, parentRendererBox.GetTop() - (float)top - parentRendererBox.GetBottom
                     () - (float)bottom);
+                Rectangle dummy = new Rectangle(0, 0);
+                if (!IsBorderBoxSizing(renderer)) {
+                    ApplyPaddings(dummy, GetPaddings(renderer), true);
+                    ApplyBorderBox(dummy, GetBorders(renderer), true);
+                }
+                ApplyMargins(dummy, GetMargins(renderer), true);
+                resolvedMinHeight -= dummy.GetHeight();
                 if (currentMinHeight != null) {
                     resolvedMinHeight = Math.Max(resolvedMinHeight, (float)currentMinHeight);
                 }
@@ -1943,6 +1927,47 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }
+        }
+
+        private static float[] GetMargins(IRenderer renderer) {
+            return new float[] { (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.MARGIN_TOP)), (float)
+                NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.MARGIN_RIGHT)), (float)NumberUtil.AsFloat(renderer
+                .GetProperty<Object>(Property.MARGIN_BOTTOM)), (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(
+                Property.MARGIN_LEFT)) };
+        }
+
+        private static Border[] GetBorders(IRenderer renderer) {
+            Border border = renderer.GetProperty<Border>(Property.BORDER);
+            Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
+            Border rightBorder = renderer.GetProperty<Border>(Property.BORDER_RIGHT);
+            Border bottomBorder = renderer.GetProperty<Border>(Property.BORDER_BOTTOM);
+            Border leftBorder = renderer.GetProperty<Border>(Property.BORDER_LEFT);
+            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP)) {
+                borders[0] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_RIGHT)) {
+                borders[1] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM)) {
+                borders[2] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_LEFT)) {
+                borders[3] = border;
+            }
+            return borders;
+        }
+
+        private static float[] GetPaddings(IRenderer renderer) {
+            return new float[] { (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.PADDING_TOP)), (float
+                )NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.PADDING_RIGHT)), (float)NumberUtil.AsFloat(renderer
+                .GetProperty<Object>(Property.PADDING_BOTTOM)), (float)NumberUtil.AsFloat(renderer.GetProperty<Object>
+                (Property.PADDING_LEFT)) };
+        }
+
+        private static bool HasOwnOrModelProperty(IRenderer renderer, int property) {
+            return renderer.HasOwnProperty(property) || (null != renderer.GetModelElement() && renderer.GetModelElement
+                ().HasProperty(property));
         }
 
         public abstract IRenderer GetNextRenderer();
