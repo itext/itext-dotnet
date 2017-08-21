@@ -83,6 +83,8 @@ namespace iText.Kernel {
 
         public const String CannotAddNonStreamImageToResources1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream.";
 
+        public const String CannotBeEmbeddedDueToLicensingRestrictions = "{0} cannot be embedded due to licensing restrictions.";
+
         public const String CannotCloseDocument = "Cannot close document.";
 
         public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "Cannot close document with already flushed PDF Catalog.";
@@ -140,6 +142,8 @@ namespace iText.Kernel {
         public const String CannotReadAStreamInOrderToAppendNewBytes = "Cannot read a stream in order to append new bytes.";
 
         public const String CannotReadPdfObject = "Cannot read PdfObject.";
+
+        public const String CannotRecogniseDocumentFontWithEncoding = "Cannot recognise document font {0} with {1} encoding";
 
         public const String CannotRemoveDocumentRootTag = "Cannot remove document root tag.";
 
@@ -380,6 +384,8 @@ namespace iText.Kernel {
         public const String ObjectMustBeIndirectToWorkWithThisWrapper = "Object must be indirect to work with this wrapper.";
 
         public const String ObjectNumberOfTheFirstObjectInThisXrefSubsectionNotFound = "Object number of the first object in this xref subsection not found.";
+
+        public const String OnlyIdentityCMapsSupportsWithTrueType = "Only Identity CMaps supports with truetype";
 
         public const String OcspStatusIsRevoked = "OCSP status is revoked.";
 

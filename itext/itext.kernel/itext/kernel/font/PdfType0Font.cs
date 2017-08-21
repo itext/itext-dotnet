@@ -75,10 +75,10 @@ namespace iText.Kernel.Font {
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             if (!cmap.Equals(PdfEncodings.IDENTITY_H) && !cmap.Equals(PdfEncodings.IDENTITY_V)) {
-                throw new PdfException("only.identity.cmaps.supports.with.truetype");
+                throw new PdfException(PdfException.OnlyIdentityCMapsSupportsWithTrueType);
             }
             if (!ttf.GetFontNames().AllowEmbedding()) {
-                throw new PdfException("1.cannot.be.embedded.due.to.licensing.restrictions").SetMessageParams(ttf.GetFontNames
+                throw new PdfException(PdfException.CannotBeEmbeddedDueToLicensingRestrictions).SetMessageParams(ttf.GetFontNames
                     ().GetFontName() + ttf.GetFontNames().GetStyle());
             }
             this.fontProgram = ttf;
@@ -162,7 +162,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (fontProgram == null) {
-                    throw new PdfException(MessageFormatUtil.Format("Cannot recognise document font {0} with {1} encoding", cidFontName
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CannotRecogniseDocumentFontWithEncoding, cidFontName
                         , cmap));
                 }
                 cidFontType = CID_FONT_TYPE_0;
