@@ -142,7 +142,7 @@ namespace iText.Kernel.Font {
                                 fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
                             }
                             else {
-                                if (byte2uni.Contains(currentNumber)) {
+                                if (byte2uni.ContainsKey(currentNumber)) {
                                     unicode = byte2uni.Get(currentNumber);
                                     fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
                                     fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
