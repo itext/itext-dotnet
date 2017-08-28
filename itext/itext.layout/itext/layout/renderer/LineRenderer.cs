@@ -675,6 +675,10 @@ namespace iText.Layout.Renderer {
             int numberOfSpaces = GetNumberOfSpaces();
             int baseCharsCount = BaseCharactersCount();
             float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
+            if (float.IsInfinity(baseFactor)) {
+                //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
+                baseFactor = 0;
+            }
             float wordSpacing = ratio * baseFactor;
             float characterSpacing = (1 - ratio) * baseFactor;
             float lastRightPos = occupiedArea.GetBBox().GetX();
