@@ -115,6 +115,13 @@ namespace iText.Forms {
             return value;
         }
 
+        public static T JRemoveAt<T>(this IList<T> list, int index) {
+            T value = list[index];
+            list.RemoveAt(index);
+
+            return value;
+        }
+
         public static void Write(this Stream stream, byte[] buffer) {
             stream.Write(buffer, 0, buffer.Length);
         }
