@@ -1362,7 +1362,7 @@ namespace iText.Layout.Renderer {
             if (action != null) {
                 PdfLinkAnnotation link = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
                 if (link == null) {
-                    link = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0));
+                    link = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetFlags(PdfAnnotation.PRINT);
                     Border border = this.GetProperty<Border>(Property.BORDER);
                     if (border != null) {
                         link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
