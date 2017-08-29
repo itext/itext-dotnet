@@ -88,6 +88,7 @@ namespace iText.Kernel.Colors {
             NAMES.Put("darkcyan", new int[] { 0x00, 0x8b, 0x8b, 0xff });
             NAMES.Put("darkgoldenrod", new int[] { 0xb8, 0x86, 0x0b, 0xff });
             NAMES.Put("darkgray", new int[] { 0xa9, 0xa9, 0xa9, 0xff });
+            NAMES.Put("darkgrey", new int[] { 0xa9, 0xa9, 0xa9, 0xff });
             NAMES.Put("darkgreen", new int[] { 0x00, 0x64, 0x00, 0xff });
             NAMES.Put("darkkhaki", new int[] { 0xbd, 0xb7, 0x6b, 0xff });
             NAMES.Put("darkmagenta", new int[] { 0x8b, 0x00, 0x8b, 0xff });
@@ -99,11 +100,13 @@ namespace iText.Kernel.Colors {
             NAMES.Put("darkseagreen", new int[] { 0x8f, 0xbc, 0x8f, 0xff });
             NAMES.Put("darkslateblue", new int[] { 0x48, 0x3d, 0x8b, 0xff });
             NAMES.Put("darkslategray", new int[] { 0x2f, 0x4f, 0x4f, 0xff });
+            NAMES.Put("darkslategrey", new int[] { 0x2f, 0x4f, 0x4f, 0xff });
             NAMES.Put("darkturquoise", new int[] { 0x00, 0xce, 0xd1, 0xff });
             NAMES.Put("darkviolet", new int[] { 0x94, 0x00, 0xd3, 0xff });
             NAMES.Put("deeppink", new int[] { 0xff, 0x14, 0x93, 0xff });
             NAMES.Put("deepskyblue", new int[] { 0x00, 0xbf, 0xff, 0xff });
             NAMES.Put("dimgray", new int[] { 0x69, 0x69, 0x69, 0xff });
+            NAMES.Put("dimgrey", new int[] { 0x69, 0x69, 0x69, 0xff });
             NAMES.Put("dodgerblue", new int[] { 0x1e, 0x90, 0xff, 0xff });
             NAMES.Put("firebrick", new int[] { 0xb2, 0x22, 0x22, 0xff });
             NAMES.Put("floralwhite", new int[] { 0xff, 0xfa, 0xf0, 0xff });
@@ -139,6 +142,7 @@ namespace iText.Kernel.Colors {
             NAMES.Put("lightseagreen", new int[] { 0x20, 0xb2, 0xaa, 0xff });
             NAMES.Put("lightskyblue", new int[] { 0x87, 0xce, 0xfa, 0xff });
             NAMES.Put("lightslategray", new int[] { 0x77, 0x88, 0x99, 0xff });
+            NAMES.Put("lightslategrey", new int[] { 0x77, 0x88, 0x99, 0xff });
             NAMES.Put("lightsteelblue", new int[] { 0xb0, 0xc4, 0xde, 0xff });
             NAMES.Put("lightyellow", new int[] { 0xff, 0xff, 0xe0, 0xff });
             NAMES.Put("lime", new int[] { 0x00, 0xff, 0x00, 0xff });
@@ -191,6 +195,7 @@ namespace iText.Kernel.Colors {
             NAMES.Put("skyblue", new int[] { 0x87, 0xce, 0xeb, 0xff });
             NAMES.Put("slateblue", new int[] { 0x6a, 0x5a, 0xcd, 0xff });
             NAMES.Put("slategray", new int[] { 0x70, 0x80, 0x90, 0xff });
+            NAMES.Put("slategrey", new int[] { 0x70, 0x80, 0x90, 0xff });
             NAMES.Put("snow", new int[] { 0xff, 0xfa, 0xfa, 0xff });
             NAMES.Put("springgreen", new int[] { 0x00, 0xff, 0x7f, 0xff });
             NAMES.Put("steelblue", new int[] { 0x46, 0x82, 0xb4, 0xff });
