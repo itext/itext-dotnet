@@ -3046,7 +3046,8 @@ namespace iText.Forms.Fields {
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
-                for (int i = 0; i < maxLen; i++) {
+                int numberOfCharacters = maxLen >= value.Length ? value.Length : maxLen;
+                for (int i = 0; i < numberOfCharacters; i++) {
                     // Get width of each character
                     String characterToPlace = value.JSubstring(i, i + 1);
                     float characterWidth = font.GetWidth(characterToPlace, fontSize);
