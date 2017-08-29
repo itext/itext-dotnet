@@ -369,6 +369,8 @@ namespace iText.Kernel {
 
         public const String NoKidWithSuchRole = "No kid with such role.";
 
+        public const String NoMaxLenPresent = "No /MaxLen has been set even though the Comb flag has been set.";
+
         public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";
 
         public const String NotAValidPkcs7ObjectNotASequence = "Not a valid PKCS#7 object - not a sequence";

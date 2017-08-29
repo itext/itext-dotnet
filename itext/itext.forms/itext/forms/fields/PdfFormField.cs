@@ -3036,20 +3036,26 @@ namespace iText.Forms.Fields {
             // check if /Comb has been set
             if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
                 // calculate space per character
-                int maxLen = this.GetPdfObject().GetAsNumber(PdfName.MaxLen).IntValue();
+                PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
+                if (maxLenEntry == null) {
+                    throw new PdfException(PdfException.NoMaxLenPresent);
+                }
+                int maxLen = maxLenEntry.IntValue();
                 float widthPerCharacter = width / maxLen;
+                Paragraph paragraph = new Paragraph().SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1);
+                if (color != null) {
+                    paragraph.SetFontColor(color);
+                }
                 for (int i = 0; i < maxLen; i++) {
                     // Get width of each character
                     String characterToPlace = value.JSubstring(i, i + 1);
                     float characterWidth = font.GetWidth(characterToPlace, fontSize);
                     // Find x-offset for this character so that we can place it in the center of this comb-section
-                    float xOffset = (widthPerCharacter - characterWidth) / 2;
-                    Paragraph paragraph = new Paragraph(characterToPlace).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading
-                        (1).SetPaddings(0f, xOffset, 0f, xOffset);
-                    if (color != null) {
-                        paragraph.SetFontColor(color);
-                    }
+                    float xOffset = characterWidth == 0 ? characterWidth : (widthPerCharacter - characterWidth) / 2;
+                    paragraph.SetPaddings(0f, xOffset, 0f, xOffset);
+                    paragraph.Add(characterToPlace);
                     modelCanvas.ShowTextAligned(paragraph, widthPerCharacter * i, 0, textAlignment);
+                    paragraph.GetChildren().JRemoveAt(0);
                 }
             }
             else {
