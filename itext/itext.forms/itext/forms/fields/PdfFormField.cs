@@ -3014,16 +3014,11 @@ namespace iText.Forms.Fields {
                 value = ObfuscatePassword(value);
             }
             canvas.BeginVariableText().SaveState().NewPath();
-            Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
-                (0, X_OFFSET, 0, X_OFFSET);
-            if (color != null) {
-                paragraph.SetFontColor(color);
-            }
+            float x = X_OFFSET;
             int? justification = GetJustification();
             if (justification == null) {
                 justification = 0;
             }
-            float x = X_OFFSET;
             TextAlignment? textAlignment = TextAlignment.LEFT;
             if (justification == ALIGN_RIGHT) {
                 textAlignment = TextAlignment.RIGHT;
@@ -3038,7 +3033,33 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
                 0, 2 * height));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            // check if /Comb has been set
+            if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
+                // calculate space per character
+                int maxLen = this.GetPdfObject().GetAsNumber(PdfName.MaxLen).IntValue();
+                float widthPerCharacter = width / maxLen;
+                for (int i = 0; i < maxLen; i++) {
+                    // Get width of each character
+                    String characterToPlace = value.JSubstring(i, i + 1);
+                    float characterWidth = font.GetWidth(characterToPlace, fontSize);
+                    // Find x-offset for this character so that we can place it in the center of this comb-section
+                    float xOffset = (widthPerCharacter - characterWidth) / 2;
+                    Paragraph paragraph = new Paragraph(characterToPlace).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading
+                        (1).SetPaddings(0f, xOffset, 0f, xOffset);
+                    if (color != null) {
+                        paragraph.SetFontColor(color);
+                    }
+                    modelCanvas.ShowTextAligned(paragraph, widthPerCharacter * i, 0, textAlignment);
+                }
+            }
+            else {
+                Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
+                    (0, X_OFFSET, 0, X_OFFSET);
+                if (color != null) {
+                    paragraph.SetFontColor(color);
+                }
+                modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
