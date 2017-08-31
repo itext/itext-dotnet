@@ -262,6 +262,10 @@ namespace iText.Layout.Renderer {
                             }
                             bbox.SetWidth(Math.Min(childMaxWidth, layoutContext.GetArea().GetBBox().GetWidth()));
                         }
+                        childBlockMinMaxWidth.SetChildrenMaxWidth(childBlockMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                        childBlockMinMaxWidth.SetChildrenMinWidth(childBlockMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
                     }
                 }
                 if (childResult == null) {
@@ -272,6 +276,14 @@ namespace iText.Layout.Renderer {
                     }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox), wasParentsHeightClipped));
+                    if (childResult is MinMaxWidthLayoutResult && null != childBlockMinMaxWidth) {
+                        // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
+                        MinMaxWidth childResultMinMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
+                        childResultMinMaxWidth.SetChildrenMaxWidth(childResultMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                        childResultMinMaxWidth.SetChildrenMinWidth(childResultMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                    }
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
