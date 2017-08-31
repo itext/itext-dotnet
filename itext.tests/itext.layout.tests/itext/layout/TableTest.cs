@@ -1913,6 +1913,28 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest01() {
+            // TODO DEVSIX-1555
+            String testName = "tableMinMaxWidthTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216));
+            // Notice that the next (commented) line will cause an exception
+            // cell.setMaxWidth(72);
+            cell.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(72));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
