@@ -785,8 +785,10 @@ namespace iText.Layout.Renderer {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
                 float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
                 if (minWidth == null || maxWidth == null) {
-                    MaxMaxWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+                    AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
                     int epsilonNum = 0;
+                    int curEpsNum = 0;
+                    float previousFloatingChildWidth = 0;
                     foreach (IRenderer childRenderer in childRenderers) {
                         MinMaxWidth childMinMaxWidth;
                         childRenderer.SetParent(this);
@@ -796,14 +798,20 @@ namespace iText.Layout.Renderer {
                         else {
                             childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, availableWidth);
                         }
-                        handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
+                        handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth() + (FloatingHelper.IsRendererFloating(childRenderer
+                            ) ? previousFloatingChildWidth : 0));
                         handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
-                        handler.SetLeftChildFloat(childRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(childRenderer
-                            ));
+                        previousFloatingChildWidth = FloatingHelper.IsRendererFloating(childRenderer) ? previousFloatingChildWidth
+                             + childMinMaxWidth.GetMaxWidth() : 0;
                         if (FloatingHelper.IsRendererFloating(childRenderer)) {
-                            epsilonNum++;
+                            curEpsNum++;
+                        }
+                        else {
+                            epsilonNum = Math.Max(epsilonNum, curEpsNum);
+                            curEpsNum = 0;
                         }
                     }
+                    epsilonNum = Math.Max(epsilonNum, curEpsNum);
                     handler.minMaxWidth.SetChildrenMaxWidth(handler.minMaxWidth.GetChildrenMaxWidth() + epsilonNum * AbstractRenderer
                         .EPS);
                     handler.minMaxWidth.SetChildrenMinWidth(handler.minMaxWidth.GetChildrenMinWidth() + epsilonNum * AbstractRenderer

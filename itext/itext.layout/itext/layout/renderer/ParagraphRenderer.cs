@@ -134,7 +134,7 @@ namespace iText.Layout.Renderer {
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
-            MaxMaxWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
+            AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -187,8 +187,6 @@ namespace iText.Layout.Renderer {
                 }
                 widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
                 widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
-                widthHandler.SetLeftChildFloat(currentRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(currentRenderer
-                    ));
                 LineRenderer processedRenderer = null;
                 if (result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;
@@ -565,14 +563,6 @@ namespace iText.Layout.Renderer {
                         DeleteOwnProperty(Property.ROTATION_ANGLE);
                     }
                     minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
-                    int epsilonNum = 0;
-                    foreach (IRenderer childRenderer in childRenderers) {
-                        if (FloatingHelper.IsRendererFloating(childRenderer)) {
-                            epsilonNum++;
-                        }
-                    }
-                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + epsilonNum * AbstractRenderer.EPS);
-                    minMaxWidth.SetChildrenMinWidth(minMaxWidth.GetChildrenMinWidth() + epsilonNum * AbstractRenderer.EPS);
                 }
                 if (minWidth != null) {
                     minMaxWidth.SetChildrenMinWidth((float)minWidth);
