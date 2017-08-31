@@ -565,6 +565,14 @@ namespace iText.Layout.Renderer {
                         DeleteOwnProperty(Property.ROTATION_ANGLE);
                     }
                     minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
+                    int epsilonNum = 0;
+                    foreach (IRenderer childRenderer in childRenderers) {
+                        if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                            epsilonNum++;
+                        }
+                    }
+                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + epsilonNum * AbstractRenderer.EPS);
+                    minMaxWidth.SetChildrenMinWidth(minMaxWidth.GetChildrenMinWidth() + epsilonNum * AbstractRenderer.EPS);
                 }
                 if (minWidth != null) {
                     minMaxWidth.SetChildrenMinWidth((float)minWidth);

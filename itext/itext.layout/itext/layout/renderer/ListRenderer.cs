@@ -108,7 +108,16 @@ namespace iText.Layout.Renderer {
             if (errorResult != null) {
                 return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
             }
-            return base.GetMinMaxWidth(availableWidth);
+            MinMaxWidth minMaxWidth = base.GetMinMaxWidth(availableWidth);
+            int epsilonNum = 0;
+            foreach (IRenderer childRenderer in childRenderers) {
+                if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                    epsilonNum++;
+                }
+            }
+            minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + epsilonNum * AbstractRenderer.EPS);
+            minMaxWidth.SetChildrenMinWidth(minMaxWidth.GetChildrenMinWidth() + epsilonNum * AbstractRenderer.EPS);
+            return minMaxWidth;
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
@@ -214,7 +223,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_202(constantFont, textElement);
+                            textRenderer = new _TextRenderer_211(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -243,8 +252,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_202 : TextRenderer {
-            public _TextRenderer_202(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_211 : TextRenderer {
+            public _TextRenderer_211(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
