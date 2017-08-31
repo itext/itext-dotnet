@@ -134,7 +134,7 @@ namespace iText.Layout.Renderer {
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
-            AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
+            MaxMaxWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -187,6 +187,8 @@ namespace iText.Layout.Renderer {
                 }
                 widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
                 widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
+                widthHandler.SetLeftChildFloat(currentRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(currentRenderer
+                    ));
                 LineRenderer processedRenderer = null;
                 if (result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;

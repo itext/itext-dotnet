@@ -45,6 +45,8 @@ using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
     public class MaxMaxWidthHandler : AbstractWidthHandler {
+        protected internal bool isLeftChildFloat = false;
+
         public MaxMaxWidthHandler(MinMaxWidth minMaxWidth)
             : base(minMaxWidth) {
         }
@@ -54,7 +56,20 @@ namespace iText.Layout.Renderer {
         }
 
         public override void UpdateMaxChildWidth(float childMaxWidth) {
-            minMaxWidth.SetChildrenMaxWidth(Math.Max(minMaxWidth.GetChildrenMaxWidth(), childMaxWidth));
+            if (isLeftChildFloat) {
+                minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + childMaxWidth);
+            }
+            else {
+                minMaxWidth.SetChildrenMaxWidth(Math.Max(minMaxWidth.GetChildrenMaxWidth(), childMaxWidth));
+            }
+        }
+
+        public virtual void SetLeftChildFloat(bool leftChildFloat) {
+            isLeftChildFloat = leftChildFloat;
+        }
+
+        public virtual bool IsLeftChildFloat() {
+            return isLeftChildFloat;
         }
     }
 }

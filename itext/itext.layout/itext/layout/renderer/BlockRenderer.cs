@@ -785,7 +785,7 @@ namespace iText.Layout.Renderer {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
                 float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
                 if (minWidth == null || maxWidth == null) {
-                    AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+                    MaxMaxWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
                     foreach (IRenderer childRenderer in childRenderers) {
                         MinMaxWidth childMinMaxWidth;
                         childRenderer.SetParent(this);
@@ -797,6 +797,8 @@ namespace iText.Layout.Renderer {
                         }
                         handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
                         handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
+                        handler.SetLeftChildFloat(childRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(childRenderer
+                            ));
                     }
                 }
                 if (minWidth != null) {

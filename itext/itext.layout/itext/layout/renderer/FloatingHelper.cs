@@ -148,8 +148,9 @@ namespace iText.Layout.Renderer {
                 if (maxWidth > parentBBox.GetWidth()) {
                     maxWidth = parentBBox.GetWidth();
                 }
-                floatElemWidth = maxWidth + AbstractRenderer.EPS;
-                blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
+                floatElemWidth = maxWidth + Math.Max(1, renderer.childRenderers.Count) * AbstractRenderer.EPS;
+                blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + Math.Max(1, renderer.childRenderers.Count) * AbstractRenderer
+                    .EPS;
             }
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, parentBBox, floatElemWidth, FloatPropertyValue
                 .LEFT.Equals(floatPropertyValue));

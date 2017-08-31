@@ -198,9 +198,13 @@ namespace iText.Layout.Renderer {
                         // TODO if percents width was used, max width might be huge
                         maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
                             );
+                        widthHandler.UpdateMinChildWidth(minChildWidth + AbstractRenderer.EPS);
+                        widthHandler.UpdateMaxChildWidth(maxChildWidth + AbstractRenderer.EPS);
                     }
-                    widthHandler.UpdateMinChildWidth(minChildWidth);
-                    widthHandler.UpdateMaxChildWidth(maxChildWidth);
+                    else {
+                        widthHandler.UpdateMinChildWidth(kidMinMaxWidth.GetMinWidth() + AbstractRenderer.EPS);
+                        widthHandler.UpdateMaxChildWidth(kidMinMaxWidth.GetMaxWidth() + AbstractRenderer.EPS);
+                    }
                     if (childResult == null || childResult.GetStatus() == LayoutResult.NOTHING) {
                         overflowFloats.Add(childRenderer);
                     }
