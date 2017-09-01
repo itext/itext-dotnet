@@ -536,10 +536,13 @@ namespace iText.Layout.Renderer {
                 ApplyRelativePositioningTranslation(true);
             }
             if (isTagged) {
-                tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
                     document.GetTagStructureContext().RemoveElementConnectionToTag(accessibleElement);
                 }
+                if (IsPossibleBadTagging(tagPointer.GetRole())) {
+                    tagPointer.SetRole(PdfName.Div);
+                }
+                tagPointer.MoveToParent();
             }
             flushed = true;
             EndTranformationIfApplied(drawContext.GetCanvas());
@@ -765,6 +768,19 @@ namespace iText.Layout.Renderer {
                 }
             }
             return difference;
+        }
+
+        /// <summary>Catch tricky cases when element order and thus tagging order is not followed accordingly.</summary>
+        /// <remarks>
+        /// Catch tricky cases when element order and thus tagging order is not followed accordingly.
+        /// The examples are a floating or absolutely positioned list item element which might end up
+        /// having parent other than list.
+        /// To produce correct tagged structure in such cases, we change the role to something else.
+        /// </remarks>
+        internal virtual bool IsPossibleBadTagging(PdfName role) {
+            return !PdfName.Artifact.Equals(role) && !PdfName.Div.Equals(role) && !PdfName.P.Equals(role) && !PdfName.
+                Link.Equals(role) && (IsFixedLayout() || IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this
+                ));
         }
 
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
