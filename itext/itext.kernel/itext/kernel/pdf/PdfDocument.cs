@@ -623,16 +623,20 @@ namespace iText.Kernel.Pdf {
                     }
                     UpdateXmpMetadata();
                     if (GetXmpMetadata() != null) {
-                        PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
-                        xmp.GetOutputStream().Write(xmpMetadata);
+                        PdfStream xmp = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                        if (xmp == null) {
+                            xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
+                            catalog.Put(PdfName.Metadata, xmp);
+                        }
+                        xmp.SetData(xmpMetadata);
                         xmp.Put(PdfName.Type, PdfName.Metadata);
                         xmp.Put(PdfName.Subtype, PdfName.XML);
+                        xmp.SetModified();
                         if (writer.crypto != null && !writer.crypto.IsMetadataEncrypted()) {
                             PdfArray ar = new PdfArray();
                             ar.Add(PdfName.Crypt);
                             xmp.Put(PdfName.Filter, ar);
                         }
-                        catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                     }
                     String producer = null;
                     if (reader == null) {
