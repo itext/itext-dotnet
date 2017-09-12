@@ -122,6 +122,10 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+        public virtual IRenderer GetParent() {
+            return null;
+        }
+
         public virtual IList<IRenderer> GetChildRenderers() {
             return null;
         }
