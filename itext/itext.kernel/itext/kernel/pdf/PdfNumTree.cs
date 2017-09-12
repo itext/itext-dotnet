@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf {
             return items;
         }
 
-        public virtual void AddEntry(int? key, PdfObject value) {
+        public virtual void AddEntry(int key, PdfObject value) {
             items.Put(key, value);
         }
 
