@@ -131,9 +131,7 @@ namespace iText.Kernel.Font {
         /// true if font contains glyph, represented with the unicode code point,
         /// otherwise false.
         /// </returns>
-        public virtual bool ContainsGlyph(String text, int from) {
-            throw new InvalidOperationException("containsGlyph(String text, int from) must be overridden");
-        }
+        public abstract bool ContainsGlyph(String text, int from);
 
         public abstract GlyphLine CreateGlyphLine(String content);
 
@@ -147,10 +145,7 @@ namespace iText.Kernel.Font {
         /// <param name="to">to index of the text.</param>
         /// <param name="glyphs">array for a new glyphs, shall not be null.</param>
         /// <returns>number of processed chars from text.</returns>
-        public virtual int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs) {
-            throw new InvalidOperationException("appendGlyphs(String text, int from, int to, List<Glyph> glyphs) must be overridden"
-                );
-        }
+        public abstract int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs);
 
         /// <summary>Append any single glyph, even notdef.</summary>
         /// <remarks>
@@ -161,10 +156,7 @@ namespace iText.Kernel.Font {
         /// <param name="from">from index of the text.</param>
         /// <param name="glyphs">array for a new glyph, shall not be null.</param>
         /// <returns>number of processed chars: 2 in case surrogate pair, otherwise 1</returns>
-        public virtual int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs) {
-            throw new InvalidOperationException("appendAnyGlyph(String text, int from, List<Glyph> glyphs) must be overridden"
-                );
-        }
+        public abstract int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs);
 
         /// <summary>Converts the text into bytes to be placed in the document.</summary>
         /// <remarks>
