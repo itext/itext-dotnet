@@ -285,8 +285,8 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             if (parentsOfPageMcrs.Size() > 0) {
                 parentsOfPageMcrs.MakeIndirect(structTreeRoot.GetDocument());
-                int structParents = (int)page.GetStructParentIndex() != -1 ? (int)page.GetStructParentIndex() : (int)page.
-                    GetDocument().GetNextStructParentIndex();
+                int structParents = page.GetStructParentIndex() != -1 ? page.GetStructParentIndex() : page.GetDocument().GetNextStructParentIndex
+                    ();
                 page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
                 parentTree.AddEntry(structParents, parentsOfPageMcrs);
                 structTreeRoot.GetDocument().CheckIsoConformance(parentsOfPageMcrs, IsoKey.TAG_STRUCTURE_ELEMENT);
