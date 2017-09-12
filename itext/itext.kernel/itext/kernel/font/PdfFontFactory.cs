@@ -398,7 +398,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -415,7 +415,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, bool embedded) {
             return CreateFont(fontProgram, null, embedded);
         }
@@ -436,7 +436,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -458,7 +458,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
