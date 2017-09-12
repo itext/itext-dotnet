@@ -81,10 +81,6 @@ namespace iText.Barcodes {
         /// <summary>X12 encodation.</summary>
         public const int DM_X12 = 5;
 
-        /// <summary>X12 encodation.</summary>
-        [System.ObsoleteAttribute(@"Use DM_X12 instead.")]
-        public const int DM_X21 = 5;
-
         /// <summary>EDIFACT encodation.</summary>
         public const int DM_EDIFACT = 6;
 
