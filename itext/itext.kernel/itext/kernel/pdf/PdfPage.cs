@@ -434,7 +434,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfStream"/>
         /// object, that represent XMP Metadata.
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public virtual PdfStream GetXmpMetadata() {
             return GetPdfObject().GetAsStream(PdfName.Metadata);
         }
