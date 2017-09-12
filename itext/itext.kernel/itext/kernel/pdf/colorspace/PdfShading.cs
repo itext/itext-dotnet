@@ -266,19 +266,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// that defines color at every point in the domain by a specified mathematical function.
         /// </summary>
         public class FunctionBased : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfDictionary">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public FunctionBased(PdfDictionary pdfDictionary)
+            internal FunctionBased(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
 
@@ -417,19 +405,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// and extends indefinitely perpendicular to that axis.
         /// </summary>
         public class Axial : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfDictionary">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public Axial(PdfDictionary pdfDictionary)
+            internal Axial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
 
@@ -633,19 +609,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// This type of shading shall not be used with an Indexed colour space
         /// </summary>
         public class Radial : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfDictionary">
-            /// -
-            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public Radial(PdfDictionary pdfDictionary)
+            internal Radial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
 
@@ -916,19 +880,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// shall be specified for each vertex in place of the colour components c1...cn.
         /// </summary>
         public class FreeFormGouraudShadedTriangleMesh : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfStream">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public FreeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
+            internal FreeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
 
@@ -1122,19 +1074,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// except there is no edge flag.
         /// </summary>
         public class LatticeFormGouraudShadedTriangleMesh : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfStream">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public LatticeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
+            internal LatticeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
 
@@ -1320,19 +1260,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// shall be specified by a single parametric value t rather than by n separate colour components c1...cn.
         /// </summary>
         public class CoonsPatchMesh : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfStream">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public CoonsPatchMesh(PdfStream pdfStream)
+            internal CoonsPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
 
@@ -1521,19 +1449,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// For the format of data stream, that defines patches, see ISO-320001 Table 86.
         /// </summary>
         public class TensorProductPatchMesh : PdfShading {
-            /// <summary>
-            /// Creates the new instance of the class from the existing
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// object.
-            /// </summary>
-            /// <param name="pdfStream">
-            /// 
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// from which the instance is created.
-            /// </param>
-            [System.ObsoleteAttribute(@"Intended only for private use. You should use PdfShading.MakeShading(iText.Kernel.Pdf.PdfDictionary) instead."
-                )]
-            public TensorProductPatchMesh(PdfStream pdfStream)
+            internal TensorProductPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
 
