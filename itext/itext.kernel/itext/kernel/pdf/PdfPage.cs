@@ -877,18 +877,12 @@ namespace iText.Kernel.Pdf {
             return mcid++;
         }
 
-        /// <summary>
-        /// Gets
-        /// <see cref="int?"/>
-        /// key of the page’s entry in the structural parent tree.
-        /// </summary>
+        /// <summary>Gets the key of the page’s entry in the structural parent tree.</summary>
         /// <returns>
-        /// 
-        /// <see cref="int?"/>
-        /// key of the page’s entry in the structural parent tree.
+        /// the key of the page’s entry in the structural parent tree.
         /// If page has no entry in the structural parent tree, returned value is -1.
         /// </returns>
-        public virtual int? GetStructParentIndex() {
+        public virtual int GetStructParentIndex() {
             return GetPdfObject().GetAsNumber(PdfName.StructParents) != null ? GetPdfObject().GetAsNumber(PdfName.StructParents
                 ).IntValue() : -1;
         }

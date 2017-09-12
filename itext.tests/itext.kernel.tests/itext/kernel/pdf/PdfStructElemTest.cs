@@ -188,7 +188,7 @@ namespace iText.Kernel.Pdf {
             document = new PdfDocument(new PdfReader(destinationFolder + "structElemTest03.pdf"));
             NUnit.Framework.Assert.AreEqual(2, (int)document.GetNextStructParentIndex());
             PdfPage page = document.GetPage(1);
-            NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex().Value);
+            NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex());
             NUnit.Framework.Assert.AreEqual(2, page.GetNextMcid());
             document.Close();
         }
