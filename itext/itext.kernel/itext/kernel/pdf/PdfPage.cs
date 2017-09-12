@@ -387,6 +387,11 @@ namespace iText.Kernel.Pdf {
         /// <c>byte[]</c>
         /// of XMP Metadata to set.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
             PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
@@ -408,6 +413,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.XMP.Options.SerializeOptions"/>
         /// used while serialization.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
@@ -421,6 +431,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.XMP.XMPMeta"/>
         /// object to set.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta) {
@@ -1391,10 +1406,9 @@ namespace iText.Kernel.Pdf {
         /// See
         /// <see cref="SetIgnorePageRotationForContent(bool)"/>
         /// </remarks>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageRotationInverseMatrixWritten() {
+        public virtual void SetPageRotationInverseMatrixWritten() {
             // this method specifically return void to discourage it's unintended usage
             pageRotationInverseMatrixWritten = true;
-            return this;
         }
 
         /// <summary>
