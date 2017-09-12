@@ -204,12 +204,12 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, float width) {
-            SetFixedPosition(x, y, UnitValue.CreatePointValue(width));
+        public virtual T SetFixedPosition(float left, float bottom, float width) {
+            SetFixedPosition(left, bottom, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
 
@@ -224,17 +224,17 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">
         /// a
         /// <see cref="iText.Layout.Properties.UnitValue"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, UnitValue width) {
+        public virtual T SetFixedPosition(float left, float bottom, UnitValue width) {
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
-            SetProperty(Property.X, x);
-            SetProperty(Property.Y, y);
+            SetProperty(Property.X, left);
+            SetProperty(Property.Y, bottom);
             SetProperty(Property.WIDTH, width);
             return (T)(Object)this;
         }
@@ -251,12 +251,12 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, float width) {
-            SetFixedPosition(x, y, width);
+        public virtual T SetFixedPosition(int pageNumber, float left, float bottom, float width) {
+            SetFixedPosition(left, bottom, width);
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
@@ -273,12 +273,12 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width) {
-            SetFixedPosition(x, y, width);
+        public virtual T SetFixedPosition(int pageNumber, float left, float bottom, UnitValue width) {
+            SetFixedPosition(left, bottom, width);
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }

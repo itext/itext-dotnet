@@ -393,11 +393,11 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="left">horizontal position on the page</param>
+        /// <param name="bottom">vertical position on the page</param>
         /// <returns>this image.</returns>
-        public virtual iText.Layout.Element.Image SetFixedPosition(float x, float y) {
-            SetFixedPosition(x, y, GetWidth());
+        public virtual iText.Layout.Element.Image SetFixedPosition(float left, float bottom) {
+            SetFixedPosition(left, bottom, GetWidth());
             return this;
         }
 
@@ -414,11 +414,11 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position on the page</param>
-        /// <param name="y">vertical position on the page</param>
+        /// <param name="left">horizontal position on the page</param>
+        /// <param name="bottom">vertical position on the page</param>
         /// <returns>this Element.</returns>
-        public virtual iText.Layout.Element.Image SetFixedPosition(int pageNumber, float x, float y) {
-            SetFixedPosition(pageNumber, x, y, GetWidth());
+        public virtual iText.Layout.Element.Image SetFixedPosition(int pageNumber, float left, float bottom) {
+            SetFixedPosition(pageNumber, left, bottom, GetWidth());
             return this;
         }
 
