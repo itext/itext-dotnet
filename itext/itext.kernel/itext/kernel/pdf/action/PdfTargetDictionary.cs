@@ -57,14 +57,18 @@ namespace iText.Kernel.Pdf.Action {
     /// nested recursively to specify one or more intermediate targets before reaching the final one.
     /// </remarks>
     public class PdfTargetDictionary : PdfObjectWrapper<PdfDictionary> {
+        private PdfTargetDictionary(PdfDictionary pdfObject)
+            : base(pdfObject) {
+        }
+
         /// <summary>
         /// Creates a new
         /// <see cref="PdfTargetDictionary"/>
         /// object by the underlying dictionary.
         /// </summary>
         /// <param name="pdfObject">the underlying dictionary object</param>
-        public PdfTargetDictionary(PdfDictionary pdfObject)
-            : base(pdfObject) {
+        public static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfDictionary pdfObject) {
+            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(pdfObject);
         }
 
         /// <summary>
@@ -80,9 +84,11 @@ namespace iText.Kernel.Pdf.Action {
         /// according to the spec.
         /// </summary>
         /// <param name="r">the relationship between the current document and the target</param>
-        public PdfTargetDictionary(PdfName r)
-            : this(new PdfDictionary()) {
-            Put(PdfName.R, r);
+        public static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfName r) {
+            iText.Kernel.Pdf.Action.PdfTargetDictionary pdfTargetDictionary = new iText.Kernel.Pdf.Action.PdfTargetDictionary
+                (new PdfDictionary());
+            pdfTargetDictionary.Put(PdfName.R, r);
+            return pdfTargetDictionary;
         }
 
         /// <summary>
@@ -107,10 +113,13 @@ namespace iText.Kernel.Pdf.Action {
         /// A target dictionary specifying additional path information to the target document.
         /// If this entry is absent, the current document is the target file containing the destination
         /// </param>
-        public PdfTargetDictionary(PdfName r, PdfString n, PdfObject p, PdfObject a, iText.Kernel.Pdf.Action.PdfTargetDictionary
-             t)
-            : this(new PdfDictionary()) {
-            Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName.T, t.GetPdfObject());
+        public static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfName r, PdfString n, PdfObject p, PdfObject
+             a, iText.Kernel.Pdf.Action.PdfTargetDictionary t) {
+            iText.Kernel.Pdf.Action.PdfTargetDictionary pdfTargetDictionary = new iText.Kernel.Pdf.Action.PdfTargetDictionary
+                (new PdfDictionary());
+            pdfTargetDictionary.Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName.T, 
+                t.GetPdfObject());
+            return pdfTargetDictionary;
         }
 
         /// <summary>Creates a new target object pointing to the parent of the current document.</summary>
@@ -119,14 +128,14 @@ namespace iText.Kernel.Pdf.Action {
         /// <see cref="PdfTargetDictionary"/>
         /// </returns>
         public static iText.Kernel.Pdf.Action.PdfTargetDictionary CreateParentTarget() {
-            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(PdfName.P);
+            return iText.Kernel.Pdf.Action.PdfTargetDictionary.Create(PdfName.P);
         }
 
         /// <summary>Creates a new target object pointing to a file in the EmbeddedFiles name tree.</summary>
         /// <param name="embeddedFileName">the name of the file in the EmbeddedFiles name tree</param>
         /// <returns>created object</returns>
         public static iText.Kernel.Pdf.Action.PdfTargetDictionary CreateChildTarget(String embeddedFileName) {
-            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(PdfName.C).Put(PdfName.N, new PdfString(embeddedFileName
+            return iText.Kernel.Pdf.Action.PdfTargetDictionary.Create(PdfName.C).Put(PdfName.N, new PdfString(embeddedFileName
                 ));
         }
 
@@ -143,7 +152,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created object</returns>
         public static iText.Kernel.Pdf.Action.PdfTargetDictionary CreateChildTarget(String namedDestination, String
              annotationIdentifier) {
-            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(PdfName.C).Put(PdfName.P, new PdfString(namedDestination
+            return iText.Kernel.Pdf.Action.PdfTargetDictionary.Create(PdfName.C).Put(PdfName.P, new PdfString(namedDestination
                 )).Put(PdfName.A, new PdfString(annotationIdentifier));
         }
 
@@ -153,8 +162,8 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created object</returns>
         public static iText.Kernel.Pdf.Action.PdfTargetDictionary CreateChildTarget(int pageNumber, int annotationIndex
             ) {
-            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(PdfName.C).Put(PdfName.P, new PdfNumber(pageNumber 
-                - 1)).Put(PdfName.A, new PdfNumber(annotationIndex));
+            return iText.Kernel.Pdf.Action.PdfTargetDictionary.Create(PdfName.C).Put(PdfName.P, new PdfNumber(pageNumber
+                 - 1)).Put(PdfName.A, new PdfNumber(annotationIndex));
         }
 
         /// <summary>
