@@ -66,14 +66,14 @@ namespace iText.Kernel.Colors {
                 throw new ArgumentException("underlyingCS");
             }
             this.pattern = uncoloredPattern;
-            this.underlyingColor = Color.MakeColor(underlyingCS, colorValue);
+            this.underlyingColor = MakeColor(underlyingCS, colorValue);
         }
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
             , float[] colorValue)
             : base(uncoloredTilingCS, colorValue) {
             this.pattern = uncoloredPattern;
-            this.underlyingColor = Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue);
+            this.underlyingColor = MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue);
         }
 
         public virtual PdfPattern GetPattern() {
