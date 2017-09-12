@@ -84,41 +84,10 @@ namespace iText.Kernel.Pdf.Action {
         /// according to the spec.
         /// </summary>
         /// <param name="r">the relationship between the current document and the target</param>
-        public static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfName r) {
+        private static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfName r) {
             iText.Kernel.Pdf.Action.PdfTargetDictionary pdfTargetDictionary = new iText.Kernel.Pdf.Action.PdfTargetDictionary
                 (new PdfDictionary());
             pdfTargetDictionary.Put(PdfName.R, r);
-            return pdfTargetDictionary;
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="PdfTargetDictionary"/>
-        /// object.
-        /// </summary>
-        /// <param name="r">the relationship between the current document and the target</param>
-        /// <param name="n">the name of the file in the EmbeddedFiles name tree</param>
-        /// <param name="p">
-        /// if the value is an integer, it specifies the page number (zero-based) in the current
-        /// document containing the file attachment annotation. If the value is a string,
-        /// it specifies a named destination in the current document that provides the page
-        /// number of the file attachment annotation
-        /// </param>
-        /// <param name="a">
-        /// If the value is an integer, it specifies the index (zero-based) of the annotation in the
-        /// Annots array of the page specified by P. If the value is a text string,
-        /// it specifies the value of NM in the annotation dictionary
-        /// </param>
-        /// <param name="t">
-        /// A target dictionary specifying additional path information to the target document.
-        /// If this entry is absent, the current document is the target file containing the destination
-        /// </param>
-        public static iText.Kernel.Pdf.Action.PdfTargetDictionary Create(PdfName r, PdfString n, PdfObject p, PdfObject
-             a, iText.Kernel.Pdf.Action.PdfTargetDictionary t) {
-            iText.Kernel.Pdf.Action.PdfTargetDictionary pdfTargetDictionary = new iText.Kernel.Pdf.Action.PdfTargetDictionary
-                (new PdfDictionary());
-            pdfTargetDictionary.Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName.T, 
-                t.GetPdfObject());
             return pdfTargetDictionary;
         }
 
