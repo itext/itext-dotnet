@@ -233,8 +233,8 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(float left, float bottom, UnitValue width) {
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
-            SetProperty(Property.X, left);
-            SetProperty(Property.Y, bottom);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.BOTTOM, bottom);
             SetProperty(Property.WIDTH, width);
             return (T)(Object)this;
         }

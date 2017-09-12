@@ -1367,11 +1367,11 @@ namespace iText.Layout.Renderer {
             if (IsPositioned()) {
                 if (IsFixedLayout()) {
                     if (isXPosition) {
-                        float x = (float)this.GetPropertyAsFloat(Property.X);
+                        float x = (float)this.GetPropertyAsFloat(Property.LEFT);
                         layoutBox.SetX(x);
                     }
                     else {
-                        float y = (float)this.GetPropertyAsFloat(Property.Y);
+                        float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                         Move(0, y - occupiedArea.GetBBox().GetY());
                     }
                 }

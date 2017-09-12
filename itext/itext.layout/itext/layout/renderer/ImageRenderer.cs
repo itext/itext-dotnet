@@ -149,8 +149,10 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            fixedXPosition = this.GetPropertyAsFloat(Property.X);
-            fixedYPosition = this.GetPropertyAsFloat(Property.Y);
+            if (IsFixedLayout()) {
+                fixedXPosition = this.GetPropertyAsFloat(Property.LEFT);
+                fixedYPosition = this.GetPropertyAsFloat(Property.BOTTOM);
+            }
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
             float? verticalScaling = this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
             AffineTransform t = new AffineTransform();

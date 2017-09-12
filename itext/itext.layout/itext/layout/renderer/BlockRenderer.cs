@@ -711,7 +711,7 @@ namespace iText.Layout.Renderer {
         [Obsolete]
         protected internal virtual void CorrectPositionedLayout(Rectangle layoutBox) {
             if (IsFixedLayout()) {
-                float y = (float)this.GetPropertyAsFloat(Property.Y);
+                float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                 Move(0, y - occupiedArea.GetBBox().GetY());
             }
         }
@@ -768,7 +768,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(parentBBox, false);
             ApplyBorderBox(parentBBox, borders, false);
             if (IsFixedLayout()) {
-                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.X));
+                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.LEFT));
             }
             ApplyPaddings(parentBBox, paddings, false);
             return parentWidth - parentBBox.GetWidth();

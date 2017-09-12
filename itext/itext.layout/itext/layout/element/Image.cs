@@ -121,8 +121,8 @@ namespace iText.Layout.Element {
         /// <param name="width">a float value</param>
         public Image(PdfImageXObject xObject, float left, float bottom, float width) {
             this.xObject = xObject;
-            SetProperty(Property.X, left);
-            SetProperty(Property.Y, bottom);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.BOTTOM, bottom);
             SetWidth(width);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
@@ -141,8 +141,8 @@ namespace iText.Layout.Element {
         /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
         public Image(PdfImageXObject xObject, float left, float bottom) {
             this.xObject = xObject;
-            SetProperty(Property.X, left);
-            SetProperty(Property.Y, bottom);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.BOTTOM, bottom);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
@@ -160,8 +160,8 @@ namespace iText.Layout.Element {
         /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the form</param>
         public Image(PdfFormXObject xObject, float left, float bottom) {
             this.xObject = xObject;
-            SetProperty(Property.X, left);
-            SetProperty(Property.Y, bottom);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.BOTTOM, bottom);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
