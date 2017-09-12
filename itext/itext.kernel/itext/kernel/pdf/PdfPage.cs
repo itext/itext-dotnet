@@ -388,12 +388,13 @@ namespace iText.Kernel.Pdf {
         /// of XMP Metadata to set.
         /// </param>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(byte[] xmpMetadata) {
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
             PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
             xmp.GetOutputStream().Write(xmpMetadata);
             xmp.Put(PdfName.Type, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.XML);
             Put(PdfName.Metadata, xmp);
+            return this;
         }
 
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
@@ -409,8 +410,8 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
-            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
+            return SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
@@ -422,10 +423,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
-            SetXmpMetadata(xmpMeta, serializeOptions);
+            return SetXmpMetadata(xmpMeta, serializeOptions);
         }
 
         /// <summary>Gets the XMP Metadata object.</summary>
@@ -1390,9 +1391,10 @@ namespace iText.Kernel.Pdf {
         /// See
         /// <see cref="SetIgnorePageRotationForContent(bool)"/>
         /// </remarks>
-        public virtual void SetPageRotationInverseMatrixWritten() {
+        public virtual iText.Kernel.Pdf.PdfPage SetPageRotationInverseMatrixWritten() {
             // this method specifically return void to discourage it's unintended usage
             pageRotationInverseMatrixWritten = true;
+            return this;
         }
 
         /// <summary>
