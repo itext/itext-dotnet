@@ -132,8 +132,7 @@ namespace iText.Pdfa {
             CheckIsoConformance(obj, key, null);
         }
 
-        public override void CheckShowTextIsoConformance(Object obj, PdfResources resources) {
-            CanvasGraphicsState gState = (CanvasGraphicsState)obj;
+        public override void CheckShowTextIsoConformance(CanvasGraphicsState gState, PdfResources resources) {
             bool fill = false;
             bool stroke = false;
             switch (gState.GetTextRenderingMode()) {

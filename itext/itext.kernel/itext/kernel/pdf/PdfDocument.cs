@@ -55,6 +55,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Log;
 using iText.Kernel.Numbering;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
@@ -1332,7 +1333,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfResources"/>
         /// associated with an object to check.
         /// </param>
-        public virtual void CheckShowTextIsoConformance(Object gState, PdfResources resources) {
+        public virtual void CheckShowTextIsoConformance(CanvasGraphicsState gState, PdfResources resources) {
         }
 
         /// <summary>Adds file attachment at document level.</summary>
