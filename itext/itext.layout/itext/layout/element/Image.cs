@@ -116,13 +116,13 @@ namespace iText.Layout.Element {
         /// an internal
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
-        /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
-        /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
+        /// <param name="left">a float value representing the horizontal offset of the lower left corner of the image</param>
+        /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
         /// <param name="width">a float value</param>
-        public Image(PdfImageXObject xObject, float x, float y, float width) {
+        public Image(PdfImageXObject xObject, float left, float bottom, float width) {
             this.xObject = xObject;
-            SetProperty(Property.X, x);
-            SetProperty(Property.Y, y);
+            SetProperty(Property.X, left);
+            SetProperty(Property.Y, bottom);
             SetWidth(width);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
@@ -137,12 +137,12 @@ namespace iText.Layout.Element {
         /// an internal
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
-        /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
-        /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
-        public Image(PdfImageXObject xObject, float x, float y) {
+        /// <param name="left">a float value representing the horizontal offset of the lower left corner of the image</param>
+        /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
+        public Image(PdfImageXObject xObject, float left, float bottom) {
             this.xObject = xObject;
-            SetProperty(Property.X, x);
-            SetProperty(Property.Y, y);
+            SetProperty(Property.X, left);
+            SetProperty(Property.Y, bottom);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
@@ -156,12 +156,12 @@ namespace iText.Layout.Element {
         /// an internal
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// </param>
-        /// <param name="x">a float value representing the horizontal offset of the lower left corner of the form</param>
-        /// <param name="y">a float value representing the vertical offset of the lower left corner of the form</param>
-        public Image(PdfFormXObject xObject, float x, float y) {
+        /// <param name="left">a float value representing the horizontal offset of the lower left corner of the form</param>
+        /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the form</param>
+        public Image(PdfFormXObject xObject, float left, float bottom) {
             this.xObject = xObject;
-            SetProperty(Property.X, x);
-            SetProperty(Property.Y, y);
+            SetProperty(Property.X, left);
+            SetProperty(Property.Y, bottom);
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
@@ -190,10 +190,10 @@ namespace iText.Layout.Element {
         /// an internal representation of the
         /// <see cref="iText.IO.Image.ImageData">image resource</see>
         /// </param>
-        /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
-        /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
-        public Image(ImageData img, float x, float y)
-            : this(new PdfImageXObject(CheckImageType(img)), x, y) {
+        /// <param name="left">a float value representing the horizontal offset of the lower left corner of the image</param>
+        /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
+        public Image(ImageData img, float left, float bottom)
+            : this(new PdfImageXObject(CheckImageType(img)), left, bottom) {
             SetProperty(Property.FLUSH_ON_DRAW, true);
         }
 
@@ -207,11 +207,11 @@ namespace iText.Layout.Element {
         /// an internal representation of the
         /// <see cref="iText.IO.Image.ImageData">image resource</see>
         /// </param>
-        /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
-        /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
+        /// <param name="left">a float value representing the horizontal offset of the lower left corner of the image</param>
+        /// <param name="bottom">a float value representing the vertical offset of the lower left corner of the image</param>
         /// <param name="width">a float value</param>
-        public Image(ImageData img, float x, float y, float width)
-            : this(new PdfImageXObject(CheckImageType(img)), x, y, width) {
+        public Image(ImageData img, float left, float bottom, float width)
+            : this(new PdfImageXObject(CheckImageType(img)), left, bottom, width) {
             SetProperty(Property.FLUSH_ON_DRAW, true);
         }
 
