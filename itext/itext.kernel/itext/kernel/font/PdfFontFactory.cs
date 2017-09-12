@@ -307,8 +307,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram, String encoding, bool embedded) {
             if (fontProgram == null) {
                 return null;
@@ -364,8 +362,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -387,8 +383,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram) {
             return CreateFont(fontProgram, DEFAULT_ENCODING);
         }
@@ -477,8 +471,6 @@ namespace iText.Kernel.Font {
         /// <param name="document">the target document of the new font</param>
         /// <param name="colorized">indicates whether the font will be colorized</param>
         /// <returns>created font</returns>
-        /// <exception cref="System.IO.IOException">actually this exception is never thrown. This will be removed in 7.1.
-        ///     </exception>
         public static PdfType3Font CreateType3Font(PdfDocument document, bool colorized) {
             return new PdfType3Font(document, colorized);
         }
