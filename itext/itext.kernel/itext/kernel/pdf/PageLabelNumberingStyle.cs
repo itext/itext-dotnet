@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
-    public enum PageLabelNumberingStyleConstants {
+    public enum PageLabelNumberingStyle {
         DECIMAL_ARABIC_NUMERALS,
         UPPERCASE_ROMAN_NUMERALS,
         LOWERCASE_ROMAN_NUMERALS,
