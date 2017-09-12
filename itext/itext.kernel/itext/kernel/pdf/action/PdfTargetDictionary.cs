@@ -181,8 +181,8 @@ namespace iText.Kernel.Pdf.Action {
         /// in the EmbeddedFiles.
         /// </summary>
         /// <returns>the name of the child file for this target</returns>
-        public virtual PdfString GetName() {
-            return GetPdfObject().GetAsString(PdfName.N);
+        public virtual String GetName() {
+            return GetPdfObject().GetAsString(PdfName.N).ToString();
         }
 
         /// <summary>
