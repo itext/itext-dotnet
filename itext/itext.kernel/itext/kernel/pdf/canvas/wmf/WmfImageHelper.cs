@@ -130,7 +130,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// </remarks>
         /// <param name="document">PdfDocument to add the PdfXObject to</param>
         /// <returns>PdfXObject based on the WMF image</returns>
-        public virtual PdfXObject CreatePdfForm(PdfDocument document) {
+        public virtual PdfXObject CreateFormXObject(PdfDocument document) {
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, wmf.GetWidth(), wmf.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             Stream @is = null;

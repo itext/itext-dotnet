@@ -112,7 +112,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="image">image to create form object from</param>
         /// <param name="pdfDocument">document instance which is needed for writing form stream contents</param>
         public PdfFormXObject(WmfImageData image, PdfDocument pdfDocument)
-            : this(new WmfImageHelper(image).CreatePdfForm(pdfDocument).GetPdfObject()) {
+            : this(new WmfImageHelper(image).CreateFormXObject(pdfDocument).GetPdfObject()) {
         }
 
         /// <summary>

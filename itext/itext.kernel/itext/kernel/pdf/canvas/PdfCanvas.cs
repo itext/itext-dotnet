@@ -1640,7 +1640,7 @@ namespace iText.Kernel.Pdf.Canvas {
             document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY, null);
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddXObject(xObject, a, b, c, d, e, f);
                 return xObject;
             }
@@ -1675,7 +1675,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddXObject(xObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
                 return xObject;
             }
@@ -1704,7 +1704,7 @@ namespace iText.Kernel.Pdf.Canvas {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 // TODO add matrix parameters
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddImage(xObject, width, 0, 0, width, x, y);
                 return xObject;
             }
