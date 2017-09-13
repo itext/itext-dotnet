@@ -287,7 +287,7 @@ namespace iText.Layout.Properties {
 
         public const int TOP = 73;
 
-        public const int TRANSFORM = 106;
+        public const int TRANSFORM = 53;
 
         public const int UNDERLINE = 74;
 
