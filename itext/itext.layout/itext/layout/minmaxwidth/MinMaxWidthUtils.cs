@@ -58,8 +58,12 @@ namespace iText.Layout.Minmaxwidth {
             return eps;
         }
 
-        public static float GetMax() {
+        public static float GetInfWidth() {
             return max;
+        }
+
+        private static float GetInfHeight() {
+            return 1e6f;
         }
 
         public static bool IsEqual(double x, double y) {
@@ -67,8 +71,8 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {
-            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
-                .INF))));
+            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, GetInfHeight
+                ()))));
             return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth(0, availableWidth) : new MinMaxWidth(0
                 , availableWidth, 0, result.GetOccupiedArea().GetBBox().GetWidth());
         }

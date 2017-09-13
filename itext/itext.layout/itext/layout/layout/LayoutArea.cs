@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
     /// <summary>
@@ -126,7 +125,7 @@ namespace iText.Layout.Layout {
                 return false;
             }
             iText.Layout.Layout.LayoutArea that = (iText.Layout.Layout.LayoutArea)obj;
-            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer.EPS);
+            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox);
         }
 
         /// <summary><inheritDoc/></summary>

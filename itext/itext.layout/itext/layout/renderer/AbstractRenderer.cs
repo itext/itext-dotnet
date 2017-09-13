@@ -76,10 +76,10 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// coordinates to consider rectangles equal
         /// </summary>
-        public const float EPS = 1e-4f;
+        protected internal const float EPS = 1e-4f;
 
         /// <summary>The infinity value which is used while layouting</summary>
-        public const float INF = 1e6f;
+        protected internal const float INF = 1e6f;
 
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
@@ -1851,7 +1851,7 @@ namespace iText.Layout.Renderer {
             if (left == null && right == null && !renderer.HasProperty(Property.WIDTH)) {
                 // Other, non-block renderers won't occupy full width anyway
                 MinMaxWidth minMaxWidth = renderer is BlockRenderer ? ((BlockRenderer)renderer).GetMinMaxWidth(MinMaxWidthUtils
-                    .GetMax()) : null;
+                    .GetInfWidth()) : null;
                 if (minMaxWidth != null && minMaxWidth.GetMaxWidth() < fullBbox.GetWidth()) {
                     fullBbox.SetWidth(minMaxWidth.GetMaxWidth() + iText.Layout.Renderer.AbstractRenderer.EPS);
                 }

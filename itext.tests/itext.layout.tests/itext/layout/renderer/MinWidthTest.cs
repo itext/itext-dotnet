@@ -79,7 +79,7 @@ namespace iText.Layout.Renderer {
             Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(Color.BLACK, 5))).SetBorder(new SolidBorder
                 (Color.BLUE, 5));
             MinMaxWidth result = ((AbstractRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             p.SetWidth(ToEffectiveWidth(p, result.GetMinWidth()));
             doc.Add(p);
             doc.Close();
@@ -101,7 +101,7 @@ namespace iText.Layout.Renderer {
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -124,7 +124,7 @@ namespace iText.Layout.Renderer {
             d.Add(new Paragraph(("iText")).SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f)));
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -148,7 +148,7 @@ namespace iText.Layout.Renderer {
             d.Add(p);
             d.Add(new Paragraph(("iText")));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -172,7 +172,7 @@ namespace iText.Layout.Renderer {
             Div dRotated = new Div().SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f));
             d.Add(dRotated.Add(new Paragraph(("iText"))));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -195,7 +195,7 @@ namespace iText.Layout.Renderer {
             dRotated.Add(p).SetRotationAngle(Math.PI * 3 / 8);
             Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(Color.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -217,10 +217,10 @@ namespace iText.Layout.Renderer {
             iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50);
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
-                ))).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                ))).GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
             doc.Add(d);
             doc.Add(dPercent);
@@ -245,10 +245,10 @@ namespace iText.Layout.Renderer {
                 (Math.PI * 3 / 8);
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
-                ))).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                ))).GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
             doc.Add(d);
             doc.Add(dPercent);
@@ -279,7 +279,7 @@ namespace iText.Layout.Renderer {
                 (3).SetBackgroundColor(Color.LIGHT_GRAY);
             curr.Add(p);
             MinMaxWidth result = ((AbstractRenderer)externalDiv.CreateRendererSubTree().SetParent(doc.GetRenderer())).
-                GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             externalDiv.SetWidth(ToEffectiveWidth(externalDiv, result.GetMinWidth()));
             doc.Add(externalDiv);
             doc.Close();
@@ -392,7 +392,7 @@ namespace iText.Layout.Renderer {
                 (cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell
                 (cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetBorder(new 
                 SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone
                 (true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)

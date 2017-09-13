@@ -627,7 +627,7 @@ namespace iText.Layout.Renderer {
             float[] maxWidths = new float[numberOfColumns];
             foreach (TableWidths.CellInfo cell in cells) {
                 cell.SetParent(tableRenderer);
-                MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
                 float[] indents = GetCellBorderIndents(cell);
                 minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
                 if (cell.GetColspan() == 1) {

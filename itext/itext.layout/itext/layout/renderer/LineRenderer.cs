@@ -244,7 +244,7 @@ namespace iText.Layout.Renderer {
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
                 if (!childWidthWasReplaced) {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
                         float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                         if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
                             childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
