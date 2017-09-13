@@ -54,6 +54,9 @@ namespace iText.Layout.Minmaxwidth {
 
         private const float max = 32760f;
 
+        private MinMaxWidthUtils() {
+        }
+
         public static float GetEps() {
             return eps;
         }
