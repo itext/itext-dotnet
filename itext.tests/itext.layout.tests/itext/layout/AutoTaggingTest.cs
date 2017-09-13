@@ -274,7 +274,7 @@ namespace iText.Layout {
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
             for (int i = 0; i < 5; ++i) {
-                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header " + (i + 1))));
             }
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
             table.AddFooterCell(cell);
@@ -376,7 +376,7 @@ namespace iText.Layout {
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
             for (int i = 0; i < 5; ++i) {
-                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header " + (i + 1))));
             }
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
             table.AddFooterCell(cell);
@@ -623,7 +623,7 @@ namespace iText.Layout {
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
             for (int i = 0; i < 5; ++i) {
-                table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header " + (i + 1))));
             }
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
             table.AddFooterCell(cell);
@@ -873,7 +873,7 @@ namespace iText.Layout {
                 for (int c = 0; c < 3; c++) {
                     String content = r + "," + c;
                     Cell cell = new Cell();
-                    cell.Add(content);
+                    cell.Add(new Paragraph(content));
                     table.AddCell(cell);
                 }
             }

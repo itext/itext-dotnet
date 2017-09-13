@@ -188,20 +188,6 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        /// <summary>Directly adds a String of text to this cell.</summary>
-        /// <remarks>
-        /// Directly adds a String of text to this cell. The content is wrapped in a
-        /// layout element.
-        /// </remarks>
-        /// <param name="content">
-        /// a
-        /// <see cref="System.String"/>
-        /// </param>
-        /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add(String content) {
-            return Add(new Paragraph(content));
-        }
-
         /// <summary>Clones a cell with its position, properties, and optionally its contents.</summary>
         /// <param name="includeContent">whether or not to also include the contents of the cell.</param>
         /// <returns>a clone of this Element</returns>

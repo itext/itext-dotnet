@@ -85,16 +85,16 @@ namespace iText.Layout {
             table.SetBorder(new SolidBorder(Color.GREEN, 5));
             Cell cell;
             // row 1, cell 1
-            cell = new Cell().Add("One");
+            cell = new Cell().Add(new Paragraph("One"));
             table.AddCell(cell);
             // row 1 and 2, cell 2
-            cell = new Cell(2, 1).Add("Two");
+            cell = new Cell(2, 1).Add(new Paragraph("Two"));
             table.AddCell(cell);
             // row 2, cell 1
-            cell = new Cell().Add("Three");
+            cell = new Cell().Add(new Paragraph("Three"));
             table.AddCell(cell);
             // row 3, cell 1
-            cell = new Cell().Add("Four");
+            cell = new Cell().Add(new Paragraph("Four"));
             table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
@@ -111,14 +111,14 @@ namespace iText.Layout {
             table.SetBorder(new SolidBorder(Color.GREEN, 5));
             Cell cell;
             // row 1, cell 1
-            cell = new Cell().Add("One");
+            cell = new Cell().Add(new Paragraph("One"));
             table.AddCell(cell);
             table.StartNewRow();
             // row 2, cell 1
-            cell = new Cell().Add("Two");
+            cell = new Cell().Add(new Paragraph("Two"));
             table.AddCell(cell);
             // row 2, cell 2
-            cell = new Cell().Add("Three");
+            cell = new Cell().Add(new Paragraph("Three"));
             table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
@@ -132,7 +132,7 @@ namespace iText.Layout {
             fileName = "incompleteTableTest03.pdf";
             Document doc = CreateDocument();
             Table innerTable = new Table(1);
-            Cell cell = new Cell().Add("Inner");
+            Cell cell = new Cell().Add(new Paragraph("Inner"));
             innerTable.AddCell(cell);
             innerTable.StartNewRow();
             Table outerTable = new Table(1);
@@ -149,10 +149,11 @@ namespace iText.Layout {
             fileName = "incompleteTableTest04.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.AddCell(new Cell().Add("Liberte").SetBorderBottom(new SolidBorder(Color.BLUE, 10)).SetHeight(40));
+            table.AddCell(new Cell().Add(new Paragraph("Liberte")).SetBorderBottom(new SolidBorder(Color.BLUE, 10)).SetHeight
+                (40));
             table.StartNewRow();
-            table.AddCell(new Cell().Add("Fraternite").SetBorderTop(new SolidBorder(Color.BLUE, 15)).SetBorderBottom(new 
-                SolidBorder(Color.BLUE, 15)).SetHeight(40));
+            table.AddCell(new Cell().Add(new Paragraph("Fraternite")).SetBorderTop(new SolidBorder(Color.BLUE, 15)).SetBorderBottom
+                (new SolidBorder(Color.BLUE, 15)).SetHeight(40));
             table.StartNewRow();
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
@@ -167,12 +168,12 @@ namespace iText.Layout {
             Table table = new Table(1);
             Cell cell;
             // row 1, cell 1
-            cell = new Cell().Add("One");
+            cell = new Cell().Add(new Paragraph("One"));
             cell.SetBorderTop(new SolidBorder(20));
             cell.SetBorderBottom(new SolidBorder(20));
             table.AddCell(cell);
             // row 2, cell 1
-            cell = new Cell().Add("Two");
+            cell = new Cell().Add(new Paragraph("Two"));
             cell.SetBorderTop(new SolidBorder(30));
             cell.SetBorderBottom(new SolidBorder(40));
             table.AddCell(cell);
@@ -187,9 +188,9 @@ namespace iText.Layout {
             fileName = "simpleBorderTest03.pdf";
             Document doc = CreateDocument();
             Table table = new Table(2);
-            table.AddCell(new Cell().Add("1"));
-            table.AddCell(new Cell(2, 1).Add("2"));
-            table.AddCell(new Cell().Add("3"));
+            table.AddCell(new Cell().Add(new Paragraph("1")));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph("2")));
+            table.AddCell(new Cell().Add(new Paragraph("3")));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -211,7 +212,7 @@ namespace iText.Layout {
             for (int i = 0; i < 2; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(textByron)));
             }
-            table.AddCell(new Cell(1, 2).Add(textByron));
+            table.AddCell(new Cell(1, 2).Add(new Paragraph(textByron)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -224,7 +225,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             Table mainTable = new Table(1);
             Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(Color.BLACK, 0.5f));
-            cell.Add("TESCHTINK");
+            cell.Add(new Paragraph("TESCHTINK"));
             mainTable.AddCell(cell);
             doc.Add(mainTable);
             doc.Close();
@@ -242,17 +243,17 @@ namespace iText.Layout {
             table.SetWidthPercent(50);
             Cell cell;
             // row 21, cell 1
-            cell = new Cell().Add("BORDERS");
+            cell = new Cell().Add(new Paragraph("BORDERS"));
             table.AddCell(cell);
             // row 1, cell 2
-            cell = new Cell().Add("ONE");
+            cell = new Cell().Add(new Paragraph("ONE"));
             cell.SetBorderLeft(new SolidBorder(Color.RED, 16f));
             table.AddCell(cell);
             // row 2, cell 1
-            cell = new Cell().Add("BORDERS");
+            cell = new Cell().Add(new Paragraph("BORDERS"));
             table.AddCell(cell);
             // row 2, cell 2
-            cell = new Cell().Add("TWO");
+            cell = new Cell().Add(new Paragraph("TWO"));
             cell.SetBorderLeft(new SolidBorder(Color.RED, 16f));
             table.AddCell(cell);
             doc.Add(table);
@@ -271,142 +272,142 @@ namespace iText.Layout {
             Table table = new Table(3);
             table.SetBorder(new SolidBorder(Color.GREEN, 91f));
             Cell cell;
-            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell(1, 2).Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 70f));
             table.AddCell(cell);
-            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell(2, 1).Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 70f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 70f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell(1, 2).Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell(2, 1).Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell(1, 2).Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 45f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 40f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 35f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.BLUE, 5f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 45f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 64f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 102f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 11f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 12f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 44f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 27f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 16f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 59));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 20f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 20f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 20f));
             table.AddCell(cell);
             doc.Add(table);
@@ -425,9 +426,9 @@ namespace iText.Layout {
             Table table = new Table(2);
             table.SetBorder(new SolidBorder(Color.RED, 5));
             for (int i = 0; i < 5; i++) {
-                table.AddCell(new Cell().Add("Cell " + i));
+                table.AddCell(new Cell().Add(new Paragraph("Cell " + i)));
             }
-            table.AddCell(new Cell().Add("Cell 5").SetBorderTop(new SolidBorder(Color.GREEN, 20)));
+            table.AddCell(new Cell().Add(new Paragraph("Cell 5")).SetBorderTop(new SolidBorder(Color.GREEN, 20)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -444,8 +445,8 @@ namespace iText.Layout {
             Table table = new Table(2);
             table.SetBorder(new SolidBorder(Color.RED, 5));
             Cell cell;
-            table.AddCell(new Cell(1, 2).Add("first").SetBorder(Border.NO_BORDER));
-            cell = new Cell(1, 2).Add("second");
+            table.AddCell(new Cell(1, 2).Add(new Paragraph("first")).SetBorder(Border.NO_BORDER));
+            cell = new Cell(1, 2).Add(new Paragraph("second"));
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             doc.Add(table);
@@ -466,21 +467,21 @@ namespace iText.Layout {
             Table table = new Table(2);
             // first row
             // column 1
-            cell = new Cell().Add("1");
+            cell = new Cell().Add(new Paragraph("1"));
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             // column 2
-            cell = new Cell().Add("2");
+            cell = new Cell().Add(new Paragraph("2"));
             table.AddCell(cell);
             // second row
             // column 1
-            cell = new Cell().Add("3");
+            cell = new Cell().Add(new Paragraph("3"));
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             // column 2
-            cell = new Cell().Add("4");
+            cell = new Cell().Add(new Paragraph("4"));
             table.AddCell(cell);
-            cell = new Cell(1, 2).Add("5");
+            cell = new Cell(1, 2).Add(new Paragraph("5"));
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             doc.Add(table);
@@ -501,23 +502,23 @@ namespace iText.Layout {
             Table table = new Table(2);
             // first row
             // column 1
-            cell = new Cell().Add("1");
+            cell = new Cell().Add(new Paragraph("1"));
             cell.SetBorderBottom(new SolidBorder(Color.RED, 4));
             table.AddCell(cell);
             // column 2
-            cell = new Cell().Add("2");
+            cell = new Cell().Add(new Paragraph("2"));
             cell.SetBorderBottom(new SolidBorder(Color.YELLOW, 5));
             table.AddCell(cell);
             // second row
             // column 1
-            cell = new Cell().Add("3");
+            cell = new Cell().Add(new Paragraph("3"));
             cell.SetBorder(new SolidBorder(Color.GREEN, 3));
             table.AddCell(cell);
             // column 2
-            cell = new Cell().Add("4");
+            cell = new Cell().Add(new Paragraph("4"));
             cell.SetBorderBottom(new SolidBorder(Color.MAGENTA, 2));
             table.AddCell(cell);
-            cell = new Cell(1, 2).Add("5");
+            cell = new Cell(1, 2).Add(new Paragraph("5"));
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
@@ -536,16 +537,16 @@ namespace iText.Layout {
             Table table = new Table(2);
             table.SetBorder(new SolidBorder(Color.GREEN, 90f));
             Cell cell;
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 120f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell = new Cell().Add(new Paragraph("Borders shouldn't be layouted outside the layout area."));
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
             doc.Add(table);
@@ -563,19 +564,19 @@ namespace iText.Layout {
             table.SetWidthPercent(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
-            cell = new Cell().Add("1ORD");
+            cell = new Cell().Add(new Paragraph("1ORD"));
             cell.SetBorderLeft(new SolidBorder(Color.BLUE, 5));
             table.AddCell(cell);
             // row 1, cell 2
-            cell = new Cell().Add("ONE");
+            cell = new Cell().Add(new Paragraph("ONE"));
             cell.SetBorderLeft(new SolidBorder(Color.RED, 100f));
             table.AddCell(cell);
             // row 2, cell 1
-            cell = new Cell().Add("2ORD");
+            cell = new Cell().Add(new Paragraph("2ORD"));
             cell.SetBorderTop(new SolidBorder(Color.YELLOW, 100f));
             table.AddCell(cell);
             // row 2, cell 2
-            cell = new Cell().Add("TWO");
+            cell = new Cell().Add(new Paragraph("TWO"));
             cell.SetBorderLeft(new SolidBorder(Color.RED, 0.5f));
             table.AddCell(cell);
             doc.Add(table);
@@ -617,22 +618,22 @@ namespace iText.Layout {
             table.SetBorderBottom(new DottedBorder(Color.BLUE, 3f));
             table.SetBorderLeft(new DottedBorder(Color.GRAY, 3f));
             Cell cell;
-            cell = new Cell().Add("Some text");
+            cell = new Cell().Add(new Paragraph("Some text"));
             cell.SetBorderRight(new SolidBorder(Color.RED, 2f));
             table.AddCell(cell);
-            cell = new Cell().Add("Some text");
+            cell = new Cell().Add(new Paragraph("Some text"));
             cell.SetBorderLeft(new SolidBorder(Color.GREEN, 4f));
             table.AddCell(cell);
-            cell = new Cell().Add(longText);
+            cell = new Cell().Add(new Paragraph(longText));
             cell.SetBorderBottom(new SolidBorder(Color.RED, 5f));
             table.AddCell(cell);
-            cell = new Cell().Add("Hello");
+            cell = new Cell().Add(new Paragraph("Hello"));
             cell.SetBorderBottom(new SolidBorder(Color.BLUE, 5f));
             table.AddCell(cell);
-            cell = new Cell().Add("Some text.");
+            cell = new Cell().Add(new Paragraph("Some text."));
             cell.SetBorderTop(new SolidBorder(Color.GREEN, 6f));
             table.AddCell(cell);
-            cell = new Cell().Add("World");
+            cell = new Cell().Add(new Paragraph("World"));
             cell.SetBorderTop(new SolidBorder(Color.YELLOW, 6f));
             table.AddCell(cell);
             doc.Add(table);
@@ -650,7 +651,7 @@ namespace iText.Layout {
             Table table = new Table(2);
             Cell cell;
             for (int i = 0; i < 38; i++) {
-                cell = new Cell().Add(text);
+                cell = new Cell().Add(new Paragraph(text));
                 cell.SetBorder(new SolidBorder(Color.RED, 2f));
                 table.AddCell(cell);
             }
@@ -670,8 +671,8 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 160));
             String textAlphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
             Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddCell(new Cell().Add(textAlphabet).SetBorder(new SolidBorder(4)));
-            table.AddFooterCell(new Cell().Add("Footer"));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet)).SetBorder(new SolidBorder(4)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -688,11 +689,12 @@ namespace iText.Layout {
                  + "A\n" + "B\n" + "C\n" + "D";
             Table table = new Table(1);
             Cell cell;
-            cell = new Cell().Add(text);
+            cell = new Cell().Add(new Paragraph(text));
             cell.SetBorderBottom(new SolidBorder(Color.RED, 20));
             cell.SetBorderTop(new SolidBorder(Color.GREEN, 20));
             table.AddCell(cell);
-            table.AddFooterCell(new Cell().Add("Footer").SetBorderTop(new SolidBorder(Color.YELLOW, 20)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorderTop(new SolidBorder(Color.YELLOW, 20)
+                ));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -706,11 +708,11 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
             String textAlphabet = "Cell";
             Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddCell(new Cell().Add(textAlphabet));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet));
-            table.AddCell(new Cell().Add(textAlphabet));
-            table.AddCell(new Cell().Add(textAlphabet));
-            table.AddCell(new Cell().Add(textAlphabet));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet)));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet)));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet)));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet)));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -727,15 +729,15 @@ namespace iText.Layout {
             doc.Add(new Paragraph("here"));
             Table table = new Table(3);
             Cell cell = new Cell(3, 1);
-            cell.Add("G");
-            cell.Add("R");
-            cell.Add("P");
+            cell.Add(new Paragraph("G"));
+            cell.Add(new Paragraph("R"));
+            cell.Add(new Paragraph("P"));
             table.AddCell(cell);
             table.AddCell("middle row 1");
             cell = new Cell(3, 1);
-            cell.Add("A");
-            cell.Add("B");
-            cell.Add("C");
+            cell.Add(new Paragraph("A"));
+            cell.Add(new Paragraph("B"));
+            cell.Add(new Paragraph("C"));
             table.AddCell(cell);
             table.AddCell("middle row 2");
             table.AddCell("middle row 3");
@@ -752,9 +754,9 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 180));
             String textAlphabet = "Cell";
             Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddCell(new Cell().Add(textAlphabet + "1"));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet + "222"));
-            table.AddCell(new Cell().Add(textAlphabet + "3"));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "1")));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "222")));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "3")));
             table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "4")).SetKeepTogether(true));
             table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "5")).SetKeepTogether(true));
             table.SetBorderBottom(new SolidBorder(Color.BLUE, 1));
@@ -771,11 +773,12 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 160));
             String textAlphabet = "Cell";
             Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddCell(new Cell().Add(textAlphabet + "1"));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet + "2").SetBorder(new SolidBorder(Color.GREEN, 4)));
-            table.AddCell(new Cell().Add(textAlphabet + "3"));
-            table.AddCell(new Cell().Add(textAlphabet + "4"));
-            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "1")));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "2")).SetBorder(new SolidBorder(Color.GREEN, 
+                4)));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "3")));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "4")));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "5")));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -789,12 +792,13 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
             String textAlphabet = "Cell";
             Table table = new Table(3);
-            table.AddCell(new Cell().Add("Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again!"
-                ));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet + "3"));
-            table.AddCell(new Cell().Add(textAlphabet + "4").SetBorder(new SolidBorder(Color.GREEN, 2)));
-            table.AddCell(new Cell().Add(textAlphabet + "5"));
-            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            table.AddCell(new Cell().Add(new Paragraph("Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again!"
+                )));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "3")));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "4")).SetBorder(new SolidBorder(Color.GREEN, 2))
+                );
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "5")));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "5")));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -808,9 +812,10 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 180));
             String textAlphabet = "Cell";
             Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddCell(new Cell().Add(textAlphabet + "1").SetBackgroundColor(Color.YELLOW));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet + "222222222").SetBackgroundColor(Color.YELLOW));
-            table.AddCell(new Cell().Add(textAlphabet + "3").SetBackgroundColor(Color.YELLOW));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "1")).SetBackgroundColor(Color.YELLOW));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "222222222")).SetBackgroundColor(Color.YELLOW
+                ));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "3")).SetBackgroundColor(Color.YELLOW));
             table.AddCell(new Cell().SetBackgroundColor(Color.YELLOW).Add(new Paragraph(textAlphabet + "4")).SetKeepTogether
                 (true));
             table.AddCell(new Cell().SetBackgroundColor(Color.YELLOW).Add(new Paragraph(textAlphabet + "5")).SetKeepTogether
@@ -830,20 +835,21 @@ namespace iText.Layout {
             String text = "Cell";
             Table table = new Table(3);
             for (int i = 0; i < 2; i++) {
-                table.AddCell(new Cell().Add(text + "1").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
-                    ));
-                table.AddCell(new Cell().Add(text + "4").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
-                    ));
-                table.AddCell(new Cell().Add(text + "5").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
-                    ));
+                table.AddCell(new Cell().Add(new Paragraph(text + "1")).SetHeight(40).SetBorderBottom(new SolidBorder(Color
+                    .MAGENTA, 100)));
+                table.AddCell(new Cell().Add(new Paragraph(text + "4")).SetHeight(40).SetBorderBottom(new SolidBorder(Color
+                    .MAGENTA, 100)));
+                table.AddCell(new Cell().Add(new Paragraph(text + "5")).SetHeight(40).SetBorderBottom(new SolidBorder(Color
+                    .MAGENTA, 100)));
             }
             for (int i = 0; i < 3; i++) {
-                table.AddHeaderCell(new Cell().Add("Header").SetHeight(40));
-                table.AddFooterCell(new Cell().Add("Header").SetHeight(40));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetHeight(40));
+                table.AddFooterCell(new Cell().Add(new Paragraph("Header")).SetHeight(40));
             }
             table.SetBorder(new SolidBorder(Color.GREEN, 100));
             doc.Add(table);
-            doc.Add(new Table(1).AddCell(new Cell().Add("Hello")).SetBorder(new SolidBorder(Color.BLACK, 10)));
+            doc.Add(new Table(1).AddCell(new Cell().Add(new Paragraph("Hello"))).SetBorder(new SolidBorder(Color.BLACK
+                , 10)));
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -855,17 +861,21 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
             Table table = new Table(2);
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header1").SetBorderTop(new SolidBorder(Color.RED, 100)));
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header2").SetBorderTop(new SolidBorder(Color.RED, 200)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer1").SetBorderTop(new SolidBorder(Color.RED, 100)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer2").SetBorderTop(new SolidBorder(Color.RED, 200)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer3"));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer4"));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header1")).SetBorderTop(new SolidBorder(Color
+                .RED, 100)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header2")).SetBorderTop(new SolidBorder(Color
+                .RED, 200)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer1")).SetBorderTop(new SolidBorder(Color
+                .RED, 100)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer2")).SetBorderTop(new SolidBorder(Color
+                .RED, 200)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer3")));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer4")));
             for (int i = 1; i < 43; i += 2) {
-                table.AddCell(new Cell().SetHeight(30).Add("Cell" + i).SetBorderBottom(new SolidBorder(Color.BLUE, 400)).SetBorderRight
-                    (new SolidBorder(20)));
-                table.AddCell(new Cell().SetHeight(30).Add("Cell" + (i + 1)).SetBorderBottom(new SolidBorder(Color.BLUE, 100
-                    )).SetBorderLeft(new SolidBorder(20)));
+                table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Cell" + i)).SetBorderBottom(new SolidBorder(Color
+                    .BLUE, 400)).SetBorderRight(new SolidBorder(20)));
+                table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Cell" + (i + 1))).SetBorderBottom(new SolidBorder
+                    (Color.BLUE, 100)).SetBorderLeft(new SolidBorder(20)));
             }
             table.SetSkipLastFooter(true);
             table.SetSkipFirstHeader(true);
@@ -881,13 +891,15 @@ namespace iText.Layout {
             fileName = "tableWithHeaderFooterTest03.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.AddHeaderCell(new Cell().Add("Header").SetHeight(400).SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetHeight(400).SetBorder(new SolidBorder(Color
+                .BLUE, 40)));
             table.SetBorder(new SolidBorder(Color.GREEN, 100));
             doc.Add(table);
             doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
             doc.Add(new AreaBreak());
             table = new Table(1);
-            table.AddFooterCell(new Cell().Add("Footer").SetHeight(400).SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetHeight(400).SetBorder(new SolidBorder(Color
+                .BLUE, 40)));
             table.SetBorder(new SolidBorder(Color.GREEN, 100));
             doc.Add(table);
             doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
@@ -901,9 +913,9 @@ namespace iText.Layout {
             fileName = "tableWithHeaderFooterTest04.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.AddHeaderCell(new Cell().Add("Header").SetBorder(new SolidBorder(Color.BLUE, 40)));
-            table.AddCell(new Cell().Add("Cell").SetBorder(new SolidBorder(Color.MAGENTA, 30)));
-            table.AddFooterCell(new Cell().Add("Footer").SetBorder(new SolidBorder(Color.BLUE, 20)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.AddCell(new Cell().Add(new Paragraph("Cell")).SetBorder(new SolidBorder(Color.MAGENTA, 30)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorder(new SolidBorder(Color.BLUE, 20)));
             doc.Add(table);
             doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
             CloseDocumentAndCompareOutputs(doc);
@@ -916,8 +928,10 @@ namespace iText.Layout {
             fileName = "tableWithHeaderFooterTest05.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.AddCell(new Cell().Add("Cell").SetBorder(new SolidBorder(Color.MAGENTA, 30)).SetHeight(30));
-            table.AddFooterCell(new Cell().Add("Footer").SetBorder(new SolidBorder(Color.BLUE, 50)).SetHeight(30));
+            table.AddCell(new Cell().Add(new Paragraph("Cell")).SetBorder(new SolidBorder(Color.MAGENTA, 30)).SetHeight
+                (30));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorder(new SolidBorder(Color.BLUE, 50)).SetHeight
+                (30));
             table.SetBorder(new SolidBorder(100));
             table.SetSkipLastFooter(true);
             doc.Add(table);
@@ -1017,9 +1031,11 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
-            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add("Footer"));
-            table.AddCell(new Cell().Add("0abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopq"));
-            table.AddCell(new Cell().Add("0bbbbbbbbbbbbbbbbbbbbbbbbbbbb").SetBorderBottom(new SolidBorder(50)));
+            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add(new Paragraph("Footer")));
+            table.AddCell(new Cell().Add(new Paragraph("0abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopq"
+                )));
+            table.AddCell(new Cell().Add(new Paragraph("0bbbbbbbbbbbbbbbbbbbbbbbbbbbb")).SetBorderBottom(new SolidBorder
+                (50)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1036,9 +1052,9 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2);
-            table.AddFooterCell(new Cell(1, 2).SetHeight(50).Add("Footer"));
-            table.AddCell(new Cell().Add("Cell1").SetHeight(50));
-            table.AddCell(new Cell().Add("Cell2").SetHeight(50));
+            table.AddFooterCell(new Cell(1, 2).SetHeight(50).Add(new Paragraph("Footer")));
+            table.AddCell(new Cell().Add(new Paragraph("Cell1")).SetHeight(50));
+            table.AddCell(new Cell().Add(new Paragraph("Cell2")).SetHeight(50));
             table.SetSkipLastFooter(true);
             table.SetBorderBottom(new SolidBorder(Color.RED, 30));
             doc.Add(table);
@@ -1056,18 +1072,18 @@ namespace iText.Layout {
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)), PageSize.A4.Rotate());
-            Cell headerCell1 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+            Cell headerCell1 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(Color.GREEN, 30)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell headerCell2 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(Color.GREEN, 30)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell tableCell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            Cell headerCell2 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+            Cell tableCell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            Cell tableCell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
-                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            Cell tableCell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
-                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            Cell footerCell1 = new Cell().Add("I am footer").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            Cell footerCell2 = new Cell().Add("I am footer").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell footerCell1 = new Cell().Add(new Paragraph("I am footer")).SetBorder(new SolidBorder(Color.GREEN, 30)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell footerCell2 = new Cell().Add(new Paragraph("I am footer")).SetBorder(new SolidBorder(Color.GREEN, 30)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
             Table table = new Table(new float[] { 350, 350 }).SetBorder(new SolidBorder(Color.BLUE, 20)).AddHeaderCell
                 (headerCell1).AddHeaderCell(headerCell2).AddCell(tableCell1).AddCell(tableCell2).AddFooterCell(footerCell1
                 ).AddFooterCell(footerCell2);
@@ -1075,14 +1091,14 @@ namespace iText.Layout {
             table.GetFooter().SetBorderRight(new SolidBorder(Color.MAGENTA, 40));
             doc.Add(table);
             doc.Add(new AreaBreak());
-            headerCell1 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom(Border
-                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            headerCell2 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom(Border
-                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            tableCell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom(Border
-                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
-            tableCell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom(Border
-                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            headerCell1 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            headerCell2 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            tableCell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            tableCell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
             table = new Table(new float[] { 350, 350 }).SetBorder(new SolidBorder(Color.BLUE, 20)).AddHeaderCell(headerCell1
                 ).AddHeaderCell(headerCell2).AddCell(tableCell1).AddCell(tableCell2);
             doc.Add(table);
@@ -1101,12 +1117,12 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
             Table table = new Table(3);
-            table.AddFooterCell(new Cell(1, 3).SetHeight(70).Add("Footer"));
-            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add("Header"));
+            table.AddFooterCell(new Cell(1, 3).SetHeight(70).Add(new Paragraph("Footer")));
+            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add(new Paragraph("Header")));
             for (int i = 0; i < 2; i++) {
-                table.AddCell(new Cell().Add(i + ": Bazz :").SetBorder(new SolidBorder(Color.BLACK, 10)));
-                table.AddCell(new Cell().Add("To infinity").SetBorder(new SolidBorder(Color.YELLOW, 30)));
-                table.AddCell(new Cell().Add(" and beyond!").SetBorder(new SolidBorder(Color.RED, 20)));
+                table.AddCell(new Cell().Add(new Paragraph(i + ": Bazz :")).SetBorder(new SolidBorder(Color.BLACK, 10)));
+                table.AddCell(new Cell().Add(new Paragraph("To infinity")).SetBorder(new SolidBorder(Color.YELLOW, 30)));
+                table.AddCell(new Cell().Add(new Paragraph(" and beyond!")).SetBorder(new SolidBorder(Color.RED, 20)));
             }
             table.SetSkipLastFooter(true);
             doc.Add(table);
@@ -1127,12 +1143,12 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Table table = new Table(3);
             table.SetBorder(new SolidBorder(90));
-            table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add("Footer"));
-            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add("Header"));
+            table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add(new Paragraph("Footer")));
+            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add(new Paragraph("Header")));
             for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add(i + ": Bazz :").SetBorder(new SolidBorder(Color.BLACK, 10)));
-                table.AddCell(new Cell().Add("To infinity").SetBorder(new SolidBorder(Color.YELLOW, 30)));
-                table.AddCell(new Cell().Add(" and beyond!").SetBorder(new SolidBorder(Color.RED, 20)));
+                table.AddCell(new Cell().Add(new Paragraph(i + ": Bazz :")).SetBorder(new SolidBorder(Color.BLACK, 10)));
+                table.AddCell(new Cell().Add(new Paragraph("To infinity")).SetBorder(new SolidBorder(Color.YELLOW, 30)));
+                table.AddCell(new Cell().Add(new Paragraph(" and beyond!")).SetBorder(new SolidBorder(Color.RED, 20)));
             }
             table.SetSkipLastFooter(true);
             doc.Add(table);
@@ -1152,10 +1168,14 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(2);
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 5)));
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 35)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 20)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 20)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new SolidBorder(Color.
+                BLUE, 5)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new SolidBorder(Color.
+                BLUE, 35)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer")).SetBorder(new SolidBorder(Color.
+                YELLOW, 20)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer")).SetBorder(new SolidBorder(Color.
+                YELLOW, 20)));
             doc.Add(table);
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
@@ -1174,16 +1194,19 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 5)));
-            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorder(Border.NO_BORDER));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 5)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new SolidBorder(Color.
+                BLUE, 5)));
+            table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Make Gretzky great again!")).SetBorder(Border.NO_BORDER
+                ));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer")).SetBorder(new SolidBorder(Color.
+                YELLOW, 5)));
             doc.Add(table);
             doc.Add(new AreaBreak());
             table = new Table(1);
-            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorderLeft(Border.NO_BORDER).SetBorderRight
-                (Border.NO_BORDER));
-            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorderLeft(new SolidBorder(Color
-                .GREEN, 0.5f)).SetBorderRight(new SolidBorder(Color.RED, 0.5f)));
+            table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Make Gretzky great again!")).SetBorderLeft(Border
+                .NO_BORDER).SetBorderRight(Border.NO_BORDER));
+            table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Make Gretzky great again!")).SetBorderLeft(new SolidBorder
+                (Color.GREEN, 0.5f)).SetBorderRight(new SolidBorder(Color.RED, 0.5f)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1202,20 +1225,20 @@ namespace iText.Layout {
             Table table = new Table(new float[3]);
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddHeaderCell(new Cell().Add(MessageFormatUtil.Format("header row {0} col {1}", r, c)).SetBorder(Border
-                        .NO_BORDER));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("header row {0} col {1}", r, c))
+                        ).SetBorder(Border.NO_BORDER));
                 }
             }
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddCell(new Cell().Add(MessageFormatUtil.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
-                        ));
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("row {0} col {1}", r, c))).SetBorder(Border
+                        .NO_BORDER));
                 }
             }
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddFooterCell(new Cell().Add(MessageFormatUtil.Format("footer row {0} col {1}", r, c)).SetBorder(Border
-                        .NO_BORDER));
+                    table.AddFooterCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("footer row {0} col {1}", r, c))
+                        ).SetBorder(Border.NO_BORDER));
                 }
             }
             table.GetHeader().SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(1));
@@ -1237,9 +1260,12 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new DottedBorder(Color.RED, 20)));
-            table.AddCell(new Cell().SetHeight(30).Add("Body").SetBorder(new DottedBorder(Color.GREEN, 20)));
-            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new DottedBorder(Color.BLUE, 20)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new DottedBorder(Color
+                .RED, 20)));
+            table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Body")).SetBorder(new DottedBorder(Color.GREEN, 
+                20)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer")).SetBorder(new DottedBorder(Color
+                .BLUE, 20)));
             table.SetBackgroundColor(Color.MAGENTA);
             table.GetHeader().SetBackgroundColor(Color.ORANGE);
             table.GetFooter().SetBackgroundColor(Color.ORANGE);
@@ -1259,12 +1285,12 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
-            table.AddHeaderCell(new Cell().Add("Header 1").SetBorderBottom(new SolidBorder(Color.RED, 25)).SetBorderTop
-                (new SolidBorder(Color.ORANGE, 27)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header 1")).SetBorderBottom(new SolidBorder(Color.RED, 25
+                )).SetBorderTop(new SolidBorder(Color.ORANGE, 27)));
             table.GetHeader().AddHeaderCell("Header 2");
-            table.AddCell(new Cell().Add("Body 1").SetBorderTop(new SolidBorder(Color.GREEN, 20)));
-            table.AddFooterCell(new Cell().Add("Footer 1").SetBorderTop(new SolidBorder(Color.RED, 25)).SetBorderBottom
-                (new SolidBorder(Color.ORANGE, 27)));
+            table.AddCell(new Cell().Add(new Paragraph("Body 1")).SetBorderTop(new SolidBorder(Color.GREEN, 20)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer 1")).SetBorderTop(new SolidBorder(Color.RED, 25))
+                .SetBorderBottom(new SolidBorder(Color.ORANGE, 27)));
             table.GetFooter().AddFooterCell("Footer 2");
             table.SetBorderTop(new SolidBorder(Color.BLUE, 30)).SetBorderBottom(new SolidBorder(Color.BLUE, 30));
             table.GetFooter().SetBorderBottom(new SolidBorder(Color.YELLOW, 50));
@@ -1293,7 +1319,8 @@ namespace iText.Layout {
             Table table = new Table(2);
             table.SetKeepTogether(true);
             int bigRowspan = 5;
-            table.AddCell(new Cell(bigRowspan, 1).Add("Big cell").SetBorder(new SolidBorder(Color.GREEN, 20)));
+            table.AddCell(new Cell(bigRowspan, 1).Add(new Paragraph("Big cell")).SetBorder(new SolidBorder(Color.GREEN
+                , 20)));
             for (int i = 0; i < bigRowspan; i++) {
                 table.AddCell(i + " " + textByron);
             }
@@ -1315,10 +1342,10 @@ namespace iText.Layout {
             table.SetWidth(10).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
-            cell = new Cell().Add("1ORD");
+            cell = new Cell().Add(new Paragraph("1ORD"));
             table.AddCell(cell);
             // row 2, cell 1
-            cell = new Cell().Add("2ORD");
+            cell = new Cell().Add(new Paragraph("2ORD"));
             cell.SetBorderTop(new SolidBorder(Color.YELLOW, 100f));
             table.AddCell(cell);
             doc.Add(table);
@@ -1333,7 +1360,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             Table mainTable = new Table(1);
             Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderRight(new SolidBorder(Color.BLACK, 0.5f));
-            cell.Add("TESCHTINK");
+            cell.Add(new Paragraph("TESCHTINK"));
             mainTable.AddCell(cell);
             doc.Add(mainTable);
             doc.Close();
@@ -1364,11 +1391,11 @@ namespace iText.Layout {
             fileName = "bordersWithSpansTest02.pdf";
             Document doc = CreateDocument();
             Table table = new Table(2);
-            table.AddCell(new Cell().Add("Liberte").SetBorder(new SolidBorder(Color.MAGENTA, 1)));
-            table.AddCell(new Cell().Add("Egalite"));
-            table.AddCell(new Cell(3, 1).Add("Fra").SetBorder(new SolidBorder(Color.GREEN, 2)));
-            table.AddCell(new Cell(2, 1).Add("ter").SetBorder(new SolidBorder(Color.YELLOW, 2)));
-            table.AddCell(new Cell().Add("nite").SetBorder(new SolidBorder(Color.CYAN, 5)));
+            table.AddCell(new Cell().Add(new Paragraph("Liberte")).SetBorder(new SolidBorder(Color.MAGENTA, 1)));
+            table.AddCell(new Cell().Add(new Paragraph("Egalite")));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph("Fra")).SetBorder(new SolidBorder(Color.GREEN, 2)));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph("ter")).SetBorder(new SolidBorder(Color.YELLOW, 2)));
+            table.AddCell(new Cell().Add(new Paragraph("nite")).SetBorder(new SolidBorder(Color.CYAN, 5)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -1380,12 +1407,12 @@ namespace iText.Layout {
             fileName = "bordersWithSpansTest03.pdf";
             Document doc = CreateDocument();
             Table table = new Table(3);
-            table.AddCell(new Cell(6, 1).Add("Fra").SetBorder(new SolidBorder(Color.ORANGE, 10)));
-            table.AddCell(new Cell().Add("Liberte").SetBorder(new SolidBorder(Color.MAGENTA, 1)));
-            table.AddCell(new Cell().Add("Egalite"));
-            table.AddCell(new Cell(5, 1).Add("ter").SetBorder(new SolidBorder(Color.GREEN, 2)));
-            table.AddCell(new Cell(2, 1).Add("ni").SetBorder(new SolidBorder(Color.YELLOW, 2)));
-            table.AddCell(new Cell(3, 1).Add("te").SetBorder(new SolidBorder(Color.CYAN, 5)));
+            table.AddCell(new Cell(6, 1).Add(new Paragraph("Fra")).SetBorder(new SolidBorder(Color.ORANGE, 10)));
+            table.AddCell(new Cell().Add(new Paragraph("Liberte")).SetBorder(new SolidBorder(Color.MAGENTA, 1)));
+            table.AddCell(new Cell().Add(new Paragraph("Egalite")));
+            table.AddCell(new Cell(5, 1).Add(new Paragraph("ter")).SetBorder(new SolidBorder(Color.GREEN, 2)));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph("ni")).SetBorder(new SolidBorder(Color.YELLOW, 2)));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph("te")).SetBorder(new SolidBorder(Color.CYAN, 5)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -1403,10 +1430,10 @@ namespace iText.Layout {
                 doc.Add(new Paragraph("aaaaaaaaaaaa"));
             }
             Table table = new Table(new float[] { 50, 50 }).SetBorder(new SolidBorder(1));
-            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
-            table.AddHeaderCell(new Cell().Add("h").SetBorderTop(Border.NO_BORDER));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("h")).SetBorderTop(Border.NO_BORDER));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("h")).SetBorderTop(Border.NO_BORDER));
             for (int i = 0; i < 4; ++i) {
-                table.AddCell(new Cell().Add("aa").SetBorder(Border.NO_BORDER));
+                table.AddCell(new Cell().Add(new Paragraph("aa")).SetBorder(Border.NO_BORDER));
             }
             doc.Add(table);
             doc.Add(new Paragraph("Correct result:"));

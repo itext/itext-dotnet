@@ -264,12 +264,12 @@ namespace iText.Layout {
             Table table = new Table(2).SetBackgroundColor(tableBackground);
             table.AddCell("Cell00");
             table.AddCell("Cell01");
-            Cell cell10 = new Cell().Add("Cell10");
+            Cell cell10 = new Cell().Add(new Paragraph("Cell10"));
             if ("cell".Equals(elem)) {
                 cell10.SetOpacity(0.3f);
             }
             table.AddCell(cell10);
-            table.AddCell(new Cell().Add("Cell11"));
+            table.AddCell(new Cell().Add(new Paragraph("Cell11")));
             if ("table".Equals(elem)) {
                 table.SetOpacity(0.3f);
             }
