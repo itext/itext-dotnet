@@ -190,7 +190,7 @@ namespace iText.Signatures.Sign {
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file, destinationFolder
-                , "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+                , "diff_", GetTestMap(new Rectangle(30, 243, 200, 14))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -206,7 +206,7 @@ namespace iText.Signatures.Sign {
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1", "TestCity"
                 , rect, false, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCms_" + file
-                , destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+                , destinationFolder, "diff_", GetTestMap(new Rectangle(30, 243, 200, 14))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -222,7 +222,7 @@ namespace iText.Signatures.Sign {
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", rect, false, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCades_" + 
-                file, destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+                file, destinationFolder, "diff_", GetTestMap(new Rectangle(30, 243, 200, 14))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
