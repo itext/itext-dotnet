@@ -347,28 +347,6 @@ namespace iText.Kernel.Pdf {
             return new PdfDictionaryValues(map.Values);
         }
 
-        /// <summary>Returns all the values of this map in a Collection.</summary>
-        /// <remarks>
-        /// Returns all the values of this map in a Collection. In opposite to
-        /// <see cref="Values()"/>
-        /// method,
-        /// this method will resolve all indirect references in the dictionary and return actual objects in collection.
-        /// </remarks>
-        /// <returns>a Collection holding all the values</returns>
-        [System.ObsoleteAttribute(@"Use Values() instead.")]
-        public virtual ICollection<PdfObject> DirectValues() {
-            ICollection<PdfObject> directValues = new List<PdfObject>();
-            foreach (PdfObject value in map.Values) {
-                if (value.IsIndirectReference()) {
-                    directValues.Add(((PdfIndirectReference)value).GetRefersTo());
-                }
-                else {
-                    directValues.Add(value);
-                }
-            }
-            return directValues;
-        }
-
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
         /// <remarks>
         /// Returns a Set holding the key-value pairs as Map#Entry objects.
@@ -384,29 +362,6 @@ namespace iText.Kernel.Pdf {
         /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> EntrySet() {
             return new PdfDictionaryEntrySet(map);
-        }
-
-        /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
-        /// <remarks>
-        /// Returns a Set holding the key-value pairs as Map#Entry objects. In opposite to
-        /// <see cref="EntrySet()"/>
-        /// method, this method will resolve all indirect references in the dictionary and return actual objects as values of
-        /// entries in the collection.
-        /// </remarks>
-        /// <returns>a Set of Map.Entry objects</returns>
-        [System.ObsoleteAttribute(@"Use EntrySet() instead.")]
-        public virtual ICollection<KeyValuePair<PdfName, PdfObject>> DirectEntrySet() {
-            IDictionary<PdfName, PdfObject> directMap = new SortedDictionary<PdfName, PdfObject>();
-            foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
-                PdfObject value = entry.Value;
-                if (value.IsIndirectReference()) {
-                    directMap.Put(entry.Key, ((PdfIndirectReference)value).GetRefersTo());
-                }
-                else {
-                    directMap.Put(entry.Key, value);
-                }
-            }
-            return directMap;
         }
 
         public override byte GetObjectType() {

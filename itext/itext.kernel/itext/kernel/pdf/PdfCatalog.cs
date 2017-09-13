@@ -260,11 +260,6 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
 
-        [Obsolete]
-        public virtual PdfString GetLang(PdfName lang) {
-            return GetPdfObject().GetAsString(PdfName.Lang);
-        }
-
         public virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {
             PdfDictionary extensions = GetPdfObject().GetAsDictionary(PdfName.Extensions);
             if (extensions == null) {

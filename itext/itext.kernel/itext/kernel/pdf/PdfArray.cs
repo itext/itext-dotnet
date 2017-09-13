@@ -228,12 +228,6 @@ namespace iText.Kernel.Pdf {
             return new PdfArrayDirectIterator(list);
         }
 
-        /// <summary>Returns an iterator over an array of PdfObject elements.</summary>
-        [System.ObsoleteAttribute(@"Use GetEnumerator() instead.")]
-        public virtual IEnumerator<PdfObject> DirectIterator() {
-            return new PdfArrayDirectIterator(list);
-        }
-
         public virtual void Add(PdfObject pdfObject) {
             list.Add(pdfObject);
         }

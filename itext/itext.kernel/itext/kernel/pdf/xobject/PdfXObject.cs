@@ -54,11 +54,6 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <seealso cref="PdfImageXObject"/>
     public class PdfXObject : PdfObjectWrapper<PdfStream> {
         [Obsolete]
-        public PdfXObject()
-            : this(new PdfStream()) {
-        }
-
-        [Obsolete]
         public PdfXObject(PdfStream pdfObject)
             : base(pdfObject) {
         }

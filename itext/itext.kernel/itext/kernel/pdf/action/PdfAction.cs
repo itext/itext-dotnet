@@ -265,26 +265,6 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
-        /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
-        /// <remarks>
-        /// Creates a Launch action (section 12.6.4.5 of ISO 32000-1).
-        /// OS-specific parameters (like win) are deprecated in PDF 2.0
-        /// </remarks>
-        /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
-        ///     </param>
-        /// <param name="win">A dictionary containing Windows-specific launch parameters</param>
-        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
-        /// <returns>created action</returns>
-        [Obsolete]
-        public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
-            ) {
-            iText.Kernel.Pdf.Action.PdfAction action = CreateLaunch(fileSpec, newWindow);
-            if (win != null) {
-                action.Put(PdfName.Win, win.GetPdfObject());
-            }
-            return action;
-        }
-
         /// <summary>Creates a Thread action (section 12.6.4.6 of ISO 32000-1).</summary>
         /// <remarks>
         /// Creates a Thread action (section 12.6.4.6 of ISO 32000-1).

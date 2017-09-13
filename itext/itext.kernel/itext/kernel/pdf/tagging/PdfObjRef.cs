@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -50,11 +49,6 @@ namespace iText.Kernel.Pdf.Tagging {
     public class PdfObjRef : PdfMcr {
         public PdfObjRef(PdfDictionary pdfObject, PdfStructElem parent)
             : base(pdfObject, parent) {
-        }
-
-        [Obsolete]
-        public PdfObjRef(PdfAnnotation annot, PdfStructElem parent)
-            : this(annot, parent, (int)GetDocEnsureIndirect(parent).GetNextStructParentIndex()) {
         }
 
         public PdfObjRef(PdfAnnotation annot, PdfStructElem parent, int nextStructParentIndex)

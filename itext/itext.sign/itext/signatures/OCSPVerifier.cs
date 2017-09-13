@@ -276,29 +276,6 @@ namespace iText.Signatures {
             responderCert.CheckValidity();
         }
 
-        /// <summary>Verifies if the response is valid.</summary>
-        /// <remarks>
-        /// Verifies if the response is valid.
-        /// If it doesn't verify against the issuer certificate and response's certificates, it may verify
-        /// using a trusted anchor or cert.
-        /// NOTE. Use
-        /// <c>isValidResponse()</c>
-        /// instead.
-        /// </remarks>
-        /// <param name="ocspResp">the response object</param>
-        /// <param name="issuerCert">the issuer certificate</param>
-        /// <returns>true if the response can be trusted</returns>
-        [Obsolete]
-        public virtual bool VerifyResponse(BasicOcspResp ocspResp, X509Certificate issuerCert) {
-            try {
-                IsValidResponse(ocspResp, issuerCert);
-                return true;
-            }
-            catch (Exception) {
-                return false;
-            }
-        }
-
         /// <summary>Checks if an OCSP response is genuine</summary>
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="responderCert">the responder certificate</param>

@@ -1452,26 +1452,6 @@ namespace iText.Layout.Renderer {
             return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
         }
 
-        [Obsolete]
-        protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float availableWidth) {
-            HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
-                );
-            if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT) {
-                float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                switch (horizontalAlignment) {
-                    case HorizontalAlignment.RIGHT: {
-                        childRenderer.Move(freeSpace, 0);
-                        break;
-                    }
-
-                    case HorizontalAlignment.CENTER: {
-                        childRenderer.Move(freeSpace / 2, 0);
-                        break;
-                    }
-                }
-            }
-        }
-
         // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
         // BlockRenderer, but actually, the block can have many areas, and occupied area will be the common area of sub-areas,
         // whereas child element alignment should be performed area-wise.

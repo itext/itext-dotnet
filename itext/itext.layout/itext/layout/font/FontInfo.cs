@@ -45,7 +45,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     /// <summary>
@@ -132,11 +131,6 @@ namespace iText.Layout.Font {
                  : null;
         }
 
-        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) instead.")]
-        public PdfFont GetPdfFont(FontProvider fontProvider) {
-            return fontProvider.GetPdfFont(this);
-        }
-
         public FontProgramDescriptor GetDescriptor() {
             return descriptor;
         }
@@ -151,18 +145,6 @@ namespace iText.Layout.Font {
         /// </summary>
         public String GetFontName() {
             return fontName;
-        }
-
-        /// <summary>
-        /// Gets font data, if
-        /// <see cref="FontInfo"/>
-        /// was created with
-        /// <c>byte[]</c>
-        /// .
-        /// </summary>
-        [System.ObsoleteAttribute(@"use GetFontData() instead.")]
-        public byte[] GetFontProgram() {
-            return fontData;
         }
 
         /// <summary>

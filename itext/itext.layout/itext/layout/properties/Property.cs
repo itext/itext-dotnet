@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -241,9 +239,6 @@ namespace iText.Layout.Properties {
         public const int PAGE_NUMBER = 51;
 
         public const int POSITION = 52;
-
-        [Obsolete]
-        public const int REVERSED = 53;
 
         public const int RIGHT = 54;
 

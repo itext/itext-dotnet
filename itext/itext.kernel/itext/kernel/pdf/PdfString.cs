@@ -146,20 +146,6 @@ namespace iText.Kernel.Pdf {
             return encoding;
         }
 
-        /// <summary>Sets the encoding of this string.</summary>
-        /// <remarks>
-        /// Sets the encoding of this string.
-        /// NOTE. Byte content will be removed.
-        /// </remarks>
-        [System.ObsoleteAttribute(@"Create a new instance with PdfString(System.String, System.String) instead.")]
-        public virtual void SetEncoding(String encoding) {
-            if (value == null) {
-                GenerateValue();
-            }
-            this.content = null;
-            this.encoding = encoding;
-        }
-
         /// <summary>
         /// Returns the Unicode
         /// <c>String</c>

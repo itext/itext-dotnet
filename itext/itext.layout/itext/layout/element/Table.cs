@@ -930,10 +930,6 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
-        [System.ObsoleteAttribute(@"This method does nothing after implementation table column width algorithms.")]
-        protected internal virtual void CalculateWidths() {
-        }
-
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
             int lastRowWeCanFlush = currentColumn == columnWidths.Length ? currentRow : currentRow - 1;
             int[] cellBottomRows = new int[columnWidths.Length];

@@ -512,13 +512,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Reads the font data.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        [Obsolete]
-        protected internal virtual void Process() {
-            LoadTables(true);
-        }
-
         /// <summary>Gets the name from a composed TTC file name.</summary>
         /// <remarks>
         /// Gets the name from a composed TTC file name.

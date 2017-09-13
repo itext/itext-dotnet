@@ -773,14 +773,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>
-        /// Trims any whitespace characters from the end of the rendered
-        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// .
-        /// </summary>
-        /// <returns>the amount of space in points which the text was trimmed by</returns>
-        [System.ObsoleteAttribute(@"visibility will be changed to package.")]
-        public virtual float TrimLast() {
+        internal virtual float TrimLast() {
             float trimmedSpace = 0;
             if (line.end <= 0) {
                 return trimmedSpace;
@@ -924,11 +917,6 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        [System.ObsoleteAttribute(@"Use iText.IO.Util.TextUtil.IsNewLine(iText.IO.Font.Otf.Glyph) instead.")]
-        protected internal static bool IsNewLine(GlyphLine text, int ind) {
-            return TextUtil.IsNewLine(text.Get(ind));
-        }
-
         internal static float[] CalculateAscenderDescender(PdfFont font) {
             FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
             float ascender;
@@ -1043,12 +1031,6 @@ namespace iText.Layout.Renderer {
             overflowRenderer.parent = parent;
             overflowRenderer.AddAllProperties(GetOwnProperties());
             return new iText.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer };
-        }
-
-        [Obsolete]
-        protected internal virtual void DrawSingleUnderline(Underline underline, Color fontStrokeColor, PdfCanvas 
-            canvas, float fontSize, float italicAngleTan) {
-            DrawSingleUnderline(underline, new TransparentColor(fontStrokeColor), canvas, fontSize, italicAngleTan);
         }
 
         protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontStrokeColor, 

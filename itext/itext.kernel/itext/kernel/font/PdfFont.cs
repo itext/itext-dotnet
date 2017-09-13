@@ -97,17 +97,6 @@ namespace iText.Kernel.Font {
         /// true if font contains glyph, represented with the unicode code point,
         /// otherwise false.
         /// </returns>
-        [System.ObsoleteAttribute(@"Use ContainsGlyph(int) instead.")]
-        public virtual bool ContainsGlyph(char unicode) {
-            return ContainsGlyph((int)unicode);
-        }
-
-        /// <summary>Check whether font contains glyph with specified unicode.</summary>
-        /// <param name="unicode">a unicode code point</param>
-        /// <returns>
-        /// true if font contains glyph, represented with the unicode code point,
-        /// otherwise false.
-        /// </returns>
         public virtual bool ContainsGlyph(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             if (glyph != null) {
@@ -195,11 +184,6 @@ namespace iText.Kernel.Font {
         public abstract void WriteText(GlyphLine text, int from, int to, PdfOutputStream stream);
 
         public abstract void WriteText(String text, PdfOutputStream stream);
-
-        [Obsolete]
-        public virtual void WriteText(GlyphLine text, PdfOutputStream stream) {
-            WriteText(text, 0, text.Size() - 1, stream);
-        }
 
         public virtual double[] GetFontMatrix() {
             return FontConstants.DefaultFontMatrix;

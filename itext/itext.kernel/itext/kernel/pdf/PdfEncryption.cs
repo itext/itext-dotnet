@@ -117,52 +117,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed to output the metadata in cleartext
         /// </param>
-        [Obsolete]
-        public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType, byte[]
-             documentId)
-            : this(userPassword, ownerPassword, permissions, encryptionType, documentId, null) {
-        }
-
-        /// <summary>Creates the encryption.</summary>
-        /// <remarks>
-        /// Creates the encryption. The userPassword and the
-        /// ownerPassword can be null or have zero length. In this case the ownerPassword
-        /// is replaced by a random string. The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
-        /// .
-        /// The permissions can be combined by ORing them.
-        /// </remarks>
-        /// <param name="userPassword">the user password. Can be null or empty</param>
-        /// <param name="ownerPassword">the owner password. Can be null or empty</param>
-        /// <param name="permissions">the user permissions</param>
-        /// <param name="encryptionType">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
-        /// .
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed to output the metadata in cleartext
-        /// </param>
         /// <param name="version">
         /// the
         /// <see cref="PdfVersion"/>
@@ -209,50 +163,6 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
             }
-        }
-
-        /// <summary>Creates the certificate encryption.</summary>
-        /// <remarks>
-        /// Creates the certificate encryption. An array of one or more public certificates
-        /// must be provided together with an array of the same size for the permissions for each certificate.
-        /// The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
-        /// .
-        /// The permissions can be combined by ORing them.
-        /// </remarks>
-        /// <param name="certs">the public certificates to be used for the encryption</param>
-        /// <param name="permissions">the user permissions for each of the certificates</param>
-        /// <param name="encryptionType">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
-        /// .
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed to output the metadata in cleartext
-        /// </param>
-        [Obsolete]
-        public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
-            : this(certs, permissions, encryptionType, null) {
         }
 
         /// <summary>Creates the certificate encryption.</summary>

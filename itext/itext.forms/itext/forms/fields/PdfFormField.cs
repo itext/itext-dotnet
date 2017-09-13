@@ -495,36 +495,6 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a named
-        /// <see cref="PdfTextFormField">multilined text form field</see>
-        /// with an initial
-        /// value, with a specified font and font size.
-        /// </summary>
-        /// <param name="doc">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the text field in
-        /// </param>
-        /// <param name="rect">the location on the page for the text field</param>
-        /// <param name="name">the name of the form field</param>
-        /// <param name="value">the initial value</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfTextFormField"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"use CreateMultilineText(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Geom.Rectangle, System.String, System.String, iText.Kernel.Font.PdfFont, float) instead"
-            )]
-        public static PdfTextFormField CreateMultilineText(PdfDocument doc, Rectangle rect, String name, String value
-            , PdfFont font, int fontSize) {
-            return CreateText(doc, rect, name, value, font, (float)fontSize, true);
-        }
-
-        /// <summary>
-        /// Creates a named
         /// <see cref="PdfTextFormField">multiline text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
@@ -1269,19 +1239,6 @@ namespace iText.Forms.Fields {
             }
             this.SetModified();
             return this;
-        }
-
-        /// <summary>Set text field value with given font and size</summary>
-        /// <param name="value">text value</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>the edited field</returns>
-        [System.ObsoleteAttribute(@"Use SetValue(System.String, iText.Kernel.Font.PdfFont, float) instead")]
-        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, PdfFont font, int fontSize) {
-            return SetValue(value, font, (float)fontSize);
         }
 
         /// <summary>Set text field value with given font and size</summary>

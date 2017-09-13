@@ -1243,8 +1243,7 @@ namespace iText.Layout.Renderer {
             DrawBorders(drawContext, null != headerRenderer, null != footerRenderer);
         }
 
-        [Obsolete]
-        protected internal virtual void DrawBorders(DrawContext drawContext, bool hasHeader, bool hasFooter) {
+        private void DrawBorders(DrawContext drawContext, bool hasHeader, bool hasFooter) {
             float height = occupiedArea.GetBBox().GetHeight();
             if (null != footerRenderer) {
                 height -= footerRenderer.occupiedArea.GetBBox().GetHeight();

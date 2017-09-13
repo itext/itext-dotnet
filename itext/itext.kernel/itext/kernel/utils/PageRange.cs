@@ -169,20 +169,6 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>Gets the list of pages that have been added to the range so far.</summary>
-        /// <remarks>
-        /// Gets the list of pages that have been added to the range so far.
-        /// This method has been deprecated in favor of an alternative method that
-        /// requires the user to supply the total number of pages in the document.
-        /// This number is necessary in order to limit open-ended ranges like "4-".
-        /// </remarks>
-        /// <returns>the list containing page numbers added to the range</returns>
-        [System.ObsoleteAttribute(@"Please use GetQualifyingPageNums(int)")]
-        public virtual IList<int> GetAllPages() {
-            // supply a reasonably high default for users who haven't switched
-            return GetQualifyingPageNums(10000);
-        }
-
-        /// <summary>Gets the list of pages that have been added to the range so far.</summary>
         /// <param name="nbPages">
         /// number of pages of the document to get the pages, to list
         /// only the pages eligible for this document.

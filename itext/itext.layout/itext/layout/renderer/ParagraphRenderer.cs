@@ -520,13 +520,11 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        [Obsolete]
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
+        private iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
             return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
         }
 
-        [Obsolete]
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
+        private iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
             return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
         }
 

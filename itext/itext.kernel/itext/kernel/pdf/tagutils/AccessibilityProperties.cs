@@ -204,18 +204,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        [Obsolete]
-        protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject, IList<PdfDictionary
-            > newAttributesList, PdfNumber revision) {
-            return CombineAttributesList(attributesObject, -1, newAttributesList, revision);
-        }
-
-        [Obsolete]
-        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary> newAttributesList, 
-            PdfNumber revision, PdfArray attributesArray) {
-            AddNewAttributesToAttributesArray(-1, newAttributesList, revision, attributesArray);
-        }
-
         protected internal static PdfObject CombineAttributesList(PdfObject attributesObject, int insertIndex, IList
             <PdfDictionary> newAttributesList, PdfNumber revision) {
             PdfObject combinedAttributes;

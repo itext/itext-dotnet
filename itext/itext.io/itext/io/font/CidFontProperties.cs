@@ -48,10 +48,6 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class CidFontProperties {
-        /// <summary>The path to the font resources.</summary>
-        [Obsolete]
-        public const String RESOURCE_PATH_CMAP = FontConstants.RESOURCE_PATH + "cmap/";
-
         private static readonly IDictionary<String, IDictionary<String, Object>> allFonts = new Dictionary<String, 
             IDictionary<String, Object>>();
 

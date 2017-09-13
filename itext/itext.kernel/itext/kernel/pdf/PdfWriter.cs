@@ -365,18 +365,6 @@ namespace iText.Kernel.Pdf {
             return result;
         }
 
-        /// <summary>Calculates hash code for object to be copied.</summary>
-        /// <remarks>
-        /// Calculates hash code for object to be copied.
-        /// The hash code and the copied object is the stored in @{link copiedObjects} hash map to avoid duplications.
-        /// </remarks>
-        /// <param name="obj">object to be copied.</param>
-        /// <returns>calculated hash code.</returns>
-        [System.ObsoleteAttribute(@"Functionality will be removed.")]
-        protected internal virtual int GetCopyObjectKey(PdfObject obj) {
-            return CalculateIndRefKey(obj.GetIndirectReference());
-        }
-
         /// <summary>Flush all copied objects.</summary>
         /// <param name="docId">id of the source document</param>
         internal virtual void FlushCopiedObjects(long docId) {

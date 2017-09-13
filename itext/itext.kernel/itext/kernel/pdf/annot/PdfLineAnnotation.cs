@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -105,9 +104,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// An array of four numbers, [x1 y1 x2 y2], specifying the starting and ending coordinates of the line
         /// in default user space. If the
         /// <see cref="iText.Kernel.Pdf.PdfName.LL"/>
-        /// (see
-        /// <see cref="GetLeaderLine()"/>
-        /// ) entry is present, this value represents
+        /// entry is present, this value represents
         /// the endpoints of the leader lines rather than the endpoints of the line itself.
         /// </remarks>
         /// <returns>An array of four numbers specifying the starting and ending coordinates of the line in default user space.
@@ -214,52 +211,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// a negative value indicates the opposite direction.
         /// </remarks>
         /// <returns>a float specifying the length of leader lines in default user space.</returns>
-        [System.ObsoleteAttribute(@"use GetLeaderLineLength() instead.")]
-        public virtual float GetLeaderLine() {
-            PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
-            return n == null ? 0 : n.FloatValue();
-        }
-
-        /// <summary>
-        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself.
-        /// </summary>
-        /// <remarks>
-        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
-        /// when traversing the line from its starting point to its ending point (as specified by
-        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
-        /// (see
-        /// <see cref="GetLine()"/>
-        /// );
-        /// a negative value indicates the opposite direction.
-        /// </remarks>
-        /// <param name="leaderLine">a float specifying the length of leader lines in default user space.</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfLineAnnotation"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"use SetLeaderLineLength(float) instead.")]
-        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float leaderLine) {
-            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LL, new PdfNumber(leaderLine));
-        }
-
-        /// <summary>
-        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself.
-        /// </summary>
-        /// <remarks>
-        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
-        /// when traversing the line from its starting point to its ending point (as specified by
-        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
-        /// (see
-        /// <see cref="GetLine()"/>
-        /// );
-        /// a negative value indicates the opposite direction.
-        /// </remarks>
-        /// <returns>a float specifying the length of leader lines in default user space.</returns>
         public virtual float GetLeaderLineLength() {
             PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
             return n == null ? 0 : n.FloatValue();
@@ -308,9 +259,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets the length of leader line extensions that extend from the line proper 180 degrees from the leader lines.
         /// <b>This value shall not be set unless
         /// <see cref="iText.Kernel.Pdf.PdfName.LL"/>
-        /// (see
-        /// <see cref="SetLeaderLine(float)"/>
-        /// ) is set.</b>
+        /// is set.</b>
         /// </remarks>
         /// <param name="leaderLineExtension">a non-negative float that represents the length of leader line extensions.
         ///     </param>

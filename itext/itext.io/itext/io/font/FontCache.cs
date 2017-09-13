@@ -50,10 +50,6 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontCache {
-        /// <summary>The path to the font resources.</summary>
-        [Obsolete]
-        public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
-
         private static readonly IDictionary<String, IDictionary<String, Object>> allCidFonts = new Dictionary<String
             , IDictionary<String, Object>>();
 
@@ -121,16 +117,11 @@ namespace iText.IO.Font {
         }
 
         public static ICollection<String> GetCompatibleCmaps(String fontName) {
-            String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP);
+            String registry = (String)FontCache.GetAllPredefinedCidFonts().Get(fontName).Get(REGISTRY_PROP);
             return registryNames.Get(registry);
         }
 
         public static IDictionary<String, IDictionary<String, Object>> GetAllPredefinedCidFonts() {
-            return allCidFonts;
-        }
-
-        [System.ObsoleteAttribute(@"Use GetAllPredefinedCidFonts() instead.")]
-        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
             return allCidFonts;
         }
 
