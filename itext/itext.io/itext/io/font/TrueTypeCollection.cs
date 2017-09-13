@@ -145,7 +145,7 @@ namespace iText.IO.Font {
         private void InitFontSize() {
             String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
             if (!mainTag.Equals("ttcf")) {
-                throw new iText.IO.IOException(iText.IO.IOException.InvalidTTCFile);
+                throw new iText.IO.IOException(iText.IO.IOException.InvalidTtcFile);
             }
             raf.SkipBytes(4);
             TTCSize = raf.ReadInt();

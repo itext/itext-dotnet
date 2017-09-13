@@ -54,9 +54,6 @@ namespace iText.Kernel {
 
         public const String _1IsNotAValidPlaceableWindowsMetafile = "{0} is not a valid placeable windows metafile.";
 
-        [Obsolete]
-        public const String AnnotShallHaveReferenceToPage = "Annotation shall have reference to page.";
-
         public const String AnnotationShallHaveReferenceToPage = "Annotation shall have reference to page.";
 
         public const String AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible = "Append mode requires a document without errors, even if recovery is possible.";
@@ -139,27 +136,15 @@ namespace iText.Kernel {
 
         public const String CannotRemoveTagBecauseItsParentIsFlushed = "Cannot remove tag, because its parent is flushed.";
 
-        [Obsolete]
-        public const String CannotSetDataToPdfstreamWhichWasCreatedByInputstream = "Cannot set data to PdfStream which was created by InputStream.";
-
         public const String CannotSetDataToPdfstreamWhichWasCreatedByInputStream = "Cannot set data to PdfStream which was created by InputStream.";
 
         public const String CannotSplitDocumentThatIsBeingWritten = "Cannot split document that is being written.";
-
-        [Obsolete]
-        public const String CannotWritePdfStream = "Cannot write pdf stream.";
 
         public const String CannotWriteToPdfStream = "Cannot write to PdfStream.";
 
         public const String CannotWriteObjectAfterItWasReleased = "Cannot write object after it was released. In normal situation the object must be read once again before being written.";
 
-        [Obsolete]
-        public const String CantDecodePkcs7SigneddataObject = "Cannot decode PKCS#7 SignedData object.";
-
         public const String CannotDecodePkcs7SigneddataObject = "Cannot decode PKCS#7 SignedData object.";
-
-        [Obsolete]
-        public const String CantFindSigningCertificateWithSerial1 = "Cannot find signing certificate with serial {0}.";
 
         public const String CannotFindSigningCertificateWithSerial1 = "Cannot find signing certificate with serial {0}.";
 
@@ -169,21 +154,9 @@ namespace iText.Kernel {
 
         public const String CfNotFoundEncryption = "/CF not found (encryption)";
 
-        [Obsolete]
-        public const String CodabarCharacterOneIsIllegal = "the character {0} is illegal in codabar.";
-
-        [Obsolete]
-        public const String CodabarMustHaveAtLeastAStartAndStopCharacter = "Codabar must have at least start and stop character.";
-
         public const String CodabarMustHaveAtLeastStartAndStopCharacter = "Codabar must have at least start and stop character.";
 
         public const String CodabarMustHaveOneAbcdAsStartStopCharacter = "Codabar must have one of 'ABCD' as start/stop character.";
-
-        [Obsolete]
-        public const String CodabarStartStopCharacterAreOnlyExtremes = "In codabar, start/stop characters are only allowed at the extremes.";
-
-        [Obsolete]
-        public const String ColorNotFound = "Color not found.";
 
         public const String ColorSpaceNotFound = "ColorSpace not found.";
 
@@ -195,17 +168,11 @@ namespace iText.Kernel {
 
         public const String DictionaryKey1IsNotAName = "Dictionary key {0} is not a name.";
 
-        [Obsolete]
-        public const String DictionaryNotContainFontData = "Dictionary doesn't have font data.";
-
         public const String DictionaryDoesntHave1FontData = "Dictionary doesn't have {0} font data.";
 
         public const String DictionaryDoesntHaveSupportedFontData = "Dictionary doesn't have supported font data.";
 
         public const String DocumentAlreadyPreClosed = "Document has been already pre closed.";
-
-        [Obsolete]
-        public const String DocumentClosedImpossibleExecuteAction = "Document was closed. It is impossible to execute action.";
 
         public const String DocumentClosedItIsImpossibleToExecuteAction = "Document was closed. It is impossible to execute action.";
 
@@ -213,38 +180,19 @@ namespace iText.Kernel {
 
         public const String DocumentHasNoPages = "Document has no pages.";
 
-        [Obsolete]
-        public const String DocumentHasNoCatalogObject = "Document has no PDF Catalog object.";
-
         public const String DocumentHasNoPdfCatalogObject = "Document has no PDF Catalog object.";
-
-        [Obsolete]
-        public const String DocumentMustBePreclosed = "Document must be preClosed.";
 
         public const String DocumentMustBePreClosed = "Document must be preClosed.";
 
-        [Obsolete]
-        public const String DocumentToCopyToCannotBeNull = "Document for copyTo cannot be null.";
-
         public const String DocumentForCopyToCannotBeNull = "Document for copyTo cannot be null.";
 
-        public const String ElementCannotFitAnyArea = "Element cannot fit any area.";
-
-        public const String EncryptionCanOnlyBeAddedBeforeOpeningDocument = "Encryption can only be added before opening the document.";
-
         public const String EndOfContentStreamReachedBeforeEndOfImageData = "End of content stream reached before end of image data.";
-
-        [Obsolete]
-        public const String ErrorReadingObjectStream = "Error while reading Object Stream.";
 
         public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
 
         public const String FailedToGetTsaResponseFrom1 = "Failed to get TSA response from {0}.";
 
         public const String FieldFlatteningIsNotSupportedInAppendMode = "Field flattening is not supported in append mode.";
-
-        [Obsolete]
-        public const String FieldIsAlreadySigned = "Field has been already signed.";
 
         public const String FieldAlreadySigned = "Field has been already signed.";
 
@@ -253,9 +201,6 @@ namespace iText.Kernel {
         public const String FieldTypeIsNotASignatureFieldType = "Field type is not a signature field type.";
 
         public const String Filter1IsNotSupported = "Filter {0} is not supported.";
-
-        [Obsolete]
-        public const String FilePosition0CrossReferenceEntryInThisXrefSubsection = "file position {0} cross reference entry in this xref subsection.";
 
         public const String FilePosition1CrossReferenceEntryInThisXrefSubsection = "file position {0} cross reference entry in this xref subsection.";
 
@@ -268,9 +213,6 @@ namespace iText.Kernel {
         public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
 
         public const String FontEmbeddingIssue = "Font embedding issue.";
-
-        [Obsolete]
-        public const String FontSizeTooSmall = "Font size is too small.";
 
         public const String FontSizeIsTooSmall = "Font size is too small.";
 
@@ -288,8 +230,6 @@ namespace iText.Kernel {
 
         public const String IllegalLengthValue = "Illegal length value.";
 
-        public const String IllegalPValue = "Illegal P value.";
-
         public const String IllegalRValue = "Illegal R value.";
 
         public const String IllegalVValue = "Illegal V value.";
@@ -303,9 +243,6 @@ namespace iText.Kernel {
         public const String InvalidTsa1ResponseCode2 = "Invalid TSA {0} response code {1}.";
 
         public const String IncorrectNumberOfComponents = "Incorrect number of components.";
-
-        [Obsolete]
-        public const String InlineLevelOrIllustrationElementCannotContainKids = "Inline level or illustration element cannot contain kids.";
 
         public const String InvalidCodewordSize = "Invalid codeword size.";
 
@@ -331,12 +268,6 @@ namespace iText.Kernel {
 
         public const String IoExceptionWhileCreatingFont = "I/O exception while creating Font";
 
-        [Obsolete]
-        public const String IsNotAnAcceptableValueForTheField = "{0} is not an acceptable value for the field {1}.";
-
-        [Obsolete]
-        public const String IsNotWmfImage = "Not a WMF image.";
-
         public const String LzwDecoderException = "LZW decoder exception.";
 
         public const String LzwFlavourNotSupported = "LZW flavour not supported.";
@@ -350,9 +281,6 @@ namespace iText.Kernel {
         public const String MustBeATaggedDocument = "Must be a tagged document.";
 
         public const String NumberOfEntriesInThisXrefSubsectionNotFound = "Number of entries in this xref subsection not found.";
-
-        [Obsolete]
-        public const String NameAlreadyExistsInTheNameTree = "Name already exists in the name tree.";
 
         public const String NoCompatibleEncryptionFound = "No compatible encryption found.";
 
@@ -376,10 +304,6 @@ namespace iText.Kernel {
 
         public const String ObjectNumberOfTheFirstObjectInThisXrefSubsectionNotFound = "Object number of the first object in this xref subsection not found.";
 
-        public const String OcspStatusIsRevoked = "OCSP status is revoked.";
-
-        public const String OcspStatusIsUnknown = "OCSP status is unknown.";
-
         public const String OnlyBmpCanBeWrappedInWmf = "Only BMP can be wrapped in WMF.";
 
         public const String OperatorEINotFoundAfterEndOfImageData = "Operator EI not found after the end of image data.";
@@ -388,13 +312,7 @@ namespace iText.Kernel {
 
         public const String PageIsNotSetForThePdfTagStructure = "Page is not set for the pdf tag structure.";
 
-        [Obsolete]
-        public const String PageWasAlreadyFlushed = "The page has been already flushed.";
-
         public const String PageAlreadyFlushed = "The page has been already flushed.";
-
-        [Obsolete]
-        public const String PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
 
         public const String PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
 
@@ -410,18 +328,11 @@ namespace iText.Kernel {
 
         public const String PdfObjectStreamReachMaxSize = "PdfObjectStream reach max size.";
 
-        [Obsolete]
-        public const String PdfPageShallHaveContent = "PdfPage shall have content.";
-
         public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
 
         public const String PdfStartxrefIsNotFollowedByANumber = "PDF startxref is not followed by a number.";
 
         public const String PdfStartxrefNotFound = "PDF startxref not found.";
-
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. <p> There is a typo in the name of the constant. Use PdfIndirectObjectBelongsToOtherPdfDocument instead."
-            )]
-        public const String PdfInderectObjectBelongToOtherPdfDocument = "pdf inderect object belong to other pdf document Copy object to current pdf document.";
 
         public const String PdfIndirectObjectBelongsToOtherPdfDocument = "Pdf indirect object belongs to other PDF document. Copy object to current pdf document.";
 
@@ -438,9 +349,6 @@ namespace iText.Kernel {
         public const String ResourcesCannotBeNull = "Resources cannot be null.";
 
         public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
-
-        [Obsolete]
-        public const String RoleIsNotMappedWithAnyStandardRole = "Role is not mapped with any standard role.";
 
         public const String RoleIsNotMappedToAnyStandardRole = "Role \"{0}\" is not mapped to any standard role.";
 
@@ -480,9 +388,6 @@ namespace iText.Kernel {
 
         public const String TwoBarcodeMustBeExternally = "The two barcodes must be composed externally.";
 
-        [Obsolete]
-        public const String TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields = "The number of booleans in the array doesn't correspond with the number of fields.";
-
         public const String ThereAreIllegalCharactersForBarcode128In1 = "There are illegal characters for barcode 128 in {0}.";
 
         public const String ThereIsNoAssociatePdfWriterForMakingIndirects = "There is no associate PdfWriter for making indirects.";
@@ -490,9 +395,6 @@ namespace iText.Kernel {
         public const String ThereIsNoFieldInTheDocumentWithSuchName1 = "There is no field in the document with such name: {0}.";
 
         public const String ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime = "This PKCS#7 object has multiple SignerInfos. Only one is supported at this time.";
-
-        [Obsolete]
-        public const String ThisInstanceOfPdfSignerIsAlreadyClosed = "This instance of PdfSigner has been already closed.";
 
         public const String ThisInstanceOfPdfSignerAlreadyClosed = "This instance of PdfSigner has been already closed.";
 
@@ -532,9 +434,6 @@ namespace iText.Kernel {
 
         public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
-        [Obsolete]
-        public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
-
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
 
         public const String UnsupportedXObjectType = "Unsupported XObject type.";
@@ -552,9 +451,6 @@ namespace iText.Kernel {
         public const String WrongMediaBoxSize1 = "Wrong media box size: {0}.";
 
         public const String XrefSubsectionNotFound = "xref subsection not found.";
-
-        [Obsolete]
-        public const String YouCannotFlushPdfCatalogManually = "You cannot flush PdfCatalog manually.";
 
         public const String YouHaveToDefineABooleanArrayForThisCollectionSortDictionary = "You have to define a boolean array for this collection sort dictionary.";
 
