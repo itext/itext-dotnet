@@ -1693,7 +1693,7 @@ namespace iText.Layout.Renderer {
 
         internal virtual bool IsFirstOnRootArea() {
             bool isFirstOnRootArea = true;
-            iText.Layout.Renderer.AbstractRenderer ancestor = this;
+            IRenderer ancestor = this;
             while (isFirstOnRootArea && ancestor.GetParent() != null) {
                 IRenderer parent = ancestor.GetParent();
                 if (parent is RootRenderer) {
@@ -1702,7 +1702,7 @@ namespace iText.Layout.Renderer {
                 else {
                     isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
                 }
-                ancestor = (iText.Layout.Renderer.AbstractRenderer)parent;
+                ancestor = parent;
             }
             return isFirstOnRootArea;
         }
