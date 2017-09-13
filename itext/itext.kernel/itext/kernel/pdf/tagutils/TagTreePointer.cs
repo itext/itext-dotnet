@@ -461,11 +461,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer RemoveTag() {
             PdfStructElement currentStructElem = GetCurrentStructElem();
-            IPdfStructElem parentElem = currentStructElem.GetParent();
+            IStructureNode parentElem = currentStructElem.GetParent();
             if (parentElem is PdfStructTreeRoot) {
                 throw new PdfException(PdfException.CannotRemoveDocumentRootTag);
             }
-            IList<IPdfStructElem> kids = currentStructElem.GetKids();
+            IList<IStructureNode> kids = currentStructElem.GetKids();
             PdfStructElement parent = (PdfStructElement)parentElem;
             if (parent.IsFlushed()) {
                 throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
@@ -480,7 +480,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 // TODO how about possible references to structure element from refs or structure destination for instance?
                 indRef.SetFree();
             }
-            foreach (IPdfStructElem kid in kids) {
+            foreach (IStructureNode kid in kids) {
                 if (kid is PdfStructElement) {
                     parent.AddKid(removedKidIndex++, (PdfStructElement)kid);
                 }
@@ -516,7 +516,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (GetDocument() != pointerToNewParent.GetDocument()) {
                 throw new PdfException(PdfException.TagCannotBeMovedToTheAnotherDocumentsTagStructure);
             }
-            IPdfStructElem removedKid = GetCurrentStructElem().RemoveKid(kidIndex);
+            IStructureNode removedKid = GetCurrentStructElem().RemoveKid(kidIndex);
             if (removedKid is PdfStructElement) {
                 pointerToNewParent.AddNewKid((PdfStructElement)removedKid);
             }
@@ -615,7 +615,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int kidIndex) {
-            IPdfStructElem kid = GetCurrentStructElem().GetKids()[kidIndex];
+            IStructureNode kid = GetCurrentStructElem().GetKids()[kidIndex];
             if (kid is PdfStructElement) {
                 SetCurrentStructElem((PdfStructElement)kid);
             }
@@ -668,7 +668,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (PdfName.MCR.Equals(role)) {
                 throw new PdfException(PdfException.CannotMoveToMarkedContentReference);
             }
-            IList<IPdfStructElem> kids = GetCurrentStructElem().GetKids();
+            IList<IStructureNode> kids = GetCurrentStructElem().GetKids();
             int k = 0;
             for (int i = 0; i < kids.Count; ++i) {
                 if (kids[i] == null) {
@@ -693,8 +693,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>current element kids roles</returns>
         public virtual IList<PdfName> GetKidsRoles() {
             IList<PdfName> roles = new List<PdfName>();
-            IList<IPdfStructElem> kids = GetCurrentStructElem().GetKids();
-            foreach (IPdfStructElem kid in kids) {
+            IList<IStructureNode> kids = GetCurrentStructElem().GetKids();
+            foreach (IStructureNode kid in kids) {
                 if (kid == null) {
                     roles.Add(null);
                 }
@@ -733,7 +733,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject()) {
                 throw new PdfException(PdfException.CannotFlushDocumentRootTagBeforeDocumentIsClosed);
             }
-            IPdfStructElem parent = tagStructureContext.GetWaitingTagsManager().FlushTag(GetCurrentStructElem());
+            IStructureNode parent = tagStructureContext.GetWaitingTagsManager().FlushTag(GetCurrentStructElem());
             if (parent != null) {
                 // parent is not flushed
                 SetCurrentStructElem((PdfStructElement)parent);

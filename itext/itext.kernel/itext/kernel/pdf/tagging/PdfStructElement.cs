@@ -62,7 +62,7 @@ namespace iText.Kernel.Pdf.Tagging {
     /// ). Immediate children of the structure tree root
     /// are structure elements. Structure elements are other structure elements or content items.
     /// </remarks>
-    public class PdfStructElement : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
+    public class PdfStructElement : PdfObjectWrapper<PdfDictionary>, IStructureNode {
         public PdfStructElement(PdfDictionary pdfObject)
             : base(pdfObject) {
             SetForbidRelease();
@@ -178,7 +178,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return kid;
         }
 
-        public virtual IPdfStructElem RemoveKid(int index) {
+        public virtual IStructureNode RemoveKid(int index) {
             PdfObject k = GetK();
             if (k == null || !k.IsArray() && index != 0) {
                 throw new IndexOutOfRangeException();
@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 GetPdfObject().Remove(PdfName.K);
             }
             SetModified();
-            IPdfStructElem removedKid = ConvertPdfObjectToIPdfStructElem(k);
+            IStructureNode removedKid = ConvertPdfObjectToIPdfStructElem(k);
             PdfDocument doc = GetDocument();
             if (removedKid is PdfMcr && doc != null) {
                 doc.GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
@@ -203,7 +203,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return removedKid;
         }
 
-        public virtual int RemoveKid(IPdfStructElem kid) {
+        public virtual int RemoveKid(IStructureNode kid) {
             if (kid is PdfMcr) {
                 PdfMcr mcr = (PdfMcr)kid;
                 PdfDocument doc = GetDocument();
@@ -222,7 +222,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <returns>parent of the current structure element. Returns null if parent isn't set or if either current element or parent are invalid.
         ///     </returns>
-        public virtual IPdfStructElem GetParent() {
+        public virtual IStructureNode GetParent() {
             PdfDictionary parent = GetPdfObject().GetAsDictionary(PdfName.P);
             if (parent == null) {
                 return null;
@@ -233,7 +233,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     return null;
                 }
                 PdfStructTreeRoot structTreeRoot = pdfDoc.GetStructTreeRoot();
-                return structTreeRoot.GetPdfObject() == parent ? (IPdfStructElem)structTreeRoot : new iText.Kernel.Pdf.Tagging.PdfStructElement
+                return structTreeRoot.GetPdfObject() == parent ? (IStructureNode)structTreeRoot : new iText.Kernel.Pdf.Tagging.PdfStructElement
                     (parent);
             }
             if (IsStructElem(parent)) {
@@ -260,9 +260,9 @@ namespace iText.Kernel.Pdf.Tagging {
         /// in the list on it's place.
         /// </remarks>
         /// <returns>list of the direct kids of structure element.</returns>
-        public virtual IList<IPdfStructElem> GetKids() {
+        public virtual IList<IStructureNode> GetKids() {
             PdfObject k = GetK();
-            IList<IPdfStructElem> kids = new List<IPdfStructElem>();
+            IList<IStructureNode> kids = new List<IStructureNode>();
             if (k != null) {
                 if (k.IsArray()) {
                     PdfArray a = (PdfArray)k;
@@ -607,7 +607,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return doc;
         }
 
-        private void AddKidObjectToStructElemList(PdfObject k, IList<IPdfStructElem> list) {
+        private void AddKidObjectToStructElemList(PdfObject k, IList<IStructureNode> list) {
             if (k.IsFlushed()) {
                 list.Add(null);
                 return;
@@ -615,8 +615,8 @@ namespace iText.Kernel.Pdf.Tagging {
             list.Add(ConvertPdfObjectToIPdfStructElem(k));
         }
 
-        private IPdfStructElem ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
-            IPdfStructElem elem = null;
+        private IStructureNode ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
+            IStructureNode elem = null;
             switch (obj.GetObjectType()) {
                 case PdfObject.DICTIONARY: {
                     PdfDictionary d = (PdfDictionary)obj;

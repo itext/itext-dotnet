@@ -63,8 +63,8 @@ namespace iText.Kernel.Pdf.Navigation {
             if (firstObj.IsDictionary()) {
                 PdfStructElement structElem = new PdfStructElement((PdfDictionary)firstObj);
                 while (true) {
-                    IList<IPdfStructElem> kids = structElem.GetKids();
-                    IPdfStructElem firstKid = kids.Count > 0 ? kids[0] : null;
+                    IList<IStructureNode> kids = structElem.GetKids();
+                    IStructureNode firstKid = kids.Count > 0 ? kids[0] : null;
                     if (firstKid is PdfMcr) {
                         return ((PdfMcr)firstKid).GetPageObject();
                     }

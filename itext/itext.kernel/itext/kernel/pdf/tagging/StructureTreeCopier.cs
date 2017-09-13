@@ -192,7 +192,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
             }
             IList<PdfDictionary> topsInOriginalOrder = new List<PdfDictionary>();
-            foreach (IPdfStructElem kid in fromDocument.GetStructTreeRoot().GetKids()) {
+            foreach (IStructureNode kid in fromDocument.GetStructTreeRoot().GetKids()) {
                 if (kid == null) {
                     continue;
                 }

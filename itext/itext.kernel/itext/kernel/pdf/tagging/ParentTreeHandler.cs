@@ -251,7 +251,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
             foreach (PdfStructElement mcrParent in mcrParents) {
-                foreach (IPdfStructElem kid in mcrParent.GetKids()) {
+                foreach (IStructureNode kid in mcrParent.GetKids()) {
                     if (kid is PdfMcr) {
                         RegisterMcr((PdfMcr)kid, true);
                     }

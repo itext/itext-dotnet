@@ -50,7 +50,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Tagging {
-    public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
+    public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IStructureNode {
         private PdfDocument document;
 
         private ParentTreeHandler parentTreeHandler;
@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return structElem;
         }
 
-        public virtual IPdfStructElem GetParent() {
+        public virtual IStructureNode GetParent() {
             return null;
         }
 
@@ -94,9 +94,9 @@ namespace iText.Kernel.Pdf.Tagging {
         /// in the list on it's place.
         /// </remarks>
         /// <returns>list of the direct kids of StructTreeRoot.</returns>
-        public virtual IList<IPdfStructElem> GetKids() {
+        public virtual IList<IStructureNode> GetKids() {
             PdfObject k = GetPdfObject().Get(PdfName.K);
-            IList<IPdfStructElem> kids = new List<IPdfStructElem>();
+            IList<IStructureNode> kids = new List<IStructureNode>();
             if (k != null) {
                 if (k.IsArray()) {
                     PdfArray a = (PdfArray)k;
@@ -477,8 +477,8 @@ namespace iText.Kernel.Pdf.Tagging {
             return true;
         }
 
-        private void FlushAllKids(IPdfStructElem elem) {
-            foreach (IPdfStructElem kid in elem.GetKids()) {
+        private void FlushAllKids(IStructureNode elem) {
+            foreach (IStructureNode kid in elem.GetKids()) {
                 if (kid is PdfStructElement && !((PdfStructElement)kid).IsFlushed()) {
                     FlushAllKids(kid);
                     ((PdfStructElement)kid).Flush();
@@ -486,7 +486,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
-        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IPdfStructElem> kids) {
+        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IStructureNode> kids) {
             if (kid.IsFlushed()) {
                 kids.Add(null);
             }

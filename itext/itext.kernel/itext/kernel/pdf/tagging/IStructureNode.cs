@@ -45,10 +45,10 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
-    public interface IPdfStructElem {
-        IPdfStructElem GetParent();
+    public interface IStructureNode {
+        IStructureNode GetParent();
 
-        IList<IPdfStructElem> GetKids();
+        IList<IStructureNode> GetKids();
 
         PdfName GetRole();
     }

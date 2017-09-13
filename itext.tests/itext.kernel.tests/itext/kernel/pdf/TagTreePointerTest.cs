@@ -297,7 +297,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagStructureContext tagStructure = document.GetTagStructureContext();
             tagStructure.FlushPageTags(document.GetPage(1));
-            IList<IPdfStructElem> kids = document.GetStructTreeRoot().GetKids();
+            IList<IStructureNode> kids = document.GetStructTreeRoot().GetKids();
             NUnit.Framework.Assert.IsTrue(!((PdfStructElement)kids[0]).GetPdfObject().IsFlushed());
             NUnit.Framework.Assert.IsTrue(!((PdfStructElement)kids[0].GetKids()[0]).GetPdfObject().IsFlushed());
             PdfArray rowsTags = (PdfArray)((PdfStructElement)kids[0].GetKids()[0]).GetK();

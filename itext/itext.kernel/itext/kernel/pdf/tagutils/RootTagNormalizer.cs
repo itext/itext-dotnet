@@ -19,7 +19,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.document = document;
         }
 
-        internal virtual PdfStructElement MakeSingleStandardRootTag(IList<IPdfStructElem> rootKids) {
+        internal virtual PdfStructElement MakeSingleStandardRootTag(IList<IStructureNode> rootKids) {
             document.GetStructTreeRoot().MakeIndirect(document);
             if (rootTagElement == null) {
                 CreateNewRootTag();
@@ -70,10 +70,10 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void AddStructTreeRootKidsToTheRootTag(IList<IPdfStructElem> rootKids) {
+        private void AddStructTreeRootKidsToTheRootTag(IList<IStructureNode> rootKids) {
             int originalRootKidsIndex = 0;
             bool isBeforeOriginalRoot = true;
-            foreach (IPdfStructElem elem in rootKids) {
+            foreach (IStructureNode elem in rootKids) {
                 // StructTreeRoot kids are always PdfStructElement, so we are save here to cast it
                 PdfStructElement kid = (PdfStructElement)elem;
                 if (kid.GetPdfObject() == rootTagElement.GetPdfObject()) {

@@ -123,16 +123,16 @@ namespace iText.Kernel.Utils {
             return this;
         }
 
-        protected internal virtual void InspectKids(IList<IPdfStructElem> kids) {
+        protected internal virtual void InspectKids(IList<IStructureNode> kids) {
             if (kids == null) {
                 return;
             }
-            foreach (IPdfStructElem kid in kids) {
+            foreach (IStructureNode kid in kids) {
                 InspectKid(kid);
             }
         }
 
-        protected internal virtual void InspectKid(IPdfStructElem kid) {
+        protected internal virtual void InspectKid(IStructureNode kid) {
             try {
                 if (kid is PdfStructElement) {
                     PdfStructElement structElemKid = (PdfStructElement)kid;

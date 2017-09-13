@@ -534,7 +534,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             // in this method we could deal with existing document, so we don't won't to throw exceptions here
             bool forbid = forbidUnknownRoles;
             forbidUnknownRoles = false;
-            IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
+            IList<IStructureNode> rootKids = document.GetStructTreeRoot().GetKids();
             IRoleMappingResolver mapping = null;
             if (rootKids.Count > 0) {
                 PdfStructElement firstKid = (PdfStructElement)rootKids[0];
@@ -678,7 +678,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private void SetNamespaceForNewTagsBasedOnExistingRoot() {
-            IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
+            IList<IStructureNode> rootKids = document.GetStructTreeRoot().GetKids();
             if (rootKids.Count > 0) {
                 PdfStructElement firstKid = (PdfStructElement)rootKids[0];
                 IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid
@@ -740,7 +740,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void RemovePageTagFromParent(IPdfStructElem pageTag, IPdfStructElem parent) {
+        private void RemovePageTagFromParent(IStructureNode pageTag, IStructureNode parent) {
             if (parent is PdfStructElement) {
                 PdfStructElement structParent = (PdfStructElement)parent;
                 if (!structParent.IsFlushed()) {
@@ -771,9 +771,9 @@ namespace iText.Kernel.Pdf.Tagutils {
                 GetPdfObject() == GetRootTag().GetPdfObject()) {
                 return;
             }
-            IList<IPdfStructElem> kids = parent.GetKids();
+            IList<IStructureNode> kids = parent.GetKids();
             bool allKidsBelongToPage = true;
-            foreach (IPdfStructElem kid in kids) {
+            foreach (IStructureNode kid in kids) {
                 if (kid is PdfMcr) {
                     PdfDictionary kidPage = ((PdfMcr)kid).GetPageObject();
                     if (!kidPage.IsFlushed() && !kidPage.Equals(currentPage.GetPdfObject())) {
@@ -791,7 +791,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
             if (allKidsBelongToPage) {
-                IPdfStructElem parentsParent = parent.GetParent();
+                IStructureNode parentsParent = parent.GetParent();
                 parent.Flush();
                 if (parentsParent is PdfStructElement) {
                     FlushParentIfBelongsToPage((PdfStructElement)parentsParent, currentPage);

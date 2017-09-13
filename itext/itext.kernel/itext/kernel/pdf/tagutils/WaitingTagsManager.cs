@@ -184,12 +184,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <returns>parent of the flushed tag</returns>
-        internal virtual IPdfStructElem FlushTag(PdfStructElement tagStruct) {
+        internal virtual IStructureNode FlushTag(PdfStructElement tagStruct) {
             Object associatedObj = waitingTagToAssociatedObj.JRemove(tagStruct.GetPdfObject());
             if (associatedObj != null) {
                 associatedObjToWaitingTag.JRemove(associatedObj);
             }
-            IPdfStructElem parent = tagStruct.GetParent();
+            IStructureNode parent = tagStruct.GetParent();
             FlushStructElementAndItKids(tagStruct);
             return parent;
         }
@@ -198,7 +198,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (waitingTagToAssociatedObj.ContainsKey(elem.GetPdfObject())) {
                 return;
             }
-            foreach (IPdfStructElem kid in elem.GetKids()) {
+            foreach (IStructureNode kid in elem.GetKids()) {
                 if (kid is PdfStructElement) {
                     FlushStructElementAndItKids((PdfStructElement)kid);
                 }
@@ -209,7 +209,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void RemoveWaitingStateAndFlushIfParentFlushed(PdfStructElement structElem) {
             if (structElem != null) {
                 waitingTagToAssociatedObj.JRemove(structElem.GetPdfObject());
-                IPdfStructElem parent = structElem.GetParent();
+                IStructureNode parent = structElem.GetParent();
                 if (parent is PdfStructElement && ((PdfStructElement)parent).IsFlushed()) {
                     FlushStructElementAndItKids(structElem);
                 }
