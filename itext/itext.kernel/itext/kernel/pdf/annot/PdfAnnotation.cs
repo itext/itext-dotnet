@@ -1237,6 +1237,24 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Sets the characteristics of the annotation’s border.</summary>
         /// <param name="border">
         /// an
+        /// <see cref="iText.Kernel.Pdf.PdfAnnotationBorder"/>
+        /// specifying the characteristics of the annotation’s border.
+        /// See
+        /// <see cref="GetBorder()"/>
+        /// for more detailes.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfAnnotationBorder border) {
+            return Put(PdfName.Border, border.GetPdfObject());
+        }
+
+        /// <summary>Sets the characteristics of the annotation’s border.</summary>
+        /// <param name="border">
+        /// an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// specifying the characteristics of the annotation’s border.
         /// See

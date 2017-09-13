@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
-    public class PdfBorderArray : PdfObjectWrapper<PdfArray> {
-        public PdfBorderArray(float hRadius, float vRadius, float width)
+    public class PdfAnnotationBorder : PdfObjectWrapper<PdfArray> {
+        public PdfAnnotationBorder(float hRadius, float vRadius, float width)
             : this(hRadius, vRadius, width, null) {
         }
 
-        public PdfBorderArray(float hRadius, float vRadius, float width, PdfDashPattern dash)
+        public PdfAnnotationBorder(float hRadius, float vRadius, float width, PdfDashPattern dash)
             : base(new PdfArray(new float[] { hRadius, vRadius, width })) {
             if (dash != null) {
                 PdfArray dashArray = new PdfArray();
