@@ -54,7 +54,7 @@ using iText.Kernel.Font;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    internal class TypographyUtils {
+    internal sealed class TypographyUtils {
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";

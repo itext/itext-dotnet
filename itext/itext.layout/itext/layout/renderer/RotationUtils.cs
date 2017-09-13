@@ -48,7 +48,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    internal class RotationUtils {
+    internal sealed class RotationUtils {
         private RotationUtils() {
         }
 

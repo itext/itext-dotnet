@@ -50,7 +50,7 @@ using System.Xml;
 using System.Xml.Linq;
 
 namespace iText.Kernel.Utils {
-    class XmlUtils {
+    sealed class XmlUtils {
         public static void WriteXmlDocToStream(XmlDocument xmlReport, Stream stream) {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = Encoding.UTF8;

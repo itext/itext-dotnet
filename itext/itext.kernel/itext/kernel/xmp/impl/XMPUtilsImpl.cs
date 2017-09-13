@@ -38,7 +38,7 @@ using iText.Kernel.XMP.Properties;
 namespace iText.Kernel.XMP.Impl
 {
 	/// <since>11.08.2006</since>
-	public class XMPUtilsImpl : XMPConst
+	public sealed class XMPUtilsImpl : XMPConst
 	{
 		private const int UCK_NORMAL = 0;
 

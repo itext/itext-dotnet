@@ -54,7 +54,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Crypto.Securityhandler {
-    internal static class EncryptionUtils {
+    internal sealed class EncryptionUtils {
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);
         }

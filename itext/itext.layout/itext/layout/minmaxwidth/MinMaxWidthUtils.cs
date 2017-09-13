@@ -49,13 +49,10 @@ using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Minmaxwidth {
-    public class MinMaxWidthUtils {
+    public sealed class MinMaxWidthUtils {
         private const float eps = 0.01f;
 
         private const float max = 32760f;
-
-        private MinMaxWidthUtils() {
-        }
 
         public static float GetEps() {
             return eps;

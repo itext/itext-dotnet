@@ -37,7 +37,7 @@ namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>Utilities for <code>XMPNode</code>.</summary>
 	/// <since>Aug 28, 2006</since>
-	public class XMPNodeUtils : XMPConst
+	public sealed class XMPNodeUtils : XMPConst
 	{
 		internal const int CLT_NO_VALUES = 0;
 

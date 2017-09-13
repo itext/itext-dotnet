@@ -17,7 +17,7 @@ namespace iText.Kernel.XMP {
     /// Java default conversion utilities.
     /// </remarks>
     /// <since>21.02.2006</since>
-    public class XMPUtils {
+    public sealed class XMPUtils {
         /// <summary>Private constructor</summary>
         private XMPUtils() {
         }
