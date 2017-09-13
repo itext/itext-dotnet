@@ -1702,9 +1702,6 @@ namespace iText.Layout.Renderer {
                 else {
                     isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
                 }
-                if (!(parent is iText.Layout.Renderer.AbstractRenderer)) {
-                    break;
-                }
                 ancestor = (iText.Layout.Renderer.AbstractRenderer)parent;
             }
             return isFirstOnRootArea;
