@@ -81,10 +81,6 @@ namespace iText.Kernel.Pdf.Navigation {
             return null;
         }
 
-        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
-            return this;
-        }
-
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }

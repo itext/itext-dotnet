@@ -60,13 +60,6 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.Type, PdfName.StructTreeRoot);
         }
 
-        /// <param name="pdfObject">must be an indirect object.</param>
-        [System.ObsoleteAttribute(@"It will be removed in iText 7.1. Use PdfStructTreeRoot(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfDocument) instead."
-            )]
-        public PdfStructTreeRoot(PdfDictionary pdfObject)
-            : this(pdfObject, null) {
-        }
-
         public PdfStructTreeRoot(PdfDictionary pdfObject, PdfDocument document)
             : base(pdfObject) {
             this.document = document;

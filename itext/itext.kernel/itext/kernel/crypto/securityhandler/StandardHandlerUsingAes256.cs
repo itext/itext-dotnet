@@ -63,13 +63,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal bool encryptMetadata;
 
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.")]
-        public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
-            , int permissions, bool encryptMetadata, bool embeddedFilesOnly)
-            : this(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
-                null) {
-        }
-
         public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, PdfVersion version) {
             isPdf2 = version != null && version.CompareTo(PdfVersion.PDF_2_0) >= 0;

@@ -402,52 +402,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             return mappingResolver;
         }
 
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Checks if given
-        /// <c>IAccessibleElement</c>
-        /// is connected to some tag.
-        /// </summary>
-        /// <param name="element">element to check if it has a connected tag.</param>
-        /// <returns>true, if there is a tag which retains the connection to the given accessible element.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
-            )]
-        public virtual bool IsElementConnectedToTag(IAccessibleElement element) {
-            return waitingTagsManager.GetStructForObj(element) != null;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Destroys the connection between the given accessible element and the tag to which this element is connected to.
-        /// </summary>
-        /// <param name="element">
-        /// 
-        /// <c>IAccessibleElement</c>
-        /// which connection to the tag (if there is one) will be removed.
-        /// </param>
-        /// <returns>
-        /// current
-        /// <see cref="TagStructureContext"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
-             element) {
-            waitingTagsManager.RemoveWaitingState(element);
-            return this;
-        }
-
         /// <summary>Removes annotation content item from the tag structure.</summary>
         /// <remarks>
         /// Removes annotation content item from the tag structure.
@@ -530,59 +484,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Sets the tag, which is connected with the given accessible element, as a current tag for the given
-        /// <see cref="TagTreePointer"/>
-        /// . An exception will be thrown, if given accessible element is not connected to any tag.
-        /// </summary>
-        /// <param name="element">an element which has a connection with some tag.</param>
-        /// <param name="tagPointer">
-        /// 
-        /// <see cref="TagTreePointer"/>
-        /// which will be moved to the tag connected to the given accessible element.
-        /// </param>
-        /// <returns>
-        /// current
-        /// <see cref="TagStructureContext"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
-            , TagTreePointer tagPointer) {
-            if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, element)) {
-                throw new PdfException(PdfException.GivenAccessibleElementIsNotConnectedToAnyTag);
-            }
-            return this;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Destroys all the retained connections.
-        /// </summary>
-        /// <returns>
-        /// current
-        /// <see cref="TagStructureContext"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
-            waitingTagsManager.RemoveAllWaitingStates();
-            return this;
-        }
-
         /// <summary>Flushes the tags which are considered to belong to the given page.</summary>
         /// <remarks>
         /// Flushes the tags which are considered to belong to the given page.
@@ -661,18 +562,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             ActualizeNamespacesInStructTreeRoot();
         }
 
-        /// <summary>Method for internal usages.</summary>
-        /// <remarks>
-        /// Method for internal usages.
-        /// Essentially, all it does is just making sure that for connected tags the properties are
-        /// up to date with the connected accessible elements properties.
-        /// </remarks>
-        [System.ObsoleteAttribute(@"This method will be removed in iText 7.1. It's needless to call this method, because properties are always up to date."
-            )]
-        public virtual void ActualizeTagsProperties() {
-        }
-
-        // nothing is needed to be done, properties are always up to date
         /// <summary>
         /// <p>
         /// Gets

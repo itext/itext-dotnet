@@ -653,13 +653,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        protected internal virtual float[] ApplyRotation() {
-            float[] ctm = new float[6];
-            CreateRotationTransformInsideOccupiedArea().GetMatrix(ctm);
-            return ctm;
-        }
-
         /// <summary>
         /// This method creates
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>

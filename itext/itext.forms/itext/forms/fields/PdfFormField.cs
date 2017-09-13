@@ -448,67 +448,6 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfTextFormField"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use CreateText(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Geom.Rectangle, System.String, System.String, iText.Kernel.Font.PdfFont, float) instead."
-            )]
-        public static PdfTextFormField CreateText(PdfDocument doc, Rectangle rect, String name, String value, PdfFont
-             font, int fontSize) {
-            return CreateText(doc, rect, name, value, font, (float)fontSize, false);
-        }
-
-        /// <summary>
-        /// Creates a named
-        /// <see cref="PdfTextFormField">text form field</see>
-        /// with an initial
-        /// value, with a specified font and font size.
-        /// </summary>
-        /// <param name="doc">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the text field in
-        /// </param>
-        /// <param name="rect">the location on the page for the text field</param>
-        /// <param name="name">the name of the form field</param>
-        /// <param name="value">the initial value</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="multiline">true for multiline text field</param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfTextFormField"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use CreateText(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Geom.Rectangle, System.String, System.String, iText.Kernel.Font.PdfFont, float, bool) instead."
-            )]
-        public static PdfTextFormField CreateText(PdfDocument doc, Rectangle rect, String name, String value, PdfFont
-             font, int fontSize, bool multiline) {
-            return CreateText(doc, rect, name, value, font, (float)fontSize, multiline);
-        }
-
-        /// <summary>
-        /// Creates a named
-        /// <see cref="PdfTextFormField">text form field</see>
-        /// with an initial
-        /// value, with a specified font and font size.
-        /// </summary>
-        /// <param name="doc">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the text field in
-        /// </param>
-        /// <param name="rect">the location on the page for the text field</param>
-        /// <param name="name">the name of the form field</param>
-        /// <param name="value">the initial value</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
         /// <param name="multiline">true for multiline text field</param>
         /// <returns>
         /// a new
@@ -741,47 +680,6 @@ namespace iText.Forms.Fields {
         /// a new
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use CreateChoice(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Geom.Rectangle, System.String, System.String, iText.Kernel.Font.PdfFont, float, iText.Kernel.Pdf.PdfArray, int) instead"
-            )]
-        public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
-            PdfFont font, int fontSize, PdfArray options, int flags) {
-            return CreateChoice(doc, rect, name, value, font, (float)fontSize, options, flags);
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="PdfChoiceFormField">choice form field</see>
-        /// with custom
-        /// behavior and layout, on a specified location.
-        /// </summary>
-        /// <param name="doc">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the choice field in
-        /// </param>
-        /// <param name="rect">the location on the page for the choice field</param>
-        /// <param name="name">the name of the form field</param>
-        /// <param name="value">the initial value</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="options">
-        /// an array of
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// objects that each represent
-        /// the 'on' state of one of the choices.
-        /// </param>
-        /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
-        /// flags you require.
-        /// </param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfChoiceFormField"/>
-        /// </returns>
         public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
             PdfFont font, float fontSize, PdfArray options, int flags) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
@@ -972,36 +870,6 @@ namespace iText.Forms.Fields {
                 throw new PdfException(e);
             }
             return field;
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="PdfButtonFormField"/>
-        /// as a push button without data, with
-        /// its caption in a custom font.
-        /// </summary>
-        /// <param name="doc">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the radio group in
-        /// </param>
-        /// <param name="rect">the location on the page for the field</param>
-        /// <param name="name">the name of the form field</param>
-        /// <param name="caption">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfButtonFormField"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use CreatePushButton(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Geom.Rectangle, System.String, System.String, iText.Kernel.Font.PdfFont, float) instead."
-            )]
-        public static PdfButtonFormField CreatePushButton(PdfDocument doc, Rectangle rect, String name, String caption
-            , PdfFont font, int fontSize) {
-            return CreatePushButton(doc, rect, name, caption, font, (float)fontSize);
         }
 
         /// <summary>
@@ -2833,13 +2701,6 @@ namespace iText.Forms.Fields {
             return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, float, iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfResources) instead."
-            )]
-        protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, int fontSize, PdfResources
-             res) {
-            return GenerateDefaultAppearanceString(font, (float)fontSize, color, res);
-        }
-
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual Object[] GetFontAndSize(PdfDictionary asNormal) {
             Object[] fontAndSize = new Object[2];
@@ -3043,21 +2904,6 @@ namespace iText.Forms.Fields {
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
 
-        /// <summary>Draws the visual appearance of text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, float, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
-            )]
-        protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, int fontSize, String value
-            , PdfFormXObject appearance) {
-            DrawTextAppearance(rect, font, (float)fontSize, value, appearance);
-        }
-
         /// <summary>Draws the visual appearance of multiline text in a form field.</summary>
         /// <param name="rect">the location on the page for the list field</param>
         /// <param name="font">
@@ -3107,21 +2953,6 @@ namespace iText.Forms.Fields {
             }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
-        }
-
-        /// <summary>Draws the visual appearance of multiline text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawMultiLineTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, float, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
-            )]
-        protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, int fontSize, String
-             value, PdfFormXObject appearance) {
-            DrawMultiLineTextAppearance(rect, font, (float)fontSize, value, appearance);
         }
 
         /// <summary>Draws a border using the borderWidth and borderColor of the form field.</summary>
@@ -3371,26 +3202,6 @@ namespace iText.Forms.Fields {
             return xObject;
         }
 
-        /// <summary>Draws the appearance for a push button.</summary>
-        /// <param name="width">the width of the pushbutton</param>
-        /// <param name="height">the width of the pushbutton</param>
-        /// <param name="text">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawPushButtonAppearance(float, float, System.String, iText.Kernel.Font.PdfFont, float) instead."
-            )]
-        protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
-            PdfFont font, int fontSize) {
-            return DrawPushButtonAppearance(width, height, text, font, (float)fontSize);
-        }
-
         /// <summary>Performs the low-level drawing operations to draw a button object.</summary>
         /// <param name="canvas">
         /// the
@@ -3421,29 +3232,6 @@ namespace iText.Forms.Fields {
                 );
         }
 
-        /// <summary>Performs the low-level drawing operations to draw a button object.</summary>
-        /// <param name="canvas">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// of the page to draw on.
-        /// </param>
-        /// <param name="x">the x coordinate of the lower left corner of the button rectangle</param>
-        /// <param name="y">the y coordinate of the lower left corner of the button rectangle</param>
-        /// <param name="width">the width of the button</param>
-        /// <param name="height">the width of the button</param>
-        /// <param name="text">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawButton(iText.Kernel.Pdf.Canvas.PdfCanvas, float, float, float, float, System.String, iText.Kernel.Font.PdfFont, float) instead."
-            )]
-        protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
-            String text, PdfFont font, int fontSize) {
-            DrawButton(canvas, x, y, width, height, text, font, (float)fontSize);
-        }
-
         /// <summary>Performs the low-level drawing operations to draw a checkbox object.</summary>
         /// <param name="canvas">
         /// the
@@ -3470,23 +3258,6 @@ namespace iText.Forms.Fields {
             // PdfFont gets all width in 1000 normalized units
             canvas.BeginText().SetFontAndSize(ufont, fontSize).ResetFillColorRgb().SetTextMatrix((width - ufont.GetWidth
                 (text, fontSize)) / 2, (height - ufont.GetAscent(text, fontSize)) / 2).ShowText(text).EndText();
-        }
-
-        /// <summary>Performs the low-level drawing operations to draw a checkbox object.</summary>
-        /// <param name="canvas">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// of the page to draw on.
-        /// </param>
-        /// <param name="width">the width of the button</param>
-        /// <param name="height">the width of the button</param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="on">the boolean value of the checkbox</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawCheckBox(iText.Kernel.Pdf.Canvas.PdfCanvas, float, float, float, bool) instead."
-            )]
-        protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, int fontSize, bool
-             on) {
-            DrawCheckBox(canvas, width, height, (float)fontSize, on);
         }
 
         protected internal virtual void DrawPdfACheckBox(PdfCanvas canvas, float width, float height, bool on) {

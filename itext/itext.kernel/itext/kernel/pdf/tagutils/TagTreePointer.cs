@@ -350,46 +350,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Adds a new tag to the tag structure.
-        /// This method call moves this
-        /// <c>TagTreePointer</c>
-        /// to the added kid.
-        /// <br/>
-        /// New tag will have a role and attributes defined by the given IAccessibleElement.
-        /// <br /><br />
-        /// If <i>keepWaiting</i> is true then a newly created tag will retain the connection with given
-        /// accessible element. See
-        /// <see cref="MoveToTag(IAccessibleElement)"/>
-        /// for more explanations about tag connections concept.
-        /// <br/><br/>
-        /// If the same accessible element is connected to the tag and is added twice to the same parent -
-        /// this
-        /// <c>TagTreePointer</c>
-        /// instance would move to connected kid instead of creating tag twice.
-        /// But if it is added to some other parent, then connection will be removed.
-        /// </summary>
-        /// <param name="element">accessible element which represents a new tag.</param>
-        /// <param name="keepWaiting">defines if to retain the connection between accessible element and the tag.</param>
-        /// <returns>
-        /// this
-        /// <see cref="TagTreePointer"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement element, bool keepWaiting
-            ) {
-            AddTag(-1, element, keepWaiting);
-            return this;
-        }
-
         /// <summary>Adds a new tag to the tag structure.</summary>
         /// <remarks>
         /// Adds a new tag to the tag structure.
@@ -415,76 +375,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             tagStructureContext.ThrowExceptionIfRoleIsInvalid(element, currentNamespace);
             SetNextNewKidIndex(index);
             SetCurrentStructElem(AddNewKid(element));
-            return this;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Adds a new tag to the tag structure.
-        /// This method call moves this
-        /// <c>TagTreePointer</c>
-        /// to the added kid.
-        /// <br/>
-        /// New tag will have a role and attributes defined by the given IAccessibleElement.
-        /// <br /><br />
-        /// If
-        /// <paramref name="keepWaiting"/>
-        /// is true then a newly created tag will retain the connection with given
-        /// accessible element. See
-        /// <see cref="MoveToTag(IAccessibleElement)"/>
-        /// for more explanations about tag connections concept.
-        /// <br/><br/>
-        /// If the same accessible element is connected to the tag and is added twice to the same parent -
-        /// this
-        /// <c>TagTreePointer</c>
-        /// instance would move to connected kid instead of creating tag twice.
-        /// But if it is added to some other parent, then connection will be removed.
-        /// <p>
-        /// <br/><br/>
-        /// This call is equivalent of calling sequentially
-        /// <see cref="SetNextNewKidIndex(int)"/>
-        /// and
-        /// <see cref="AddTag(IAccessibleElement)"/>
-        /// .
-        /// </summary>
-        /// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.</param>
-        /// <param name="element">accessible element which represents a new tag.</param>
-        /// <param name="keepWaiting">defines if to retain the connection between accessible element and the tag.</param>
-        /// <returns>
-        /// this
-        /// <see cref="TagTreePointer"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element, bool
-             keepWaiting) {
-            WaitingTagsManager waitingTagsManager = tagStructureContext.GetWaitingTagsManager();
-            if (waitingTagsManager.GetStructForObj(element) == null) {
-                AddTag(index, element);
-                if (keepWaiting) {
-                    waitingTagsManager.SaveAssociatedObjectForWaitingTag(element, GetCurrentStructElem());
-                }
-            }
-            else {
-                PdfStructElement waitingStruct = waitingTagsManager.GetStructForObj(element);
-                if (waitingStruct.GetParent() != null && GetCurrentStructElem().GetPdfObject() == ((PdfStructElement)waitingStruct
-                    .GetParent()).GetPdfObject()) {
-                    SetCurrentStructElem(waitingStruct);
-                }
-                else {
-                    waitingTagsManager.RemoveWaitingState(element);
-                    AddTag(index, element);
-                    if (keepWaiting) {
-                        waitingTagsManager.SaveAssociatedObjectForWaitingTag(element, GetCurrentStructElem());
-                    }
-                }
-            }
             return this;
         }
 
@@ -552,57 +442,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 this.nextNewKidIndex = nextNewKidIndex;
             }
             return this;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Checks if given
-        /// <c>IAccessibleElement</c>
-        /// is connected to some tag.
-        /// See
-        /// <see cref="MoveToTag(IAccessibleElement)"/>
-        /// for more explanations about tag connections concept.
-        /// </summary>
-        /// <param name="element">element to check if it has a connected tag.</param>
-        /// <returns>true, if there is a tag which retains the connection to the given accessible element.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual bool IsElementConnectedToTag(IAccessibleElement element) {
-            return tagStructureContext.GetWaitingTagsManager().GetStructForObj(element) != null;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Destroys the connection between the given accessible element and the tag to which this element is connected to.
-        /// See
-        /// <see cref="MoveToTag(IAccessibleElement)"/>
-        /// for more explanations about tag connections concept.
-        /// </summary>
-        /// <param name="element">
-        /// 
-        /// <c>IAccessibleElement</c>
-        /// which connection to the tag (if there is one) will be removed.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="TagStructureContext"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual TagStructureContext RemoveElementConnectionToTag(IAccessibleElement element) {
-            tagStructureContext.GetWaitingTagsManager().RemoveWaitingState(element);
-            return tagStructureContext;
         }
 
         /// <summary>Removes the current tag.</summary>
@@ -843,40 +682,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             throw new PdfException(PdfException.NoKidWithSuchRole);
         }
 
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Moves this
-        /// <c>TagTreePointer</c>
-        /// instance to a tag, which is connected with the given accessible element.
-        /// <p>
-        /// <br/><br/>
-        /// The connection between the tag and the accessible element instance is used as a sign that tag is not yet finished
-        /// and therefore should not be flushed or removed if page tags are flushed or removed. Also, any
-        /// <c>TagTreePointer</c>
-        /// could be immediately moved to the tag with connection via it's connected element by using this method.
-        /// <br/>
-        /// For any existing not connected tag the connection could be created using
-        /// <see cref="GetConnectedElement(bool)"/>
-        /// with <i>true</i> as parameter.
-        /// </summary>
-        /// <param name="element">an element which has a connection with some tag.</param>
-        /// <returns>
-        /// this
-        /// <see cref="TagStructureContext"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToTag(IAccessibleElement element) {
-            tagStructureContext.MoveTagPointerToTag(element, this);
-            return this;
-        }
-
         /// <summary>Gets current element kids roles.</summary>
         /// <remarks>
         /// Gets current element kids roles.
@@ -937,52 +742,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 SetCurrentStructElem(tagStructureContext.GetRootTag());
             }
             return this;
-        }
-
-        /// <summary>
-        /// <p>NOTE: this method has been deprecated, use
-        /// <see cref="WaitingTagsManager"/>
-        /// class functionality instead
-        /// (can be obtained via
-        /// <see cref="TagStructureContext.GetWaitingTagsManager()"/>
-        /// ).</p>
-        /// Gets connected accessible element for the current tag. If tag is not connected to element, behaviour is defined
-        /// by the createIfNotExist flag.
-        /// See
-        /// <see cref="MoveToTag(IAccessibleElement)"/>
-        /// for more explanations about tag connections concept.
-        /// </summary>
-        /// <param name="createIfNotExist">
-        /// if <i>true</i>, creates an
-        /// <c>IAccessibleElement</c>
-        /// and connects it to the tag.
-        /// </param>
-        /// <returns>
-        /// connected
-        /// <c>IAccessibleElement</c>
-        /// if there is one (or if it is created), otherwise null.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
-            )]
-        public virtual IAccessibleElement GetConnectedElement(bool createIfNotExist) {
-            Object associatedObject = tagStructureContext.GetWaitingTagsManager().GetAssociatedObject(this);
-            if (associatedObject == null && createIfNotExist) {
-                associatedObject = new DummyAccessibleElement(GetRole(), GetProperties());
-                tagStructureContext.GetWaitingTagsManager().SaveAssociatedObjectForWaitingTag(associatedObject, GetCurrentStructElem
-                    ());
-            }
-            if (associatedObject is IAccessibleElement) {
-                return (IAccessibleElement)associatedObject;
-            }
-            else {
-                if (associatedObject != null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
-                    // using inline string literal, because this code shall be removed in iText 7.1
-                    logger.Warn("Object associated with the current tag is not IAccessibleElement. " + "This means that new API was used to create such connection and it's recommended to use it (See TagStructureContext#getWaitingTagsManager())."
-                        );
-                }
-                return null;
-            }
         }
 
         /// <summary>Gets accessibility properties of the current tag.</summary>

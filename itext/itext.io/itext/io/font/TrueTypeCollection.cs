@@ -58,12 +58,6 @@ namespace iText.IO.Font {
 
         private bool cached = true;
 
-        /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use TrueTypeCollection(byte[]) instead")]
-        public TrueTypeCollection(byte[] ttc, String encoding)
-            : this(ttc) {
-        }
-
         /// <summary>
         /// Creates a new
         /// <see cref="TrueTypeCollection"/>
@@ -75,12 +69,6 @@ namespace iText.IO.Font {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             this.ttc = ttc;
             InitFontSize();
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use TrueTypeCollection(System.String) instead")]
-        public TrueTypeCollection(String ttcPath, String encoding)
-            : this(ttcPath) {
         }
 
         /// <summary>

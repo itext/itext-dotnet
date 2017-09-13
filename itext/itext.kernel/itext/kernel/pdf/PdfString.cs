@@ -315,25 +315,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Decrypt content of an encrypted
-        /// <c>PdfString</c>
-        /// .
-        /// </summary>
-        [System.ObsoleteAttribute(@"use DecodeContent() or GetValue() methods, they will decrypt bytes if they are encrypted. Will be removed in iText 7.1"
-            )]
-        protected internal virtual iText.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
-            if (decrypt != null) {
-                System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value");
-                byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
-                content = null;
-                decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-                value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null);
-                decryption = null;
-            }
-            return this;
-        }
-
-        /// <summary>
         /// Encrypt content of
         /// <c>value</c>
         /// and set as content.

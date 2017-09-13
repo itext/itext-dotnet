@@ -1339,68 +1339,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Adds file attachment at document level.</summary>
         /// <param name="description">the file description</param>
-        /// <param name="fileStore">an array with the file.</param>
-        /// <param name="fileDisplay">the actual file name stored in the pdf</param>
-        /// <param name="mimeType">mime type of the file</param>
-        /// <param name="fileParameter">the optional extra file parameters such as the creation or modification date</param>
-        /// <param name="afRelationshipValue">
-        /// if
-        /// <see langword="null"/>
-        /// ,
-        /// <see cref="PdfName.Unspecified"/>
-        /// will be added. Shall be one of:
-        /// <see cref="PdfName.Source"/>
-        /// ,
-        /// <see cref="PdfName.Data"/>
-        /// ,
-        /// <see cref="PdfName.Alternative"/>
-        /// ,
-        /// <see cref="PdfName.Supplement"/>
-        /// or
-        /// <see cref="PdfName.Unspecified"/>
-        /// .
-        /// </param>
-        [System.ObsoleteAttribute(@"use AddAssociatedFile(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec) methods. Will be removed in iText 7.1"
-            )]
-        public virtual void AddFileAttachment(String description, byte[] fileStore, String fileDisplay, PdfName mimeType
-            , PdfDictionary fileParameter, PdfName afRelationshipValue) {
-            AddFileAttachment(description, PdfFileSpec.CreateEmbeddedFileSpec(this, fileStore, description, fileDisplay
-                , mimeType, fileParameter, afRelationshipValue));
-        }
-
-        /// <summary>Adds file attachment at document level.</summary>
-        /// <param name="description">the file description</param>
-        /// <param name="file">the path to the file.</param>
-        /// <param name="fileDisplay">the actual file name stored in the pdf</param>
-        /// <param name="mimeType">mime type of the file</param>
-        /// <param name="afRelationshipValue">
-        /// if
-        /// <see langword="null"/>
-        /// ,
-        /// <see cref="PdfName.Unspecified"/>
-        /// will be added. Shall be one of:
-        /// <see cref="PdfName.Source"/>
-        /// ,
-        /// <see cref="PdfName.Data"/>
-        /// ,
-        /// <see cref="PdfName.Alternative"/>
-        /// ,
-        /// <see cref="PdfName.Supplement"/>
-        /// or
-        /// <see cref="PdfName.Unspecified"/>
-        /// .
-        /// </param>
-        /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"use AddAssociatedFile(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec) methods. Will be removed in iText 7.1"
-            )]
-        public virtual void AddFileAttachment(String description, String file, String fileDisplay, PdfName mimeType
-            , PdfName afRelationshipValue) {
-            AddFileAttachment(description, PdfFileSpec.CreateEmbeddedFileSpec(this, file, description, fileDisplay, mimeType
-                , afRelationshipValue));
-        }
-
-        /// <summary>Adds file attachment at document level.</summary>
-        /// <param name="description">the file description</param>
         /// <param name="fs">
         /// 
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
@@ -1554,32 +1492,6 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
             PdfBoolean userPropsVal = userProperties ? PdfBoolean.TRUE : PdfBoolean.FALSE;
             UpdateValueInMarkInfoDict(PdfName.UserProperties, userPropsVal);
-        }
-
-        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
-        /// <remarks>
-        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
-        /// The second one should be the same entry, unless the document has been modified. iText will by default keep thi
-        /// existing initial id. But if you'd like you can set this id yourself using this setter.
-        /// </remarks>
-        /// <param name="initialDocumentId">the new initial document id</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetInitialDocumentId(PdfString) instead"
-            )]
-        public virtual void SetInitialDocumentId(PdfString initialDocumentId) {
-            this.initialDocumentId = initialDocumentId;
-        }
-
-        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
-        /// <remarks>
-        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
-        /// The second one should be the same entry, unless the document has been modified. iText will by default generate
-        /// a modified id. But if you'd like you can set this id yourself using this setter.
-        /// </remarks>
-        /// <param name="modifiedDocumentId">the new modified document id</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetModifiedDocumentId(PdfString) instead"
-            )]
-        public virtual void SetModifiedDocumentId(PdfString modifiedDocumentId) {
-            this.modifiedDocumentId = modifiedDocumentId;
         }
 
         /// <summary>

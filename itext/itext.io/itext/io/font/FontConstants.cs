@@ -89,16 +89,6 @@ namespace iText.IO.Font {
         /// <summary>Italic font style.</summary>
         public const int ITALIC = 2;
 
-        /// <summary>Deprecated.</summary>
-        /// <remarks>Deprecated. Will be removed in 7.1</remarks>
-        [Obsolete]
-        public const int UNDERLINE = 4;
-
-        /// <summary>Deprecated.</summary>
-        /// <remarks>Deprecated. Will be removed in 7.1</remarks>
-        [Obsolete]
-        public const int STRIKETHRU = 8;
-
         /// <summary>Bold-Italic font style.</summary>
         public const int BOLDITALIC = BOLD | ITALIC;
 

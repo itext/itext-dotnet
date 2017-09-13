@@ -45,6 +45,7 @@ using System.IO;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -85,8 +86,8 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
             byte[] somePdf = new byte[25];
-            pdfDocument.AddFileAttachment("some pdf file", somePdf, "foo.pdf", PdfName.ApplicationPdf, null, new PdfName
-                ("Data"));
+            pdfDocument.AddAssociatedFile("some pdf file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, somePdf, "some pdf file"
+                , "foo.pdf", PdfName.ApplicationPdf, null, new PdfName("Data")));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -115,8 +116,8 @@ namespace iText.Pdfa {
             while ((length = fis.JRead(buffer, 0, buffer.Length)) > 0) {
                 os.Write(buffer, 0, length);
             }
-            pdfDocument.AddFileAttachment("some pdf file", os.ToArray(), "foo.pdf", PdfName.ApplicationPdf, null, null
-                );
+            pdfDocument.AddFileAttachment("some pdf file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, os.ToArray(
+                ), "some pdf file", "foo.pdf", PdfName.ApplicationPdf, null, null));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -140,8 +141,8 @@ namespace iText.Pdfa {
                 StreamWriter @out = new StreamWriter(txt);
                 @out.Write("<foo><foo2>Hello world</foo2></foo>");
                 @out.Dispose();
-                pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", PdfName.ApplicationXml, null, PdfName.
-                    Source);
+                pdfDocument.AddFileAttachment("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
+                    , "foo.xml", PdfName.ApplicationXml, null, PdfName.Source));
                 pdfDocument.Close();
             }
             , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType));

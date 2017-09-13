@@ -440,11 +440,6 @@ namespace iText.Kernel.Font {
             subsetRanges.Add(range);
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use SplitString(System.String, float, float) instead")]
-        public virtual IList<String> SplitString(String text, int fontSize, float maxWidth) {
-            return SplitString(text, (float)fontSize, maxWidth);
-        }
-
         public virtual IList<String> SplitString(String text, float fontSize, float maxWidth) {
             IList<String> resultString = new List<String>();
             int lastWhiteSpace = 0;
@@ -507,24 +502,6 @@ namespace iText.Kernel.Font {
 
         protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType) {
             return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic) {
-            return CheckTrueTypeFontDictionary(fontDic, true);
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException) {
-            if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
-                .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {
-                if (isException) {
-                    throw new PdfException(PdfException.DictionaryDoesntHave1FontData).SetMessageParams(PdfName.TrueType.GetValue
-                        ());
-                }
-                return false;
-            }
-            return true;
         }
 
         /// <summary>Creates a unique subset prefix to be added to the font name when the font is embedded and subset.

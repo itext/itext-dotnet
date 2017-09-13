@@ -1107,11 +1107,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        [System.ObsoleteAttribute(@"Method will be removed in 7.1.")]
-        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth) {
-            return countedColumnWidth;
-        }
-
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row) {
             return Split(row, false);
         }

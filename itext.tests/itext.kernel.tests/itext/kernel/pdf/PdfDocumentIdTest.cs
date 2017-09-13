@@ -69,7 +69,7 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument pdfDocument = new PdfDocument(writer);
             String value = "Modified ID 1234";
-            pdfDocument.SetModifiedDocumentId(new PdfString(value));
+            writer.properties.SetModifiedDocumentId(new PdfString(value));
             pdfDocument.AddNewPage();
             pdfDocument.Close();
             byte[] documentBytes = baos.ToArray();

@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -59,48 +58,6 @@ namespace iText.Layout.Renderer {
     /// based on the layout element properties and renderer layout results.
     /// </summary>
     public class AccessibleAttributesApplier {
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDocument doc) {
-            if (!(renderer.GetModelElement() is IAccessibleElement)) {
-                return;
-            }
-            PdfDictionary layoutAttributes = GetLayoutAttributes(renderer, null);
-            if (layoutAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.Layout);
-                properties.AddAttributes(layoutAttributes);
-            }
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyListAttributes(AbstractRenderer renderer) {
-            if (!(renderer.GetModelElement() is List)) {
-                return;
-            }
-            PdfDictionary listAttributes = GetListAttributes(renderer, null);
-            if (listAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.List);
-                properties.AddAttributes(listAttributes);
-            }
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyTableAttributes(AbstractRenderer renderer) {
-            if (!(renderer.GetModelElement() is IAccessibleElement)) {
-                return;
-            }
-            PdfDictionary tableAttributes = GetTableAttributes(renderer, null);
-            if (tableAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.Table);
-                properties.AddAttributes(tableAttributes);
-            }
-        }
-
         public static PdfDictionary GetLayoutAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
             IRoleMappingResolver resolvedMapping = null;
             // TODO remove this null pointer check in iText 7.1
@@ -585,28 +542,6 @@ namespace iText.Layout.Renderer {
                     }
                     break;
                 }
-            }
-        }
-
-        /// <summary>The same layout element instance can be added several times to the document.</summary>
-        /// <remarks>
-        /// The same layout element instance can be added several times to the document.
-        /// In that case it will already have attributes which belong to the previous positioning on the page, and because of
-        /// that we want to remove those old irrelevant attributes.
-        /// </remarks>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        private static void RemoveSameAttributesTypeIfPresent(AccessibilityProperties properties, PdfName attributesType
-            ) {
-            IList<PdfDictionary> attributesList = properties.GetAttributesList();
-            int i;
-            for (i = 0; i < attributesList.Count; i++) {
-                PdfDictionary attr = attributesList[i];
-                if (attributesType.Equals(attr.Get(PdfName.O))) {
-                    break;
-                }
-            }
-            if (i < attributesList.Count) {
-                attributesList.JRemoveAt(i);
             }
         }
     }

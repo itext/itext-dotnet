@@ -163,10 +163,8 @@ namespace iText.IO.Font {
             return CreateFont(null, fontProgram, cached);
         }
 
-        /// <summary>This method is deprecated and will be made private in 7.1</summary>
         /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Use CreateFont(byte[], bool) or CreateFont(System.String, bool)")]
-        public static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
+        private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.GetBaseName(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
@@ -279,24 +277,6 @@ namespace iText.IO.Font {
                 }
             }
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
-        }
-
-        /// <summary>This method is deprecated and will be completely removed in 7.1</summary>
-        /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Use CreateType1Font(byte[], byte[]) or CreateType1Font(System.String, System.String) instead"
-            )]
-        public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool cached) {
-            FontProgram fontProgram;
-            FontCacheKey fontKey = null;
-            if (cached) {
-                fontKey = CreateFontCacheKey(name, afm);
-                fontProgram = FontCache.GetFont(fontKey);
-                if (fontProgram != null) {
-                    return fontProgram;
-                }
-            }
-            fontProgram = new Type1Font(name, null, afm, pfb);
-            return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 
         /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>

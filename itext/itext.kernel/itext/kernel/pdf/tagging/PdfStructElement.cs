@@ -63,89 +63,6 @@ namespace iText.Kernel.Pdf.Tagging {
     /// are structure elements. Structure elements are other structure elements or content items.
     /// </remarks>
     public class PdfStructElement : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static int Unknown = 0;
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static int Grouping = 1;
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static int BlockLevel = 2;
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static int InlineLevel = 3;
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static int Illustration = 4;
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static ICollection<PdfName> groupingRoles = new HashSet<PdfName>();
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static ICollection<PdfName> blockLevelRoles = new HashSet<PdfName>();
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static ICollection<PdfName> inlineLevelRoles = new HashSet<PdfName>();
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        public static ICollection<PdfName> illustrationRoles = new HashSet<PdfName>();
-
-        static PdfStructElement() {
-            groupingRoles.Add(PdfName.Document);
-            groupingRoles.Add(PdfName.Part);
-            groupingRoles.Add(PdfName.Art);
-            groupingRoles.Add(PdfName.Sect);
-            groupingRoles.Add(PdfName.Div);
-            groupingRoles.Add(PdfName.BlockQuote);
-            groupingRoles.Add(PdfName.Caption);
-            groupingRoles.Add(PdfName.Caption);
-            groupingRoles.Add(PdfName.TOC);
-            groupingRoles.Add(PdfName.TOCI);
-            groupingRoles.Add(PdfName.Index);
-            groupingRoles.Add(PdfName.NonStruct);
-            groupingRoles.Add(PdfName.Private);
-            blockLevelRoles.Add(PdfName.P);
-            blockLevelRoles.Add(PdfName.H);
-            blockLevelRoles.Add(PdfName.H1);
-            blockLevelRoles.Add(PdfName.H2);
-            blockLevelRoles.Add(PdfName.H3);
-            blockLevelRoles.Add(PdfName.H4);
-            blockLevelRoles.Add(PdfName.H5);
-            blockLevelRoles.Add(PdfName.H6);
-            blockLevelRoles.Add(PdfName.L);
-            blockLevelRoles.Add(PdfName.Lbl);
-            blockLevelRoles.Add(PdfName.LI);
-            blockLevelRoles.Add(PdfName.LBody);
-            blockLevelRoles.Add(PdfName.Table);
-            blockLevelRoles.Add(PdfName.TR);
-            blockLevelRoles.Add(PdfName.TH);
-            blockLevelRoles.Add(PdfName.TD);
-            blockLevelRoles.Add(PdfName.THead);
-            blockLevelRoles.Add(PdfName.TBody);
-            blockLevelRoles.Add(PdfName.TFoot);
-            inlineLevelRoles.Add(PdfName.Span);
-            inlineLevelRoles.Add(PdfName.Quote);
-            inlineLevelRoles.Add(PdfName.Note);
-            inlineLevelRoles.Add(PdfName.Reference);
-            inlineLevelRoles.Add(PdfName.BibEntry);
-            inlineLevelRoles.Add(PdfName.Code);
-            inlineLevelRoles.Add(PdfName.Link);
-            inlineLevelRoles.Add(PdfName.Annot);
-            inlineLevelRoles.Add(PdfName.Ruby);
-            inlineLevelRoles.Add(PdfName.Warichu);
-            inlineLevelRoles.Add(PdfName.RB);
-            inlineLevelRoles.Add(PdfName.RT);
-            inlineLevelRoles.Add(PdfName.RP);
-            inlineLevelRoles.Add(PdfName.WT);
-            inlineLevelRoles.Add(PdfName.WP);
-            illustrationRoles.Add(PdfName.Figure);
-            illustrationRoles.Add(PdfName.Formula);
-            illustrationRoles.Add(PdfName.Form);
-        }
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        protected internal int type = Unknown;
-
         public PdfStructElement(PdfDictionary pdfObject)
             : base(pdfObject) {
             SetForbidRelease();
@@ -613,36 +530,6 @@ namespace iText.Kernel.Pdf.Tagging {
             return afArray;
         }
 
-        [System.ObsoleteAttribute(@"shall be removed in iText 7.1. Since PDF 2.0, standard role types are not strictly defined based on element's role, but are rather dependent on the role usage, it kids and position in the tree. Moreover, role types might be different for the different standard structure namespaces."
-            )]
-        public static int IdentifyType(PdfDocument doc, PdfName role) {
-            PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
-            if (roleMap.ContainsKey(role)) {
-                role = roleMap.GetAsName(role);
-            }
-            if (groupingRoles.Contains(role)) {
-                return Grouping;
-            }
-            else {
-                if (blockLevelRoles.Contains(role)) {
-                    return BlockLevel;
-                }
-                else {
-                    if (inlineLevelRoles.Contains(role)) {
-                        return InlineLevel;
-                    }
-                    else {
-                        if (illustrationRoles.Contains(role)) {
-                            return Illustration;
-                        }
-                        else {
-                            return Unknown;
-                        }
-                    }
-                }
-            }
-        }
-
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElement Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             SetModified();
@@ -655,15 +542,6 @@ namespace iText.Kernel.Pdf.Tagging {
                 doc.CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
             }
             base.Flush();
-        }
-
-        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
-        protected internal virtual int GetType() {
-            if (type == Unknown) {
-                PdfName role = GetPdfObject().GetAsName(PdfName.S);
-                type = IdentifyType(GetDocument(), role);
-            }
-            return type;
         }
 
         internal static void AddKidObject(PdfDictionary parent, int index, PdfObject kid) {
