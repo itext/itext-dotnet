@@ -61,7 +61,7 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Sets the signatureCreator property in the underlying
-        /// <see cref="PdfSignatureAppDictionary"/>
+        /// <see cref="PdfSignatureApp"/>
         /// dictionary.
         /// </summary>
         /// <param name="name"/>
@@ -71,24 +71,24 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Gets the
-        /// <see cref="PdfSignatureAppDictionary"/>
+        /// <see cref="PdfSignatureApp"/>
         /// from this dictionary. If it
         /// does not exist, it adds a new
-        /// <see cref="PdfSignatureAppDictionary"/>
+        /// <see cref="PdfSignatureApp"/>
         /// and
         /// returns this instance.
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="PdfSignatureAppDictionary"/>
+        /// <see cref="PdfSignatureApp"/>
         /// </returns>
-        private PdfSignatureAppDictionary GetPdfSignatureAppProperty() {
+        private PdfSignatureApp GetPdfSignatureAppProperty() {
             PdfDictionary appPropDic = GetPdfObject().GetAsDictionary(PdfName.App);
             if (appPropDic == null) {
                 appPropDic = new PdfDictionary();
                 GetPdfObject().Put(PdfName.App, appPropDic);
             }
-            return new PdfSignatureAppDictionary(appPropDic);
+            return new PdfSignatureApp(appPropDic);
         }
 
         protected override bool IsWrappedObjectMustBeIndirect() {

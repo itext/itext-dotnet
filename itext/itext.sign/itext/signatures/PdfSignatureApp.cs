@@ -46,15 +46,15 @@ using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
     /// <summary>A dictionary that stores the name of the application that signs the PDF.</summary>
-    public class PdfSignatureAppDictionary : PdfObjectWrapper<PdfDictionary> {
-        /// <summary>Creates a new PdfSignatureAppDictionary</summary>
-        public PdfSignatureAppDictionary()
+    public class PdfSignatureApp : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>Creates a new PdfSignatureApp</summary>
+        public PdfSignatureApp()
             : base(new PdfDictionary()) {
         }
 
-        /// <summary>Creates a new PdfSignatureAppDictionary.</summary>
+        /// <summary>Creates a new PdfSignatureApp.</summary>
         /// <param name="pdfObject">PdfDictionary containing initial values</param>
-        public PdfSignatureAppDictionary(PdfDictionary pdfObject)
+        public PdfSignatureApp(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
