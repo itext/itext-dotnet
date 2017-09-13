@@ -122,7 +122,7 @@ namespace iText.Signatures {
         protected internal bool preClosed = false;
 
         /// <summary>Signature field lock dictionary.</summary>
-        protected internal PdfSigFieldLockDictionary fieldLock;
+        protected internal PdfSigFieldLock fieldLock;
 
         /// <summary>The signature appearance.</summary>
         protected internal PdfSignatureAppearance appearance;
@@ -346,7 +346,7 @@ namespace iText.Signatures {
 
         /// <summary>Getter for the field lock dictionary.</summary>
         /// <returns>Field lock dictionary.</returns>
-        public virtual PdfSigFieldLockDictionary GetFieldLockDict() {
+        public virtual PdfSigFieldLock GetFieldLockDict() {
             return fieldLock;
         }
 
@@ -357,7 +357,7 @@ namespace iText.Signatures {
         /// then its /Lock dictionary takes the precedence (if it exists).</p>
         /// </remarks>
         /// <param name="fieldLock">Field lock dictionary</param>
-        public virtual void SetFieldLockDict(PdfSigFieldLockDictionary fieldLock) {
+        public virtual void SetFieldLockDict(PdfSigFieldLock fieldLock) {
             this.fieldLock = fieldLock;
         }
 
@@ -715,7 +715,7 @@ namespace iText.Signatures {
             String name = GetFieldName();
             bool fieldExist = sgnUtil.DoesSignatureFieldExist(name);
             acroForm.SetSignatureFlags(PdfAcroForm.SIGNATURE_EXIST | PdfAcroForm.APPEND_ONLY);
-            PdfSigFieldLockDictionary fieldLock = null;
+            PdfSigFieldLock fieldLock = null;
             if (cryptoDictionary == null) {
                 throw new PdfException(PdfException.NoCryptoDictionaryDefined);
             }
@@ -996,7 +996,7 @@ namespace iText.Signatures {
         /// This method is only used for signatures that lock fields.
         /// </remarks>
         /// <param name="crypto">the signature dictionary</param>
-        protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLockDictionary fieldLock) {
+        protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLock fieldLock) {
             PdfDictionary reference = new PdfDictionary();
             PdfDictionary transformParams = new PdfDictionary();
             transformParams.PutAll(fieldLock.GetPdfObject());

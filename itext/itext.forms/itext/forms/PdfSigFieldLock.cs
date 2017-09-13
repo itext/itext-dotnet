@@ -51,26 +51,26 @@ namespace iText.Forms {
     /// fields that shall be locked when this signature field is
     /// signed.
     /// </remarks>
-    public class PdfSigFieldLockDictionary : PdfObjectWrapper<PdfDictionary> {
+    public class PdfSigFieldLock : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// Creates an instance of
-        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// <see cref="PdfSigFieldLock"/>
         /// .
         /// </summary>
-        public PdfSigFieldLockDictionary()
+        public PdfSigFieldLock()
             : this(new PdfDictionary()) {
         }
 
         /// <summary>
         /// Creates an instance of
-        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// <see cref="PdfSigFieldLock"/>
         /// .
         /// </summary>
         /// <param name="dict">
         /// The dictionary whose entries should be added to
         /// the signature field lock dictionary.
         /// </param>
-        public PdfSigFieldLockDictionary(PdfDictionary dict)
+        public PdfSigFieldLock(PdfDictionary dict)
             : base(dict) {
             GetPdfObject().Put(PdfName.Type, PdfName.SigFieldLock);
         }
@@ -88,11 +88,11 @@ namespace iText.Forms {
         /// <param name="permissions">The permissions granted for the document.</param>
         /// <returns>
         /// This
-        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// <see cref="PdfSigFieldLock"/>
         /// object.
         /// </returns>
-        public virtual iText.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(PdfSigFieldLockDictionary.LockPermissions
-             permissions) {
+        public virtual iText.Forms.PdfSigFieldLock SetDocumentPermissions(PdfSigFieldLock.LockPermissions permissions
+            ) {
             GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
             return this;
         }
@@ -105,11 +105,11 @@ namespace iText.Forms {
         /// <param name="fields">Names indicating the fields.</param>
         /// <returns>
         /// This
-        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// <see cref="PdfSigFieldLock"/>
         /// object.
         /// </returns>
-        public virtual iText.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction action
-            , params String[] fields) {
+        public virtual iText.Forms.PdfSigFieldLock SetFieldLock(PdfSigFieldLock.LockAction action, params String[]
+             fields) {
             PdfArray fieldsArray = new PdfArray();
             foreach (String field in fields) {
                 fieldsArray.Add(new PdfString(field));
@@ -119,17 +119,17 @@ namespace iText.Forms {
             return this;
         }
 
-        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action) {
+        public static PdfName GetLockActionValue(PdfSigFieldLock.LockAction action) {
             switch (action) {
-                case PdfSigFieldLockDictionary.LockAction.ALL: {
+                case PdfSigFieldLock.LockAction.ALL: {
                     return PdfName.All;
                 }
 
-                case PdfSigFieldLockDictionary.LockAction.INCLUDE: {
+                case PdfSigFieldLock.LockAction.INCLUDE: {
                     return PdfName.Include;
                 }
 
-                case PdfSigFieldLockDictionary.LockAction.EXCLUDE: {
+                case PdfSigFieldLock.LockAction.EXCLUDE: {
                     return PdfName.Exclude;
                 }
 
@@ -139,17 +139,17 @@ namespace iText.Forms {
             }
         }
 
-        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions permissions) {
+        public static PdfNumber GetLockPermission(PdfSigFieldLock.LockPermissions permissions) {
             switch (permissions) {
-                case PdfSigFieldLockDictionary.LockPermissions.NO_CHANGES_ALLOWED: {
+                case PdfSigFieldLock.LockPermissions.NO_CHANGES_ALLOWED: {
                     return new PdfNumber(1);
                 }
 
-                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING: {
+                case PdfSigFieldLock.LockPermissions.FORM_FILLING: {
                     return new PdfNumber(2);
                 }
 
-                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING_AND_ANNOTATION: {
+                case PdfSigFieldLock.LockPermissions.FORM_FILLING_AND_ANNOTATION: {
                     return new PdfNumber(3);
                 }
 
