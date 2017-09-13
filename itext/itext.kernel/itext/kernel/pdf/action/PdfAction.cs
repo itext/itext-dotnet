@@ -209,7 +209,7 @@ namespace iText.Kernel.Pdf.Action {
         /// may have nested target dictionaries specifying additional elements
         /// </param>
         /// <returns>created action</returns>
-        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTargetDictionary
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTarget
              targetDictionary) {
             return CreateGoToE(null, destination, newWindow, targetDictionary);
         }
@@ -228,7 +228,7 @@ namespace iText.Kernel.Pdf.Action {
         /// </param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
-            , bool newWindow, PdfTargetDictionary targetDictionary) {
+            , bool newWindow, PdfTarget targetDictionary) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
                 GoToE).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
             if (fileSpec != null) {
