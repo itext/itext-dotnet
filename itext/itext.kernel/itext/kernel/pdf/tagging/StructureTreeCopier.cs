@@ -196,7 +196,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 if (kid == null) {
                     continue;
                 }
-                PdfDictionary kidObject = ((PdfStructElem)kid).GetPdfObject();
+                PdfDictionary kidObject = ((PdfStructElement)kid).GetPdfObject();
                 if (tops.Contains(kidObject)) {
                     topsInOriginalOrder.Add(kidObject);
                 }
@@ -297,7 +297,7 @@ namespace iText.Kernel.Pdf.Tagging {
              copyingParams) {
             if (kid.IsNumber()) {
                 copyingParams.GetToDocument().GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(new PdfMcrNumber((PdfNumber
-                    )kid, new PdfStructElem(copiedParent)));
+                    )kid, new PdfStructElement(copiedParent)));
                 return kid;
             }
             else {
@@ -313,7 +313,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         else {
                             PdfMcr mcr;
                             if (copiedKid.ContainsKey(PdfName.Obj)) {
-                                mcr = new PdfObjRef(copiedKid, new PdfStructElem(copiedParent));
+                                mcr = new PdfObjRef(copiedKid, new PdfStructElement(copiedParent));
                                 PdfDictionary contentItemObject = copiedKid.GetAsDictionary(PdfName.Obj);
                                 if (PdfName.Link.Equals(contentItemObject.GetAsName(PdfName.Subtype)) && !contentItemObject.ContainsKey(PdfName
                                     .P)) {
@@ -324,7 +324,7 @@ namespace iText.Kernel.Pdf.Tagging {
                                     ()));
                             }
                             else {
-                                mcr = new PdfMcrDictionary(copiedKid, new PdfStructElem(copiedParent));
+                                mcr = new PdfMcrDictionary(copiedKid, new PdfStructElement(copiedParent));
                             }
                             copyingParams.GetToDocument().GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(mcr);
                         }
@@ -382,7 +382,7 @@ namespace iText.Kernel.Pdf.Tagging {
             // kids from both parts at the same time. It would either be cloned as an ancestor later, or not cloned at all.
             // If it's kid is struct elem - it would definitely be structElem from the first part, so we simply call separateKids for it.
             if (!k.IsArray()) {
-                if (k.IsDictionary() && PdfStructElem.IsStructElem((PdfDictionary)k)) {
+                if (k.IsDictionary() && PdfStructElement.IsStructElem((PdfDictionary)k)) {
                     SeparateKids((PdfDictionary)k, firstPartElems, lastCloned, document);
                 }
             }
@@ -394,7 +394,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     if (kid.IsDictionary()) {
                         dictKid = (PdfDictionary)kid;
                     }
-                    if (dictKid != null && PdfStructElem.IsStructElem(dictKid)) {
+                    if (dictKid != null && PdfStructElement.IsStructElem(dictKid)) {
                         if (firstPartElems.Contains(kid)) {
                             SeparateKids((PdfDictionary)kid, firstPartElems, lastCloned, document);
                         }
@@ -407,7 +407,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             if (dictKid.ContainsKey(PdfName.K)) {
                                 CloneParents(structElem, lastCloned, document);
                                 kids.Remove(i--);
-                                PdfStructElem.AddKidObject(lastCloned.clone, -1, kid);
+                                PdfStructElement.AddKidObject(lastCloned.clone, -1, kid);
                             }
                         }
                     }
@@ -417,17 +417,17 @@ namespace iText.Kernel.Pdf.Tagging {
                             PdfMcr mcr;
                             if (dictKid != null) {
                                 if (dictKid.Get(PdfName.Type).Equals(PdfName.MCR)) {
-                                    mcr = new PdfMcrDictionary(dictKid, new PdfStructElem(lastCloned.clone));
+                                    mcr = new PdfMcrDictionary(dictKid, new PdfStructElement(lastCloned.clone));
                                 }
                                 else {
-                                    mcr = new PdfObjRef(dictKid, new PdfStructElem(lastCloned.clone));
+                                    mcr = new PdfObjRef(dictKid, new PdfStructElement(lastCloned.clone));
                                 }
                             }
                             else {
-                                mcr = new PdfMcrNumber((PdfNumber)kid, new PdfStructElem(lastCloned.clone));
+                                mcr = new PdfMcrNumber((PdfNumber)kid, new PdfStructElement(lastCloned.clone));
                             }
                             kids.Remove(i--);
-                            PdfStructElem.AddKidObject(lastCloned.clone, -1, kid);
+                            PdfStructElement.AddKidObject(lastCloned.clone, -1, kid);
                             document.GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(mcr);
                         }
                     }
@@ -455,7 +455,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     currClone = parentClone;
                     currElem = parent;
                 }
-                PdfStructElem.AddKidObject(lastCloned.clone, -1, currClone);
+                PdfStructElement.AddKidObject(lastCloned.clone, -1, currClone);
                 lastCloned.clone = structElemClone;
                 lastCloned.ancestor = structElem;
             }
@@ -464,7 +464,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <returns>the topmost parent added to set. If encountered flushed element - stops and returns this flushed element.
         ///     </returns>
         private static PdfDictionary AddAllParentsToSet(PdfMcr mcr, ICollection<PdfObject> set) {
-            PdfDictionary elem = ((PdfStructElem)mcr.GetParent()).GetPdfObject();
+            PdfDictionary elem = ((PdfStructElement)mcr.GetParent()).GetPdfObject();
             set.Add(elem);
             for (; ; ) {
                 if (elem.IsFlushed()) {

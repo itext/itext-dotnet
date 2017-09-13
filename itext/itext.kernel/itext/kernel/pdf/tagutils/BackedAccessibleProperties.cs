@@ -170,7 +170,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         public override IList<TagTreePointer> GetRefsList() {
             IList<TagTreePointer> refsList = new List<TagTreePointer>();
-            foreach (PdfStructElem @ref in GetBackingElem().GetRefsList()) {
+            foreach (PdfStructElement @ref in GetBackingElem().GetRefsList()) {
                 refsList.Add(new TagTreePointer(@ref, pointerToBackingElem.GetDocument()));
             }
             return JavaCollectionsUtil.UnmodifiableList(refsList);
@@ -181,11 +181,11 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        private PdfStructElem GetBackingElem() {
+        private PdfStructElement GetBackingElem() {
             return pointerToBackingElem.GetCurrentStructElem();
         }
 
-        internal override void SetToStructElem(PdfStructElem elem) {
+        internal override void SetToStructElem(PdfStructElement elem) {
         }
 
         // ignore, because all attributes are directly set to the structElem

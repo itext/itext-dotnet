@@ -76,7 +76,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfDocument document;
 
-        private PdfStructElem rootTagElement;
+        private PdfStructElement rootTagElement;
 
         protected internal TagTreePointer autoTaggingPointer;
 
@@ -460,14 +460,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// otherwise returns null.
         /// </returns>
         public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation) {
-            PdfStructElem structElem = null;
+            PdfStructElement structElem = null;
             PdfDictionary annotDic = annotation.GetPdfObject();
             PdfNumber structParentIndex = (PdfNumber)annotDic.Get(PdfName.StructParent);
             if (structParentIndex != null) {
                 PdfObjRef objRef = document.GetStructTreeRoot().FindObjRefByStructParentIndex(annotDic.GetAsDictionary(PdfName
                     .P), structParentIndex.IntValue());
                 if (objRef != null) {
-                    PdfStructElem parent = (PdfStructElem)objRef.GetParent();
+                    PdfStructElement parent = (PdfStructElement)objRef.GetParent();
                     parent.RemoveKid(objRef);
                     structElem = parent;
                 }
@@ -499,7 +499,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (mcr == null) {
                 return null;
             }
-            PdfStructElem parent = (PdfStructElem)mcr.GetParent();
+            PdfStructElement parent = (PdfStructElement)mcr.GetParent();
             parent.RemoveKid(mcr);
             return new TagTreePointer(document).SetCurrentStructElem(parent);
         }
@@ -603,7 +603,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);
             if (pageMcrs != null) {
                 foreach (PdfMcr mcr in pageMcrs) {
-                    PdfStructElem parent = (PdfStructElem)mcr.GetParent();
+                    PdfStructElement parent = (PdfStructElement)mcr.GetParent();
                     FlushParentIfBelongsToPage(parent, page);
                 }
             }
@@ -636,12 +636,12 @@ namespace iText.Kernel.Pdf.Tagutils {
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
             IRoleMappingResolver mapping = null;
             if (rootKids.Count > 0) {
-                PdfStructElem firstKid = (PdfStructElem)rootKids[0];
+                PdfStructElement firstKid = (PdfStructElement)rootKids[0];
                 mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid.GetNamespace());
             }
             if (rootKids.Count == 1 && mapping != null && mapping.CurrentRoleIsStandard() && IsRoleAllowedToBeRoot(mapping
                 .GetRole())) {
-                rootTagElement = (PdfStructElem)rootKids[0];
+                rootTagElement = (PdfStructElement)rootKids[0];
             }
             else {
                 document.GetStructTreeRoot().GetPdfObject().Remove(PdfName.K);
@@ -676,13 +676,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>
         /// <p>
         /// Gets
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// at which
         /// <see cref="TagTreePointer"/>
         /// points.
         /// </p>
         /// NOTE: Be aware that
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// is a low level class, use it carefully,
         /// especially in conjunction with high level
         /// <see cref="TagTreePointer"/>
@@ -694,17 +694,17 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// a
         /// <see cref="TagTreePointer"/>
         /// which points at desired
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// .
         /// </param>
         /// <returns>
         /// a
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// at which given
         /// <see cref="TagTreePointer"/>
         /// points.
         /// </returns>
-        public virtual PdfStructElem GetPointerStructElem(TagTreePointer pointer) {
+        public virtual PdfStructElement GetPointerStructElem(TagTreePointer pointer) {
             return pointer.GetCurrentStructElem();
         }
 
@@ -712,12 +712,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Creates a new
         /// <see cref="TagTreePointer"/>
         /// which points at given
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// .
         /// </summary>
         /// <param name="structElem">
         /// a
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElement"/>
         /// for which
         /// <see cref="TagTreePointer"/>
         /// will be created.
@@ -727,11 +727,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// .
         /// </returns>
-        public virtual TagTreePointer CreatePointerForStructElem(PdfStructElem structElem) {
+        public virtual TagTreePointer CreatePointerForStructElem(PdfStructElement structElem) {
             return new TagTreePointer(structElem, document);
         }
 
-        internal virtual PdfStructElem GetRootTag() {
+        internal virtual PdfStructElement GetRootTag() {
             if (rootTagElement == null) {
                 NormalizeDocumentRootTag();
             }
@@ -791,7 +791,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void SetNamespaceForNewTagsBasedOnExistingRoot() {
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
             if (rootKids.Count > 0) {
-                PdfStructElem firstKid = (PdfStructElem)rootKids[0];
+                PdfStructElement firstKid = (PdfStructElement)rootKids[0];
                 IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid
                     .GetNamespace());
                 if (resolvedMapping == null || !resolvedMapping.CurrentRoleIsStandard()) {
@@ -852,8 +852,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private void RemovePageTagFromParent(IPdfStructElem pageTag, IPdfStructElem parent) {
-            if (parent is PdfStructElem) {
-                PdfStructElem structParent = (PdfStructElem)parent;
+            if (parent is PdfStructElement) {
+                PdfStructElement structParent = (PdfStructElement)parent;
                 if (!structParent.IsFlushed()) {
                     structParent.RemoveKid(pageTag);
                     PdfDictionary parentStructDict = structParent.GetPdfObject();
@@ -877,7 +877,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         // it is StructTreeRoot
         // should never happen as we always should have only one root tag and we don't remove it
-        private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
+        private void FlushParentIfBelongsToPage(PdfStructElement parent, PdfPage currentPage) {
             if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
                 GetPdfObject() == GetRootTag().GetPdfObject()) {
                 return;
@@ -893,9 +893,9 @@ namespace iText.Kernel.Pdf.Tagutils {
                     }
                 }
                 else {
-                    if (kid is PdfStructElem) {
+                    if (kid is PdfStructElement) {
                         // If kid is structElem and was already flushed then in kids list there will be null for it instead of
-                        // PdfStructElem. And therefore if we get into this if-clause it means that some StructElem wasn't flushed.
+                        // PdfStructElement. And therefore if we get into this if-clause it means that some StructElem wasn't flushed.
                         allKidsBelongToPage = false;
                         break;
                     }
@@ -904,8 +904,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (allKidsBelongToPage) {
                 IPdfStructElem parentsParent = parent.GetParent();
                 parent.Flush();
-                if (parentsParent is PdfStructElem) {
-                    FlushParentIfBelongsToPage((PdfStructElem)parentsParent, currentPage);
+                if (parentsParent is PdfStructElement) {
+                    FlushParentIfBelongsToPage((PdfStructElement)parentsParent, currentPage);
                 }
             }
             return;

@@ -80,11 +80,11 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         // TODO may be remove?
-        public virtual PdfStructElem AddKid(PdfStructElem structElem) {
+        public virtual PdfStructElement AddKid(PdfStructElement structElem) {
             return AddKid(-1, structElem);
         }
 
-        public virtual PdfStructElem AddKid(int index, PdfStructElem structElem) {
+        public virtual PdfStructElement AddKid(int index, PdfStructElement structElem) {
             AddKidObject(index, structElem.GetPdfObject());
             return structElem;
         }
@@ -470,7 +470,7 @@ namespace iText.Kernel.Pdf.Tagging {
             else {
                 GetKidsObject().Add(index, structElem);
             }
-            if (PdfStructElem.IsStructElem(structElem)) {
+            if (PdfStructElement.IsStructElem(structElem)) {
                 if (GetPdfObject().GetIndirectReference() == null) {
                     throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
                         );
@@ -486,9 +486,9 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private void FlushAllKids(IPdfStructElem elem) {
             foreach (IPdfStructElem kid in elem.GetKids()) {
-                if (kid is PdfStructElem && !((PdfStructElem)kid).IsFlushed()) {
+                if (kid is PdfStructElement && !((PdfStructElement)kid).IsFlushed()) {
                     FlushAllKids(kid);
-                    ((PdfStructElem)kid).Flush();
+                    ((PdfStructElement)kid).Flush();
                 }
             }
         }
@@ -498,8 +498,8 @@ namespace iText.Kernel.Pdf.Tagging {
                 kids.Add(null);
             }
             else {
-                if (kid.IsDictionary() && PdfStructElem.IsStructElem((PdfDictionary)kid)) {
-                    kids.Add(new PdfStructElem((PdfDictionary)kid));
+                if (kid.IsDictionary() && PdfStructElement.IsStructElem((PdfDictionary)kid)) {
+                    kids.Add(new PdfStructElement((PdfDictionary)kid));
                 }
             }
         }

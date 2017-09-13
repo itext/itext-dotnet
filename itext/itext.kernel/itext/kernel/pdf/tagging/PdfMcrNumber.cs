@@ -45,11 +45,11 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
     public class PdfMcrNumber : PdfMcr {
-        public PdfMcrNumber(PdfNumber pdfObject, PdfStructElem parent)
+        public PdfMcrNumber(PdfNumber pdfObject, PdfStructElement parent)
             : base(pdfObject, parent) {
         }
 
-        public PdfMcrNumber(PdfPage page, PdfStructElem parent)
+        public PdfMcrNumber(PdfPage page, PdfStructElement parent)
             : base(new PdfNumber(page.GetNextMcid()), parent) {
         }
 

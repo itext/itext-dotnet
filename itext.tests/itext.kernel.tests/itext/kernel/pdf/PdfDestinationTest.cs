@@ -173,7 +173,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "structureDestination01Test.pdf";
             String cmpFile = sourceFolder + "cmp_structureDestination01Test.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
-            PdfStructElem imgElement = new PdfStructElem((PdfDictionary)document.GetPdfObject(13));
+            PdfStructElement imgElement = new PdfStructElement((PdfDictionary)document.GetPdfObject(13));
             PdfStructureDestination dest = PdfStructureDestination.CreateFit(imgElement);
             PdfPage secondPage = document.AddNewPage();
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
@@ -192,7 +192,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "structureDestination02Test.pdf";
             String cmpFile = sourceFolder + "cmp_structureDestination02Test.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
-            PdfStructElem imgElement = new PdfStructElem((PdfDictionary)document.GetPdfObject(13));
+            PdfStructElement imgElement = new PdfStructElement((PdfDictionary)document.GetPdfObject(13));
             PdfStructureDestination dest = PdfStructureDestination.CreateFit(imgElement);
             PdfPage secondPage = document.AddNewPage();
             PdfPage thirdPage = document.AddNewPage();

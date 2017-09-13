@@ -50,13 +50,14 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal int insertIndex;
 
-        protected internal PdfStructElem referencedTag;
+        protected internal PdfStructElement referencedTag;
 
         protected internal PdfName role;
 
         protected internal PdfDictionary properties;
 
-        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer, int insertIndex) {
+        protected internal TagReference(PdfStructElement referencedTag, TagTreePointer tagPointer, int insertIndex
+            ) {
             this.role = referencedTag.GetRole();
             this.referencedTag = referencedTag;
             this.tagPointer = tagPointer;

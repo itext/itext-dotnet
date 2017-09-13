@@ -64,7 +64,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Contains marked content references for every page.
         /// If new mcrs are added to the tag structure, these new mcrs are also added to this map. So for each adding or
         /// removing mcr, register/unregister calls must be made (this is done automatically if addKid or removeKid methods
-        /// of PdfStructElem are used).
+        /// of PdfStructElement are used).
         /// Keys in this map are page references, values - a map which contains all mcrs that belong to the given page.
         /// This inner map of mcrs is of following structure:
         /// * for McrDictionary and McrNumber values the keys are their MCIDs;
@@ -227,7 +227,7 @@ namespace iText.Kernel.Pdf.Tagging {
             // we create new number tree and not using parentTree, because we want parentTree to be empty
             IDictionary<int?, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument().GetCatalog(), 
                 PdfName.ParentTree).GetNumbers();
-            ICollection<PdfStructElem> mcrParents = new HashSet<PdfStructElem>();
+            ICollection<PdfStructElement> mcrParents = new HashSet<PdfStructElement>();
             int maxStructParentIndex = -1;
             foreach (KeyValuePair<int?, PdfObject> entry in parentTreeEntries) {
                 if (entry.Key > maxStructParentIndex) {
@@ -235,7 +235,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 PdfObject entryValue = entry.Value;
                 if (entryValue.IsDictionary()) {
-                    mcrParents.Add(new PdfStructElem((PdfDictionary)entryValue));
+                    mcrParents.Add(new PdfStructElement((PdfDictionary)entryValue));
                 }
                 else {
                     if (entryValue.IsArray()) {
@@ -243,14 +243,14 @@ namespace iText.Kernel.Pdf.Tagging {
                         for (int i = 0; i < parentsArray.Size(); ++i) {
                             PdfDictionary parent = parentsArray.GetAsDictionary(i);
                             if (parent != null) {
-                                mcrParents.Add(new PdfStructElem(parent));
+                                mcrParents.Add(new PdfStructElement(parent));
                             }
                         }
                     }
                 }
             }
             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-            foreach (PdfStructElem mcrParent in mcrParents) {
+            foreach (PdfStructElement mcrParent in mcrParents) {
                 foreach (IPdfStructElem kid in mcrParent.GetKids()) {
                     if (kid is PdfMcr) {
                         RegisterMcr((PdfMcr)kid, true);
@@ -266,7 +266,7 @@ namespace iText.Kernel.Pdf.Tagging {
             int currentMcid = 0;
             foreach (KeyValuePair<int, PdfMcr> entry in mcrs) {
                 PdfMcr mcr = entry.Value;
-                PdfDictionary parentObj = ((PdfStructElem)mcr.GetParent()).GetPdfObject();
+                PdfDictionary parentObj = ((PdfStructElement)mcr.GetParent()).GetPdfObject();
                 if (!parentObj.IsIndirect()) {
                     continue;
                 }

@@ -48,16 +48,16 @@ using iText.Kernel.Pdf.Annot;
 
 namespace iText.Kernel.Pdf.Tagging {
     public class PdfObjRef : PdfMcr {
-        public PdfObjRef(PdfDictionary pdfObject, PdfStructElem parent)
+        public PdfObjRef(PdfDictionary pdfObject, PdfStructElement parent)
             : base(pdfObject, parent) {
         }
 
         [Obsolete]
-        public PdfObjRef(PdfAnnotation annot, PdfStructElem parent)
+        public PdfObjRef(PdfAnnotation annot, PdfStructElement parent)
             : this(annot, parent, (int)GetDocEnsureIndirect(parent).GetNextStructParentIndex()) {
         }
 
-        public PdfObjRef(PdfAnnotation annot, PdfStructElem parent, int nextStructParentIndex)
+        public PdfObjRef(PdfAnnotation annot, PdfStructElement parent, int nextStructParentIndex)
             : base(new PdfDictionary(), parent) {
             annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber(nextStructParentIndex));
             annot.SetModified();
@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Obj);
         }
 
-        private static PdfDocument GetDocEnsureIndirect(PdfStructElem structElem) {
+        private static PdfDocument GetDocEnsureIndirect(PdfStructElement structElem) {
             PdfIndirectReference indRef = structElem.GetPdfObject().GetIndirectReference();
             if (indRef == null) {
                 throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren

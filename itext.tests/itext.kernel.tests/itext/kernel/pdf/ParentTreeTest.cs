@@ -71,14 +71,15 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest01.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             PdfPage firstPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(firstPage);
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, firstPage));
+            PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+            PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, firstPage));
             canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(firstPage, span1))));
             canvas.ShowText("Hello ");
             canvas.CloseTag();
@@ -100,15 +101,16 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest02.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             PdfPage firstPage = document.AddNewPage();
             PdfPage secondPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(secondPage);
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, secondPage));
+            PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+            PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, secondPage));
             canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(secondPage, span1))));
             canvas.ShowText("Hello ");
             canvas.CloseTag();
@@ -129,7 +131,8 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest03.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             PdfPage firstPage = document.AddNewPage();
             for (int i = 0; i < 51; i++) {
                 PdfPage anotherPage = document.AddNewPage();
@@ -137,8 +140,8 @@ namespace iText.Kernel.Pdf {
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
                 canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-                PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, anotherPage));
+                PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+                PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, anotherPage));
                 canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(anotherPage, span1))));
                 canvas.ShowText("Hello ");
                 canvas.CloseTag();
@@ -160,15 +163,16 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest04.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             for (int i = 0; i < 51; i++) {
                 PdfPage anotherPage = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(anotherPage);
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
                 canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-                PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, anotherPage));
+                PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+                PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, anotherPage));
                 canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(anotherPage, span1))));
                 canvas.ShowText("Hello ");
                 canvas.CloseTag();
@@ -190,14 +194,15 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest05.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
+            PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+            PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, page1));
             canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(page1, span1))));
             canvas.ShowText("Hello ");
             canvas.CloseTag();
@@ -211,12 +216,12 @@ namespace iText.Kernel.Pdf {
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-            paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-            span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
+            paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+            span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, page2));
             canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(page2, span1))));
             canvas.ShowText("Hello ");
             canvas.CloseTag();
-            PdfStructElem span2 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
+            PdfStructElement span2 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, page2));
             canvas.OpenTag(new CanvasTag(span2.AddKid(new PdfMcrNumber(page2, span2))));
             canvas.ShowText("World");
             canvas.CloseTag();
@@ -234,14 +239,15 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_parentTreeTest06.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(outFile));
             document.SetTagged();
-            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfStructElement doc = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document
+                ));
             PdfPage firstPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(firstPage);
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
-            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, firstPage));
+            PdfStructElement paragraph = doc.AddKid(new PdfStructElement(document, PdfName.P));
+            PdfStructElement span1 = paragraph.AddKid(new PdfStructElement(document, PdfName.Span, firstPage));
             canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(firstPage, span1))));
             canvas.ShowText("Hello ");
             canvas.CloseTag();
