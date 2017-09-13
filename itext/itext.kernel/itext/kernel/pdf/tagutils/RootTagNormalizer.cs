@@ -8,18 +8,18 @@ namespace iText.Kernel.Pdf.Tagutils {
     internal class RootTagNormalizer {
         private TagStructureContext context;
 
-        private PdfStructElement rootTagElement;
+        private PdfStructElem rootTagElement;
 
         private PdfDocument document;
 
-        internal RootTagNormalizer(TagStructureContext context, PdfStructElement rootTagElement, PdfDocument document
+        internal RootTagNormalizer(TagStructureContext context, PdfStructElem rootTagElement, PdfDocument document
             ) {
             this.context = context;
             this.rootTagElement = rootTagElement;
             this.document = document;
         }
 
-        internal virtual PdfStructElement MakeSingleStandardRootTag(IList<IStructureNode> rootKids) {
+        internal virtual PdfStructElem MakeSingleStandardRootTag(IList<IStructureNode> rootKids) {
             document.GetStructTreeRoot().MakeIndirect(document);
             if (rootTagElement == null) {
                 CreateNewRootTag();
@@ -40,7 +40,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (mapping == null || mapping.CurrentRoleIsStandard() && !PdfName.Document.Equals(mapping.GetRole())) {
                 LogCreatedRootTagHasMappingIssue(docDefaultNs, mapping);
             }
-            rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElement(document, PdfName.Document));
+            rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             if (context.TargetTagStructureVersionIs2()) {
                 rootTagElement.SetNamespace(docDefaultNs);
                 context.EnsureNamespaceRegistered(docDefaultNs);
@@ -75,7 +75,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             bool isBeforeOriginalRoot = true;
             foreach (IStructureNode elem in rootKids) {
                 // StructTreeRoot kids are always PdfStructElement, so we are save here to cast it
-                PdfStructElement kid = (PdfStructElement)elem;
+                PdfStructElem kid = (PdfStructElem)elem;
                 if (kid.GetPdfObject() == rootTagElement.GetPdfObject()) {
                     isBeforeOriginalRoot = false;
                     continue;
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void WrapAllKidsInTag(PdfStructElement parent, PdfName wrapTagRole, PdfNamespace wrapTagNs) {
+        private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole, PdfNamespace wrapTagNs) {
             int kidsNum = parent.GetKids().Count;
             TagTreePointer tagPointer = new TagTreePointer(parent, document);
             tagPointer.AddTag(0, wrapTagRole);
@@ -117,7 +117,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void RemoveOldRoot(PdfStructElement oldRoot) {
+        private void RemoveOldRoot(PdfStructElem oldRoot) {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetCurrentStructElem(oldRoot).RemoveTag();
         }

@@ -47,9 +47,9 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
     public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IStructureNode {
-        protected internal PdfStructElement parent;
+        protected internal PdfStructElem parent;
 
-        protected internal PdfMcr(PdfObject pdfObject, PdfStructElement parent)
+        protected internal PdfMcr(PdfObject pdfObject, PdfStructElem parent)
             : base(pdfObject) {
             this.parent = parent;
         }

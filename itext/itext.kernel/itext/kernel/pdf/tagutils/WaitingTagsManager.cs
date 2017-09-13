@@ -22,12 +22,12 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// Waiting state could also be perceived as a temporal association of the object to some particular tag.
     /// </remarks>
     public class WaitingTagsManager {
-        private IDictionary<Object, PdfStructElement> associatedObjToWaitingTag;
+        private IDictionary<Object, PdfStructElem> associatedObjToWaitingTag;
 
         private IDictionary<PdfDictionary, Object> waitingTagToAssociatedObj;
 
         internal WaitingTagsManager() {
-            associatedObjToWaitingTag = new Dictionary<Object, PdfStructElement>();
+            associatedObjToWaitingTag = new Dictionary<Object, PdfStructElem>();
             waitingTagToAssociatedObj = new Dictionary<PdfDictionary, Object>();
         }
 
@@ -107,7 +107,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (associatedObject == null) {
                 return false;
             }
-            PdfStructElement waitingStructElem = associatedObjToWaitingTag.Get(associatedObject);
+            PdfStructElem waitingStructElem = associatedObjToWaitingTag.Get(associatedObject);
             if (waitingStructElem != null) {
                 tagPointer.SetCurrentStructElem(waitingStructElem);
                 return true;
@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>true if object was actually associated with some tag and it's association was removed.</returns>
         public virtual bool RemoveWaitingState(Object associatedObject) {
             if (associatedObject != null) {
-                PdfStructElement structElem = associatedObjToWaitingTag.JRemove(associatedObject);
+                PdfStructElem structElem = associatedObjToWaitingTag.JRemove(associatedObject);
                 RemoveWaitingStateAndFlushIfParentFlushed(structElem);
                 return structElem != null;
             }
@@ -163,13 +163,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// will be also immediately flushed right after the waiting state removal.</p>
         /// </remarks>
         public virtual void RemoveAllWaitingStates() {
-            foreach (PdfStructElement structElem in associatedObjToWaitingTag.Values) {
+            foreach (PdfStructElem structElem in associatedObjToWaitingTag.Values) {
                 RemoveWaitingStateAndFlushIfParentFlushed(structElem);
             }
             associatedObjToWaitingTag.Clear();
         }
 
-        internal virtual PdfStructElement GetStructForObj(Object associatedObj) {
+        internal virtual PdfStructElem GetStructForObj(Object associatedObj) {
             return associatedObjToWaitingTag.Get(associatedObj);
         }
 
@@ -177,14 +177,13 @@ namespace iText.Kernel.Pdf.Tagutils {
             return waitingTagToAssociatedObj.Get(structDict);
         }
 
-        internal virtual Object SaveAssociatedObjectForWaitingTag(Object associatedObj, PdfStructElement structElem
-            ) {
+        internal virtual Object SaveAssociatedObjectForWaitingTag(Object associatedObj, PdfStructElem structElem) {
             associatedObjToWaitingTag.Put(associatedObj, structElem);
             return waitingTagToAssociatedObj.Put(structElem.GetPdfObject(), associatedObj);
         }
 
         /// <returns>parent of the flushed tag</returns>
-        internal virtual IStructureNode FlushTag(PdfStructElement tagStruct) {
+        internal virtual IStructureNode FlushTag(PdfStructElem tagStruct) {
             Object associatedObj = waitingTagToAssociatedObj.JRemove(tagStruct.GetPdfObject());
             if (associatedObj != null) {
                 associatedObjToWaitingTag.JRemove(associatedObj);
@@ -194,23 +193,23 @@ namespace iText.Kernel.Pdf.Tagutils {
             return parent;
         }
 
-        private void FlushStructElementAndItKids(PdfStructElement elem) {
+        private void FlushStructElementAndItKids(PdfStructElem elem) {
             if (waitingTagToAssociatedObj.ContainsKey(elem.GetPdfObject())) {
                 return;
             }
             foreach (IStructureNode kid in elem.GetKids()) {
-                if (kid is PdfStructElement) {
-                    FlushStructElementAndItKids((PdfStructElement)kid);
+                if (kid is PdfStructElem) {
+                    FlushStructElementAndItKids((PdfStructElem)kid);
                 }
             }
             elem.Flush();
         }
 
-        private void RemoveWaitingStateAndFlushIfParentFlushed(PdfStructElement structElem) {
+        private void RemoveWaitingStateAndFlushIfParentFlushed(PdfStructElem structElem) {
             if (structElem != null) {
                 waitingTagToAssociatedObj.JRemove(structElem.GetPdfObject());
                 IStructureNode parent = structElem.GetParent();
-                if (parent is PdfStructElement && ((PdfStructElement)parent).IsFlushed()) {
+                if (parent is PdfStructElem && ((PdfStructElem)parent).IsFlushed()) {
                     FlushStructElementAndItKids(structElem);
                 }
             }

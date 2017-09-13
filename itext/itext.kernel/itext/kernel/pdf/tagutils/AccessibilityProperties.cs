@@ -170,7 +170,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        internal virtual void SetToStructElem(PdfStructElement elem) {
+        internal virtual void SetToStructElem(PdfStructElem elem) {
             if (GetActualText() != null) {
                 elem.SetActualText(new PdfString(GetActualText(), PdfEncodings.UNICODE_BIG));
             }

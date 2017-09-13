@@ -227,7 +227,7 @@ namespace iText.Kernel.Pdf.Tagging {
             // we create new number tree and not using parentTree, because we want parentTree to be empty
             IDictionary<int?, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument().GetCatalog(), 
                 PdfName.ParentTree).GetNumbers();
-            ICollection<PdfStructElement> mcrParents = new HashSet<PdfStructElement>();
+            ICollection<PdfStructElem> mcrParents = new HashSet<PdfStructElem>();
             int maxStructParentIndex = -1;
             foreach (KeyValuePair<int?, PdfObject> entry in parentTreeEntries) {
                 if (entry.Key > maxStructParentIndex) {
@@ -235,7 +235,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 PdfObject entryValue = entry.Value;
                 if (entryValue.IsDictionary()) {
-                    mcrParents.Add(new PdfStructElement((PdfDictionary)entryValue));
+                    mcrParents.Add(new PdfStructElem((PdfDictionary)entryValue));
                 }
                 else {
                     if (entryValue.IsArray()) {
@@ -243,14 +243,14 @@ namespace iText.Kernel.Pdf.Tagging {
                         for (int i = 0; i < parentsArray.Size(); ++i) {
                             PdfDictionary parent = parentsArray.GetAsDictionary(i);
                             if (parent != null) {
-                                mcrParents.Add(new PdfStructElement(parent));
+                                mcrParents.Add(new PdfStructElem(parent));
                             }
                         }
                     }
                 }
             }
             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-            foreach (PdfStructElement mcrParent in mcrParents) {
+            foreach (PdfStructElem mcrParent in mcrParents) {
                 foreach (IStructureNode kid in mcrParent.GetKids()) {
                     if (kid is PdfMcr) {
                         RegisterMcr((PdfMcr)kid, true);
@@ -266,7 +266,7 @@ namespace iText.Kernel.Pdf.Tagging {
             int currentMcid = 0;
             foreach (KeyValuePair<int, PdfMcr> entry in mcrs) {
                 PdfMcr mcr = entry.Value;
-                PdfDictionary parentObj = ((PdfStructElement)mcr.GetParent()).GetPdfObject();
+                PdfDictionary parentObj = ((PdfStructElem)mcr.GetParent()).GetPdfObject();
                 if (!parentObj.IsIndirect()) {
                     continue;
                 }

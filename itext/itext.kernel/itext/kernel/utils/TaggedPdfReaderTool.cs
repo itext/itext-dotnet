@@ -134,8 +134,8 @@ namespace iText.Kernel.Utils {
 
         protected internal virtual void InspectKid(IStructureNode kid) {
             try {
-                if (kid is PdfStructElement) {
-                    PdfStructElement structElemKid = (PdfStructElement)kid;
+                if (kid is PdfStructElem) {
+                    PdfStructElem structElemKid = (PdfStructElem)kid;
                     PdfName s = structElemKid.GetRole();
                     String tagN = s.GetValue();
                     String tag = FixTagName(tagN);
@@ -168,7 +168,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        protected internal virtual void InspectAttributes(PdfStructElement kid) {
+        protected internal virtual void InspectAttributes(PdfStructElem kid) {
             PdfObject attrObj = kid.GetAttributes(false);
             if (attrObj != null) {
                 PdfDictionary attrDict;

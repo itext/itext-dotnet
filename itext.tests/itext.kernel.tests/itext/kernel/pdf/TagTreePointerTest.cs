@@ -298,9 +298,9 @@ namespace iText.Kernel.Pdf {
             TagStructureContext tagStructure = document.GetTagStructureContext();
             tagStructure.FlushPageTags(document.GetPage(1));
             IList<IStructureNode> kids = document.GetStructTreeRoot().GetKids();
-            NUnit.Framework.Assert.IsTrue(!((PdfStructElement)kids[0]).GetPdfObject().IsFlushed());
-            NUnit.Framework.Assert.IsTrue(!((PdfStructElement)kids[0].GetKids()[0]).GetPdfObject().IsFlushed());
-            PdfArray rowsTags = (PdfArray)((PdfStructElement)kids[0].GetKids()[0]).GetK();
+            NUnit.Framework.Assert.IsTrue(!((PdfStructElem)kids[0]).GetPdfObject().IsFlushed());
+            NUnit.Framework.Assert.IsTrue(!((PdfStructElem)kids[0].GetKids()[0]).GetPdfObject().IsFlushed());
+            PdfArray rowsTags = (PdfArray)((PdfStructElem)kids[0].GetKids()[0]).GetK();
             NUnit.Framework.Assert.IsTrue(rowsTags.Get(0).IsFlushed());
             document.Close();
             CompareResult("tagStructureFlushingTest02.pdf", "taggedDocument.pdf", "diffFlushing02_");
