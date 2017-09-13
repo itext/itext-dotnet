@@ -834,7 +834,7 @@ namespace iText.Kernel.Pdf {
             return structTreeRoot != null;
         }
 
-        public virtual void SetTagged() {
+        public virtual iText.Kernel.Pdf.PdfDocument SetTagged() {
             CheckClosingStatus();
             if (structTreeRoot == null) {
                 structTreeRoot = new PdfStructTreeRoot(this);
@@ -842,6 +842,7 @@ namespace iText.Kernel.Pdf {
                 UpdateValueInMarkInfoDict(PdfName.Marked, PdfBoolean.TRUE);
                 structParentIndex = 0;
             }
+            return this;
         }
 
         /// <summary>
