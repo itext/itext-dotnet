@@ -638,18 +638,6 @@ namespace iText.Layout {
             return SetUnderline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
-        /// <summary>
-        /// This attribute specifies the base direction of directionally neutral text
-        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
-        /// in an element's content and attribute values.
-        /// </summary>
-        /// <param name="baseDirection">base direction</param>
-        /// <returns>this element</returns>
-        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            return SetBaseDirection((BaseDirection?)baseDirection);
-        }
-
         /// <summary>Sets default underline attributes for text.</summary>
         /// <remarks>
         /// Sets default underline attributes for text.
