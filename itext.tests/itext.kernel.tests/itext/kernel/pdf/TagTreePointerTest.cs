@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -527,7 +528,8 @@ namespace iText.Kernel.Pdf {
                 properties.AddAttributes(10, testAttrDict);
                 NUnit.Framework.Assert.Fail();
             }
-            catch (ArgumentOutOfRangeException) {
+            catch (Exception e) {
+                NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             document.Close();
             CompareResult("accessibleAttributesInsertionTest01.pdf", "cmp_accessibleAttributesInsertionTest01.pdf", "diffAttributes01_"
@@ -629,7 +631,8 @@ namespace iText.Kernel.Pdf {
                 // 1 attribute array
                 NUnit.Framework.Assert.Fail();
             }
-            catch (ArgumentOutOfRangeException) {
+            catch (Exception e) {
+                NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             pointer.MoveToRoot();
             try {
@@ -637,7 +640,8 @@ namespace iText.Kernel.Pdf {
                 // 3 attributes
                 NUnit.Framework.Assert.Fail();
             }
-            catch (ArgumentOutOfRangeException) {
+            catch (Exception e) {
+                NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             pointer.MoveToRoot();
             try {
@@ -646,14 +650,16 @@ namespace iText.Kernel.Pdf {
                 // 1 attribute dictionary
                 NUnit.Framework.Assert.Fail();
             }
-            catch (ArgumentOutOfRangeException) {
+            catch (Exception e) {
+                NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             try {
                 pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(5, testAttrDict);
                 // no attributes
                 NUnit.Framework.Assert.Fail();
             }
-            catch (IndexOutOfRangeException) {
+            catch (Exception e) {
+                NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             document.Close();
             CompareResult("accessibleAttributesInsertionTest05.pdf", "cmp_accessibleAttributesInsertionTest05.pdf", "diffAttributes05_"
