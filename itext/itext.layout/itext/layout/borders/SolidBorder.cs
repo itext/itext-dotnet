@@ -72,7 +72,7 @@ namespace iText.Layout.Borders {
 
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
-            return Border.SOLID;
+            return SOLID;
         }
 
         /// <summary><inheritDoc/></summary>

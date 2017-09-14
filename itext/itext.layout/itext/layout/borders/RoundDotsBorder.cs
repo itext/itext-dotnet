@@ -80,7 +80,7 @@ namespace iText.Layout.Borders {
 
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
-            return Border.ROUND_DOTS;
+            return ROUND_DOTS;
         }
 
         /// <summary><inheritDoc/></summary>
