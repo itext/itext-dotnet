@@ -47,7 +47,7 @@ namespace iText.IO.Font {
 
         private int unitsPerEm = 1000;
 
-        private int maxGlyphId;
+        private int numOfGlyphs;
 
         private int[] glyphWidths;
 
@@ -128,8 +128,8 @@ namespace iText.IO.Font {
             return unitsPerEm;
         }
 
-        public virtual int GetMaxGlyphId() {
-            return maxGlyphId;
+        public virtual int GetNumberOfGlyphs() {
+            return numOfGlyphs;
         }
 
         public virtual int[] GetGlyphWidths() {
@@ -247,8 +247,8 @@ namespace iText.IO.Font {
             bbox[3] = (int)(ury * normalizationCoef);
         }
 
-        protected internal virtual void SetMaxGlyphId(int maxGlyphId) {
-            this.maxGlyphId = maxGlyphId;
+        protected internal virtual void SetNumberOfGlyphs(int numOfGlyphs) {
+            this.numOfGlyphs = numOfGlyphs;
         }
 
         protected internal virtual void SetGlyphWidths(int[] glyphWidths) {

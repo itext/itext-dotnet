@@ -845,14 +845,14 @@ namespace iText.Kernel.Font {
                         GetPdfObject().Put(PdfName.BaseFont, new PdfName(fontName));
                         fontDescriptor.Put(PdfName.FontFile2, fontStream);
                     }
-                    // CIDSet shall be based on font.maxGlyphId property of the font, it is maxp.numGlyphs for ttf,
+                    // CIDSet shall be based on font.numberOfGlyphs property of the font, it is maxp.numGlyphs for ttf,
                     // because technically we convert all unused glyphs to space, e.g. just remove outlines.
-                    int maxGlyphId = ttf.GetFontMetrics().GetMaxGlyphId();
-                    byte[] cidSetBytes = new byte[ttf.GetFontMetrics().GetMaxGlyphId() / 8 + 1];
-                    for (int i = 0; i < maxGlyphId / 8; i++) {
+                    int numOfGlyphs = ttf.GetFontMetrics().GetNumberOfGlyphs();
+                    byte[] cidSetBytes = new byte[ttf.GetFontMetrics().GetNumberOfGlyphs() / 8 + 1];
+                    for (int i = 0; i < numOfGlyphs / 8; i++) {
                         cidSetBytes[i] |= 0xff;
                     }
-                    for (int i = 0; i < maxGlyphId % 8; i++) {
+                    for (int i = 0; i < numOfGlyphs % 8; i++) {
                         cidSetBytes[cidSetBytes.Length - 1] |= rotbits[i];
                     }
                     fontDescriptor.Put(PdfName.CIDSet, new PdfStream(cidSetBytes));

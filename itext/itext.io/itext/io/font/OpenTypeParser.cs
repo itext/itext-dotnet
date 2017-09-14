@@ -572,7 +572,7 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hmtx");
                 }
             }
-            glyphWidthsByIndex = new int[Math.Max(ReadMaxGlyphId(), numberOfHMetrics)];
+            glyphWidthsByIndex = new int[ReadNumGlyphs()];
             raf.Seek(table_location[0]);
             for (int k = 0; k < numberOfHMetrics; ++k) {
                 glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
@@ -695,7 +695,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual int ReadMaxGlyphId() {
+        protected internal virtual int ReadNumGlyphs() {
             int[] table_location = tables.Get("maxp");
             if (table_location == null) {
                 return 65536;
