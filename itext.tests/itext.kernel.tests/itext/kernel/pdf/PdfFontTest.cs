@@ -1136,6 +1136,26 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-444")]
+        public virtual void SourceHanSerifKRRegularTest() {
+            String filename = destinationFolder + "SourceHanSerifKRRegularTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf", "Identity-H");
+            //font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
+                ("\ube48\uc9d1").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
             TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc");
