@@ -111,7 +111,8 @@ namespace iText.Layout.Renderer {
                 waitingDrawingElements.Add(resultRenderer);
                 return;
             }
-            if (!resultRenderer.IsFlushed()) {
+            if (!resultRenderer.IsFlushed() && null != resultRenderer.GetOccupiedArea()) {
+                // TODO Remove checking occupied area to be not null when DEVSIX-1001 is resolved.
                 int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
                 PdfDocument pdfDocument = document.GetPdfDocument();
                 EnsureDocumentHasNPages(pageNum, null);
