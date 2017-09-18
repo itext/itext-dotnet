@@ -157,6 +157,8 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
+            float[] paddings = GetPaddings();
+            ApplyPaddings(layoutBox, paddings, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox
                 ().GetWidth());
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
@@ -310,6 +312,7 @@ namespace iText.Layout.Renderer {
                     // check if line height exceeds the allowed height
                     if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight() && (null == overflowY ||
                          OverflowPropertyValue.FIT.Equals(overflowY))) {
+                        ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                         ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                         ApplyMargins(occupiedArea.GetBBox(), margins, true);
                         // Force to place what we can
@@ -411,6 +414,7 @@ namespace iText.Layout.Renderer {
             if (currentLineHeight > layoutBox.GetHeight()) {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (null == overflowY || OverflowPropertyValue
                     .FIT.Equals(overflowY))) {
+                    ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
                     return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
@@ -426,6 +430,7 @@ namespace iText.Layout.Renderer {
             layoutBox.SetHeight(area.GetBBox().GetHeight() - currentLineHeight);
             occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + italicSkewAddition + boldSimulationAddition
                 );
+            ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (result == null) {
@@ -563,6 +568,7 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), false);
             ApplyBorderBox(occupiedArea.GetBBox(), false);
+            ApplyPaddings(occupiedArea.GetBBox(), GetPaddings(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
@@ -659,7 +665,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_693();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_700();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -713,6 +719,7 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
+            ApplyPaddings(occupiedArea.GetBBox(), true);
             ApplyBorderBox(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);
             if (modelElementIsAccessible) {
@@ -723,8 +730,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_693 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_693() {
+        private sealed class _IGlyphLineFilter_700 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_700() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1107,7 +1114,7 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     // process empty renderers because they can have borders or paddings with background to be drawn
-                    if (null != strToBeConverted && String.IsNullOrEmpty(strToBeConverted)) {
+                    if (null == strToBeConverted || String.IsNullOrEmpty(strToBeConverted)) {
                         addTo.Add(this);
                     }
                     else {
