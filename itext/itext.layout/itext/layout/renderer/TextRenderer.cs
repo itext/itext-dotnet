@@ -1106,12 +1106,18 @@ namespace iText.Layout.Renderer {
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
-                    while (!strategy.EndOfText()) {
-                        GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
-                        PdfFont currentFont = strategy.GetCurrentFont();
-                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont
-                            ), currentFont);
-                        addTo.Add(textRenderer);
+                    // process empty renderers because they can have borders or paddings with background to be drawn
+                    if (null != strToBeConverted && String.IsNullOrEmpty(strToBeConverted)) {
+                        addTo.Add(this);
+                    }
+                    else {
+                        while (!strategy.EndOfText()) {
+                            GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
+                            PdfFont currentFont = strategy.GetCurrentFont();
+                            iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont
+                                ), currentFont);
+                            addTo.Add(textRenderer);
+                        }
                     }
                     return true;
                 }
@@ -1256,8 +1262,10 @@ namespace iText.Layout.Renderer {
                 }
                 catch (InvalidCastException) {
                     font = ResolveFirstPdfFont();
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                    logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                    if (!String.IsNullOrEmpty(strToBeConverted)) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                        logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                    }
                 }
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
