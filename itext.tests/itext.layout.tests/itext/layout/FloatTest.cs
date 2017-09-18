@@ -1035,5 +1035,86 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff14_"));
         }
+
+        /// <summary>Suggested by Richard Cohn.</summary>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatRootElementNotFitPage01() {
+            String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage01.pdf";
+            String outFile = destinationFolder + "floatRootElementNotFitPage01.pdf";
+            //Initialize PDF writer
+            PdfWriter writer = new PdfWriter(outFile);
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(writer);
+            pdf.SetDefaultPageSize(new PageSize(600, 350));
+            pdf.SetTagged();
+            // Initialize document
+            Document document = new Document(pdf);
+            // Document layout is correct if COLLAPSING_MARGINS is not true
+            document.SetProperty(Property.COLLAPSING_MARGINS, true);
+            document.Add(new Paragraph("Some text\nSome text\nSome text\nSome text\nSome text\nSome text"));
+            byte[] data = new byte[1];
+            ImageData raw = ImageDataFactory.Create(1, 1, 1, 8, data, null);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(raw).SetHeight(200);
+            Div div = new Div();
+            div.Add(image);
+            Div captionDiv = new Div();
+            captionDiv.Add(new Paragraph("Caption line 1\n").Add("line 2"));
+            div.Add(captionDiv);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            //div.setKeepTogether(true);
+            document.Add(div);
+            document.Add(new Paragraph("After float"));
+            document.Add(new List(ListNumberingType.DECIMAL).Add("Some text\nSome text\nSome text\nSome text").Add("Some text\nSome text\nSome text"
+                ).Add("Some text\nSome text").Add("Some text\nSome text"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff15_"));
+        }
+
+        /// <summary>Suggested by Richard Cohn.</summary>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatRootElementNotFitPage02() {
+            String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage02.pdf";
+            String outFile = destinationFolder + "floatRootElementNotFitPage02.pdf";
+            //Initialize PDF writer
+            PdfWriter writer = new PdfWriter(outFile);
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(writer);
+            pdf.SetDefaultPageSize(new PageSize(600, 350));
+            pdf.SetTagged();
+            // Initialize document
+            Document document = new Document(pdf);
+            // Document layout is correct if COLLAPSING_MARGINS is not true
+            document.SetProperty(Property.COLLAPSING_MARGINS, true);
+            document.Add(new Paragraph("Some text\nSome text\nSome text\nSome text\nSome text\nSome text\nSome text"));
+            byte[] data = new byte[1];
+            ImageData raw = ImageDataFactory.Create(1, 1, 1, 8, data, null);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(raw).SetHeight(200);
+            Div div = new Div();
+            div.Add(image);
+            Div captionDiv = new Div();
+            captionDiv.Add(new Paragraph("Caption line 1\n").Add("line 2"));
+            div.Add(captionDiv);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.SetKeepTogether(true);
+            //document.add(div);
+            div = new Div();
+            image = new iText.Layout.Element.Image(raw).SetHeight(200);
+            div.Add(image);
+            div.Add(captionDiv);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            div.SetKeepTogether(true);
+            document.Add(div);
+            document.Add(new Paragraph("After float").SetKeepWithNext(true));
+            document.Add(new List(ListNumberingType.DECIMAL).Add("List text\nList text\nList text\nList text").Add("List text\nList text\nList text"
+                ).Add("List text\nList text").Add("List text\nList text"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff16_"));
+        }
     }
 }

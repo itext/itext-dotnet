@@ -110,6 +110,7 @@ namespace iText.Layout.Renderer {
                 bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
                     (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
+                    bool currentAreaNeedsToBeUpdated = false;
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (rendererIsFloat) {
                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
@@ -127,7 +128,7 @@ namespace iText.Layout.Renderer {
                                     nextStoredArea = null;
                                 }
                                 else {
-                                    UpdateCurrentAndInitialArea(result);
+                                    currentAreaNeedsToBeUpdated = true;
                                 }
                             }
                         }
@@ -141,7 +142,7 @@ namespace iText.Layout.Renderer {
                                         waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                         break;
                                     }
-                                    UpdateCurrentAndInitialArea(result);
+                                    currentAreaNeedsToBeUpdated = true;
                                 }
                                 else {
                                     ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
@@ -208,7 +209,7 @@ namespace iText.Layout.Renderer {
                                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                             break;
                                         }
-                                        UpdateCurrentAndInitialArea(result);
+                                        currentAreaNeedsToBeUpdated = true;
                                     }
                                 }
                             }
@@ -217,6 +218,11 @@ namespace iText.Layout.Renderer {
                     renderer = result.GetOverflowRenderer();
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
+                    }
+                    if (currentAreaNeedsToBeUpdated) {
+                        UpdateCurrentAndInitialArea(result);
+                    }
+                    if (marginsCollapsingEnabled) {
                         marginsCollapseHandler = new MarginsCollapseHandler(this, null);
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
