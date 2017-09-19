@@ -234,6 +234,10 @@ internal static class KernelExtensions {
         return item;
     }
 
+    public static bool IsEmpty<T1, T2>(this ICollection<KeyValuePair<T1, T2>> collection) {
+        return collection.Count == 0;
+    }
+
     public static bool IsEmpty<T>(this ICollection<T> collection) {
         return collection.Count == 0;
     }
