@@ -1442,7 +1442,7 @@ namespace iText.Kernel.Utils {
                 }
                 if (compareResult != null && currentPath != null) {
                     compareResult.AddError(currentPath, MessageFormatUtil.Format("The dictionaries refer to different pages. Expected page number: {0}. Found: {1}"
-                        , cmpPagesRef.IndexOf(cmpRefKey), outPagesRef.IndexOf(outRefKey)));
+                        , cmpPagesRef.IndexOf(cmpRefKey) + 1, outPagesRef.IndexOf(outRefKey)) + 1);
                 }
                 return false;
             }

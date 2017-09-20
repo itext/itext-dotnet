@@ -201,6 +201,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
+            splitRenderer.isLastRendererForModelElement = false;
             if (layoutResult == LayoutResult.PARTIAL) {
                 splitRenderer.symbolRenderer = symbolRenderer;
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
