@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -1500,7 +1501,15 @@ namespace iText.Layout.Renderer {
                 float shift = height - cell.GetOccupiedArea().GetBBox().GetHeight();
                 Rectangle bBox = cell.GetOccupiedArea().GetBBox();
                 bBox.MoveDown(shift);
-                cell.Move(0, -(cumulativeShift - rowspanOffset));
+                try {
+                    cell.Move(0, -(cumulativeShift - rowspanOffset));
+                }
+                catch (ArgumentNullException) {
+                    // TODO Remove try-catch when DEVSIX-1001 is resolved.
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                        "Some of the cell's content might not end up placed correctly."));
+                }
                 bBox.SetHeight(height);
                 cell.ApplyVerticalAlignment();
             }

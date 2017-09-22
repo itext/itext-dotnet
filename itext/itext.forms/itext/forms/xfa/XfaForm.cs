@@ -755,13 +755,13 @@ namespace iText.Forms.Xfa
 		/// </remarks>
 		private void CreateDatasetsNode(XNode n)
 		{
-			while (((XElement)n).Nodes().Count() == 0) {
+			while (!(n is XElement) || !((XElement)n).Nodes().Any()) {
 			    n = n.NextNode;
 			}
 			if (n != null)
 			{
-				XElement e = new XElement("xfa:datasets");
-				e.SetAttributeValue("xmlns:xfa", XFA_DATA_SCHEMA);
+				XElement e = new XElement((XNamespace)XFA_DATA_SCHEMA + "datasets", 
+					new XAttribute(XNamespace.Xmlns + "xfa", XFA_DATA_SCHEMA));
 				datasetsNode = e;
 				((XElement)n).Add(datasetsNode);
 			}

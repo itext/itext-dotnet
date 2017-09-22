@@ -846,6 +846,41 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
+        public virtual void EmptyDivTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "emptyDivTest.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            pdf.SetTagged();
+            // This tests that /Artifact content is properly closed in canvas
+            document.Add(new Div().Add(new Div().SetBackgroundColor(Color.RED)).SetBackgroundColor(Color.RED));
+            document.Add(new Paragraph("Hello"));
+            document.Close();
+            CompareResult("emptyDivTest.pdf", "cmp_emptyDivTest.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatListItemTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "floatListItemTest.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            pdf.SetTagged();
+            ListItem li = new ListItem("List item");
+            li.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(new List().Add(li));
+            document.Close();
+            CompareResult("floatListItemTest.pdf", "cmp_floatListItemTest.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");

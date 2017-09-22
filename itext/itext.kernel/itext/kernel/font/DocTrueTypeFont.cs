@@ -101,8 +101,18 @@ namespace iText.Kernel.Font {
             iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             FillFontDescriptor(fontProgram, fontDescriptor);
-            int dw = (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) ? (int)fontDescriptor.GetAsInt
-                (PdfName.DW) : 1000;
+            int dw;
+            if (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) {
+                dw = (int)fontDescriptor.GetAsInt(PdfName.DW);
+            }
+            else {
+                if (fontDictionary.ContainsKey(PdfName.DW)) {
+                    dw = (int)fontDictionary.GetAsInt(PdfName.DW);
+                }
+                else {
+                    dw = 1000;
+                }
+            }
             IntHashtable widths = null;
             if (toUnicode != null) {
                 widths = FontUtil.ConvertCompositeWidthsArray(fontDictionary.GetAsArray(PdfName.W));

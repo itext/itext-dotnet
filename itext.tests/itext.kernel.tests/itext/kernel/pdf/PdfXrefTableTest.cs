@@ -74,6 +74,8 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
             PdfXrefTable xref = pdfDocument.GetXref();
+            PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
+            ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             PdfIndirectReference ref0 = xref.Get(0);
             PdfIndirectReference freeRef = xref.Get(6);
             pdfDocument.Close();
@@ -107,8 +109,12 @@ namespace iText.Kernel.Pdf {
             // create XMP metadata
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
+            PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
+            ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain));
+            catalog = pdfDocument.GetCatalog().GetPdfObject();
+            ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             PdfXrefTable xref = pdfDocument.GetXref();
             PdfIndirectReference ref0 = xref.Get(0);
             PdfIndirectReference freeRef1 = xref.Get(6);

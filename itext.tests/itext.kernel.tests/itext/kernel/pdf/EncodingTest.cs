@@ -259,5 +259,22 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SymbolTrueTypeFontSameCharsIdentityTest() {
+            String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
+            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfDocument doc = new PdfDocument(writer);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            String line = "AABBCCDDEEFFGGHHIIJJ";
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(line).EndText().RestoreState
+                ();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
+                 + fileName, outputFolder, "diff_"));
+        }
     }
 }

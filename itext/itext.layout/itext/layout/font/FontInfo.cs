@@ -189,7 +189,7 @@ namespace iText.Layout.Font {
             String name = descriptor.GetFontName();
             if (name.Length > 0) {
                 if (encoding != null) {
-                    return String.Format("%s+%s", name, encoding);
+                    return MessageFormatUtil.Format("{0}+{1}", name, encoding);
                 }
                 else {
                     return name;

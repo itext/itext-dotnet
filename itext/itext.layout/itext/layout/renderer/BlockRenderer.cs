@@ -531,10 +531,13 @@ namespace iText.Layout.Renderer {
                 ApplyRelativePositioningTranslation(true);
             }
             if (isTagged) {
-                tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
                     waitingTagsManager.RemoveWaitingState(accessibleElement);
                 }
+                if (IsPossibleBadTagging(tagPointer.GetRole())) {
+                    tagPointer.SetRole(PdfName.Div);
+                }
+                tagPointer.MoveToParent();
             }
             flushed = true;
             EndTranformationIfApplied(drawContext.GetCanvas());
@@ -755,6 +758,19 @@ namespace iText.Layout.Renderer {
             return difference;
         }
 
+        /// <summary>Catch tricky cases when element order and thus tagging order is not followed accordingly.</summary>
+        /// <remarks>
+        /// Catch tricky cases when element order and thus tagging order is not followed accordingly.
+        /// The examples are a floating or absolutely positioned list item element which might end up
+        /// having parent other than list.
+        /// To produce correct tagged structure in such cases, we change the role to something else.
+        /// </remarks>
+        internal virtual bool IsPossibleBadTagging(PdfName role) {
+            return !PdfName.Artifact.Equals(role) && !PdfName.Div.Equals(role) && !PdfName.P.Equals(role) && !PdfName.
+                Link.Equals(role) && (IsFixedLayout() || IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this
+                ));
+        }
+
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
             [] paddings) {
             float parentWidth = parentBBox.GetWidth();
@@ -774,6 +790,9 @@ namespace iText.Layout.Renderer {
                 float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
                 if (minWidth == null || maxWidth == null) {
                     AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+                    int epsilonNum = 0;
+                    int curEpsNum = 0;
+                    float previousFloatingChildWidth = 0;
                     foreach (IRenderer childRenderer in childRenderers) {
                         MinMaxWidth childMinMaxWidth;
                         childRenderer.SetParent(this);
@@ -783,9 +802,24 @@ namespace iText.Layout.Renderer {
                         else {
                             childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, availableWidth);
                         }
-                        handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
+                        handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth() + (FloatingHelper.IsRendererFloating(childRenderer
+                            ) ? previousFloatingChildWidth : 0));
                         handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
+                        previousFloatingChildWidth = FloatingHelper.IsRendererFloating(childRenderer) ? previousFloatingChildWidth
+                             + childMinMaxWidth.GetMaxWidth() : 0;
+                        if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                            curEpsNum++;
+                        }
+                        else {
+                            epsilonNum = Math.Max(epsilonNum, curEpsNum);
+                            curEpsNum = 0;
+                        }
                     }
+                    epsilonNum = Math.Max(epsilonNum, curEpsNum);
+                    handler.minMaxWidth.SetChildrenMaxWidth(handler.minMaxWidth.GetChildrenMaxWidth() + epsilonNum * AbstractRenderer
+                        .EPS);
+                    handler.minMaxWidth.SetChildrenMinWidth(handler.minMaxWidth.GetChildrenMinWidth() + epsilonNum * AbstractRenderer
+                        .EPS);
                 }
                 if (minWidth != null) {
                     minMaxWidth.SetChildrenMinWidth((float)minWidth);

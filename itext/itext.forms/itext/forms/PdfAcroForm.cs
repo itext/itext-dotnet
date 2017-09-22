@@ -777,6 +777,14 @@ namespace iText.Forms {
                             TagReference tagRef = tagPointer.GetTagReference();
                             canvas.OpenTag(tagRef);
                         }
+                        PdfArray oldMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
+                        if (oldMatrix != null && iText.IO.Util.JavaUtil.ArraysEquals(oldMatrix.ToFloatArray(), new float[] { 1, 0, 
+                            0, 1, 0, 0 })) {
+                            Rectangle boundingBox = xObject.GetBBox().ToRectangle();
+                            PdfArray newMatrixArray = new PdfArray(new float[] { box.GetWidth() / boundingBox.GetWidth(), 0, 0, box.GetHeight
+                                () / boundingBox.GetHeight(), 0, 0 });
+                            xObject.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+                        }
                         canvas.AddXObject(xObject, box.GetX(), box.GetY());
                         if (tagPointer != null) {
                             canvas.CloseTag();

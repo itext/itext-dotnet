@@ -198,9 +198,13 @@ namespace iText.Layout.Renderer {
                         // TODO if percents width was used, max width might be huge
                         maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
                             );
+                        widthHandler.UpdateMinChildWidth(minChildWidth + AbstractRenderer.EPS);
+                        widthHandler.UpdateMaxChildWidth(maxChildWidth + AbstractRenderer.EPS);
                     }
-                    widthHandler.UpdateMinChildWidth(minChildWidth);
-                    widthHandler.UpdateMaxChildWidth(maxChildWidth);
+                    else {
+                        widthHandler.UpdateMinChildWidth(kidMinMaxWidth.GetMinWidth() + AbstractRenderer.EPS);
+                        widthHandler.UpdateMaxChildWidth(kidMinMaxWidth.GetMaxWidth() + AbstractRenderer.EPS);
+                    }
                     if (childResult == null || childResult.GetStatus() == LayoutResult.NOTHING) {
                         overflowFloats.Add(childRenderer);
                     }
@@ -258,6 +262,10 @@ namespace iText.Layout.Renderer {
                             }
                             bbox.SetWidth(Math.Min(childMaxWidth, layoutContext.GetArea().GetBBox().GetWidth()));
                         }
+                        childBlockMinMaxWidth.SetChildrenMaxWidth(childBlockMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                        childBlockMinMaxWidth.SetChildrenMinWidth(childBlockMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
                     }
                 }
                 if (childResult == null) {
@@ -268,6 +276,14 @@ namespace iText.Layout.Renderer {
                     }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox), wasParentsHeightClipped));
+                    if (childResult is MinMaxWidthLayoutResult && null != childBlockMinMaxWidth) {
+                        // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
+                        MinMaxWidth childResultMinMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
+                        childResultMinMaxWidth.SetChildrenMaxWidth(childResultMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                        childResultMinMaxWidth.SetChildrenMinWidth(childResultMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
+                            );
+                    }
                 }
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
@@ -675,6 +691,10 @@ namespace iText.Layout.Renderer {
             int numberOfSpaces = GetNumberOfSpaces();
             int baseCharsCount = BaseCharactersCount();
             float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
+            if (float.IsInfinity(baseFactor)) {
+                //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
+                baseFactor = 0;
+            }
             float wordSpacing = ratio * baseFactor;
             float characterSpacing = (1 - ratio) * baseFactor;
             float lastRightPos = occupiedArea.GetBBox().GetX();

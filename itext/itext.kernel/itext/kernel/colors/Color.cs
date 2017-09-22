@@ -281,10 +281,10 @@ namespace iText.Kernel.Colors {
         /// <summary>Sets the color value of the color</summary>
         /// <param name="value">new color value</param>
         public virtual void SetColorValue(float[] value) {
-            colorValue = value;
             if (colorValue.Length != value.Length) {
                 throw new PdfException(PdfException.IncorrectNumberOfComponents, this);
             }
+            colorValue = value;
         }
 
         /// <summary>Indicates whether the color is equal to the given color.</summary>

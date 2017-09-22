@@ -665,16 +665,16 @@ namespace iText.Kernel.Pdf {
                         if (catalog.pageLabels != null) {
                             catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());
                         }
-                        PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
-                        if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
-                            catalog.Put(PdfName.Pages, pageRoot);
-                            catalog.GetPdfObject().Flush(false);
-                        }
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
                             PdfNameTree tree = entry.Value;
                             if (tree.IsModified()) {
                                 EnsureTreeRootAddedToNames(((PdfDictionary)tree.BuildTree().MakeIndirect(this)), entry.Key);
                             }
+                        }
+                        PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
+                        if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
+                            catalog.Put(PdfName.Pages, pageRoot);
+                            catalog.GetPdfObject().Flush(false);
                         }
                         if (info.GetPdfObject().IsModified()) {
                             info.GetPdfObject().Flush(false);
@@ -2076,7 +2076,7 @@ namespace iText.Kernel.Pdf {
             PdfDictionary names = catalog.GetPdfObject().GetAsDictionary(PdfName.Names);
             if (names == null) {
                 names = new PdfDictionary();
-                catalog.GetPdfObject().Put(PdfName.Names, names);
+                catalog.Put(PdfName.Names, names);
                 names.MakeIndirect(this);
             }
             names.Put(treeType, treeRoot);

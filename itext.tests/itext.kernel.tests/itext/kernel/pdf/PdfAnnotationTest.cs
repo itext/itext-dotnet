@@ -299,6 +299,29 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>see DEVSIX-1539</summary>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FileAttachmentAppendModeTest() {
+            String fileName = destinationFolder + "fileAttachmentAppendModeTest.pdf";
+            MemoryStream baos = new MemoryStream();
+            PdfDocument inputDoc = new PdfDocument(new PdfWriter(baos));
+            PdfPage page1 = inputDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("This is a text").EndText().RestoreState();
+            inputDoc.Close();
+            PdfDocument finalDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(fileName
+                ), new StampingProperties().UseAppendMode());
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(finalDoc, "Some test".GetBytes(), null, "test.txt", 
+                null);
+            finalDoc.AddFileAttachment("some_test", spec);
+            finalDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_fileAttachmentAppendModeTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

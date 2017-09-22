@@ -328,13 +328,16 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual PdfPopupAnnotation GetPopup() {
             if (popup == null) {
-                PdfAnnotation annotation = MakeAnnotation(GetPopupObject());
-                if (!(annotation is PdfPopupAnnotation)) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
-                    logger.Warn(iText.IO.LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
-                    return null;
+                PdfDictionary popupObject = GetPopupObject();
+                if (popupObject != null) {
+                    PdfAnnotation annotation = MakeAnnotation(popupObject);
+                    if (!(annotation is PdfPopupAnnotation)) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
+                        logger.Warn(iText.IO.LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
+                        return null;
+                    }
+                    popup = (PdfPopupAnnotation)annotation;
                 }
-                popup = (PdfPopupAnnotation)annotation;
             }
             return popup;
         }

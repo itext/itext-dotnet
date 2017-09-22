@@ -42,6 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Kernel.Utils;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -54,7 +57,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.Exception"/>
@@ -73,11 +76,78 @@ namespace iText.Kernel.Pdf {
             PdfReader reader = new PdfReader(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            int delta = ReadFile(sourceFolder + "emptyDocumentWithXmp.xml").Length - pdfDocument.GetXmpMetadata().Length;
-            //Difference could be because of -SNAPSHOT postfix.
-            NUnit.Framework.Assert.IsTrue(delta == 0 || delta == 9, "Unexpected length delta");
-            NUnit.Framework.Assert.IsNotNull(reader.pdfDocument.GetPage(1));
-            reader.Close();
+            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            pdfDocument.Close();
+            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmp.xml");
+            cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
+            outBytes = RemoveAlwaysDifferentEntries(outBytes);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EmptyDocumentWithXmpAppendMode01() {
+            String created = destinationFolder + "emptyDocumentWithXmpAppendMode01.pdf";
+            String updated = destinationFolder + "emptyDocumentWithXmpAppendMode01_updated.pdf";
+            String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode01_updatedAgain.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            pdfDocument.AddNewPage();
+            pdfDocument.GetXmpMetadata(true);
+            // create XMP metadata
+            pdfDocument.Close();
+            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
+                ());
+            pdfDocument.Close();
+            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain), new StampingProperties(
+                ).UseAppendMode());
+            pdfDocument.Close();
+            PdfReader reader = new PdfReader(updatedAgain);
+            pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata));
+            PdfIndirectReference metadataRef = pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata).GetIndirectReference
+                ();
+            NUnit.Framework.Assert.AreEqual(6, metadataRef.GetObjNumber());
+            NUnit.Framework.Assert.AreEqual(0, metadataRef.GetGenNumber());
+            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            pdfDocument.Close();
+            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmpAppendMode01.xml");
+            cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
+            outBytes = RemoveAlwaysDifferentEntries(outBytes);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EmptyDocumentWithXmpAppendMode02() {
+            String created = destinationFolder + "emptyDocumentWithXmpAppendMode02.pdf";
+            String updated = destinationFolder + "emptyDocumentWithXmpAppendMode02_updated.pdf";
+            String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode02_updatedAgain.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            pdfDocument.AddNewPage();
+            pdfDocument.Close();
+            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
+                ());
+            pdfDocument.GetXmpMetadata(true);
+            // create XMP metadata
+            pdfDocument.Close();
+            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain), new StampingProperties(
+                ).UseAppendMode());
+            pdfDocument.Close();
+            PdfReader reader = new PdfReader(updatedAgain);
+            pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata));
+            PdfIndirectReference metadataRef = pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata).GetIndirectReference
+                ();
+            NUnit.Framework.Assert.AreEqual(6, metadataRef.GetObjNumber());
+            NUnit.Framework.Assert.AreEqual(0, metadataRef.GetGenNumber());
+            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            pdfDocument.Close();
+            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmpAppendMode02.xml");
+            cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
+            outBytes = RemoveAlwaysDifferentEntries(outBytes);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -102,6 +172,17 @@ namespace iText.Kernel.Pdf {
                 ());
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
             reader.Close();
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        private byte[] RemoveAlwaysDifferentEntries(byte[] cmpBytes) {
+            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
+            XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
+            XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
+            XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
+            XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
+            cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
+            return cmpBytes;
         }
     }
 }

@@ -111,7 +111,7 @@ namespace iText.Layout.Renderer {
                         tagPointer.MoveToParent();
                     }
                     else {
-                        tagPointer.AddTag(PdfName.LI);
+                        tagPointer.AddTag(IsPossibleBadTagging(PdfName.LI) ? PdfName.Div : PdfName.LI);
                     }
                 }
                 else {
@@ -178,7 +178,7 @@ namespace iText.Layout.Renderer {
                 symbolRenderer.Move(xPosition, 0);
                 if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
                     if (isTagged) {
-                        tagPointer.AddTag(0, PdfName.Lbl);
+                        tagPointer.AddTag(0, IsPossibleBadTagging(PdfName.Lbl) ? PdfName.P : PdfName.Lbl);
                     }
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);

@@ -381,9 +381,14 @@ namespace iText.Kernel.Pdf {
                             kids.Set(i, lastPdfPages.GetPdfObject());
                             newParents.Add(lastPdfPages);
                         }
+                        else {
+                            // Only remove from kids if we did not replace the entry with new PdfPages
+                            kids.Remove(i);
+                            i--;
+                        }
+                        // decrement count first so that page is not counted twice when moved to lastPdfPages
+                        parent.DecrementCount();
                         lastPdfPages.AddPage(pdfPagesObject);
-                        kids.Remove(i);
-                        i--;
                         kidsCount--;
                     }
                     else {

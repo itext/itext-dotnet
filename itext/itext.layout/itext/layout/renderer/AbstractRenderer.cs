@@ -223,8 +223,7 @@ namespace iText.Layout.Renderer {
         /// otherwise
         /// </returns>
         public virtual bool HasOwnOrModelProperty(int property) {
-            return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasProperty(property
-                ));
+            return HasOwnOrModelProperty(this, property);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -463,52 +462,54 @@ namespace iText.Layout.Renderer {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
                         ));
-                    return;
                 }
-                bool backgroundAreaIsClipped = false;
-                if (background != null) {
-                    backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
-                    TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
-                    drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
-                    backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
-                    drawContext.GetCanvas().Rectangle(backgroundArea.GetX() - background.GetExtraLeft(), backgroundArea.GetY()
-                         - background.GetExtraBottom(), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight
-                        (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
-                        ();
-                }
-                if (backgroundImage != null && backgroundImage.GetImage() != null) {
-                    if (!backgroundAreaIsClipped) {
+                else {
+                    bool backgroundAreaIsClipped = false;
+                    if (background != null) {
                         backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
+                        TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
+                        drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
+                        backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
+                        drawContext.GetCanvas().Rectangle(backgroundArea.GetX() - background.GetExtraLeft(), backgroundArea.GetY()
+                             - background.GetExtraBottom(), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight
+                            (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
+                            ();
                     }
-                    ApplyBorderBox(backgroundArea, false);
-                    Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
-                        GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
-                    if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
-                            ));
-                        return;
-                    }
-                    ApplyBorderBox(backgroundArea, true);
-                    drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
-                    float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
-                        .GetX();
-                    float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
-                    imageRectangle.SetY(initialY);
-                    do {
-                        imageRectangle.SetX(initialX);
-                        do {
-                            drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
-                            imageRectangle.MoveRight(imageRectangle.GetWidth());
+                    if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                        if (!backgroundAreaIsClipped) {
+                            backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                         }
-                        while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
-                        imageRectangle.MoveDown(imageRectangle.GetHeight());
+                        ApplyBorderBox(backgroundArea, false);
+                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
+                            GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                        if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
+                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                                ));
+                        }
+                        else {
+                            ApplyBorderBox(backgroundArea, true);
+                            drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
+                            float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
+                                .GetX();
+                            float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
+                            imageRectangle.SetY(initialY);
+                            do {
+                                imageRectangle.SetX(initialX);
+                                do {
+                                    drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
+                                    imageRectangle.MoveRight(imageRectangle.GetWidth());
+                                }
+                                while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
+                                imageRectangle.MoveDown(imageRectangle.GetHeight());
+                            }
+                            while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
+                            drawContext.GetCanvas().RestoreState();
+                        }
                     }
-                    while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
-                    drawContext.GetCanvas().RestoreState();
-                }
-                if (backgroundAreaIsClipped) {
-                    drawContext.GetCanvas().RestoreState();
+                    if (backgroundAreaIsClipped) {
+                        drawContext.GetCanvas().RestoreState();
+                    }
                 }
                 if (isTagged) {
                     drawContext.GetCanvas().CloseTag();
@@ -1202,9 +1203,7 @@ namespace iText.Layout.Renderer {
         /// margins of the renderer
         /// </returns>
         protected internal virtual float[] GetMargins() {
-            return new float[] { (float)this.GetPropertyAsFloat(Property.MARGIN_TOP), (float)this.GetPropertyAsFloat(Property
-                .MARGIN_RIGHT), (float)this.GetPropertyAsFloat(Property.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat
-                (Property.MARGIN_LEFT) };
+            return GetMargins(this);
         }
 
         /// <summary>Returns paddings of the renderer</summary>
@@ -1214,9 +1213,7 @@ namespace iText.Layout.Renderer {
         /// paddings of the renderer
         /// </returns>
         protected internal virtual float[] GetPaddings() {
-            return new float[] { (float)this.GetPropertyAsFloat(Property.PADDING_TOP), (float)this.GetPropertyAsFloat(
-                Property.PADDING_RIGHT), (float)this.GetPropertyAsFloat(Property.PADDING_BOTTOM), (float)this.GetPropertyAsFloat
-                (Property.PADDING_LEFT) };
+            return GetPaddings(this);
         }
 
         /// <summary>Applies paddings of the renderer on the given rectangle</summary>
@@ -1360,7 +1357,7 @@ namespace iText.Layout.Renderer {
             if (action != null) {
                 PdfLinkAnnotation link = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
                 if (link == null) {
-                    link = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0));
+                    link = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetFlags(PdfAnnotation.PRINT);
                     Border border = this.GetProperty<Border>(Property.BORDER);
                     if (border != null) {
                         link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -1492,25 +1489,7 @@ namespace iText.Layout.Renderer {
         /// on position of this border
         /// </returns>
         protected internal virtual Border[] GetBorders() {
-            Border border = this.GetProperty<Border>(Property.BORDER);
-            Border topBorder = this.GetProperty<Border>(Property.BORDER_TOP);
-            Border rightBorder = this.GetProperty<Border>(Property.BORDER_RIGHT);
-            Border bottomBorder = this.GetProperty<Border>(Property.BORDER_BOTTOM);
-            Border leftBorder = this.GetProperty<Border>(Property.BORDER_LEFT);
-            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
-            if (!HasOwnOrModelProperty(Property.BORDER_TOP)) {
-                borders[0] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_RIGHT)) {
-                borders[1] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_BOTTOM)) {
-                borders[2] = border;
-            }
-            if (!HasOwnOrModelProperty(Property.BORDER_LEFT)) {
-                borders[3] = border;
-            }
-            return borders;
+            return GetBorders(this);
         }
 
         protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders(Border border, int borderNumber
@@ -1807,6 +1786,13 @@ namespace iText.Layout.Renderer {
                 float? currentMinHeight = GetPropertyAsFloat(renderer, Property.MIN_HEIGHT);
                 float resolvedMinHeight = Math.Max(0, parentRendererBox.GetTop() - (float)top - parentRendererBox.GetBottom
                     () - (float)bottom);
+                Rectangle dummy = new Rectangle(0, 0);
+                if (!IsBorderBoxSizing(renderer)) {
+                    ApplyPaddings(dummy, GetPaddings(renderer), true);
+                    ApplyBorderBox(dummy, GetBorders(renderer), true);
+                }
+                ApplyMargins(dummy, GetMargins(renderer), true);
+                resolvedMinHeight -= dummy.GetHeight();
                 if (currentMinHeight != null) {
                     resolvedMinHeight = Math.Max(resolvedMinHeight, (float)currentMinHeight);
                 }
@@ -1886,6 +1872,47 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }
+        }
+
+        private static float[] GetMargins(IRenderer renderer) {
+            return new float[] { (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.MARGIN_TOP)), (float)
+                NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.MARGIN_RIGHT)), (float)NumberUtil.AsFloat(renderer
+                .GetProperty<Object>(Property.MARGIN_BOTTOM)), (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(
+                Property.MARGIN_LEFT)) };
+        }
+
+        private static Border[] GetBorders(IRenderer renderer) {
+            Border border = renderer.GetProperty<Border>(Property.BORDER);
+            Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
+            Border rightBorder = renderer.GetProperty<Border>(Property.BORDER_RIGHT);
+            Border bottomBorder = renderer.GetProperty<Border>(Property.BORDER_BOTTOM);
+            Border leftBorder = renderer.GetProperty<Border>(Property.BORDER_LEFT);
+            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP)) {
+                borders[0] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_RIGHT)) {
+                borders[1] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM)) {
+                borders[2] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_LEFT)) {
+                borders[3] = border;
+            }
+            return borders;
+        }
+
+        private static float[] GetPaddings(IRenderer renderer) {
+            return new float[] { (float)NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.PADDING_TOP)), (float
+                )NumberUtil.AsFloat(renderer.GetProperty<Object>(Property.PADDING_RIGHT)), (float)NumberUtil.AsFloat(renderer
+                .GetProperty<Object>(Property.PADDING_BOTTOM)), (float)NumberUtil.AsFloat(renderer.GetProperty<Object>
+                (Property.PADDING_LEFT)) };
+        }
+
+        private static bool HasOwnOrModelProperty(IRenderer renderer, int property) {
+            return renderer.HasOwnProperty(property) || (null != renderer.GetModelElement() && renderer.GetModelElement
+                ().HasProperty(property));
         }
 
         public abstract IRenderer GetNextRenderer();
