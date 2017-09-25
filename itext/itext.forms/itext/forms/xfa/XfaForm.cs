@@ -584,14 +584,14 @@ namespace iText.Forms.Xfa
 					break;
 				}
 			}
-			if (data == null)
-			{
-				datasetsNode.Add(new XElement((XNamespace)XFA_DATA_SCHEMA + "xfa:data"));
+			if (data == null) {
+				data = new XElement((XNamespace) XFA_DATA_SCHEMA + "data");
+				datasetsNode.Add(data);
 			}
 		    IEnumerable<XNode> list = ((XElement) data).Nodes();
 			if (list.Count() == 0)
 			{
-				((XElement)data).Add(node);
+				((XElement)data).Add(node is XDocument ? ((XDocument)node).FirstNode : node);
 			}
 			else
 			{
