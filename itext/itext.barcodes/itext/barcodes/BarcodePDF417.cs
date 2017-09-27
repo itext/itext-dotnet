@@ -712,7 +712,7 @@ namespace iText.Barcodes {
             pad = tot - lenErr - lenCodewords;
             if ((options & PDF417_USE_MACRO) != 0) {
                 // the padding comes before the control block
-                System.Array.Copy(codewords, macroIndex, codewords, macroIndex + pad, pad);
+                System.Array.Copy(codewords, macroIndex, codewords, macroIndex + pad, lenCodewords - macroIndex);
                 cwPtr = lenCodewords + pad;
                 while (pad-- != 0) {
                     codewords[macroIndex++] = TEXT_MODE;
