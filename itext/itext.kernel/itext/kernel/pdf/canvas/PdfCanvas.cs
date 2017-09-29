@@ -501,7 +501,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">the text to write</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(String text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('\'').WriteNewLine();
             return this;
@@ -515,7 +514,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(float wordSpacing, float charSpacing, String
              text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             contentStream.GetOutputStream().WriteFloat(wordSpacing).WriteSpace().WriteFloat(charSpacing);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('"').WriteNewLine();
@@ -620,7 +618,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">text to show.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(String text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteBytes(Tj);
             return this;
@@ -642,7 +639,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
             > iterator) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
@@ -774,7 +770,6 @@ namespace iText.Kernel.Pdf.Canvas {
             if (currentGs.GetFont() == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
             }
-            document.CheckShowTextIsoConformance(currentGs, resources);
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {
@@ -1044,7 +1039,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas PaintShading(PdfShading shading) {
             PdfName shadingName = resources.AddShading(shading);
-            document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY);
             contentStream.GetOutputStream().Write((PdfObject)shadingName).WriteSpace().WriteBytes(sh);
             return this;
         }
@@ -1063,7 +1057,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathEoFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(bStar);
             return this;
         }
@@ -1072,7 +1065,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(b);
             return this;
         }
@@ -1087,7 +1079,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Strokes the path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Stroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(S);
             return this;
         }
@@ -1122,7 +1113,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Fill() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
             contentStream.GetOutputStream().WriteBytes(f);
             return this;
         }
@@ -1131,7 +1121,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas FillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(B);
             return this;
         }
@@ -1139,7 +1128,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>EOFills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFill() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
             contentStream.GetOutputStream().WriteBytes(fStar);
             return this;
         }
@@ -1147,7 +1135,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills the path, using the even-odd rule to determine the region to fill and strokes it.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(BStar);
             return this;
         }
@@ -1435,6 +1422,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     }
                 }
             }
+            document.CheckIsoConformance(currentGs, fill ? IsoKey.FILL_COLOR : IsoKey.STROKE_COLOR, resources);
             return this;
         }
 
@@ -1637,7 +1625,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
             bool asInline) {
-            document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY, null);
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreatePdfForm(document);
@@ -1873,6 +1860,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);
+            document.CheckIsoConformance(currentGs, IsoKey.EXTENDED_GRAPHICS_STATE);
             return this;
         }
 
