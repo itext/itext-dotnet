@@ -91,11 +91,6 @@ namespace iText.Layout.Borders {
         public const int _3D_RIDGE = 8;
 
         /// <summary>The color of the border.</summary>
-        /// <seealso cref="iText.Kernel.Colors.Color"/>
-        [System.ObsoleteAttribute(@"use transparentColor instead")]
-        protected internal Color color;
-
-        /// <summary>The color of the border.</summary>
         /// <seealso cref="iText.Layout.Properties.TransparentColor"/>
         protected internal TransparentColor transparentColor;
 
@@ -131,7 +126,6 @@ namespace iText.Layout.Borders {
         /// <param name="color">the color which the border should have</param>
         /// <param name="width">the width which the border should have</param>
         protected internal Border(Color color, float width) {
-            this.color = color;
             this.transparentColor = new TransparentColor(color);
             this.width = width;
         }
@@ -148,7 +142,6 @@ namespace iText.Layout.Borders {
         /// <param name="opacity">the opacity which border should have; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
         ///     </param>
         protected internal Border(Color color, float width, float opacity) {
-            this.color = color;
             this.transparentColor = new TransparentColor(color, opacity);
             this.width = width;
         }
@@ -282,7 +275,6 @@ namespace iText.Layout.Borders {
         /// <see cref="Border">border</see>
         /// </summary>
         public virtual void SetColor(Color color) {
-            this.color = color;
             this.transparentColor = new TransparentColor(color, this.transparentColor.GetOpacity());
         }
 
