@@ -58,7 +58,7 @@ namespace iText.IO.Font.Woff2 {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTTFTest() {
+        public virtual void SimpleTtfTest() {
             RunTest("NotoSansCJKtc-Regular");
         }
 

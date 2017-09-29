@@ -58,9 +58,9 @@ namespace iText.IO.Font.Woff2 {
         }
 
         public static byte[] Convert(byte[] woff2Bytes) {
-            byte[] inner_byte_buffer = new byte[Woff2Dec.ComputeWOFF2FinalSize(woff2Bytes, woff2Bytes.Length)];
+            byte[] inner_byte_buffer = new byte[Woff2Dec.ComputeWoff2FinalSize(woff2Bytes, woff2Bytes.Length)];
             Woff2Out @out = new Woff2MemoryOut(inner_byte_buffer, inner_byte_buffer.Length);
-            Woff2Dec.ConvertWOFF2ToTTF(woff2Bytes, woff2Bytes.Length, @out);
+            Woff2Dec.ConvertWoff2ToTtf(woff2Bytes, woff2Bytes.Length, @out);
             return inner_byte_buffer;
         }
     }
