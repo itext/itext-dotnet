@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -73,7 +74,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 5; j++) {
@@ -86,7 +87,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -101,7 +103,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(5, true).SetMargins(20, 20, 20, 20);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth().SetMargins(20, 20, 20
+                , 20);
             doc.Add(table);
             for (int i = 0; i < 100; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}", i + 1))));
@@ -110,7 +113,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -125,7 +129,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -138,7 +142,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -153,7 +158,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -169,7 +174,8 @@ namespace iText.Layout {
             // Compare with #largeTableWithHeaderFooterTest01A. When we flush last row before calling complete(), we don't yet know
             // if there will be any more rows. Flushing last row implicitly by calling complete solves this problem.
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -184,7 +190,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
                 (Color.MAGENTA, 20));
@@ -200,7 +206,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -215,7 +222,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             table.SetSkipLastFooter(true);
             table.SetSkipFirstHeader(true);
             doc.Add(table);
@@ -233,7 +240,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -248,7 +256,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
@@ -265,7 +273,8 @@ namespace iText.Layout {
             // Compare with #largeTableWithHeaderFooterTest01A. When we flush last row before calling complete(), we don't yet know
             // if there will be any more rows. Flushing last row implicitly by calling complete solves this problem.
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -280,7 +289,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 5; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header1 \n" + i)));
@@ -295,7 +304,8 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -310,7 +320,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 5; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header \n" + i)));
@@ -325,7 +335,8 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -340,7 +351,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 5; i++) {
                 table.AddFooterCell(new Cell().Add(new Paragraph("Footer \n" + i)));
@@ -352,7 +363,8 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -367,12 +379,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1, true);
+            Table table = new Table(UnitValue.CreatePercentArray(1), true).UseAllAvailableWidth();
             doc.Add(table);
             table.SetBorderTop(new SolidBorder(Color.ORANGE, 100)).SetBorderBottom(new SolidBorder(Color.MAGENTA, 150)
                 );
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -388,32 +401,35 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(3, true);
+            Table table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 3; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            table = new Table(3, true);
+            table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 3; i++) {
                 table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            table = new Table(3, true);
+            table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 3; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
                 table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            table = new Table(3, true);
+            table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 3; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
@@ -421,18 +437,20 @@ namespace iText.Layout {
             }
             table.AddCell(new Cell().Add(new Paragraph("Cell")));
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            table = new Table(3, true);
+            table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 2; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
                 table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            table = new Table(3, true);
+            table = new Table(UnitValue.CreatePercentArray(3), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 2; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
@@ -440,7 +458,8 @@ namespace iText.Layout {
             }
             table.AddCell(new Cell().Add(new Paragraph("Cell")));
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));

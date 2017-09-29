@@ -593,7 +593,7 @@ namespace iText.Layout {
         private void AddSimpleContentToDoc(Document document, Paragraph p2) {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100);
-            Table table = new Table(4);
+            Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
             for (int k = 0; k < 5; k++) {
                 table.AddCell(p2);
                 List list = new List().SetListSymbol("-> ");
@@ -602,7 +602,7 @@ namespace iText.Layout {
                 table.AddCell(cell);
                 Cell c = new Cell().Add(img);
                 table.AddCell(c);
-                Table innerTable = new Table(3);
+                Table innerTable = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
                 int j = 0;
                 while (j < 9) {
                     innerTable.AddCell("Hi");

@@ -297,7 +297,8 @@ namespace iText.Layout {
             Style style = new Style();
             style.SetProperty(Property.KEEP_WITH_NEXT, true);
             document.Add(new Paragraph("A").AddStyle(style));
-            Table table = new Table(1).SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(2));
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorderTop(new SolidBorder
+                (2)).SetBorderBottom(new SolidBorder(2));
             table.AddCell("Body").AddHeaderCell("Header");
             document.Add(table);
             document.Close();

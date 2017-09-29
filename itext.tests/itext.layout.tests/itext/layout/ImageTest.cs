@@ -427,7 +427,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(8);
+            Table table = new Table(UnitValue.CreatePercentArray(8)).UseAllAvailableWidth();
             table.SetWidthPercent(100);
             for (int k = 0; k < rowCount; k++) {
                 for (int j = 0; j < 7; j++) {
@@ -465,7 +465,7 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 ));
             img.SetAutoScale(true);
-            Table table = new Table(4);
+            Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
             table.SetWidthPercent(100);
             for (int k = 0; k < 5; k++) {
                 table.AddCell("Hello World from iText7");
@@ -475,7 +475,7 @@ namespace iText.Layout {
                 table.AddCell(cell);
                 Cell c = new Cell().Add(img);
                 table.AddCell(c);
-                Table innerTable = new Table(3);
+                Table innerTable = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
                 int j = 0;
                 while (j < 9) {
                     innerTable.AddCell("Hi");
@@ -567,17 +567,20 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(Color.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell(c);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Add(new AreaBreak());
             table.SetMinHeight(150);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -594,18 +597,21 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(Color.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell("First cell");
             table.AddCell(c);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Add(new AreaBreak());
             table.SetMinHeight(150);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

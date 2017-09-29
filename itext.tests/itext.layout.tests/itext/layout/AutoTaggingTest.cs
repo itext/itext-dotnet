@@ -164,7 +164,8 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100).SetAutoScale(true);
             table.AddCell(CreateParagraph1());
@@ -191,7 +192,8 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
@@ -210,7 +212,8 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
             cell.SetRole(PdfName.TH);
             table.AddHeaderCell(cell);
@@ -242,7 +245,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -255,7 +258,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("tableTest04.pdf", "cmp_tableTest04.pdf");
         }
@@ -269,7 +273,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -285,7 +289,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("tableTest05.pdf", "cmp_tableTest05.pdf");
         }
@@ -387,7 +392,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
         }
@@ -561,7 +567,7 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello world"));
-            Table table = new Table(5);
+            Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             for (int i = 0; i < 25; ++i) {
                 table.AddCell(i.ToString());
             }
@@ -618,7 +624,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -634,7 +640,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("flushingTest02.pdf", "cmp_flushingTest02.pdf");
         }
@@ -656,7 +663,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(5, true);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -670,7 +677,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(Color.
+                ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("flushingTest03.pdf", "cmp_tableTest04.pdf");
         }

@@ -116,7 +116,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument, PageSize.A9.Rotate());
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
                 ).Add("fourth string");
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddCell(new Cell().Add(list).SetVerticalAlignment(VerticalAlignment.BOTTOM));
             document.Add(table);
             document.Close();

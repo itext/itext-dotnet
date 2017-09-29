@@ -299,8 +299,9 @@ namespace iText.Layout.Renderer {
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(2).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2
-                .Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell
+                (cell2.Clone(true));
             Table minTable = new Table(new float[] { -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop(10
                 ).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell
                 (cell1.Clone(true)).AddCell(cell2.Clone(true));
@@ -327,8 +328,9 @@ namespace iText.Layout.Renderer {
                 .RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell
-                .Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell
+                (cell.Clone(true)).AddCell(cell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
                 (10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true))
                 .AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
@@ -357,8 +359,9 @@ namespace iText.Layout.Renderer {
                 (Color.GREEN, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(Color.BLUE, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell
-                .Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true))
+                .AddCell(colspanCell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
                 (10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
                 (rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
@@ -387,10 +390,10 @@ namespace iText.Layout.Renderer {
                 30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell = new Cell().Add(new Paragraph("cell")).SetBorder(new SolidBorder(Color.BLUE, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(mediumCell.Clone(true)).AddCell
-                (mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell
-                (cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell
-                (cell.Clone(true)).AddHeaderCell(cell.Clone(true));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                Color.BLACK, 20)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone
+                (true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true
+                )).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetBorder(new 

@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
@@ -261,7 +262,8 @@ namespace iText.Layout {
             if ("image".Equals(elem)) {
                 image.SetOpacity(0.3f);
             }
-            Table table = new Table(2).SetBackgroundColor(tableBackground);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBackgroundColor(tableBackground
+                );
             table.AddCell("Cell00");
             table.AddCell("Cell01");
             Cell cell10 = new Cell().Add(new Paragraph("Cell10"));
