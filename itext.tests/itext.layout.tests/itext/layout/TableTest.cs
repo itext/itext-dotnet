@@ -642,6 +642,40 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SimpleTableTest23() {
+            String testName = "tableTest23.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell().Add(new 
+                Paragraph("longer cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell()
+                .Add(new Paragraph("cell 1, 4")));
+            doc.Add(table);
+            table = new Table(2).SetFixedLayout().AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell
+                ().Add(new Paragraph("longer cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 4")));
+            doc.Add(table);
+            table = new Table(2, true).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell().Add(new 
+                Paragraph("longer cell 1, 2")));
+            doc.Add(table);
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4"
+                ))).Flush();
+            table.Complete();
+            table = new Table(2, true).SetFixedLayout().AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new 
+                Cell().Add(new Paragraph("longer cell 1, 2")));
+            doc.Add(table);
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4"
+                ))).Flush();
+            table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BigRowspanTest01() {
             String testName = "bigRowspanTest01.pdf";
             String outFileName = destinationFolder + testName;

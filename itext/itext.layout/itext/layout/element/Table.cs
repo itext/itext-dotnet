@@ -177,10 +177,6 @@ namespace iText.Layout.Element {
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");
             }
-            //TODO remove in 7.1. It shall work as html tables.
-            if (largeTable && HasOnlyPercents(columnWidths)) {
-                UseAllAvailableWidth();
-            }
             this.columnWidths = NormalizeColumnWidths(columnWidths);
             InitializeLargeTable(largeTable);
             InitializeRows();
@@ -247,8 +243,8 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with specified number of columns. Each column will get equal percent width,
-        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns.
+        /// The final column widths depend on selected table layout.
         /// <br/>
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
@@ -272,18 +268,10 @@ namespace iText.Layout.Element {
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
-        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use another constructor to get predictable result."
-            )]
         public Table(int numColumns, bool largeTable) {
             if (numColumns <= 0) {
                 throw new ArgumentException("The number of columns in Table constructor must be greater than zero");
             }
-            this.columnWidths = new UnitValue[numColumns];
-            for (int k = 0; k < numColumns; ++k) {
-                this.columnWidths[k] = UnitValue.CreatePercentValue((float)100 / numColumns);
-            }
-            //TODO remove in 7.1. It shall work as html tables.
-            UseAllAvailableWidth();
             this.columnWidths = NormalizeColumnWidths(numColumns);
             InitializeLargeTable(largeTable);
             InitializeRows();
@@ -292,8 +280,8 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with specified number of columns. Each column will get equal percent width,
-        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns.
+        /// The final column widths depend on selected table layout.
         /// <br/>
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
@@ -313,19 +301,8 @@ namespace iText.Layout.Element {
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
-        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use another constructor to get predictable result."
-            )]
         public Table(int numColumns)
             : this(numColumns, false) {
-        }
-
-        private static bool HasOnlyPercents(UnitValue[] columnWidths) {
-            foreach (UnitValue col in columnWidths) {
-                if (col == null || col.IsPointValue() || col.GetValue() < 0) {
-                    return false;
-                }
-            }
-            return true;
         }
 
         private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
@@ -349,9 +326,6 @@ namespace iText.Layout.Element {
 
         private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
             UnitValue[] normalized = new UnitValue[numberOfColumns];
-            for (int i = 0; i < numberOfColumns; i++) {
-                normalized[i] = UnitValue.CreatePercentValue((float)100 / numberOfColumns);
-            }
             return normalized;
         }
 
