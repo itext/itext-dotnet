@@ -240,7 +240,7 @@ namespace iText.Layout.Renderer {
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), true);
-                                CorrectPositionedLayout(layoutBox);
+                                CorrectFixedLayout(layoutBox);
                                 LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                                     (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                                 if (wasHeightClipped) {
@@ -274,7 +274,7 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
                                 }
                                 UpdateHeightsOnSplit(wasHeightClipped, overflowRenderer);
-                                CorrectPositionedLayout(layoutBox);
+                                CorrectFixedLayout(layoutBox);
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), true);
@@ -387,7 +387,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (isPositioned) {
-                CorrectPositionedLayout(layoutBox);
+                CorrectFixedLayout(layoutBox);
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -704,8 +704,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        [Obsolete]
-        protected internal virtual void CorrectPositionedLayout(Rectangle layoutBox) {
+        internal virtual void CorrectFixedLayout(Rectangle layoutBox) {
             if (IsFixedLayout()) {
                 float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                 Move(0, y - occupiedArea.GetBBox().GetY());

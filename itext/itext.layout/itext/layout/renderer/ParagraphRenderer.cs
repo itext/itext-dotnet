@@ -294,7 +294,7 @@ namespace iText.Layout.Renderer {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
                                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                             }
-                            CorrectPositionedLayout(layoutBox);
+                            CorrectFixedLayout(layoutBox);
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -403,7 +403,7 @@ namespace iText.Layout.Renderer {
                 }
                 ApplyVerticalAlignment();
             }
-            CorrectPositionedLayout(layoutBox);
+            CorrectFixedLayout(layoutBox);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
