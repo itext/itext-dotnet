@@ -97,8 +97,8 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
-            , float borderWidthAfter) {
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side defaultSide
+            , float borderWidthBefore, float borderWidthAfter) {
             float x3 = 0;
             float y3 = 0;
             float x4 = 0;
@@ -106,7 +106,7 @@ namespace iText.Layout.Borders {
             float thirdOfWidth = width / 3;
             float thirdOfWidthBefore = borderWidthBefore / 3;
             float thirdOfWidthAfter = borderWidthAfter / 3;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
             switch (borderSide) {
                 case Border.Side.TOP: {
                     x3 = x2 + thirdOfWidthAfter;
@@ -195,15 +195,16 @@ namespace iText.Layout.Borders {
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill().RestoreState();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
-             side, float borderWidthBefore, float borderWidthAfter) {
-            Draw(canvas, x1, y1, x2, y2, borderWidthBefore, borderWidthAfter);
+             defaultSide, float borderWidthBefore, float borderWidthAfter) {
+            Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);
         }
 
         /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             float thirdOfWidth = width / 3;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, Border.Side.NONE);
             switch (borderSide) {
                 case Border.Side.TOP: {
                     y1 -= thirdOfWidth;

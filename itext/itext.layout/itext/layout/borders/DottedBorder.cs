@@ -87,8 +87,8 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
-            , float borderWidthAfter) {
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side defaultSide
+            , float borderWidthBefore, float borderWidthAfter) {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
             float dy = y2 - y1;
@@ -98,7 +98,7 @@ namespace iText.Layout.Borders {
                 adjustedGap -= width;
             }
             float widthHalf = width / 2;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
             switch (borderSide) {
                 case Border.Side.TOP: {
                     y1 += widthHalf;
@@ -130,8 +130,9 @@ namespace iText.Layout.Borders {
                 ();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float outerRadius, Border.Side
-             side, float borderWidthBefore, float borderWidthAfter) {
+             defaultSide, float borderWidthBefore, float borderWidthAfter) {
             float curv = 0.447f;
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -156,7 +157,7 @@ namespace iText.Layout.Borders {
             Point clipPoint1;
             Point clipPoint2;
             Point clipPoint;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, side);
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
             switch (borderSide) {
                 case Border.Side.TOP: {
                     x0 -= borderWidthBefore / 2;
