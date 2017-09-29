@@ -280,7 +280,8 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side 
+            defaultSide) {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
             float dy = y2 - y1;

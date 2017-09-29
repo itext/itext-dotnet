@@ -227,7 +227,13 @@ namespace iText.Layout.Borders {
         /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
         /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
         /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
-        public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2);
+        /// <param name="defaultSide">
+        /// the
+        /// <see cref="Side"/>
+        /// , that we will fallback to, if it cannot be determined by border coordinates
+        /// </param>
+        public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side 
+            defaultSide);
 
         /// <summary>
         /// Returns the type of the

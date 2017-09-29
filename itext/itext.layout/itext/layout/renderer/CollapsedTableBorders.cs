@@ -483,8 +483,8 @@ namespace iText.Layout.Renderer {
                 Border curBorder = borders[j];
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
                         x1 = x2;
                     }
                 }
@@ -509,7 +509,7 @@ namespace iText.Layout.Renderer {
                         x2 += GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1].GetWidth() / 2;
                     }
                 }
-                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
             }
             return this;
         }
@@ -528,7 +528,7 @@ namespace iText.Layout.Renderer {
                 Border curBorder = borders[startRow - largeTableIndexOffset + j];
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
                         y1 = y2;
                     }
                 }
@@ -545,7 +545,7 @@ namespace iText.Layout.Renderer {
             }
             Border lastBorder = borders[startRow - largeTableIndexOffset + j - 1];
             if (lastBorder != null) {
-                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
             }
             return this;
         }
