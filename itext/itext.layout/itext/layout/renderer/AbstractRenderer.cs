@@ -934,10 +934,8 @@ namespace iText.Layout.Renderer {
                 if (maxWidth != null) {
                     width = width > maxWidth ? maxWidth : width;
                 }
-                else {
-                    if (minWidth != null) {
-                        width = width < minWidth ? minWidth : width;
-                    }
+                if (minWidth != null) {
+                    width = width < minWidth ? minWidth : width;
                 }
             }
             else {
