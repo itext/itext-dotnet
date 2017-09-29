@@ -55,11 +55,8 @@ namespace iText.Kernel.XMP.Impl
 		private int second = 0;
 
         /// <summary>Use NO time zone as default</summary>
-#if !NETSTANDARD1_6
-		private TimeZone timeZone = null;
-#else
+
         private TimeZoneInfo timeZone = null;
-#endif
 
         /// <summary>The nano seconds take micro and nano seconds, while the milli seconds are in the calendar.
         /// 	</summary>
@@ -86,11 +83,7 @@ namespace iText.Kernel.XMP.Impl
 		public XMPDateTimeImpl(XMPCalendar calendar) {
 			// extract the date and timezone from the calendar provided
 			DateTime date = calendar.GetDateTime();
-#if !NETSTANDARD1_6
-            TimeZone zone = calendar.GetTimeZone();
-#else
             TimeZoneInfo zone = calendar.GetTimeZone();
-#endif
 
             year = date.Year;
 			month = date.Month + 1; // cal is from 0..12
@@ -107,15 +100,11 @@ namespace iText.Kernel.XMP.Impl
 
         /// <summary>
         /// Creates an <code>XMPDateTime</code>-instance from 
-        /// a <code>Date</code> and a <code>TimeZone</code>.
+        /// a <code>Date</code> and a <code>TimeZoneInfo</code>.
         /// </summary>
         /// <param name="date"> a date describing an absolute point in time </param>
-        /// <param name="timeZone"> a TimeZone how to interpret the date </param>
-#if !NETSTANDARD1_6
-        public XMPDateTimeImpl(DateTime date, TimeZone timeZone) {
-#else
+        /// <param name="timeZone"> a TimeZoneInfo how to interpret the date </param>
         public XMPDateTimeImpl(DateTime date, TimeZoneInfo timeZone) {
-#endif
             year = date.Year;
 			month = date.Month + 1; // cal is from 0..12
 			day = date.Day;
@@ -269,37 +258,20 @@ namespace iText.Kernel.XMP.Impl
 			return Math.Sign(d);
 		}
 
-#if !NETSTANDARD1_6
-        /// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetTimeZone()"/>
-		public virtual TimeZone GetTimeZone()
-		{
-			return timeZone;
-		}
-
-		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
-		/// 	/>
-		public virtual void SetTimeZone(TimeZone timeZone)
-		{
-			this.timeZone = timeZone;
-			this.hasTime = true;
-			this.hasTimeZone = true;
-		}
-#else
         /// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetTimeZone()"/>
         public virtual TimeZoneInfo GetTimeZone()
 		{
 			return timeZone;
 		}
 
-		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
-		/// 	/>
-		public virtual void SetTimeZone(TimeZoneInfo timeZone)
+        /// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetTimeZone(Java.Util.TimeZoneInfo)"
+        /// 	/>
+        public virtual void SetTimeZone(TimeZoneInfo timeZone)
 		{
 			this.timeZone = timeZone;
 			this.hasTime = true;
 			this.hasTimeZone = true;
 		}
-#endif
 
         /// <seealso cref="iText.Kernel.XMP.XMPDateTime.HasDate()"/>
         public virtual bool HasDate()
@@ -322,21 +294,12 @@ namespace iText.Kernel.XMP.Impl
 		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetCalendar()"/>
 		public virtual XMPCalendar GetCalendar()
 		{
-#if !NETSTANDARD1_6
-            TimeZone tz;
-			if (hasTimeZone) {
-				tz = timeZone;
-			} else {
-				tz = TimeZone.CurrentTimeZone;
-			}
-#else
             TimeZoneInfo tz;
 			if (hasTimeZone) {
 				tz = timeZone;
 			} else {
 				tz = TimeZoneInfo.Local;
 			}
-#endif
             return new XMPCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
 		}
 
