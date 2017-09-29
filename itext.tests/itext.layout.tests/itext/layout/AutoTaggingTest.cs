@@ -245,7 +245,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -273,7 +273,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -624,7 +624,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
@@ -663,7 +663,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            Table table = new Table(UnitValue.CreatePercentArray(5), true).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 4; j++) {

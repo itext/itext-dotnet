@@ -249,6 +249,10 @@ namespace iText.Layout.Element {
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
         /// <br/>
+        /// Since 7.1 table will have undefined column widths, that will be determined during layout.
+        /// In oder to set equal percent width as column width, use
+        /// <see cref="iText.Layout.Properties.UnitValue.CreatePercentArray(int)"/>
+        /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -285,6 +289,10 @@ namespace iText.Layout.Element {
         /// <br/>
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
+        /// <br/>
+        /// Since 7.1 table will have undefined column widths, that will be determined during layout.
+        /// In oder to set equal percent width as column width, use
+        /// <see cref="iText.Layout.Properties.UnitValue.CreatePercentArray(int)"/>
         /// <br/>
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
