@@ -355,16 +355,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Calculates hash code for the indirect reference taking into account the document it belongs to.</summary>
-        /// <param name="indRef">object to be hashed.</param>
-        /// <returns>calculated hash code.</returns>
-        [Obsolete]
-        protected internal static int CalculateIndRefKey(PdfIndirectReference indRef) {
-            int result = indRef.GetHashCode();
-            result = 31 * result + indRef.GetDocument().GetHashCode();
-            return result;
-        }
-
         /// <summary>Flush all copied objects.</summary>
         /// <param name="docId">id of the source document</param>
         internal virtual void FlushCopiedObjects(long docId) {

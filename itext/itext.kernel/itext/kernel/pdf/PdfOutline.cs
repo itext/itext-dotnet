@@ -80,8 +80,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfDocument"/>
         /// the outline belongs to.
         /// </param>
-        [System.ObsoleteAttribute(@"Use PdfCatalog.GetOutlines(bool) instead.")]
-        public PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument) {
+        internal PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument) {
             this.title = title;
             this.content = content;
             this.pdfDoc = pdfDocument;
@@ -90,10 +89,14 @@ namespace iText.Kernel.Pdf {
         /// <summary>Create instance of document outline.</summary>
         /// <param name="title">the text that shall be displayed on the screen for this item.</param>
         /// <param name="content">Outline dictionary</param>
-        /// <param name="parent">parent outline.</param>
-        [System.ObsoleteAttribute(@"Use PdfCatalog.GetNextItem(PdfDictionary, PdfOutline, System.Collections.Generic.IDictionary{K, V}) ,AddOutline(System.String, int) and AddOutline(System.String) instead."
-            )]
-        public PdfOutline(String title, PdfDictionary content, iText.Kernel.Pdf.PdfOutline parent) {
+        /// <param name="parent">
+        /// parent outline.
+        /// <see cref="AddOutline(System.String, int)"/>
+        /// and
+        /// <see cref="AddOutline(System.String)"/>
+        /// instead.
+        /// </param>
+        internal PdfOutline(String title, PdfDictionary content, iText.Kernel.Pdf.PdfOutline parent) {
             this.title = title;
             this.content = content;
             this.parent = parent;
@@ -106,8 +109,7 @@ namespace iText.Kernel.Pdf {
         /// 
         /// <see cref="PdfDocument"/>
         /// </param>
-        [System.ObsoleteAttribute(@"Use PdfCatalog.GetOutlines(bool) instead.")]
-        protected internal PdfOutline(PdfDocument doc) {
+        internal PdfOutline(PdfDocument doc) {
             content = new PdfDictionary();
             content.Put(PdfName.Type, PdfName.Outlines);
             this.pdfDoc = doc;

@@ -484,10 +484,6 @@ namespace iText.Kernel.Font {
             return true;
         }
 
-        protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType) {
-            return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
-        }
-
         /// <summary>Creates a unique subset prefix to be added to the font name when the font is embedded and subset.
         ///     </summary>
         /// <returns>the subset prefix</returns>

@@ -261,7 +261,7 @@ namespace iText.Pdfa {
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
-                canvas.SetExtGState(new PdfExtGState().SetHTP(new PdfName("Test")));
+                canvas.SetExtGState(new PdfExtGState().Put(PdfName.HTP, new PdfName("Test")));
                 canvas.Rectangle(30, 30, 100, 100).Fill();
                 doc.Close();
             }

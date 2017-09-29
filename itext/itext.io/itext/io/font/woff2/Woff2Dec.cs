@@ -1212,14 +1212,6 @@ namespace iText.IO.Font.Woff2 {
             return file.ReadInt();
         }
 
-        [Obsolete]
-        public static void ConvertWOFF2ToTTF(byte[] result, int result_length, byte[] data, int length) {
-            // Decompresses the font into the target buffer. The result_length should
-            // be the same as determined by ComputeFinalSize().
-            Woff2MemoryOut @out = new Woff2MemoryOut(result, result_length);
-            ConvertWOFF2ToTTF(data, length, @out);
-        }
-
         // Decompresses the font into out. Returns true on success.
         // Works even if WOFF2Header totalSfntSize is wrong.
         // Please prefer this API.

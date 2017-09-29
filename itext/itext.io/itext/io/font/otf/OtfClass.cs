@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -57,8 +56,7 @@ namespace iText.IO.Font.Otf {
         private IntHashtable mapClass = new IntHashtable();
 
         /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"use Create(iText.IO.Source.RandomAccessFileOrArray, int) instead.")]
-        public OtfClass(RandomAccessFileOrArray rf, int classLocation) {
+        private OtfClass(RandomAccessFileOrArray rf, int classLocation) {
             //key is glyph, value is class inside all 2
             rf.Seek(classLocation);
             int classFormat = rf.ReadUnsignedShort();

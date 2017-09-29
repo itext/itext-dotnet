@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Extgstate {
@@ -751,32 +750,6 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHalftone(PdfObject halftone) {
             return Put(PdfName.HT, halftone);
-        }
-
-        /// <summary>
-        /// Gets
-        /// <c>HTP</c>
-        /// key.
-        /// </summary>
-        [Obsolete]
-        public virtual PdfObject GetHTP() {
-            return GetPdfObject().Get(PdfName.HTP);
-        }
-
-        /// <summary>
-        /// Sets
-        /// <c>HTP</c>
-        /// key.
-        /// </summary>
-        /// <param name="htp">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// .
-        /// </param>
-        /// <returns>object itself.</returns>
-        [Obsolete]
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHTP(PdfObject htp) {
-            return Put(PdfName.HTP, htp);
         }
 
         /// <summary>

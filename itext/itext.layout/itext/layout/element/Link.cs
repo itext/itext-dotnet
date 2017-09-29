@@ -60,9 +60,6 @@ namespace iText.Layout.Element {
     /// HTML anchor tag.
     /// </summary>
     public class Link : Text {
-        [Obsolete]
-        protected internal PdfLinkAnnotation linkAnnotation;
-
         /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
         /// <param name="text">the textual contents of the link</param>
         /// <param name="linkAnnotation">

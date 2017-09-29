@@ -52,9 +52,8 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <summary>An abstract wrapper for supported types of XObject.</summary>
     /// <seealso cref="PdfFormXObject"/>
     /// <seealso cref="PdfImageXObject"/>
-    public class PdfXObject : PdfObjectWrapper<PdfStream> {
-        [Obsolete]
-        public PdfXObject(PdfStream pdfObject)
+    public abstract class PdfXObject : PdfObjectWrapper<PdfStream> {
+        protected internal PdfXObject(PdfStream pdfObject)
             : base(pdfObject) {
         }
 

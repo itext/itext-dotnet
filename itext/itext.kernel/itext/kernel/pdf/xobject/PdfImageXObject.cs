@@ -351,9 +351,8 @@ namespace iText.Kernel.Pdf.Xobject {
             return this;
         }
 
-        [Obsolete]
-        protected internal static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject
-             imageMask) {
+        private static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject imageMask
+            ) {
             PdfStream stream;
             if (image.GetOriginalType() == ImageType.RAW) {
                 RawImageHelper.UpdateImageAttributes((RawImageData)image, null);

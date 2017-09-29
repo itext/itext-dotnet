@@ -63,9 +63,6 @@ namespace iText.Layout {
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        [System.ObsoleteAttribute(@"This field just hides the same field from ElementPropertyContainer{T}")]
-        protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
-
         protected internal PdfFont defaultFont;
 
         protected internal FontProvider defaultFontProvider;

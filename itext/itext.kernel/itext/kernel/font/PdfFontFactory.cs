@@ -655,9 +655,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>Checks if the provided dictionary is a valid font dictionary of the provided font type.</summary>
         /// <returns><code>true</code> if the passed dictionary is a valid dictionary, <code>false</code> otherwise</returns>
-        [System.ObsoleteAttribute(@"this method will become private in 7.1. Do not use this method")]
-        protected internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException
-            ) {
+        private static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {
                 if (isException) {
