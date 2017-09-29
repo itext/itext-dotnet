@@ -1917,18 +1917,96 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest01() {
-            // TODO DEVSIX-1555
             String testName = "tableMinMaxWidthTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
-            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216));
-            // Notice that the next (commented) line will cause an exception
-            // cell.setMaxWidth(72);
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add("width:72pt");
             cell.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(72));
             table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest02() {
+            String testName = "tableMinMaxWidthTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add("width:72pt");
+            cell.SetMaxWidth(72);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest03() {
+            String testName = "tableMinMaxWidthTest03.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add("width:72pt");
+            cell.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(72));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest04() {
+            String testName = "tableMinMaxWidthTest04.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add("width:72pt");
+            cell.SetMinWidth(72);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest05() {
+            String testName = "tableMinMaxWidthTest05.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 2, 1, 1 }));
+            table.SetWidthPercent(80);
+            table.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+            table.AddCell(new Cell(1, 3).Add("Cell with colspan 3"));
+            table.AddCell(new Cell(2, 1).Add("Cell with rowspan 2"));
+            table.AddCell(new Cell().Add("row 1; cell 1").SetMinWidth(200));
+            table.AddCell(new Cell().Add("row 1; cell 2").SetMaxWidth(50));
+            table.AddCell("row 2; cell 1");
+            table.AddCell("row 2; cell 2");
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

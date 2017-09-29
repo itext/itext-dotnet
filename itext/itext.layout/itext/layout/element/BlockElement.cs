@@ -354,12 +354,12 @@ namespace iText.Layout.Element {
         }
 
         public virtual T SetMaxWidth(float maxWidth) {
-            SetProperty(Property.MAX_WIDTH, maxWidth);
+            SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(maxWidth));
             return (T)(Object)this;
         }
 
         public virtual T SetMinWidth(float minWidth) {
-            SetProperty(Property.MIN_WIDTH, minWidth);
+            SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(minWidth));
             return (T)(Object)this;
         }
 
