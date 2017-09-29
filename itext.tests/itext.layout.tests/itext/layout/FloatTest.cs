@@ -424,8 +424,8 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas pdfCanvas = new PdfCanvas(page);
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins<Rectangle
-                >(36, 36, 36, 36, false));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins(36
+                , 36, 36, 36, false));
             Div div = new Div().SetBackgroundColor(Color.RED);
             Div fDiv = new Div().SetBackgroundColor(Color.BLUE).SetWidth(200).SetHeight(200);
             fDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);

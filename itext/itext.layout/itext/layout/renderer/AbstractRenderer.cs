@@ -1193,7 +1193,7 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyMargins(Rectangle rect, float[] margins, bool reverse) {
-            return rect.ApplyMargins<Rectangle>(margins[0], margins[1], margins[2], margins[3], reverse);
+            return rect.ApplyMargins(margins[0], margins[1], margins[2], margins[3], reverse);
         }
 
         /// <summary>Returns margins of the renderer</summary>
@@ -1245,7 +1245,7 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
-            return rect.ApplyMargins<Rectangle>(paddings[0], paddings[1], paddings[2], paddings[3], reverse);
+            return rect.ApplyMargins(paddings[0], paddings[1], paddings[2], paddings[3], reverse);
         }
 
         /// <summary>
@@ -1289,7 +1289,7 @@ namespace iText.Layout.Renderer {
             float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;
             float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
             float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
-            return rect.ApplyMargins<Rectangle>(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
+            return rect.ApplyMargins(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
         }
 
         protected internal virtual void ApplyAbsolutePosition(Rectangle parentRect) {

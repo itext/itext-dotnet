@@ -587,7 +587,7 @@ namespace iText.Layout.Renderer {
         // region occupation
         protected internal override TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox, bool reverse) {
             if (null != layoutBox) {
-                layoutBox.ApplyMargins<Rectangle>(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, reverse);
+                layoutBox.ApplyMargins(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, reverse);
             }
             return this;
         }
@@ -640,7 +640,7 @@ namespace iText.Layout.Renderer {
 
         protected internal override TableBorders ApplyCellIndents(Rectangle box, float topIndent, float rightIndent
             , float bottomIndent, float leftIndent, bool reverse) {
-            box.ApplyMargins<Rectangle>(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
+            box.ApplyMargins(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
             return this;
         }
 

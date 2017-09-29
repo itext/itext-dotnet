@@ -358,16 +358,14 @@ namespace iText.Kernel.Geom {
         /// <see langword="true"/>
         /// the rectangle will expand, otherwise it will shrink
         /// </param>
-        /// 
-        /// <returns>this instance that is cast to type T.</returns>
-        public virtual T ApplyMargins<T>(float topIndent, float rightIndent, float bottomIndent, float leftIndent, 
-            bool reverse)
-            where T : iText.Kernel.Geom.Rectangle {
+        /// <returns>the rectangle with applied margins</returns>
+        public virtual iText.Kernel.Geom.Rectangle ApplyMargins(float topIndent, float rightIndent, float bottomIndent
+            , float leftIndent, bool reverse) {
             x += leftIndent * (reverse ? -1 : 1);
             width -= (leftIndent + rightIndent) * (reverse ? -1 : 1);
             y += bottomIndent * (reverse ? -1 : 1);
             height -= (topIndent + bottomIndent) * (reverse ? -1 : 1);
-            return (T)this;
+            return this;
         }
 
         /// <summary>Checks if rectangle have common points with line, specified by two points.</summary>

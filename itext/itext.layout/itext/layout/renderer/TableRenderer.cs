@@ -1067,12 +1067,12 @@ namespace iText.Layout.Renderer {
             bool shrinkBackgroundArea = bordersHandler is CollapsedTableBorders && (IsHeaderRenderer() || IsFooterRenderer
                 ());
             if (shrinkBackgroundArea) {
-                occupiedArea.GetBBox().ApplyMargins<Rectangle>(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
                     () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, false);
             }
             base.DrawBackground(drawContext);
             if (shrinkBackgroundArea) {
-                occupiedArea.GetBBox().ApplyMargins<Rectangle>(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
                     () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, true);
             }
             if (null != headerRenderer) {
