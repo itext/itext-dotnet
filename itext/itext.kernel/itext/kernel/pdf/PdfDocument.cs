@@ -108,14 +108,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
-        /// <summary>The ID entry that represents the initial identifier.</summary>
-        [Obsolete]
-        protected internal PdfString initialDocumentId;
-
-        /// <summary>The ID entry that represents a change in a document.</summary>
-        [Obsolete]
-        protected internal PdfString modifiedDocumentId;
-
         /// <summary>The original second id when the document is read initially.</summary>
         private PdfString originalModifiedDocumentId;
 
@@ -127,9 +119,6 @@ namespace iText.Kernel.Pdf {
         protected internal PdfStructTreeRoot structTreeRoot;
 
         protected internal int structParentIndex = -1;
-
-        [Obsolete]
-        protected internal bool userProperties;
 
         protected internal bool closeReader = true;
 
@@ -783,11 +772,6 @@ namespace iText.Kernel.Pdf {
             if (properties.initialDocumentId != null) {
                 originalFileID = ByteUtils.GetIsoBytes(properties.initialDocumentId.GetValue());
             }
-            else {
-                if (initialDocumentId != null) {
-                    originalFileID = ByteUtils.GetIsoBytes(initialDocumentId.GetValue());
-                }
-            }
             if (originalFileID == null && crypto == null && writer.crypto != null) {
                 originalFileID = writer.crypto.GetDocumentId();
             }
@@ -801,11 +785,6 @@ namespace iText.Kernel.Pdf {
             byte[] secondId = null;
             if (properties.modifiedDocumentId != null) {
                 secondId = ByteUtils.GetIsoBytes(properties.modifiedDocumentId.GetValue());
-            }
-            else {
-                if (modifiedDocumentId != null) {
-                    secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
-                }
             }
             if (secondId == null && originalModifiedDocumentId != null) {
                 PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
@@ -1489,7 +1468,6 @@ namespace iText.Kernel.Pdf {
         ///     </summary>
         /// <param name="userProperties">the user properties flag</param>
         public virtual void SetUserProperties(bool userProperties) {
-            this.userProperties = userProperties;
             PdfBoolean userPropsVal = userProperties ? PdfBoolean.TRUE : PdfBoolean.FALSE;
             UpdateValueInMarkInfoDict(PdfName.UserProperties, userPropsVal);
         }
