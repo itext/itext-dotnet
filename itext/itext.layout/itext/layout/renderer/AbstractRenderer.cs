@@ -694,40 +694,11 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer child in childRenderers) {
                 Transform transformProp = child.GetProperty<Transform>(Property.TRANSFORM);
                 Border outlineProp = child.GetProperty<Border>(Property.OUTLINE);
-                if (FloatingHelper.IsRendererFloating(child) || transformProp != null || outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer
-                    ) {
-                    RootRenderer rootRenderer = GetRootRenderer();
-                    if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
-                        if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
-                            rootRenderer.waitingDrawingElements.Add(child);
-                        }
-                        else {
-                            waitingRenderers.Add(child);
-                        }
-                    }
-                    if (outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer) {
-                        iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
-                        if (abstractChild.IsRelativePosition()) {
-                            abstractChild.ApplyRelativePositioningTranslation(false);
-                        }
-                        DivRenderer div = GetDivRendererWithOutlines(abstractChild, outlineProp, transformProp);
-                        if (CorrectPlacementOutline(div)) {
-                            if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
-                                rootRenderer.waitingDrawingElements.Add(div);
-                            }
-                            else {
-                                waitingRenderers.Add(div);
-                            }
-                        }
-                        if (abstractChild.IsRelativePosition()) {
-                            abstractChild.ApplyRelativePositioningTranslation(true);
-                        }
-                        if (!FloatingHelper.IsRendererFloating(child) && transformProp == null) {
-                            child.Draw(drawContext);
-                        }
-                    }
-                }
-                else {
+                RootRenderer rootRenderer = GetRootRenderer();
+                IList<IRenderer> waiting = (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) ? 
+                    rootRenderer.waitingDrawingElements : waitingRenderers;
+                ProcessWaitingDrawing(child, transformProp, outlineProp, waiting);
+                if (!FloatingHelper.IsRendererFloating(child) && transformProp == null) {
                     child.Draw(drawContext);
                 }
             }
@@ -736,31 +707,40 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal static DivRenderer GetDivRendererWithOutlines(iText.Layout.Renderer.AbstractRenderer renderer, Border
-             outlineProp, Transform transformProp) {
-            Div outlines = new Div();
-            outlines.SetRole(null);
-            if (transformProp != null) {
-                outlines.SetProperty(Property.TRANSFORM, transformProp);
+        internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, Border outlineProp, IList
+            <IRenderer> waitingDrawing) {
+            if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
+                waitingDrawing.Add(child);
             }
-            outlines.SetProperty(Property.BORDER, outlineProp);
-            float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-            if (renderer.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
-                offset += (float)renderer.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+            if (outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer) {
+                iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(false);
+                }
+                Div outlines = new Div();
+                outlines.SetRole(null);
+                if (transformProp != null) {
+                    outlines.SetProperty(Property.TRANSFORM, transformProp);
+                }
+                outlines.SetProperty(Property.BORDER, outlineProp);
+                float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (abstractChild.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                    offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                }
+                DivRenderer div = new DivRenderer(outlines);
+                Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
+                    ).MoveLeft(offset).MoveDown(offset);
+                divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                    2 * offset);
+                div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+                float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                    waitingDrawing.Add(div);
+                }
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(true);
+                }
             }
-            DivRenderer div = new DivRenderer(outlines);
-            Rectangle divOccupiedArea = renderer.ApplyMargins(renderer.occupiedArea.Clone().GetBBox(), false).MoveLeft
-                (offset).MoveDown(offset);
-            divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
-                2 * offset);
-            div.occupiedArea = new LayoutArea(renderer.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
-            return div;
-        }
-
-        internal static bool CorrectPlacementOutline(DivRenderer div) {
-            float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
-            return div.occupiedArea.GetBBox().GetWidth() >= outlineWidth * 2 && div.occupiedArea.GetBBox().GetHeight()
-                 >= outlineWidth * 2;
         }
 
         /// <summary>

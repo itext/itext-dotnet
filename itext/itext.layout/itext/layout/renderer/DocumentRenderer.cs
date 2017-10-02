@@ -109,26 +109,9 @@ namespace iText.Layout.Renderer {
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
             Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
             Border outlineProp = resultRenderer.GetProperty<Border>(Property.OUTLINE);
-            if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || transformProp != null || outlineProp != null)) {
-                if (outlineProp != null && resultRenderer is AbstractRenderer) {
-                    AbstractRenderer abstractResult = (AbstractRenderer)resultRenderer;
-                    DivRenderer div = GetDivRendererWithOutlines(abstractResult, outlineProp, transformProp);
-                    if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
-                        waitingDrawingElements.Add(resultRenderer);
-                        if (CorrectPlacementOutline(div)) {
-                            waitingDrawingElements.Add(div);
-                        }
-                        return;
-                    }
-                    else {
-                        if (CorrectPlacementOutline(div)) {
-                            waitingDrawingElements.Add(div);
-                        }
-                    }
-                }
-                else {
-                    waitingDrawingElements.Add(resultRenderer);
+            if (!waitingDrawingElements.Contains(resultRenderer)) {
+                ProcessWaitingDrawing(resultRenderer, transformProp, outlineProp, waitingDrawingElements);
+                if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
                     return;
                 }
             }
