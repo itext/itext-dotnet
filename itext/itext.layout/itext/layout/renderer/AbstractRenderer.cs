@@ -702,7 +702,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (child.GetProperty<Border>(Property.OUTLINE) != null) {
+                    if (child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
+                        ) {
                         iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
                         Div outlines = new Div();
                         outlines.SetRole(null);
