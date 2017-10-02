@@ -99,14 +99,14 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
+            Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
+            Border outlineProp = resultRenderer.GetProperty<Border>(Property.OUTLINE);
             if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null || resultRenderer.GetProperty<Border
-                >(Property.OUTLINE) != null)) {
-                if (resultRenderer.GetProperty<Border>(Property.OUTLINE) != null && resultRenderer is AbstractRenderer) {
+                 || transformProp != null || outlineProp != null)) {
+                if (outlineProp != null && resultRenderer is AbstractRenderer) {
                     AbstractRenderer abstractResult = (AbstractRenderer)resultRenderer;
-                    DivRenderer div = GetDivRendererWithOutlines(abstractResult);
-                    if (FloatingHelper.IsRendererFloating(resultRenderer) || resultRenderer.GetProperty<Transform>(Property.TRANSFORM
-                        ) != null) {
+                    DivRenderer div = GetDivRendererWithOutlines(abstractResult, outlineProp, transformProp);
+                    if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
                         waitingDrawingElements.Add(resultRenderer);
                         if (CorrectPlacementOutline(div)) {
                             waitingDrawingElements.Add(div);

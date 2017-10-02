@@ -692,11 +692,12 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null ||
-                     child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
+                Transform transformProp = child.GetProperty<Transform>(Property.TRANSFORM);
+                Border outlineProp = child.GetProperty<Border>(Property.OUTLINE);
+                if (FloatingHelper.IsRendererFloating(child) || transformProp != null || outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer
                     ) {
                     RootRenderer rootRenderer = GetRootRenderer();
-                    if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                    if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
                         if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
                             rootRenderer.waitingDrawingElements.Add(child);
                         }
@@ -704,13 +705,12 @@ namespace iText.Layout.Renderer {
                             waitingRenderers.Add(child);
                         }
                     }
-                    if (child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
-                        ) {
+                    if (outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer) {
                         iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
                         if (abstractChild.IsRelativePosition()) {
                             abstractChild.ApplyRelativePositioningTranslation(false);
                         }
-                        DivRenderer div = GetDivRendererWithOutlines(abstractChild);
+                        DivRenderer div = GetDivRendererWithOutlines(abstractChild, outlineProp, transformProp);
                         if (CorrectPlacementOutline(div)) {
                             if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
                                 rootRenderer.waitingDrawingElements.Add(div);
@@ -722,7 +722,7 @@ namespace iText.Layout.Renderer {
                         if (abstractChild.IsRelativePosition()) {
                             abstractChild.ApplyRelativePositioningTranslation(true);
                         }
-                        if (!FloatingHelper.IsRendererFloating(child) && child.GetProperty<Transform>(Property.TRANSFORM) == null) {
+                        if (!FloatingHelper.IsRendererFloating(child) && transformProp == null) {
                             child.Draw(drawContext);
                         }
                     }
@@ -736,13 +736,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal static DivRenderer GetDivRendererWithOutlines(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static DivRenderer GetDivRendererWithOutlines(iText.Layout.Renderer.AbstractRenderer renderer, Border
+             outlineProp, Transform transformProp) {
             Div outlines = new Div();
             outlines.SetRole(null);
-            if (renderer.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                outlines.SetProperty(Property.TRANSFORM, renderer.GetProperty<Transform>(Property.TRANSFORM));
+            if (transformProp != null) {
+                outlines.SetProperty(Property.TRANSFORM, transformProp);
             }
-            outlines.SetProperty(Property.BORDER, renderer.GetProperty<Border>(Property.OUTLINE));
+            outlines.SetProperty(Property.BORDER, outlineProp);
             float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
             if (renderer.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
                 offset += (float)renderer.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
