@@ -707,27 +707,11 @@ namespace iText.Layout.Renderer {
                     if (child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
                         ) {
                         iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
-                        Div outlines = new Div();
-                        outlines.SetRole(null);
-                        if (abstractChild.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                            outlines.SetProperty(Property.TRANSFORM, abstractChild.GetProperty<Transform>(Property.TRANSFORM));
-                        }
-                        outlines.SetProperty(Property.BORDER, child.GetProperty<Border>(Property.OUTLINE));
-                        float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                        if (child.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
-                            offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
-                        }
-                        DivRenderer div = new DivRenderer(outlines);
                         if (abstractChild.IsRelativePosition()) {
                             abstractChild.ApplyRelativePositioningTranslation(false);
                         }
-                        Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
-                            ).MoveLeft(offset).MoveDown(offset);
-                        divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
-                            2 * offset);
-                        div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
-                        float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                        if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                        DivRenderer div = GetDivRendererWithOutlines(abstractChild);
+                        if (CorrectPlacementOutline(div)) {
                             if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
                                 rootRenderer.waitingDrawingElements.Add(div);
                             }
@@ -750,6 +734,32 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer waitingRenderer in waitingRenderers) {
                 waitingRenderer.Draw(drawContext);
             }
+        }
+
+        internal static DivRenderer GetDivRendererWithOutlines(iText.Layout.Renderer.AbstractRenderer renderer) {
+            Div outlines = new Div();
+            outlines.SetRole(null);
+            if (renderer.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                outlines.SetProperty(Property.TRANSFORM, renderer.GetProperty<Transform>(Property.TRANSFORM));
+            }
+            outlines.SetProperty(Property.BORDER, renderer.GetProperty<Border>(Property.OUTLINE));
+            float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+            if (renderer.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                offset += (float)renderer.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+            }
+            DivRenderer div = new DivRenderer(outlines);
+            Rectangle divOccupiedArea = renderer.ApplyMargins(renderer.occupiedArea.Clone().GetBBox(), false).MoveLeft
+                (offset).MoveDown(offset);
+            divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                2 * offset);
+            div.occupiedArea = new LayoutArea(renderer.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+            return div;
+        }
+
+        internal static bool CorrectPlacementOutline(DivRenderer div) {
+            float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
+            return div.occupiedArea.GetBBox().GetWidth() >= outlineWidth * 2 && div.occupiedArea.GetBBox().GetHeight()
+                 >= outlineWidth * 2;
         }
 
         /// <summary>
