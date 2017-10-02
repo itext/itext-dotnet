@@ -108,10 +108,13 @@ namespace iText.Layout.Renderer {
                     AbstractRenderer abstractResult = (AbstractRenderer)resultRenderer;
                     Div outlines = new Div();
                     outlines.SetRole(null);
+                    if (abstractResult.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                        outlines.SetProperty(Property.TRANSFORM, abstractResult.GetProperty<Transform>(Property.TRANSFORM));
+                    }
                     outlines.SetProperty(Property.BORDER, resultRenderer.GetProperty<Border>(Property.OUTLINE));
                     float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
                     if (resultRenderer.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
-                        offset += abstractResult.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                        offset += (float)abstractResult.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
                     }
                     DivRenderer div = new DivRenderer(outlines);
                     Rectangle divOccupiedArea = abstractResult.ApplyMargins(abstractResult.occupiedArea.Clone().GetBBox(), false
@@ -120,8 +123,18 @@ namespace iText.Layout.Renderer {
                         2 * offset);
                     div.occupiedArea = new LayoutArea(abstractResult.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
                     float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                    if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
-                        waitingDrawingElements.Add(div);
+                    if (FloatingHelper.IsRendererFloating(resultRenderer) || resultRenderer.GetProperty<Transform>(Property.TRANSFORM
+                        ) != null) {
+                        waitingDrawingElements.Add(resultRenderer);
+                        if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                            waitingDrawingElements.Add(div);
+                        }
+                        return;
+                    }
+                    else {
+                        if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                            waitingDrawingElements.Add(div);
+                        }
                     }
                 }
                 else {

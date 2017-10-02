@@ -692,25 +692,30 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null ||
+                     child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
+                    ) {
                     RootRenderer rootRenderer = GetRootRenderer();
-                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
-                        rootRenderer.waitingDrawingElements.Add(child);
+                    if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                        if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
+                            rootRenderer.waitingDrawingElements.Add(child);
+                        }
+                        else {
+                            waitingRenderers.Add(child);
+                        }
                     }
-                    else {
-                        waitingRenderers.Add(child);
-                    }
-                }
-                else {
                     if (child.GetProperty<Border>(Property.OUTLINE) != null && child is iText.Layout.Renderer.AbstractRenderer
                         ) {
                         iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
                         Div outlines = new Div();
                         outlines.SetRole(null);
+                        if (abstractChild.GetProperty<Transform>(Property.TRANSFORM) != null) {
+                            outlines.SetProperty(Property.TRANSFORM, abstractChild.GetProperty<Transform>(Property.TRANSFORM));
+                        }
                         outlines.SetProperty(Property.BORDER, child.GetProperty<Border>(Property.OUTLINE));
                         float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
                         if (child.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
-                            offset += abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                            offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
                         }
                         DivRenderer div = new DivRenderer(outlines);
                         if (abstractChild.IsRelativePosition()) {
@@ -723,22 +728,23 @@ namespace iText.Layout.Renderer {
                         div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
                         float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
                         if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
-                            RootRenderer rootRenderer = GetRootRenderer();
                             if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
                                 rootRenderer.waitingDrawingElements.Add(div);
                             }
                             else {
                                 waitingRenderers.Add(div);
                             }
-                            if (abstractChild.IsRelativePosition()) {
-                                abstractChild.ApplyRelativePositioningTranslation(true);
-                            }
                         }
-                        child.Draw(drawContext);
+                        if (abstractChild.IsRelativePosition()) {
+                            abstractChild.ApplyRelativePositioningTranslation(true);
+                        }
+                        if (!FloatingHelper.IsRendererFloating(child) && child.GetProperty<Transform>(Property.TRANSFORM) == null) {
+                            child.Draw(drawContext);
+                        }
                     }
-                    else {
-                        child.Draw(drawContext);
-                    }
+                }
+                else {
+                    child.Draw(drawContext);
                 }
             }
             foreach (IRenderer waitingRenderer in waitingRenderers) {
