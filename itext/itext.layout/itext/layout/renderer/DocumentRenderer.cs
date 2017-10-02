@@ -47,6 +47,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -106,10 +107,13 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null)) {
-                waitingDrawingElements.Add(resultRenderer);
-                return;
+            Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
+            Border outlineProp = resultRenderer.GetProperty<Border>(Property.OUTLINE);
+            if (!waitingDrawingElements.Contains(resultRenderer)) {
+                ProcessWaitingDrawing(resultRenderer, transformProp, outlineProp, waitingDrawingElements);
+                if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
+                    return;
+                }
             }
             if (!resultRenderer.IsFlushed() && null != resultRenderer.GetOccupiedArea()) {
                 // TODO Remove checking occupied area to be not null when DEVSIX-1001 is resolved.

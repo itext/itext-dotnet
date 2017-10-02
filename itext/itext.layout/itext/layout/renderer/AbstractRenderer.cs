@@ -692,21 +692,54 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                    RootRenderer rootRenderer = GetRootRenderer();
-                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
-                        rootRenderer.waitingDrawingElements.Add(child);
-                    }
-                    else {
-                        waitingRenderers.Add(child);
-                    }
-                }
-                else {
+                Transform transformProp = child.GetProperty<Transform>(Property.TRANSFORM);
+                Border outlineProp = child.GetProperty<Border>(Property.OUTLINE);
+                RootRenderer rootRenderer = GetRootRenderer();
+                IList<IRenderer> waiting = (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) ? 
+                    rootRenderer.waitingDrawingElements : waitingRenderers;
+                ProcessWaitingDrawing(child, transformProp, outlineProp, waiting);
+                if (!FloatingHelper.IsRendererFloating(child) && transformProp == null) {
                     child.Draw(drawContext);
                 }
             }
             foreach (IRenderer waitingRenderer in waitingRenderers) {
                 waitingRenderer.Draw(drawContext);
+            }
+        }
+
+        internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, Border outlineProp, IList
+            <IRenderer> waitingDrawing) {
+            if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
+                waitingDrawing.Add(child);
+            }
+            if (outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer) {
+                iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(false);
+                }
+                Div outlines = new Div();
+                outlines.SetRole(null);
+                if (transformProp != null) {
+                    outlines.SetProperty(Property.TRANSFORM, transformProp);
+                }
+                outlines.SetProperty(Property.BORDER, outlineProp);
+                float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (abstractChild.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                    offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                }
+                DivRenderer div = new DivRenderer(outlines);
+                Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
+                    ).MoveLeft(offset).MoveDown(offset);
+                divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                    2 * offset);
+                div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+                float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                    waitingDrawing.Add(div);
+                }
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(true);
+                }
             }
         }
 
