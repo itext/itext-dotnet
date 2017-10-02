@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -1008,6 +1009,7 @@ namespace iText.Layout.Renderer {
                     isTagged = false;
                 }
             }
+            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (isTagged) {
                     int adjustByHeaderRowsNum = 0;
@@ -1035,10 +1037,36 @@ namespace iText.Layout.Renderer {
                         tagPointer.AddTag(PdfName.TR);
                     }
                 }
+                if (child.GetProperty<Border>(Property.OUTLINE) != null) {
+                    AbstractRenderer abstractChild = (AbstractRenderer)child;
+                    Div outlines = new Div();
+                    outlines.SetProperty(Property.BORDER, child.GetProperty<Border>(Property.OUTLINE));
+                    outlines.SetBackgroundColor(Color.BLACK, 0f);
+                    float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                    if (child.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                        offset += abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                    }
+                    DivRenderer div = new DivRenderer(outlines);
+                    Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
+                        ).MoveLeft(offset).MoveDown(offset);
+                    divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                        2 * offset);
+                    div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+                    RootRenderer rootRenderer = GetRootRenderer();
+                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
+                        rootRenderer.waitingDrawingElements.Add(div);
+                    }
+                    else {
+                        waitingRenderers.Add(div);
+                    }
+                }
                 child.Draw(drawContext);
                 if (isTagged) {
                     tagPointer.MoveToParent();
                 }
+            }
+            foreach (IRenderer waitingRenderer in waitingRenderers) {
+                waitingRenderer.Draw(drawContext);
             }
             if (isTagged) {
                 if (shouldHaveFooterOrHeaderTag) {

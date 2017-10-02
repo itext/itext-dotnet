@@ -42,8 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Log;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
+using iText.Layout.Borders;
+using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 
@@ -99,9 +102,32 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
             if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null)) {
-                waitingDrawingElements.Add(resultRenderer);
-                return;
+                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null || resultRenderer.GetProperty<Border
+                >(Property.OUTLINE) != null)) {
+                if (resultRenderer.GetProperty<Border>(Property.OUTLINE) != null) {
+                    Div outlines = new Div();
+                    outlines.SetRole(null);
+                    outlines.SetProperty(Property.BORDER, resultRenderer.GetProperty<Border>(Property.OUTLINE));
+                    float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                    if (resultRenderer.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                        offset += ((AbstractRenderer)resultRenderer).GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                    }
+                    DivRenderer div = new DivRenderer(outlines);
+                    Rectangle divOccupiedArea = ((AbstractRenderer)resultRenderer).ApplyMargins(((AbstractRenderer)resultRenderer
+                        ).occupiedArea.Clone().GetBBox(), false).MoveLeft(offset).MoveDown(offset);
+                    divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                        2 * offset);
+                    div.occupiedArea = new LayoutArea(((AbstractRenderer)resultRenderer).GetOccupiedArea().GetPageNumber(), divOccupiedArea
+                        );
+                    float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                    if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                        waitingDrawingElements.Add(div);
+                    }
+                }
+                else {
+                    waitingDrawingElements.Add(resultRenderer);
+                    return;
+                }
             }
             if (!resultRenderer.IsFlushed()) {
                 bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();

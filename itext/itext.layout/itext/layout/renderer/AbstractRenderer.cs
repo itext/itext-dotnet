@@ -702,7 +702,42 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    child.Draw(drawContext);
+                    if (child.GetProperty<Border>(Property.OUTLINE) != null) {
+                        iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
+                        Div outlines = new Div();
+                        outlines.SetRole(null);
+                        outlines.SetProperty(Property.BORDER, child.GetProperty<Border>(Property.OUTLINE));
+                        float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                        if (child.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                            offset += abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                        }
+                        DivRenderer div = new DivRenderer(outlines);
+                        if (abstractChild.IsRelativePosition()) {
+                            abstractChild.ApplyRelativePositioningTranslation(false);
+                        }
+                        Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
+                            ).MoveLeft(offset).MoveDown(offset);
+                        divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                            2 * offset);
+                        div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+                        float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                        if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                            RootRenderer rootRenderer = GetRootRenderer();
+                            if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
+                                rootRenderer.waitingDrawingElements.Add(div);
+                            }
+                            else {
+                                waitingRenderers.Add(div);
+                            }
+                            if (abstractChild.IsRelativePosition()) {
+                                abstractChild.ApplyRelativePositioningTranslation(true);
+                            }
+                        }
+                        child.Draw(drawContext);
+                    }
+                    else {
+                        child.Draw(drawContext);
+                    }
                 }
             }
             foreach (IRenderer waitingRenderer in waitingRenderers) {
