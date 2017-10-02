@@ -1008,7 +1008,6 @@ namespace iText.Layout.Renderer {
                     isTagged = false;
                 }
             }
-            IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
                 if (isTagged) {
                     int adjustByHeaderRowsNum = 0;
@@ -1036,64 +1035,10 @@ namespace iText.Layout.Renderer {
                         tagPointer.AddTag(PdfName.TR);
                     }
                 }
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null ||
-                     child.GetProperty<Border>(Property.OUTLINE) != null && child is AbstractRenderer) {
-                    RootRenderer rootRenderer = GetRootRenderer();
-                    if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                        if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
-                            rootRenderer.waitingDrawingElements.Add(child);
-                        }
-                        else {
-                            waitingRenderers.Add(child);
-                        }
-                    }
-                    if (child.GetProperty<Border>(Property.OUTLINE) != null && child is AbstractRenderer) {
-                        AbstractRenderer abstractChild = (AbstractRenderer)child;
-                        Div outlines = new Div();
-                        outlines.SetRole(null);
-                        if (abstractChild.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                            outlines.SetProperty(Property.TRANSFORM, abstractChild.GetProperty<Transform>(Property.TRANSFORM));
-                        }
-                        outlines.SetProperty(Property.BORDER, child.GetProperty<Border>(Property.OUTLINE));
-                        float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                        if (child.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
-                            offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
-                        }
-                        DivRenderer div = new DivRenderer(outlines);
-                        if (abstractChild.IsRelativePosition()) {
-                            abstractChild.ApplyRelativePositioningTranslation(false);
-                        }
-                        Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
-                            ).MoveLeft(offset).MoveDown(offset);
-                        divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
-                            2 * offset);
-                        div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
-                        float outlineWidth = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                        if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
-                            if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(div)) {
-                                rootRenderer.waitingDrawingElements.Add(div);
-                            }
-                            else {
-                                waitingRenderers.Add(div);
-                            }
-                        }
-                        if (abstractChild.IsRelativePosition()) {
-                            abstractChild.ApplyRelativePositioningTranslation(true);
-                        }
-                        if (!FloatingHelper.IsRendererFloating(child) && child.GetProperty<Transform>(Property.TRANSFORM) == null) {
-                            child.Draw(drawContext);
-                        }
-                    }
-                }
-                else {
-                    child.Draw(drawContext);
-                }
+                child.Draw(drawContext);
                 if (isTagged) {
                     tagPointer.MoveToParent();
                 }
-            }
-            foreach (IRenderer waitingRenderer in waitingRenderers) {
-                waitingRenderer.Draw(drawContext);
             }
             if (isTagged) {
                 if (shouldHaveFooterOrHeaderTag) {
