@@ -724,7 +724,7 @@ namespace iText.Layout.Renderer {
                 }
                 outlines.SetProperty(Property.BORDER, outlineProp);
                 float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
-                if (abstractChild.GetProperty<Border>(Property.OUTLINE_OFFSET) != null) {
+                if (abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET) != null) {
                     offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
                 }
                 DivRenderer div = new DivRenderer(outlines);
