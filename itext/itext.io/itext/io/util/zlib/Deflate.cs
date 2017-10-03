@@ -35,7 +35,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace System.util.zlib {
 
-    public sealed class Deflate{
+    internal sealed class Deflate{
 
         private const int MAX_MEM_LEVEL=9;
 
