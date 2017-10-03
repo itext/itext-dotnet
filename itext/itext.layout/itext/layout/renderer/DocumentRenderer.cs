@@ -102,7 +102,7 @@ namespace iText.Layout.Renderer {
             if (lastPageSize == null) {
                 lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetTrimBox());
             }
-            return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
+            return (currentArea = new RootLayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {

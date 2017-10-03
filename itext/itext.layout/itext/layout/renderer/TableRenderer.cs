@@ -210,7 +210,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetFinishRow());
-            InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
+            InitializeHeaderAndFooter(isAndWasComplete || 0 == rowRange.GetStartRow() || IsFirstOnRootArea(true));
             // update
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);

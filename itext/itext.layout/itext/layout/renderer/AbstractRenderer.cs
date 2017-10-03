@@ -1651,15 +1651,21 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual bool IsFirstOnRootArea() {
+            return IsFirstOnRootArea(false);
+        }
+
+        internal virtual bool IsFirstOnRootArea(bool checkRootAreaOnly) {
             bool isFirstOnRootArea = true;
             IRenderer ancestor = this;
             while (isFirstOnRootArea && ancestor.GetParent() != null) {
                 IRenderer parent = ancestor.GetParent();
                 if (parent is RootRenderer) {
-                    isFirstOnRootArea = ((RootRenderer)parent).GetCurrentArea().IsEmptyArea();
+                    isFirstOnRootArea = ((RootRenderer)parent).currentArea.IsEmptyArea();
                 }
                 else {
-                    isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                    if (!checkRootAreaOnly) {
+                        isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                    }
                 }
                 ancestor = parent;
             }

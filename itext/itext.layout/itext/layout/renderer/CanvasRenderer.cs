@@ -121,7 +121,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             if (currentArea == null) {
-                currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
+                currentArea = new RootLayoutArea(0, canvas.GetRootArea().Clone());
             }
             else {
                 SetProperty(Property.FULL, true);

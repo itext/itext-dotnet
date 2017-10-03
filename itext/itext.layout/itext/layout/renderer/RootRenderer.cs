@@ -54,7 +54,7 @@ namespace iText.Layout.Renderer {
     public abstract class RootRenderer : AbstractRenderer {
         protected internal bool immediateFlush = true;
 
-        protected internal LayoutArea currentArea;
+        protected internal RootLayoutArea currentArea;
 
         protected internal int currentPageNumber;
 
@@ -101,15 +101,16 @@ namespace iText.Layout.Renderer {
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
-                LayoutArea storedArea = null;
-                LayoutArea nextStoredArea = null;
+                RootLayoutArea storedArea = null;
+                RootLayoutArea nextStoredArea = null;
                 MarginsCollapseInfo childMarginsInfo = null;
                 if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
                 bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
-                    (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
+                    (((RootLayoutArea)currentArea.Clone()), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult
+                    .FULL) {
                     bool currentAreaNeedsToBeUpdated = false;
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (rendererIsFloat) {
@@ -371,7 +372,7 @@ namespace iText.Layout.Renderer {
 
         private void ProcessWaitingKeepWithNextElement(IRenderer renderer) {
             if (keepWithNextHangingRenderer != null) {
-                LayoutArea rest = currentArea.Clone();
+                LayoutArea rest = ((RootLayoutArea)currentArea.Clone());
                 rest.GetBBox().SetHeight(rest.GetBBox().GetHeight() - keepWithNextHangingRendererLayoutResult.GetOccupiedArea
                     ().GetBBox().GetHeight());
                 bool ableToProcessKeepWithNext = false;
@@ -391,18 +392,18 @@ namespace iText.Layout.Renderer {
                     }
                     for (int i = 0; i < trySplitHeightPoints.Count && !ableToProcessKeepWithNext; i++) {
                         float curElementSplitHeight = trySplitHeightPoints[i];
-                        LayoutArea firstElementSplitLayoutArea = currentArea.Clone();
+                        RootLayoutArea firstElementSplitLayoutArea = ((RootLayoutArea)currentArea.Clone());
                         firstElementSplitLayoutArea.GetBBox().SetHeight(curElementSplitHeight).MoveUp(currentArea.GetBBox().GetHeight
                             () - curElementSplitHeight);
                         LayoutResult firstElementSplitLayoutResult = keepWithNextHangingRenderer.SetParent(this).Layout(new LayoutContext
-                            (firstElementSplitLayoutArea.Clone()));
+                            (((RootLayoutArea)firstElementSplitLayoutArea.Clone())));
                         if (firstElementSplitLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
-                            LayoutArea storedArea = currentArea;
+                            RootLayoutArea storedArea = currentArea;
                             UpdateCurrentAndInitialArea(firstElementSplitLayoutResult);
                             LayoutResult firstElementOverflowLayoutResult = firstElementSplitLayoutResult.GetOverflowRenderer().Layout
-                                (new LayoutContext(currentArea.Clone()));
+                                (new LayoutContext(((RootLayoutArea)currentArea.Clone())));
                             if (firstElementOverflowLayoutResult.GetStatus() == LayoutResult.FULL) {
-                                LayoutArea secondElementLayoutArea = currentArea.Clone();
+                                LayoutArea secondElementLayoutArea = ((RootLayoutArea)currentArea.Clone());
                                 secondElementLayoutArea.GetBBox().SetHeight(secondElementLayoutArea.GetBBox().GetHeight() - firstElementOverflowLayoutResult
                                     .GetOccupiedArea().GetBBox().GetHeight());
                                 LayoutResult secondElementLayoutResult = renderer.SetParent(this).Layout(new LayoutContext(secondElementLayoutArea
@@ -426,12 +427,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (!ableToProcessKeepWithNext && !currentArea.IsEmptyArea()) {
-                    LayoutArea storedArea = currentArea;
+                    RootLayoutArea storedArea = currentArea;
                     UpdateCurrentAndInitialArea(null);
                     LayoutResult firstElementLayoutResult = keepWithNextHangingRenderer.SetParent(this).Layout(new LayoutContext
-                        (currentArea.Clone()));
+                        (((RootLayoutArea)currentArea.Clone())));
                     if (firstElementLayoutResult.GetStatus() == LayoutResult.FULL) {
-                        LayoutArea secondElementLayoutArea = currentArea.Clone();
+                        LayoutArea secondElementLayoutArea = ((RootLayoutArea)currentArea.Clone());
                         secondElementLayoutArea.GetBBox().SetHeight(secondElementLayoutArea.GetBBox().GetHeight() - firstElementLayoutResult
                             .GetOccupiedArea().GetBBox().GetHeight());
                         LayoutResult secondElementLayoutResult = renderer.SetParent(this).Layout(new LayoutContext(secondElementLayoutArea
@@ -461,7 +462,7 @@ namespace iText.Layout.Renderer {
         private void UpdateCurrentAndInitialArea(LayoutResult overflowResult) {
             floatRendererAreas = new List<Rectangle>();
             UpdateCurrentArea(overflowResult);
-            initialCurrentArea = currentArea == null ? null : currentArea.Clone();
+            initialCurrentArea = currentArea == null ? null : ((RootLayoutArea)currentArea.Clone());
             // TODO how bout currentArea == null ?
             AddWaitingNextPageRenderers();
         }
