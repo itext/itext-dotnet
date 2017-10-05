@@ -176,6 +176,8 @@ namespace iText.IO {
 
         public const String ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER = "Rotation was not correctly processed for {0}";
 
+        public const String SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT = "Some fields in target dictionary are not set or incorrect. Null will be returned.";
+
         public const String SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY = "Source document has AcroForm dictionary. The pages you are going to copy may have FormFields, but they will not be copied, because you have not used any IPdfPageExtraCopier";
 
         public const String START_MARKER_MISSING_IN_PFB_FILE = "Start marker is missing in the pfb file";

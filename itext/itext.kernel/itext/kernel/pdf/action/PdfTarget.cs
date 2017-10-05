@@ -42,7 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.IO.Log;
+using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 
 namespace iText.Kernel.Pdf.Action {
     /// <summary>
@@ -99,6 +103,15 @@ namespace iText.Kernel.Pdf.Action {
             return iText.Kernel.Pdf.Action.PdfTarget.Create(PdfName.P);
         }
 
+        /// <summary>Creates a new target object pointing to the child of the current document.</summary>
+        /// <returns>
+        /// created
+        /// <see cref="PdfTarget"/>
+        /// </returns>
+        public static iText.Kernel.Pdf.Action.PdfTarget CreateChildTarget() {
+            return iText.Kernel.Pdf.Action.PdfTarget.Create(PdfName.C);
+        }
+
         /// <summary>Creates a new target object pointing to a file in the EmbeddedFiles name tree.</summary>
         /// <param name="embeddedFileName">the name of the file in the EmbeddedFiles name tree</param>
         /// <returns>created object</returns>
@@ -151,75 +164,75 @@ namespace iText.Kernel.Pdf.Action {
             return GetPdfObject().GetAsString(PdfName.N).ToString();
         }
 
-        /// <summary>
-        /// Sets the page number in the current document containing the file attachment annotation for the
-        /// child target associates with a file attachment annotation.
-        /// </summary>
-        /// <param name="pageNumber">
-        /// the page number (one-based) in the current document containing
-        /// the file attachment annotation
-        /// </param>
+        /// <summary>Sets the /P and /A values corresponding to provided annotation, which is already added to a page.
+        ///     </summary>
+        /// <param name="pdfAnnotation">the annotation to be set</param>
+        /// <param name="pdfDocument">the corresponding document</param>
         /// <returns>this object wrapper</returns>
-        public virtual iText.Kernel.Pdf.Action.PdfTarget SetPage(int pageNumber) {
-            return Put(PdfName.P, new PdfNumber(pageNumber - 1));
+        public virtual iText.Kernel.Pdf.Action.PdfTarget SetAnnotation(PdfFileAttachmentAnnotation pdfAnnotation, 
+            PdfDocument pdfDocument) {
+            PdfPage page = pdfAnnotation.GetPage();
+            if (null == page) {
+                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
+            }
+            else {
+                Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page)));
+                Put(PdfName.A, new PdfNumber(page.GetAnnotations().IndexOf(pdfAnnotation)));
+            }
+            return this;
         }
 
-        /// <summary>
-        /// Sets a named destination in the current document that provides the page number of the file
-        /// attachment annotation for the child target associated with a file attachment annotation.
-        /// </summary>
-        /// <param name="namedDestination">
-        /// a named destination in the current document that provides the page
-        /// number of the file attachment annotation
-        /// </param>
-        /// <returns>this object wrapper</returns>
-        public virtual iText.Kernel.Pdf.Action.PdfTarget SetPage(String namedDestination) {
-            return Put(PdfName.P, new PdfString(namedDestination));
-        }
-
-        /// <summary>Get the contents of the /P entry of this target object.</summary>
-        /// <remarks>
-        /// Get the contents of the /P entry of this target object.
-        /// If the value is an integer, it specifies the page number (zero-based)
-        /// in the current document containing the file attachment annotation.
-        /// If the value is a string, it specifies a named destination in the current
-        /// document that provides the page number of the file attachment annotation.
-        /// </remarks>
-        /// <returns>the /P entry of target object</returns>
-        public virtual PdfObject GetPage() {
-            return GetPdfObject().Get(PdfName.P);
-        }
-
-        /// <summary>
-        /// Sets the index of the annotation in Annots array of the page specified by /P entry
-        /// for the child target associated with a file attachment annotation.
-        /// </summary>
-        /// <param name="annotationIndex">the index (zero-based) of the annotation in the Annots array</param>
-        /// <returns>this object wrapper</returns>
-        public virtual iText.Kernel.Pdf.Action.PdfTarget SetAnnotation(int annotationIndex) {
-            return Put(PdfName.A, new PdfNumber(annotationIndex));
-        }
-
-        /// <summary>
-        /// Sets the text value, which uniquely identifies an annotation (/NM entry) in an annotation dictionary
-        /// for the child target associated with a file attachment annotation.
-        /// </summary>
-        /// <param name="annotationName">specifies the value of NM in the annotation dictionary of the target annotation
-        ///     </param>
-        /// <returns>this object wrapper</returns>
-        public virtual iText.Kernel.Pdf.Action.PdfTarget SetAnnotation(String annotationName) {
-            return Put(PdfName.A, new PdfString(annotationName));
-        }
-
-        /// <summary>Gets the object in the /A entry of the underlying object.</summary>
-        /// <remarks>
-        /// Gets the object in the /A entry of the underlying object. If the value is an integer,
-        /// it specifies the index (zero-based) of the annotation in the Annots array of the page specified by P.
-        /// If the value is a text string, it specifies the value of NM in the annotation dictionary.
-        /// </remarks>
-        /// <returns>the /A entry in the target object</returns>
-        public virtual PdfObject GetAnnotation() {
-            return GetPdfObject().Get(PdfName.A);
+        /// <summary>Gets the annotation specified by /A and /P entry values.</summary>
+        /// <param name="pdfDocument">specifies the corresponding document</param>
+        /// <returns>the annotation specified by /A and /P entry value.</returns>
+        public virtual PdfFileAttachmentAnnotation GetAnnotation(PdfDocument pdfDocument) {
+            PdfObject pValue = GetPdfObject().Get(PdfName.P);
+            PdfPage page = null;
+            if (pValue is PdfNumber) {
+                page = pdfDocument.GetPage(((PdfNumber)pValue).IntValue() + 1);
+            }
+            else {
+                // zero-based index is used
+                if (pValue is PdfString) {
+                    PdfNameTree destsTree = pdfDocument.GetCatalog().GetNameTree(PdfName.Dests);
+                    IDictionary<String, PdfObject> dests = destsTree.GetNames();
+                    PdfArray pdfArray = (PdfArray)dests.Get(((PdfString)pValue).GetValue());
+                    if (null != pdfArray) {
+                        if (pdfArray.Get(0) is PdfNumber) {
+                            page = pdfDocument.GetPage(((PdfNumber)pdfArray.Get(0)).IntValue());
+                        }
+                        else {
+                            page = pdfDocument.GetPage((PdfDictionary)pdfArray.Get(0));
+                        }
+                    }
+                }
+            }
+            IList<PdfAnnotation> pageAnnotations = null;
+            if (null != page) {
+                pageAnnotations = page.GetAnnotations();
+            }
+            PdfObject aValue = GetPdfObject().Get(PdfName.A);
+            PdfFileAttachmentAnnotation resultAnnotation = null;
+            if (null != pageAnnotations) {
+                if (aValue is PdfNumber) {
+                    resultAnnotation = (PdfFileAttachmentAnnotation)pageAnnotations[((PdfNumber)aValue).IntValue()];
+                }
+                else {
+                    if (aValue is PdfString) {
+                        foreach (PdfAnnotation annotation in pageAnnotations) {
+                            if (aValue.Equals(annotation.GetName())) {
+                                resultAnnotation = (PdfFileAttachmentAnnotation)annotation;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (null == resultAnnotation) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfTarget));
+                logger.Error(iText.IO.LogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT);
+            }
+            return resultAnnotation;
         }
 
         /// <summary>Sets a target dictionary specifying additional path information to the target document.</summary>

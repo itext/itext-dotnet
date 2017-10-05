@@ -299,6 +299,44 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FileAttachmentTargetTest() {
+            String filename = destinationFolder + "fileAttachmentTargetTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.pdf", null, "embedded_doc.pdf"
+                , null, null);
+            PdfFileAttachmentAnnotation fileAttachmentAnnotation = new PdfFileAttachmentAnnotation(new Rectangle(300, 
+                500, 50, 50), spec);
+            fileAttachmentAnnotation.SetName(new PdfString("FileAttachmentAnnotation1"));
+            pdfDoc.AddNewPage();
+            pdfDoc.AddNewPage().AddAnnotation(fileAttachmentAnnotation);
+            PdfArray array = new PdfArray();
+            array.Add(pdfDoc.GetPage(2).GetPdfObject());
+            array.Add(PdfName.XYZ);
+            array.Add(new PdfNumber(pdfDoc.GetPage(2).GetPageSize().GetLeft()));
+            array.Add(new PdfNumber(pdfDoc.GetPage(2).GetPageSize().GetTop()));
+            array.Add(new PdfNumber(1));
+            pdfDoc.AddNamedDestination("FileAttachmentDestination1", array);
+            PdfTarget target = PdfTarget.CreateChildTarget();
+            target.GetPdfObject().Put(PdfName.P, new PdfString("FileAttachmentDestination1"));
+            target.GetPdfObject().Put(PdfName.A, fileAttachmentAnnotation.GetName());
+            // just test functionality to get annotation /* DEVSIX-1503 */
+            target.GetAnnotation(pdfDoc);
+            PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
+            linkAnnotation.SetColor(Color.RED);
+            linkAnnotation.SetAction(PdfAction.CreateGoToE(new PdfNamedDestination("prime"), true, target));
+            pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentTargetTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
         /// <summary>see DEVSIX-1539</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
