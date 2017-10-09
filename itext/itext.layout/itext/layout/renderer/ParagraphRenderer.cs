@@ -279,21 +279,7 @@ namespace iText.Layout.Renderer {
                             if (result.GetOverflowRenderer() != null) {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                split[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MIN_HEIGHT)) {
-                                split[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.HEIGHT)) {
-                                split[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (wasHeightClipped) {
-                                split[0].GetOccupiedArea().GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).
-                                    SetHeight((float)blockMaxHeight);
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
-                                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                            }
+                            UpdateHeightsOnSplit(wasHeightClipped, this, split[1]);
                             CorrectPositionedLayout(layoutBox);
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);

@@ -792,15 +792,7 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
-                            if (HasProperty(Property.HEIGHT)) {
-                                splitResult[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MIN_HEIGHT)) {
-                                splitResult[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
+                            UpdateHeightsOnSplit(false, splitResult[0], splitResult[1]);
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             LayoutArea editedArea = null;

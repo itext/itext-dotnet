@@ -1419,6 +1419,28 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
+             splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
+            float? maxHeight = RetrieveMaxHeight();
+            if (maxHeight != null) {
+                overflowRenderer.UpdateMaxHeight(maxHeight - occupiedArea.GetBBox().GetHeight());
+            }
+            float? minHeight = RetrieveMinHeight();
+            if (minHeight != null) {
+                overflowRenderer.UpdateMinHeight(minHeight - occupiedArea.GetBBox().GetHeight());
+            }
+            float? height = RetrieveHeight();
+            if (height != null) {
+                overflowRenderer.UpdateHeight(height - occupiedArea.GetBBox().GetHeight());
+            }
+            if (wasHeightClipped) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
+                    ((float)maxHeight);
+            }
+        }
+
         protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
