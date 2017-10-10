@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -126,12 +127,12 @@ namespace iText.Layout {
             list.Insert(index, elem);
         }
 
-        public static bool IsEmpty<T>(this IList<T> list) {
-            return 0 == list.Count();
+        public static bool IsEmpty<T>(this ICollection<T> collection) {
+            return 0 == collection.Count;
         }
 
-        public static bool IsEmpty<T>(this Queue<T> queue) {
-            return 0 == queue.Count();
+        public static bool IsEmpty(this ICollection collection) {
+            return 0 == collection.Count;
         }
 
         public static KeyValuePair<K, V>? HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
