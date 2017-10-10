@@ -659,18 +659,21 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("ignore")]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
         public virtual void CorrectSimpleDoc4() {
-            //test with abnormal object declaration
             String filename = sourceFolder + "correctSimpleDoc4.pdf";
             PdfReader reader = new PdfReader(filename);
-            PdfDocument document = new PdfDocument(reader);
-            NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
-            int pageCount = document.GetNumberOfPages();
-            NUnit.Framework.Assert.AreEqual(1, pageCount);
-            PdfPage page = document.GetPage(1);
-            NUnit.Framework.Assert.IsNotNull(page.GetContentStream(0).GetBytes());
-            document.Close();
+            try {
+                //NOTE test with abnormal object declaration that iText can't resolve.
+                PdfDocument document = new PdfDocument(reader);
+                NUnit.Framework.Assert.Fail("Expect exception");
+            }
+            catch (PdfException e) {
+                NUnit.Framework.Assert.AreEqual(PdfException.InvalidPageStructurePagesPagesMustBePdfDictionary, e.Message);
+            }
+            finally {
+                reader.Close();
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>

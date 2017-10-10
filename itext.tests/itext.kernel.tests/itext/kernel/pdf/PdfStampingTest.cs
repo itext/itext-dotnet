@@ -573,7 +573,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("ignore")]
         public virtual void Stamping14() {
             String filename1 = sourceFolder + "20000PagesDocument.pdf";
             String filename2 = destinationFolder + "stamping14.pdf";
@@ -587,10 +586,11 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i);
             }
-            NUnit.Framework.Assert.IsTrue(pdfDoc3.GetXref().Size() < 20, "Xref size is " + pdfDoc3.GetXref().Size());
+            //NOTE: during page removing iText don't flatten page structure (we can end up with a lot of embedded pages dictionaries)
+            NUnit.Framework.Assert.AreEqual(42226, pdfDoc3.GetXref().Size(), "Xref size");
             NUnit.Framework.Assert.AreEqual(3, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = new PdfReader(filename2);

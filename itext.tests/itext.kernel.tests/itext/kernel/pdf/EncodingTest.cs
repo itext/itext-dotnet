@@ -171,31 +171,39 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Should we update built-in font's descriptor in case not standard font encoding?")]
         public virtual void SymbolDefaultFontTest() {
             String fileName = "symbolDefaultFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.SYMBOL, PdfEncodings.WINANSI);
-            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            String str = "";
-            for (int i = 32; i <= 100; i++) {
-                str += (char)i;
-            }
-            canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText(str).EndText();
-            str = "";
-            for (int i = 101; i <= 190; i++) {
-                str += (char)i;
-            }
-            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 12).ShowText(str).EndText();
-            str = "";
-            for (int i = 191; i <= 254; i++) {
-                str += (char)i;
-            }
-            canvas.BeginText().MoveText(36, 766).ShowText(str).EndText().RestoreState();
+            PdfFont font = PdfFontFactory.CreateFont(FontConstants.SYMBOL);
+            FillSymbolDefaultPage(font, doc.AddNewPage());
+            //WinAnsi encoding doesn't support special symbols
+            font = PdfFontFactory.CreateFont(FontConstants.SYMBOL, PdfEncodings.WINANSI);
+            FillSymbolDefaultPage(font, doc.AddNewPage());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));
+        }
+
+        private void FillSymbolDefaultPage(PdfFont font, PdfPage page) {
+            PdfCanvas canvas = new PdfCanvas(page);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 32; i <= 100; i++) {
+                builder.Append((char)i);
+            }
+            canvas.SaveState().BeginText().SetFontAndSize(font, 12).MoveText(36, 806).ShowText(builder.ToString()).EndText
+                ().RestoreState();
+            builder = new StringBuilder();
+            for (int i = 101; i <= 190; i++) {
+                builder.Append((char)i);
+            }
+            canvas.SaveState().BeginText().SetFontAndSize(font, 12).MoveText(36, 786).ShowText(builder.ToString()).EndText
+                ();
+            builder = new StringBuilder();
+            for (int i = 191; i <= 254; i++) {
+                builder.Append((char)i);
+            }
+            canvas.BeginText().MoveText(36, 766).ShowText(builder.ToString()).EndText().RestoreState();
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -67,13 +67,12 @@ namespace iText.Pdfa {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("ignore")]
-        public virtual void FileSpecCheckTest01() {
+        public virtual void FileSpecNonConformingTest01() {
             // According to spec, only pdfa-1 or pdfa-2 compliant pdf document are allowed to be added to the
             // conforming pdfa-2 document. We only check they mime type, to define embedded file type, but we don't check
             // the bytes of the file. That's why this test creates invalid pdfa document.
-            String outPdf = destinationFolder + "pdfA2b_fileSpecCheckTest01.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecCheckTest01.pdf";
+            String outPdf = destinationFolder + "pdfA2b_fileSpecNonConformingTest01.pdf";
+            String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecNonConformingTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
