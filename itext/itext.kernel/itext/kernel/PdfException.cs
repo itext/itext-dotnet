@@ -562,6 +562,8 @@ namespace iText.Kernel {
 
         public const String YouNeedASingleBooleanForThisCollectionSortDictionary = "You need a single boolean for this collection sort dictionary.";
 
+        public const String QuadPointArrayLengthIsNotAMultipleOfEight = "The QuadPoint Array length is not a multiple of 8.";
+
         /// <summary>Object for more details</summary>
         protected internal Object @object;
 
