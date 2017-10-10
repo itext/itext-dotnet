@@ -171,6 +171,12 @@ internal static class KernelExtensions {
 
         return r;
     }
+    
+    public static T[] ToArray<T>(this ICollection<T> col) {
+        T[] r = new T[col.Count];
+        col.CopyTo(r, 0);
+        return r;
+    }
 
     public static void ReadFully(this BinaryReader input, byte[] b, int off, int len) {
         if (len < 0) {

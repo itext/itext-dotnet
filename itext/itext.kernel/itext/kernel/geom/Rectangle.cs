@@ -117,6 +117,72 @@ namespace iText.Kernel.Geom {
             return new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
         }
 
+        /// <summary>Get the rectangle representation of the intersection between this rectangle and the passed rectangle
+        ///     </summary>
+        /// <param name="rect">the rectangle to find overlap with</param>
+        /// <returns>the overlap rectangle if the passed rectangles overlaps with this rectangle, null otherwise</returns>
+        public virtual iText.Kernel.Geom.Rectangle GetIntersectionRectangle(iText.Kernel.Geom.Rectangle rect) {
+            iText.Kernel.Geom.Rectangle result = null;
+            //Calculate possible lower-left corner and upper-right corner
+            float llx = Math.Max(x, rect.x);
+            float lly = Math.Max(y, rect.y);
+            float urx = Math.Min(GetRight(), rect.GetRight());
+            float ury = Math.Min(GetTop(), rect.GetTop());
+            //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
+            //TODO(Samuel) check if this can cause overflow and handle appropriatly
+            float width = urx - llx;
+            float height = ury - lly;
+            if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) >= 0 || iText.IO.Util.JavaUtil.FloatCompare(height, 0) >=
+                 0) {
+                if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) < 0) {
+                    width = 0;
+                }
+                if (iText.IO.Util.JavaUtil.FloatCompare(height, 0) < 0) {
+                    height = 0;
+                }
+                result = new iText.Kernel.Geom.Rectangle(llx, lly, width, height);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Check if this rectangle envelops the passed rectangle
+        /// A rectangle will envelop itself
+        /// </summary>
+        /// <param name="rect"/>
+        /// <returns>true if this rectangle envelops the passed rectangle, false otherwise.</returns>
+        public virtual bool Envelops(iText.Kernel.Geom.Rectangle rect) {
+            float llx = this.GetX();
+            float lly = this.GetY();
+            float urx = llx + this.GetWidth();
+            float ury = lly + this.GetHeight();
+            float rllx = rect.GetX();
+            float rlly = rect.GetY();
+            float rurx = rllx + rect.GetWidth();
+            float rury = rlly + rect.GetHeight();
+            return llx <= rllx && lly <= rlly && rurx <= urx && rury <= ury;
+        }
+
+        /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
+        /// <param name="rect"/>
+        /// <returns>true if there is overlap of some kind</returns>
+        public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
+            // Two rectangles do not overlap if any of the following holds
+            // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
+            // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
+            // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
+            // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
+            float llx = this.GetX();
+            float lly = this.GetY();
+            float urx = llx + this.GetWidth();
+            float ury = lly + this.GetHeight();
+            float rllx = rect.GetX();
+            float rlly = rect.GetY();
+            float rurx = rllx + rect.GetWidth();
+            float rury = rlly + rect.GetHeight();
+            return !(urx < rllx || ury < rlly || llx > rurx || lly > rury);
+        }
+
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
         /// <remarks>
         /// Sets the rectangle by the coordinates, specifying its lower left and upper right points. May be used in chain.
@@ -396,6 +462,23 @@ namespace iText.Kernel.Geom {
         /// <returns>the string representation of rectangle.</returns>
         public override String ToString() {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
+        }
+
+        /// <summary>Compare the rectangle to the passed object</summary>
+        /// <param name="o">passed object</param>
+        /// <returns>True if o is a rectangle and matches in x,y,width and height, false otherwise</returns>
+        public override bool Equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+            //Cast to rectangle first
+            if (!o.GetType().Equals(typeof(iText.Kernel.Geom.Rectangle))) {
+                return false;
+            }
+            iText.Kernel.Geom.Rectangle rect = (iText.Kernel.Geom.Rectangle)o;
+            return (iText.IO.Util.JavaUtil.FloatCompare(this.x, rect.GetX()) == 0) && (iText.IO.Util.JavaUtil.FloatCompare
+                (this.y, rect.GetY()) == 0) && (iText.IO.Util.JavaUtil.FloatCompare(this.width, rect.GetWidth()) == 0)
+                 && (iText.IO.Util.JavaUtil.FloatCompare(this.height, rect.GetHeight()) == 0);
         }
 
         /// <summary>Gets the copy of this rectangle.</summary>
