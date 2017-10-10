@@ -139,7 +139,7 @@ namespace iText.Kernel.Geom {
             //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
             float width = urx - llx;
             float height = ury - lly;
-            if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) >= 0 || iText.IO.Util.JavaUtil.FloatCompare(height, 0) >=
+            if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) >= 0 && iText.IO.Util.JavaUtil.FloatCompare(height, 0) >=
                  0) {
                 if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) < 0) {
                     width = 0;
