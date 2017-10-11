@@ -367,6 +367,11 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override void Flush() {
+            PdfDictionary pageDict = GetPdfObject().GetAsDictionary(PdfName.Pg);
+            if (pageDict == null || pageDict.GetIndirectReference() == null) {
+                // TODO DEVSIX-1583: identify removed pages more reliably
+                GetPdfObject().Remove(PdfName.Pg);
+            }
             GetDocument().CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
             base.Flush();
         }
@@ -484,7 +489,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return removedIndex;
         }
 
-        internal static int RemoveObjectFromArray(PdfArray array, PdfObject toRemove) {
+        private static int RemoveObjectFromArray(PdfArray array, PdfObject toRemove) {
             int i;
             for (i = 0; i < array.Size(); ++i) {
                 PdfObject obj = array.Get(i);

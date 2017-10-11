@@ -175,7 +175,6 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         public virtual PdfIndirectReference GetIndirectReference() {
-            GetPdfObject().MakeIndirect(GetDocument());
             return GetPdfObject().GetIndirectReference();
         }
 

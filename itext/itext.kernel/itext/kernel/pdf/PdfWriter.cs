@@ -318,7 +318,8 @@ namespace iText.Kernel.Pdf {
                 needFlush = false;
                 for (int i = 1; i < xref.Size(); i++) {
                     PdfIndirectReference indirectReference = xref.Get(i);
-                    if (indirectReference != null && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
+                    if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
+                        )) {
                         PdfObject obj = indirectReference.GetRefersTo(false);
                         if (obj != null) {
                             obj.Flush();
@@ -339,7 +340,7 @@ namespace iText.Kernel.Pdf {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {
                 PdfIndirectReference indirectReference = xref.Get(i);
-                if (null != indirectReference) {
+                if (null != indirectReference && !indirectReference.IsFree()) {
                     bool isModified = indirectReference.CheckState(PdfObject.MODIFIED);
                     if (isModified) {
                         PdfObject obj = indirectReference.GetRefersTo(false);

@@ -493,8 +493,8 @@ namespace iText.Kernel.Pdf {
                 }
                 if (!removedPage.GetPdfObject().IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
+                    removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 }
-                removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
             return removedPage;
@@ -1667,7 +1667,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="pdfObject">an object to mark.</param>
         protected internal virtual void MarkObjectAsMustBeFlushed(PdfObject pdfObject) {
-            if (pdfObject.IsIndirect()) {
+            if (pdfObject.GetIndirectReference() != null) {
                 pdfObject.GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
             }
         }
