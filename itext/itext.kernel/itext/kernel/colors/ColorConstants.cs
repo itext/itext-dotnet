@@ -14,10 +14,10 @@ namespace iText.Kernel.Colors {
     /// </summary>
     public class ColorConstants {
         /// <summary>Predefined black DeviceRgb color</summary>
-        public static readonly Color BLACK = new DeviceRgb(0, 0, 0);
+        public static readonly Color BLACK = DeviceRgb.BLACK;
 
         /// <summary>Predefined blue  DeviceRgb color</summary>
-        public static readonly Color BLUE = new DeviceRgb(0, 0, 255);
+        public static readonly Color BLUE = DeviceRgb.BLUE;
 
         /// <summary>Predefined cyan DeviceRgb color</summary>
         public static readonly Color CYAN = new DeviceRgb(0, 255, 255);
@@ -29,7 +29,7 @@ namespace iText.Kernel.Colors {
         public static readonly Color GRAY = new DeviceRgb(128, 128, 128);
 
         /// <summary>Predefined green DeviceRgb color</summary>
-        public static readonly Color GREEN = new DeviceRgb(0, 255, 0);
+        public static readonly Color GREEN = DeviceRgb.GREEN;
 
         /// <summary>Predefined light gray DeviceRgb color</summary>
         public static readonly Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
@@ -44,10 +44,10 @@ namespace iText.Kernel.Colors {
         public static readonly Color PINK = new DeviceRgb(255, 175, 175);
 
         /// <summary>Predefined red DeviceRgb color</summary>
-        public static readonly Color RED = new DeviceRgb(255, 0, 0);
+        public static readonly Color RED = DeviceRgb.RED;
 
         /// <summary>Predefined white DeviceRgb color</summary>
-        public static readonly Color WHITE = new DeviceRgb(255, 255, 255);
+        public static readonly Color WHITE = DeviceRgb.WHITE;
 
         /// <summary>Predefined yellow DeviceRgb color</summary>
         public static readonly Color YELLOW = new DeviceRgb(255, 255, 0);
