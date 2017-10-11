@@ -269,9 +269,9 @@ namespace iText.Kernel.Pdf {
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
                 page.Flush();
             }
-            NUnit.Framework.Assert.AreEqual(true, pdfDoc.RemovePage(pdfDoc.GetPage(pageCount)), "Remove last page");
-            NUnit.Framework.Assert.AreEqual(true, pdfDoc.GetXref().Get(removedPageObjectNumber).CheckState(PdfObject.FREE
-                ), "Free reference");
+            NUnit.Framework.Assert.IsTrue(pdfDoc.RemovePage(pdfDoc.GetPage(pageCount)), "Remove last page");
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetXref().Get(removedPageObjectNumber).CheckState(PdfObject.FREE), "Free reference"
+                );
             pdfDoc.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount - 1);
         }
