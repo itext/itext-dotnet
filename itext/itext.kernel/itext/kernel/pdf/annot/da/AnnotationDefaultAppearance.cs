@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 
@@ -127,14 +128,13 @@ namespace iText.Kernel.Pdf.Annot.DA {
         }
 
         public virtual PdfString ToPdfString() {
-            return new PdfString(rawFontName + " " + fontSize + " Tf " + colorOperand);
+            return new PdfString(MessageFormatUtil.Format("{0} {1} Tf {2}", rawFontName, fontSize, colorOperand));
         }
 
         private void SetColorOperand(float[] colorValues, String operand) {
             StringBuilder builder = new StringBuilder();
             foreach (float value in colorValues) {
-                builder.Append(value);
-                builder.Append(' ');
+                builder.Append(MessageFormatUtil.Format("{0} ", value));
             }
             builder.Append(operand);
             this.colorOperand = builder.ToString();
