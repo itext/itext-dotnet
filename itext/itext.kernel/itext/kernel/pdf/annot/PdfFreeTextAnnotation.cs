@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot.DA;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfFreeTextAnnotation : PdfMarkupAnnotation {
@@ -54,6 +55,19 @@ namespace iText.Kernel.Pdf.Annot {
 
         public const int RIGHT_JUSTIFIED = 2;
 
+        /// <summary>Creates new instance</summary>
+        /// <param name="rect">- rectangle that specifies annotation position and bounds on page</param>
+        /// <param name="contents">- the displayed text</param>
+        public PdfFreeTextAnnotation(Rectangle rect, PdfString contents)
+            : base(rect) {
+            SetContents(contents);
+        }
+
+        /// <summary>Creates new instance</summary>
+        /// <param name="rect">- bounding rectangle of annotation</param>
+        /// <param name="appearanceString">- appearance string of annotation</param>
+        [System.ObsoleteAttribute(@"unintuitive, will be removed in 7.1 use PdfFreeTextAnnotation(iText.Kernel.Geom.Rectangle, iText.Kernel.Pdf.PdfString) instead"
+            )]
         public PdfFreeTextAnnotation(Rectangle rect, String appearanceString)
             : base(rect) {
             SetDefaultAppearance(new PdfString(appearanceString));
@@ -74,6 +88,11 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString(PdfString defaultStyleString
             ) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString);
+        }
+
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
+             da) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetDefaultAppearance(da.ToPdfString());
         }
 
         public virtual PdfArray GetCalloutLine() {

@@ -49,6 +49,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Annot.DA;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
@@ -242,8 +243,11 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24).MoveText
                 (100, 600).ShowText("Annotated text").EndText().Release();
-            PdfFreeTextAnnotation textannot = new PdfFreeTextAnnotation(new Rectangle(300, 700, 150, 20), "");
-            textannot.SetContents(new PdfString("FreeText annotation")).SetColor(new float[] { 1, 0, 0 });
+            PdfFreeTextAnnotation textannot = new PdfFreeTextAnnotation(new Rectangle(300, 700, 150, 20), new PdfString
+                ("FreeText annotation"));
+            textannot.SetDefaultAppearance(new AnnotationDefaultAppearance().SetFont(StandardAnnotationFont.TimesRoman
+                ));
+            textannot.SetColor(new float[] { 1, 0, 0 });
             textannot.SetIntent(PdfName.FreeTextCallout);
             textannot.SetCalloutLine(new float[] { 120, 616, 180, 680, 300, 710 }).SetLineEndingStyle(PdfName.OpenArrow
                 );
@@ -941,6 +945,46 @@ namespace iText.Kernel.Pdf {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DefaultAppearanceTest() {
+            String name = "defaultAppearance";
+            String inPath = sourceFolder + "in_" + name + ".pdf";
+            String outPath = destinationFolder + name + ".pdf";
+            String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
+            String diff = "diff_" + name + "_";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            PdfPage page = pdfDoc.GetPage(1);
+            Rectangle rect = new Rectangle(20, 700, 250, 50);
+            page.AddAnnotation(new PdfRedactAnnotation(rect).SetDefaultAppearance(new AnnotationDefaultAppearance().SetColor
+                (new DeviceRgb(1.0f, 0, 0)).SetFont(StandardAnnotationFont.TimesBold).SetFontSize(20)).SetOverlayText(
+                new PdfString("Redact RGB times-bold")));
+            rect.MoveDown(80);
+            page.AddAnnotation(new PdfRedactAnnotation(rect).SetDefaultAppearance(new AnnotationDefaultAppearance().SetColor
+                (DeviceCmyk.MAGENTA).SetFont(StandardAnnotationFont.CourierOblique).SetFontSize(20)).SetOverlayText(new 
+                PdfString("Redact CMYK courier-oblique")));
+            rect.MoveDown(80);
+            page.AddAnnotation(new PdfRedactAnnotation(rect).SetDefaultAppearance(new AnnotationDefaultAppearance().SetColor
+                (DeviceGray.GRAY).SetFont(ExtendedAnnotationFont.HeiseiMinW3).SetFontSize(20)).SetOverlayText(new PdfString
+                ("Redact Gray HeiseiMinW3")));
+            rect.MoveUp(160).MoveRight(260);
+            page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText RGB times-bold")).SetDefaultAppearance
+                (new AnnotationDefaultAppearance().SetColor(new DeviceRgb(1.0f, 0, 0)).SetFont(StandardAnnotationFont.
+                TimesBold).SetFontSize(20)).SetColor(Color.WHITE));
+            rect.MoveDown(80);
+            page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText CMYK courier-oblique")).SetDefaultAppearance
+                (new AnnotationDefaultAppearance().SetColor(DeviceCmyk.MAGENTA).SetFont(StandardAnnotationFont.CourierOblique
+                ).SetFontSize(20)).SetColor(Color.WHITE));
+            rect.MoveDown(80);
+            page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText Gray HeiseiMinW3")).SetDefaultAppearance
+                (new AnnotationDefaultAppearance().SetColor(DeviceGray.GRAY).SetFont(ExtendedAnnotationFont.HeiseiMinW3
+                ).SetFontSize(20)).SetColor(Color.WHITE));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+                ));
         }
     }
 }

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot.DA;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfRedactAnnotation : PdfMarkupAnnotation {
@@ -56,6 +57,11 @@ namespace iText.Kernel.Pdf.Annot {
 
         public override PdfName GetSubtype() {
             return PdfName.Redact;
+        }
+
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
+             da) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetDefaultAppearance(da.ToPdfString());
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
