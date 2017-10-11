@@ -783,18 +783,18 @@ namespace iText.Forms {
                     }
                 }
                 PdfArray fFields = GetFields();
-                RemoveObjectFromArray(fFields, fieldObject);
+                fFields.Remove(fieldObject);
                 if (annotation != null) {
                     page.RemoveAnnotation(annotation);
                 }
                 PdfDictionary parent = fieldObject.GetAsDictionary(PdfName.Parent);
                 if (parent != null) {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                    RemoveObjectFromArray(kids, fieldObject);
+                    kids.Remove(fieldObject);
                     // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
                     // shouldn't we remove them recursively? check it
                     if (kids.IsEmpty()) {
-                        RemoveObjectFromArray(fFields, parent);
+                        fFields.Remove(parent);
                     }
                 }
             }
@@ -832,12 +832,14 @@ namespace iText.Forms {
             }
             PdfDictionary parent = field.GetParent();
             if (parent != null) {
-                RemoveObjectFromArray(parent.GetAsArray(PdfName.Kids), fieldObject);
+                parent.GetAsArray(PdfName.Kids).Remove(fieldObject);
                 fields.JRemove(fieldName);
                 return true;
             }
-            if (RemoveObjectFromArray(GetFields(), fieldObject)) {
-                fields.JRemove(fieldName);
+            PdfArray fieldsPdfArray = GetFields();
+            if (fieldsPdfArray.Contains(fieldObject)) {
+                fieldsPdfArray.Remove(fieldObject);
+                this.fields.JRemove(fieldName);
                 return true;
             }
             return false;
@@ -1008,9 +1010,6 @@ namespace iText.Forms {
             else {
                 for (int i = 0; i < kids.Size(); i++) {
                     PdfObject kid = kids.Get(i);
-                    if (kid.IsIndirectReference()) {
-                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                    }
                     PdfArray otherKids = ((PdfDictionary)kid).GetAsArray(PdfName.Kids);
                     if (otherKids != null) {
                         ProcessKids(otherKids, (PdfDictionary)kid, page);
@@ -1208,20 +1207,6 @@ namespace iText.Forms {
                 }
             }
             return preparedFields;
-        }
-
-        private bool RemoveObjectFromArray(PdfArray array, PdfObject toRemove) {
-            if (array.Contains(toRemove)) {
-                array.Remove(toRemove);
-                return true;
-            }
-            else {
-                if (array.Contains(toRemove.GetIndirectReference())) {
-                    array.Remove(toRemove.GetIndirectReference());
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

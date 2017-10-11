@@ -1344,9 +1344,6 @@ namespace iText.Forms.Fields {
                 if (kids != null) {
                     for (int i = 0; i < kids.Size(); i++) {
                         PdfObject kid = kids.Get(i);
-                        if (kid.IsIndirectReference()) {
-                            kid = ((PdfIndirectReference)kid).GetRefersTo();
-                        }
                         iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                         field.font = font;
                         field.fontSize = fontSize;
@@ -1854,9 +1851,6 @@ namespace iText.Forms.Fields {
             if (kids != null) {
                 for (int i = 0; i < kids.Size(); i++) {
                     PdfObject kid = kids.Get(i);
-                    if (kid.IsIndirectReference()) {
-                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                    }
                     subType = ((PdfDictionary)kid).GetAsName(PdfName.Subtype);
                     if (subType != null && subType.Equals(PdfName.Widget)) {
                         widgets.Add((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(kid));
@@ -2372,9 +2366,6 @@ namespace iText.Forms.Fields {
                             if (null != kids) {
                                 for (int i = 0; i < kids.Size(); i++) {
                                     PdfObject kid = kids.Get(i);
-                                    if (kid.IsIndirectReference()) {
-                                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                                    }
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
                                     PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);

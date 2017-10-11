@@ -1065,12 +1065,7 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation) {
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
-                if (annots.Contains(annotation.GetPdfObject())) {
-                    annots.Remove(annotation.GetPdfObject());
-                }
-                else {
-                    annots.Remove(annotation.GetPdfObject().GetIndirectReference());
-                }
+                annots.Remove(annotation.GetPdfObject());
                 if (annots.IsEmpty()) {
                     GetPdfObject().Remove(PdfName.Annots);
                     SetModified();

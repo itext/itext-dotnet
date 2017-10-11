@@ -158,7 +158,7 @@ namespace iText.Kernel.Pdf.Annot {
             PdfDictionary parent = annotDict.GetAsDictionary(PdfName.Parent);
             if (parent != null && annotDict.Size() == 1) {
                 PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                kids.Remove(annotDict.GetIndirectReference());
+                kids.Remove(annotDict);
                 if (kids.Size() == 0) {
                     parent.Remove(PdfName.Kids);
                 }
