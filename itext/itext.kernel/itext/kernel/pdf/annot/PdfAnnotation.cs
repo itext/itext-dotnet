@@ -515,50 +515,14 @@ namespace iText.Kernel.Pdf.Annot {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
         }
 
-        /// <summary>
-        /// Sets a
-        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to this annotation which will be performed when the annotation is activated.
-        /// </summary>
-        /// <param name="action">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to set to this annotation.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action) {
             return Put(PdfName.A, action.GetPdfObject());
         }
 
-        /// <summary>
-        /// Sets an additional
-        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to this annotation which will be performed in response to
-        /// the specific trigger event defined by
-        /// <paramref name="key"/>
-        /// . See ISO-320001 12.6.3, "Trigger Events".
-        /// </summary>
-        /// <param name="key">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// that denotes a type of the additional action to set.
-        /// </param>
-        /// <param name="action">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to set as additional to this annotation.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
@@ -1413,187 +1377,51 @@ namespace iText.Kernel.Pdf.Annot {
             return Put(PdfName.StructParent, new PdfNumber(structParentIndex));
         }
 
-        /// <summary>A flag specifying whether the annotation shall initially be displayed open.</summary>
-        /// <remarks>
-        /// A flag specifying whether the annotation shall initially be displayed open.
-        /// This flag has affect to not all kinds of annotations.
-        /// </remarks>
-        /// <returns>true if annotation is initially open, false - if closed.</returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
+            )]
         public virtual bool GetOpen() {
             PdfBoolean open = GetPdfObject().GetAsBoolean(PdfName.Open);
             return open != null && open.GetValue();
         }
 
-        /// <summary>Sets a flag specifying whether the annotation shall initially be displayed open.</summary>
-        /// <remarks>
-        /// Sets a flag specifying whether the annotation shall initially be displayed open.
-        /// This flag has affect to not all kinds of annotations.
-        /// </remarks>
-        /// <param name="open">true if annotation shall initially be open, false - if closed.</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
             return Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
 
-        /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>
-        /// <remarks>
-        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
-        /// Quadrilaterals are used to define:
-        /// <ul>
-        /// <li>regions inside annotation rectangle in which the link annotation should be activated;</li>
-        /// <li>a word or group of contiguous words in the text underlying the text markup annotation;</li>
-        /// <li>the content region that is intended to be removed for a redaction annotation;</li>
-        /// </ul>
-        /// <p>
-        /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
-        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
-        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
-        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
-        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
-        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
-        /// just as Acrobat and probably most other viewers expect.
-        /// </remarks>
-        /// <returns>
-        /// an
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
-        /// <summary>
-        /// Sets n quadrilaterals in default user space by passing an
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// of 8 × n numbers. For more info of what
-        /// quadrilaterals define see
-        /// <see cref="GetQuadPoints()"/>
-        /// .
-        /// <p>
-        /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
-        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
-        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
-        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
-        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
-        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
-        /// just as Acrobat and probably most other viewers expect.
-        /// </summary>
-        /// <param name="quadPoints">
-        /// an
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
             return Put(PdfName.QuadPoints, quadPoints);
         }
 
-        /// <summary>
-        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
-        /// <see cref="GetBorder()"/>
-        /// ).
-        /// See ISO-320001, Table 166 and
-        /// <see cref="GetBorderStyle()"/>
-        /// for more info.
-        /// </summary>
-        /// <param name="borderStyle">
-        /// a border style dictionary specifying the line width and dash pattern that shall be used
-        /// in drawing the annotation’s border.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return Put(PdfName.BS, borderStyle);
         }
 
-        /// <summary>Setter for the annotation's preset border style.</summary>
-        /// <remarks>
-        /// Setter for the annotation's preset border style. Possible values are
-        /// <ul>
-        /// <li>
-        /// <see cref="STYLE_SOLID"/>
-        /// - A solid rectangle surrounding the annotation.</li>
-        /// <li>
-        /// <see cref="STYLE_DASHED"/>
-        /// - A dashed rectangle surrounding the annotation.</li>
-        /// <li>
-        /// <see cref="STYLE_BEVELED"/>
-        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
-        /// <li>
-        /// <see cref="STYLE_INSET"/>
-        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
-        /// <li>
-        /// <see cref="STYLE_UNDERLINE"/>
-        /// - A single line along the bottom of the annotation rectangle.</li>
-        /// </ul>
-        /// See also ISO-320001, Table 166.
-        /// </remarks>
-        /// <param name="style">The new value for the annotation's border style.</param>
-        /// <returns>The annotation which this method was called on.</returns>
-        /// <seealso cref="GetBorderStyle()"/>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style) {
             return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
-        /// <summary>Setter for the annotation's preset dashed border style.</summary>
-        /// <remarks>
-        /// Setter for the annotation's preset dashed border style. This property has affect only if
-        /// <see cref="STYLE_DASHED"/>
-        /// style was used for the annotation border style (see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
-        /// .
-        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
-        /// </remarks>
-        /// <param name="dashPattern">
-        /// a dash array defining a pattern of dashes and gaps that
-        /// shall be used in drawing a dashed border.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern) {
             return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
-        /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
-        ///     </summary>
-        /// <remarks>
-        /// The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
-        /// That entry specifies a border style dictionary that has more settings than the array specified for the Border
-        /// entry (see
-        /// <see cref="GetBorder()"/>
-        /// ). If an annotation dictionary includes the BS entry, then the Border
-        /// entry is ignored. If annotation includes AP (see
-        /// <see cref="GetAppearanceDictionary()"/>
-        /// ) it takes
-        /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
-        /// </remarks>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// which is a border style dictionary or null if it is not specified.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
+            )]
         public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
@@ -1629,83 +1457,27 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsString(PdfName.T);
         }
 
-        /// <summary>
-        /// Sets an appearance characteristics dictionary containing additional information for constructing the
-        /// annotation’s appearance stream.
-        /// </summary>
-        /// <remarks>
-        /// Sets an appearance characteristics dictionary containing additional information for constructing the
-        /// annotation’s appearance stream. See ISO-320001, Table 189.
-        /// This property affects
-        /// <see cref="PdfWidgetAnnotation"/>
-        /// and
-        /// <see cref="PdfScreenAnnotation"/>
-        /// .
-        /// </remarks>
-        /// <param name="characteristics">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// with additional information for appearance stream.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
             ) {
             return Put(PdfName.MK, characteristics);
         }
 
-        /// <summary>
-        /// An appearance characteristics dictionary containing additional information for constructing the
-        /// annotation’s appearance stream.
-        /// </summary>
-        /// <remarks>
-        /// An appearance characteristics dictionary containing additional information for constructing the
-        /// annotation’s appearance stream. See ISO-320001, Table 189.
-        /// This property affects
-        /// <see cref="PdfWidgetAnnotation"/>
-        /// and
-        /// <see cref="PdfScreenAnnotation"/>
-        /// .
-        /// </remarks>
-        /// <returns>an appearance characteristics dictionary or null if it isn't specified.</returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual PdfDictionary GetAppearanceCharacteristics() {
             return GetPdfObject().GetAsDictionary(PdfName.MK);
         }
 
-        /// <summary>
-        /// An
-        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to perform, such as launching an application, playing a sound,
-        /// changing an annotation’s appearance state etc, when the annotation is activated.
-        /// </summary>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// which defines the characteristics and behaviour of an action.
-        /// </returns>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
         }
 
-        /// <summary>An additional actions dictionary that extends the set of events that can trigger the execution of an action.
-        ///     </summary>
-        /// <remarks>
-        /// An additional actions dictionary that extends the set of events that can trigger the execution of an action.
-        /// See ISO-320001 12.6.3 Trigger Events.
-        /// </remarks>
-        /// <returns>
-        /// an additional actions
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// .
-        /// </returns>
-        /// <seealso cref="GetAction()"/>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
+            )]
         public virtual PdfDictionary GetAdditionalAction() {
             return GetPdfObject().GetAsDictionary(PdfName.AA);
         }
