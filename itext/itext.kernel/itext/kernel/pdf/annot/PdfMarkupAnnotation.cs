@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -553,6 +554,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.RD, rect);
         }
@@ -571,6 +573,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
         /// of the inner rectangle, respectively.
         /// </returns>
+        [Obsolete]
         public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
@@ -599,6 +602,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.BE, borderEffect);
         }
@@ -610,6 +614,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// , which is a border effect dictionary (see ISO-320001, Table 167).
         /// </returns>
+        [Obsolete]
         public virtual PdfDictionary GetBorderEffect() {
             return GetPdfObject().GetAsDictionary(PdfName.BE);
         }
@@ -641,30 +646,9 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
+        [Obsolete]
         public virtual Color GetInteriorColor() {
-            PdfArray color = GetPdfObject().GetAsArray(PdfName.IC);
-            if (color == null) {
-                return null;
-            }
-            switch (color.Size()) {
-                case 1: {
-                    return new DeviceGray(color.GetAsNumber(0).FloatValue());
-                }
-
-                case 3: {
-                    return new DeviceRgb(color.GetAsNumber(0).FloatValue(), color.GetAsNumber(1).FloatValue(), color.GetAsNumber
-                        (2).FloatValue());
-                }
-
-                case 4: {
-                    return new DeviceCmyk(color.GetAsNumber(0).FloatValue(), color.GetAsNumber(1).FloatValue(), color.GetAsNumber
-                        (2).FloatValue(), color.GetAsNumber(3).FloatValue());
-                }
-
-                default: {
-                    return null;
-                }
-            }
+            return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
         /// <summary>
@@ -702,6 +686,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.IC, interiorColor);
         }
@@ -722,6 +707,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
             return SetInteriorColor(new PdfArray(interiorColor));
         }
@@ -738,6 +724,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation, or null if icon name is not specified.
         /// </returns>
+        [Obsolete]
         public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
@@ -769,6 +756,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Name, name);
         }
@@ -786,6 +774,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"DefaultAppearance entry exist only in PdfFreeTextAnnotation and PdfRedactAnnotation , so it will be moved to those two classes in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.DA, appearanceString);
         }
@@ -798,6 +788,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// that specifies the default appearance, or null if default appereance is not specified.
         /// </returns>
+        [Obsolete]
         public virtual PdfString GetDefaultAppearance() {
             return GetPdfObject().GetAsString(PdfName.DA);
         }
@@ -812,6 +803,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
         ///     </returns>
+        [Obsolete]
         public virtual int GetJustification() {
             PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
             return q == null ? 0 : q.IntValue();
@@ -831,6 +823,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetJustification(int justification) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }

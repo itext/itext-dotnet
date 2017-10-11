@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot.DA;
@@ -59,9 +60,38 @@ namespace iText.Kernel.Pdf.Annot {
             return PdfName.Redact;
         }
 
+        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        ///     </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// that specifies the default appearance, or null if default appereance is not specified.
+        /// </returns>
+        public override PdfString GetDefaultAppearance() {
+            return GetPdfObject().GetAsString(PdfName.DA);
+        }
+
+        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        ///     </remarks>
+        /// <param name="appearanceString">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// that specifies the default appearance.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfMarkupAnnotation"/>
+        /// instance.+
+        /// </returns>
+        public override PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.DA, appearanceString);
+        }
+
         public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
              da) {
-            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetDefaultAppearance(da.ToPdfString());
+            return ((iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetDefaultAppearance(da.ToPdfString()));
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
@@ -86,6 +116,128 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual PdfBoolean GetRepeat() {
             return GetPdfObject().GetAsBoolean(PdfName.Repeat);
+        }
+
+        /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>
+        /// <remarks>
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Quadrilaterals are used to define the content region that is intended to be removed for a redaction annotation.
+        /// </remarks>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </returns>
+        public override PdfArray GetQuadPoints() {
+            return GetPdfObject().GetAsArray(PdfName.QuadPoints);
+        }
+
+        /// <summary>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
+        /// Quadrilaterals are used to define the content region that is intended to be removed for a redaction annotation.
+        /// </summary>
+        /// <param name="quadPoints">
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfRedactAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.QuadPoints, quadPoints);
+        }
+
+        /// <summary>The interior color which is used to fill the redacted region after the affected content has been removed.
+        ///     </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// of either
+        /// <see cref="iText.Kernel.Colors.DeviceGray"/>
+        /// ,
+        /// <see cref="iText.Kernel.Colors.DeviceRgb"/>
+        /// or
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk"/>
+        /// type which defines
+        /// interior color of the annotation, or null if interior color is not specified.
+        /// </returns>
+        public override Color GetInteriorColor() {
+            return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
+        }
+
+        /// <summary>
+        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which
+        /// is used to fill the redacted region after the affected content has been removed.
+        /// </summary>
+        /// <param name="interiorColor">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of numbers in the range 0.0 to 1.0. The number of array elements determines
+        /// the colour space in which the colour is defined: 0 - No colour, transparent; 1 - DeviceGray,
+        /// 3 - DeviceRGB, 4 - DeviceCMYK. For the
+        /// <see cref="PdfRedactAnnotation"/>
+        /// number of elements shall be
+        /// equal to 3 (which defines DeviceRGB colour space).
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfRedactAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.IC, interiorColor);
+        }
+
+        /// <summary>
+        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which
+        /// is used to fill the redacted region after the affected content has been removed.
+        /// </summary>
+        /// <param name="interiorColor">an array of floats in the range 0.0 to 1.0.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfRedactAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
+            return ((iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
+        }
+
+        /// <summary>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
+        /// </summary>
+        /// <remarks>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
+        /// </remarks>
+        /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
+        ///     </returns>
+        public override int GetJustification() {
+            PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
+            return q == null ? 0 : q.IntValue();
+        }
+
+        /// <summary>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
+        /// </summary>
+        /// <remarks>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
+        /// </remarks>
+        /// <param name="justification">a code specifying the form of quadding (justification).</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfRedactAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetJustification(int justification) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }
     }
 }

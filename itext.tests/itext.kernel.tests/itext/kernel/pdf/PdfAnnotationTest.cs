@@ -266,12 +266,12 @@ namespace iText.Kernel.Pdf {
                 ));
             PdfPage page = document.AddNewPage();
             PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
-            square.SetInteriorColor(new float[] { 1, 0, 0 }).SetColor(new float[] { 0, 1, 0 }).SetContents("RED Square"
-                );
+            ((PdfSquareAnnotation)square.SetInteriorColor(new float[] { 1, 0, 0 })).SetColor(new float[] { 0, 1, 0 }).
+                SetContents("RED Square");
             page.AddAnnotation(square);
             PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 100));
-            circle.SetInteriorColor(new float[] { 0, 1, 0 }).SetColor(new float[] { 0, 0, 1 }).SetContents(new PdfString
-                ("GREEN Circle"));
+            ((PdfCircleAnnotation)circle.SetInteriorColor(new float[] { 0, 1, 0 })).SetColor(new float[] { 0, 0, 1 }).
+                SetContents(new PdfString("GREEN Circle"));
             page.AddAnnotation(circle);
             page.Flush();
             document.Close();

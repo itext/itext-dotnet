@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -114,6 +115,106 @@ namespace iText.Kernel.Pdf.Annot {
         ///     </returns>
         public virtual PdfArray GetLine() {
             return GetPdfObject().GetAsArray(PdfName.L);
+        }
+
+        /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        ///     </summary>
+        /// <remarks>
+        /// The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        /// That entry specifies a border style dictionary that has more settings than the array specified for the Border
+        /// entry (see
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ). If an annotation dictionary includes the BS entry, then the Border
+        /// entry is ignored. If annotation includes AP (see
+        /// <see cref="PdfAnnotation.GetAppearanceDictionary()"/>
+        /// ) it takes
+        /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which is a border style dictionary or null if it is not specified.
+        /// </returns>
+        public override PdfDictionary GetBorderStyle() {
+            return GetPdfObject().GetAsDictionary(PdfName.BS);
+        }
+
+        /// <summary>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
+        /// See ISO-320001, Table 166 and
+        /// <see cref="GetBorderStyle()"/>
+        /// for more info.
+        /// </summary>
+        /// <param name="borderStyle">
+        /// a border style dictionary specifying the line width and dash pattern that shall be used
+        /// in drawing the annotation’s border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.BS, borderStyle);
+        }
+
+        /// <summary>Setter for the annotation's preset border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset border style. Possible values are
+        /// <ul>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_SOLID"/>
+        /// - A solid rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// - A dashed rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_INSET"/>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
+        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// </ul>
+        /// See also ISO-320001, Table 166.
+        /// </remarks>
+        /// <param name="style">The new value for the annotation's border style.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        /// <seealso cref="GetBorderStyle()"/>
+        public override PdfAnnotation SetBorderStyle(PdfName style) {
+            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle()
+                , style)));
+        }
+
+        /// <summary>Setter for the annotation's preset dashed border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset dashed border style. This property has affect only if
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// style was used for the annotation border style (see
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
+        /// </remarks>
+        /// <param name="dashPattern">
+        /// a dash array defining a pattern of dashes and gaps that
+        /// shall be used in drawing a dashed border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
+            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
+                (), dashPattern)));
         }
 
         /// <summary>An array of two names specifying the line ending styles that is used in drawing the line.</summary>
@@ -197,6 +298,60 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLineEndingStyles(PdfArray lineEndingStyles) {
             return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, lineEndingStyles);
+        }
+
+        /// <summary>The interior color which is used to fill the annotation's line endings.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// of either
+        /// <see cref="iText.Kernel.Colors.DeviceGray"/>
+        /// ,
+        /// <see cref="iText.Kernel.Colors.DeviceRgb"/>
+        /// or
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk"/>
+        /// type which defines
+        /// interior color of the annotation, or null if interior color is not specified.
+        /// </returns>
+        public override Color GetInteriorColor() {
+            return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
+        }
+
+        /// <summary>
+        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color
+        /// which is used to fill the annotation's line endings.
+        /// </summary>
+        /// <param name="interiorColor">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of numbers in the range 0.0 to 1.0. The number of array elements determines
+        /// the colour space in which the colour is defined: 0 - No colour, transparent; 1 - DeviceGray,
+        /// 3 - DeviceRGB, 4 - DeviceCMYK. For the
+        /// <see cref="PdfRedactAnnotation"/>
+        /// number of elements shall be
+        /// equal to 3 (which defines DeviceRGB colour space).
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.IC, interiorColor);
+        }
+
+        /// <summary>
+        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color
+        /// which is used to fill the annotation's line endings.
+        /// </summary>
+        /// <param name="interiorColor">an array of floats in the range 0.0 to 1.0.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
+            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
         }
 
         /// <summary>

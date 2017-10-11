@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation border style. See ISO-320001, Table 166 (S key).
         /// Also see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
         /// </remarks>
         public static readonly PdfName STYLE_SOLID = PdfName.S;
 
@@ -203,7 +203,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation border style. See ISO-320001, Table 166 (S key).
         /// Also see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
         /// </remarks>
         public static readonly PdfName STYLE_DASHED = PdfName.D;
 
@@ -211,7 +211,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation border style. See ISO-320001, Table 166 (S key).
         /// Also see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
         /// </remarks>
         public static readonly PdfName STYLE_BEVELED = PdfName.B;
 
@@ -219,7 +219,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation border style. See ISO-320001, Table 166 (S key).
         /// Also see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
         /// </remarks>
         public static readonly PdfName STYLE_INSET = PdfName.I;
 
@@ -227,7 +227,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation border style. See ISO-320001, Table 166 (S key).
         /// Also see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
         /// </remarks>
         public static readonly PdfName STYLE_UNDERLINE = PdfName.U;
 
@@ -530,6 +530,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action) {
             return Put(PdfName.A, action.GetPdfObject());
         }
@@ -557,6 +558,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
@@ -1417,6 +1419,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// This flag has affect to not all kinds of annotations.
         /// </remarks>
         /// <returns>true if annotation is initially open, false - if closed.</returns>
+        [Obsolete]
         public virtual bool GetOpen() {
             PdfBoolean open = GetPdfObject().GetAsBoolean(PdfName.Open);
             return open != null && open.GetValue();
@@ -1433,6 +1436,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
             return Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
@@ -1460,6 +1464,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
         /// </returns>
+        [Obsolete]
         public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
@@ -1490,6 +1495,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
             return Put(PdfName.QuadPoints, quadPoints);
         }
@@ -1511,6 +1517,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return Put(PdfName.BS, borderStyle);
         }
@@ -1540,13 +1547,9 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="style">The new value for the annotation's border style.</param>
         /// <returns>The annotation which this method was called on.</returns>
         /// <seealso cref="GetBorderStyle()"/>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style) {
-            PdfDictionary styleDict = GetBorderStyle();
-            if (null == styleDict) {
-                styleDict = new PdfDictionary();
-            }
-            styleDict.Put(PdfName.S, style);
-            return SetBorderStyle(styleDict);
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -1567,13 +1570,9 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            PdfDictionary styleDict = GetBorderStyle();
-            if (null == styleDict) {
-                styleDict = new PdfDictionary();
-            }
-            styleDict.Put(PdfName.D, dashPattern);
-            return SetBorderStyle(styleDict);
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
         /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
@@ -1594,6 +1593,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
+        [Obsolete]
         public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
@@ -1652,6 +1652,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// instance.
         /// </returns>
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
             ) {
             return Put(PdfName.MK, characteristics);
@@ -1671,6 +1672,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// .
         /// </remarks>
         /// <returns>an appearance characteristics dictionary or null if it isn't specified.</returns>
+        [Obsolete]
         public virtual PdfDictionary GetAppearanceCharacteristics() {
             return GetPdfObject().GetAsDictionary(PdfName.MK);
         }
@@ -1686,6 +1688,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which defines the characteristics and behaviour of an action.
         /// </returns>
+        [Obsolete]
         public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
         }
@@ -1702,6 +1705,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// .
         /// </returns>
         /// <seealso cref="GetAction()"/>
+        [Obsolete]
         public virtual PdfDictionary GetAdditionalAction() {
             return GetPdfObject().GetAsDictionary(PdfName.AA);
         }

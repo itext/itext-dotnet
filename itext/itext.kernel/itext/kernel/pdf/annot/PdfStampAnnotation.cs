@@ -65,5 +65,52 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual PdfName GetStampName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <remarks>
+        /// The name of an icon that is used in displaying the annotation.
+        /// Possible values are described in
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation, or null if icon name is not specified.
+        /// </returns>
+        public override PdfName GetIconName() {
+            return GetPdfObject().GetAsName(PdfName.Name);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <param name="name">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation. Possible values are:
+        /// <ul>
+        /// <li>Approved</li>
+        /// <li>Experimental</li>
+        /// <li>NotApproved</li>
+        /// <li>AsIs</li>
+        /// <li>Expired</li>
+        /// <li>NotForPublicRelease</li>
+        /// <li>Confidential</li>
+        /// <li>Final</li>
+        /// <li>Sold</li>
+        /// <li>Departmental</li>
+        /// <li>ForComment</li>
+        /// <li>TopSecret</li>
+        /// <li>Draft</li>
+        /// <li>ForPublicRelease.</li>
+        /// </ul>
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfStampAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+            return (iText.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
+        }
     }
 }

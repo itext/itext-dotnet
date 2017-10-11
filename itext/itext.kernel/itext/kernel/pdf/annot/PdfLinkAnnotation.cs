@@ -94,10 +94,56 @@ namespace iText.Kernel.Pdf.Annot {
             return this;
         }
 
+        /// <summary>
+        /// An
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to perform, such as launching an application, playing a sound,
+        /// changing an annotation’s appearance state etc, when the annotation is activated.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which defines the characteristics and behaviour of an action.
+        /// </returns>
+        public override PdfDictionary GetAction() {
+            return GetPdfObject().GetAsDictionary(PdfName.A);
+        }
+
+        /// <summary>
+        /// Sets a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// representing action to this annotation which will be performed
+        /// when the annotation is activated.
+        /// </summary>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// that represents action to set to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfDictionary action) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action);
         }
 
+        /// <summary>
+        /// Sets a
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed when the annotation is activated.
+        /// </summary>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to set to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
         public override PdfAnnotation SetAction(PdfAction action) {
             if (GetDestinationObject() != null) {
                 RemoveDestination();
@@ -129,6 +175,139 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfAction action) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action.GetPdfObject());
+        }
+
+        /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>
+        /// <remarks>
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Quadrilaterals are used to define regions inside annotation rectangle
+        /// in which the link annotation should be activated.
+        /// </remarks>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </returns>
+        public override PdfArray GetQuadPoints() {
+            return GetPdfObject().GetAsArray(PdfName.QuadPoints);
+        }
+
+        /// <summary>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
+        /// Quadrilaterals are used to define regions inside annotation rectangle
+        /// in which the link annotation should be activated.
+        /// </summary>
+        /// <param name="quadPoints">
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+            return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.QuadPoints, quadPoints);
+        }
+
+        /// <summary>
+        /// BS entry specifies a border style dictionary that has more settings than the array specified for the Border
+        /// entry (see
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ). If an annotation dictionary includes the BS entry, then the Border
+        /// entry is ignored. If annotation includes AP (see
+        /// <see cref="PdfAnnotation.GetAppearanceDictionary()"/>
+        /// ) it takes
+        /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which is a border style dictionary or null if it is not specified.
+        /// </returns>
+        public override PdfDictionary GetBorderStyle() {
+            return GetPdfObject().GetAsDictionary(PdfName.BS);
+        }
+
+        /// <summary>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
+        /// See ISO-320001, Table 166 and
+        /// <see cref="GetBorderStyle()"/>
+        /// for more info.
+        /// </summary>
+        /// <param name="borderStyle">
+        /// a border style dictionary specifying the line width and dash pattern that shall be used
+        /// in drawing the annotation’s border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+            return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.BS, borderStyle);
+        }
+
+        /// <summary>Setter for the annotation's preset border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset border style. Possible values are
+        /// <ul>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_SOLID"/>
+        /// - A solid rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// - A dashed rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_INSET"/>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
+        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// </ul>
+        /// See also ISO-320001, Table 166.
+        /// </remarks>
+        /// <param name="style">The new value for the annotation's border style.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
+        /// <seealso cref="GetBorderStyle()"/>
+        public override PdfAnnotation SetBorderStyle(PdfName style) {
+            return ((iText.Kernel.Pdf.Annot.PdfLinkAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle()
+                , style)));
+        }
+
+        /// <summary>Setter for the annotation's preset dashed border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset dashed border style. This property has affect only if
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// style was used for the annotation border style (see
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
+        /// </remarks>
+        /// <param name="dashPattern">
+        /// a dash array defining a pattern of dashes and gaps that
+        /// shall be used in drawing a dashed border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
+            return ((iText.Kernel.Pdf.Annot.PdfLinkAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
+                (), dashPattern)));
         }
     }
 }

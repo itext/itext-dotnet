@@ -75,5 +75,30 @@ namespace iText.Kernel.Pdf.Annot {
             this.parent = parent;
             return (iText.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent.GetPdfObject());
         }
+
+        /// <summary>A flag specifying whether the annotation shall initially be displayed open.</summary>
+        /// <remarks>
+        /// A flag specifying whether the annotation shall initially be displayed open.
+        /// This flag has affect to not all kinds of annotations.
+        /// </remarks>
+        /// <returns>true if annotation is initially open, false - if closed.</returns>
+        public override bool GetOpen() {
+            return PdfBoolean.TRUE.Equals(GetPdfObject().GetAsBoolean(PdfName.Open));
+        }
+
+        /// <summary>Sets a flag specifying whether the annotation shall initially be displayed open.</summary>
+        /// <remarks>
+        /// Sets a flag specifying whether the annotation shall initially be displayed open.
+        /// This flag has affect to not all kinds of annotations.
+        /// </remarks>
+        /// <param name="open">true if annotation shall initially be open, false - if closed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPopupAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetOpen(bool open) {
+            return (iText.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Open, PdfBoolean.ValueOf(open));
+        }
     }
 }

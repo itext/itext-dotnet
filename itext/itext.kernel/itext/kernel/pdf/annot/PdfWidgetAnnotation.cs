@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfWidgetAnnotation : PdfAnnotation {
@@ -194,6 +195,219 @@ namespace iText.Kernel.Pdf.Annot {
                 }
             }
             return this;
+        }
+
+        /// <summary>
+        /// An
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to perform, such as launching an application, playing a sound,
+        /// changing an annotation’s appearance state etc, when the annotation is activated.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which defines the characteristics and behaviour of an action.
+        /// </returns>
+        public override PdfDictionary GetAction() {
+            return GetPdfObject().GetAsDictionary(PdfName.A);
+        }
+
+        /// <summary>
+        /// Sets a
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed when the annotation is activated.
+        /// </summary>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to set to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAction(PdfAction action) {
+            return (iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.A, action.GetPdfObject());
+        }
+
+        /// <summary>An additional actions dictionary that extends the set of events that can trigger the execution of an action.
+        ///     </summary>
+        /// <remarks>
+        /// An additional actions dictionary that extends the set of events that can trigger the execution of an action.
+        /// See ISO-320001 12.6.3 Trigger Events.
+        /// </remarks>
+        /// <returns>
+        /// an additional actions
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// .
+        /// </returns>
+        /// <seealso cref="GetAction()"/>
+        public override PdfDictionary GetAdditionalAction() {
+            return GetPdfObject().GetAsDictionary(PdfName.AA);
+        }
+
+        /// <summary>
+        /// Sets an additional
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed in response to
+        /// the specific trigger event defined by
+        /// <paramref name="key"/>
+        /// . See ISO-320001 12.6.3, "Trigger Events".
+        /// </summary>
+        /// <param name="key">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that denotes a type of the additional action to set.
+        /// </param>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to set as additional to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
+            PdfAction.SetAdditionalAction(this, key, action);
+            return this;
+        }
+
+        /// <summary>
+        /// An appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream.
+        /// </summary>
+        /// <remarks>
+        /// An appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream. See ISO-320001, Table 189.
+        /// </remarks>
+        /// <returns>an appearance characteristics dictionary or null if it isn't specified.</returns>
+        public override PdfDictionary GetAppearanceCharacteristics() {
+            return GetPdfObject().GetAsDictionary(PdfName.MK);
+        }
+
+        /// <summary>
+        /// Sets an appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream.
+        /// </summary>
+        /// <remarks>
+        /// Sets an appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream. See ISO-320001, Table 189.
+        /// </remarks>
+        /// <param name="characteristics">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// with additional information for appearance stream.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics) {
+            return (iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.MK, characteristics);
+        }
+
+        /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        ///     </summary>
+        /// <remarks>
+        /// The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        /// That entry specifies a border style dictionary that has more settings than the array specified for the Border
+        /// entry (see
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ). If an annotation dictionary includes the BS entry, then the Border
+        /// entry is ignored. If annotation includes AP (see
+        /// <see cref="PdfAnnotation.GetAppearanceDictionary()"/>
+        /// ) it takes
+        /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which is a border style dictionary or null if it is not specified.
+        /// </returns>
+        public override PdfDictionary GetBorderStyle() {
+            return GetPdfObject().GetAsDictionary(PdfName.BS);
+        }
+
+        /// <summary>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
+        /// See ISO-320001, Table 166 and
+        /// <see cref="GetBorderStyle()"/>
+        /// for more info.
+        /// </summary>
+        /// <param name="borderStyle">
+        /// a border style dictionary specifying the line width and dash pattern that shall be used
+        /// in drawing the annotation’s border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+            return (iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.BS, borderStyle);
+        }
+
+        /// <summary>Setter for the annotation's preset border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset border style. Possible values are
+        /// <ul>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_SOLID"/>
+        /// - A solid rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// - A dashed rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_INSET"/>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
+        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// </ul>
+        /// See also ISO-320001, Table 166.
+        /// </remarks>
+        /// <param name="style">The new value for the annotation's border style.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        /// <seealso cref="GetBorderStyle()"/>
+        public override PdfAnnotation SetBorderStyle(PdfName style) {
+            return ((iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle
+                (), style)));
+        }
+
+        /// <summary>Setter for the annotation's preset dashed border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset dashed border style. This property has affect only if
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// style was used for the annotation border style (see
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
+        /// </remarks>
+        /// <param name="dashPattern">
+        /// a dash array defining a pattern of dashes and gaps that
+        /// shall be used in drawing a dashed border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWidgetAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
+            return ((iText.Kernel.Pdf.Annot.PdfWidgetAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
+                (), dashPattern)));
         }
     }
 }

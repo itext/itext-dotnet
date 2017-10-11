@@ -200,5 +200,57 @@ namespace iText.Kernel.Pdf.Annot {
             }
             return subType;
         }
+
+        /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>
+        /// <remarks>
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Quadrilaterals are used to define a word or group of contiguous words in the text
+        /// underlying the text markup annotation.
+        /// <p>
+        /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </remarks>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </returns>
+        public override PdfArray GetQuadPoints() {
+            return GetPdfObject().GetAsArray(PdfName.QuadPoints);
+        }
+
+        /// <summary>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
+        /// Quadrilaterals are used to define a word or group of contiguous words in the text
+        /// underlying the text markup annotation.
+        /// <p>
+        /// IMPORTANT NOTE: According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </summary>
+        /// <param name="quadPoints">
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfTextMarkupAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+            return (iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation)Put(PdfName.QuadPoints, quadPoints);
+        }
     }
 }
