@@ -73,6 +73,9 @@ namespace iText.Kernel.Pdf.Annot {
             SetDefaultAppearance(new PdfString(appearanceString));
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfFreeTextAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

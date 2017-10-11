@@ -89,6 +89,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represents existing annotation in the document.
         /// </param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfLineAnnotation(PdfDictionary pdfDictionary)
             : base(pdfDictionary) {
         }

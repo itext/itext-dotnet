@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -56,6 +57,9 @@ namespace iText.Kernel.Pdf.Annot {
             Put(PdfName.FS, file.GetPdfObject());
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfFileAttachmentAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

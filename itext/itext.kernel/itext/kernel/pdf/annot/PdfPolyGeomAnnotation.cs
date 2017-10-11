@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -52,12 +53,17 @@ namespace iText.Kernel.Pdf.Annot {
 
         public static readonly PdfName PolyLine = PdfName.PolyLine;
 
+        [System.ObsoleteAttribute(@"Use CreatePolygon(iText.Kernel.Geom.Rectangle, float[]) or CreatePolyLine(iText.Kernel.Geom.Rectangle, float[]) instead. Will be made private in 7.1."
+            )]
         public PdfPolyGeomAnnotation(Rectangle rect, PdfName subtype, float[] vertices)
             : base(rect) {
             SetSubtype(subtype);
             SetVertices(vertices);
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfPolyGeomAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
