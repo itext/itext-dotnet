@@ -75,7 +75,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         internal int hatch;
 
-        internal Color color = DeviceRgb.WHITE;
+        internal Color color = ColorConstants.WHITE;
 
         /// <summary>Creates a MetaBrush object.</summary>
         public MetaBrush()

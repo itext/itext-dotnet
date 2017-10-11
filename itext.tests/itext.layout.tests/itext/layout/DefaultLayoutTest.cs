@@ -87,8 +87,8 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            document.Add(new Paragraph(new Text(str).SetBackgroundColor(Color.RED)).SetBackgroundColor(Color.GREEN)).Add
-                (new Paragraph(str)).Add(new AreaBreak(PageSize.Default)).Add(new Paragraph(str));
+            document.Add(new Paragraph(new Text(str).SetBackgroundColor(ColorConstants.RED)).SetBackgroundColor(ColorConstants
+                .GREEN)).Add(new Paragraph(str)).Add(new AreaBreak(PageSize.Default)).Add(new Paragraph(str));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -105,10 +105,10 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph());
             // this line should not cause any effect
-            document.Add(new Paragraph().SetBackgroundColor(Color.GREEN));
-            document.Add(new Paragraph().SetBorder(new SolidBorder(Color.BLUE, 3)));
+            document.Add(new Paragraph().SetBackgroundColor(ColorConstants.GREEN));
+            document.Add(new Paragraph().SetBorder(new SolidBorder(ColorConstants.BLUE, 3)));
             document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?").SetBackgroundColor
-                (Color.RED).SetBorder(new SolidBorder(1)));
+                (ColorConstants.RED).SetBorder(new SolidBorder(1)));
             document.Add(new Paragraph().SetHeight(50));
             document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right?"));
             document.Close();

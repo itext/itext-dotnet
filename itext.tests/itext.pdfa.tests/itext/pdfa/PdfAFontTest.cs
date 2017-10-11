@@ -77,8 +77,8 @@ namespace iText.Pdfa {
             PdfPage page = doc.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                ("Hello World! Pdf/A-1B").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -95,8 +95,8 @@ namespace iText.Pdfa {
                 PdfPage page = doc.AddNewPage();
                 PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi");
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                    ("Hello World! Pdf/A-1B").EndText().RestoreState();
+                canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                    ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
             , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "FreeSans")));
@@ -118,8 +118,8 @@ namespace iText.Pdfa {
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                ("Hello World! Pdf/A-1B").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -136,8 +136,8 @@ namespace iText.Pdfa {
                 PdfPage page = doc.AddNewPage();
                 PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", true);
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                    ("Hello World! Pdf/A-1B").EndText().RestoreState();
+                canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                    ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
             , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "Helvetica")));
@@ -159,8 +159,8 @@ namespace iText.Pdfa {
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H");
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                ("Hello World! Pdf/A-1B").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -180,8 +180,8 @@ namespace iText.Pdfa {
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                ("Hello World! Pdf/A-2B").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-2B").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -201,8 +201,8 @@ namespace iText.Pdfa {
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().SetFillColor(DeviceRgb.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
-                ("Hello World! Pdf/A-3B").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-3B").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }

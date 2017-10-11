@@ -168,7 +168,7 @@ namespace iText.Layout {
                 doc.Add(p);
             }
             Div div = new Div();
-            div.SetBorder(new SolidBorder(Color.BLACK, 1));
+            div.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
             div.SetMinHeight(500);
             div.SetKeepTogether(true);
             div.Add(new Paragraph("Hello"));

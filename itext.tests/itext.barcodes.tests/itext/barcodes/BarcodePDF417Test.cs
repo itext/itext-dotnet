@@ -127,7 +127,7 @@ namespace iText.Barcodes {
             pf.SetMacroSegmentCount(2);
             pf.SetMacroSegmentId(segmentId);
             pf.SetCode(text);
-            return pf.CreateFormXObject(Color.BLACK, mw, mh, document);
+            return pf.CreateFormXObject(ColorConstants.BLACK, mw, mh, document);
         }
     }
 }

@@ -171,7 +171,7 @@ namespace iText.Layout {
             table.AddCell(image);
             table.AddCell(CreateParagraph2());
             table.AddCell(image);
-            table.AddCell(new Paragraph("abcdefghijklmnopqrstuvwxyz").SetFontColor(Color.GREEN));
+            table.AddCell(new Paragraph("abcdefghijklmnopqrstuvwxyz").SetFontColor(ColorConstants.GREEN));
             table.AddCell("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -255,7 +255,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
+                ));
             doc.Close();
             CompareResult("tableTest04.pdf", "cmp_tableTest04.pdf");
         }
@@ -285,7 +286,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
+                ));
             doc.Close();
             CompareResult("tableTest05.pdf", "cmp_tableTest05.pdf");
         }
@@ -387,7 +389,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
+                ));
             doc.Close();
             CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
         }
@@ -615,7 +618,8 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
+                ));
             doc.Close();
             CompareResult("flushingTest02.pdf", "cmp_flushingTest02.pdf");
         }
@@ -651,7 +655,8 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
+                ));
             doc.Close();
             CompareResult("flushingTest03.pdf", "cmp_tableTest04.pdf");
         }
@@ -838,7 +843,8 @@ namespace iText.Layout {
             Document document = new Document(pdf);
             pdf.SetTagged();
             // This tests that /Artifact content is properly closed in canvas
-            document.Add(new Div().Add(new Div().SetBackgroundColor(Color.RED)).SetBackgroundColor(Color.RED));
+            document.Add(new Div().Add(new Div().SetBackgroundColor(ColorConstants.RED)).SetBackgroundColor(ColorConstants
+                .RED));
             document.Add(new Paragraph("Hello"));
             document.Close();
             CompareResult("emptyDivTest.pdf", "cmp_emptyDivTest.pdf");

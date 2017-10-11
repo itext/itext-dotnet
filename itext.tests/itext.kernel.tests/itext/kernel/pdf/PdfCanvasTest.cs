@@ -901,9 +901,9 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "colorTest01.pdf"));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SetFillColor(DeviceRgb.RED).Rectangle(50, 500, 50, 50).Fill();
-            canvas.SetFillColor(DeviceRgb.GREEN).Rectangle(150, 500, 50, 50).Fill();
-            canvas.SetFillColor(DeviceRgb.BLUE).Rectangle(250, 500, 50, 50).Fill();
+            canvas.SetFillColor(ColorConstants.RED).Rectangle(50, 500, 50, 50).Fill();
+            canvas.SetFillColor(ColorConstants.GREEN).Rectangle(150, 500, 50, 50).Fill();
+            canvas.SetFillColor(ColorConstants.BLUE).Rectangle(250, 500, 50, 50).Fill();
             canvas.SetLineWidth(5);
             canvas.SetStrokeColor(DeviceCmyk.CYAN).Rectangle(50, 400, 50, 50).Stroke();
             canvas.SetStrokeColor(DeviceCmyk.MAGENTA).Rectangle(150, 400, 50, 50).Stroke();

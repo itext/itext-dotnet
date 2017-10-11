@@ -81,7 +81,7 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Text foo = new Text("foo");
-            foo.SetBackgroundColor(Color.BLUE);
+            foo.SetBackgroundColor(ColorConstants.BLUE);
             doc.Add(new Paragraph(foo));
             CloseDocumentAndCompareOutputs(doc);
         }

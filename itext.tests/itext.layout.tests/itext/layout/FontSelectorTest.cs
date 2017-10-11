@@ -83,7 +83,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, "Puritan42");
-            Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
             doc.Close();
@@ -105,7 +105,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFont("'Puritan', \"FreeSans\"");
-            Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
             doc.Close();
@@ -125,7 +125,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFont("Puritan");
-            Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
             doc.Close();

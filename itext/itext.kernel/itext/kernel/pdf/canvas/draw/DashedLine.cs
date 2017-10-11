@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
     public class DashedLine : ILineDrawer {
         private float lineWidth = 1;
 
-        private Color color = Color.BLACK;
+        private Color color = ColorConstants.BLACK;
 
         public DashedLine() {
         }

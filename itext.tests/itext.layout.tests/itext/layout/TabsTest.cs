@@ -254,7 +254,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             //tabstops out of page bounds
             Paragraph p = new Paragraph();
-            p.SetFontColor(Color.GREEN);
+            p.SetFontColor(ColorConstants.GREEN);
             p.Add("left tab stop out of page bounds:");
             doc.Add(p);
             p = new Paragraph();
@@ -262,7 +262,7 @@ namespace iText.Layout {
             p.Add("text").Add(new Tab()).Add("some interesting text after left-tabstop");
             doc.Add(p);
             p = new Paragraph();
-            p.SetFontColor(Color.GREEN);
+            p.SetFontColor(ColorConstants.GREEN);
             p.Add("right tab stop out of page bounds:");
             doc.Add(p);
             p = new Paragraph();
@@ -271,7 +271,7 @@ namespace iText.Layout {
             doc.Add(p);
             //text out of page bounds
             p = new Paragraph();
-            p.SetFontColor(Color.GREEN);
+            p.SetFontColor(ColorConstants.GREEN);
             p.Add("text out of page bounds after left tab stop:");
             doc.Add(p);
             p = new Paragraph();
@@ -280,7 +280,7 @@ namespace iText.Layout {
             p.Add("text").Add(new Tab()).Add("someinterestingtextafterleft-tabstop");
             doc.Add(p);
             p = new Paragraph();
-            p.SetFontColor(Color.GREEN);
+            p.SetFontColor(ColorConstants.GREEN);
             p.Add("text out of page bounds after right tab stop:");
             doc.Add(p);
             p = new Paragraph();

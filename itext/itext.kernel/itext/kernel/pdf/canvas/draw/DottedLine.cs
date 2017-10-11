@@ -58,7 +58,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
 
         private float lineWidth = 1;
 
-        private Color color = Color.BLACK;
+        private Color color = ColorConstants.BLACK;
 
         /// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
         ///     </summary>

@@ -555,7 +555,7 @@ namespace iText.Kernel.Pdf {
                 .HELVETICA), 16).ShowText("This is Printer Mark annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(Color.GREEN, true).Fill().RestoreState();
+            canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
             canvas.Release();
             PdfPrinterMarkAnnotation printer = new PdfPrinterMarkAnnotation(PageSize.A4, form);
             page1.AddAnnotation(printer);
@@ -581,7 +581,7 @@ namespace iText.Kernel.Pdf {
                 .HELVETICA), 16).ShowText("This is Trap Network annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(272, 795, 5).SetColor(Color.GREEN, true).Fill().RestoreState();
+            canvas.SaveState().Circle(272, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
             canvas.Release();
             form.SetProcessColorModel(PdfName.DeviceN);
             PdfTrapNetworkAnnotation trap = new PdfTrapNetworkAnnotation(PageSize.A4, form);
@@ -887,7 +887,7 @@ namespace iText.Kernel.Pdf {
             watermark.SetFixedPrint(fixedPrint);
             PdfFormXObject form = new PdfFormXObject(new Rectangle(200, 200));
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(100, 100, 50).SetColor(Color.BLACK, true).Fill().RestoreState();
+            canvas.SaveState().Circle(100, 100, 50).SetColor(ColorConstants.BLACK, true).Fill().RestoreState();
             canvas.Release();
             watermark.SetNormalAppearance(form.GetPdfObject());
             watermark.SetFlags(PdfAnnotation.PRINT);
@@ -918,8 +918,8 @@ namespace iText.Kernel.Pdf {
             redact.SetDownAppearance(formD.GetPdfObject());
             PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 51));
             PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc);
-            canvasN.SetColor(Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE
-                ).Rectangle(180, 531, 120, 48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
+            canvasN.SetColor(ColorConstants.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
+                .PROJECTING_SQUARE).Rectangle(180, 531, 120, 48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
             redact.SetNormalAppearance(formN.GetPdfObject());
             PdfFormXObject formR = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
             PdfCanvas canvasR = new PdfCanvas(formR, pdfDoc);

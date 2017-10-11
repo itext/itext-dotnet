@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
     public class SolidLine : ILineDrawer {
         private float lineWidth = 1;
 
-        private Color color = Color.BLACK;
+        private Color color = ColorConstants.BLACK;
 
         /// <summary>Constructs an instance of solid line drawer</summary>
         public SolidLine() {

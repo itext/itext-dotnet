@@ -316,7 +316,7 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             list.Add(new ListItem()).Add(new ListItem(image)).Add(new ListItem()).Add("123").Add((ListItem)new ListItem
-                ().Add(new Div().SetHeight(70).SetBackgroundColor(Color.RED)));
+                ().Add(new Div().SetHeight(70).SetBackgroundColor(ColorConstants.RED)));
             document.Add(list);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -368,13 +368,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_listItemTest02.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdf);
-            document.SetFontColor(Color.WHITE);
+            document.SetFontColor(ColorConstants.WHITE);
             List list = new List();
-            Style liStyle = new Style().SetMargins(20, 0, 20, 0).SetBackgroundColor(Color.BLACK);
+            Style liStyle = new Style().SetMargins(20, 0, 20, 0).SetBackgroundColor(ColorConstants.BLACK);
             list.Add((ListItem)new ListItem("").AddStyle(liStyle)).Add((ListItem)new ListItem("fox").AddStyle(liStyle)
                 ).Add((ListItem)new ListItem("").AddStyle(liStyle)).Add((ListItem)new ListItem("dog").AddStyle(liStyle
                 ));
-            document.Add(list.SetBackgroundColor(Color.BLUE));
+            document.Add(list.SetBackgroundColor(ColorConstants.BLUE));
             document.Add(new Paragraph("separation between lists"));
             liStyle.SetMargin(0);
             document.Add(list);
@@ -406,7 +406,7 @@ namespace iText.Layout {
             item.Add(nestedList);
             list.Add(item);
             list.Add(item);
-            list.SetBorder(new SolidBorder(Color.RED, 3));
+            list.SetBorder(new SolidBorder(ColorConstants.RED, 3));
             doc.Add(list);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("List's height is set shorter than needed:"));
