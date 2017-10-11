@@ -340,9 +340,14 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i < xref.Size(); i++) {
                 PdfIndirectReference indirectReference = xref.Get(i);
                 if (null != indirectReference) {
-                    PdfObject obj = indirectReference.GetRefersTo(false);
-                    if (obj != null && !obj.Equals(objectStream) && obj.IsModified()) {
-                        obj.Flush();
+                    bool isModified = indirectReference.CheckState(PdfObject.MODIFIED);
+                    if (isModified) {
+                        PdfObject obj = indirectReference.GetRefersTo(false);
+                        if (obj != null) {
+                            if (!obj.Equals(objectStream)) {
+                                obj.Flush();
+                            }
+                        }
                     }
                 }
             }
