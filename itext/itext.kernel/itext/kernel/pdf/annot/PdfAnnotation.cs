@@ -192,43 +192,23 @@ namespace iText.Kernel.Pdf.Annot {
         public static readonly PdfName HIGHLIGHT_TOGGLE = PdfName.T;
 
         /// <summary>Annotation border style.</summary>
-        /// <remarks>
-        /// Annotation border style. See ISO-320001, Table 166 (S key).
-        /// Also see
-        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
-        /// </remarks>
+        /// <remarks>Annotation border style. See ISO-320001, Table 166 (S key).</remarks>
         public static readonly PdfName STYLE_SOLID = PdfName.S;
 
         /// <summary>Annotation border style.</summary>
-        /// <remarks>
-        /// Annotation border style. See ISO-320001, Table 166 (S key).
-        /// Also see
-        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
-        /// </remarks>
+        /// <remarks>Annotation border style. See ISO-320001, Table 166 (S key).</remarks>
         public static readonly PdfName STYLE_DASHED = PdfName.D;
 
         /// <summary>Annotation border style.</summary>
-        /// <remarks>
-        /// Annotation border style. See ISO-320001, Table 166 (S key).
-        /// Also see
-        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
-        /// </remarks>
+        /// <remarks>Annotation border style. See ISO-320001, Table 166 (S key).</remarks>
         public static readonly PdfName STYLE_BEVELED = PdfName.B;
 
         /// <summary>Annotation border style.</summary>
-        /// <remarks>
-        /// Annotation border style. See ISO-320001, Table 166 (S key).
-        /// Also see
-        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
-        /// </remarks>
+        /// <remarks>Annotation border style. See ISO-320001, Table 166 (S key).</remarks>
         public static readonly PdfName STYLE_INSET = PdfName.I;
 
         /// <summary>Annotation border style.</summary>
-        /// <remarks>
-        /// Annotation border style. See ISO-320001, Table 166 (S key).
-        /// Also see
-        /// <see cref="BorderStyleUtil.SetStyle(iText.Kernel.Pdf.PdfDictionary, iText.Kernel.Pdf.PdfName)"/>
-        /// </remarks>
+        /// <remarks>Annotation border style. See ISO-320001, Table 166 (S key).</remarks>
         public static readonly PdfName STYLE_UNDERLINE = PdfName.U;
 
         /// <summary>Annotation state.</summary>
