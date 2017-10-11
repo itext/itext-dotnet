@@ -16,6 +16,9 @@
     <copyright>Copyright (c) 1998-2017 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
+	<dependencies>
+      <dependency id="Portable.BouncyCastle" version="1.8.1.3" />
+    </dependencies>
   </metadata>
   <files>
 	<file src="itext\itext.io\bin\Release\itext.io.dll" target="lib\net40" />
