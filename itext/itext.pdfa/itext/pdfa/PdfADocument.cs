@@ -109,7 +109,7 @@ namespace iText.Pdfa {
             : base(reader, writer, properties) {
             byte[] existingXmpMetadata = GetXmpMetadata();
             if (existingXmpMetadata == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             XMPMeta meta;
@@ -117,12 +117,12 @@ namespace iText.Pdfa {
                 meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
             }
             catch (XMPException) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(meta);
             if (conformanceLevel == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             SetChecker(conformanceLevel);

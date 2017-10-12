@@ -84,7 +84,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES));
 ;
         }
 
@@ -113,7 +113,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES));
 ;
         }
 
@@ -170,7 +170,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OptionalContentConfigurationDictionaryShallContainNameEntry));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY));
 ;
         }
 
@@ -245,7 +245,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS));
 ;
         }
 
@@ -282,7 +282,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS));
 ;
         }
 
@@ -324,7 +324,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS));
 ;
         }
 
@@ -343,7 +343,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.Names, names);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainAlternatepresentationsNamesEntry));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY));
 ;
         }
 
@@ -360,7 +360,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.Requirements, new PdfArray());
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainRequirementsEntry));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY));
 ;
         }
 

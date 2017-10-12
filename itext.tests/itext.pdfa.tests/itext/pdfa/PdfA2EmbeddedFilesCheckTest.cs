@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Pdfa {
     public class PdfA2EmbeddedFilesCheckTest : ExtendedITextTest {
@@ -96,6 +97,7 @@ namespace iText.Pdfa {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC, Count = 1)]
         public virtual void FileSpecCheckTest02() {
             String outPdf = destinationFolder + "pdfA2b_fileSpecCheckTest02.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecCheckTest02.pdf";
@@ -125,28 +127,25 @@ namespace iText.Pdfa {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
+        [LogMessage(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC, Count = 1)]
         public virtual void FileSpecCheckTest03() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
-                PdfPage page = pdfDocument.AddNewPage();
-                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
-                    ().RestoreState();
-                MemoryStream txt = new MemoryStream();
-                StreamWriter @out = new StreamWriter(txt);
-                @out.Write("<foo><foo2>Hello world</foo2></foo>");
-                @out.Dispose();
-                pdfDocument.AddFileAttachment("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
-                    , "foo.xml", PdfName.ApplicationXml, null, PdfName.Source));
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType));
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
+                ().RestoreState();
+            MemoryStream txt = new MemoryStream();
+            StreamWriter @out = new StreamWriter(txt);
+            @out.Write("<foo><foo2>Hello world</foo2></foo>");
+            @out.Dispose();
+            pdfDocument.AddFileAttachment("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
+                , "foo.xml", PdfName.ApplicationXml, null, PdfName.Source));
+            pdfDocument.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -92,7 +92,7 @@ namespace iText.Pdfa.Checker {
         public override void CheckCanvasStack(char stackOperation) {
             if ('q' == stackOperation) {
                 if (++gsStackDepth > iText.Pdfa.Checker.PdfA1Checker.maxGsStackDepth) {
-                    throw new PdfAConformanceException(PdfAConformanceException.GraphicStateStackDepthIsGreaterThan28);
+                    throw new PdfAConformanceException(PdfAConformanceException.GRAPHICS_STATE_STACK_DEPTH_IS_GREATER_THAN_28);
                 }
             }
             else {
@@ -106,7 +106,7 @@ namespace iText.Pdfa.Checker {
             PdfObject filter = inlineImage.Get(PdfName.Filter);
             if (filter is PdfName) {
                 if (filter.Equals(PdfName.LZWDecode)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
+                    throw new PdfAConformanceException(PdfAConformanceException.LZWDECODE_FILTER_IS_NOT_PERMITTED);
                 }
             }
             else {
@@ -114,7 +114,7 @@ namespace iText.Pdfa.Checker {
                     for (int i = 0; i < ((PdfArray)filter).Size(); i++) {
                         PdfName f = ((PdfArray)filter).GetAsName(i);
                         if (f.Equals(PdfName.LZWDecode)) {
-                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
+                            throw new PdfAConformanceException(PdfAConformanceException.LZWDECODE_FILTER_IS_NOT_PERMITTED);
                         }
                     }
                 }
@@ -138,7 +138,7 @@ namespace iText.Pdfa.Checker {
             }
             if (colorSpace is PdfDeviceCs.Rgb) {
                 if (cmykIsUsed) {
-                    throw new PdfAConformanceException(PdfAConformanceException.DevicergbAndDevicecmykColorspacesCannotBeUsedBothInOneFile
+                    throw new PdfAConformanceException(PdfAConformanceException.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                         );
                 }
                 rgbIsUsed = true;
@@ -146,7 +146,7 @@ namespace iText.Pdfa.Checker {
             else {
                 if (colorSpace is PdfDeviceCs.Cmyk) {
                     if (rgbIsUsed) {
-                        throw new PdfAConformanceException(PdfAConformanceException.DevicergbAndDevicecmykColorspacesCannotBeUsedBothInOneFile
+                        throw new PdfAConformanceException(PdfAConformanceException.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                             );
                     }
                     cmykIsUsed = true;
@@ -169,18 +169,18 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckColorsUsages() {
             if ((rgbIsUsed || cmykIsUsed || grayIsUsed) && pdfAOutputIntentColorSpace == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.IfDeviceRgbCmykGrayUsedInFileThatFileShallContainPdfaOutputIntent
+                throw new PdfAConformanceException(PdfAConformanceException.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
                     );
             }
             if (rgbIsUsed) {
                 if (!ICC_COLOR_SPACE_RGB.Equals(pdfAOutputIntentColorSpace)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.DevicergbMayBeUsedOnlyIfTheFileHasARgbPdfAOutputIntent
+                    throw new PdfAConformanceException(PdfAConformanceException.DEVICERGB_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_RGB_PDFA_OUTPUT_INTENT
                         );
                 }
             }
             if (cmykIsUsed) {
                 if (!ICC_COLOR_SPACE_CMYK.Equals(pdfAOutputIntentColorSpace)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntent
+                    throw new PdfAConformanceException(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT
                         );
                 }
             }
@@ -188,29 +188,33 @@ namespace iText.Pdfa.Checker {
 
         public override void CheckExtGState(CanvasGraphicsState extGState) {
             if (extGState.GetTransferFunction() != null) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheTrKey);
+                throw new PdfAConformanceException(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
+                    );
             }
             PdfObject transferFunction2 = extGState.GetTransferFunction2();
             if (transferFunction2 != null && !PdfName.Default.Equals(transferFunction2)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheTR2KeyWithAValueOtherThanDefault
+                throw new PdfAConformanceException(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_2_KEY_WITH_A_VALUE_OTHER_THAN_DEFAULT
                     );
             }
             CheckRenderingIntent(extGState.GetRenderingIntent());
             PdfObject softMask = extGState.GetSoftMask();
             if (softMask != null && !PdfName.None.Equals(softMask)) {
-                throw new PdfAConformanceException(PdfAConformanceException.TheSmaskKeyIsNotAllowedInExtgstate);
+                throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_EXTGSTATE);
             }
             PdfObject bm = extGState.GetBlendMode();
             if (bm != null && !PdfName.Normal.Equals(bm) && !PdfName.Compatible.Equals(bm)) {
-                throw new PdfAConformanceException(PdfAConformanceException.BlendModeShallHhaveValueNormalOrCompatible);
+                throw new PdfAConformanceException(PdfAConformanceException.BLEND_MODE_SHALL_HAVE_VALUE_NORMAL_OR_COMPATIBLE
+                    );
             }
             float? ca = extGState.GetStrokeOpacity();
             if (ca != null && ca != 1) {
-                throw new PdfAConformanceException(PdfAConformanceException.TransparencyIsNotAllowedCAShallBeEqualTo1);
+                throw new PdfAConformanceException(PdfAConformanceException.TRANSPARENCY_IS_NOT_ALLOWED_CA_SHALL_BE_EQUAL_TO_1
+                    );
             }
             ca = extGState.GetFillOpacity();
             if (ca != null && ca != 1) {
-                throw new PdfAConformanceException(PdfAConformanceException.TransparencyIsNotAllowedCaShallBeEqualTo1);
+                throw new PdfAConformanceException(PdfAConformanceException.TRANSPARENCY_IS_NOT_ALLOWED_AND_CA_SHALL_BE_EQUAL_TO_1
+                    );
             }
         }
 
@@ -219,15 +223,15 @@ namespace iText.Pdfa.Checker {
                 return;
             }
             if (!allowedRenderingIntents.Contains(intent)) {
-                throw new PdfAConformanceException(PdfAConformanceException.IfSpecifiedRenderingShallBeOneOfTheFollowingRelativecolorimetricAbsolutecolorimetricPerceptualOrSaturation
+                throw new PdfAConformanceException(PdfAConformanceException.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
                     );
             }
         }
 
         public override void CheckFont(PdfFont pdfFont) {
             if (!pdfFont.IsEmbedded()) {
-                throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
-                    (pdfFont.GetFontProgram().GetFontNames().GetFontName());
+                throw new PdfAConformanceException(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                    ).SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
             }
             if (pdfFont is PdfTrueTypeFont) {
                 PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont)pdfFont;
@@ -246,14 +250,14 @@ namespace iText.Pdfa.Checker {
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
             if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) || trueTypeFont.GetFontEncoding
                 ().HasDifferences()) {
-                throw new PdfAConformanceException(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry
+                throw new PdfAConformanceException(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY
                     , trueTypeFont);
             }
         }
 
         protected internal override void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             if (trueTypeFont.GetFontEncoding().HasDifferences()) {
-                throw new PdfAConformanceException(PdfAConformanceException.AllSymbolicTrueTypeFontsShallNotSpecifyEncoding
+                throw new PdfAConformanceException(PdfAConformanceException.ALL_SYMBOLIC_TRUE_TYPE_FONTS_SHALL_NOT_SPECIFY_ENCODING
                     );
             }
         }
@@ -273,17 +277,18 @@ namespace iText.Pdfa.Checker {
                 checkedObjectsColorspace.Put(image, colorSpace);
             }
             if (image.ContainsKey(PdfName.Alternates)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainAlternatesKey);
+                throw new PdfAConformanceException(PdfAConformanceException.AN_IMAGE_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATES_KEY
+                    );
             }
             if (image.ContainsKey(PdfName.OPI)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainOpiKey);
+                throw new PdfAConformanceException(PdfAConformanceException.AN_IMAGE_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY);
             }
             if (image.ContainsKey(PdfName.Interpolate) && (bool)image.GetAsBool(PdfName.Interpolate)) {
-                throw new PdfAConformanceException(PdfAConformanceException.TheValueOfInterpolateKeyShallNotBeTrue);
+                throw new PdfAConformanceException(PdfAConformanceException.THE_VALUE_OF_INTERPOLATE_KEY_SHALL_BE_FALSE);
             }
             CheckRenderingIntent(image.GetAsName(PdfName.Intent));
             if (image.ContainsKey(PdfName.SMask) && !PdfName.None.Equals(image.GetAsName(PdfName.SMask))) {
-                throw new PdfAConformanceException(PdfAConformanceException.TheSmaskKeyIsNotAllowedInXobjects);
+                throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_XOBJECTS);
             }
         }
 
@@ -292,21 +297,23 @@ namespace iText.Pdfa.Checker {
                 return;
             }
             if (form.ContainsKey(PdfName.OPI)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainOpiKey);
+                throw new PdfAConformanceException(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY
+                    );
             }
             if (form.ContainsKey(PdfName.PS)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainPSKey);
+                throw new PdfAConformanceException(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_PS_KEY
+                    );
             }
             if (PdfName.PS.Equals(form.GetAsName(PdfName.Subtype2))) {
-                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainSubtype2KeyWithAValueOfPS
+                throw new PdfAConformanceException(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_SUBTYPE2_KEY_WITH_A_VALUE_OF_PS
                     );
             }
             if (form.ContainsKey(PdfName.SMask)) {
-                throw new PdfAConformanceException(PdfAConformanceException.TheSmaskKeyIsNotAllowedInXobjects);
+                throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_XOBJECTS);
             }
             if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
                 (PdfName.S))) {
-                throw new PdfAConformanceException(PdfAConformanceException.AGroupObjectWithAnSKeyWithAValueOfTransparencyShallNotBeIncludedInAFormXobject
+                throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                     );
             }
             CheckResources(form.GetAsDictionary(PdfName.Resources));
@@ -317,19 +324,20 @@ namespace iText.Pdfa.Checker {
                 PdfDictionary markInfo = catalog.GetAsDictionary(PdfName.MarkInfo);
                 if (markInfo == null || markInfo.GetAsBoolean(PdfName.Marked) == null || !markInfo.GetAsBoolean(PdfName.Marked
                     ).GetValue()) {
-                    throw new PdfAConformanceException(PdfAConformanceException.CatalogShallIncludeMarkInfoDictionaryWithMarkedTrueValue
+                    throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_SHALL_INCLUDE_MARK_INFO_DICTIONARY_WITH_MARKED_TRUE_VALUE
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(PdfAChecker));
-                    logger.Warn(PdfAConformanceException.CatalogShallContainLangEntry);
+                    logger.Warn(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
         }
 
         protected internal override void CheckMetaData(PdfDictionary catalog) {
             if (!catalog.ContainsKey(PdfName.Metadata)) {
-                throw new PdfAConformanceException(PdfAConformanceException.CatalogShallContainMetadataEntry);
+                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_CONTAIN_METADATA_ENTRY
+                    );
             }
         }
 
@@ -346,7 +354,7 @@ namespace iText.Pdfa.Checker {
             for (; i < outputIntents.Size(); ++i) {
                 PdfObject otherDestOutputProfile = outputIntents.GetAsDictionary(i).Get(PdfName.DestOutputProfile);
                 if (otherDestOutputProfile != null && destOutputProfile != otherDestOutputProfile) {
-                    throw new PdfAConformanceException(PdfAConformanceException.IfOutputintentsArrayHasMoreThanOneEntryWithDestoutputprofileKeyTheSameIndirectObjectShallBeUsedAsTheValueOfThatObject
+                    throw new PdfAConformanceException(PdfAConformanceException.IF_OUTPUTINTENTS_ARRAY_HAS_MORE_THAN_ONE_ENTRY_WITH_DESTOUTPUTPROFILE_KEY_THE_SAME_INDIRECT_OBJECT_SHALL_BE_USED_AS_THE_VALUE_OF_THAT_OBJECT
                         );
                 }
             }
@@ -354,7 +362,7 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckPdfNumber(PdfNumber number) {
             if (Math.Abs(number.LongValue()) > GetMaxRealValue() && number.ToString().Contains(".")) {
-                throw new PdfAConformanceException(PdfAConformanceException.RealNumberIsOutOfRange);
+                throw new PdfAConformanceException(PdfAConformanceException.REAL_NUMBER_IS_OUT_OF_RANGE);
             }
         }
 
@@ -365,20 +373,20 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckPdfStream(PdfStream stream) {
             if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream.ContainsKey(PdfName.FDecodeParams
                 )) {
-                throw new PdfAConformanceException(PdfAConformanceException.StreamObjDictShallNotContainForFFilterOrFDecodeParams
+                throw new PdfAConformanceException(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
                     );
             }
             PdfObject filter = stream.Get(PdfName.Filter);
             if (filter is PdfName) {
                 if (filter.Equals(PdfName.LZWDecode)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
+                    throw new PdfAConformanceException(PdfAConformanceException.LZWDECODE_FILTER_IS_NOT_PERMITTED);
                 }
             }
             else {
                 if (filter is PdfArray) {
                     foreach (PdfObject f in ((PdfArray)filter)) {
                         if (f.Equals(PdfName.LZWDecode)) {
-                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
+                            throw new PdfAConformanceException(PdfAConformanceException.LZWDECODE_FILTER_IS_NOT_PERMITTED);
                         }
                     }
                 }
@@ -387,7 +395,7 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckPdfString(PdfString @string) {
             if (@string.GetValueBytes().Length > GetMaxStringLength()) {
-                throw new PdfAConformanceException(PdfAConformanceException.PdfStringIsTooLong);
+                throw new PdfAConformanceException(PdfAConformanceException.PDF_STRING_IS_TOO_LONG);
             }
         }
 
@@ -400,7 +408,7 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckFileSpec(PdfDictionary fileSpec) {
             if (fileSpec.ContainsKey(PdfName.EF)) {
-                throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallNotContainTheEFKey
+                throw new PdfAConformanceException(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
                     );
             }
         }
@@ -408,63 +416,65 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted).SetMessageParams
+                throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     ("null");
             }
             if (forbiddenAnnotations.Contains(subtype)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted).SetMessageParams
+                throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     (subtype.GetValue());
             }
             PdfNumber ca = annotDic.GetAsNumber(PdfName.CA);
             if (ca != null && ca.FloatValue() != 1.0) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallNotContainTheCaKeyWithAValueOtherThan1
+                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_CA_KEY_WITH_A_VALUE_OTHER_THAN_1
                     );
             }
             if (!annotDic.ContainsKey(PdfName.F)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnnotationShallContainKeyF);
+                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_CONTAIN_THE_F_KEY
+                    );
             }
             int flags = (int)annotDic.GetAsInt(PdfName.F);
             if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN) || CheckFlag(flags, PdfAnnotation
                 .INVISIBLE) || CheckFlag(flags, PdfAnnotation.NO_VIEW)) {
-                throw new PdfAConformanceException(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleAndNoviewFlagBitsShallBeSetTo0
+                throw new PdfAConformanceException(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
                     );
             }
             if (subtype.Equals(PdfName.Text) && (!CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !CheckFlag(flags, PdfAnnotation
                 .NO_ROTATE))) {
-                throw new PdfAConformanceException(PdfAConformanceException.TextAnnotationsShouldSetTheNozoomAndNorotateFlagBitsOfTheFKeyTo1
+                throw new PdfAConformanceException(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
                     );
             }
             if (annotDic.ContainsKey(PdfName.C) || annotDic.ContainsKey(PdfName.IC)) {
                 if (!ICC_COLOR_SPACE_RGB.Equals(pdfAOutputIntentColorSpace)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.DestoutputprofileInThePdfa1OutputintentDictionaryShallBeRgb
+                    throw new PdfAConformanceException(PdfAConformanceException.DESTOUTPUTPROFILE_IN_THE_PDFA1_OUTPUTINTENT_DICTIONARY_SHALL_BE_RGB
                         );
                 }
             }
             PdfDictionary ap = annotDic.GetAsDictionary(PdfName.AP);
             if (ap != null) {
                 if (ap.ContainsKey(PdfName.D) || ap.ContainsKey(PdfName.R)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue
+                    throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                         );
                 }
                 PdfStream n = ap.GetAsStream(PdfName.N);
                 if (n == null) {
-                    throw new PdfAConformanceException(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue
+                    throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                         );
                 }
                 CheckResourcesOfAppearanceStreams(ap);
             }
             if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
                 )) {
-                throw new PdfAConformanceException(PdfAConformanceException.WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry
+                throw new PdfAConformanceException(PdfAConformanceException.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
                     );
             }
             if (annotDic.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallNotContainAAKey);
+                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
+                    );
             }
             if (CheckStructure(conformanceLevel)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.AnnotationOfType1ShouldHaveContentsKey).SetMessageParams
-                        (subtype);
+                    throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY)
+                        .SetMessageParams(subtype.GetValue());
                 }
             }
         }
@@ -475,7 +485,7 @@ namespace iText.Pdfa.Checker {
             }
             PdfBoolean needAppearances = form.GetAsBoolean(PdfName.NeedAppearances);
             if (needAppearances != null && needAppearances.GetValue()) {
-                throw new PdfAConformanceException(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse
+                throw new PdfAConformanceException(PdfAConformanceException.NEEDAPPEARANCES_FLAG_OF_THE_INTERACTIVE_FORM_DICTIONARY_SHALL_EITHER_NOT_BE_PRESENTED_OR_SHALL_BE_FALSE
                     );
             }
             CheckResources(form.GetAsDictionary(PdfName.DR));
@@ -485,7 +495,7 @@ namespace iText.Pdfa.Checker {
                 foreach (PdfObject field in fields) {
                     PdfDictionary fieldDic = (PdfDictionary)field;
                     if (fieldDic.ContainsKey(PdfName.A) || fieldDic.ContainsKey(PdfName.AA)) {
-                        throw new PdfAConformanceException(PdfAConformanceException.WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry
+                        throw new PdfAConformanceException(PdfAConformanceException.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
                             );
                     }
                     CheckResources(fieldDic.GetAsDictionary(PdfName.DR));
@@ -499,32 +509,34 @@ namespace iText.Pdfa.Checker {
             }
             PdfName s = action.GetAsName(PdfName.S);
             if (GetForbiddenActions().Contains(s)) {
-                throw new PdfAConformanceException(PdfAConformanceException._1ActionsAreNotAllowed).SetMessageParams(s.GetValue
-                    ());
+                throw new PdfAConformanceException(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED).SetMessageParams(s
+                    .GetValue());
             }
             if (s.Equals(PdfName.Named)) {
                 PdfName n = action.GetAsName(PdfName.N);
                 if (n != null && !GetAllowedNamedActions().Contains(n)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.NamedActionType1IsNotAllowed).SetMessageParams
+                    throw new PdfAConformanceException(PdfAConformanceException.NAMED_ACTION_TYPE_0_IS_NOT_ALLOWED).SetMessageParams
                         (n.GetValue());
                 }
             }
             if (s.Equals(PdfName.SetState) || s.Equals(PdfName.NoOp)) {
-                throw new PdfAConformanceException(PdfAConformanceException.DeprecatedSetStateAndNoOpActionsAreNotAllowed);
+                throw new PdfAConformanceException(PdfAConformanceException.DEPRECATED_SETSTATE_AND_NOOP_ACTIONS_ARE_NOT_ALLOWED
+                    );
             }
         }
 
         protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict) {
             if (catalogDict.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.CatalogDictionaryShallNotContainAAEntry);
+                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                    );
             }
             if (catalogDict.ContainsKey(PdfName.OCProperties)) {
-                throw new PdfAConformanceException(PdfAConformanceException.CatalogDictionaryShallNotContainOCPropertiesKey
+                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_OCPROPERTIES_KEY
                     );
             }
             if (catalogDict.ContainsKey(PdfName.Names)) {
                 if (catalogDict.GetAsDictionary(PdfName.Names).ContainsKey(PdfName.EmbeddedFiles)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.NameDictionaryShallNotContainTheEmbeddedFilesKey
+                    throw new PdfAConformanceException(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
                         );
                 }
             }
@@ -540,14 +552,15 @@ namespace iText.Pdfa.Checker {
             }
             if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
                 ).GetAsName(PdfName.S))) {
-                throw new PdfAConformanceException(PdfAConformanceException.AGroupObjectWithAnSKeyWithAValueOfTransparencyShallNotBeIncludedInAPageObject
+                throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_PAGE_XOBJECT
                     );
             }
         }
 
         protected internal override void CheckTrailer(PdfDictionary trailer) {
             if (trailer.ContainsKey(PdfName.Encrypt)) {
-                throw new PdfAConformanceException(PdfAConformanceException.EncryptShallNotBeUsedInTrailerDictionary);
+                throw new PdfAConformanceException(PdfAConformanceException.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
+                    );
             }
         }
 

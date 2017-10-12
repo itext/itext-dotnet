@@ -1,7 +1,8 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2017 iText Group NV
-Authors: iText Software.
+Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,31 +42,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.IO;
-using iText.IO.Source;
-using iText.Kernel.Pdf;
-using iText.Test;
 
 namespace iText.Pdfa {
-    public class PdfA2PageCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
+    /// <summary>Class containing pdfa conformance constants to be used in logging.</summary>
+    public sealed class PdfAConformanceLogMessageConstant {
+        public const String CATALOG_SHOULD_CONTAIN_LANG_ENTRY = "Catalog dictionary should contain lang entry";
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                page.GetPdfObject().Put(PdfName.PresSteps, new PdfDictionary());
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_PRESSTEPS_ENTRY));
-;
-        }
+        public const String EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC = "Embedded file shall be compliant with either ISO 19005-1 (PDF-A/1 standard) or ISO 19005-2 (PDF-A/2 standard). Please ensure that fact, because iText doesn't check embedded file.";
+
+        public const String EMBEDDED_FILE_SHOULD_CONTAIN_PARAMS_KEY = "Embedded file should contain params key ";
+
+        public const String FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY = "File specification dictionary should contain desc key";
+
+        public const String TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1 = "Text annotations should set the nozoom and norotate flag bits of the f key to 1";
     }
 }
