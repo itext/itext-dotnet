@@ -64,9 +64,9 @@ namespace iText.Kernel.Pdf {
         /// <param name="productInfo">ProductInfo to be added</param>
         /// <returns>true if the fingerprint did not already contain the specified element</returns>
         public virtual bool RegisterProduct(ProductInfo productInfo) {
-            int size = productInfoSet.Count;
-            this.productInfoSet.Add(productInfo);
-            return size != productInfoSet.Count;
+            int initialSize = productInfoSet.Count;
+            productInfoSet.Add(productInfo);
+            return initialSize != productInfoSet.Count;
         }
 
         /// <summary>Returns the registered products.</summary>
