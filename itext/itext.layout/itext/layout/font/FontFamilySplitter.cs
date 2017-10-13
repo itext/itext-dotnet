@@ -77,5 +77,13 @@ namespace iText.Layout.Font {
             }
             return result;
         }
+
+        public static String RemoveQuotes(String fontFamily) {
+            Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
+            if (selectMatcher.Success) {
+                return iText.IO.Util.StringUtil.Group(selectMatcher);
+            }
+            return null;
+        }
     }
 }
