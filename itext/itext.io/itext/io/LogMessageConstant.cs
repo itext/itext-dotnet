@@ -56,6 +56,8 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
+        public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during creation of color";
+
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
         public const String COLOR_NOT_FOUND = "Color \"{0}\" not found.";

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -100,6 +101,22 @@ namespace iText.Kernel.Colors {
         public DeviceRgb()
             : this(0f, 0f, 0f) {
         }
+
+#if !NETSTANDARD1_6
+        /// <summary>
+        /// Create DeviceRGB color from R, G, B values of System.Drawing.Color
+        /// Note, that alpha chanel is ignored
+        /// </summary>
+        /// <param name="color">the color which RGB values are used</param>
+        public DeviceRgb(System.Drawing.Color color)
+            : this(color.R, color.G, color.B) {
+            if (color.A != 255) {
+                ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
+            }
+        }
+#endif
+
 
         /// <summary>
         /// Returns
