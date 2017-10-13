@@ -105,7 +105,9 @@ namespace iText.Kernel.Colors {
 #if !NETSTANDARD1_6
         /// <summary>
         /// Create DeviceRGB color from R, G, B values of System.Drawing.Color
-        /// Note, that alpha chanel is ignored
+        /// <br/>
+        /// Note, that alpha chanel is ignored, but opacity still can be achieved
+        /// in some places by using 'setOpacity' method or 'TransparentColor' class.
         /// </summary>
         /// <param name="color">the color which RGB values are used</param>
         public DeviceRgb(System.Drawing.Color color)
