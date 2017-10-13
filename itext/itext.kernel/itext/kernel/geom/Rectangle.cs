@@ -464,21 +464,6 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
-        /// <summary>Compare the rectangle to the passed object</summary>
-        /// <param name="o">passed object</param>
-        /// <returns>True if o is a rectangle and matches in x,y,width and height, false otherwise</returns>
-        public override bool Equals(Object o) {
-            if (o == null) {
-                return false;
-            }
-            //Cast to rectangle first
-            if (!(o is iText.Kernel.Geom.Rectangle)) {
-                return false;
-            }
-            iText.Kernel.Geom.Rectangle rect = (iText.Kernel.Geom.Rectangle)o;
-            return EqualsWithEpsilon(rect);
-        }
-
         /// <summary>Gets the copy of this rectangle.</summary>
         /// <returns>the copied rectangle.</returns>
         public virtual iText.Kernel.Geom.Rectangle Clone() {
