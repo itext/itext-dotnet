@@ -47,6 +47,7 @@ using System.Text;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -348,7 +349,7 @@ namespace iText.Kernel.Pdf {
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
-            WriteKeyInfo(writer);
+            WriteKeyInfo(document);
             writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
             xref = null;
             freeReferencesLinkedList.Clear();
@@ -364,7 +365,30 @@ namespace iText.Kernel.Pdf {
             count = 1;
         }
 
+        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
+        /// <remarks>
+        /// Convenience method to write the fingerprint preceding the trailer.
+        /// The fingerprint contains information on iText products used in the generation or manipulation
+        /// of an outputted PDF file.
+        /// </remarks>
+        /// <param name="document">pdfDocument to write the fingerprint to</param>
+        protected internal static void WriteKeyInfo(PdfDocument document) {
+            PdfWriter writer = document.GetWriter();
+            FingerPrint fingerPrint = document.GetFingerPrint();
+            String platform = " for .NET";
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
+            String k = version.GetKey();
+            if (k == null) {
+                k = "iText";
+            }
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
+                writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
+            }
+        }
+
         /// <exception cref="System.IO.IOException"/>
+        [Obsolete]
         protected internal static void WriteKeyInfo(PdfWriter writer) {
             String platform = " for .NET";
             iText.Kernel.Version version = iText.Kernel.Version.GetInstance();

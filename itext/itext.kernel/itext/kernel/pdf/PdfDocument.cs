@@ -121,6 +121,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
 
+        protected internal FingerPrint fingerPrint;
+
         protected internal readonly StampingProperties properties;
 
         protected internal PdfStructTreeRoot structTreeRoot;
@@ -1617,6 +1619,19 @@ namespace iText.Kernel.Pdf {
             return font;
         }
 
+        /// <summary>Registers a product for debugging purposes.</summary>
+        /// <param name="productInfo">product to be registered.</param>
+        /// <returns>true if the product hadn't been registered before.</returns>
+        public virtual bool RegisterProduct(ProductInfo productInfo) {
+            return this.fingerPrint.RegisterProduct(productInfo);
+        }
+
+        /// <summary>Returns the object containing the registered products.</summary>
+        /// <returns>fingerprint object</returns>
+        public virtual FingerPrint GetFingerPrint() {
+            return fingerPrint;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -1688,6 +1703,7 @@ namespace iText.Kernel.Pdf {
         /// otherwise
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
+            this.fingerPrint = new FingerPrint();
             try {
                 if (reader != null) {
                     reader.pdfDocument = this;
