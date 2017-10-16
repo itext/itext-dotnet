@@ -467,17 +467,74 @@ namespace iText.Kernel.Pdf {
         public virtual void EncryptAes256Pdf2NotEncryptMetadata() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256EncryptedStampingPreserve() {
+            String filename = "encryptAes256EncryptedStampingPreserve.pdf";
+            String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
+            String @out = destinationFolder + filename;
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
+                (@out, new WriterProperties()), new StampingProperties().PreserveEncryption());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff_", USER, USER);
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256EncryptedStampingUpdate() {
+            String filename = "encryptAes256EncryptedStampingUpdate.pdf";
+            String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
+            String @out = destinationFolder + filename;
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
+                (@out, new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants
+                .STANDARD_ENCRYPTION_40)), new StampingProperties());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff_", USER, USER);
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256FullCompression() {
+            String filename = "encryptAes256FullCompression.pdf";
+            int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
+            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void EncryptWithPassword(String filename, int encryptionType, int compression) {
+            EncryptWithPassword(filename, encryptionType, compression, false);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression, bool fullCompression
+            ) {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
-                , encryptionType).AddXmpMetadata());
+                , encryptionType).AddXmpMetadata().SetFullCompressionMode(fullCompression));
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);
