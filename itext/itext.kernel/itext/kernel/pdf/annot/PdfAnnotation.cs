@@ -579,8 +579,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// on which annotation is placed or null if annotation is not placed yet.
         /// </returns>
         public virtual PdfPage GetPage() {
-            if (page == null && GetPdfObject().IsIndirect()) {
-                PdfIndirectReference annotationIndirectReference = GetPdfObject().GetIndirectReference();
+            PdfIndirectReference annotationIndirectReference;
+            if (page == null && (annotationIndirectReference = GetPdfObject().GetIndirectReference()) != null) {
                 PdfDocument doc = annotationIndirectReference.GetDocument();
                 PdfDictionary pageDictionary = GetPageObject();
                 if (pageDictionary != null) {
@@ -590,7 +590,7 @@ namespace iText.Kernel.Pdf.Annot {
                     for (int i = 1; i <= doc.GetNumberOfPages(); i++) {
                         PdfPage docPage = doc.GetPage(i);
                         foreach (iText.Kernel.Pdf.Annot.PdfAnnotation annot in docPage.GetAnnotations()) {
-                            if (annot.GetPdfObject().GetIndirectReference().Equals(annotationIndirectReference)) {
+                            if (annotationIndirectReference.Equals(annot.GetPdfObject().GetIndirectReference())) {
                                 page = docPage;
                                 break;
                             }
