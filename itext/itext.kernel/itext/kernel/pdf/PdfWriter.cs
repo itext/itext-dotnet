@@ -314,7 +314,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
-        protected internal virtual void FlushWaitingObjects() {
+        /// <param name="forbiddenToFlush">
+        /// 
+        /// <see>Set<PdfIndirectReference></see>
+        /// of references that are forbidden to be flushed automatically.
+        /// </param>
+        protected internal virtual void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
             PdfXrefTable xref = document.GetXref();
             bool needFlush = true;
             while (needFlush) {
@@ -322,7 +327,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 1; i < xref.Size(); i++) {
                     PdfIndirectReference indirectReference = xref.Get(i);
                     if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
-                        )) {
+                        ) && !forbiddenToFlush.Contains(indirectReference)) {
                         PdfObject obj = indirectReference.GetRefersTo(false);
                         if (obj != null) {
                             obj.Flush();
@@ -339,11 +344,18 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
-        protected internal virtual void FlushModifiedWaitingObjects() {
+        /// <param name="forbiddenToFlush">
+        /// 
+        /// <see>Set<PdfIndirectReference></see>
+        /// of references that are forbidden to be flushed automatically.
+        /// </param>
+        protected internal virtual void FlushModifiedWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush
+            ) {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {
                 PdfIndirectReference indirectReference = xref.Get(i);
-                if (null != indirectReference && !indirectReference.IsFree()) {
+                if (null != indirectReference && !indirectReference.IsFree() && !forbiddenToFlush.Contains(indirectReference
+                    )) {
                     bool isModified = indirectReference.CheckState(PdfObject.MODIFIED);
                     if (isModified) {
                         PdfObject obj = indirectReference.GetRefersTo(false);

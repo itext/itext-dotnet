@@ -646,7 +646,9 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     CheckIsoConformance();
+                    PdfObject fileId = GetFileId();
                     PdfObject crypto = null;
+                    ICollection<PdfIndirectReference> forbiddenToFlush = new HashSet<PdfIndirectReference>();
                     if (properties.appendMode) {
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(true);
@@ -672,18 +674,23 @@ namespace iText.Kernel.Pdf {
                             info.GetPdfObject().Flush(false);
                         }
                         FlushFonts();
-                        writer.FlushModifiedWaitingObjects();
-                        for (int i = 0; i < xref.Size(); i++) {
-                            PdfIndirectReference indirectReference = xref.Get(i);
-                            if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MODIFIED
-                                ) && !indirectReference.CheckState(PdfObject.FLUSHED)) {
-                                indirectReference.SetFree();
-                            }
-                        }
                         if (writer.crypto != null) {
                             System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject(), "Conflict with source encryption"
                                 );
                             crypto = reader.decrypt.GetPdfObject();
+                            if (crypto.GetIndirectReference() != null) {
+                                // Checking just for extra safety, encryption dictionary shall never be direct.
+                                forbiddenToFlush.Add(crypto.GetIndirectReference());
+                            }
+                        }
+                        writer.FlushModifiedWaitingObjects(forbiddenToFlush);
+                        for (int i = 0; i < xref.Size(); i++) {
+                            PdfIndirectReference indirectReference = xref.Get(i);
+                            if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MODIFIED
+                                ) && !indirectReference.CheckState(PdfObject.FLUSHED) && !forbiddenToFlush.Contains(indirectReference)
+                                ) {
+                                indirectReference.SetFree();
+                            }
                         }
                     }
                     else {
@@ -710,11 +717,16 @@ namespace iText.Kernel.Pdf {
                         catalog.GetPdfObject().Flush(false);
                         info.GetPdfObject().Flush(false);
                         FlushFonts();
-                        writer.FlushWaitingObjects();
+                        if (writer.crypto != null) {
+                            crypto = writer.crypto.GetPdfObject();
+                            crypto.MakeIndirect(this);
+                            forbiddenToFlush.Add(crypto.GetIndirectReference());
+                        }
+                        writer.FlushWaitingObjects(forbiddenToFlush);
                         for (int i = 0; i < xref.Size(); i++) {
                             PdfIndirectReference indirectReference = xref.Get(i);
                             if (indirectReference != null && !indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED
-                                )) {
+                                ) && !forbiddenToFlush.Contains(indirectReference)) {
                                 PdfObject @object;
                                 if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM) && (@object 
                                     = indirectReference.GetRefersTo(false)) != null) {
@@ -726,13 +738,11 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                     }
-                    PdfObject fileId = GetFileId(crypto, writer.properties);
-                    if (crypto == null && writer.crypto != null) {
-                        crypto = writer.crypto.GetPdfObject();
-                        crypto.MakeIndirect(this);
-                        // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
-                        // NOTE. No need in reverting, because it is the last operation with the document.
-                        writer.crypto = null;
+                    // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
+                    // NOTE. No need in reverting, because it is the last operation with the document.
+                    writer.crypto = null;
+                    if (!properties.appendMode && crypto != null) {
+                        // no need to flush crypto in append mode, it shall not have changed in this case
                         crypto.Flush(false);
                     }
                     // The following two operators prevents the possible inconsistency between root and info
@@ -776,25 +786,26 @@ namespace iText.Kernel.Pdf {
             closed = true;
         }
 
-        private PdfObject GetFileId(PdfObject crypto, WriterProperties properties) {
-            bool isModified = false;
-            byte[] originalFileID = null;
-            if (properties.initialDocumentId != null) {
-                originalFileID = ByteUtils.GetIsoBytes(properties.initialDocumentId.GetValue());
+        private PdfObject GetFileId() {
+            bool documentIsModified = false;
+            byte[] originalFileId = null;
+            if (writer.properties.initialDocumentId != null) {
+                originalFileId = ByteUtils.GetIsoBytes(writer.properties.initialDocumentId.GetValue());
             }
-            if (originalFileID == null && crypto == null && writer.crypto != null) {
-                originalFileID = writer.crypto.GetDocumentId();
+            if (originalFileId == null && !properties.appendMode && writer.crypto != null) {
+                // TODO why only not in append mode when encrypted?
+                originalFileId = writer.crypto.GetDocumentId();
             }
-            if (originalFileID == null && GetReader() != null) {
-                originalFileID = GetReader().GetOriginalFileId();
-                isModified = true;
+            if (originalFileId == null && GetReader() != null) {
+                originalFileId = GetReader().GetOriginalFileId();
+                documentIsModified = true;
             }
-            if (originalFileID == null) {
-                originalFileID = PdfEncryption.GenerateNewDocumentId();
+            if (originalFileId == null) {
+                originalFileId = PdfEncryption.GenerateNewDocumentId();
             }
             byte[] secondId = null;
-            if (properties.modifiedDocumentId != null) {
-                secondId = ByteUtils.GetIsoBytes(properties.modifiedDocumentId.GetValue());
+            if (writer.properties.modifiedDocumentId != null) {
+                secondId = ByteUtils.GetIsoBytes(writer.properties.modifiedDocumentId.GetValue());
             }
             if (secondId == null && originalModifiedDocumentId != null) {
                 PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
@@ -806,9 +817,9 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (secondId == null) {
-                secondId = (isModified) ? PdfEncryption.GenerateNewDocumentId() : originalFileID;
+                secondId = (documentIsModified) ? PdfEncryption.GenerateNewDocumentId() : originalFileId;
             }
-            return PdfEncryption.CreateInfoId(originalFileID, secondId);
+            return PdfEncryption.CreateInfoId(originalFileId, secondId);
         }
 
         /// <summary>Gets close status of the document.</summary>
