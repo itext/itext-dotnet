@@ -541,7 +541,10 @@ namespace iText.Kernel.Pdf.Tagging {
                 // TODO DEVSIX-1583: identify removed pages more reliably
                 GetPdfObject().Remove(PdfName.Pg);
             }
-            GetDocument().CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
+            PdfDocument doc = GetDocument();
+            if (doc != null) {
+                doc.CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
+            }
             base.Flush();
         }
 
