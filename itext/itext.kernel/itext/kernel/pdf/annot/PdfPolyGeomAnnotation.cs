@@ -62,10 +62,11 @@ namespace iText.Kernel.Pdf.Annot {
             SetVertices(vertices);
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfPolyGeomAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfPolyGeomAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 

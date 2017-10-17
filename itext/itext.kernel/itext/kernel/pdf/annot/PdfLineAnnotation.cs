@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -77,21 +76,10 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Creates a
-        /// <see cref="PdfLineAnnotation"/>
-        /// instance from the given
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents annotation object. This method is useful for property reading in reading mode or
-        /// modifying in stamping mode.
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         /// </summary>
-        /// <param name="pdfDictionary">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents existing annotation in the document.
-        /// </param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfLineAnnotation(PdfDictionary pdfDictionary)
+        protected internal PdfLineAnnotation(PdfDictionary pdfDictionary)
             : base(pdfDictionary) {
         }
 
