@@ -41,9 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.IO.Log;
-using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -517,85 +515,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetExternalData(PdfName exData) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.ExData, exData);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfCaretAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.RD, rect);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfCaretAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfArray GetRectangleDifferences() {
-            return GetPdfObject().GetAsArray(PdfName.RD);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.BE, borderEffect);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetBorderEffect() {
-            return GetPdfObject().GetAsDictionary(PdfName.BE);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual Color GetInteriorColor() {
-            return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.IC, interiorColor);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
-            return SetInteriorColor(new PdfArray(interiorColor));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfTextAnnotation , PdfStampAnnotation ,PdfFileAttachmentAnnotation , PdfSoundAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfName GetIconName() {
-            return GetPdfObject().GetAsName(PdfName.Name);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfTextAnnotation , PdfStampAnnotation ,PdfFileAttachmentAnnotation , PdfSoundAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetIconName(PdfName name) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Name, name);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.DA, appearanceString);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfString GetDefaultAppearance() {
-            return GetPdfObject().GetAsString(PdfName.DA);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual int GetJustification() {
-            PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
-            return q == null ? 0 : q.IntValue();
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetJustification(int justification) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }
     }
 }

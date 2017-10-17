@@ -111,7 +111,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation, or null if icon name is not specified.
         /// </returns>
-        public override PdfName GetIconName() {
+        public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfSoundAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+        public virtual iText.Kernel.Pdf.Annot.PdfSoundAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfSoundAnnotation)Put(PdfName.Name, name);
         }
     }

@@ -114,9 +114,8 @@ namespace iText.Kernel.Pdf {
             canvas.ShowText("Click here to go to itextpdf site.");
             canvas.EndText();
             canvas.Release();
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction
-                .CreateURI("http://itextpdf.com"))).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray
-                (new float[] { 1, 0, 0 })));
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com"
+                )).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray(new float[] { 1, 0, 0 })));
             page.Flush();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation02.pdf"
@@ -140,15 +139,12 @@ namespace iText.Kernel.Pdf {
             canvas.EndText();
             canvas.Release();
             int[] borders = new int[] { 0, 0, 1 };
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction
-                .CreateURI("http://itextpdf.com"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float[]
-                 { 1, 0, 0 })));
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 540, 300, 25)).SetAction(PdfAction
-                .CreateURI("http://itextpdf.com/node"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float
-                [] { 0, 1, 0 })));
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 490, 300, 25)).SetAction(PdfAction
-                .CreateURI("http://itextpdf.com/salesfaq"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new 
-                float[] { 0, 0, 1 })));
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com"
+                )).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float[] { 1, 0, 0 })));
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 540, 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com/node"
+                )).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float[] { 0, 1, 0 })));
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 490, 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com/salesfaq"
+                )).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float[] { 0, 0, 1 })));
             page.Flush();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation03.pdf"
@@ -266,12 +262,12 @@ namespace iText.Kernel.Pdf {
                 ));
             PdfPage page = document.AddNewPage();
             PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
-            ((PdfSquareAnnotation)square.SetInteriorColor(new float[] { 1, 0, 0 })).SetColor(new float[] { 0, 1, 0 }).
-                SetContents("RED Square");
+            square.SetInteriorColor(new float[] { 1, 0, 0 }).SetColor(new float[] { 0, 1, 0 }).SetContents("RED Square"
+                );
             page.AddAnnotation(square);
             PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 100));
-            ((PdfCircleAnnotation)circle.SetInteriorColor(new float[] { 0, 1, 0 })).SetColor(new float[] { 0, 0, 1 }).
-                SetContents(new PdfString("GREEN Circle"));
+            circle.SetInteriorColor(new float[] { 0, 1, 0 }).SetColor(new float[] { 0, 0, 1 }).SetContents(new PdfString
+                ("GREEN Circle"));
             page.AddAnnotation(circle);
             page.Flush();
             document.Close();

@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// This flag has affect to not all kinds of annotations.
         /// </remarks>
         /// <returns>true if annotation is initially open, false - if closed.</returns>
-        public override bool GetOpen() {
+        public virtual bool GetOpen() {
             return PdfBoolean.TRUE.Equals(GetPdfObject().GetAsBoolean(PdfName.Open));
         }
 
@@ -99,7 +99,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetOpen(bool open) {
+        public virtual iText.Kernel.Pdf.Annot.PdfTextAnnotation SetOpen(bool open) {
             return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
 
@@ -115,7 +115,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation, or null if icon name is not specified.
         /// </returns>
-        public override PdfName GetIconName() {
+        public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
@@ -139,7 +139,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+        public virtual iText.Kernel.Pdf.Annot.PdfTextAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.Name, name);
         }
     }

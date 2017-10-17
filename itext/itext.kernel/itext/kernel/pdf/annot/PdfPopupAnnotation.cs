@@ -86,7 +86,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// This flag has affect to not all kinds of annotations.
         /// </remarks>
         /// <returns>true if annotation is initially open, false - if closed.</returns>
-        public override bool GetOpen() {
+        public virtual bool GetOpen() {
             return PdfBoolean.TRUE.Equals(GetPdfObject().GetAsBoolean(PdfName.Open));
         }
 
@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPopupAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetOpen(bool open) {
+        public virtual iText.Kernel.Pdf.Annot.PdfPopupAnnotation SetOpen(bool open) {
             return (iText.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
     }

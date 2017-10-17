@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which defines the characteristics and behaviour of an action.
         /// </returns>
-        public override PdfDictionary GetAction() {
+        public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
         }
 
@@ -148,7 +148,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLinkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetAction(PdfAction action) {
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfAction action) {
             if (GetDestinationObject() != null) {
                 RemoveDestination();
                 logger.Warn(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION);
@@ -192,7 +192,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
         /// </returns>
-        public override PdfArray GetQuadPoints() {
+        public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
@@ -213,7 +213,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLinkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetQuadPoints(PdfArray quadPoints) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.QuadPoints, quadPoints);
         }
 
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLinkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -286,9 +286,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfLinkAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle()
-                , style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -309,9 +308,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLinkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfLinkAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
     }
 }

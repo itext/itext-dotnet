@@ -183,7 +183,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -237,9 +237,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle
-                (), style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -260,9 +259,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
         /// <summary>Gets a border effect dictionary that specifies an effect that shall be applied to the border of the annotations.
@@ -272,7 +270,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// , which is a border effect dictionary (see ISO-320001, Table 167).
         /// </returns>
-        public override PdfDictionary GetBorderEffect() {
+        public virtual PdfDictionary GetBorderEffect() {
             return GetPdfObject().GetAsDictionary(PdfName.BE);
         }
 
@@ -288,7 +286,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.BE, borderEffect);
         }
 
@@ -305,7 +303,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
-        public override Color GetInteriorColor() {
+        public virtual Color GetInteriorColor() {
             return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
@@ -328,7 +326,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.IC, interiorColor);
         }
 
@@ -342,8 +340,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
-            return ((iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetInteriorColor(float[] interiorColor) {
+            return SetInteriorColor(new PdfArray(interiorColor));
         }
     }
 }

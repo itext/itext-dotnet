@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfInkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfInkAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfInkAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -139,9 +139,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfInkAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), 
-                style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfInkAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -162,9 +161,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfInkAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfInkAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfInkAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
     }
 }

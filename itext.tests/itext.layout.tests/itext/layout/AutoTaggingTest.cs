@@ -360,8 +360,8 @@ namespace iText.Layout {
             table.AddCell("1x");
             table.AddCell("2x");
             table.AddCell("3x");
-            table.SetProperty(Property.LINK_ANNOTATION, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0))
-                .SetAction(PdfAction.CreateURI("http://itextpdf.com/"))));
+            table.SetProperty(Property.LINK_ANNOTATION, new PdfLinkAnnotation(new Rectangle(0, 0)).SetAction(PdfAction
+                .CreateURI("http://itextpdf.com/")));
             doc.Add(table);
             doc.Close();
             CompareResult("linkInsideTable.pdf", "cmp_linkInsideTable.pdf");

@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
         /// of the inner rectangle, respectively.
         /// </returns>
-        public override PdfArray GetRectangleDifferences() {
+        public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
 
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCaretAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCaretAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.RD, rect);
         }
     }

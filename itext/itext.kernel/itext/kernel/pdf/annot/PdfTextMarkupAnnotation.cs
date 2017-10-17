@@ -224,7 +224,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
         /// </returns>
-        public override PdfArray GetQuadPoints() {
+        public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfTextMarkupAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+        public virtual iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation SetQuadPoints(PdfArray quadPoints) {
             return (iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation)Put(PdfName.QuadPoints, quadPoints);
         }
     }

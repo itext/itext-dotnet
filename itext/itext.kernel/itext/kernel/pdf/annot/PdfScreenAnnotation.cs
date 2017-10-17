@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which defines the characteristics and behaviour of an action.
         /// </returns>
-        public override PdfDictionary GetAction() {
+        public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
         }
 
@@ -93,7 +93,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfScreenAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetAction(PdfAction action) {
+        public virtual iText.Kernel.Pdf.Annot.PdfScreenAnnotation SetAction(PdfAction action) {
             return (iText.Kernel.Pdf.Annot.PdfScreenAnnotation)Put(PdfName.A, action.GetPdfObject());
         }
 
@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// .
         /// </returns>
         /// <seealso cref="GetAction()"/>
-        public override PdfDictionary GetAdditionalAction() {
+        public virtual PdfDictionary GetAdditionalAction() {
             return GetPdfObject().GetAsDictionary(PdfName.AA);
         }
 
@@ -136,7 +136,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfScreenAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
+        public virtual iText.Kernel.Pdf.Annot.PdfScreenAnnotation SetAdditionalAction(PdfName key, PdfAction action
+            ) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
@@ -150,7 +151,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// annotation’s appearance stream. See ISO-320001, Table 189.
         /// </remarks>
         /// <returns>an appearance characteristics dictionary or null if it isn't specified.</returns>
-        public override PdfDictionary GetAppearanceCharacteristics() {
+        public virtual PdfDictionary GetAppearanceCharacteristics() {
             return GetPdfObject().GetAsDictionary(PdfName.MK);
         }
 
@@ -172,7 +173,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfScreenAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics) {
+        public virtual iText.Kernel.Pdf.Annot.PdfScreenAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
+            ) {
             return (iText.Kernel.Pdf.Annot.PdfScreenAnnotation)Put(PdfName.MK, characteristics);
         }
     }

@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// that specifies the default appearance, or null if default appereance is not specified.
         /// </returns>
-        public override PdfString GetDefaultAppearance() {
+        public virtual PdfString GetDefaultAppearance() {
             return GetPdfObject().GetAsString(PdfName.DA);
         }
 
@@ -118,13 +118,14 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultAppearance(PdfString appearanceString
+            ) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DA, appearanceString);
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
              da) {
-            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetDefaultAppearance(da.ToPdfString()));
+            return SetDefaultAppearance(da.ToPdfString());
         }
 
         public virtual PdfArray GetCalloutLine() {
@@ -157,7 +158,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
         ///     </returns>
-        public override int GetJustification() {
+        public virtual int GetJustification() {
             PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
             return q == null ? 0 : q.IntValue();
         }
@@ -176,7 +177,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetJustification(int justification) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetJustification(int justification) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }
 
@@ -198,7 +199,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -219,7 +220,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -252,9 +253,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle
-                (), style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -275,9 +275,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
         /// <summary>
@@ -291,7 +290,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
         /// of the inner rectangle, respectively.
         /// </returns>
-        public override PdfArray GetRectangleDifferences() {
+        public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
 
@@ -313,7 +312,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.RD, rect);
         }
 
@@ -324,7 +323,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// , which is a border effect dictionary (see ISO-320001, Table 167).
         /// </returns>
-        public override PdfDictionary GetBorderEffect() {
+        public virtual PdfDictionary GetBorderEffect() {
             return GetPdfObject().GetAsDictionary(PdfName.BE);
         }
 
@@ -340,7 +339,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfFreeTextAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.BE, borderEffect);
         }
     }

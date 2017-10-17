@@ -211,7 +211,8 @@ namespace iText.Kernel.Pdf {
         public virtual void MakeDestination01Test() {
             String srcFile = sourceFolder + "cmp_structureDestination01Test.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcFile));
-            PdfObject destObj = pdfDocument.GetPage(2).GetAnnotations()[0].GetAction().Get(PdfName.D);
+            PdfObject destObj = ((PdfLinkAnnotation)pdfDocument.GetPage(2).GetAnnotations()[0]).GetAction().Get(PdfName
+                .D);
             PdfDestination destWrapper = PdfDestination.MakeDestination(destObj);
             NUnit.Framework.Assert.AreEqual(typeof(PdfStructureDestination), destWrapper.GetType());
         }

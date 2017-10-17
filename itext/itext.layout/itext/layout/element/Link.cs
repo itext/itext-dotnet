@@ -79,8 +79,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// </param>
         public Link(String text, PdfAction action)
-            : this(text, (PdfLinkAnnotation)((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction
-                (action)).SetFlags(PdfAnnotation.PRINT)) {
+            : this(text, (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action).SetFlags
+                (PdfAnnotation.PRINT)) {
         }
 
         /// <summary>Creates a Link to another location in the document.</summary>

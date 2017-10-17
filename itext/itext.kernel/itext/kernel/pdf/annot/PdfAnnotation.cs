@@ -47,7 +47,6 @@ using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 
@@ -455,19 +454,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="layer">the layer this annotation belongs to</param>
         public virtual void SetLayer(IPdfOCG layer) {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action) {
-            return Put(PdfName.A, action.GetPdfObject());
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
-            PdfAction.SetAdditionalAction(this, key, action);
-            return this;
         }
 
         /// <summary>
@@ -1337,55 +1323,6 @@ namespace iText.Kernel.Pdf.Annot {
             return Put(PdfName.StructParent, new PdfNumber(structParentIndex));
         }
 
-        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
-            )]
-        public virtual bool GetOpen() {
-            PdfBoolean open = GetPdfObject().GetAsBoolean(PdfName.Open);
-            return open != null && open.GetValue();
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
-            return Put(PdfName.Open, PdfBoolean.ValueOf(open));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfArray GetQuadPoints() {
-            return GetPdfObject().GetAsArray(PdfName.QuadPoints);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
-            return Put(PdfName.QuadPoints, quadPoints);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
-            return Put(PdfName.BS, borderStyle);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style) {
-            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetBorderStyle() {
-            return GetPdfObject().GetAsDictionary(PdfName.BS);
-        }
-
         /// <summary>Sets annotation title.</summary>
         /// <remarks>Sets annotation title. This property affects not all annotation types.</remarks>
         /// <param name="title">
@@ -1415,31 +1352,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual PdfString GetTitle() {
             return GetPdfObject().GetAsString(PdfName.T);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
-            ) {
-            return Put(PdfName.MK, characteristics);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAppearanceCharacteristics() {
-            return GetPdfObject().GetAsDictionary(PdfName.MK);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAction() {
-            return GetPdfObject().GetAsDictionary(PdfName.A);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAdditionalAction() {
-            return GetPdfObject().GetAsDictionary(PdfName.AA);
         }
 
         /// <summary>The annotation rectangle, defining the location of the annotation on the page in default user space units.
