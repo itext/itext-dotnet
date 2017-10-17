@@ -55,11 +55,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>set to true for debugging</summary>
         private static bool DUMP_STATE = false;
 
-        private const float DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION = 2;
-
         /// <summary>a summary of all found text</summary>
-        private readonly IList<LocationTextExtractionStrategy.TextChunk> locationalResult = new List<LocationTextExtractionStrategy.TextChunk
-            >();
+        private readonly IList<TextChunk> locationalResult = new List<TextChunk>();
 
         private readonly LocationTextExtractionStrategy.ITextChunkLocationStrategy tclStrat;
 
@@ -71,17 +68,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_88()) {
+            : this(new _ITextChunkLocationStrategy_85()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_88 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_88() {
+        private sealed class _ITextChunkLocationStrategy_85 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_85() {
             }
 
-            public LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment
-                 baseline) {
-                return new LocationTextExtractionStrategy.TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint
-                    (), renderInfo.GetSingleSpaceWidth());
+            public ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline) {
+                return new TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint(), renderInfo.GetSingleSpaceWidth
+                    ());
             }
         }
 
@@ -148,27 +144,26 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                     if (lastTagWithActualText != null && lastTagWithActualText == FindLastTagWithActualText(renderInfo.GetCanvasTagHierarchy
                         ())) {
                         // Merge two text pieces, assume they will be in the same line
-                        LocationTextExtractionStrategy.TextChunk lastTextChunk = locationalResult[locationalResult.Count - 1];
+                        TextChunk lastTextChunk = locationalResult[locationalResult.Count - 1];
                         Vector mergedStart = new Vector(Math.Min(lastTextChunk.GetLocation().GetStartLocation().Get(0), segment.GetStartPoint
                             ().Get(0)), Math.Min(lastTextChunk.GetLocation().GetStartLocation().Get(1), segment.GetStartPoint().Get
                             (1)), Math.Min(lastTextChunk.GetLocation().GetStartLocation().Get(2), segment.GetStartPoint().Get(2)));
                         Vector mergedEnd = new Vector(Math.Max(lastTextChunk.GetLocation().GetEndLocation().Get(0), segment.GetEndPoint
                             ().Get(0)), Math.Max(lastTextChunk.GetLocation().GetEndLocation().Get(1), segment.GetEndPoint().Get(1)
                             ), Math.Max(lastTextChunk.GetLocation().GetEndLocation().Get(2), segment.GetEndPoint().Get(2)));
-                        LocationTextExtractionStrategy.TextChunk merged = new LocationTextExtractionStrategy.TextChunk(lastTextChunk
-                            .GetText(), tclStrat.CreateLocation(renderInfo, new LineSegment(mergedStart, mergedEnd)));
+                        TextChunk merged = new TextChunk(lastTextChunk.GetText(), tclStrat.CreateLocation(renderInfo, new LineSegment
+                            (mergedStart, mergedEnd)));
                         locationalResult[locationalResult.Count - 1] = merged;
                     }
                     else {
                         String actualText = renderInfo.GetActualText();
-                        LocationTextExtractionStrategy.TextChunk tc = new LocationTextExtractionStrategy.TextChunk(actualText != null
-                             ? actualText : renderInfo.GetText(), tclStrat.CreateLocation(renderInfo, segment));
+                        TextChunk tc = new TextChunk(actualText != null ? actualText : renderInfo.GetText(), tclStrat.CreateLocation
+                            (renderInfo, segment));
                         locationalResult.Add(tc);
                     }
                 }
                 else {
-                    LocationTextExtractionStrategy.TextChunk tc = new LocationTextExtractionStrategy.TextChunk(renderInfo.GetText
-                        (), tclStrat.CreateLocation(renderInfo, segment));
+                    TextChunk tc = new TextChunk(renderInfo.GetText(), tclStrat.CreateLocation(renderInfo, segment));
                     locationalResult.Add(tc);
                 }
                 lastTextRenderInfo = renderInfo;
@@ -183,12 +178,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             if (DUMP_STATE) {
                 DumpState();
             }
-            IList<LocationTextExtractionStrategy.TextChunk> textChunks = new List<LocationTextExtractionStrategy.TextChunk
-                >(locationalResult);
+            IList<TextChunk> textChunks = new List<TextChunk>(locationalResult);
             SortWithMarks(textChunks);
             StringBuilder sb = new StringBuilder();
-            LocationTextExtractionStrategy.TextChunk lastChunk = null;
-            foreach (LocationTextExtractionStrategy.TextChunk chunk in textChunks) {
+            TextChunk lastChunk = null;
+            foreach (TextChunk chunk in textChunks) {
                 if (lastChunk == null) {
                     sb.Append(chunk.text);
                 }
@@ -224,8 +218,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <param name="previousChunk">the chunk that appeared immediately before the current chunk</param>
         /// <returns>true if the two chunks represent different words (i.e. should have a space between them).  False otherwise.
         ///     </returns>
-        protected internal virtual bool IsChunkAtWordBoundary(LocationTextExtractionStrategy.TextChunk chunk, LocationTextExtractionStrategy.TextChunk
-             previousChunk) {
+        protected internal virtual bool IsChunkAtWordBoundary(TextChunk chunk, TextChunk previousChunk) {
             return chunk.GetLocation().IsAtWordBoundary(previousChunk.GetLocation());
         }
 
@@ -249,7 +242,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Used for debugging only</summary>
         private void DumpState() {
-            foreach (LocationTextExtractionStrategy.TextChunk location in locationalResult) {
+            foreach (TextChunk location in locationalResult) {
                 location.PrintDiagnostics();
                 System.Console.Out.WriteLine();
             }
@@ -266,21 +259,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return lastActualText;
         }
 
-        private void SortWithMarks(IList<LocationTextExtractionStrategy.TextChunk> textChunks) {
-            IDictionary<LocationTextExtractionStrategy.TextChunk, LocationTextExtractionStrategy.TextChunkMarks> marks
-                 = new Dictionary<LocationTextExtractionStrategy.TextChunk, LocationTextExtractionStrategy.TextChunkMarks
+        private void SortWithMarks(IList<TextChunk> textChunks) {
+            IDictionary<TextChunk, LocationTextExtractionStrategy.TextChunkMarks> marks = new Dictionary<TextChunk, LocationTextExtractionStrategy.TextChunkMarks
                 >();
-            IList<LocationTextExtractionStrategy.TextChunk> toSort = new List<LocationTextExtractionStrategy.TextChunk
-                >();
+            IList<TextChunk> toSort = new List<TextChunk>();
             for (int markInd = 0; markInd < textChunks.Count; markInd++) {
-                LocationTextExtractionStrategy.ITextChunkLocation location = textChunks[markInd].GetLocation();
+                ITextChunkLocation location = textChunks[markInd].GetLocation();
                 if (location.GetStartLocation().Equals(location.GetEndLocation())) {
                     bool foundBaseToAttachTo = false;
                     for (int baseInd = 0; baseInd < textChunks.Count; baseInd++) {
                         if (markInd != baseInd) {
-                            LocationTextExtractionStrategy.ITextChunkLocation baseLocation = textChunks[baseInd].GetLocation();
-                            if (!baseLocation.GetStartLocation().Equals(baseLocation.GetEndLocation()) && ContainsMark(baseLocation, location
-                                )) {
+                            ITextChunkLocation baseLocation = textChunks[baseInd].GetLocation();
+                            if (!baseLocation.GetStartLocation().Equals(baseLocation.GetEndLocation()) && TextChunkLocationDefaultImp.
+                                ContainsMark(baseLocation, location)) {
                                 LocationTextExtractionStrategy.TextChunkMarks currentMarks = marks.Get(textChunks[baseInd]);
                                 if (currentMarks == null) {
                                     currentMarks = new LocationTextExtractionStrategy.TextChunkMarks();
@@ -305,15 +296,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                     toSort.Add(textChunks[markInd]);
                 }
             }
-            if (rightToLeftRunDirection) {
-                JavaCollectionsUtil.Sort(toSort, new LocationTextExtractionStrategy.TextChunkComparator(new LocationTextExtractionStrategy.TextChunkLocationComparator
-                    (false)));
-            }
-            else {
-                JavaCollectionsUtil.Sort(toSort);
-            }
+            JavaCollectionsUtil.Sort(toSort, new TextChunkLocationBasedComparator(new DefaultTextChunkLocationComparator
+                (!rightToLeftRunDirection)));
             textChunks.Clear();
-            foreach (LocationTextExtractionStrategy.TextChunk current in toSort) {
+            foreach (TextChunk current in toSort) {
                 LocationTextExtractionStrategy.TextChunkMarks currentMarks = marks.Get(current);
                 if (currentMarks != null) {
                     if (!rightToLeftRunDirection) {
@@ -343,276 +329,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
         }
 
-        private bool ContainsMark(LocationTextExtractionStrategy.ITextChunkLocation baseLocation, LocationTextExtractionStrategy.ITextChunkLocation
-             markLocation) {
-            return baseLocation.GetStartLocation().Get(Vector.I1) <= markLocation.GetStartLocation().Get(Vector.I1) &&
-                 baseLocation.GetEndLocation().Get(Vector.I1) >= markLocation.GetEndLocation().Get(Vector.I1) && Math.
-                Abs(baseLocation.DistPerpendicular() - markLocation.DistPerpendicular()) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION;
-        }
-
         public interface ITextChunkLocationStrategy {
-            LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline
-                );
-        }
-
-        public interface ITextChunkLocation : IComparable<LocationTextExtractionStrategy.ITextChunkLocation> {
-            float DistParallelEnd();
-
-            float DistParallelStart();
-
-            int DistPerpendicular();
-
-            float GetCharSpaceWidth();
-
-            Vector GetEndLocation();
-
-            Vector GetStartLocation();
-
-            int OrientationMagnitude();
-
-            bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as);
-
-            float DistanceFromEndOf(LocationTextExtractionStrategy.ITextChunkLocation other);
-
-            bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation previous);
-        }
-
-        /// <summary>Represents a chunk of text, it's orientation, and location relative to the orientation vector</summary>
-        public class TextChunk : IComparable<LocationTextExtractionStrategy.TextChunk> {
-            /// <summary>the text of the chunk</summary>
-            protected internal readonly String text;
-
-            protected internal readonly LocationTextExtractionStrategy.ITextChunkLocation location;
-
-            public TextChunk(String @string, LocationTextExtractionStrategy.ITextChunkLocation loc) {
-                this.text = @string;
-                this.location = loc;
-            }
-
-            /// <returns>the text captured by this chunk</returns>
-            public virtual String GetText() {
-                return text;
-            }
-
-            public virtual LocationTextExtractionStrategy.ITextChunkLocation GetLocation() {
-                return location;
-            }
-
-            /// <summary>Compares based on orientation, perpendicular distance, then parallel distance</summary>
-            /// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
-            public virtual int CompareTo(LocationTextExtractionStrategy.TextChunk rhs) {
-                return location.CompareTo(rhs.location);
-            }
-
-            internal virtual void PrintDiagnostics() {
-                System.Console.Out.WriteLine("Text (@" + location.GetStartLocation() + " -> " + location.GetEndLocation() 
-                    + "): " + text);
-                System.Console.Out.WriteLine("orientationMagnitude: " + location.OrientationMagnitude());
-                System.Console.Out.WriteLine("distPerpendicular: " + location.DistPerpendicular());
-                System.Console.Out.WriteLine("distParallel: " + location.DistParallelStart());
-            }
-
-            internal virtual bool SameLine(LocationTextExtractionStrategy.TextChunk lastChunk) {
-                return GetLocation().SameLine(lastChunk.GetLocation());
-            }
-        }
-
-        public class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.ITextChunkLocation {
-            private static readonly LocationTextExtractionStrategy.TextChunkLocationComparator defaultComparator = new 
-                LocationTextExtractionStrategy.TextChunkLocationComparator();
-
-            /// <summary>the starting location of the chunk</summary>
-            private readonly Vector startLocation;
-
-            /// <summary>the ending location of the chunk</summary>
-            private readonly Vector endLocation;
-
-            /// <summary>unit vector in the orientation of the chunk</summary>
-            private readonly Vector orientationVector;
-
-            /// <summary>the orientation as a scalar for quick sorting</summary>
-            private readonly int orientationMagnitude;
-
-            /// <summary>perpendicular distance to the orientation unit vector (i.e.</summary>
-            /// <remarks>
-            /// perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system)
-            /// we round to the nearest integer to handle the fuzziness of comparing floats
-            /// </remarks>
-            private readonly int distPerpendicular;
-
-            /// <summary>distance of the start of the chunk parallel to the orientation unit vector (i.e.</summary>
-            /// <remarks>distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
-            ///     </remarks>
-            private readonly float distParallelStart;
-
-            /// <summary>distance of the end of the chunk parallel to the orientation unit vector (i.e.</summary>
-            /// <remarks>distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
-            ///     </remarks>
-            private readonly float distParallelEnd;
-
-            /// <summary>the width of a single space character in the font of the chunk</summary>
-            private readonly float charSpaceWidth;
-
-            public TextChunkLocationDefaultImp(Vector startLocation, Vector endLocation, float charSpaceWidth) {
-                this.startLocation = startLocation;
-                this.endLocation = endLocation;
-                this.charSpaceWidth = charSpaceWidth;
-                Vector oVector = endLocation.Subtract(startLocation);
-                if (oVector.Length() == 0) {
-                    oVector = new Vector(1, 0, 0);
-                }
-                orientationVector = oVector.Normalize();
-                orientationMagnitude = (int)(Math.Atan2(orientationVector.Get(Vector.I2), orientationVector.Get(Vector.I1)
-                    ) * 1000);
-                // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-                // the two vectors we are crossing are in the same plane, so the result will be purely
-                // in the z-axis (out of plane) direction, so we just take the I3 component of the result
-                Vector origin = new Vector(0, 0, 1);
-                distPerpendicular = (int)(startLocation.Subtract(origin)).Cross(orientationVector).Get(Vector.I3);
-                distParallelStart = orientationVector.Dot(startLocation);
-                distParallelEnd = orientationVector.Dot(endLocation);
-            }
-
-            public virtual int OrientationMagnitude() {
-                return orientationMagnitude;
-            }
-
-            public virtual int DistPerpendicular() {
-                return distPerpendicular;
-            }
-
-            public virtual float DistParallelStart() {
-                return distParallelStart;
-            }
-
-            public virtual float DistParallelEnd() {
-                return distParallelEnd;
-            }
-
-            /// <returns>the start location of the text</returns>
-            public virtual Vector GetStartLocation() {
-                return startLocation;
-            }
-
-            /// <returns>the end location of the text</returns>
-            public virtual Vector GetEndLocation() {
-                return endLocation;
-            }
-
-            /// <returns>the width of a single space character as rendered by this chunk</returns>
-            public virtual float GetCharSpaceWidth() {
-                return charSpaceWidth;
-            }
-
-            /// <param name="as">the location to compare to</param>
-            /// <returns>true is this location is on the the same line as the other</returns>
-            public virtual bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as) {
-                if (OrientationMagnitude() != @as.OrientationMagnitude()) {
-                    return false;
-                }
-                float distPerpendicularDiff = DistPerpendicular() - @as.DistPerpendicular();
-                if (distPerpendicularDiff == 0) {
-                    return true;
-                }
-                LineSegment mySegment = new LineSegment(startLocation, endLocation);
-                LineSegment otherSegment = new LineSegment(@as.GetStartLocation(), @as.GetEndLocation());
-                return Math.Abs(distPerpendicularDiff) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION && (mySegment.GetLength
-                    () == 0 || otherSegment.GetLength() == 0);
-            }
-
-            /// <summary>
-            /// Computes the distance between the end of 'other' and the beginning of this chunk
-            /// in the direction of this chunk's orientation vector.
-            /// </summary>
-            /// <remarks>
-            /// Computes the distance between the end of 'other' and the beginning of this chunk
-            /// in the direction of this chunk's orientation vector.  Note that it's a bad idea
-            /// to call this for chunks that aren't on the same line and orientation, but we don't
-            /// explicitly check for that condition for performance reasons.
-            /// </remarks>
-            /// <param name="other"/>
-            /// <returns>the number of spaces between the end of 'other' and the beginning of this chunk</returns>
-            public virtual float DistanceFromEndOf(LocationTextExtractionStrategy.ITextChunkLocation other) {
-                return DistParallelStart() - other.DistParallelEnd();
-            }
-
-            public virtual bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation previous) {
-                /*
-                * Here we handle a very specific case which in PDF may look like:
-                * -.232 Tc [( P)-226.2(r)-231.8(e)-230.8(f)-238(a)-238.9(c)-228.9(e)]TJ
-                * The font's charSpace width is 0.232 and it's compensated with charSpacing of 0.232.
-                * And a resultant TextChunk.charSpaceWidth comes to TextChunk constructor as 0.
-                * In this case every chunk is considered as a word boundary and space is added.
-                * We should consider charSpaceWidth equal (or close) to zero as a no-space.
-                */
-                if (GetCharSpaceWidth() < 0.1f) {
-                    return false;
-                }
-                // In case a text chunk is of zero length, this probably means this is a mark character,
-                // and we do not actually want to insert a space in such case
-                if (startLocation.Equals(endLocation) || previous.GetEndLocation().Equals(previous.GetStartLocation())) {
-                    return false;
-                }
-                float dist = DistanceFromEndOf(previous);
-                return dist < -GetCharSpaceWidth() || dist > GetCharSpaceWidth() / 2.0f;
-            }
-
-            public virtual int CompareTo(LocationTextExtractionStrategy.ITextChunkLocation other) {
-                return defaultComparator.Compare(this, other);
-            }
-        }
-
-        private class TextChunkComparator : IComparer<LocationTextExtractionStrategy.TextChunk> {
-            private IComparer<LocationTextExtractionStrategy.ITextChunkLocation> locationComparator;
-
-            public TextChunkComparator(IComparer<LocationTextExtractionStrategy.ITextChunkLocation> locationComparator
-                ) {
-                this.locationComparator = locationComparator;
-            }
-
-            public virtual int Compare(LocationTextExtractionStrategy.TextChunk o1, LocationTextExtractionStrategy.TextChunk
-                 o2) {
-                return locationComparator.Compare(o1.location, o2.location);
-            }
-        }
-
-        private class TextChunkLocationComparator : IComparer<LocationTextExtractionStrategy.ITextChunkLocation> {
-            private bool leftToRight = true;
-
-            public TextChunkLocationComparator() {
-            }
-
-            public TextChunkLocationComparator(bool leftToRight) {
-                this.leftToRight = leftToRight;
-            }
-
-            public virtual int Compare(LocationTextExtractionStrategy.ITextChunkLocation first, LocationTextExtractionStrategy.ITextChunkLocation
-                 second) {
-                if (first == second) {
-                    return 0;
-                }
-                // not really needed, but just in case
-                int result;
-                result = iText.IO.Util.JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude()
-                    );
-                if (result != 0) {
-                    return result;
-                }
-                int distPerpendicularDiff = first.DistPerpendicular() - second.DistPerpendicular();
-                if (distPerpendicularDiff != 0) {
-                    return distPerpendicularDiff;
-                }
-                return leftToRight ? iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelStart(), second.DistParallelStart
-                    ()) : -iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelEnd(), second.DistParallelEnd());
-            }
+            ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline);
         }
 
         private class TextChunkMarks {
-            internal IList<LocationTextExtractionStrategy.TextChunk> preceding = new List<LocationTextExtractionStrategy.TextChunk
-                >();
+            internal IList<TextChunk> preceding = new List<TextChunk>();
 
-            internal IList<LocationTextExtractionStrategy.TextChunk> succeeding = new List<LocationTextExtractionStrategy.TextChunk
-                >();
+            internal IList<TextChunk> succeeding = new List<TextChunk>();
         }
     }
 }
