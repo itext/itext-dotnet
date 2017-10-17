@@ -242,8 +242,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT, Count
-             = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 2)]
         public virtual void FreeARefInWrongWayTest02() {
             String @out = "freeARefInWrongWayTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -269,10 +268,9 @@ namespace iText.Kernel.Pdf {
             a1.Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
-            String[] expected = new String[] { "xref\n" + "0 10\n" + "0000000007 65535 f \n" + "0000000433 00000 n \n"
-                 + "0000000660 00000 n \n" + "0000000494 00000 n \n" + "0000000318 00000 n \n" + "0000000245 00000 n \n"
-                 + "0000000060 00000 n \n" + "0000000000 00001 f \n" + "0000000015 00000 n \n" + "0000000711 00000 n \n"
-                 };
+            String[] expected = new String[] { "xref\n" + "0 9\n" + "0000000007 65535 f \n" + "0000000432 00000 n \n" 
+                + "0000000659 00000 n \n" + "0000000493 00000 n \n" + "0000000317 00000 n \n" + "0000000244 00000 n \n"
+                 + "0000000060 00000 n \n" + "0000000000 00001 f \n" + "0000000015 00000 n \n" };
             CompareXrefTables(xrefString, expected);
         }
 

@@ -484,6 +484,7 @@ namespace iText.Kernel.Pdf {
                 if (IsTagged()) {
                     GetTagStructureContext().RemovePageTags(removedPage);
                 }
+                // TODO should we remove everything (outlines, tags) if page won't be removed in the end, because it's already flushed? wouldn't tags be also flushed?
                 if (!removedPage.GetPdfObject().IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
                     removedPage.GetPdfObject().GetIndirectReference().SetFree();

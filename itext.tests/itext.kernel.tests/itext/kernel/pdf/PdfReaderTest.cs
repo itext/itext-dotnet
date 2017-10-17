@@ -315,6 +315,7 @@ namespace iText.Kernel.Pdf {
             int xrefSize = document.GetXref().Size();
             PdfPage testPage = document.RemovePage(1000);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
+            // TODO pages reordering issue
             document.AddPage(1000, testPage);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {

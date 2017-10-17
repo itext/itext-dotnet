@@ -158,6 +158,7 @@ namespace iText.Kernel.Pdf {
             String filename = "removePageWithOutlinesTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), new PdfWriter(
                 destinationFolder + filename));
+            // TODO this causes log message errors! it's because of destinations pointing to removed page (freed reference, replaced by PdfNull)
             pdfDoc.RemovePage(102);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder

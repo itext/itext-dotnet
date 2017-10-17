@@ -130,6 +130,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
                 destinationFolder + filename));
             for (int i = pdfDoc.GetNumberOfPages() - 1; i > 0; i--) {
+                // TODO pages reordering issue
                 PdfPage page = pdfDoc.RemovePage(i);
                 pdfDoc.AddPage(page);
             }
@@ -165,6 +166,7 @@ namespace iText.Kernel.Pdf {
             int xrefSize = document.GetXref().Size();
             PdfPage testPage = document.RemovePage(1000);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
+            // TODO pages reordering issue
             document.AddPage(1000, testPage);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
             for (int i = 0; i < pages.Length; i++) {
@@ -203,6 +205,7 @@ namespace iText.Kernel.Pdf {
                     if (j_page < i_page) {
                         PdfPage page = pdfDoc.RemovePage(j);
                         pdfDoc.AddPage(i + 1, page);
+                        // TODO pages reordering issue
                         page = pdfDoc.RemovePage(i);
                         pdfDoc.AddPage(j, page);
                     }
