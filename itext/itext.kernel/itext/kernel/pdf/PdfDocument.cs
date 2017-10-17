@@ -504,13 +504,16 @@ namespace iText.Kernel.Pdf {
         public virtual bool RemovePage(PdfPage page) {
             CheckClosingStatus();
             int pageNum = GetPageNumber(page);
-            return pageNum >= 1 && RemovePage(pageNum) != null;
+            if (pageNum >= 1) {
+                RemovePage(pageNum);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>Removes page from the document by page number.</summary>
         /// <param name="pageNum">the one-based index of the PdfPage to be removed</param>
-        /// <returns>the page that was removed from the list</returns>
-        public virtual PdfPage RemovePage(int pageNum) {
+        public virtual void RemovePage(int pageNum) {
             CheckClosingStatus();
             PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNum);
             if (removedPage != null) {
@@ -526,7 +529,6 @@ namespace iText.Kernel.Pdf {
                 }
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
-            return removedPage;
         }
 
         /// <summary>Gets document information dictionary.</summary>
