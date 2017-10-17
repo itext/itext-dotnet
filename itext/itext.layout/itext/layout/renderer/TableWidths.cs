@@ -505,7 +505,8 @@ namespace iText.Layout.Renderer {
                     firtsRow = null;
                 }
             }
-            if (firtsRow != null) {
+            if (firtsRow != null && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count) {
+                // only for not large tables
                 for (int i = 0; i < numberOfColumns; i++) {
                     if (columnWidths[i] == -1) {
                         CellRenderer cell = firtsRow[i];
@@ -526,6 +527,14 @@ namespace iText.Layout.Renderer {
                     else {
                         remainWidth -= columnWidths[i];
                         processedColumns++;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < numberOfColumns; i++) {
+                    if (columnWidths[i] != -1) {
+                        processedColumns++;
+                        remainWidth -= columnWidths[i];
                     }
                 }
             }

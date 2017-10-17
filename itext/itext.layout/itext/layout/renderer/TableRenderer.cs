@@ -202,6 +202,7 @@ namespace iText.Layout.Renderer {
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
             bool isAndWasComplete = tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count;
+            bool isFirstOnThePage = 0 == rowRange.GetStartRow() || area.IsEmptyArea();
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
                     bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete ? rowRange
@@ -210,7 +211,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetFinishRow());
-            InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
+            InitializeHeaderAndFooter(isFirstOnThePage);
             // update
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);
@@ -726,7 +727,7 @@ namespace iText.Layout.Renderer {
                         else {
                             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                             // process bottom border of the last added row if there is no footer
-                            if (!isAndWasComplete) {
+                            if (!isAndWasComplete && !isFirstOnThePage) {
                                 bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
                                     );
                             }
@@ -757,8 +758,8 @@ namespace iText.Layout.Renderer {
                     else {
                         int status = ((occupiedArea.GetBBox().GetHeight() - (null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea
                             ().GetBBox().GetHeight()) - (null == headerRenderer ? 0 : headerRenderer.GetOccupiedArea().GetBBox().GetHeight
-                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && isAndWasComplete) ? LayoutResult.NOTHING
-                             : LayoutResult.PARTIAL;
+                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && (isAndWasComplete || isFirstOnThePage
+                            )) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
