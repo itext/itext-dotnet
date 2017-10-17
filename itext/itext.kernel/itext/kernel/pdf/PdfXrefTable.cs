@@ -188,10 +188,6 @@ namespace iText.Kernel.Pdf {
             }
             ((PdfIndirectReference)reference.SetState(PdfObject.FREE)).SetState(PdfObject.MODIFIED);
             AppendNewRefToFreeList(reference);
-            if (reference.refersTo != null) {
-                reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
-                reference.refersTo = null;
-            }
             if (reference.GetGenNumber() < MAX_GENERATION) {
                 reference.genNr++;
             }

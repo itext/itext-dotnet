@@ -796,7 +796,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (currentStructElem.IsFlushed()) {
                 throw new PdfException(PdfException.TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot);
             }
-            if (currentStructElem.GetParent() == null) {
+            if (currentStructElem.GetPdfObject().GetIndirectReference().IsFree()) {
                 // is removed
                 throw new PdfException(PdfException.TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot);
             }

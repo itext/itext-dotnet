@@ -193,18 +193,25 @@ namespace iText.Kernel.Pdf {
             if (document != null && !indirectReference.GetDocument().Equals(document)) {
                 throw new PdfException(PdfException.PdfIndirectObjectBelongsToOtherPdfDocument);
             }
-            if (indirectReference.GetRefersTo() == null) {
+            if (indirectReference.IsFree()) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT);
+                logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
                 Write(PdfNull.PDF_NULL);
             }
             else {
-                if (indirectReference.GetGenNumber() == 0) {
-                    WriteInteger(indirectReference.GetObjNumber()).WriteBytes(endIndirectWithZeroGenNr);
+                if (indirectReference.GetRefersTo() == null) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+                    logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT);
+                    Write(PdfNull.PDF_NULL);
                 }
                 else {
-                    WriteInteger(indirectReference.GetObjNumber()).WriteSpace().WriteInteger(indirectReference.GetGenNumber())
-                        .WriteBytes(endIndirect);
+                    if (indirectReference.GetGenNumber() == 0) {
+                        WriteInteger(indirectReference.GetObjNumber()).WriteBytes(endIndirectWithZeroGenNr);
+                    }
+                    else {
+                        WriteInteger(indirectReference.GetObjNumber()).WriteSpace().WriteInteger(indirectReference.GetGenNumber())
+                            .WriteBytes(endIndirect);
+                    }
                 }
             }
         }

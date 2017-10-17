@@ -537,8 +537,8 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public override void Flush() {
             PdfDictionary pageDict = GetPdfObject().GetAsDictionary(PdfName.Pg);
-            if (pageDict == null || pageDict.GetIndirectReference() == null) {
-                // TODO DEVSIX-1583: identify removed pages more reliably
+            if (pageDict == null || pageDict.GetIndirectReference() != null && pageDict.GetIndirectReference().IsFree(
+                )) {
                 GetPdfObject().Remove(PdfName.Pg);
             }
             PdfDocument doc = GetDocument();
