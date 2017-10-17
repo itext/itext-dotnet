@@ -477,6 +477,14 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (pageMcrs != null) {
                 // We create a copy here, because pageMcrs is backed by the internal collection which is changed when mcrs are removed.
                 IList<PdfMcr> mcrsList = new List<PdfMcr>(pageMcrs);
+                RemoveStructureElements(mcrsList);
+            }
+            return this;
+        }
+
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveStructureElements(IList<PdfMcr> mcrsList
+            ) {
+            if (mcrsList != null) {
                 foreach (PdfMcr mcr in mcrsList) {
                     RemovePageTagFromParent(mcr, mcr.GetParent());
                 }

@@ -371,6 +371,19 @@ namespace iText.Kernel.Pdf.Tagging {
             StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());
         }
 
+        //TODO add proper documentation
+        //works only if StructureTree was read
+        public virtual IList<PdfDictionary> DetachPageStructure(int pageNumber) {
+            return StructureTreeCopier.DetachPageStructure(GetDocument(), pageNumber);
+        }
+
+        //return structure tree index of first separated top
+        //works only if StructureTree was read
+        //TODO add proper documentation
+        public virtual int SeparateStructure(int separateBeforePage) {
+            return StructureTreeCopier.SeparateStructure(GetDocument(), separateBeforePage);
+        }
+
         public virtual int GetParentTreeNextKey() {
             // /ParentTreeNextKey entry is always inited on ParentTreeHandler initialization
             return GetPdfObject().GetAsNumber(PdfName.ParentTreeNextKey).IntValue();

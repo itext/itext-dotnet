@@ -210,5 +210,25 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copySamePageWithAnnotationsSeveralTimes.pdf"
                 , sourceFolder + "cmp_copySamePageWithAnnotationsSeveralTimes.pdf", destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void CopyReorderTaggedHasCommonStructElem() {
+            String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
+            String outPath = destinationFolder + "copyReorderTaggedHasCommonStructElem.pdf";
+            String cmpPath = sourceFolder + "cmp_copyReorderTaggedHasCommonStructElem.pdf";
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(inPath));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
+            pdfDoc.SetTagged();
+            sourceDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(2, 1, 3), pdfDoc);
+            sourceDoc.Close();
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNull(compareTool.CompareTagStructures(outPath, cmpPath));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_"));
+        }
     }
 }
