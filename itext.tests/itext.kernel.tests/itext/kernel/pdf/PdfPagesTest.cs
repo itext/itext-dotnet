@@ -341,6 +341,22 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ReorderInheritedResourcesTest() {
+            //TODO: DEVSIX-1643 Inherited resources aren't copied on page reordering
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "inheritedFontResources.pdf"), new PdfWriter
+                (destinationFolder + "reorderInheritedFontResources.pdf"));
+            pdfDoc.MovePage(1, pdfDoc.GetNumberOfPages() + 1);
+            pdfDoc.RemovePage(1);
+            pdfDoc.Close();
+            String compareResult = new CompareTool().CompareByContent(destinationFolder + "reorderInheritedFontResources.pdf"
+                , sourceFolder + "cmp_reorderInheritedFontResources.pdf", destinationFolder, "diff_reorderInheritedFontResources_"
+                );
+            NUnit.Framework.Assert.IsNull(compareResult);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetPageByDictionary() {
             String filename = sourceFolder + "1000PagesDocument.pdf";
