@@ -848,11 +848,18 @@ namespace iText.Kernel.Font {
                         fontDescriptor.Put(PdfName.FontFile3, fontStream);
                     }
                     else {
-                        byte[] ttfBytes;
+                        byte[] ttfBytes = null;
                         if (subset || ttf.GetDirectoryOffset() != 0) {
-                            ttfBytes = ttf.GetSubset(new HashSet<int>(longTag), true);
+                            try {
+                                ttfBytes = ttf.GetSubset(new HashSet<int>(longTag), true);
+                            }
+                            catch (iText.IO.IOException) {
+                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                                logger.Warn(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
+                                ttfBytes = null;
+                            }
                         }
-                        else {
+                        if (ttfBytes == null) {
                             ttfBytes = ttf.GetFontStreamBytes();
                         }
                         fontStream = GetPdfFontStream(ttfBytes, new int[] { ttfBytes.Length });

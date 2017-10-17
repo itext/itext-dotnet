@@ -1,4 +1,5 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -40,50 +41,38 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using iText.Kernel;
 
-namespace iText.Layout.Font {
+namespace iText.Kernel.Pdf {
+    /// <summary>Data container for debugging information.</summary>
+    /// <remarks>
+    /// Data container for debugging information. This class keeps a record of every registered product that
+    /// was involved in the creation of a certain PDF file. This information can then be used to log to the
+    /// logger or to the file.
+    /// </remarks>
+    public class FingerPrint {
+        private ICollection<ProductInfo> productInfoSet;
 
-    /// <summary>
-    /// Split css font-family string into list of font-families or generic-families
-    /// </summary>
-    public sealed class FontFamilySplitter {
-        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
-
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
-
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("[\\w-]+( +[\\w-]+)*");
-
-        public static IList<String> SplitFontFamily(String fontFamily) {
-            if (fontFamily == null) {
-                return null;
-            }
-            String[] names = iText.IO.Util.StringUtil.Split(fontFamily, ",");
-            IList<String> result = new List<String>(names.Length);
-            foreach (String name in names) {
-                if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN, name).Success) {
-                    result.Add(name.Trim());
-                }
-                else {
-                    if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED, name).Success) {
-                        Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
-                        if (selectMatcher.Success) {
-                            result.Add(iText.IO.Util.StringUtil.Group(selectMatcher));
-                        }
-                    }
-                }
-            }
-            return result;
+        /// <summary>Default constructor.</summary>
+        /// <remarks>Default constructor. Initializes the productInfoSet.</remarks>
+        public FingerPrint() {
+            this.productInfoSet = new HashSet<ProductInfo>();
         }
 
-        public static String RemoveQuotes(String fontFamily) {
-            Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
-            if (selectMatcher.Success) {
-                return iText.IO.Util.StringUtil.Group(selectMatcher);
-            }
-            return null;
+        /// <summary>Registers a product to be added to the fingerprint or other debugging info.</summary>
+        /// <param name="productInfo">ProductInfo to be added</param>
+        /// <returns>true if the fingerprint did not already contain the specified element</returns>
+        public virtual bool RegisterProduct(ProductInfo productInfo) {
+            int initialSize = productInfoSet.Count;
+            productInfoSet.Add(productInfo);
+            return initialSize != productInfoSet.Count;
+        }
+
+        /// <summary>Returns the registered products.</summary>
+        /// <returns>registered products.</returns>
+        public virtual ICollection<ProductInfo> GetProducts() {
+            return this.productInfoSet;
         }
     }
 }

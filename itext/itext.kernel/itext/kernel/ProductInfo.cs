@@ -1,4 +1,5 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -41,49 +42,60 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
-namespace iText.Layout.Font {
+namespace iText.Kernel {
+    /// <summary>Describes an iText 7 add on.</summary>
+    /// <remarks>
+    /// Describes an iText 7 add on. An add on should register itself to a PdfDocument object if it
+    /// wants to be included in the debugging information.
+    /// </remarks>
+    public class ProductInfo {
+        private String name;
 
-    /// <summary>
-    /// Split css font-family string into list of font-families or generic-families
-    /// </summary>
-    public sealed class FontFamilySplitter {
-        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
+        private int major;
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
+        private int minor;
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("[\\w-]+( +[\\w-]+)*");
+        private int patch;
 
-        public static IList<String> SplitFontFamily(String fontFamily) {
-            if (fontFamily == null) {
-                return null;
-            }
-            String[] names = iText.IO.Util.StringUtil.Split(fontFamily, ",");
-            IList<String> result = new List<String>(names.Length);
-            foreach (String name in names) {
-                if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN, name).Success) {
-                    result.Add(name.Trim());
-                }
-                else {
-                    if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED, name).Success) {
-                        Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
-                        if (selectMatcher.Success) {
-                            result.Add(iText.IO.Util.StringUtil.Group(selectMatcher));
-                        }
-                    }
-                }
-            }
-            return result;
+        private bool snapshot;
+
+        /// <summary>Instantiates a ProductInfo object.</summary>
+        /// <param name="name">name of the add on</param>
+        /// <param name="major">major version of the add on</param>
+        /// <param name="minor">minor version of the add on</param>
+        /// <param name="patch">patch number of the add on</param>
+        /// <param name="snapshot">whether the version of this add on is a snapshot build or not</param>
+        public ProductInfo(String name, int major, int minor, int patch, bool snapshot) {
+            this.name = name;
+            this.major = major;
+            this.minor = minor;
+            this.patch = patch;
+            this.snapshot = snapshot;
         }
 
-        public static String RemoveQuotes(String fontFamily) {
-            Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
-            if (selectMatcher.Success) {
-                return iText.IO.Util.StringUtil.Group(selectMatcher);
-            }
-            return null;
+        public virtual String GetName() {
+            return name;
+        }
+
+        public virtual int GetMajor() {
+            return major;
+        }
+
+        public virtual int GetMinor() {
+            return minor;
+        }
+
+        public virtual int GetPatch() {
+            return patch;
+        }
+
+        public virtual bool IsSnapshot() {
+            return snapshot;
+        }
+
+        public override String ToString() {
+            return name + "-" + major + "." + minor + "." + patch + (snapshot ? "-SNAPSHOT" : "");
         }
     }
 }

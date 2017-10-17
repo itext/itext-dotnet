@@ -176,15 +176,26 @@ namespace iText.Layout.Font {
                 FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
                 // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
                 // it should not be any 'contains' with aliases.
-                if (fontName.Equals(descriptor.GetFullNameLowerCase()) || fontName.Equals(descriptor.GetFontNameLowerCase(
-                    )) || fontName.Equals(fontInfo.GetAlias())) {
-                    score += 10;
+                bool checkContains = true;
+                if (fontName.Equals(descriptor.GetFullNameLowerCase())) {
+                    score += 4;
+                    checkContains = false;
                 }
-                else {
-                    if (descriptor.GetFullNameLowerCase().Contains(fontName) || descriptor.GetFontNameLowerCase().Contains(fontName
-                        )) {
-                        //yes, we will not find contains for each alias.
-                        score += 7;
+                if (fontName.Equals(descriptor.GetFontNameLowerCase())) {
+                    score += 4;
+                    checkContains = false;
+                }
+                if (fontName.Equals(fontInfo.GetAlias())) {
+                    score += 4;
+                    checkContains = false;
+                }
+                if (checkContains) {
+                    //yes, we will not find contains for each alias.
+                    if (descriptor.GetFullNameLowerCase().Contains(fontName)) {
+                        score += 3;
+                    }
+                    if (descriptor.GetFontNameLowerCase().Contains(fontName)) {
+                        score += 3;
                     }
                 }
                 return score;
