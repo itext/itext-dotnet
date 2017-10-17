@@ -49,7 +49,7 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Split css font-family string into list of font-families or generic-families
     /// </summary>
-    internal sealed class FontFamilySplitter {
+    public sealed class FontFamilySplitter {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
 
         private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
