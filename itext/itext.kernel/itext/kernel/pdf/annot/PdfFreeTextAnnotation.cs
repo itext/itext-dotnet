@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot.DA;
@@ -61,16 +60,6 @@ namespace iText.Kernel.Pdf.Annot {
         public PdfFreeTextAnnotation(Rectangle rect, PdfString contents)
             : base(rect) {
             SetContents(contents);
-        }
-
-        /// <summary>Creates new instance</summary>
-        /// <param name="rect">- bounding rectangle of annotation</param>
-        /// <param name="appearanceString">- appearance string of annotation</param>
-        [System.ObsoleteAttribute(@"unintuitive, will be removed in 7.1 use PdfFreeTextAnnotation(iText.Kernel.Geom.Rectangle, iText.Kernel.Pdf.PdfString) instead"
-            )]
-        public PdfFreeTextAnnotation(Rectangle rect, String appearanceString)
-            : base(rect) {
-            SetDefaultAppearance(new PdfString(appearanceString));
         }
 
         /// <summary>
