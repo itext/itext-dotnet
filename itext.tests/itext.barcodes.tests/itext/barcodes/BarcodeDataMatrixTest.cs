@@ -73,7 +73,7 @@ namespace iText.Barcodes {
             BarcodeDataMatrix barcode = new BarcodeDataMatrix();
             barcode.SetCode("AAAAAAAAAA;BBBBAAAA3;00028;BBBAA05;AAAA;AAAAAA;1234567;AQWXSZ;JEAN;;;;7894561;AQWXSZ;GEO;;;;1;1;1;1;0;0;1;0;1;0;0;0;1;0;1;0;0;0;0;0;0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1"
                 );
-            barcode.PlaceBarcode(canvas, Color.GREEN, 5);
+            barcode.PlaceBarcode(canvas, ColorConstants.GREEN, 5);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -90,7 +90,7 @@ namespace iText.Barcodes {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             BarcodeDataMatrix barcode2 = new BarcodeDataMatrix("дима", "UTF-8");
-            barcode2.PlaceBarcode(canvas, Color.GREEN, 10);
+            barcode2.PlaceBarcode(canvas, ColorConstants.GREEN, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -110,7 +110,7 @@ namespace iText.Barcodes {
             barcode3.SetWidth(36);
             barcode3.SetHeight(12);
             barcode3.SetCode("AbcdFFghijklmnopqrstuWXSQ");
-            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            barcode3.PlaceBarcode(canvas, ColorConstants.BLACK, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -130,7 +130,7 @@ namespace iText.Barcodes {
             barcode3.SetWidth(36);
             barcode3.SetHeight(12);
             barcode3.SetCode("01AbcdefgAbcdefg123451231231234");
-            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            barcode3.PlaceBarcode(canvas, ColorConstants.BLACK, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -150,7 +150,7 @@ namespace iText.Barcodes {
             barcode3.SetWidth(40);
             barcode3.SetHeight(40);
             barcode3.SetCode("aaabbbcccdddAAABBBAAABBaaabbbcccdddaaa");
-            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            barcode3.PlaceBarcode(canvas, ColorConstants.BLACK, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -170,7 +170,7 @@ namespace iText.Barcodes {
             barcode3.SetWidth(36);
             barcode3.SetHeight(12);
             barcode3.SetCode(">>>\r>>>THIS VERY TEXT>>\r>");
-            barcode3.PlaceBarcode(canvas, Color.BLACK, 10);
+            barcode3.PlaceBarcode(canvas, ColorConstants.BLACK, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

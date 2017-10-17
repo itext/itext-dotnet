@@ -113,7 +113,7 @@ namespace iText.Layout.Borders {
         /// </summary>
         /// <param name="width">the width which the border should have</param>
         protected internal Border(float width)
-            : this(Color.BLACK, width) {
+            : this(ColorConstants.BLACK, width) {
         }
 
         /// <summary>

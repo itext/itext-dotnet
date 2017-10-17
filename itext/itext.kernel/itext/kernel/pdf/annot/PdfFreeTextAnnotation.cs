@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot.DA;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfFreeTextAnnotation : PdfMarkupAnnotation {
@@ -54,11 +55,27 @@ namespace iText.Kernel.Pdf.Annot {
 
         public const int RIGHT_JUSTIFIED = 2;
 
+        /// <summary>Creates new instance</summary>
+        /// <param name="rect">- rectangle that specifies annotation position and bounds on page</param>
+        /// <param name="contents">- the displayed text</param>
+        public PdfFreeTextAnnotation(Rectangle rect, PdfString contents)
+            : base(rect) {
+            SetContents(contents);
+        }
+
+        /// <summary>Creates new instance</summary>
+        /// <param name="rect">- bounding rectangle of annotation</param>
+        /// <param name="appearanceString">- appearance string of annotation</param>
+        [System.ObsoleteAttribute(@"unintuitive, will be removed in 7.1 use PdfFreeTextAnnotation(iText.Kernel.Geom.Rectangle, iText.Kernel.Pdf.PdfString) instead"
+            )]
         public PdfFreeTextAnnotation(Rectangle rect, String appearanceString)
             : base(rect) {
             SetDefaultAppearance(new PdfString(appearanceString));
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfFreeTextAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -74,6 +91,40 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString(PdfString defaultStyleString
             ) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString);
+        }
+
+        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        ///     </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// that specifies the default appearance, or null if default appereance is not specified.
+        /// </returns>
+        public override PdfString GetDefaultAppearance() {
+            return GetPdfObject().GetAsString(PdfName.DA);
+        }
+
+        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        ///     </remarks>
+        /// <param name="appearanceString">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// that specifies the default appearance.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DA, appearanceString);
+        }
+
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
+             da) {
+            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetDefaultAppearance(da.ToPdfString()));
         }
 
         public virtual PdfArray GetCalloutLine() {
@@ -94,6 +145,203 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle(PdfName lineEndingStyle) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle);
+        }
+
+        /// <summary>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
+        /// </summary>
+        /// <remarks>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
+        /// </remarks>
+        /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
+        ///     </returns>
+        public override int GetJustification() {
+            PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
+            return q == null ? 0 : q.IntValue();
+        }
+
+        /// <summary>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
+        /// </summary>
+        /// <remarks>
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
+        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
+        /// </remarks>
+        /// <param name="justification">a code specifying the form of quadding (justification).</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetJustification(int justification) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.Q, new PdfNumber(justification));
+        }
+
+        /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        ///     </summary>
+        /// <remarks>
+        /// The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
+        /// That entry specifies a border style dictionary that has more settings than the array specified for the Border
+        /// entry (see
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ). If an annotation dictionary includes the BS entry, then the Border
+        /// entry is ignored. If annotation includes AP (see
+        /// <see cref="PdfAnnotation.GetAppearanceDictionary()"/>
+        /// ) it takes
+        /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which is a border style dictionary or null if it is not specified.
+        /// </returns>
+        public override PdfDictionary GetBorderStyle() {
+            return GetPdfObject().GetAsDictionary(PdfName.BS);
+        }
+
+        /// <summary>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
+        /// See ISO-320001, Table 166 and
+        /// <see cref="GetBorderStyle()"/>
+        /// for more info.
+        /// </summary>
+        /// <param name="borderStyle">
+        /// a border style dictionary specifying the line width and dash pattern that shall be used
+        /// in drawing the annotation’s border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.BS, borderStyle);
+        }
+
+        /// <summary>Setter for the annotation's preset border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset border style. Possible values are
+        /// <ul>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_SOLID"/>
+        /// - A solid rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// - A dashed rectangle surrounding the annotation.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_INSET"/>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
+        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// </ul>
+        /// See also ISO-320001, Table 166.
+        /// </remarks>
+        /// <param name="style">The new value for the annotation's border style.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        /// <seealso cref="GetBorderStyle()"/>
+        public override PdfAnnotation SetBorderStyle(PdfName style) {
+            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle
+                (), style)));
+        }
+
+        /// <summary>Setter for the annotation's preset dashed border style.</summary>
+        /// <remarks>
+        /// Setter for the annotation's preset dashed border style. This property has affect only if
+        /// <see cref="PdfAnnotation.STYLE_DASHED"/>
+        /// style was used for the annotation border style (see
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
+        /// </remarks>
+        /// <param name="dashPattern">
+        /// a dash array defining a pattern of dashes and gaps that
+        /// shall be used in drawing a dashed border.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
+            return ((iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
+                (), dashPattern)));
+        }
+
+        /// <summary>
+        /// A set of four numbers describing the numerical differences between two rectangles:
+        /// the Rect entry of the annotation and the inner rectangle where the annotation's text should be displayed
+        /// </summary>
+        /// <returns>
+        /// null if not specified, otherwise a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// with four numbers which correspond to the
+        /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
+        /// of the inner rectangle, respectively.
+        /// </returns>
+        public override PdfArray GetRectangleDifferences() {
+            return GetPdfObject().GetAsArray(PdfName.RD);
+        }
+
+        /// <summary>
+        /// A set of four numbers describing the numerical differences between two rectangles:
+        /// the Rect entry of the annotation and the inner rectangle where the annotation's text should be displayed
+        /// </summary>
+        /// <param name="rect">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// with four numbers which correspond to the differences in default user space between
+        /// the left, top, right, and bottom coordinates of Rect and those of the inner rectangle, respectively.
+        /// Each value shall be greater than or equal to 0. The sum of the top and bottom differences shall be
+        /// less than the height of Rect, and the sum of the left and right differences shall be less than
+        /// the width of Rect.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.RD, rect);
+        }
+
+        /// <summary>A border effect dictionary that specifies an effect that shall be applied to the border of the annotations.
+        ///     </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// , which is a border effect dictionary (see ISO-320001, Table 167).
+        /// </returns>
+        public override PdfDictionary GetBorderEffect() {
+            return GetPdfObject().GetAsDictionary(PdfName.BE);
+        }
+
+        /// <summary>Sets a border effect dictionary that specifies an effect that shall be applied to the border of the annotations.
+        ///     </summary>
+        /// <param name="borderEffect">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which contents shall be specified in accordance to ISO-320001, Table 167.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.BE, borderEffect);
         }
     }
 }

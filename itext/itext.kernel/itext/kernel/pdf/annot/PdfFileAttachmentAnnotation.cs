@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -56,6 +57,9 @@ namespace iText.Kernel.Pdf.Annot {
             Put(PdfName.FS, file.GetPdfObject());
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfFileAttachmentAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -66,6 +70,43 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual PdfObject GetFileSpecObject() {
             return GetPdfObject().Get(PdfName.FS);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <remarks>
+        /// The name of an icon that is used in displaying the annotation. Possible values are different for different
+        /// annotation types. See
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation, or null if icon name is not specified.
+        /// </returns>
+        public override PdfName GetIconName() {
+            return GetPdfObject().GetAsName(PdfName.Name);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <param name="name">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation. Possible values are different
+        /// for different annotation types:
+        /// <ul>
+        /// <li>GraphPushPin</li>
+        /// <li>PaperclipTag</li>
+        /// </ul>
+        /// Additional names may be supported as well.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFileAttachmentAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+            return (iText.Kernel.Pdf.Annot.PdfFileAttachmentAnnotation)Put(PdfName.Name, name);
         }
     }
 }

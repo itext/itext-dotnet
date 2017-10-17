@@ -55,6 +55,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentTest : ExtendedITextTest {
@@ -266,6 +267,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT)]
         public virtual void TestFreeReference() {
             PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
                 (false));

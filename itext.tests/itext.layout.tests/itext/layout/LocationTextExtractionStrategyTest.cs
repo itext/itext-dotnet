@@ -197,7 +197,8 @@ namespace iText.Layout {
             document.Add(new Paragraph("B"));
             PdfFormXObject template = new PdfFormXObject(new Rectangle(20, 100));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
-            canvas.SetStrokeColor(Color.GREEN).Rectangle(0, 0, template.GetWidth(), template.GetHeight()).Stroke();
+            canvas.SetStrokeColor(ColorConstants.GREEN).Rectangle(0, 0, template.GetWidth(), template.GetHeight()).Stroke
+                ();
             AffineTransform tx = new AffineTransform();
             tx.Translate(0, template.GetHeight());
             tx.Rotate((float)(-90 / 180f * Math.PI));

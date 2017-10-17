@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -50,6 +51,9 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfCaretAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -64,6 +68,43 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual PdfString GetSymbol() {
             return GetPdfObject().GetAsString(PdfName.Sy);
+        }
+
+        /// <summary>
+        /// A set of four numbers describing the numerical differences between two rectangles:
+        /// the Rect entry of the annotation and the actual boundaries of the underlying caret.
+        /// </summary>
+        /// <returns>
+        /// null if not specified, otherwise a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// with four numbers which correspond to the
+        /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
+        /// of the inner rectangle, respectively.
+        /// </returns>
+        public override PdfArray GetRectangleDifferences() {
+            return GetPdfObject().GetAsArray(PdfName.RD);
+        }
+
+        /// <summary>
+        /// A set of four numbers describing the numerical differences between two rectangles:
+        /// the Rect entry of the annotation and the actual boundaries of the underlying caret.
+        /// </summary>
+        /// <param name="rect">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// with four numbers which correspond to the differences in default user space between
+        /// the left, top, right, and bottom coordinates of Rect and those of the inner rectangle, respectively.
+        /// Each value shall be greater than or equal to 0. The sum of the top and bottom differences shall be
+        /// less than the height of Rect, and the sum of the left and right differences shall be less than
+        /// the width of Rect.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfCaretAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+            return (iText.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.RD, rect);
         }
     }
 }

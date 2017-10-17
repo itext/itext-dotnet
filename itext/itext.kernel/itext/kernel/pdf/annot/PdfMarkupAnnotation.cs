@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -518,319 +519,81 @@ namespace iText.Kernel.Pdf.Annot {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.ExData, exData);
         }
 
-        /// <summary>
-        /// A set of four numbers describing the numerical differences between two rectangles:
-        /// the Rect entry of the annotation and another rectangle within that one, which
-        /// meaning depends on the type of the annotation:
-        /// <ul>
-        /// <li> for
-        /// <see cref="PdfFreeTextAnnotation"/>
-        /// the inner rectangle is where the annotation's text should be displayed;</li>
-        /// <li>
-        /// for
-        /// <see cref="PdfSquareAnnotation"/>
-        /// and
-        /// <see cref="PdfCircleAnnotation"/>
-        /// the inner rectangle is the actual boundaries
-        /// of the underlying square or circle;
-        /// </li>
-        /// <li> for
-        /// <see cref="PdfCaretAnnotation"/>
-        /// the inner rectangle is the actual boundaries of the underlying caret.</li>
-        /// </ul>
-        /// </summary>
-        /// <param name="rect">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// with four numbers which correspond to the differences in default user space between
-        /// the left, top, right, and bottom coordinates of Rect and those of the inner rectangle, respectively.
-        /// Each value shall be greater than or equal to 0. The sum of the top and bottom differences shall be
-        /// less than the height of Rect, and the sum of the left and right differences shall be less than
-        /// the width of Rect.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfCaretAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.RD, rect);
         }
 
-        /// <summary>
-        /// A set of four numbers describing the numerical differences between two rectangles:
-        /// the Rect entry of the annotation and another rectangle within that one, which
-        /// meaning depends on the type of the annotation (see
-        /// <see cref="SetRectangleDifferences(iText.Kernel.Pdf.PdfArray)"/>
-        /// ).
-        /// </summary>
-        /// <returns>
-        /// null if not specified, otherwise a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// with four numbers which correspond to the
-        /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
-        /// of the inner rectangle, respectively.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfCaretAnnotation will be removed in 7.1"
+            )]
         public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
 
-        /// <summary>
-        /// Some annotations types (
-        /// <see cref="PdfSquareAnnotation"/>
-        /// ,
-        /// <see cref="PdfCircleAnnotation"/>
-        /// ,
-        /// <see cref="PdfPolyGeomAnnotation"/>
-        /// and
-        /// <see cref="PdfFreeTextAnnotation"/>
-        /// ) may have a
-        /// <see cref="iText.Kernel.Pdf.PdfName.BE"/>
-        /// entry, which is a border effect dictionary that specifies
-        /// an effect that shall be applied to the border of the annotations.
-        /// </summary>
-        /// <param name="borderEffect">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// which contents shall be specified in accordance to ISO-320001, Table 167.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.BE, borderEffect);
         }
 
-        /// <summary>A border effect dictionary that specifies an effect that shall be applied to the border of the annotations.
-        ///     </summary>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// , which is a border effect dictionary (see ISO-320001, Table 167).
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation will be removed in 7.1"
+            )]
         public virtual PdfDictionary GetBorderEffect() {
             return GetPdfObject().GetAsDictionary(PdfName.BE);
         }
 
-        /// <summary>The interior color which is used to fill areas specific for different types of annotation.</summary>
-        /// <remarks>
-        /// The interior color which is used to fill areas specific for different types of annotation. For
-        /// <see cref="PdfLineAnnotation"/>
-        /// and polyline annotation (
-        /// <see cref="PdfPolyGeomAnnotation"/>
-        /// - the annotation's line endings, for
-        /// <see cref="PdfSquareAnnotation"/>
-        /// and
-        /// <see cref="PdfCircleAnnotation"/>
-        /// - the annotation's rectangle or ellipse, for
-        /// <see cref="PdfRedactAnnotation"/>
-        /// - the redacted
-        /// region after the affected content has been removed.
-        /// </remarks>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Colors.Color"/>
-        /// of either
-        /// <see cref="iText.Kernel.Colors.DeviceGray"/>
-        /// ,
-        /// <see cref="iText.Kernel.Colors.DeviceRgb"/>
-        /// or
-        /// <see cref="iText.Kernel.Colors.DeviceCmyk"/>
-        /// type which defines
-        /// interior color of the annotation, or null if interior color is not specified.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual Color GetInteriorColor() {
-            PdfArray color = GetPdfObject().GetAsArray(PdfName.IC);
-            if (color == null) {
-                return null;
-            }
-            switch (color.Size()) {
-                case 1: {
-                    return new DeviceGray(color.GetAsNumber(0).FloatValue());
-                }
-
-                case 3: {
-                    return new DeviceRgb(color.GetAsNumber(0).FloatValue(), color.GetAsNumber(1).FloatValue(), color.GetAsNumber
-                        (2).FloatValue());
-                }
-
-                case 4: {
-                    return new DeviceCmyk(color.GetAsNumber(0).FloatValue(), color.GetAsNumber(1).FloatValue(), color.GetAsNumber
-                        (2).FloatValue(), color.GetAsNumber(3).FloatValue());
-                }
-
-                default: {
-                    return null;
-                }
-            }
+            return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
-        /// <summary>
-        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which is used to fill areas specific
-        /// for different types of annotation.
-        /// </summary>
-        /// <remarks>
-        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which is used to fill areas specific
-        /// for different types of annotation. For
-        /// <see cref="PdfLineAnnotation"/>
-        /// and polyline annotation (
-        /// <see cref="PdfPolyGeomAnnotation"/>
-        /// -
-        /// the annotation's line endings, for
-        /// <see cref="PdfSquareAnnotation"/>
-        /// and
-        /// <see cref="PdfCircleAnnotation"/>
-        /// - the annotation's
-        /// rectangle or ellipse, for
-        /// <see cref="PdfRedactAnnotation"/>
-        /// - the redacted region after the affected content has been removed.
-        /// </remarks>
-        /// <param name="interiorColor">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// of numbers in the range 0.0 to 1.0. The number of array elements determines
-        /// the colour space in which the colour is defined: 0 - No colour, transparent; 1 - DeviceGray,
-        /// 3 - DeviceRGB, 4 - DeviceCMYK. For the
-        /// <see cref="PdfRedactAnnotation"/>
-        /// number of elements shall be
-        /// equal to 3 (which defines DeviceRGB colour space).
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.IC, interiorColor);
         }
 
-        /// <summary>
-        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which is used to fill areas specific
-        /// for different types of annotation.
-        /// </summary>
-        /// <remarks>
-        /// An array of numbers in the range 0.0 to 1.0 specifying the interior color which is used to fill areas specific
-        /// for different types of annotation. See
-        /// <see cref="SetInteriorColor(iText.Kernel.Pdf.PdfArray)"/>
-        /// for more info.
-        /// </remarks>
-        /// <param name="interiorColor">an array of floats in the range 0.0 to 1.0.</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
             return SetInteriorColor(new PdfArray(interiorColor));
         }
 
-        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
-        /// <remarks>
-        /// The name of an icon that is used in displaying the annotation. Possible values are different for different
-        /// annotation types. See
-        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
-        /// .
-        /// </remarks>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// that specifies the icon for displaying annotation, or null if icon name is not specified.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfTextAnnotation , PdfStampAnnotation ,PdfFileAttachmentAnnotation , PdfSoundAnnotation , will be removed in 7.1"
+            )]
         public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
-        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
-        /// <param name="name">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// that specifies the icon for displaying annotation. Possible values are different
-        /// for different annotation types:
-        /// <ul>
-        /// <li>
-        /// <see cref="PdfTextAnnotation"/>
-        /// - Comment, Key, Note, Help, NewParagraph, Paragraph, Insert;</li>
-        /// <li>
-        /// <see cref="PdfStampAnnotation"/>
-        /// - Approved, Experimental, NotApproved, AsIs, Expired, NotForPublicRelease,
-        /// Confidential, Final, Sold, Departmental, ForComment, TopSecret, Draft, ForPublicRelease.</li>
-        /// <li>
-        /// <see cref="PdfFileAttachmentAnnotation"/>
-        /// - GraphPushPin, PaperclipTag. Additional names may be supported as well.</li>
-        /// <li>
-        /// <see cref="PdfSoundAnnotation"/>
-        /// - Speaker and Mic. Additional names may be supported as well.</li>
-        /// </ul>
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfTextAnnotation , PdfStampAnnotation ,PdfFileAttachmentAnnotation , PdfSoundAnnotation , will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Name, name);
         }
 
-        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
-        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
-        ///     </remarks>
-        /// <param name="appearanceString">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// that specifies the default appearance.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.DA, appearanceString);
         }
 
-        /// <summary>The default appearance string that shall be used in formatting the text.</summary>
-        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
-        ///     </remarks>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// that specifies the default appearance, or null if default appereance is not specified.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual PdfString GetDefaultAppearance() {
             return GetPdfObject().GetAsString(PdfName.DA);
         }
 
-        /// <summary>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
-        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
-        /// </summary>
-        /// <remarks>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
-        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
-        /// </remarks>
-        /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
-        ///     </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual int GetJustification() {
             PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
             return q == null ? 0 : q.IntValue();
         }
 
-        /// <summary>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
-        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
-        /// </summary>
-        /// <remarks>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
-        /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
-        /// </remarks>
-        /// <param name="justification">a code specifying the form of quadding (justification).</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance.
-        /// </returns>
+        [System.ObsoleteAttribute(@"Supported only for: PdfFreeTextAnnotation , PdfRedactAnnotation will be removed in 7.1"
+            )]
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetJustification(int justification) {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }

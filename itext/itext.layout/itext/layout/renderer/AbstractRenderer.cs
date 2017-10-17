@@ -691,21 +691,54 @@ namespace iText.Layout.Renderer {
         public virtual void DrawChildren(DrawContext drawContext) {
             IList<IRenderer> waitingRenderers = new List<IRenderer>();
             foreach (IRenderer child in childRenderers) {
-                if (FloatingHelper.IsRendererFloating(child) || child.GetProperty<Transform>(Property.TRANSFORM) != null) {
-                    RootRenderer rootRenderer = GetRootRenderer();
-                    if (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) {
-                        rootRenderer.waitingDrawingElements.Add(child);
-                    }
-                    else {
-                        waitingRenderers.Add(child);
-                    }
-                }
-                else {
+                Transform transformProp = child.GetProperty<Transform>(Property.TRANSFORM);
+                Border outlineProp = child.GetProperty<Border>(Property.OUTLINE);
+                RootRenderer rootRenderer = GetRootRenderer();
+                IList<IRenderer> waiting = (rootRenderer != null && !rootRenderer.waitingDrawingElements.Contains(child)) ? 
+                    rootRenderer.waitingDrawingElements : waitingRenderers;
+                ProcessWaitingDrawing(child, transformProp, outlineProp, waiting);
+                if (!FloatingHelper.IsRendererFloating(child) && transformProp == null) {
                     child.Draw(drawContext);
                 }
             }
             foreach (IRenderer waitingRenderer in waitingRenderers) {
                 waitingRenderer.Draw(drawContext);
+            }
+        }
+
+        internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, Border outlineProp, IList
+            <IRenderer> waitingDrawing) {
+            if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
+                waitingDrawing.Add(child);
+            }
+            if (outlineProp != null && child is iText.Layout.Renderer.AbstractRenderer) {
+                iText.Layout.Renderer.AbstractRenderer abstractChild = (iText.Layout.Renderer.AbstractRenderer)child;
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(false);
+                }
+                Div outlines = new Div();
+                outlines.SetRole(null);
+                if (transformProp != null) {
+                    outlines.SetProperty(Property.TRANSFORM, transformProp);
+                }
+                outlines.SetProperty(Property.BORDER, outlineProp);
+                float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET) != null) {
+                    offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
+                }
+                DivRenderer div = new DivRenderer(outlines);
+                Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
+                    ).MoveLeft(offset).MoveDown(offset);
+                divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
+                    2 * offset);
+                div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
+                float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
+                if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                    waitingDrawing.Add(div);
+                }
+                if (abstractChild.IsRelativePosition()) {
+                    abstractChild.ApplyRelativePositioningTranslation(true);
+                }
             }
         }
 
@@ -927,10 +960,8 @@ namespace iText.Layout.Renderer {
                 if (maxWidth != null) {
                     width = width > maxWidth ? maxWidth : width;
                 }
-                else {
-                    if (minWidth != null) {
-                        width = width < minWidth ? minWidth : width;
-                    }
+                if (minWidth != null) {
+                    width = width < minWidth ? minWidth : width;
                 }
             }
             else {
@@ -1381,6 +1412,28 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
+             splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
+            float? maxHeight = RetrieveMaxHeight();
+            if (maxHeight != null) {
+                overflowRenderer.UpdateMaxHeight(maxHeight - occupiedArea.GetBBox().GetHeight());
+            }
+            float? minHeight = RetrieveMinHeight();
+            if (minHeight != null) {
+                overflowRenderer.UpdateMinHeight(minHeight - occupiedArea.GetBBox().GetHeight());
+            }
+            float? height = RetrieveHeight();
+            if (height != null) {
+                overflowRenderer.UpdateHeight(height - occupiedArea.GetBBox().GetHeight());
+            }
+            if (wasHeightClipped) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
+                    ((float)maxHeight);
+            }
+        }
+
         protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
@@ -1472,7 +1525,8 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    catch (ArgumentNullException) {
+                    catch (Exception) {
+                        // TODO Review exception type when DEVSIX-1592 is resolved.
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                             "Some of the children might not end up aligned horizontally."));

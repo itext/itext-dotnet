@@ -94,11 +94,11 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>The current background color.</summary>
         /// <remarks>The current background color. Default value is DeviceRgb#WHITE.</remarks>
-        public Color currentBackgroundColor = DeviceRgb.WHITE;
+        public Color currentBackgroundColor = ColorConstants.WHITE;
 
         /// <summary>Current text color.</summary>
         /// <remarks>Current text color. Default value is DeviceRgb#BLACK.</remarks>
-        public Color currentTextColor = DeviceRgb.BLACK;
+        public Color currentTextColor = ColorConstants.BLACK;
 
         /// <summary>The current background mode.</summary>
         /// <remarks>The current background mode. Default value is OPAQUE.</remarks>

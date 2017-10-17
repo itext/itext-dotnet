@@ -222,6 +222,10 @@ namespace iText.Layout.Properties {
 
         public const int OPACITY = 92;
 
+        public const int OUTLINE = 109;
+
+        public const int OUTLINE_OFFSET = 110;
+
         public const int OVERFLOW = 102;
 
         public const int OVERFLOW_X = 103;

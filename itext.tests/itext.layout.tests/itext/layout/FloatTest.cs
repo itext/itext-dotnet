@@ -187,7 +187,7 @@ namespace iText.Layout {
             doc.Add(div);
             Div coloredDiv = new Div();
             coloredDiv.SetMargin(0);
-            coloredDiv.SetBackgroundColor(Color.RED);
+            coloredDiv.SetBackgroundColor(ColorConstants.RED);
             Paragraph p1 = new Paragraph();
             p1.Add("Some div");
             coloredDiv.Add(p1);
@@ -426,22 +426,22 @@ namespace iText.Layout {
             PdfCanvas pdfCanvas = new PdfCanvas(page);
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins(36
                 , 36, 36, 36, false));
-            Div div = new Div().SetBackgroundColor(Color.RED);
-            Div fDiv = new Div().SetBackgroundColor(Color.BLUE).SetWidth(200).SetHeight(200);
+            Div div = new Div().SetBackgroundColor(ColorConstants.RED);
+            Div fDiv = new Div().SetBackgroundColor(ColorConstants.BLUE).SetWidth(200).SetHeight(200);
             fDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             Div fInnerDiv1 = new Div().SetWidth(50).SetHeight(50);
             fInnerDiv1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            fInnerDiv1.SetBackgroundColor(Color.YELLOW);
+            fInnerDiv1.SetBackgroundColor(ColorConstants.YELLOW);
             Div fInnerDiv2 = new Div().SetWidth(50).SetHeight(50);
             fInnerDiv2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            fInnerDiv2.SetBackgroundColor(Color.CYAN);
+            fInnerDiv2.SetBackgroundColor(ColorConstants.CYAN);
             fDiv.Add(fInnerDiv1);
             fDiv.Add(fInnerDiv2);
             fDiv.Add(new Paragraph("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add"
                 ));
             div.Add(fDiv).Add(new Paragraph("Hello"));
             canvas.Add(div);
-            div = new Div().SetBackgroundColor(Color.GREEN);
+            div = new Div().SetBackgroundColor(ColorConstants.GREEN);
             div.Add(new Paragraph("World"));
             canvas.Add(div);
             canvas.Add(div);
@@ -459,19 +459,19 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
             String outFile = destinationFolder + "floatFixedHeightContentNotFit.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div.")).Add(new Paragraph(text));
             div.SetHeight(200).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
             document.Add(new Paragraph(text));
-            Paragraph p = new Paragraph("Floating p.\n" + text).SetBorder(new SolidBorder(Color.RED, 2));
+            Paragraph p = new Paragraph("Floating p.\n" + text).SetBorder(new SolidBorder(ColorConstants.RED, 2));
             p.SetHeight(200).SetWidth(100);
             p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(p);
             document.Add(new Paragraph(text));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 0.3f, 0.7f })).SetBorder(new SolidBorder
-                (Color.RED, 2));
+                (ColorConstants.RED, 2));
             table.AddCell(new Paragraph("Floating table.")).AddCell(new Paragraph(text));
             table.SetHeight(200).SetWidth(300);
             table.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -490,12 +490,12 @@ namespace iText.Layout {
             String outFile = destinationFolder + "clearanceApplyingPageSplit.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(200).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div.")).Add(new Paragraph(text));
             divClear.SetHeight(400);
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
@@ -513,12 +513,12 @@ namespace iText.Layout {
             String outFile = destinationFolder + "clearanceApplyingPageSplit02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -537,12 +537,12 @@ namespace iText.Layout {
             String outFile = destinationFolder + "clearanceApplyingPageSplit03.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             document.Add(divClear);
@@ -561,12 +561,12 @@ namespace iText.Layout {
             String outFile = destinationFolder + "clearanceApplyingPageSplit04.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
             // TODO Adding float at the end of the page, it doesn't fit at all.
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             document.Add(divClear);
@@ -585,14 +585,14 @@ namespace iText.Layout {
             String outFile = destinationFolder + "clearanceApplyingPageSplit05.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
             // TODO Adding float at the end of the page, it is split.
             Div divClear = new Div();
-            divClear.SetBorder(new SolidBorder(Color.GREEN, 2));
+            divClear.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             //
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             document.Add(divClear);
@@ -614,13 +614,13 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -643,13 +643,13 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             containerDiv.Add(divClear);
@@ -670,12 +670,12 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            Div divClear = new Div().SetBackgroundColor(Color.GREEN);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             containerDiv.Add(divClear);
@@ -694,14 +694,14 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
             Div divClear = new Div();
-            divClear.SetBorder(new SolidBorder(Color.GREEN, 2));
+            divClear.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text));
@@ -721,7 +721,7 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
@@ -742,7 +742,7 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(200);
             div.Add(img);
@@ -763,7 +763,7 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit03.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph(text).SetWidth(250));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
@@ -784,7 +784,7 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit04.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
@@ -804,14 +804,14 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit05.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
             // TODO Adding float that doesn't fit on first page.
-            Div div2 = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div2);
@@ -830,7 +830,7 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatsOnPageSplit06.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.SetHeight(600);
             // TODO Setting fixed height for the div, that will be split between pages.
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -856,8 +856,8 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(200);
             div.Add(img);
@@ -882,8 +882,8 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
@@ -908,8 +908,8 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph(text).SetWidth(250));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
@@ -934,8 +934,8 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
@@ -957,15 +957,15 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
-            containerDiv.SetBorder(new SolidBorder(Color.MAGENTA, 2));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
             // TODO Adding float that will not fit.
-            Div div2 = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div2);
@@ -984,7 +984,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit12.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -1004,7 +1004,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit13.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit13.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             Paragraph p = new Paragraph(text);
             p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             div.SetHeight(100).Add(p);
@@ -1024,7 +1024,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(1));
             p.Add("Float with large borders shall fit on first line with this text. ");
-            Div div = new Div().SetBorder(new SolidBorder(Color.RED, 40));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 40));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             div.Add(new Paragraph("Floating div."));
             p.Add(div);

@@ -484,8 +484,8 @@ namespace iText.Kernel.Pdf {
                 }
                 if (!removedPage.GetPdfObject().IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
+                    removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 }
-                removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
             return removedPage;
@@ -670,6 +670,13 @@ namespace iText.Kernel.Pdf {
                         }
                         FlushFonts();
                         writer.FlushModifiedWaitingObjects();
+                        for (int i = 0; i < xref.Size(); i++) {
+                            PdfIndirectReference indirectReference = xref.Get(i);
+                            if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MODIFIED
+                                ) && !indirectReference.CheckState(PdfObject.FLUSHED)) {
+                                indirectReference.SetFree();
+                            }
+                        }
                         if (writer.crypto != null) {
                             System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject(), "Conflict with source encryption"
                                 );
@@ -701,13 +708,13 @@ namespace iText.Kernel.Pdf {
                         info.GetPdfObject().Flush(false);
                         FlushFonts();
                         writer.FlushWaitingObjects();
-                        // flush unused objects
                         for (int i = 0; i < xref.Size(); i++) {
                             PdfIndirectReference indirectReference = xref.Get(i);
                             if (indirectReference != null && !indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED
                                 )) {
-                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM)) {
-                                    PdfObject @object = indirectReference.GetRefersTo();
+                                PdfObject @object;
+                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM) && (@object 
+                                    = indirectReference.GetRefersTo(false)) != null) {
                                     @object.Flush();
                                 }
                                 else {
@@ -1586,7 +1593,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="pdfObject">an object to mark.</param>
         protected internal virtual void MarkObjectAsMustBeFlushed(PdfObject pdfObject) {
-            if (pdfObject.IsIndirect()) {
+            if (pdfObject.GetIndirectReference() != null) {
                 pdfObject.GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
             }
         }
@@ -1640,7 +1647,7 @@ namespace iText.Kernel.Pdf {
                         catch (XMPException) {
                         }
                     }
-                    PdfObject infoDict = trailer.Get(PdfName.Info, true);
+                    PdfObject infoDict = trailer.Get(PdfName.Info);
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
                     XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
@@ -1652,6 +1659,7 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(PdfException.AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible);
                     }
                 }
+                xref.InitFreeReferencesList(this);
                 if (writer != null) {
                     if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression == null) {
                         writer.properties.isFullCompression = true;

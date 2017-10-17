@@ -86,7 +86,7 @@ namespace iText.Signatures.Sign {
         /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
         /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("For some reason signatures created with the given cert (either by iText or acrobat) are considered invalid"
+        [NUnit.Framework.Ignore("DEVSIX-1620: For some reason signatures created with the given cert (either by iText or acrobat) are considered invalid"
             )]
         public virtual void PadesDsaSigTest01() {
             SignApproval(certsSrc + "signCertDsa01.p12", destinationFolder + "padesDsaSigTest01.pdf");

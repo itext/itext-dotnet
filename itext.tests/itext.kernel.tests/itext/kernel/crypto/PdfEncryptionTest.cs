@@ -438,7 +438,6 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Specific crypto filters for EFF StmF and StrF are not supported at the moment.")]
         public virtual void EncryptWithPasswordAes128EmbeddedFilesOnly() {
             String filename = "encryptWithPasswordAes128EmbeddedFilesOnly.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants.EMBEDDED_FILES_ONLY;
@@ -457,16 +456,11 @@ namespace iText.Kernel.Crypto {
                 , null, null));
             page.Flush();
             document.Close();
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent);
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, textContent);
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
-            String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff_", USER, USER);
-            if (compareResult != null) {
-                NUnit.Framework.Assert.Fail(compareResult);
-            }
-            CheckEncryptedWithPasswordDocumentStamping(filename, OWNER);
-            CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
+            //NOTE: Specific crypto filters for EFF StmF and StrF are not supported at the moment. iText don't distinguish objects based on their semantic role
+            //      because of this we can't read streams correctly and corrupt such documents on stamping.
+            bool ERROR_IS_EXPECTED = true;
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent, ERROR_IS_EXPECTED);
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, textContent, ERROR_IS_EXPECTED);
         }
 
         /// <exception cref="System.Exception"/>
@@ -637,13 +631,27 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.IO.IOException"/>
         public static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent) {
+            CheckDecryptedWithPasswordContent(src, password, pageContent, false);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent, bool
+             expectError) {
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(password));
             PdfDocument document = new PdfDocument(reader);
             PdfPage page = document.GetPage(1);
-            NUnit.Framework.Assert.IsTrue(iText.IO.Util.JavaUtil.GetStringForBytes(page.GetStreamBytes(0)).Contains(pageContent
-                ), "Expected content: \n" + pageContent);
-            NUnit.Framework.Assert.AreEqual(customInfoEntryValue, document.GetTrailer().GetAsDictionary(PdfName.Info).
-                GetAsString(new PdfName(customInfoEntryKey)).ToUnicodeString(), "Encrypted custom");
+            bool expectedContentFound = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetStreamBytes(0)).Contains(pageContent
+                );
+            String actualCustomInfoEntry = document.GetTrailer().GetAsDictionary(PdfName.Info).GetAsString(new PdfName
+                (customInfoEntryKey)).ToUnicodeString();
+            if (!expectError) {
+                NUnit.Framework.Assert.IsTrue(expectedContentFound, "Expected content: \n" + pageContent);
+                NUnit.Framework.Assert.AreEqual(customInfoEntryValue, actualCustomInfoEntry, "Encrypted custom");
+            }
+            else {
+                NUnit.Framework.Assert.IsFalse(expectedContentFound, "Expected content: \n" + pageContent);
+                NUnit.Framework.Assert.AreNotEqual("Encrypted custom", customInfoEntryValue, actualCustomInfoEntry);
+            }
             document.Close();
         }
 

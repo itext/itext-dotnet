@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -62,9 +63,9 @@ namespace iText.Kernel.Pdf.Annot {
             Put(PdfName.Sound, sound);
         }
 
-        /// <summary>Creates a sound annotation.</summary>
-        /// <remarks>Creates a sound annotation. Sound annotations are deprecated in PDF 2.0.</remarks>
-        /// <param name="pdfObject">dictionary to create annotation from</param>
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfSoundAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -96,6 +97,43 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual PdfStream GetSound() {
             return GetPdfObject().GetAsStream(PdfName.Sound);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <remarks>
+        /// The name of an icon that is used in displaying the annotation. Possible values are different for different
+        /// annotation types. See
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation, or null if icon name is not specified.
+        /// </returns>
+        public override PdfName GetIconName() {
+            return GetPdfObject().GetAsName(PdfName.Name);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <param name="name">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation. Possible values are different
+        /// for different annotation types:
+        /// <ul>
+        /// <li>Speaker</li>
+        /// <li>Mic</li>
+        /// </ul>
+        /// Additional names may be supported as well.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfSoundAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+            return (iText.Kernel.Pdf.Annot.PdfSoundAnnotation)Put(PdfName.Name, name);
         }
     }
 }

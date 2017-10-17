@@ -132,6 +132,7 @@ namespace iText.Pdfa {
             CheckIsoConformance(obj, key, null);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
         public override void CheckShowTextIsoConformance(CanvasGraphicsState gState, PdfResources resources) {
             bool fill = false;
             bool stroke = false;
@@ -201,6 +202,12 @@ namespace iText.Pdfa {
                     break;
                 }
 
+                case IsoKey.EXTENDED_GRAPHICS_STATE: {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckExtGState(gState);
+                    break;
+                }
+
                 case IsoKey.GRAPHIC_STATE_ONLY: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckExtGState(gState);
@@ -214,10 +221,27 @@ namespace iText.Pdfa {
                     break;
                 }
 
+                case IsoKey.FILL_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
+                    break;
+                }
+
+                case IsoKey.PAGE: {
+                    checker.CheckSinglePage((PdfPage)obj);
+                    break;
+                }
+
                 case IsoKey.DRAWMODE_STROKE: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
                     checker.CheckExtGState(gState);
+                    break;
+                }
+
+                case IsoKey.STROKE_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
                     break;
                 }
 
@@ -226,11 +250,6 @@ namespace iText.Pdfa {
                     checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
                     checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
                     checker.CheckExtGState(gState);
-                    break;
-                }
-
-                case IsoKey.PAGE: {
-                    checker.CheckSinglePage((PdfPage)obj);
                     break;
                 }
 

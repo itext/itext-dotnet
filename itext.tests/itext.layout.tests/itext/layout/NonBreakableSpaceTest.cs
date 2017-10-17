@@ -69,12 +69,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_simpleParagraphTest.pdf";
             String diffPrefix = "diff_simpleParagraphTest_";
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            document.Add(new Paragraph("aaa bbb\u00a0ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(Color.RED, 
-                10)));
-            document.Add(new Paragraph("aaa bbb ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(Color.GREEN, 10)
-                ));
-            document.Add(new Paragraph("aaaaaaa\u00a0bbbbbbbbbbb").SetWidth(100).SetBorder(new SolidBorder(Color.BLUE, 
-                10)));
+            document.Add(new Paragraph("aaa bbb\u00a0ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(ColorConstants
+                .RED, 10)));
+            document.Add(new Paragraph("aaa bbb ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.GREEN
+                , 10)));
+            document.Add(new Paragraph("aaaaaaa\u00a0bbbbbbbbbbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants
+                .BLUE, 10)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , diffPrefix));
@@ -88,11 +88,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_consecutiveSpacesTest.pdf";
             String diffPrefix = "diff_consecutiveSpacesTest_";
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            document.Add(new Paragraph("aaa\u00a0\u00a0\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(Color.RED, 
-                10)));
-            document.Add(new Paragraph("aaa\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(Color.GREEN, 10)));
-            document.Add(new Paragraph("aaa   bbb").SetWidth(100).SetBorder(new SolidBorder(Color.BLUE, 10)));
-            document.Add(new Paragraph("aaa bbb").SetWidth(100).SetBorder(new SolidBorder(Color.BLACK, 10)));
+            document.Add(new Paragraph("aaa\u00a0\u00a0\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants
+                .RED, 10)));
+            document.Add(new Paragraph("aaa\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.GREEN, 10
+                )));
+            document.Add(new Paragraph("aaa   bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 10)));
+            document.Add(new Paragraph("aaa bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
             Paragraph p = new Paragraph();
             p.Add("aaa\u00a0\u00a0\u00a0bbb").Add("ccc   ddd");
             document.Add(p);

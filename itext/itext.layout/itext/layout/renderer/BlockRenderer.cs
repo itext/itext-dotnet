@@ -142,7 +142,7 @@ namespace iText.Layout.Renderer {
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
                     AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                     AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
-                    UpdateHeightsOnSplit(wasHeightClipped, overflowRenderer);
+                    UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
@@ -236,7 +236,7 @@ namespace iText.Layout.Renderer {
                                 AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                                 AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
                                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
-                                UpdateHeightsOnSplit(wasHeightClipped, overflowRenderer);
+                                UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), true);
@@ -273,7 +273,7 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.childRenderers.Clear();
                                     overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
                                 }
-                                UpdateHeightsOnSplit(wasHeightClipped, overflowRenderer);
+                                UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                                 CorrectFixedLayout(layoutBox);
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -859,27 +859,6 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
             }
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
-        }
-
-        private void UpdateHeightsOnSplit(bool wasHeightClipped, AbstractRenderer overflowRenderer) {
-            float? maxHeight = RetrieveMaxHeight();
-            if (maxHeight != null) {
-                overflowRenderer.UpdateMaxHeight(maxHeight - occupiedArea.GetBBox().GetHeight());
-            }
-            float? minHeight = RetrieveMinHeight();
-            if (minHeight != null) {
-                overflowRenderer.UpdateMinHeight(minHeight - occupiedArea.GetBBox().GetHeight());
-            }
-            float? height = RetrieveHeight();
-            if (height != null) {
-                overflowRenderer.UpdateHeight(height - occupiedArea.GetBBox().GetHeight());
-            }
-            if (wasHeightClipped) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float)maxHeight
-                    );
-            }
         }
 
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IRenderer

@@ -76,8 +76,8 @@ namespace iText.Layout {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
-                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(Color.WHITE).SetBackgroundColor
-                    (Color.BLACK, 0, 0, 0, 0);
+                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(ColorConstants.WHITE).SetBackgroundColor
+                    (ColorConstants.BLACK, 0, 0, 0, 0);
                 p.Add(id);
                 document.Add(p);
             }
@@ -95,14 +95,14 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(Color.RED).SetStrokeWidth(0.1f);
+                .FILL_STROKE).SetStrokeColor(ColorConstants.RED).SetStrokeWidth(0.1f);
             document.Add(new Paragraph().Add(text1));
             Text text2 = new Text("This is a stroke-only text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .STROKE).SetStrokeColor(Color.GREEN).SetStrokeWidth(0.3f);
+                .STROKE).SetStrokeColor(ColorConstants.GREEN).SetStrokeWidth(0.3f);
             document.Add(new Paragraph(text2));
             Text text3 = new Text("This is a colorful text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(Color.GREEN).SetFontSize(20
-                );
+                .FILL_STROKE).SetStrokeColor(ColorConstants.BLUE).SetStrokeWidth(0.3f).SetFontColor(ColorConstants.GREEN
+                ).SetFontSize(20);
             document.Add(new Paragraph(text3));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -220,7 +220,8 @@ namespace iText.Layout {
                  + "Save time in Word with new buttons that show up where you need them. To change the way a picture fits in your document, click it and a button for layout options appears next to it. When you work on a table, click where you want to add a row or a column, and then click the plus sign.\n"
                  + "Reading is easier, too, in the new Reading view. You can collapse parts of the document and focus on the text you want. If you need to stop reading before you reach the end, Word remembers where you left off - even on another device. "
                 );
-            p.Add(new Text("You can collapse parts of the document and focus.").SetBackgroundColor(DeviceRgb.GREEN));
+            p.Add(new Text("You can collapse parts of the document and focus.").SetBackgroundColor(ColorConstants.GREEN
+                ));
             p.SetWordSpacing(15);
             document.Add(p);
             document.Close();
@@ -238,13 +239,13 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
-            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(Color.GREEN)).SetBold
-                ());
-            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(Color.GREEN)).SetItalic
-                ());
+            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(ColorConstants.GREEN)
+                ).SetBold());
+            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(ColorConstants.GREEN
+                )).SetItalic());
             document.Add(new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
-                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(Color.GREEN)).SetItalic
-                ().SetBold().SetUnderline().SetLineThrough());
+                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(ColorConstants.GREEN
+                )).SetItalic().SetBold().SetUnderline().SetLineThrough());
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -260,26 +261,26 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             p.SetWidth(150);
-            p.SetBackgroundColor(Color.RED);
+            p.SetBackgroundColor(ColorConstants.RED);
             p.Add("Hello ho ho ho ");
             p.Add("LongWordThatDoNotFitInALine");
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
             p = new Paragraph();
             p.SetWidth(150);
-            p.SetBackgroundColor(Color.RED);
+            p.SetBackgroundColor(ColorConstants.RED);
             p.Add("LongWordThatDoNotFitInALine World");
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
             p = new Paragraph();
             p.SetWidth(150);
-            p.SetBackgroundColor(Color.RED);
+            p.SetBackgroundColor(ColorConstants.RED);
             p.Add("World LongWordThatDoNotFitInALine");
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
             p = new Paragraph();
             p.SetWidth(150);
-            p.SetBackgroundColor(Color.RED);
+            p.SetBackgroundColor(ColorConstants.RED);
             p.Add("World ");
             p.Add("LongWordThatDoNotFitInALine");
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);

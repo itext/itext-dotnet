@@ -130,7 +130,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(Color
+            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(ColorConstants
                 .BLUE).SetHeight(100);
             list.Add("Hello").Add("World").Add("!!!");
             document.Add(list);
@@ -148,10 +148,10 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
-            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(Color.BLACK).Rectangle(300, 300, 100, 100
-                ).Fill().Release();
-            Paragraph p = new Paragraph("Hello").SetBackgroundColor(Color.BLUE).SetHeight(100).SetFixedPosition(1, 300
-                , 300, 100);
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(ColorConstants.BLACK).Rectangle(300, 300, 
+                100, 100).Fill().Release();
+            Paragraph p = new Paragraph("Hello").SetBackgroundColor(ColorConstants.BLUE).SetHeight(100).SetFixedPosition
+                (1, 300, 300, 100);
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -172,11 +172,11 @@ namespace iText.Layout {
                  + "aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex " + 
                 "ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu "
                  + "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
-                 + "mollit anim id est laborum.").SetMargin(0).SetBackgroundColor(Color.LIGHT_GRAY).SetHeight(100).SetFixedPosition
-                (1, 300, 300, 100);
+                 + "mollit anim id est laborum.").SetMargin(0).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetHeight
+                (100).SetFixedPosition(1, 300, 300, 100);
             document.Add(p);
-            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(Color.BLACK).Rectangle(300, 300, 100, 100
-                ).Stroke().Release();
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(ColorConstants.BLACK).Rectangle(300, 300
+                , 100, 100).Stroke().Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -192,15 +192,15 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
-            Div div = new Div().SetBackgroundColor(Color.LIGHT_GRAY).SetHeight(100).SetFixedPosition(1, 300, 300, 100)
-                .Add(new Paragraph("Hello,  this is fairly long text. Lorem ipsum dolor sit amet, " + "consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
+            Div div = new Div().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetHeight(100).SetFixedPosition(1, 300, 
+                300, 100).Add(new Paragraph("Hello,  this is fairly long text. Lorem ipsum dolor sit amet, " + "consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
                  + "aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex " + 
                 "ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu "
                  + "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
                  + "mollit anim id est laborum.").SetMargin(0));
             document.Add(div);
-            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(Color.BLACK).Rectangle(300, 300, 100, 100
-                ).Stroke().Release();
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetStrokeColor(ColorConstants.BLACK).Rectangle(300, 300
+                , 100, 100).Stroke().Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

@@ -75,16 +75,17 @@ namespace iText.Layout {
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(200);
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) background.").SetBackgroundColor
-                (Color.RED, 0f));
+                (ColorConstants.RED, 0f));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) background.").SetBackgroundColor
-                (Color.RED, 0.3f));
+                (ColorConstants.RED, 0.3f));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) background.").SetBackgroundColor
-                (Color.RED, 0.5f));
+                (ColorConstants.RED, 0.5f));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) background.").SetBackgroundColor
-                (Color.RED, 0.7f));
+                (ColorConstants.RED, 0.7f));
             div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) background.").SetBackgroundColor
-                (Color.RED, 1f));
-            div.Add(new Paragraph("Simple text inside of the div with background.").SetBackgroundColor(Color.RED));
+                (ColorConstants.RED, 1f));
+            div.Add(new Paragraph("Simple text inside of the div with background.").SetBackgroundColor(ColorConstants.
+                RED));
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -102,17 +103,17 @@ namespace iText.Layout {
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) border.").SetBorder(new DoubleBorder
-                (Color.RED, 7f, 0.0f)));
+                (ColorConstants.RED, 7f, 0.0f)));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) border.").SetBorder(new DoubleBorder
-                (Color.RED, 7f, 0.3f)));
+                (ColorConstants.RED, 7f, 0.3f)));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) border.").SetBorder(new DoubleBorder
-                (Color.RED, 7f, 0.5f)));
+                (ColorConstants.RED, 7f, 0.5f)));
             div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) border.").SetBorder(new DoubleBorder
-                (Color.RED, 7f, 0.7f)));
+                (ColorConstants.RED, 7f, 0.7f)));
             div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) border.").SetBorder(new DoubleBorder
-                (Color.RED, 7f, 1.0f)));
-            div.Add(new Paragraph("Simple text inside of the div with border.").SetBorder(new DoubleBorder(Color.RED, 
-                7f)));
+                (ColorConstants.RED, 7f, 1.0f)));
+            div.Add(new Paragraph("Simple text inside of the div with border.").SetBorder(new DoubleBorder(ColorConstants
+                .RED, 7f)));
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -129,17 +130,17 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) text.").SetFontColor(Color.RED
-                , 0f));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) text.").SetFontColor(Color.RED
-                , 0.3f));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) text.").SetFontColor(Color.RED
-                , 0.5f));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) text.").SetFontColor(Color.RED
-                , 0.7f));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) text.").SetFontColor(Color.RED
-                , 1f));
-            div.Add(new Paragraph("Simple text inside of the div with text.").SetFontColor(Color.RED));
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) text.").SetFontColor(ColorConstants
+                .RED, 0f));
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) text.").SetFontColor(ColorConstants
+                .RED, 0.3f));
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) text.").SetFontColor(ColorConstants
+                .RED, 0.5f));
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) text.").SetFontColor(ColorConstants
+                .RED, 0.7f));
+            div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) text.").SetFontColor(ColorConstants
+                .RED, 1f));
+            div.Add(new Paragraph("Simple text inside of the div with text.").SetFontColor(ColorConstants.RED));
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -156,18 +157,18 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) underline.").SetUnderline(Color
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.0) underline.").SetUnderline(ColorConstants
                 .RED, 0.0f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) underline.").SetUnderline(Color
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.3) underline.").SetUnderline(ColorConstants
                 .RED, 0.3f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) underline.").SetUnderline(Color
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.5) underline.").SetUnderline(ColorConstants
                 .RED, 0.5f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) underline.").SetUnderline(Color
+            div.Add(new Paragraph("Simple text inside of the div with transparent (0.7) underline.").SetUnderline(ColorConstants
                 .RED, 0.7f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
-            div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) underline.").SetUnderline(Color
+            div.Add(new Paragraph("Simple text inside of the div with transparent (1.0) underline.").SetUnderline(ColorConstants
                 .RED, 1.0f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
-            div.Add(new Paragraph("Simple text inside of the div with underline.").SetUnderline(Color.RED, .75f, 0, 0, 
-                -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
+            div.Add(new Paragraph("Simple text inside of the div with underline.").SetUnderline(ColorConstants.RED, .75f
+                , 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -241,7 +242,7 @@ namespace iText.Layout {
             DeviceRgb paraBackground = WebColors.GetRGBColor("#994ec7");
             DeviceRgb textBackground = WebColors.GetRGBColor("#009688");
             DeviceRgb tableBackground = WebColors.GetRGBColor("#ffc107");
-            document.SetFontColor(Color.WHITE);
+            document.SetFontColor(ColorConstants.WHITE);
             Div div = new Div().SetBackgroundColor(divBackground);
             if ("div".Equals(elem)) {
                 div.SetOpacity(0.3f);

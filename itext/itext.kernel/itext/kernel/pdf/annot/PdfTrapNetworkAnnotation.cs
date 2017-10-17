@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel;
 using iText.Kernel.Font;
@@ -105,6 +106,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represents existing annotation in the document.
         /// </param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfTrapNetworkAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

@@ -360,7 +360,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -378,7 +378,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             image.SetAutoScale(true);
             image.SetRotationAngle(Math.PI / 2);
             doc.Add(image);
@@ -399,10 +399,10 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "Desert.jpg"));
-            image1.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image1.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "scarf.jpg"));
-            image2.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image2.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             for (int i = 0; i <= 24; i++) {
                 image1.SetRotationAngle(i * Math.PI / 12);
                 image2.SetRotationAngle(i * Math.PI / 12);
@@ -501,10 +501,10 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(new Text("before image"));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             p.Add(new Text("after image"));
             doc.Add(p);
             doc.Close();
@@ -524,9 +524,9 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -547,9 +547,9 @@ namespace iText.Layout {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100).SetRelativePosition(30, 30
                 , 0, 0);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -570,7 +570,7 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
                 (100)).SetFixedLayout();
             table.SetMaxHeight(300);
-            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell(c);
             document.Add(table);
@@ -600,7 +600,7 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
                 (100)).SetFixedLayout();
             table.SetMaxHeight(300);
-            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell("First cell");
             table.AddCell(c);
@@ -628,7 +628,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             document.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath), 12, pdfDoc.GetDefaultPageSize
-                ().GetHeight() - 36, 24).SetBorder(new SolidBorder(Color.RED, 5)));
+                ().GetHeight() - 36, 24).SetBorder(new SolidBorder(ColorConstants.RED, 5)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

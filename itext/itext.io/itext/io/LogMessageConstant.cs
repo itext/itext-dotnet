@@ -50,6 +50,8 @@ namespace iText.IO {
 
         public const String ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP = "For associated files their associated file specification dictionaries shall include the AFRelationship key.";
 
+        public const String ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE = "An attempt is made to free already flushed indirect object reference. Indirect reference wasn't freed.";
+
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
 
         public const String CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER = "Calculate hashcode for modified PdfNumber.";
@@ -92,6 +94,8 @@ namespace iText.IO {
 
         public const String EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD = "Existing tag structure of the document has a root of \"{0}\" role in \"{1}\" namespace that is not mapped to the standard role.";
 
+        public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object (e.g. this reference might be a free reference). Null object will be written instead.";
+
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT = "The Font Property must be a PdfFont object";
@@ -115,6 +119,8 @@ namespace iText.IO {
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
         public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances for form fields";
+
+        public const String INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE = "An attempt is made to free an indirect reference which was already used in the flushed object. Indirect reference wasn't freed.";
 
         public const String INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED = "Inline block element does not fit into parent element and will be clipped";
 

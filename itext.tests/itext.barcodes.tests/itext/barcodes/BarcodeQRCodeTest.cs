@@ -75,7 +75,7 @@ namespace iText.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints.Put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
-            barcode.PlaceBarcode(canvas, Color.GRAY, 12);
+            barcode.PlaceBarcode(canvas, ColorConstants.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -94,7 +94,7 @@ namespace iText.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints.Put(EncodeHintType.CHARACTER_SET, "UTF-8");
             BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
-            barcode1.PlaceBarcode(canvas, Color.GRAY, 12);
+            barcode1.PlaceBarcode(canvas, ColorConstants.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -115,7 +115,7 @@ namespace iText.Barcodes {
                 hints.Put(EncodeHintType.CHARACTER_SET, "UTF-8");
                 hints.Put(EncodeHintType.MIN_VERSION_NR, i);
                 BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
-                barcode1.PlaceBarcode(canvas, Color.GRAY, 3);
+                barcode1.PlaceBarcode(canvas, ColorConstants.GRAY, 3);
             }
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder

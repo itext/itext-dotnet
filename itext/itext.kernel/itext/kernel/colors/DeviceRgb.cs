@@ -48,6 +48,21 @@ using iText.Kernel.Pdf.Colorspace;
 namespace iText.Kernel.Colors {
     /// <summary>Color space to specify colors according to RGB color model.</summary>
     public class DeviceRgb : Color {
+        /// <summary>Predefined black DeviceRgb color</summary>
+        public static readonly Color BLACK = new iText.Kernel.Colors.DeviceRgb(0, 0, 0);
+
+        /// <summary>Predefined white DeviceRgb color</summary>
+        public static readonly Color WHITE = new iText.Kernel.Colors.DeviceRgb(255, 255, 255);
+
+        /// <summary>Predefined red DeviceRgb color</summary>
+        public static readonly Color RED = new iText.Kernel.Colors.DeviceRgb(255, 0, 0);
+
+        /// <summary>Predefined green DeviceRgb color</summary>
+        public static readonly Color GREEN = new iText.Kernel.Colors.DeviceRgb(0, 255, 0);
+
+        /// <summary>Predefined blue  DeviceRgb color</summary>
+        public static readonly Color BLUE = new iText.Kernel.Colors.DeviceRgb(0, 0, 255);
+
         /// <summary>Creates DeviceRgb color by intensities of red, green and blue colorants.</summary>
         /// <remarks>
         /// Creates DeviceRgb color by intensities of red, green and blue colorants.

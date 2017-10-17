@@ -425,13 +425,9 @@ namespace iText.Kernel.Pdf.Layer {
             usage.SetModified();
         }
 
-        /// <summary>
-        /// Gets the indirect reference to the current layer object,
-        /// making it indirect first if necessary.
-        /// </summary>
+        /// <summary>Gets the indirect reference to the current layer object.</summary>
         /// <returns>the indirect reference to the object representing the layer</returns>
         public virtual PdfIndirectReference GetIndirectReference() {
-            GetPdfObject().MakeIndirect(GetDocument());
             return GetPdfObject().GetIndirectReference();
         }
 

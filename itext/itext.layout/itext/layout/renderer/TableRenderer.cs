@@ -792,15 +792,7 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
-                            if (HasProperty(Property.HEIGHT)) {
-                                splitResult[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MIN_HEIGHT)) {
-                                splitResult[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
+                            UpdateHeightsOnSplit(false, splitResult[0], splitResult[1]);
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             LayoutArea editedArea = null;
@@ -1503,8 +1495,8 @@ namespace iText.Layout.Renderer {
                 try {
                     cell.Move(0, -(cumulativeShift - rowspanOffset));
                 }
-                catch (ArgumentNullException) {
-                    // TODO Remove try-catch when DEVSIX-1001 is resolved.
+                catch (Exception) {
+                    // TODO Remove try-catch when DEVSIX-1001 is resolved. Review exception type when DEVSIX-1592 is resolved.
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the cell's content might not end up placed correctly."));

@@ -1182,9 +1182,6 @@ namespace iText.Forms.Fields {
                 if (kids != null) {
                     for (int i = 0; i < kids.Size(); i++) {
                         PdfObject kid = kids.Get(i);
-                        if (kid.IsIndirectReference()) {
-                            kid = ((PdfIndirectReference)kid).GetRefersTo();
-                        }
                         iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                         field.font = font;
                         field.fontSize = fontSize;
@@ -1679,9 +1676,6 @@ namespace iText.Forms.Fields {
             if (kids != null) {
                 for (int i = 0; i < kids.Size(); i++) {
                     PdfObject kid = kids.Get(i);
-                    if (kid.IsIndirectReference()) {
-                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                    }
                     subType = ((PdfDictionary)kid).GetAsName(PdfName.Subtype);
                     if (subType != null && subType.Equals(PdfName.Widget)) {
                         widgets.Add((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(kid));
@@ -2197,9 +2191,6 @@ namespace iText.Forms.Fields {
                             if (null != kids) {
                                 for (int i = 0; i < kids.Size(); i++) {
                                     PdfObject kid = kids.Get(i);
-                                    if (kid.IsIndirectReference()) {
-                                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                                    }
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
                                     PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
@@ -2930,7 +2921,7 @@ namespace iText.Forms.Fields {
                         }
                         if (((PdfNumber)ind).GetValue() == index) {
                             paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                            paragraph.SetFontColor(Color.LIGHT_GRAY);
+                            paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
                         }
                     }
                 }
@@ -2957,7 +2948,7 @@ namespace iText.Forms.Fields {
                 borderWidth = 0;
             }
             if (borderColor == null) {
-                borderColor = Color.BLACK;
+                borderColor = ColorConstants.BLACK;
             }
             if (backgroundColor != null) {
                 canvas.SetFillColor(backgroundColor).Rectangle(borderWidth / 2, borderWidth / 2, width - borderWidth, height
@@ -3162,7 +3153,7 @@ namespace iText.Forms.Fields {
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (backgroundColor == null) {
-                backgroundColor = Color.LIGHT_GRAY;
+                backgroundColor = ColorConstants.LIGHT_GRAY;
             }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
@@ -3206,7 +3197,7 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
             String text, PdfFont font, float fontSize) {
             if (color == null) {
-                color = Color.BLACK;
+                color = ColorConstants.BLACK;
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);

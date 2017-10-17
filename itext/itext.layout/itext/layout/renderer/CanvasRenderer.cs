@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using iText.IO.Log;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 
@@ -98,10 +99,13 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
-            if (!waitingDrawingElements.Contains(resultRenderer) && (FloatingHelper.IsRendererFloating(resultRenderer)
-                 || resultRenderer.GetProperty<Transform>(Property.TRANSFORM) != null)) {
-                waitingDrawingElements.Add(resultRenderer);
-                return;
+            Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
+            Border outlineProp = resultRenderer.GetProperty<Border>(Property.OUTLINE);
+            if (!waitingDrawingElements.Contains(resultRenderer)) {
+                ProcessWaitingDrawing(resultRenderer, transformProp, outlineProp, waitingDrawingElements);
+                if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
+                    return;
+                }
             }
             if (!resultRenderer.IsFlushed()) {
                 bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();

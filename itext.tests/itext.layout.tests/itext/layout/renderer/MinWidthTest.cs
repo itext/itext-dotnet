@@ -76,8 +76,8 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(Color.BLACK, 5))).SetBorder(new SolidBorder
-                (Color.BLUE, 5));
+            Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(ColorConstants.BLACK, 5))).SetBorder(new 
+                SolidBorder(ColorConstants.BLUE, 5));
             MinMaxWidth result = ((AbstractRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
             p.SetWidth(ToEffectiveWidth(p, result.GetMinWidth()));
@@ -96,9 +96,9 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY);
-            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
@@ -118,10 +118,11 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY);
-            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
-            d.Add(new Paragraph(("iText")).SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f)));
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
+            d.Add(new Paragraph(("iText")).SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(ColorConstants.BLUE
+                , 2f)));
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
@@ -142,9 +143,9 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY).SetRotationAngle(Math.PI / 8);
-            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetRotationAngle(Math.PI / 8);
+            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
             d.Add(p);
             d.Add(new Paragraph(("iText")));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
@@ -165,11 +166,11 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY);
-            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
             d.Add(p);
-            Div dRotated = new Div().SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            Div dRotated = new Div().SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             d.Add(dRotated.Add(new Paragraph(("iText"))));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
@@ -189,11 +190,12 @@ namespace iText.Layout.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY);
-            Div dRotated = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Div dRotated = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
             dRotated.Add(p).SetRotationAngle(Math.PI * 3 / 8);
-            Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(ColorConstants.BLUE
+                , 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
@@ -213,9 +215,9 @@ namespace iText.Layout.Renderer {
             Document doc = new Document(pdfDocument);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject);
-            Div d = new Div().Add(img).SetBorder(new SolidBorder(Color.BLUE, 2f)).SetMarginBottom(10);
+            Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
             iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50);
-            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
@@ -240,10 +242,10 @@ namespace iText.Layout.Renderer {
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject).SetRotationAngle(Math.PI * 3
                  / 8);
-            Div d = new Div().Add(img).SetBorder(new SolidBorder(Color.BLUE, 2f)).SetMarginBottom(10);
+            Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
             iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50).SetRotationAngle
                 (Math.PI * 3 / 8);
-            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (MinMaxWidthUtils.GetInfWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
@@ -265,8 +267,8 @@ namespace iText.Layout.Renderer {
             String cmpFileName = sourceFolder + "cmp_multipleDivTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            Border[] borders = new Border[] { new SolidBorder(Color.BLUE, 2f), new SolidBorder(Color.RED, 2f), new SolidBorder
-                (Color.GREEN, 2f) };
+            Border[] borders = new Border[] { new SolidBorder(ColorConstants.BLUE, 2f), new SolidBorder(ColorConstants
+                .RED, 2f), new SolidBorder(ColorConstants.GREEN, 2f) };
             Div externalDiv = new Div().SetPadding(2f).SetBorder(borders[2]);
             Div curr = externalDiv;
             for (int i = 0; i < 100; ++i) {
@@ -275,8 +277,8 @@ namespace iText.Layout.Renderer {
                 curr = d;
             }
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
-                (3).SetBackgroundColor(Color.LIGHT_GRAY);
+            Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
+                2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             curr.Add(p);
             MinMaxWidth result = ((AbstractRenderer)externalDiv.CreateRendererSubTree().SetParent(doc.GetRenderer())).
                 GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
@@ -295,19 +297,19 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "simpleTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell cell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.RED, 60)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.RED, 60)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 
+                10)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorder(new SolidBorder(
-                Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell
-                (cell2.Clone(true));
+                ColorConstants.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true
+                )).AddCell(cell2.Clone(true));
             Table minTable = new Table(new float[] { -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop(10
-                ).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell
-                (cell1.Clone(true)).AddCell(cell2.Clone(true));
-            Table maxTable = new Table(new float[] { -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 
-                20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone
-                (true));
+                ).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true
+                )).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(ColorConstants
+                .BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2
+                .Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -324,19 +326,19 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "colspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell bigCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder(Color
+            Cell bigCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
                 .RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 10
+                )).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
-                Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (cell.Clone(true)).AddCell(cell.Clone(true));
+                ColorConstants.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true
+                )).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
-                (10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true))
-                .AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
-            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE
-                , 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone
-                (true)).AddCell(cell.Clone(true));
+                (10).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone
+                (true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(ColorConstants
+                .BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell
+                .Clone(true)).AddCell(cell.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -354,20 +356,22 @@ namespace iText.Layout.Renderer {
             String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Cell colspanCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder
-                (Color.RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+                (ColorConstants.RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(
+                0);
             Cell rowspanCell = new Cell(2, 1).Add(new Paragraph("I am very very very long cell")).SetBorder(new SolidBorder
-                (Color.GREEN, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(Color.BLUE, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+                (ColorConstants.GREEN, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding
+                (0);
+            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(ColorConstants.BLUE, 10))
+                .SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
-                Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true))
-                .AddCell(colspanCell.Clone(true));
+                ColorConstants.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone
+                (true)).AddCell(colspanCell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
-                (10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
-            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK
-                , 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell
-                .Clone(true));
+                (10).SetBorder(new SolidBorder(ColorConstants.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone
+                (true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetMarginTop(10).SetBorder(new SolidBorder(ColorConstants
+                .BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell
+                (colspanCell.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -384,27 +388,29 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell bigCell = new Cell().Add(new Paragraph("veryveryveryvery big cell")).SetBorder(new SolidBorder(Color.
-                RED, 40)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell mediumCell = new Cell().Add(new Paragraph("mediumsize cell")).SetBorder(new SolidBorder(Color.GREEN, 
-                30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add(new Paragraph("cell")).SetBorder(new SolidBorder(Color.BLUE, 10)).SetBorderBottom
+            Cell bigCell = new Cell().Add(new Paragraph("veryveryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
+                .RED, 40)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell mediumCell = new Cell().Add(new Paragraph("mediumsize cell")).SetBorder(new SolidBorder(ColorConstants
+                .GREEN, 30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add(new Paragraph("cell")).SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
-                Color.BLACK, 20)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone
-                (true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true
-                )).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
+                ColorConstants.BLACK, 20)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
+                .Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone
+                (true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true
+                ));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetBorder(new 
-                SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone
-                (true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)
-                ).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)
-                ).AddHeaderCell(cell.Clone(true));
-            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop
-                (20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
-                (cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell
-                .Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
+                SolidBorder(ColorConstants.BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
+                .Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone
+                (true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone
+                (true)).AddHeaderCell(cell.Clone(true));
+            Table maxTable = new Table(new float[] { -1, -1, -1 }).SetBorder(new SolidBorder(ColorConstants.BLACK, 20)
+                ).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.
+                Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone
+                (true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true
+                ));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
