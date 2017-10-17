@@ -455,6 +455,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Moves page to new place in same document with all it tag structure</summary>
+        /// <param name="page">page to be moved in document if present</param>
+        /// <param name="insertBefore">indicates before which page new one will be inserted to</param>
+        /// <returns><tt>true</tt> if this document contained the specified page</returns>
+        public virtual bool MovePage(PdfPage page, int insertBefore) {
+            CheckClosingStatus();
+            int pageNum = GetPageNumber(page);
+            if (pageNum > 0) {
+                MovePage(pageNum, insertBefore);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>Moves page to new place in same document with all it tag structure</summary>
         /// <param name="pageNumber">number of Page that will be moved</param>
         /// <param name="insertBefore">indicates before which page new one will be inserted to</param>
         public virtual void MovePage(int pageNumber, int insertBefore) {

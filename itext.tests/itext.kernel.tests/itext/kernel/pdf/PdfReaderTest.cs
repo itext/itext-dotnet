@@ -312,12 +312,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
-            int xrefSize = document.GetXref().Size();
-            PdfPage testPage = document.RemovePage(1000);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
-            // TODO pages reordering issue
-            document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
+            PdfPage testPage = document.GetPage(1000);
+            int testXref = testPage.GetPdfObject().GetIndirectReference().GetObjNumber();
+            document.MovePage(1000, 1000);
+            NUnit.Framework.Assert.AreEqual(testXref, testPage.GetPdfObject().GetIndirectReference().GetObjNumber());
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
                 String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());

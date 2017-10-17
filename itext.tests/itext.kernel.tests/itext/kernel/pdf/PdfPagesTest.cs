@@ -129,10 +129,9 @@ namespace iText.Kernel.Pdf {
             String filename = "1000PagesDocument_reversed.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
                 destinationFolder + filename));
-            for (int i = pdfDoc.GetNumberOfPages() - 1; i > 0; i--) {
-                // TODO pages reordering issue
-                PdfPage page = pdfDoc.RemovePage(i);
-                pdfDoc.AddPage(page);
+            int n = pdfDoc.GetNumberOfPages();
+            for (int i = n - 1; i > 0; --i) {
+                pdfDoc.MovePage(i, n + 1);
             }
             pdfDoc.Close();
             new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
@@ -163,15 +162,12 @@ namespace iText.Kernel.Pdf {
                 //page.flush();
                 pages[indexes[i] - 1] = page;
             }
-            int xrefSize = document.GetXref().Size();
-            PdfPage testPage = document.RemovePage(1000);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
-            // TODO pages reordering issue
-            document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
+            int testPageXref = document.GetPage(1000).GetPdfObject().GetIndirectReference().GetObjNumber();
+            document.MovePage(1000, 1000);
+            NUnit.Framework.Assert.AreEqual(testPageXref, document.GetPage(1000).GetPdfObject().GetIndirectReference()
+                .GetObjNumber());
             for (int i = 0; i < pages.Length; i++) {
-                NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i]), "Remove page");
-                document.AddPage(i + 1, pages[i]);
+                NUnit.Framework.Assert.IsTrue(document.MovePage(pages[i], i + 1), "Move page");
             }
             document.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount);
@@ -203,11 +199,8 @@ namespace iText.Kernel.Pdf {
                     int j_page = pdfDoc.GetPage(j).GetPdfObject().GetAsNumber(PageNum).IntValue();
                     int i_page = pdfDoc.GetPage(i).GetPdfObject().GetAsNumber(PageNum).IntValue();
                     if (j_page < i_page) {
-                        PdfPage page = pdfDoc.RemovePage(j);
-                        pdfDoc.AddPage(i + 1, page);
-                        // TODO pages reordering issue
-                        page = pdfDoc.RemovePage(i);
-                        pdfDoc.AddPage(j, page);
+                        pdfDoc.MovePage(i, j);
+                        pdfDoc.MovePage(j, i);
                     }
                 }
                 NUnit.Framework.Assert.IsTrue(VerifyIntegrity(pdfDoc.GetCatalog().GetPageTree()) == -1);
