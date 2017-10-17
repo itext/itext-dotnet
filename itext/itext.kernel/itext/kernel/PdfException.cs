@@ -134,6 +134,8 @@ namespace iText.Kernel {
 
         public const String CannotMoveToParentCurrentElementIsRoot = "Cannot move to parent current element is root.";
 
+        public const String CannotMovePagesInPartlyFlushedDocument = "Cannot move pages in partly flushed document. Page number {0} is already flushed.";
+
         public const String CannotOpenDocument = "Cannot open document.";
 
         public const String CannotParseContentStream = "Cannot parse content stream.";

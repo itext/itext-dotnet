@@ -376,11 +376,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <remarks>
         /// Moves structure associated with specified page and insert it in a specified position in the document.
         /// <br/><br/>
-        /// NOTE: Works only for structure tags that were already read.
+        /// NOTE: Works only for document with not flushed pages.
         /// </remarks>
         /// <param name="fromPage">page which tag structure will be moved</param>
         /// <param name="insertBeforePage">indicates before tags of which page tag structure will be moved to</param>
         public virtual void Move(PdfPage fromPage, int insertBeforePage) {
+            for (int i = 1; i <= GetDocument().GetNumberOfPages(); ++i) {
+                if (GetDocument().GetPage(i).IsFlushed()) {
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CannotMovePagesInPartlyFlushedDocument, i));
+                }
+            }
             StructureTreeCopier.Move(GetDocument(), fromPage, insertBeforePage);
         }
 
