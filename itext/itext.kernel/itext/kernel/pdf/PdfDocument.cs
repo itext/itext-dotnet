@@ -454,6 +454,38 @@ namespace iText.Kernel.Pdf {
             return catalog.GetPageTree().GetPageNumber(pageDictionary);
         }
 
+        //TODO add docs
+        public virtual void MovePage(int pageNumber, int insertBeforePageNumber) {
+            CheckClosingStatus();
+            if (insertBeforePageNumber < 1 || insertBeforePageNumber > GetNumberOfPages()) {
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
+                    insertBeforePageNumber));
+            }
+            if (pageNumber < 1 || pageNumber > GetNumberOfPages()) {
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
+                    pageNumber));
+            }
+            if (pageNumber == insertBeforePageNumber) {
+                return;
+            }
+            int insertStructureIndex = -1;
+            if (IsTagged()) {
+                insertStructureIndex = GetStructTreeRoot().SeparateStructure(insertBeforePageNumber);
+                IList<PdfDictionary> pageStructure = GetStructTreeRoot().DetachPageStructure(insertBeforePageNumber);
+                foreach (PdfDictionary structureTop in pageStructure) {
+                    GetStructTreeRoot().AddKidObject(insertStructureIndex, structureTop);
+                    if (insertStructureIndex >= 0) {
+                        ++insertStructureIndex;
+                    }
+                }
+            }
+            PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNumber);
+            if (insertBeforePageNumber > pageNumber) {
+                --insertBeforePageNumber;
+            }
+            catalog.GetPageTree().AddPage(insertBeforePageNumber, removedPage);
+        }
+
         /// <summary>
         /// Removes the first occurrence of the specified page from this document,
         /// if it is present.

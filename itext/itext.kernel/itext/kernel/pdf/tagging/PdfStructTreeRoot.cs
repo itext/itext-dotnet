@@ -469,7 +469,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return parentTreeHandler;
         }
 
-        internal virtual void AddKidObject(int index, PdfDictionary structElem) {
+        public virtual void AddKidObject(int index, PdfDictionary structElem) {
             if (index == -1) {
                 GetKidsObject().Add(structElem);
             }
