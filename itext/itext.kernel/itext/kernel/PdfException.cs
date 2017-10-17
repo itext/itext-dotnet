@@ -126,6 +126,8 @@ namespace iText.Kernel {
 
         public const String CannotFlushObject = "Cannot flush object.";
 
+        public const String CannotMoveFlushedTag = "Cannot move flushed tag";
+
         public const String CannotMoveToFlushedKid = "Cannot move to flushed kid.";
 
         public const String CannotMoveToMarkedContentReference = "Cannot move to marked content reference.";

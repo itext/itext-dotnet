@@ -482,8 +482,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveStructureElements(IList<PdfMcr> mcrsList
-            ) {
+        private iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveStructureElements(IList<PdfMcr> mcrsList) {
             if (mcrsList != null) {
                 foreach (PdfMcr mcr in mcrsList) {
                     RemovePageTagFromParent(mcr, mcr.GetParent());

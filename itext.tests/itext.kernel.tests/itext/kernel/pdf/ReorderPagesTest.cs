@@ -62,17 +62,45 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void ReorderTaggedHasCommonStructElem() {
+        public virtual void ReorderTaggedHasCommonStructElem01() {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
-            String outPath = destinationFolder + "reorderTaggedHasCommonStructElem.pdf";
+            String outPath = destinationFolder + "reorderTaggedHasCommonStructElem01.pdf";
             String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElem.pdf";
             PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
             pdf.SetTagged();
             pdf.MovePage(2, 1);
             pdf.Close();
-            CompareTool compareTool = new CompareTool();
-            NUnit.Framework.Assert.IsNull(compareTool.CompareTagStructures(outPath, cmpPath));
-            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_"));
+            Compare(outPath, cmpPath, destinationFolder, "diff_01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ReorderTaggedHasCommonStructElem02() {
+            String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
+            String outPath = destinationFolder + "reorderTaggedHasCommonStructElem02.pdf";
+            String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElem.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            pdf.MovePage(1, 3);
+            pdf.Close();
+            Compare(outPath, cmpPath, destinationFolder, "diff_02");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ReorderTaggedHasCommonStructElemBigger() {
+            String inPath = sourceFolder + "taggedHasCommonStructElemBigger.pdf";
+            String outPath = destinationFolder + "reorderTaggedHasCommonStructElemBigger.pdf";
+            String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElemBigger.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            pdf.MovePage(2, 5);
+            pdf.Close();
+            Compare(outPath, cmpPath, destinationFolder, "diff_03");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -90,9 +118,25 @@ namespace iText.Kernel.Pdf {
             sourceDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(2, 1, 3), pdfDoc);
             sourceDoc.Close();
             pdfDoc.Close();
+            Compare(outPath, cmpPath, destinationFolder, "diff_04");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        private void Compare(String outPath, String cmpPath, String destinationFolder, String diffPrefix) {
             CompareTool compareTool = new CompareTool();
-            NUnit.Framework.Assert.IsNull(compareTool.CompareTagStructures(outPath, cmpPath));
-            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_"));
+            String tagStructureErrors = compareTool.CompareTagStructures(outPath, cmpPath);
+            String contentErrors = compareTool.CompareByContent(outPath, cmpPath, destinationFolder, diffPrefix);
+            String resultMessage = "";
+            if (tagStructureErrors != null) {
+                resultMessage += tagStructureErrors + "\n";
+            }
+            if (contentErrors != null) {
+                resultMessage += contentErrors + "\n";
+            }
+            NUnit.Framework.Assert.IsTrue(tagStructureErrors == null && contentErrors == null, resultMessage);
         }
     }
 }

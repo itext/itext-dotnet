@@ -454,36 +454,25 @@ namespace iText.Kernel.Pdf {
             return catalog.GetPageTree().GetPageNumber(pageDictionary);
         }
 
-        //TODO add docs
-        public virtual void MovePage(int pageNumber, int insertBeforePageNumber) {
+        /// <summary>Moves page to new place in same document with all it tag structure</summary>
+        /// <param name="pageNumber">number of Page that will be moved</param>
+        /// <param name="insertBefore">indicates before which page new one will be inserted to</param>
+        public virtual void MovePage(int pageNumber, int insertBefore) {
             CheckClosingStatus();
-            if (insertBeforePageNumber < 1 || insertBeforePageNumber > GetNumberOfPages()) {
+            if (insertBefore < 1 || insertBefore > GetNumberOfPages() + 1) {
                 throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
-                    insertBeforePageNumber));
+                    insertBefore));
             }
-            if (pageNumber < 1 || pageNumber > GetNumberOfPages()) {
-                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
-                    pageNumber));
-            }
-            if (pageNumber == insertBeforePageNumber) {
-                return;
-            }
-            int insertStructureIndex = -1;
+            PdfPage page = GetPage(pageNumber);
             if (IsTagged()) {
-                insertStructureIndex = GetStructTreeRoot().SeparateStructure(insertBeforePageNumber);
-                IList<PdfDictionary> pageStructure = GetStructTreeRoot().DetachPageStructure(insertBeforePageNumber);
-                foreach (PdfDictionary structureTop in pageStructure) {
-                    GetStructTreeRoot().AddKidObject(insertStructureIndex, structureTop);
-                    if (insertStructureIndex >= 0) {
-                        ++insertStructureIndex;
-                    }
-                }
+                GetStructTreeRoot().Move(page, insertBefore);
+                GetTagStructureContext().NormalizeDocumentRootTag();
             }
             PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNumber);
-            if (insertBeforePageNumber > pageNumber) {
-                --insertBeforePageNumber;
+            if (insertBefore > pageNumber) {
+                --insertBefore;
             }
-            catalog.GetPageTree().AddPage(insertBeforePageNumber, removedPage);
+            catalog.GetPageTree().AddPage(insertBefore, removedPage);
         }
 
         /// <summary>

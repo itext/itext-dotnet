@@ -371,17 +371,17 @@ namespace iText.Kernel.Pdf.Tagging {
             StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());
         }
 
-        //TODO add proper documentation
-        //works only if StructureTree was read
-        public virtual IList<PdfDictionary> DetachPageStructure(int pageNumber) {
-            return StructureTreeCopier.DetachPageStructure(GetDocument(), pageNumber);
-        }
-
-        //return structure tree index of first separated top
-        //works only if StructureTree was read
-        //TODO add proper documentation
-        public virtual int SeparateStructure(int separateBeforePage) {
-            return StructureTreeCopier.SeparateStructure(GetDocument(), separateBeforePage);
+        /// <summary>Moves structure associated with specified page and insert it in a specified position in the document.
+        ///     </summary>
+        /// <remarks>
+        /// Moves structure associated with specified page and insert it in a specified position in the document.
+        /// <br/><br/>
+        /// NOTE: Works only for structure tags that were already read.
+        /// </remarks>
+        /// <param name="fromPage">page which tag structure will be moved</param>
+        /// <param name="insertBeforePage">indicates before tags of which page tag structure will be moved to</param>
+        public virtual void Move(PdfPage fromPage, int insertBeforePage) {
+            StructureTreeCopier.Move(GetDocument(), fromPage, insertBeforePage);
         }
 
         public virtual int GetParentTreeNextKey() {
@@ -469,7 +469,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return parentTreeHandler;
         }
 
-        public virtual void AddKidObject(int index, PdfDictionary structElem) {
+        internal virtual void AddKidObject(int index, PdfDictionary structElem) {
             if (index == -1) {
                 GetKidsObject().Add(structElem);
             }
