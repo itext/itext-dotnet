@@ -378,7 +378,7 @@ namespace iText.Kernel.Pdf {
             pageCanvas.AddXObject(imageXObject, 40, 400);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(200, 200));
             PdfCanvas formCanvas = new PdfCanvas(formXObject, pdfDocument);
-            formCanvas.SaveState().Circle(100, 100, 50).SetColor(Color.BLACK, true).Fill().RestoreState();
+            formCanvas.SaveState().Circle(100, 100, 50).SetColor(ColorConstants.BLACK, true).Fill().RestoreState();
             formCanvas.Release();
             formXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 2".GetBytes
                 (), "af_2.txt", PdfName.Data));

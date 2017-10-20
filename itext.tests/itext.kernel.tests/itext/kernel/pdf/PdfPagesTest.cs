@@ -410,7 +410,7 @@ namespace iText.Kernel.Pdf {
                 .NO_COMPRESSION));
             PdfPage page = pdfDoc.AddNewPage().SetThumbnailImage(new PdfImageXObject(ImageDataFactory.Create(sourceFolder
                  + imageSrc)));
-            new PdfCanvas(page).SetFillColor(Color.RED).Rectangle(100, 100, 400, 400).Fill();
+            new PdfCanvas(page).SetFillColor(ColorConstants.RED).Rectangle(100, 100, 400, 400).Fill();
             pdfDoc.Close();
             new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff");

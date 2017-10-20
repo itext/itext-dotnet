@@ -325,7 +325,7 @@ namespace iText.Kernel.Pdf {
             // just test functionality to get annotation /* DEVSIX-1503 */
             target.GetAnnotation(pdfDoc);
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
-            linkAnnotation.SetColor(Color.RED);
+            linkAnnotation.SetColor(ColorConstants.RED);
             linkAnnotation.SetAction(PdfAction.CreateGoToE(new PdfNamedDestination("prime"), true, target));
             pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
             pdfDoc.Close();
@@ -1007,15 +1007,15 @@ namespace iText.Kernel.Pdf {
             rect.MoveUp(160).MoveRight(260);
             page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText RGB times-bold")).SetDefaultAppearance
                 (new AnnotationDefaultAppearance().SetColor(new DeviceRgb(1.0f, 0, 0)).SetFont(StandardAnnotationFont.
-                TimesBold).SetFontSize(20)).SetColor(Color.WHITE));
+                TimesBold).SetFontSize(20)).SetColor(ColorConstants.WHITE));
             rect.MoveDown(80);
             page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText CMYK courier-oblique")).SetDefaultAppearance
                 (new AnnotationDefaultAppearance().SetColor(DeviceCmyk.MAGENTA).SetFont(StandardAnnotationFont.CourierOblique
-                ).SetFontSize(20)).SetColor(Color.WHITE));
+                ).SetFontSize(20)).SetColor(ColorConstants.WHITE));
             rect.MoveDown(80);
             page.AddAnnotation(new PdfFreeTextAnnotation(rect, new PdfString("FreeText Gray HeiseiMinW3")).SetDefaultAppearance
                 (new AnnotationDefaultAppearance().SetColor(DeviceGray.GRAY).SetFont(ExtendedAnnotationFont.HeiseiMinW3
-                ).SetFontSize(20)).SetColor(Color.WHITE));
+                ).SetFontSize(20)).SetColor(ColorConstants.WHITE));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
                 ));
