@@ -99,7 +99,9 @@ namespace iText.IO.Codec {
             bf_.WriteBits(clearCode_, numBits_);
         }
 
-        /// <param name="buf">data to be compressed to output stream</param>
+        /// <param name="buf">The data to be compressed to output stream</param>
+        /// <param name="offset">The offset at which the data starts</param>
+        /// <param name="length">The length of the data being compressed</param>
         /// <exception cref="System.IO.IOException">if underlying output stream error</exception>
         public virtual void Compress(byte[] buf, int offset, int length) {
             int idx;

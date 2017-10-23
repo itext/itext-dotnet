@@ -89,7 +89,7 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>Splits the document basing on the given size.</summary>
-        /// <param name="size"><strog>Preferred</strog> size for splitting.</param>
+        /// <param name="size"><strong>Preferred</strong> size for splitting.</param>
         /// <returns>
         /// The documents which the source document was split into.
         /// Be warned that these documents are not closed.

@@ -492,6 +492,10 @@ namespace iText.IO.Codec {
         /// Invokes the superclass method and then sets instance variables on
         /// the basis of the metadata set on this decompressor.
         /// </summary>
+        /// <param name="fillOrder">The fill order</param>
+        /// <param name="compression">The compression algorithm</param>
+        /// <param name="t4Options">The T4 options</param>
+        /// <param name="t6Options">The T6 options</param>
         public virtual void SetOptions(int fillOrder, int compression, int t4Options, int t6Options) {
             this.fillOrder = fillOrder;
             this.compression = compression;

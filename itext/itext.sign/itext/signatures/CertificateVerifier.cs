@@ -70,7 +70,8 @@ namespace iText.Signatures {
         }
 
         /// <summary>Decide whether or not online checking is allowed.</summary>
-        /// <param name="onlineCheckingAllowed"/>
+        /// <param name="onlineCheckingAllowed">a boolean indicating whether the certificate can be verified using online verification results.
+        ///     </param>
         public virtual void SetOnlineCheckingAllowed(bool onlineCheckingAllowed) {
             this.onlineCheckingAllowed = onlineCheckingAllowed;
         }
@@ -82,12 +83,15 @@ namespace iText.Signatures {
         /// <param name="signCert">the certificate that needs to be checked</param>
         /// <param name="issuerCert">its issuer</param>
         /// <param name="signDate">the date the certificate needs to be valid</param>
-        /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
-        /// The list will be empty if the certificate couldn't be verified.
-        /// </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <returns>a list of <code>VerificationOK</code> objects. The list will be empty if the certificate couldn't be verified.
+        ///     </returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
+        /// thrown if the certificate has expired, isn't valid yet, or if an exception has been thrown in
+        /// <see cref="Org.BouncyCastle.X509.X509Certificate.Verify(Org.BouncyCastle.Crypto.AsymmetricKeyParameter)">Certificate#verify
+        ///     </see>
+        /// .
+        /// </exception>
+        /// <exception cref="System.IO.IOException">Deprecated</exception>
         public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             // Check if the certificate is valid on the signDate

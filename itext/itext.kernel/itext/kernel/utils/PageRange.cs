@@ -75,9 +75,9 @@ namespace iText.Kernel.Utils {
         /// - "3-" to indicate from page 3 to the last page
         /// - "odd" for all odd pages
         /// - "even" for all even pages
-        /// - "3- & odd" for all odd pages starting from page 3
+        /// - "3- &amp; odd" for all odd pages starting from page 3
         /// A complete example for pages 1 to 5, page 8 then odd pages starting from
-        /// page 9: "1-5, 8, odd & 9-".
+        /// page 9: "1-5, 8, odd &amp; 9-".
         /// </summary>
         /// <param name="pageRange">a String of page ranges</param>
         public PageRange(String pageRange) {

@@ -1180,8 +1180,8 @@ namespace iText.Layout.Renderer {
         /// Gets the first yLine of the nested children recursively. E.g. for a list, this will be the yLine of the
         /// first item (if the first item is indeed a paragraph).
         /// NOTE: this method will no go further than the first child.
-        /// Returns null if there is no text found.
         /// </remarks>
+        /// <returns>the first yline of the nested children, null if there is no text found</returns>
         protected internal virtual float? GetFirstYLineRecursively() {
             if (childRenderers.Count == 0) {
                 return null;
@@ -1566,7 +1566,7 @@ namespace iText.Layout.Renderer {
         /// <returns>
         /// an array of BorderDrawer objects.
         /// In case when certain border isn't set <code>Property.BORDER</code> is used,
-        /// and if <code>Property.BORDER</code> is also not set then <code>null<code/> is returned
+        /// and if <code>Property.BORDER</code> is also not set then <code>null</code> is returned
         /// on position of this border
         /// </returns>
         protected internal virtual Border[] GetBorders() {

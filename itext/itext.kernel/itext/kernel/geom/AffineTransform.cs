@@ -234,6 +234,7 @@ namespace iText.Kernel.Geom {
         /// - transformation can't be inversed</li>
         /// </ul>
         /// </remarks>
+        /// <returns>the type of this AffineTransform</returns>
         public virtual int GetTransformType() {
             if (this.type != TYPE_UNKNOWN) {
                 return this.type;

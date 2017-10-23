@@ -580,8 +580,8 @@ namespace iText.Kernel.Pdf {
         /// Gets the mapped resource name of the
         /// <see cref="PdfObject"/>
         /// under the given wrapper.
-        /// </br>
-        /// </br>
+        /// <br />
+        /// <br />
         /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
         /// </summary>
         /// <param name="resource">
@@ -604,8 +604,8 @@ namespace iText.Kernel.Pdf {
         /// Gets the mapped resource name of the given
         /// <see cref="PdfObject"/>
         /// .
-        /// </br>
-        /// </br>
+        /// <br />
+        /// <br />
         /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
         /// </summary>
         /// <param name="resource">the object, for which the name will be searched.</param>

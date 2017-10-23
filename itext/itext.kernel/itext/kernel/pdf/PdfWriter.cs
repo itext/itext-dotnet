@@ -161,7 +161,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Sets the smart mode.</summary>
         /// <remarks>
         /// Sets the smart mode.
-        /// <p/>
+        /// <br />
         /// In smart mode when resources (such as fonts, images,...) are
         /// encountered, a reference to these resources is saved
         /// in a cache, so that they can be reused.

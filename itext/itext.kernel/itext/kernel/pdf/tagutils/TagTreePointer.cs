@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// 'points' at the specific position in the tree (at the specific tag). For the current tag you can add new tags, modify
     /// it's role and properties, etc. Also, using instance of this class, you can change tag position in the tag structure,
     /// you can flush current tag or remove it.
-    /// <br/><br/>
+    /// <br /><br />
     /// <p>
     /// There could be any number of the instances of this class, simultaneously pointing to different (or the same) parts of
     /// the tag structure. Because of this, you can for example remove the tag at which another instance is currently pointing.
@@ -225,7 +225,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
@@ -250,7 +250,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// </remarks>
         /// <param name="element">accessible element which represents a new tag.</param>
@@ -270,14 +270,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// <br /><br />
         /// If <i>keepConnectedToTag</i> is true then a newly created tag will retain the connection with given
         /// accessible element. See
         /// <see cref="MoveToTag(IAccessibleElement)"/>
         /// for more explanations about tag connections concept.
-        /// <br/><br/>
+        /// <br /><br />
         /// If the same accessible element is connected to the tag and is added twice to the same parent -
         /// this
         /// <c>TagTreePointer</c>
@@ -304,7 +304,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
@@ -330,7 +330,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// <br /><br />
         /// If
@@ -339,14 +339,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// accessible element. See
         /// <see cref="MoveToTag(IAccessibleElement)"/>
         /// for more explanations about tag connections concept.
-        /// <br/><br/>
+        /// <br /><br />
         /// If the same accessible element is connected to the tag and is added twice to the same parent -
         /// this
         /// <c>TagTreePointer</c>
         /// instance would move to connected kid instead of creating tag twice.
         /// But if it is added to some other parent, then connection will be removed.
         /// <p>
-        /// <br/><br/>
+        /// <br /><br />
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
@@ -388,7 +388,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Adds a new content item for the given
         /// <c>PdfAnnotation</c>
         /// under the current tag.
-        /// <br/><br/>
+        /// <br /><br />
         /// By default, when annotation is added to the page it is automatically tagged with auto tagging pointer
         /// (see
         /// <see cref="TagStructureContext.GetAutoTaggingPointer()"/>
@@ -421,7 +421,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Sets index of the next added to the current tag kid, which could be another tag or content item.
         /// By default, new tag is added at the end of the parent kids array. This property affects only the next added tag,
         /// all tags added after will be added with the default behaviour.
-        /// <br/><br/>
+        /// <br /><br />
         /// This method could be used with any overload of
         /// <see cref="AddTag(iText.Kernel.Pdf.PdfName)"/>
         /// method,
@@ -430,7 +430,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// and
         /// <see cref="AddAnnotationTag(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>
         /// .
-        /// <br/>
+        /// <br />
         /// Keep in mind, that this method set property to the
         /// <c>TagTreePointer</c>
         /// and not to the tag itself, which means
@@ -491,7 +491,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
-        /// <br/><br/>
+        /// <br /><br />
         /// You cannot remove root tag, and also you cannot remove any tag if document's tag structure was partially flushed;
         /// in this two cases an exception will be thrown.
         /// </remarks>
@@ -718,14 +718,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// instance to a tag, which is connected with the given accessible element.
         /// <p>
-        /// <br/><br/>
+        /// <br /><br />
         /// The connection between the tag and the accessible element instance is used as a sign that tag is not yet finished
         /// and therefore should not be flushed or removed if page tags are flushed or removed. Also, any
         /// <c>TagTreePointer</c>
         /// could be immediately moved to the tag with connection via it's connected element by using this method. If accessible
         /// element is connected to the tag, then all changes of the role or properties of the element will affect the connected
         /// tag role and properties.
-        /// <br/>
+        /// <br />
         /// For any existing not connected tag the connection could be created using
         /// <see cref="GetConnectedElement(bool)"/>
         /// with <i>true</i> as parameter.

@@ -119,7 +119,7 @@ namespace iText.IO.Codec {
         /// type of the TIFF field.  Since there is no available 32-bit
         /// unsigned data type, long is used. The mapping between types is
         /// as follows:
-        /// <table border=1>
+        /// <table border=1 summary="TIFFField data">
         /// <tr>
         /// <th> TIFF type </th> <th> Java type </th>
         /// <tr>
@@ -155,7 +155,8 @@ namespace iText.IO.Codec {
             this.data = data;
         }
 
-        /// <summary>Returns the tag number, between 0 and 65535.</summary>
+        /// <summary>Returns the tag number</summary>
+        /// <returns>the tag number, between 0 and 65535.</returns>
         public virtual int GetTag() {
             return tag;
         }
@@ -167,11 +168,13 @@ namespace iText.IO.Codec {
         /// TIFF_ constants defined in this class.  For future
         /// revisions of TIFF, higher values are possible.
         /// </remarks>
+        /// <returns>The type of the data stored in the IFD</returns>
         public virtual int GetFieldType() {
             return type;
         }
 
         /// <summary>Returns the number of elements in the IFD.</summary>
+        /// <returns>The number of elements in the IFD</returns>
         public virtual int GetCount() {
             return count;
         }
@@ -187,6 +190,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_BYTE, TIFF_SBYTE, or TIFF_UNDEFINED.
         /// </remarks>
+        /// <returns>the data as an uninterpreted array of bytes</returns>
         public virtual byte[] GetAsBytes() {
             return (byte[])data;
         }
@@ -201,6 +205,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SHORT.
         /// </remarks>
+        /// <returns>TIFF_SHORT data as an array of chars</returns>
         public virtual char[] GetAsChars() {
             return (char[])data;
         }

@@ -77,7 +77,8 @@ namespace iText.IO.Util {
     /// }
     /// </code></pre>
     /// <p>
-    /// For convenience: <code><pre>
+    /// For convenience:
+    /// <pre><code>
     /// public int hashCode() {
     /// return new HashCode().append(id).append(name).append(weight).hashCode();
     /// }

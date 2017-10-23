@@ -167,9 +167,9 @@ namespace iText.Forms.Fields {
         /// Highlights the options. Is this method is used for Combo box, the first value in input array
         /// will be the field value
         /// </remarks>
-        /// <param name="optionNumbers"/>
+        /// <param name="optionNumbers">The option numbers</param>
         /// <returns>
-        /// current
+        /// The edited
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers) {

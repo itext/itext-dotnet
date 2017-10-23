@@ -770,7 +770,7 @@ namespace iText.Layout {
         /// Sets a custom hyphenation configuration which will hyphenate words automatically accordingly to the
         /// language and country.
         /// </summary>
-        /// <param name="hyphenationConfig"/>
+        /// <param name="hyphenationConfig">The hyphenation configuration</param>
         /// <returns>this element</returns>
         public virtual T SetHyphenation(HyphenationConfig hyphenationConfig) {
             SetProperty(Property.HYPHENATION, hyphenationConfig);

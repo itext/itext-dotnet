@@ -77,7 +77,7 @@ namespace iText.Kernel.XMP.Impl
 		/// </param>
 		/// <param name="quotes">
 		/// The characters to be used as quotes around array items that
-		/// contain a separator. Defaults to &apos;&quot;&apos;
+		/// contain a separator. Defaults to '&quot;';
 		/// </param>
 		/// <param name="allowCommas">Option flag to control the catenation.</param>
 		/// <returns>Returns the string containing the catenated array items.</returns>

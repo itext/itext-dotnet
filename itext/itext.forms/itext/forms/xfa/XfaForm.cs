@@ -83,6 +83,7 @@ namespace iText.Forms.Xfa
 		}
 
 		/// <summary>Creates an XFA form by the stream containing all xml information</summary>
+		/// <param name="inputStream">the InputStream</param>
 		public XfaForm(Stream inputStream)
 		{
 			try
@@ -100,6 +101,7 @@ namespace iText.Forms.Xfa
 		/// <see cref="Document"/>
 		/// containing all xml information
 		/// </summary>
+		/// <param name="domDocument">The document</param>
 		public XfaForm(XDocument domDocument)
 		{
 			SetDomDocument(domDocument);

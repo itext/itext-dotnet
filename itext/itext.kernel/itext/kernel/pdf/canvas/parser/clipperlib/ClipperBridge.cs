@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <see cref="iText.Kernel.Geom.Point"/>
     /// </li>
     /// </ul>
-    /// </p>
+    /// <p>
     /// </remarks>
     public class ClipperBridge {
         /// <summary>

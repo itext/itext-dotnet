@@ -62,7 +62,7 @@ namespace iText.Forms {
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>
         /// .
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// If set, the document contains at least one signature field. This flag
         /// allows a conforming reader to enable user interface items (such as menu
@@ -77,7 +77,7 @@ namespace iText.Forms {
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>
         /// .
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// If set, the document contains signatures that may be invalidated if the
         /// file is saved (written) in a way that alters its previous contents, as
@@ -331,7 +331,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
         /// streams and appearance dictionaries for all widget annotations in the
@@ -348,7 +348,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>NeedAppearances</code> boolean property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
         /// streams and appearance dictionaries for all widget annotations in the
@@ -368,7 +368,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>SigFlags</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>SigFlags</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields.
@@ -392,7 +392,7 @@ namespace iText.Forms {
         /// <remarks>
         /// Changes the <code>SigFlags</code> integer property on the AcroForm.
         /// This method allows only to add flags, not to remove them.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields.
@@ -417,7 +417,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>SigFlags</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>SigFlags</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields
@@ -438,7 +438,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>CO</code> array property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>CO</code> array property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>CO</code>, Calculation Order, is an array of indirect references to
         /// field dictionaries with calculation actions, defining the calculation
@@ -456,7 +456,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>CO</code> array property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>CO</code> array property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>CO</code>, Calculation Order, is an array of indirect references to
         /// field dictionaries with calculation actions, defining the calculation
@@ -473,7 +473,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>DR</code> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>DR</code> dictionary property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>DR</code> is a resource dictionary containing default resources
         /// (such as fonts, patterns, or colour spaces) that shall be used by form
@@ -492,7 +492,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>DR</code> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>DR</code> dictionary property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>DR</code> is a resource dictionary containing default resources
         /// (such as fonts, patterns, or colour spaces) that shall be used by form
@@ -510,7 +510,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>DA</code> String property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>DA</code> String property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method sets a default (fallback value) for the <code>DA</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -526,7 +526,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>DA</code> String property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>DA</code> String property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method returns the default (fallback value) for the <code>DA</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -540,7 +540,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>Q</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>Q</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method sets a default (fallback value) for the <code>Q</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -556,7 +556,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>Q</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>Q</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method gets the default (fallback value) for the <code>Q</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -571,7 +571,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>XFA</code> property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <code>XFA</code> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
@@ -588,7 +588,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>XFA</code> property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <code>XFA</code> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a

@@ -201,14 +201,14 @@ namespace iText.IO.Codec {
 
             /// <summary>
             /// return as a single byte array the header-data for each segment in segment number
-            /// order, EMBEDDED organization, but i am putting the needed segments in SEQUENTIAL organization.
+            /// order, EMBEDDED organization, but I am putting the needed segments in SEQUENTIAL organization.
             /// </summary>
             /// <remarks>
             /// return as a single byte array the header-data for each segment in segment number
-            /// order, EMBEDDED organization, but i am putting the needed segments in SEQUENTIAL organization.
+            /// order, EMBEDDED organization, but I am putting the needed segments in SEQUENTIAL organization.
             /// if for_embedding, skip the segment types that are known to be not for acrobat.
             /// </remarks>
-            /// <param name="for_embedding"/>
+            /// <param name="for_embedding">True if the bytes represents embedded data, false otherwise</param>
             /// <exception cref="System.IO.IOException"/>
             /// <returns>a byte array</returns>
             public virtual byte[] GetData(bool for_embedding) {

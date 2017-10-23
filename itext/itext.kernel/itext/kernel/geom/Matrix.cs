@@ -91,8 +91,8 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Constructs a matrix that represents translation</summary>
-        /// <param name="tx"/>
-        /// <param name="ty"/>
+        /// <param name="tx">x-axis translation</param>
+        /// <param name="ty">y-axis translation</param>
         public Matrix(float tx, float ty) {
             vals[I31] = tx;
             vals[I32] = ty;
@@ -100,6 +100,14 @@ namespace iText.Kernel.Geom {
 
         /// <summary>Creates a Matrix with 9 specified entries</summary>
         /// <param name="e11">element at position (1,1)</param>
+        /// <param name="e12">element at position (1,2)</param>
+        /// <param name="e13">element at position (1,3)</param>
+        /// <param name="e21">element at position (2,1)</param>
+        /// <param name="e22">element at position (2,2)</param>
+        /// <param name="e23">element at position (2,3)</param>
+        /// <param name="e31">element at position (3,1)</param>
+        /// <param name="e32">element at position (3,2)</param>
+        /// <param name="e33">element at position (3,3)</param>
         public Matrix(float e11, float e12, float e13, float e21, float e22, float e23, float e31, float e32, float
              e33) {
             vals[I11] = e11;

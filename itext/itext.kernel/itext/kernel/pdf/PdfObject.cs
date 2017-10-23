@@ -276,7 +276,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies object to a specified document.</summary>
         /// <remarks>
         /// Copies object to a specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
@@ -288,7 +288,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies object to a specified document.</summary>
         /// <remarks>
         /// Copies object to a specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>

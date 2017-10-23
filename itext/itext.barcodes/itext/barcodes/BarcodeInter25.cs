@@ -75,6 +75,7 @@ namespace iText.Barcodes {
             0, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0 } };
 
         /// <summary>Creates new BarcodeInter25</summary>
+        /// <param name="document">The document</param>
         public BarcodeInter25(PdfDocument document)
             : base(document) {
             x = 0.8f;
@@ -188,8 +189,9 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// The bars and text are written in the following colors:
+        /// <br />
+        /// <TABLE BORDER=1 SUMMARY="barcode properties">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>

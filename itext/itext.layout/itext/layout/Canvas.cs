@@ -86,9 +86,10 @@ namespace iText.Layout {
         }
 
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
-        /// <param name="pdfCanvas">the low-level content stream writer</param>
-        /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
-        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        /// <param name="pdfCanvas">The low-level content stream writer</param>
+        /// <param name="pdfDocument">The document that the resulting content stream will be written to</param>
+        /// <param name="rootArea">The maximum area that the Canvas may write upon</param>
+        /// <param name="immediateFlush">Whether to flush the canvas immediately after operations, false otherwise</param>
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool immediateFlush)
             : this(pdfCanvas, pdfDocument, rootArea) {
             this.immediateFlush = immediateFlush;

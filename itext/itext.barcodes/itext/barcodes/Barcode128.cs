@@ -147,6 +147,7 @@ namespace iText.Barcodes {
         private static IDictionary<int, int?> ais = new Dictionary<int, int?>();
 
         /// <summary>Creates new Barcode128</summary>
+        /// <param name="document">The document</param>
         public Barcode128(PdfDocument document)
             : base(document) {
             x = 0.8f;
@@ -176,8 +177,8 @@ namespace iText.Barcodes {
         private Barcode128.Barcode128CodeSet codeSet = Barcode128.Barcode128CodeSet.AUTO;
 
         /// <summary>Removes the FNC1 codes in the text.</summary>
-        /// <param name="code">the text to clean</param>
-        /// <returns>the cleaned text</returns>
+        /// <param name="code">The text to clean</param>
+        /// <returns>The cleaned text</returns>
         public static String RemoveFNC1(String code) {
             int len = code.Length;
             StringBuilder buf = new StringBuilder(len);
@@ -512,8 +513,9 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// The bars and text are written in the following colors:
+        /// <br />
+        /// <TABLE BORDER=1 SUMMARY="barcode properties">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>
@@ -652,7 +654,7 @@ namespace iText.Barcodes {
         /// <remarks>
         /// Sets the code to generate. If it's an UCC code and starts with '(' it will
         /// be split by the AI. This code in UCC mode is valid:
-        /// <p/>
+        /// <br />
         /// <code>(01)00000090311314(10)ABC123(15)060916</code>
         /// </remarks>
         /// <param name="code">the code to generate</param>

@@ -146,7 +146,7 @@ namespace iText.Pdfa.Checker {
         /// level and thus are implemented in subclasses; others are implemented
         /// as private methods in this class.
         /// </remarks>
-        /// <param name="catalog"/>
+        /// <param name="catalog">The catalog being checked</param>
         public virtual void CheckDocument(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();
             SetPdfAOutputIntentColorSpace(catalogDict);

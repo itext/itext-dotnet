@@ -107,7 +107,7 @@ namespace iText.Kernel.Utils {
         /// <summary>This method merges pages from the source document to the current one.</summary>
         /// <remarks>
         /// This method merges pages from the source document to the current one.
-        /// <br/><br/>
+        /// <br /><br />
         /// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
         /// <see cref="SetCloseSourceDocuments(bool)"/>
         /// ),
@@ -134,7 +134,7 @@ namespace iText.Kernel.Utils {
         /// <summary>This method merges pages from the source document to the current one.</summary>
         /// <remarks>
         /// This method merges pages from the source document to the current one.
-        /// <br/><br/>
+        /// <br /><br />
         /// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
         /// <see cref="SetCloseSourceDocuments(bool)"/>
         /// ),

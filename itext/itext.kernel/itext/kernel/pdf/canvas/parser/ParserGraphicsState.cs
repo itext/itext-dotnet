@@ -74,7 +74,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Sets the current clipping path to the specified path.</summary>
         /// <remarks>
         /// Sets the current clipping path to the specified path.
-        /// <br/>
         /// <strong>Note:</strong>This method doesn't modify existing clipping path,
         /// it simply replaces it with the new one instead.
         /// </remarks>
@@ -95,7 +94,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Intersects the current clipping path with the given path.</summary>
         /// <remarks>
         /// Intersects the current clipping path with the given path.
-        /// <br/>
         /// <strong>Note:</strong> Coordinates of the given path should be in
         /// the transformed user space.
         /// </remarks>
@@ -125,7 +123,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Getter for the current clipping path.</summary>
         /// <remarks>
         /// Getter for the current clipping path.
-        /// <br/>
         /// <strong>Note:</strong> The returned clipping path is in the transformed user space, so
         /// if you want to get it in default user space, apply transformation matrix (
         /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState.GetCtm()"/>

@@ -200,7 +200,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Opens PDF document in the stamping mode.</summary>
         /// <remarks>
         /// Opens PDF document in the stamping mode.
-        /// <br/>
+        /// <br />
         /// </remarks>
         /// <param name="reader">PDF reader.</param>
         /// <param name="writer">PDF writer.</param>

@@ -183,8 +183,9 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-        /// <param name="moduleSide">the side (width and height) of the pixels.</param>
+        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="moduleSide">The side (width and height) of the pixels.</param>
+        /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleSide, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
@@ -219,6 +220,9 @@ namespace iText.Barcodes {
 
         // AWT related methods (remove this if you port to Android / GAE)
         /// <summary>Gets the barcode size</summary>
+        /// <param name="moduleHeight">The height of the module</param>
+        /// <param name="moduleWidth">The width of the module</param>
+        /// <returns>The size of the barcode</returns>
         public virtual Rectangle GetBarcodeSize(float moduleHeight, float moduleWidth) {
             return new Rectangle(0, 0, (width + 2 * ws) * moduleHeight, (height + 2 * ws) * moduleWidth);
         }
@@ -228,7 +232,6 @@ namespace iText.Barcodes {
         /// <param name="text">the text</param>
         /// <returns>
         /// the status of the generation. It can be one of this values:
-        /// <p/>
         /// <CODE>DM_NO_ERROR</CODE> - no error.<br />
         /// <CODE>DM_ERROR_TEXT_TOO_BIG</CODE> - the text is too big for the symbology capabilities.<br />
         /// <CODE>DM_ERROR_INVALID_SQUARE</CODE> - the dimensions given for the symbol are illegal.<br />
@@ -251,7 +254,6 @@ namespace iText.Barcodes {
         /// <param name="textSize">the text size</param>
         /// <returns>
         /// the status of the generation. It can be one of this values:
-        /// <p/>
         /// <CODE>DM_NO_ERROR</CODE> - no error.<br />
         /// <CODE>DM_ERROR_TEXT_TOO_BIG</CODE> - the text is too big for the symbology capabilities.<br />
         /// <CODE>DM_ERROR_INVALID_SQUARE</CODE> - the dimensions given for the symbol are illegal.<br />
@@ -335,7 +337,6 @@ namespace iText.Barcodes {
         /// <summary>Sets the height of the barcode.</summary>
         /// <remarks>
         /// Sets the height of the barcode. If the height is zero it will be calculated. This height doesn't include the whitespace border, if any.
-        /// <p/>
         /// The allowed dimensions are (height, width):<p>
         /// 10, 10<br />
         /// 12, 12<br />
@@ -386,7 +387,6 @@ namespace iText.Barcodes {
         /// <summary>Sets the width of the barcode.</summary>
         /// <remarks>
         /// Sets the width of the barcode. If the width is zero it will be calculated. This width doesn't include the whitespace border, if any.
-        /// <p/>
         /// The allowed dimensions are (height, width):<p>
         /// 10, 10<br />
         /// 12, 12<br />
@@ -454,7 +454,7 @@ namespace iText.Barcodes {
         /// <CODE>DM_X12</CODE> - X12 encodation<br />
         /// <CODE>DM_EDIFACT</CODE> - EDIFACT encodation<br />
         /// <CODE>DM_RAW</CODE> - no encodation. The bytes provided are already encoded and will be added directly to the barcode, using padding if needed. It assumes that the encodation state is left at ASCII after the last byte.<br />
-        /// <p/>
+        /// <br />
         /// One of:<br />
         /// <CODE>DM_EXTENSION</CODE> - allows extensions to be embedded at the start of the text:<p>
         /// exxxxxx - ECI number xxxxxx<br />

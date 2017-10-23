@@ -52,7 +52,7 @@ namespace iText.Layout.Font {
 
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
-        /// <param name="fontFamilies">sorted list of preferred font families.</param>
+        /// <param name="fontFamilies">Sorted list of preferred font families.</param>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual protected member in constructor.
@@ -66,11 +66,14 @@ namespace iText.Layout.Font {
         /// <see cref="GetFonts()"/>
         /// doesn't contain requested glyphs, this font will be used.
         /// </remarks>
+        /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
             return fonts[0];
         }
 
+        // fonts is sorted best to worst, get(0) returns the best matched FontInfo
         /// <summary>Sorted set of fonts.</summary>
+        /// <returns>sorted set of fonts</returns>
         public IEnumerable<FontInfo> GetFonts() {
             return fonts;
         }

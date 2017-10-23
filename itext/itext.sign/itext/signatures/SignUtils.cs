@@ -90,8 +90,11 @@ namespace iText.Signatures {
             return algorithm;
         }
 
-        /// <exception cref="CertificateException"/>
-        /// <exception cref="CrlException"/>
+        /// <summary>
+        /// Parses a CRL from an InputStream.
+        /// </summary>
+        /// <param name="input">The InputStream holding the unparsed CRL.</param>
+        /// <returns>the parsed CRL object</returns>
         internal static X509Crl ParseCrlFromStream(Stream input) {
             return new X509CrlParser().ReadCrl(input);
         }
