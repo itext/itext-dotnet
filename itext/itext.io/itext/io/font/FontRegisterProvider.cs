@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -53,8 +53,7 @@ namespace iText.IO.Font {
     /// without having to enter a path as parameter.
     /// </summary>
     internal class FontRegisterProvider {
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.FontRegisterProvider
-            ));
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.FontRegisterProvider));
 
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
         private readonly IDictionary<String, String> fontNames = new Dictionary<String, String>();

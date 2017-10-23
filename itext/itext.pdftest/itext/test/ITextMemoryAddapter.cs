@@ -42,13 +42,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
+using Common.Logging.Simple;
 
-namespace iText.IO.Log {
-    public interface ILoggerFactory {
-
-        ILogger GetLogger(Type klass);
-
-        ILogger GetLogger(String name);
-
+namespace iText.Test {
+    public class ITextMemoryAddapter : CapturingLoggerFactoryAdapter {
+        public override void AddEvent(CapturingLoggerEvent le) {
+            Console.WriteLine(le.Source.Name + ": " + le.RenderedMessage);
+            if (le.Level >= LogLevel.Warn) {
+                base.AddEvent(le);
+            }
+        }
     }
 }

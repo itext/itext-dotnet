@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -285,7 +285,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         if (!mappingEntry.Value.Equals(destRoleMap.Get(mappingEntry.Key))) {
                             String srcMapping = mappingEntry.Key + " -> " + mappingEntry.Value;
                             String destMapping = mappingEntry.Key + " -> " + destRoleMap.Get(mappingEntry.Key);
-                            ILogger logger = LoggerFactory.GetLogger(typeof(StructureTreeCopier));
+                            ILog logger = LogManager.GetLogger(typeof(StructureTreeCopier));
                             logger.Warn(String.Format(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST
                                 , srcMapping, destMapping));
                         }
@@ -492,7 +492,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             copiedMapping = copiedMappingArray;
                         }
                         else {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(StructureTreeCopier));
+                            ILog logger = LogManager.GetLogger(typeof(StructureTreeCopier));
                             logger.Warn(String.Format(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID, entry
                                 .Key.ToString()));
                             continue;

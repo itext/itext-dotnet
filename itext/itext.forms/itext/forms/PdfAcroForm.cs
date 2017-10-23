@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -112,7 +112,7 @@ namespace iText.Forms {
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
 
-        internal ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.PdfAcroForm));
+        internal ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
             , PdfName.Pattern };

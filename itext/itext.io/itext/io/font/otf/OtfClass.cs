@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -93,7 +93,7 @@ namespace iText.IO.Font.Otf {
                 otfClass = new iText.IO.Font.Otf.OtfClass(rf, classLocation);
             }
             catch (System.IO.IOException) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Otf.OtfClass));
+                ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Otf.OtfClass));
                 logger.Error(iText.IO.LogMessageConstant.OPENTYPE_GDEF_TABLE_ERROR);
                 otfClass = null;
             }

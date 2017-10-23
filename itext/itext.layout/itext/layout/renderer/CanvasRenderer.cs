@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -89,7 +89,7 @@ namespace iText.Layout.Renderer {
 
         public override void AddChild(IRenderer renderer) {
             if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
-                LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
+                LogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
                     );
             }
             else {

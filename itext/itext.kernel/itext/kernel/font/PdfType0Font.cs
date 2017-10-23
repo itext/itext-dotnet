@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -130,7 +130,7 @@ namespace iText.Kernel.Font {
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
@@ -588,7 +588,7 @@ namespace iText.Kernel.Font {
                 int glyphCode = cmapEncoding.GetCidCode(code);
                 Glyph glyph = fontProgram.GetGlyphByCode(glyphCode);
                 if (glyph == null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode
                         ));
                 }
@@ -854,7 +854,7 @@ namespace iText.Kernel.Font {
                                 ttfBytes = ttf.GetSubset(new HashSet<int>(longTag), true);
                             }
                             catch (iText.IO.IOException) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                                 logger.Warn(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
                                 ttfBytes = null;
                             }

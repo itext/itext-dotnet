@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
@@ -135,7 +135,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            ILogger logger = LoggerFactory.GetLogger(typeof(PdfDocument));
+            ILog logger = LogManager.GetLogger(typeof(PdfDocument));
             logger.Warn("PdfCatalog cannot be flushed manually");
         }
 

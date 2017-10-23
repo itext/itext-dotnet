@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
@@ -123,7 +123,7 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         if (currentNumber > 255) {
-                            ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.DocFontEncoding));
+                            ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Font.DocFontEncoding));
                             LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, ((PdfName
                                 )obj).GetValue()));
                         }

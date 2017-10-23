@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
@@ -765,7 +765,7 @@ namespace iText.Layout.Element {
                     return renderer;
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Table));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Element.Table));
                     logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
                 }
             }

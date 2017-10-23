@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Font;
 using iText.Kernel.Log;
 using iText.Kernel.Pdf;
@@ -281,7 +281,7 @@ namespace iText.Pdfa {
                     XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
                 }
                 catch (XMPException exc) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
                     logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
                 }
             }
@@ -297,7 +297,7 @@ namespace iText.Pdfa {
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
                 logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }

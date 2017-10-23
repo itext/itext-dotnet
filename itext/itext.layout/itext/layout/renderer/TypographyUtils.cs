@@ -45,17 +45,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Common.Logging;
 using Versions.Attributes;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal sealed class TypographyUtils {
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(TypographyUtils));
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
 
@@ -412,7 +412,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (type == null) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+                        ILog logger = LogManager.GetLogger(typeof(TypographyUtils));
                         logger.Error(fileLoadExceptionMessage);
                     }
                 }

@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
@@ -239,8 +239,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 bool? encryptMetadataEntry = encryptionDictionary.GetAsBool(PdfName.EncryptMetadata);
                 if (permissionsDecoded != permissions || encryptMetadataEntry != null && encryptMetadata != encryptMetadataEntry
                     ) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256
-                        ));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256));
                     logger.Error(iText.IO.LogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
                         );
                 }

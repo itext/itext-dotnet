@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -701,7 +701,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void Warn100percent() {
-            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
             logger.Warn(iText.IO.LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100);
         }
 
@@ -716,7 +716,7 @@ namespace iText.Layout.Renderer {
                 layoutMinWidth += widths[i].min;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
                 logger.Warn(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH);
             }
             return columnWidths;

@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf;
 using iText.Pdfa;
 
@@ -101,7 +101,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(PdfAChecker));
+                    ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
                     logger.Warn(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHOULD_CONTAIN_PARAMS_KEY);
                 }
             }

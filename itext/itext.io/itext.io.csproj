@@ -34,6 +34,12 @@
     <DocumentationFile>bin\Release\itext.io.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>$(SolutionDir)\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>$(SolutionDir)\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
@@ -45,6 +51,7 @@
     <EmbeddedResource Include="resources\AdobeGlyphList.txt">
       <LogicalName>iText.IO.Font.AdobeGlyphList.txt</LogicalName>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="resources\cmap_info.txt" />
     <None Include="resources\mustRead.html" />
   </ItemGroup>

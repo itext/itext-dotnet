@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -68,7 +68,7 @@ namespace iText.Kernel.Colors {
         public DeviceGray(float value)
             : base(new PdfDeviceCs.Gray(), new float[] { value > 1 ? 1 : (value > 0 ? value : 0) }) {
             if (value > 1 || value < 0) {
-                ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Colors.DeviceGray));
+                ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceGray));
                 LOGGER.Warn(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }

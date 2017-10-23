@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Common.Logging;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -58,7 +58,7 @@ namespace iText.Signatures {
     /// </summary>
     public class OCSPVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.OCSPVerifier
+        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier
             ));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";

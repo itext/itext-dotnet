@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -531,7 +531,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;
@@ -1253,7 +1253,7 @@ namespace iText.Layout.Renderer {
                 catch (InvalidCastException) {
                     font = ResolveFirstPdfFont();
                     if (!String.IsNullOrEmpty(strToBeConverted)) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
                         logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
                     }
                 }

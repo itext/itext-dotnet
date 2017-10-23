@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -193,12 +193,12 @@ namespace iText.IO.Font {
                 int bytePtr = 0;
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
+                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
                         logger.Error(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
+                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
                         logger.Error("incorrect.segment.type.in.pfb.file");
                         return null;
                     }
@@ -210,7 +210,7 @@ namespace iText.IO.Font {
                     while (size != 0) {
                         int got = raf.Read(fontStreamBytes, bytePtr, size);
                         if (got < 0) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
+                            ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
                             logger.Error("premature.end.in.pfb.file");
                             return null;
                         }
@@ -221,7 +221,7 @@ namespace iText.IO.Font {
                 return fontStreamBytes;
             }
             catch (Exception) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
+                ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
                 logger.Error("type1.font.file.exception");
                 return null;
             }

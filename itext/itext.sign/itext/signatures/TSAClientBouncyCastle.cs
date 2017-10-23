@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.IO.Codec;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 
@@ -74,8 +74,7 @@ namespace iText.Signatures {
         public const int DEFAULTTOKENSIZE = 4096;
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
-            ));
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle));
 
         /// <summary>URL of the Time Stamp Authority</summary>
         protected internal String tsaURL;

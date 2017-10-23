@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.IO.Log;
 
 namespace iText.Signatures {
     /// <summary>
@@ -54,8 +54,8 @@ namespace iText.Signatures {
     /// </summary>
     public class CRLVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.CRLVerifier
-            ));
+        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.CRLVerifier)
+            );
 
         /// <summary>The list of CRLs to check for revocation date.</summary>
         internal IList<X509Crl> crls;

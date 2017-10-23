@@ -1,5 +1,5 @@
 using System;
-using iText.IO.Log;
+using Common.Logging;
 
 namespace iText.Kernel.Pdf {
     public class VersionConforming {
@@ -11,7 +11,7 @@ namespace iText.Kernel.Pdf {
 
         public const String DEPRECATED_XFA_FORMS = "XFA is deprecated in PDF 2.0. The XFA form will not be written to the document";
 
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(VersionConforming));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(VersionConforming));
 
         public static bool ValidatePdfVersionForDictEntry(PdfDocument document, PdfVersion expectedVersion, PdfName
              entryKey, PdfName dictType) {

@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -164,7 +164,7 @@ namespace iText.Kernel.Pdf {
                 Write(key);
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key
                         ));
                     value = PdfNull.PDF_NULL;
@@ -194,13 +194,13 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.PdfIndirectObjectBelongsToOtherPdfDocument);
             }
             if (indirectReference.IsFree()) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
                 logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
                 Write(PdfNull.PDF_NULL);
             }
             else {
                 if (indirectReference.GetRefersTo() == null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
                     logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT);
                     Write(PdfNull.PDF_NULL);
                 }

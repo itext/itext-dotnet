@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -561,7 +561,7 @@ namespace iText.Kernel.Pdf {
                 ReadXref();
             }
             catch (Exception ex) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                 logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
@@ -701,14 +701,14 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference reference = table.Get(num);
                     if (reference != null) {
                         if (reference.IsFree()) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
                                 (), tokens.GetGenNr()));
                             return CreatePdfNullInstance(readAsDirect);
                         }
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                                 logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
                                     (), tokens.GetGenNr()));
                                 return CreatePdfNullInstance(readAsDirect);

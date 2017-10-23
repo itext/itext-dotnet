@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -82,7 +82,7 @@ namespace iText.Layout.Renderer {
                             if (rowspansToDeduct[col] > 0) {
                                 int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
                                 if (rowspan < 1) {
-                                    ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                                    ILog logger = LogManager.GetLogger(typeof(TableRenderer));
                                     logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
                                     rowspan = 1;
                                 }
@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
                             // delete current row
                             rows.JRemoveAt(row - rowspansToDeduct[0]);
                             SetFinishRow(finishRow - 1);
-                            ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                            ILog logger = LogManager.GetLogger(typeof(TableRenderer));
                             logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                         }
                         else {

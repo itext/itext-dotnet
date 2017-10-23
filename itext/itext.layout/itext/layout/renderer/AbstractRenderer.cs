@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -459,7 +459,7 @@ namespace iText.Layout.Renderer {
                 }
                 Rectangle backgroundArea = ApplyMargins(bBox, false);
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
                         ));
                 }
@@ -483,7 +483,7 @@ namespace iText.Layout.Renderer {
                         Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
                             GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
                                 ));
                         }
@@ -523,7 +523,7 @@ namespace iText.Layout.Renderer {
             float radius = 0;
             if (null != borderRadius) {
                 if (borderRadius.IsPercentValue()) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
                         ));
                 }
@@ -640,7 +640,7 @@ namespace iText.Layout.Renderer {
             float radius = 0;
             if (null != borderRadius) {
                 if (borderRadius.IsPercentValue()) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
                         ));
                 }
@@ -765,7 +765,7 @@ namespace iText.Layout.Renderer {
                 float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
                 Rectangle bBox = GetBorderAreaBBox();
                 if (bBox.GetWidth() < 0 || bBox.GetHeight() < 0) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
                     return;
                 }
@@ -784,7 +784,7 @@ namespace iText.Layout.Renderer {
                 float radius = 0;
                 if (null != borderRadius) {
                     if (borderRadius.IsPercentValue()) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                        ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
                             ));
                     }
@@ -1350,7 +1350,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             catch (Exception) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Absolute positioning might be applied incorrectly."));
             }
@@ -1427,7 +1427,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.UpdateHeight(height - occupiedArea.GetBBox().GetHeight());
             }
             if (wasHeightClipped) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                 splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
                     ((float)maxHeight);
@@ -1527,7 +1527,7 @@ namespace iText.Layout.Renderer {
                     }
                     catch (Exception) {
                         // TODO Review exception type when DEVSIX-1592 is resolved.
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                             "Some of the children might not end up aligned horizontally."));
                     }

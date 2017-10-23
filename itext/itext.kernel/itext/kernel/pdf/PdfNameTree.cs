@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
@@ -121,7 +121,7 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, key
                         ));
                 }

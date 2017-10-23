@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -547,7 +547,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!fileSpec.ContainsKey(PdfName.Desc)) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(PdfAChecker));
+                    ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
                     logger.Warn(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
@@ -557,7 +557,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
-                ILogger logger_1 = LoggerFactory.GetLogger(typeof(PdfAChecker));
+                ILog logger_1 = LogManager.GetLogger(typeof(PdfAChecker));
                 logger_1.Warn(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
             }
         }

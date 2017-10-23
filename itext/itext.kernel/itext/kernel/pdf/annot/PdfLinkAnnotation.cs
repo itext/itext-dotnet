@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -49,7 +49,7 @@ using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfLinkAnnotation : PdfAnnotation {
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
+        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
             ));
 
         /// <summary>Highlight modes.</summary>

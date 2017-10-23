@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 
@@ -166,7 +166,7 @@ namespace iText.Kernel.Pdf {
                 PdfDocument document = GetIndirectReference().GetDocument();
                 if (document != null) {
                     if (document.IsAppendMode() && !IsModified()) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                        ILog logger = LogManager.GetLogger(typeof(PdfObject));
                         logger.Info(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
@@ -348,7 +348,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Release() {
             // In case ForbidRelease flag is set, release will not be performed.
             if (CheckState(FORBID_RELEASE)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                ILog logger = LogManager.GetLogger(typeof(PdfObject));
                 logger.Warn(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {

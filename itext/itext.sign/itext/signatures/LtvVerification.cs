@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
@@ -51,7 +52,6 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Font;
-using iText.IO.Log;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -60,7 +60,7 @@ namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
     /// <author>Paulo Soares</author>
     public class LtvVerification {
-        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.LtvVerification));
+        private ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
 
         private PdfDocument document;
 

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -177,12 +177,12 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             if (reference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
                 logger.Error(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
                 return;
             }
             if (reference.CheckState(PdfObject.FLUSHED)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
                 logger.Error(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
                 return;
             }

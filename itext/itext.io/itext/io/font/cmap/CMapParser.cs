@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
@@ -152,7 +152,7 @@ namespace iText.IO.Font.Cmap {
                 }
             }
             catch (Exception) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(CMapParser));
+                ILog logger = LogManager.GetLogger(typeof(CMapParser));
                 logger.Error(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
             }
             finally {

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfDictionary roleMap = GetRoleMap();
             PdfObject prevVal = roleMap.Put(fromRole, toRole);
             if (prevVal != null && prevVal is PdfName) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
                 logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
                     , toRole));
             }
@@ -423,7 +423,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
                 logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {

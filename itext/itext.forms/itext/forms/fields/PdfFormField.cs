@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Logging;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -2050,7 +2050,7 @@ namespace iText.Forms.Fields {
                     }
                     else {
                         //Avoid NPE when handling corrupt pdfs
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                        ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
                         logger.Error(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
                         matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -130,7 +130,7 @@ namespace iText.Layout.Renderer {
                 rows[cell.GetRow() - rowRange.GetStartRow() + cell.GetRowspan() - 1][cell.GetCol()] = (CellRenderer)renderer;
             }
             else {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                 logger.Error("Only CellRenderer could be added");
             }
         }
@@ -762,7 +762,7 @@ namespace iText.Layout.Renderer {
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
@@ -815,7 +815,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
@@ -1497,7 +1497,7 @@ namespace iText.Layout.Renderer {
                 }
                 catch (Exception) {
                     // TODO Remove try-catch when DEVSIX-1001 is resolved. Review exception type when DEVSIX-1592 is resolved.
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the cell's content might not end up placed correctly."));
                 }

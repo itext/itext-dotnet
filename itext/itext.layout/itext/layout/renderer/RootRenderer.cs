@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Layout;
@@ -147,7 +147,7 @@ namespace iText.Layout.Renderer {
                                 else {
                                     ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                     result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                    ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                    ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                 }
                             }
@@ -156,7 +156,7 @@ namespace iText.Layout.Renderer {
                                     if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(Property.KEEP_TOGETHER))
                                         ) {
                                         result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
-                                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                        ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                         logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
                                         if (storedArea != null) {
@@ -176,14 +176,14 @@ namespace iText.Layout.Renderer {
                                                 theDeepestKeptTogether = ((AbstractRenderer)theDeepestKeptTogether).parent;
                                             }
                                             theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
-                                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                            ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
                                                 ));
                                         }
                                         else {
                                             if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
                                                 result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                                ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                                ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                                 logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                             }
                                             else {
@@ -237,7 +237,7 @@ namespace iText.Layout.Renderer {
                 if (renderer != null && result != null) {
                     if (true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
                         if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                            ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                             logger.Warn(iText.IO.LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
                             ShrinkCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                         }
@@ -448,7 +448,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (!ableToProcessKeepWithNext) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                     logger.Warn(iText.IO.LogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
                     ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );

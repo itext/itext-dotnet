@@ -1,5 +1,5 @@
 using System;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -255,7 +255,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private void LogOverwritingOfMappingIfNeeded(PdfName thisNsRole, PdfObject prevVal) {
             if (prevVal != null) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
                 String nsNameStr = GetNamespaceName();
                 if (nsNameStr == null) {
                     nsNameStr = "this";

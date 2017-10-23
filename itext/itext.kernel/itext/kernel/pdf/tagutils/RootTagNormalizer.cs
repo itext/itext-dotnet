@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
@@ -139,7 +139,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             else {
                 mappingRole += "not standard role";
             }
-            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.RootTagNormalizer));
+            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.RootTagNormalizer));
             logger.Warn(String.Format(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, origRootTagNs, mappingRole
                 ));
         }

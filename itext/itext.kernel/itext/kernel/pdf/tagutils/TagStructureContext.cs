@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -391,7 +391,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             int maxIters = 100;
             while (mappingResolver.CurrentRoleShallBeMappedToStandard()) {
                 if (++i > maxIters) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     logger.Error(ComposeTooMuchTransitiveMappingsException(role, @namespace));
                     return null;
                 }
@@ -665,7 +665,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                     throw new PdfException(exMessage);
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     logger.Warn(exMessage);
                 }
             }
@@ -691,7 +691,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid
                     .GetNamespace());
                 if (resolvedMapping == null || !resolvedMapping.CurrentRoleIsStandard()) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     String nsStr;
                     if (firstKid.GetNamespace() != null) {
                         nsStr = firstKid.GetNamespace().GetNamespaceName();
