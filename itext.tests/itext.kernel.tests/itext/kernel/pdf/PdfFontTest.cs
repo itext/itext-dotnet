@@ -440,6 +440,37 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithTrueTypeFont1NotEmbedded() {
+            String filename = destinationFolder + "createDocumentWithTrueTypeFont1NotEmbedded.pdf";
+            String cmpFilename = sourceFolder + "cmp_createDocumentWithTrueTypeFont1NotEmbedded.pdf";
+            String title = "Empty iText 7 Document";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            String font = fontsFolder + "abserif4_5.ttf";
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, false);
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
+            pdfTrueTypeFont.SetSubset(true);
+            PdfPage page = pdfDoc.AddNewPage();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
+            page.Flush();
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, false);
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
+            pdfTrueTypeFont.SetSubset(true);
+            page = pdfDoc.AddNewPage();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeOtfFont() {
             String filename = destinationFolder + "DocumentWithTrueTypeOtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFont.pdf";
@@ -1011,6 +1042,41 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
             pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true, false);
+            pdfTrueTypeFont.SetSubset(true);
+            page = pdfDoc.AddNewPage();
+            canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
+            canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestWriteTTCNotEmbedded() {
+            String filename = destinationFolder + "testWriteTTCNotEmbedded.pdf";
+            String cmpFilename = sourceFolder + "cmp_testWriteTTCNotEmbedded.pdf";
+            String title = "Empty iText 7 Document";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            String font = fontsFolder + "uming.ttc";
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, false, false);
+            pdfTrueTypeFont.SetSubset(true);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
+            canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            page.Flush();
+            byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
+            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, false, false);
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);

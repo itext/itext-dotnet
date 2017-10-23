@@ -127,8 +127,7 @@ namespace iText.Kernel.Font {
                 }
                 else {
                     subtype = PdfName.TrueType;
-                    fontName = subset ? CreateSubsetPrefix() + fontProgram.GetFontNames().GetFontName() : fontProgram.GetFontNames
-                        ().GetFontName();
+                    fontName = UpdateSubsetPrefix(fontProgram.GetFontNames().GetFontName(), subset, embedded);
                 }
                 FlushFontData(fontName, subtype);
             }
