@@ -186,7 +186,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 0; i < tt; ++i) {
                     int offset = i * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
-                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
+                    PdfDictionary dic = (PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument());
                     PdfArray arr = new PdfArray();
                     arr.Add(new PdfString(names[i * skip], null));
                     arr.Add(new PdfString(names[Math.Min((i + 1) * skip, names.Length) - 1], null));

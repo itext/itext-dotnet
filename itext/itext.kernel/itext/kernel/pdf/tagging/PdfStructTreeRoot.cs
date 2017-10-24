@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private ParentTreeHandler parentTreeHandler;
 
         public PdfStructTreeRoot(PdfDocument document)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document)), document) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(document), document) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructTreeRoot);
         }
 

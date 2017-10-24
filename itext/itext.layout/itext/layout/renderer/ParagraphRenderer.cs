@@ -168,9 +168,9 @@ namespace iText.Layout.Renderer {
                     layoutBox.GetHeight());
                 currentRenderer.SetProperty(Property.OVERFLOW_X, overflowX);
                 currentRenderer.SetProperty(Property.OVERFLOW_Y, overflowY);
-                LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
+                LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped
-                    )));
+                    ));
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {

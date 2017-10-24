@@ -212,8 +212,7 @@ namespace iText.Kernel.Pdf {
                 indirectReference.SetOffset(GetCurrentPos());
                 WriteToBody(pdfObject);
             }
-            ((PdfIndirectReference)indirectReference.SetState(PdfObject.FLUSHED)).ClearState(PdfObject.MUST_BE_FLUSHED
-                );
+            indirectReference.SetState(PdfObject.FLUSHED).ClearState(PdfObject.MUST_BE_FLUSHED);
             switch (pdfObject.GetObjectType()) {
                 case PdfObject.BOOLEAN:
                 case PdfObject.NAME:

@@ -56,6 +56,7 @@ namespace iText.Kernel.Font {
     /// In Type 3 fonts, glyphs are defined by streams of PDF graphics operators.
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.
+    /// <p>
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -185,7 +186,7 @@ namespace iText.Kernel.Font {
 
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode) || unicode < 33) {
-                Glyph glyph = ((Type3FontProgram)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                     // Handle special layout characters like sfthyphen (00AD).
                     // This glyphs will be skipped while converting to bytes
@@ -202,8 +203,8 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(int unicode) {
-            return (fontEncoding.CanEncode(unicode) || unicode < 33) && ((Type3FontProgram)GetFontProgram()).GetGlyph(
-                fontEncoding.GetUnicodeDifference(unicode)) != null;
+            return (fontEncoding.CanEncode(unicode) || unicode < 33) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference
+                (unicode)) != null;
         }
 
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {

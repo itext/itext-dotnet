@@ -76,7 +76,7 @@ namespace iText.Kernel.Font {
         /// <param name="pdfDocument">the document that this canvas is created for</param>
         internal Type3Glyph(PdfDocument pdfDocument, float wx, float llx, float lly, float urx, float ury, bool isColor
             )
-            : base(((PdfStream)new PdfStream().MakeIndirect(pdfDocument)), null, pdfDocument) {
+            : base((PdfStream)new PdfStream().MakeIndirect(pdfDocument), null, pdfDocument) {
             WriteMetrics(wx, llx, lly, urx, ury, isColor);
         }
 

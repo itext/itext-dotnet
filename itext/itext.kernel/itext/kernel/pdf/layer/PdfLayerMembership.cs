@@ -87,14 +87,14 @@ namespace iText.Kernel.Pdf.Layer {
             PdfObject layers = GetPdfObject().Get(PdfName.OCGs);
             if (layers is PdfDictionary) {
                 IList<PdfLayer> list = new List<PdfLayer>();
-                list.Add(new PdfLayer(((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument()))));
+                list.Add(new PdfLayer((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument())));
                 return list;
             }
             else {
                 if (layers is PdfArray) {
                     IList<PdfLayer> layerList = new List<PdfLayer>();
                     for (int ind = 0; ind < ((PdfArray)layers).Size(); ind++) {
-                        layerList.Add(new PdfLayer((((PdfArray)((PdfArray)layers).MakeIndirect(GetDocument()))).GetAsDictionary(ind
+                        layerList.Add(new PdfLayer(((PdfArray)(((PdfArray)layers).MakeIndirect(GetDocument()))).GetAsDictionary(ind
                             )));
                     }
                     return layerList;

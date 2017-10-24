@@ -146,7 +146,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             unusedDictionary.MakeIndirect(pdfDocument);
@@ -167,10 +167,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
                  + filenameOut));
@@ -190,7 +190,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             unusedDictionary.MakeIndirect(pdfDocument);
@@ -211,10 +211,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
                  + filenameOut));
@@ -234,12 +234,12 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             PdfStream stream = new PdfStream(new byte[] { 1, 2, 34, 45 }, 0);
             unusedArray.Add(stream);
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.SetFlushUnusedObjects(true);
             pdfDocument.Close();
             PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filenameIn));

@@ -102,10 +102,10 @@ namespace iText.Kernel.Font {
             if (fontEncoding.CanEncode(unicode)) {
                 Glyph glyph;
                 if (fontEncoding.IsFontSpecific()) {
-                    glyph = ((Type1Font)GetFontProgram()).GetGlyphByCode(unicode);
+                    glyph = GetFontProgram().GetGlyphByCode(unicode);
                 }
                 else {
-                    glyph = ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                    glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                     if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                         // Handle special layout characters like sfthyphen (00AD).
                         // This glyphs will be skipped while converting to bytes
@@ -125,10 +125,10 @@ namespace iText.Kernel.Font {
         public override bool ContainsGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {
                 if (fontEncoding.IsFontSpecific()) {
-                    return ((Type1Font)GetFontProgram()).GetGlyphByCode(unicode) != null;
+                    return GetFontProgram().GetGlyphByCode(unicode) != null;
                 }
                 else {
-                    return ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode)) != null;
+                    return GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode)) != null;
                 }
             }
             else {

@@ -50,8 +50,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-            catalog.Put(new PdfName("a"), ((PdfDictionary)GetTestPdfDictionary().MakeIndirect(document)).GetIndirectReference
-                ().MakeIndirect(document).GetIndirectReference().MakeIndirect(document));
+            catalog.Put(new PdfName("a"), GetTestPdfDictionary().MakeIndirect(document).GetIndirectReference().MakeIndirect
+                (document).GetIndirectReference().MakeIndirect(document));
             PdfObject @object = ((PdfIndirectReference)catalog.Get(new PdfName("a"), false)).GetRefersTo(true);
             NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
             document.Close();

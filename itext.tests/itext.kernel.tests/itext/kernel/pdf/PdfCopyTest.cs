@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copying1_1.pdf"));
             pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
                 );
-            pdfDoc1.GetCatalog().Put(new PdfName("a"), ((PdfName)new PdfName("b").MakeIndirect(pdfDoc1)));
+            pdfDoc1.GetCatalog().Put(new PdfName("a"), new PdfName("b").MakeIndirect(pdfDoc1));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             pdfDoc1.Close();
@@ -138,8 +138,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void Copying3() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copying3_1.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
-            PdfDictionary helloWorld1 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
+            PdfDictionary helloWorld1 = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             helloWorld.Put(new PdfName("HelloWrld"), helloWorld);
             helloWorld.Put(new PdfName("HelloWrld1"), helloWorld1);

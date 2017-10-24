@@ -147,12 +147,12 @@ namespace iText.Pdfa {
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             PdfStream stream = new PdfStream(new byte[] { 1, 2, 34, 45 }, 0);
             unusedArray.Add(stream);
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             unusedDictionary.Flush();
             pdfDocument.Close();
             PdfReader testerReader = new PdfReader(outPdf);

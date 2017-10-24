@@ -399,7 +399,7 @@ namespace iText.Kernel.Crypto {
             PdfDictionary srcInfo = srcDoc.GetTrailer().GetAsDictionary(PdfName.Info);
             PdfDictionary destInfo = destDoc.GetTrailer().GetAsDictionary(PdfName.Info);
             foreach (PdfName srcInfoKey in srcInfo.KeySet()) {
-                destInfo.Put(((PdfName)srcInfoKey.CopyTo(destDoc)), srcInfo.Get(srcInfoKey).CopyTo(destDoc));
+                destInfo.Put((PdfName)srcInfoKey.CopyTo(destDoc), srcInfo.Get(srcInfoKey).CopyTo(destDoc));
             }
             srcDoc.Close();
             destDoc.Close();

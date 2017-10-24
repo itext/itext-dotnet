@@ -669,7 +669,7 @@ namespace iText.Kernel.Pdf {
                         }
                         else {
                             // Create new object
-                            xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
+                            xmp = (PdfStream)new PdfStream().MakeIndirect(this);
                             xmp.GetOutputStream().Write(xmpMetadata);
                             catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                             catalog.SetModified();
@@ -699,7 +699,7 @@ namespace iText.Kernel.Pdf {
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
                             PdfNameTree tree = entry.Value;
                             if (tree.IsModified()) {
-                                EnsureTreeRootAddedToNames(((PdfDictionary)tree.BuildTree().MakeIndirect(this)), entry.Key);
+                                EnsureTreeRootAddedToNames(tree.BuildTree().MakeIndirect(this), entry.Key);
                             }
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
@@ -742,7 +742,7 @@ namespace iText.Kernel.Pdf {
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
                             PdfNameTree tree = entry.Value;
                             if (tree.IsModified()) {
-                                EnsureTreeRootAddedToNames(((PdfDictionary)tree.BuildTree().MakeIndirect(this)), entry.Key);
+                                EnsureTreeRootAddedToNames(tree.BuildTree().MakeIndirect(this), entry.Key);
                             }
                         }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
@@ -1415,7 +1415,7 @@ namespace iText.Kernel.Pdf {
             }
             PdfArray afArray = catalog.GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {
-                afArray = ((PdfArray)new PdfArray().MakeIndirect(this));
+                afArray = (PdfArray)new PdfArray().MakeIndirect(this);
                 catalog.Put(PdfName.AF, afArray);
             }
             afArray.Add(fs.GetPdfObject());
@@ -2049,7 +2049,7 @@ namespace iText.Kernel.Pdf {
                                 }
                             }
                             else {
-                                copiedAction = ((PdfDictionary)action.CopyTo(toDocument, false));
+                                copiedAction = (PdfDictionary)action.CopyTo(toDocument, false);
                             }
                         }
                     }

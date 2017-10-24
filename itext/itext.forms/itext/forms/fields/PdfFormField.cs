@@ -206,7 +206,7 @@ namespace iText.Forms.Fields {
         /// .
         /// </summary>
         protected internal PdfFormField(PdfDocument pdfDocument)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
             PdfName formType = GetFormType();
             if (formType != null) {
                 Put(PdfName.FT, formType);
@@ -223,7 +223,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfFormField"/>
         /// </param>
         protected internal PdfFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
             widget.MakeIndirect(pdfDocument);
             AddKid(widget);
             Put(PdfName.FT, GetFormType());
@@ -2811,7 +2811,7 @@ namespace iText.Forms.Fields {
         /// <param name="value">the initial value</param>
         protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, float fontSize, String value
             , PdfFormXObject appearance) {
-            PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
             SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
@@ -2890,7 +2890,7 @@ namespace iText.Forms.Fields {
         /// <param name="value">the initial value</param>
         protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, float fontSize, 
             String value, PdfFormXObject appearance) {
-            PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
             SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
@@ -3000,14 +3000,14 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the radio button to draw</param>
         /// <param name="value">the value of the button</param>
         protected internal virtual void DrawRadioAppearance(float width, float height, String value) {
-            PdfStream streamOn = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawRadioBorder(canvasOn, xObjectOn, width, height);
             DrawRadioField(canvasOn, width, height, true);
-            PdfStream streamOff = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             DrawRadioBorder(canvasOff, xObjectOff, width, height);
             if (pdfAConformanceLevel != null && (pdfAConformanceLevel.GetPart().Equals("2") || pdfAConformanceLevel.GetPart
@@ -3028,7 +3028,7 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the radio button to draw</param>
         /// <param name="value">the value of the button</param>
         protected internal virtual void DrawPdfA1RadioAppearance(float width, float height, String value) {
-            PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObject = new PdfFormXObject(rect);
@@ -3061,14 +3061,14 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the checkbox to draw</param>
         /// <param name="value">the state of the form field that will be drawn</param>
         protected internal virtual void DrawCheckAppearance(float width, float height, String value) {
-            PdfStream streamOn = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawBorder(canvasOn, xObjectOn, width, height);
             DrawCheckBox(canvasOn, width, height, (float)DEFAULT_FONT_SIZE, true);
-            PdfStream streamOff = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             DrawBorder(canvasOff, xObjectOff, width, height);
             DrawCheckBox(canvasOff, width, height, (float)DEFAULT_FONT_SIZE, false);
@@ -3090,7 +3090,7 @@ namespace iText.Forms.Fields {
 
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String value, int checkType
             ) {
-            PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObject = new PdfFormXObject(rect);
@@ -3109,9 +3109,9 @@ namespace iText.Forms.Fields {
 
         protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String value, int checkType
             ) {
-            PdfStream streamOn = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
-            PdfStream streamOff = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
@@ -3149,7 +3149,7 @@ namespace iText.Forms.Fields {
         /// </returns>
         protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
             PdfFont font, float fontSize) {
-            PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (backgroundColor == null) {

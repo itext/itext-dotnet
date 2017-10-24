@@ -844,8 +844,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
-                new Rectangle(availableWidth, AbstractRenderer.INF)))));
+            LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
+                , AbstractRenderer.INF))));
             return result.GetNotNullMinMaxWidth(availableWidth);
         }
 

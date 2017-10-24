@@ -588,8 +588,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
             outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(4);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(((PdfDictionary)pdfType3FontDict.CopyTo
-                (outputPdfDoc)));
+            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
+                (outputPdfDoc));
             Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
             newGlyph.SetLineWidth(100);
             newGlyph.MoveTo(540, 5);
@@ -622,7 +622,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfType1Font = PdfFontFactory.CreateFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("New Hello world"
@@ -650,7 +650,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
@@ -678,7 +678,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfFont = inputPdfDoc1.GetFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("New Hello world").EndText
@@ -758,7 +758,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
@@ -786,7 +786,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello World"
@@ -840,7 +840,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfType1Font = inputPdfDoc1.GetFont((PdfDictionary)pdfDictionary.CopyTo(pdfDoc));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(pdfType1Font, 10).ShowText("New MyriadPro-Bold font."

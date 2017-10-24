@@ -87,12 +87,12 @@ namespace iText.Kernel.Font {
 
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {
-                Glyph glyph = ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 //TODO TrueType what if font is specific?
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
-                    Glyph notdef = ((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0);
+                    Glyph notdef = GetFontProgram().GetGlyphByCode(0);
                     if (notdef != null) {
-                        glyph = new Glyph(((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0), unicode);
+                        glyph = new Glyph(GetFontProgram().GetGlyphByCode(0), unicode);
                         notdefGlyphs.Put(unicode, glyph);
                     }
                 }
@@ -110,8 +110,8 @@ namespace iText.Kernel.Font {
                 return fontProgram.GetGlyphByCode(unicode) != null;
             }
             else {
-                return fontEncoding.CanEncode(unicode) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
-                    (unicode)) != null;
+                return fontEncoding.CanEncode(unicode) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode
+                    )) != null;
             }
         }
 

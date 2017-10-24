@@ -1378,7 +1378,7 @@ namespace iText.Layout.Renderer {
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
                 array.Add(new PdfNumber(0));
-                document.AddNamedDestination(destination, ((PdfArray)array.MakeIndirect(document)));
+                document.AddNamedDestination(destination, array.MakeIndirect(document));
                 DeleteProperty(Property.DESTINATION);
             }
         }

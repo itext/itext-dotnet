@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf.Filespec {
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
-            PdfStream stream = ((PdfStream)new PdfStream(fileStore).MakeIndirect(doc));
+            PdfStream stream = (PdfStream)new PdfStream(fileStore).MakeIndirect(doc);
             PdfDictionary @params = new PdfDictionary();
             if (fileParameter != null) {
                 @params.MergeDifferent(fileParameter);

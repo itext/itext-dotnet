@@ -66,7 +66,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override IPropertyContainer GetModelElement() {
-            return (Cell)base.GetModelElement();
+            return base.GetModelElement();
         }
 
         protected internal override float? RetrieveWidth(float parentBoxWidth) {
@@ -145,7 +145,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
-            return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
+            return new iText.Layout.Renderer.CellRenderer((Cell)GetModelElement());
         }
     }
 }

@@ -501,7 +501,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     else {
                         copiedMapping = entry.Value.CopyTo(toDocument);
                     }
-                    PdfName copiedRoleFrom = ((PdfName)entry.Key.CopyTo(toDocument));
+                    PdfName copiedRoleFrom = (PdfName)entry.Key.CopyTo(toDocument);
                     copiedRoleMap.Put(copiedRoleFrom, copiedMapping);
                 }
             }
@@ -576,13 +576,12 @@ namespace iText.Kernel.Pdf.Tagging {
         private static void CloneParents(PdfDictionary structElem, StructureTreeCopier.LastClonedAncestor lastCloned
             , PdfDocument document) {
             if (lastCloned.ancestor != structElem) {
-                PdfDictionary structElemClone = ((PdfDictionary)structElem.Clone(ignoreKeysForClone).MakeIndirect(document
-                    ));
+                PdfDictionary structElemClone = (PdfDictionary)structElem.Clone(ignoreKeysForClone).MakeIndirect(document);
                 PdfDictionary currClone = structElemClone;
                 PdfDictionary currElem = structElem;
                 while (currElem.Get(PdfName.P) != lastCloned.ancestor) {
                     PdfDictionary parent = currElem.GetAsDictionary(PdfName.P);
-                    PdfDictionary parentClone = ((PdfDictionary)parent.Clone(ignoreKeysForClone).MakeIndirect(document));
+                    PdfDictionary parentClone = (PdfDictionary)parent.Clone(ignoreKeysForClone).MakeIndirect(document);
                     currClone.Put(PdfName.P, parentClone);
                     parentClone.Put(PdfName.K, currClone);
                     currClone = parentClone;

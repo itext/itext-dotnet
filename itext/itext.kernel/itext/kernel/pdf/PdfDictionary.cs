@@ -404,47 +404,6 @@ namespace iText.Kernel.Pdf {
             return dictionary;
         }
 
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfDictionary)base.MakeIndirect(document);
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iText.Kernel.Pdf.PdfDictionary)base.MakeIndirect(document, reference);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfDictionary)base.CopyTo(document, true);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <param name="allowDuplicating">
-        /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-        /// </param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iText.Kernel.Pdf.PdfDictionary)base.CopyTo(document, allowDuplicating);
-        }
-
         /// <summary>Copies dictionary to specified document.</summary>
         /// <remarks>
         /// Copies dictionary to specified document.
@@ -466,8 +425,8 @@ namespace iText.Kernel.Pdf {
                     excluded.Put(key, map.JRemove(key));
                 }
             }
-            iText.Kernel.Pdf.PdfDictionary dictionary = ((iText.Kernel.Pdf.PdfDictionary)CopyTo(document, allowDuplicating
-                ));
+            iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)CopyTo(document, allowDuplicating
+                );
             map.AddAll(excluded);
             return dictionary;
         }

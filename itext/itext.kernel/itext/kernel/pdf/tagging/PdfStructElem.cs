@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public PdfStructElem(PdfDocument document, PdfName role)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(document)) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructElem);
             GetPdfObject().Put(PdfName.S, role);
         }

@@ -48,10 +48,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestValuesIndirectContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(0).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
+            array.Add(new PdfNumber(0).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc));
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
             array.Add(new PdfNumber(4));
             array.Add(new PdfNumber(5));
             NUnit.Framework.Assert.IsTrue(array.Contains(array.Get(0, false)));
@@ -66,10 +66,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestValuesIndirectRemove() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             array.Remove(array.Get(0, false));
@@ -85,17 +85,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             PdfArray array2 = new PdfArray();
-            array2.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array2.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array2.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(3).MakeIndirect(doc));
+            array2.Add(new PdfNumber(4).MakeIndirect(doc));
             array2.Add(new PdfNumber(5));
             array2.Add(new PdfNumber(6));
             foreach (PdfObject obj in array2) {
@@ -110,17 +110,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestRemove() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             PdfArray array2 = new PdfArray();
-            array2.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array2.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array2.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(3).MakeIndirect(doc));
+            array2.Add(new PdfNumber(4).MakeIndirect(doc));
             array2.Add(new PdfNumber(5));
             array2.Add(new PdfNumber(6));
             foreach (PdfObject obj in array2) {
@@ -133,17 +133,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestRemove2() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             PdfArray array2 = new PdfArray();
-            array2.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array2.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array2.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(3).MakeIndirect(doc));
+            array2.Add(new PdfNumber(4).MakeIndirect(doc));
             array2.Add(new PdfNumber(5));
             array2.Add(new PdfNumber(6));
             for (int i = 0; i < array2.Size(); i++) {
@@ -156,17 +156,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestIndexOf() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             PdfArray array2 = new PdfArray();
-            array2.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array2.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array2.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(3).MakeIndirect(doc));
+            array2.Add(new PdfNumber(4).MakeIndirect(doc));
             array2.Add(new PdfNumber(5));
             array2.Add(new PdfNumber(6));
             int i = 0;
@@ -179,17 +179,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestIndexOf2() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfArray array = new PdfArray();
-            array.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array.Add(new PdfNumber(3).MakeIndirect(doc));
+            array.Add(new PdfNumber(4).MakeIndirect(doc));
             array.Add(new PdfNumber(5));
             array.Add(new PdfNumber(6));
             PdfArray array2 = new PdfArray();
-            array2.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            array2.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            array2.Add(((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            array2.Add(new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            array2.Add(new PdfNumber(3).MakeIndirect(doc));
+            array2.Add(new PdfNumber(4).MakeIndirect(doc));
             array2.Add(new PdfNumber(5));
             array2.Add(new PdfNumber(6));
             for (int i = 0; i < array2.Size(); i++) {

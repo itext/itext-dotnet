@@ -510,7 +510,7 @@ namespace iText.Layout.Renderer {
                                         }
                                         for (int i = 0; i < numberOfColumns; i++) {
                                             if (null != rows[row + reusedRows][i]) {
-                                                rows[row + reusedRows][i] = (CellRenderer)((Cell)rows[row + reusedRows][i].GetModelElement()).CreateRendererSubTree
+                                                rows[row + reusedRows][i] = (CellRenderer)((Cell)(rows[row + reusedRows][i].GetModelElement())).CreateRendererSubTree
                                                     ();
                                             }
                                         }

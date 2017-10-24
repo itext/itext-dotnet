@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfDictionary BuildParentTree() {
-            return ((PdfDictionary)parentTree.BuildTree().MakeIndirect(structTreeRoot.GetDocument()));
+            return (PdfDictionary)parentTree.BuildTree().MakeIndirect(structTreeRoot.GetDocument());
         }
 
         public virtual void RegisterMcr(PdfMcr mcr) {

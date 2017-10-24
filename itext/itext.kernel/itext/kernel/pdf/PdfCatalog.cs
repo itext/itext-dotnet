@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal PdfCatalog(PdfDocument pdfDocument)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
         }
 
         /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
@@ -460,7 +460,7 @@ namespace iText.Kernel.Pdf {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
                                     // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
-                                    PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
+                                    PdfArray copiedArray = (PdfArray)srcDestArray.CopyTo(toDocument, false);
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }
                                 break;

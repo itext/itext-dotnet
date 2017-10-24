@@ -720,8 +720,8 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     else {
-                        reference = table.Add(((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                            0).SetState(PdfObject.READING)));
+                        reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                            0).SetState(PdfObject.READING));
                     }
                     return reference;
                 }
@@ -1043,8 +1043,8 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference newReference;
                     switch (type) {
                         case 0: {
-                            newReference = ((PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
-                                (PdfObject.FREE));
+                            newReference = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
+                                (PdfObject.FREE);
                             break;
                         }
 

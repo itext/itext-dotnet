@@ -88,8 +88,8 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal PdfPage(PdfDocument pdfDocument, PageSize pageSize)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
-            PdfStream contentStream = ((PdfStream)new PdfStream().MakeIndirect(pdfDocument));
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
+            PdfStream contentStream = (PdfStream)new PdfStream().MakeIndirect(pdfDocument);
             GetPdfObject().Put(PdfName.Contents, contentStream);
             GetPdfObject().Put(PdfName.Type, PdfName.Page);
             GetPdfObject().Put(PdfName.MediaBox, new PdfArray(pageSize));
@@ -394,7 +394,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
-            PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream xmp = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             xmp.GetOutputStream().Write(xmpMetadata);
             xmp.Put(PdfName.Type, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.XML);
@@ -538,7 +538,7 @@ namespace iText.Kernel.Pdf {
             xObject.GetPdfObject().MergeDifferent(dictionary);
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
-                PdfObject copyResource = ((PdfDictionary)GetResources().GetPdfObject().CopyTo(toDocument, true));
+                PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true);
                 xObject.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             return xObject;
@@ -1517,7 +1517,7 @@ namespace iText.Kernel.Pdf {
                     array = null;
                 }
             }
-            PdfStream contentStream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream contentStream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             if (array != null) {
                 if (before) {
                     array.Add(0, contentStream);

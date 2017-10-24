@@ -150,7 +150,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(new PdfWriter(filename));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-            catalog.Put(new PdfName("a"), ((PdfBoolean)new PdfBoolean(true).MakeIndirect(document)));
+            catalog.Put(new PdfName("a"), new PdfBoolean(true).MakeIndirect(document));
             document.Close();
             PdfReader reader = new PdfReader(filename);
             document = new PdfDocument(reader);

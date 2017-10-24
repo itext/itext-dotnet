@@ -177,8 +177,8 @@ namespace iText.Kernel.Pdf.Xobject {
         /// .
         /// </returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
-            iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject(((PdfStream)
-                GetPdfObject().CopyTo(document)));
+            iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject((PdfStream)GetPdfObject
+                ().CopyTo(document));
             image.width = width;
             image.height = height;
             image.mask = mask;

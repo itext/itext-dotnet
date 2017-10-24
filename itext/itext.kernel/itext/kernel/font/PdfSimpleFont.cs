@@ -150,10 +150,6 @@ namespace iText.Kernel.Font {
             return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
-        public override FontProgram GetFontProgram() {
-            return (T)fontProgram;
-        }
-
         public virtual FontEncoding GetFontEncoding() {
             return fontEncoding;
         }
