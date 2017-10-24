@@ -280,14 +280,11 @@ namespace iText.Barcodes {
             if (text == null) {
                 throw new ArgumentException("Valid code required to generate checksum for MSI barcode");
             }
-            String[] strArray = iText.IO.Util.StringUtil.Split(text, "");
-            int[] digits = new int[strArray.Length];
-            for (int i = 0; i < strArray.Length; i++) {
-                try {
-                    digits[i] = System.Convert.ToInt32(strArray[i]);
-                }
-                catch (FormatException) {
-                    throw new ArgumentException("The character " + text[i] + " is illegal in MSI bar codes.");
+            int[] digits = new int[text.Length];
+            for (int x = 0; x < text.Length; x++) {
+                digits[x] = (int)(text[x] - '0');
+                if (digits[x] < 0 || digits[x] > 9) {
+                    throw new ArgumentException("The character " + text[x] + " is illegal in MSI bar codes.");
                 }
             }
             int sum = 0;
