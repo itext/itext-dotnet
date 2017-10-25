@@ -181,6 +181,176 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [NUnit.Framework.Test]
+        public virtual void BlockWithSetHeightProperties03() {
+            //Relative height declaration tests
+            String outFileName = destinationFolder + "blockWithSetHeightProperties03.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            float parentHeight = 650;
+            Div d = new Div();
+            d.Add(new Paragraph(textByron));
+            d.SetBorder(new SolidBorder(0.5f));
+            doc.Add(new Paragraph("Default layout:"));
+            Div parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 150% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(150f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 10% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(10f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 40% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(40f));
+            parent.Add(d);
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 50% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(50f));
+            parent.Add(d);
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's min height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's max height is set to 30% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.DeleteOwnProperty(Property.MIN_HEIGHT);
+            //Min-height trumps max-height, so we have to remove it when re-using the div
+            d.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [NUnit.Framework.Test]
+        public virtual void BlockWithSetHeightProperties04() {
+            //Relative height declaration tests
+            String outFileName = destinationFolder + "blockWithSetHeightProperties04.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            float parentHeight = 650;
+            Paragraph p = new Paragraph();
+            p.Add(new Text(textByron));
+            p.SetBorder(new SolidBorder(0.5f));
+            doc.Add(new Paragraph("Default layout:"));
+            Div parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 150% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(150f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 10% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(10f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 40% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(40f));
+            parent.Add(p);
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 50% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(50f));
+            parent.Add(p);
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's min height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's max height is set to 30% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.DeleteOwnProperty(Property.MIN_HEIGHT);
+            //Min-height trumps max, so we have to remove it when re-using the paragraph
+            p.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowTest01() {
             // TODO DEVSIX-1373

@@ -374,6 +374,19 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<bool?>(property);
         }
 
+        /// <summary>Returns a property with a certain key, as a unit value.</summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// </returns>
+        public virtual UnitValue GetPropertyAsUnitValue(int property) {
+            return this.GetProperty<UnitValue>(property);
+        }
+
         /// <summary>Returns a property with a certain key, as an integer value.</summary>
         /// <param name="property">
         /// an
@@ -1057,20 +1070,66 @@ namespace iText.Layout.Renderer {
             SetProperty(Property.WIDTH, updatedWidthValue);
         }
 
-        /// <summary>Retrieves element's fixed content box height, if it's set.</summary>
+        /// <summary>Retrieves the element's fixed content box height, if it's set.</summary>
         /// <remarks>
-        /// Retrieves element's fixed content box height, if it's set.
+        /// Retrieves the element's fixed content box height, if it's set.
         /// Takes into account
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
-        /// property value.
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.MIN_HEIGHT"/>
+        /// ,
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.MAX_HEIGHT"/>
+        /// properties.
         /// </remarks>
         /// <returns>element's fixed content box height or null if it's not set.</returns>
         protected internal virtual float? RetrieveHeight() {
-            float? height = this.GetProperty<float?>(Property.HEIGHT);
-            if (height != null && IsBorderBoxSizing(this)) {
-                height = Math.Max(0, (float)height - CalculatePaddingBorderHeight(this));
+            float? height = null;
+            UnitValue heightUV = GetPropertyAsUnitValue(Property.HEIGHT);
+            float? parentResolvedHeight = RetrieveResolvedParentDeclaredHeight();
+            float? minHeight = null;
+            float? maxHeight = null;
+            if (heightUV != null) {
+                if (parentResolvedHeight == null) {
+                    if (heightUV.IsPercentValue()) {
+                        //If the height is a relative value and no parent with a resolved height can be found, treat it as null
+                        height = null;
+                    }
+                    else {
+                        //Since no parent height is resolved, only point-value min and max should be taken into account
+                        UnitValue minHeightUV = GetPropertyAsUnitValue(Property.MIN_HEIGHT);
+                        if (minHeightUV != null && minHeightUV.IsPointValue()) {
+                            minHeight = minHeightUV.GetValue();
+                        }
+                        UnitValue maxHeightUV = GetPropertyAsUnitValue(Property.MAX_HEIGHT);
+                        if (maxHeightUV != null && maxHeightUV.IsPointValue()) {
+                            maxHeight = maxHeightUV.GetValue();
+                        }
+                        //If the height is stored as a point value, we do not care about the parent's resolved height
+                        height = heightUV.GetValue();
+                    }
+                }
+                else {
+                    minHeight = RetrieveUnitValue((float)parentResolvedHeight, Property.MIN_HEIGHT);
+                    maxHeight = RetrieveUnitValue((float)parentResolvedHeight, Property.MAX_HEIGHT);
+                    height = RetrieveUnitValue((float)parentResolvedHeight, Property.HEIGHT);
+                }
+                if (maxHeight != null && minHeight != null && minHeight > maxHeight) {
+                    maxHeight = minHeight;
+                }
+                if (height != null) {
+                    if (maxHeight != null) {
+                        height = height > maxHeight ? maxHeight : height;
+                    }
+                    if (minHeight != null) {
+                        height = height < minHeight ? minHeight : height;
+                    }
+                }
+                if (height != null && IsBorderBoxSizing(this)) {
+                    height -= CalculatePaddingBorderHeight(this);
+                }
             }
-            return height;
+            return height != null ? (float?)Math.Max(0, (float)height) : null;
         }
 
         /// <summary>Updates fixed content box height value for this renderer.</summary>
@@ -1080,28 +1139,58 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
         /// property value.
         /// </remarks>
-        /// <param name="updatedHeightValue">element's new fixed content box height, shall be not null.</param>
-        internal virtual void UpdateHeight(float? updatedHeightValue) {
-            if (IsBorderBoxSizing(this)) {
-                updatedHeightValue += CalculatePaddingBorderHeight(this);
+        /// <param name="updatedHeight">element's new fixed content box height, shall be not null.</param>
+        internal virtual void UpdateHeight(UnitValue updatedHeight) {
+            if (IsBorderBoxSizing(this) && updatedHeight.IsPointValue()) {
+                updatedHeight.SetValue(updatedHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
-            SetProperty(Property.HEIGHT, updatedHeightValue);
+            SetProperty(Property.HEIGHT, updatedHeight);
         }
 
-        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <summary>Retrieve element's content box max-ehight, if it's set.</summary>
         /// <remarks>
-        /// Retrieves element's content box max-height, if it's set.
+        /// Retrieve element's content box max-ehight, if it's set.
         /// Takes into account
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
         /// property value.
         /// </remarks>
         /// <returns>element's content box max-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMaxHeight() {
-            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
-            if (maxHeight != null && IsBorderBoxSizing(this)) {
-                maxHeight = Math.Max(0, (float)maxHeight - CalculatePaddingBorderHeight(this));
+            float? maxHeight = null;
+            float? minHeight = null;
+            float? directParentDeclaredHeight = RetrieveDirectParentDeclaredHeight();
+            UnitValue maxHeightAsUV = GetPropertyAsUnitValue(Property.MAX_HEIGHT);
+            if (maxHeightAsUV != null) {
+                if (directParentDeclaredHeight == null) {
+                    if (maxHeightAsUV.IsPercentValue()) {
+                        maxHeight = null;
+                    }
+                    else {
+                        minHeight = RetrieveMinHeight();
+                        //Since no parent height is resolved, only point-value min should be taken into account
+                        UnitValue minHeightUV = GetPropertyAsUnitValue(Property.MIN_HEIGHT);
+                        if (minHeightUV != null && minHeightUV.IsPointValue()) {
+                            minHeight = minHeightUV.GetValue();
+                        }
+                        //We don't care about a baseline if the max-height is explicitly defined
+                        maxHeight = maxHeightAsUV.GetValue();
+                    }
+                }
+                else {
+                    maxHeight = RetrieveUnitValue((float)directParentDeclaredHeight, Property.MAX_HEIGHT);
+                }
+                if (maxHeight != null) {
+                    if (minHeight != null && minHeight > maxHeight) {
+                        maxHeight = minHeight;
+                    }
+                    if (IsBorderBoxSizing(this)) {
+                        maxHeight -= CalculatePaddingBorderHeight(this);
+                    }
+                    return maxHeight > 0 ? maxHeight : 0;
+                }
             }
-            return maxHeight;
+            //Max height is not set, but height might be set
+            return RetrieveHeight();
         }
 
         /// <summary>Updates content box max-height value for this renderer.</summary>
@@ -1111,28 +1200,49 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
         /// property value.
         /// </remarks>
-        /// <param name="updatedMaxHeightValue">element's new content box max-height, shall be not null.</param>
-        internal virtual void UpdateMaxHeight(float? updatedMaxHeightValue) {
-            if (IsBorderBoxSizing(this)) {
-                updatedMaxHeightValue += CalculatePaddingBorderHeight(this);
+        /// <param name="updatedMaxHeight">element's new content box max-height, shall be not null.</param>
+        internal virtual void UpdateMaxHeight(UnitValue updatedMaxHeight) {
+            if (IsBorderBoxSizing(this) && updatedMaxHeight.IsPointValue()) {
+                updatedMaxHeight.SetValue(updatedMaxHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
-            SetProperty(Property.MAX_HEIGHT, updatedMaxHeightValue);
+            SetProperty(Property.MAX_HEIGHT, updatedMaxHeight);
         }
 
-        /// <summary>Retrieves element's content box max-height, if it's set.</summary>
+        /// <summary>Retrieves element's content box min-height, if it's set.</summary>
         /// <remarks>
-        /// Retrieves element's content box max-height, if it's set.
+        /// Retrieves element's content box min-height, if it's set.
         /// Takes into account
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
         /// property value.
         /// </remarks>
         /// <returns>element's content box min-height or null if it's not set.</returns>
         protected internal virtual float? RetrieveMinHeight() {
-            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
-            if (minHeight != null && IsBorderBoxSizing(this)) {
-                minHeight = Math.Max(0, (float)minHeight - CalculatePaddingBorderHeight(this));
+            float? minHeight = null;
+            float? directParentDeclaredHeight = RetrieveDirectParentDeclaredHeight();
+            UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+            if (minHeightUV != null) {
+                if (directParentDeclaredHeight == null) {
+                    if (minHeightUV.IsPercentValue()) {
+                        //if there is no baseline to compare against, a relative value evaluates to null
+                        minHeight = null;
+                    }
+                    else {
+                        //If the min-height is stored as a point value, we do not care about a baseline.
+                        minHeight = minHeightUV.GetValue();
+                    }
+                }
+                else {
+                    minHeight = RetrieveUnitValue((float)directParentDeclaredHeight, Property.MIN_HEIGHT);
+                }
+                if (minHeight != null) {
+                    if (IsBorderBoxSizing(this)) {
+                        minHeight -= CalculatePaddingBorderHeight(this);
+                    }
+                    return minHeight > 0 ? minHeight : 0;
+                }
             }
-            return minHeight;
+            //min-height might be zero, but height might be set
+            return RetrieveHeight();
         }
 
         /// <summary>Updates content box min-height value for this renderer.</summary>
@@ -1142,12 +1252,12 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.BOX_SIZING"/>
         /// property value.
         /// </remarks>
-        /// <param name="updatedMinHeightValue">element's new content box min-height, shall be not null.</param>
-        internal virtual void UpdateMinHeight(float? updatedMinHeightValue) {
-            if (IsBorderBoxSizing(this)) {
-                updatedMinHeightValue += CalculatePaddingBorderHeight(this);
+        /// <param name="updatedMinHeight">element's new content box min-height, shall be not null.</param>
+        internal virtual void UpdateMinHeight(UnitValue updatedMinHeight) {
+            if (IsBorderBoxSizing(this) && updatedMinHeight.IsPointValue()) {
+                updatedMinHeight.SetValue(updatedMinHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
-            SetProperty(Property.MIN_HEIGHT, updatedMinHeightValue);
+            SetProperty(Property.MIN_HEIGHT, updatedMinHeight);
         }
 
         protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
@@ -1419,21 +1529,147 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>Retrieve the parent's resolved height declaration.</summary>
+        /// <remarks>
+        /// Retrieve the parent's resolved height declaration.
+        /// If the parent has a relative height declaration, it will check it's parent recursively,
+        /// </remarks>
+        /// <returns>
+        /// null if no height declaration is set on the parent, or if it's own height declaration cannot be resolved
+        /// The float value of the resolved height otherwiser
+        /// </returns>
+        private float? RetrieveResolvedParentDeclaredHeight() {
+            if (parent != null && parent.GetProperty<UnitValue>(Property.HEIGHT) != null) {
+                UnitValue parentHeightUV = GetPropertyAsUnitValue(parent, Property.HEIGHT);
+                if (parentHeightUV.IsPointValue()) {
+                    return parentHeightUV.GetValue();
+                }
+                else {
+                    float? parentResolvedHeightValue = ((iText.Layout.Renderer.AbstractRenderer)parent).RetrieveResolvedParentDeclaredHeight
+                        ();
+                    if (parentResolvedHeightValue != null) {
+                        return ((iText.Layout.Renderer.AbstractRenderer)parent).RetrieveHeight();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+            else {
+                return null;
+            }
+        }
+
+        /// <summary>Retrieve the direct parent's absolute height property</summary>
+        /// <returns>the direct parent's absolute height property value if it exists, null otherwise</returns>
+        private float? RetrieveDirectParentDeclaredHeight() {
+            if (parent != null && parent.GetProperty<UnitValue>(Property.HEIGHT) != null) {
+                UnitValue parentHeightUV = GetPropertyAsUnitValue(parent, Property.HEIGHT);
+                if (parentHeightUV.IsPointValue()) {
+                    return parentHeightUV.GetValue();
+                }
+            }
+            return null;
+        }
+
+        /// <Deprecated>This function is no longer part of the layout algorithm and will be removed in 7.1</Deprecated>
+        [Obsolete]
+        protected internal virtual void OverrideHeightProperties() {
+            float? height = GetPropertyAsFloat(Property.HEIGHT);
+            float? maxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
+            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
+            if (null != height) {
+                if (null == maxHeight || height < maxHeight) {
+                    maxHeight = height;
+                }
+                else {
+                    height = maxHeight;
+                }
+                if (null == minHeight || height > minHeight) {
+                    minHeight = height;
+                }
+            }
+            if (null != maxHeight && null != minHeight && minHeight > maxHeight) {
+                maxHeight = minHeight;
+            }
+            if (null != maxHeight) {
+                SetProperty(Property.MAX_HEIGHT, maxHeight);
+            }
+            if (null != minHeight) {
+                SetProperty(Property.MIN_HEIGHT, minHeight);
+            }
+        }
+
         protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
              splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
-            float? maxHeight = RetrieveMaxHeight();
-            if (maxHeight != null) {
-                overflowRenderer.UpdateMaxHeight(maxHeight - occupiedArea.GetBBox().GetHeight());
+            //Update height related properties on split or overflow
+            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
+            //For relative heights, we need the parent's resolved height declaration
+            if (HasProperty(Property.MAX_HEIGHT)) {
+                UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
+                if (maxHeightUV.IsPointValue()) {
+                    float? maxHeight = RetrieveMaxHeight();
+                    UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - occupiedArea.GetBBox().GetHeight
+                        ()));
+                    overflowRenderer.UpdateMaxHeight(updateMaxHeight);
+                }
+                else {
+                    if (parentResolvedHeightPropertyValue != null) {
+                        //Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
+                             * 100;
+                        //Fraction
+                        float newFraction = maxHeightUV.GetValue() - currentOccupiedFraction;
+                        //Update
+                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
+                    }
+                }
             }
-            float? minHeight = RetrieveMinHeight();
-            if (minHeight != null) {
-                overflowRenderer.UpdateMinHeight(minHeight - occupiedArea.GetBBox().GetHeight());
+            //If parent has no resolved height, relative height declarations can be ignored
+            if (HasProperty(Property.MIN_HEIGHT)) {
+                UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+                if (minHeightUV.IsPointValue()) {
+                    float? minHeight = RetrieveMinHeight();
+                    UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - occupiedArea.GetBBox().GetHeight
+                        ()));
+                    overflowRenderer.UpdateMinHeight(updateminHeight);
+                }
+                else {
+                    if (parentResolvedHeightPropertyValue != null) {
+                        //Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
+                             * 100;
+                        //Fraction
+                        float newFraction = minHeightUV.GetValue() - currentOccupiedFraction;
+                        //Update
+                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
+                    }
+                }
             }
-            float? height = RetrieveHeight();
-            if (height != null) {
-                overflowRenderer.UpdateHeight(height - occupiedArea.GetBBox().GetHeight());
+            //If parent has no resolved height, relative height declarations can be ignored
+            if (HasProperty(Property.HEIGHT)) {
+                UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+                if (heightUV.IsPointValue()) {
+                    float? height = RetrieveHeight();
+                    UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - occupiedArea.GetBBox().GetHeight()));
+                    overflowRenderer.UpdateHeight(updateHeight);
+                }
+                else {
+                    if (parentResolvedHeightPropertyValue != null) {
+                        //Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
+                             * 100;
+                        //Fraction
+                        float newFraction = heightUV.GetValue() - currentOccupiedFraction;
+                        //Update
+                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
+                    }
+                }
             }
+            //If parent has no resolved height, relative height declarations can be ignored
             if (wasHeightClipped) {
+                //if height was clipped, max height exists and can be resolved
+                float? maxHeight = RetrieveMaxHeight();
                 ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                 splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
@@ -1694,32 +1930,6 @@ namespace iText.Layout.Renderer {
             return new float[] { dx, dy };
         }
 
-        protected internal virtual void OverrideHeightProperties() {
-            float? height = GetPropertyAsFloat(Property.HEIGHT);
-            float? maxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
-            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
-            if (null != height) {
-                if (null == maxHeight || height < maxHeight) {
-                    maxHeight = height;
-                }
-                else {
-                    height = maxHeight;
-                }
-                if (null == minHeight || height > minHeight) {
-                    minHeight = height;
-                }
-            }
-            if (null != maxHeight && null != minHeight && minHeight > maxHeight) {
-                maxHeight = minHeight;
-            }
-            if (null != maxHeight) {
-                SetProperty(Property.MAX_HEIGHT, maxHeight);
-            }
-            if (null != minHeight) {
-                SetProperty(Property.MIN_HEIGHT, minHeight);
-            }
-        }
-
         /// <summary>Check if corresponding property has point value.</summary>
         /// <param name="property">
         /// 
@@ -1776,6 +1986,16 @@ namespace iText.Layout.Renderer {
 
         internal static float? GetPropertyAsFloat(IRenderer renderer, int property) {
             return NumberUtil.AsFloat(renderer.GetProperty<Object>(property));
+        }
+
+        /// <summary>Returns the property of the renderer as a UnitValue if it exists and is a UnitValue, null otherwise
+        ///     </summary>
+        /// <param name="renderer">renderer to retrieve the property from</param>
+        /// <param name="property">key for the property to retrieve</param>
+        /// <returns>A UnitValue if the property is present and is a UnitValue, null otherwise</returns>
+        internal static UnitValue GetPropertyAsUnitValue(IRenderer renderer, int property) {
+            UnitValue result = renderer.GetProperty<UnitValue>(property);
+            return result;
         }
 
         internal static void ApplyGeneratedAccessibleAttributes(TagTreePointer tagPointer, PdfDictionary attributes
@@ -1893,8 +2113,8 @@ namespace iText.Layout.Renderer {
         private void UpdateMinHeightForAbsolutelyPositionedRenderer(IRenderer renderer, Rectangle parentRendererBox
             , float? top, float? bottom) {
             if (top != null && bottom != null && !renderer.HasProperty(Property.HEIGHT)) {
-                float? currentMaxHeight = GetPropertyAsFloat(renderer, Property.MAX_HEIGHT);
-                float? currentMinHeight = GetPropertyAsFloat(renderer, Property.MIN_HEIGHT);
+                UnitValue currentMaxHeight = GetPropertyAsUnitValue(renderer, Property.MAX_HEIGHT);
+                UnitValue currentMinHeight = GetPropertyAsUnitValue(renderer, Property.MIN_HEIGHT);
                 float resolvedMinHeight = Math.Max(0, parentRendererBox.GetTop() - (float)top - parentRendererBox.GetBottom
                     () - (float)bottom);
                 Rectangle dummy = new Rectangle(0, 0);
@@ -1905,12 +2125,12 @@ namespace iText.Layout.Renderer {
                 ApplyMargins(dummy, GetMargins(renderer), true);
                 resolvedMinHeight -= dummy.GetHeight();
                 if (currentMinHeight != null) {
-                    resolvedMinHeight = Math.Max(resolvedMinHeight, (float)currentMinHeight);
+                    resolvedMinHeight = Math.Max(resolvedMinHeight, currentMinHeight.GetValue());
                 }
                 if (currentMaxHeight != null) {
-                    resolvedMinHeight = Math.Min(resolvedMinHeight, (float)currentMaxHeight);
+                    resolvedMinHeight = Math.Min(resolvedMinHeight, currentMaxHeight.GetValue());
                 }
-                renderer.SetProperty(Property.MIN_HEIGHT, resolvedMinHeight);
+                renderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue((float)resolvedMinHeight));
             }
         }
 

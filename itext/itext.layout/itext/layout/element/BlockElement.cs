@@ -339,18 +339,29 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        /// <summary>Sets the height of a block element as point-unit value</summary>
+        /// <param name="height">a floating point value for the new height</param>
+        /// <returns>the block element itself</returns>
         public override T SetHeight(float height) {
             base.SetHeight(height);
             return (T)(Object)this;
         }
 
+        /// <summary>Sets the max-height of a block element as point-unit value.</summary>
+        /// <param name="maxHeight">a floating point value for the new max-height</param>
+        /// <returns>the block element itself</returns>
         public virtual T SetMaxHeight(float maxHeight) {
-            SetProperty(Property.MAX_HEIGHT, maxHeight);
+            UnitValue maxHeightAsUV = UnitValue.CreatePointValue(maxHeight);
+            SetProperty(Property.MAX_HEIGHT, maxHeightAsUV);
             return (T)(Object)this;
         }
 
+        /// <summary>Sets the min-height of a block element as point-unit value.</summary>
+        /// <param name="minHeight">a floating point value for the new min-height</param>
+        /// <returns>the block element itself</returns>
         public virtual T SetMinHeight(float minHeight) {
-            SetProperty(Property.MIN_HEIGHT, minHeight);
+            UnitValue minHeightAsUV = UnitValue.CreatePointValue(minHeight);
+            SetProperty(Property.MIN_HEIGHT, minHeightAsUV);
             return (T)(Object)this;
         }
 
