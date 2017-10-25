@@ -74,7 +74,7 @@ namespace iText.Barcodes {
             barcode.SetCode("123456789");
             barcode.SetGenerateChecksum(true);
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, Color.BLACK, Color.WHITE);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLACK, ColorConstants.WHITE);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff01_"));
@@ -92,7 +92,7 @@ namespace iText.Barcodes {
             Barcode1D barcode = new BarcodeMSI(document);
             barcode.SetCode("9781935182610");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, Color.BLACK, Color.WHITE);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLACK, ColorConstants.WHITE);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff02_"));
