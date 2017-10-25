@@ -174,7 +174,6 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            OverrideHeightProperties();
             float? blockMinHeight = RetrieveMinHeight();
             float? blockMaxHeight = RetrieveMaxHeight();
             LayoutArea area = layoutContext.GetArea();

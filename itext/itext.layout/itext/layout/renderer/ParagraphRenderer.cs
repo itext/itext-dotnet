@@ -81,7 +81,6 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            OverrideHeightProperties();
             bool wasHeightClipped = false;
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
@@ -382,9 +381,11 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                         ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
                     overflowRenderer = CreateOverflowRenderer(parent);
-                    overflowRenderer.UpdateMinHeight((float)blockMinHeight - occupiedArea.GetBBox().GetHeight());
+                    overflowRenderer.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight - occupiedArea.GetBBox()
+                        .GetHeight()));
                     if (HasProperty(Property.HEIGHT)) {
-                        overflowRenderer.UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                        overflowRenderer.UpdateHeight(UnitValue.CreatePointValue((float)RetrieveHeight() - occupiedArea.GetBBox().
+                            GetHeight()));
                     }
                 }
                 ApplyVerticalAlignment();

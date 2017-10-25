@@ -150,16 +150,17 @@ namespace iText.Layout {
         }
 
         /// <summary>Gets the height property of the Element.</summary>
-        /// <returns>the height of the element, as a floating point value.</returns>
+        /// <returns>the height of the element, as a floating point value. Null if the property is not present</returns>
         public virtual float? GetHeight() {
-            return this.GetProperty<float?>(Property.HEIGHT);
+            return this.GetProperty<UnitValue>(Property.HEIGHT).GetValue();
         }
 
-        /// <summary>Sets the height property of the Element.</summary>
+        /// <summary>Sets the height property of the Element as a point-value.</summary>
         /// <param name="height">a floating point value for the new height</param>
         /// <returns>this Element.</returns>
         public virtual T SetHeight(float height) {
-            SetProperty(Property.HEIGHT, height);
+            UnitValue heightAsUV = UnitValue.CreatePointValue(height);
+            SetProperty(Property.HEIGHT, heightAsUV);
             return (T)(Object)this;
         }
 

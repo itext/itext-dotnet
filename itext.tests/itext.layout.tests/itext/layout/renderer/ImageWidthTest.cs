@@ -97,7 +97,7 @@ namespace iText.Layout.Renderer {
             xObject = new PdfImageXObject(ImageDataFactory.Create(imageFolder + "Desert.jpg"));
             image = new iText.Layout.Element.Image(xObject);
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePercentValue(100));
-            image.SetProperty(Property.MAX_HEIGHT, 200f);
+            image.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(200f));
             p.Add(image);
             doc.Add(p);
             doc.Add(new Paragraph(new Text("Fourth Line")));
@@ -129,7 +129,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(1024.0, minMaxWidth.GetMaxWidth(), EPSILON);
             minMaxWidth = renderer.GetMinMaxWidth(500);
             NUnit.Framework.Assert.AreEqual(250.0, minMaxWidth.GetMaxWidth(), EPSILON);
-            image.SetProperty(Property.MAX_HEIGHT, 100f);
+            image.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(100f));
             minMaxWidth = renderer.GetMinMaxWidth(500);
             NUnit.Framework.Assert.AreEqual(100.0 * 1024.0 / 768.0, minMaxWidth.GetMaxWidth(), EPSILON);
             image = new iText.Layout.Element.Image(xObject);
@@ -139,8 +139,8 @@ namespace iText.Layout.Renderer {
             minMaxWidth = renderer.GetMinMaxWidth(5000);
             NUnit.Framework.Assert.AreEqual(2000.0, minMaxWidth.GetMaxWidth(), EPSILON);
             NUnit.Framework.Assert.AreEqual(0.0, minMaxWidth.GetMaxWidth() - minMaxWidth.GetMinWidth(), EPSILON);
-            image.SetProperty(Property.MIN_HEIGHT, 100f);
-            image.SetProperty(Property.HEIGHT, 100f);
+            image.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(100f));
+            image.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100f));
             minMaxWidth = renderer.GetMinMaxWidth(5000);
             NUnit.Framework.Assert.AreEqual(100.0 * 1024.0 / 768.0, minMaxWidth.GetMaxWidth(), EPSILON);
         }
