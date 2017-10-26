@@ -484,6 +484,36 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1658")]
+        [NUnit.Framework.Test]
+        public virtual void ImageTest21() {
+            String outFileName = destinationFolder + "imageTest21.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest21.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            float[] colWidths = new float[] { 1f, 1f };
+            Table container = new Table(UnitValue.CreatePercentArray(colWidths));
+            container.AddCell("Text");
+            container.AddCell("autoscaling image, height only");
+            int textIterations = 50;
+            Paragraph p = new Paragraph();
+            for (int i = 0; i < textIterations; i++) {
+                p.Add("Text will wrap");
+            }
+            container.AddCell(p);
+            container.AddCell(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>

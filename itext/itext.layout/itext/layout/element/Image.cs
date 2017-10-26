@@ -352,7 +352,12 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        //TODO(DEVSIX-1658):Remove bugged mention
         /// <summary>Sets the autoscale property for the height of the image.</summary>
+        /// <remarks>
+        /// Sets the autoscale property for the height of the image.
+        /// Is currently bugged and will not work as expected.
+        /// </remarks>
         /// <param name="autoScale">whether or not to let the image height resize automatically</param>
         /// <returns>this image</returns>
         public virtual iText.Layout.Element.Image SetAutoScaleHeight(bool autoScale) {
