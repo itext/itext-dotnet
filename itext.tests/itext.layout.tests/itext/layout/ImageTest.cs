@@ -437,9 +437,9 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1658)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-1658")]
         [NUnit.Framework.Test]
         public virtual void ImageTest19() {
             String outFileName = destinationFolder + "imageTest19.pdf";

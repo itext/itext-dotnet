@@ -164,6 +164,14 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Sets the height property of the Element, measured in percentage.</summary>
+        /// <param name="heightPercent">a value measured in percentage.</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetHeightPercent(float heightPercent) {
+            SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(heightPercent));
+            return (T)(Object)this;
+        }
+
         /// <summary>
         /// Sets the width property of the Element with a
         /// <see cref="iText.Layout.Properties.UnitValue"/>
@@ -630,17 +638,6 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Switch on the simulation of italic style for a font.</summary>
-        /// <remarks>
-        /// Switch on the simulation of italic style for a font.
-        /// Be aware that using correct italic (oblique) font is highly preferred over this option.
-        /// </remarks>
-        /// <returns>this element</returns>
-        public virtual T SetItalic() {
-            SetProperty(Property.ITALIC_SIMULATION, true);
-            return (T)(Object)this;
-        }
-
         /// <summary>
         /// This attribute specifies the base direction of directionally neutral text
         /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
@@ -651,6 +648,17 @@ namespace iText.Layout {
         [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
         public virtual T SetBaseDirection(BaseDirection baseDirection) {
             return SetBaseDirection((BaseDirection?)baseDirection);
+        }
+
+        /// <summary>Switch on the simulation of italic style for a font.</summary>
+        /// <remarks>
+        /// Switch on the simulation of italic style for a font.
+        /// Be aware that using correct italic (oblique) font is highly preferred over this option.
+        /// </remarks>
+        /// <returns>this element</returns>
+        public virtual T SetItalic() {
+            SetProperty(Property.ITALIC_SIMULATION, true);
+            return (T)(Object)this;
         }
 
         /// <summary>Sets default line-through attributes for text.</summary>
