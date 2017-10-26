@@ -484,9 +484,9 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1658)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-1658")]
         [NUnit.Framework.Test]
         public virtual void ImageTest21() {
             String outFileName = destinationFolder + "imageTest21.pdf";
@@ -633,10 +633,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1022)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1022")]
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageRelativePositionTest.pdf";
@@ -711,10 +711,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1045)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1045")]
         public virtual void FixedPositionImageTest01() {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositionImageTest01.pdf";
