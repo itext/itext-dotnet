@@ -414,6 +414,76 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest18() {
+            String outFileName = destinationFolder + "imageTest18.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest18.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScale(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1658")]
+        [NUnit.Framework.Test]
+        public virtual void ImageTest19() {
+            String outFileName = destinationFolder + "imageTest19.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest19.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest20() {
+            String outFileName = destinationFolder + "imageTest20.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest20.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleWidth(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(60f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>

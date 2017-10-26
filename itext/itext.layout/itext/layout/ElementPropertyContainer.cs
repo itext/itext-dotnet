@@ -164,6 +164,22 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>
+        /// Sets the width property of the Element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="height">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetHeight(UnitValue height) {
+            SetProperty(Property.HEIGHT, height);
+            return (T)(Object)this;
+        }
+
         /// <summary>Sets values for a relative repositioning of the Element.</summary>
         /// <remarks>
         /// Sets values for a relative repositioning of the Element. Also has as a
@@ -625,6 +641,18 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>
+        /// This attribute specifies the base direction of directionally neutral text
+        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
+        /// in an element's content and attribute values.
+        /// </summary>
+        /// <param name="baseDirection">base direction</param>
+        /// <returns>this element</returns>
+        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
+        public virtual T SetBaseDirection(BaseDirection baseDirection) {
+            return SetBaseDirection((BaseDirection?)baseDirection);
+        }
+
         /// <summary>Sets default line-through attributes for text.</summary>
         /// <remarks>
         /// Sets default line-through attributes for text.
@@ -637,18 +665,6 @@ namespace iText.Layout {
         public virtual T SetLineThrough() {
             // 7/24 is the average between default browser behavior(1/4) and iText5 behavior(1/3)
             return SetUnderline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT);
-        }
-
-        /// <summary>
-        /// This attribute specifies the base direction of directionally neutral text
-        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
-        /// in an element's content and attribute values.
-        /// </summary>
-        /// <param name="baseDirection">base direction</param>
-        /// <returns>this element</returns>
-        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>Sets default underline attributes for text.</summary>
