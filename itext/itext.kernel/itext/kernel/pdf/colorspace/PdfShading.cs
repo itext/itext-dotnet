@@ -321,8 +321,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="ymin">the Ymin coordinate of rectangle.</param>
             /// <param name="ymax">the Ymax coordinate of rectangle.</param>
             public virtual void SetDomain(float xmin, float xmax, float ymin, float ymax) {
-                GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { xmin, xmax, ymin, ymax }));
-                SetModified();
+                SetDomain(new PdfArray(new float[] { xmin, xmax, ymin, ymax }));
             }
 
             /// <summary>
@@ -342,24 +341,23 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary>
-            /// Gets the array of floats that represents the transformation matrix that maps the domain rectangle
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of floats that represents the transformation matrix that maps the domain rectangle
             /// into a corresponding figure in the target coordinate space.
             /// </summary>
             /// <returns>
             /// the
-            /// <c>float[]</c>
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of transformation matrix (identical matrix by default).
             /// </returns>
-            public virtual float[] GetMatrix() {
+            public virtual PdfArray GetMatrix() {
                 PdfArray matrix = GetPdfObject().GetAsArray(PdfName.Matrix);
                 if (matrix == null) {
-                    return new float[] { 1, 0, 0, 1, 0, 0 };
+                    matrix = new PdfArray(new float[] { 1, 0, 0, 1, 0, 0 });
+                    SetMatrix(matrix);
                 }
-                float[] result = new float[6];
-                for (int i = 0; i < 6; i++) {
-                    result[i] = matrix.GetAsNumber(i).FloatValue();
-                }
-                return result;
+                return matrix;
             }
 
             /// <summary>
@@ -531,22 +529,25 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary>
-            /// Gets the array of two
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
             /// <c>float</c>
             /// [t0, t1] that represent the limiting values of a parametric
             /// variable t, that becomes an input of color function(s).
             /// </summary>
             /// <returns>
-            /// 
-            /// <c>float[]</c>
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of Domain object ([0.0 1.0] by default)
             /// </returns>
-            public virtual float[] GetDomain() {
+            public virtual PdfArray GetDomain() {
                 PdfArray domain = GetPdfObject().GetAsArray(PdfName.Domain);
                 if (domain == null) {
-                    return new float[] { 0, 1 };
+                    domain = new PdfArray(new float[] { 0, 1 });
+                    SetDomain(domain);
                 }
-                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue() };
+                return domain;
             }
 
             /// <summary>
@@ -558,27 +559,47 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="t0">first limit of variable t</param>
             /// <param name="t1">second limit of variable t</param>
             public virtual void SetDomain(float t0, float t1) {
-                GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { t0, t1 }));
+                SetDomain(new PdfArray(new float[] { t0, t1 }));
+            }
+
+            /// <summary>
+            /// Sets the Domain with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>float</c>
+            /// [t0, t1] that represent the limiting values
+            /// of a parametric variable t, that becomes an input of color function(s).
+            /// </summary>
+            /// <param name="domain">
+            /// the
+            /// <PdfArray/>
+            /// that represents domain
+            /// </param>
+            public virtual void SetDomain(PdfArray domain) {
+                GetPdfObject().Put(PdfName.Domain, domain);
                 SetModified();
             }
 
             /// <summary>
-            /// Gets the array of two
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
             /// <c>boolean</c>
             /// that specified whether to extend the shading
             /// beyond the starting and ending points of the axis, respectively.
             /// </summary>
             /// <returns>
-            /// 
-            /// <c>boolean[]</c>
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of Extended object ([false false] by default)
             /// </returns>
-            public virtual bool[] GetExtend() {
+            public virtual PdfArray GetExtend() {
                 PdfArray extend = GetPdfObject().GetAsArray(PdfName.Extend);
                 if (extend == null) {
-                    return new bool[] { false, false };
+                    extend = new PdfArray(new bool[] { false, false });
+                    SetExtend(extend);
                 }
-                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
+                return extend;
             }
 
             /// <summary>
@@ -589,7 +610,25 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="extendStart">if true will extend shading beyond the starting point of Coords</param>
             /// <param name="extendEnd">if true will extend shading beyond the ending point of Coords</param>
             public virtual void SetExtend(bool extendStart, bool extendEnd) {
-                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd }));
+                SetExtend(new PdfArray(new bool[] { extendStart, extendEnd }));
+            }
+
+            /// <summary>
+            /// Sets the Extend object with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>boolean</c>
+            /// .
+            /// If first is true shading will extend beyond the starting point of Coords.
+            /// If second is true shading will extend beyond the ending point of Coords.
+            /// </summary>
+            /// <param name="extend">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// representing Extend object
+            /// </param>
+            public virtual void SetExtend(PdfArray extend) {
+                GetPdfObject().Put(PdfName.Extend, extend);
                 SetModified();
             }
         }
@@ -791,22 +830,25 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary>
-            /// Gets the array of two
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
             /// <c>float</c>
             /// [t0, t1] that represent the limiting values of a parametric
             /// variable t, that becomes an input of color function(s).
             /// </summary>
             /// <returns>
-            /// 
-            /// <c>float[]</c>
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of Domain object ([0.0 1.0] by default)
             /// </returns>
-            public virtual float[] GetDomain() {
+            public virtual PdfArray GetDomain() {
                 PdfArray domain = GetPdfObject().GetAsArray(PdfName.Domain);
                 if (domain == null) {
-                    return new float[] { 0, 1 };
+                    domain = new PdfArray(new float[] { 0, 1 });
+                    SetDomain(domain);
                 }
-                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue() };
+                return domain;
             }
 
             /// <summary>
@@ -818,27 +860,47 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="t0">first limit of variable t</param>
             /// <param name="t1">second limit of variable t</param>
             public virtual void SetDomain(float t0, float t1) {
-                GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { t0, t1 }));
+                SetDomain(new PdfArray(new float[] { t0, t1 }));
+            }
+
+            /// <summary>
+            /// Sets the Domain with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>float</c>
+            /// [t0, t1] that represent the limiting values
+            /// of a parametric variable t, that becomes an input of color function(s).
+            /// </summary>
+            /// <param name="domain">
+            /// the
+            /// <PdfArray/>
+            /// that represents domain
+            /// </param>
+            public virtual void SetDomain(PdfArray domain) {
+                GetPdfObject().Put(PdfName.Domain, domain);
                 SetModified();
             }
 
             /// <summary>
-            /// Gets the array of two
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
             /// <c>boolean</c>
             /// that specified whether to extend the shading
             /// beyond the starting and ending circles of the axis, respectively.
             /// </summary>
             /// <returns>
-            /// 
-            /// <c>boolean[]</c>
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of Extended object ([false false] by default)
             /// </returns>
-            public virtual bool[] GetExtend() {
+            public virtual PdfArray GetExtend() {
                 PdfArray extend = GetPdfObject().GetAsArray(PdfName.Extend);
                 if (extend == null) {
-                    return new bool[] { false, false };
+                    extend = new PdfArray(new bool[] { false, false });
+                    SetExtend(extend);
                 }
-                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
+                return extend;
             }
 
             /// <summary>
@@ -849,7 +911,25 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="extendStart">if true will extend shading beyond the starting circle of Coords.</param>
             /// <param name="extendEnd">if true will extend shading beyond the ending circle of Coords.</param>
             public virtual void SetExtend(bool extendStart, bool extendEnd) {
-                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd }));
+                SetExtend(new PdfArray(new bool[] { extendStart, extendEnd }));
+            }
+
+            /// <summary>
+            /// Sets the Extend object with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>boolean</c>
+            /// .
+            /// If first is true shading will extend beyond the starting circle of Coords.
+            /// If second is true shading will extend beyond the ending circle of Coords.
+            /// </summary>
+            /// <param name="extend">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// representing Extend object
+            /// </param>
+            public virtual void SetExtend(PdfArray extend) {
+                GetPdfObject().Put(PdfName.Extend, extend);
                 SetModified();
             }
         }
@@ -1029,7 +1109,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// of Decode object to set.
             /// </param>
             public virtual void SetDecode(float[] decode) {
-                GetPdfObject().Put(PdfName.Decode, new PdfArray(decode));
+                SetDecode(new PdfArray(decode));
             }
 
             /// <summary>
@@ -1047,6 +1127,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public virtual void SetDecode(PdfArray decode) {
                 GetPdfObject().Put(PdfName.Decode, decode);
+                SetModified();
             }
         }
 
@@ -1213,7 +1294,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// of Decode object to set.
             /// </param>
             public virtual void SetDecode(float[] decode) {
-                GetPdfObject().Put(PdfName.Decode, new PdfArray(decode));
+                SetDecode(new PdfArray(decode));
             }
 
             /// <summary>
@@ -1231,6 +1312,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public virtual void SetDecode(PdfArray decode) {
                 GetPdfObject().Put(PdfName.Decode, decode);
+                SetModified();
             }
         }
 
@@ -1409,7 +1491,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// of Decode object to set.
             /// </param>
             public virtual void SetDecode(float[] decode) {
-                GetPdfObject().Put(PdfName.Decode, new PdfArray(decode));
+                SetDecode(new PdfArray(decode));
             }
 
             /// <summary>
@@ -1427,6 +1509,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public virtual void SetDecode(PdfArray decode) {
                 GetPdfObject().Put(PdfName.Decode, decode);
+                SetModified();
             }
         }
 
@@ -1598,7 +1681,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// of Decode object to set.
             /// </param>
             public virtual void SetDecode(float[] decode) {
-                GetPdfObject().Put(PdfName.Decode, new PdfArray(decode));
+                SetDecode(new PdfArray(decode));
             }
 
             /// <summary>
@@ -1616,6 +1699,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public virtual void SetDecode(PdfArray decode) {
                 GetPdfObject().Put(PdfName.Decode, decode);
+                SetModified();
             }
         }
     }

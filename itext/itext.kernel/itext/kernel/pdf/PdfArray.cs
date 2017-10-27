@@ -549,6 +549,24 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Returns this array as an array of booleans.</summary>
+        /// <remarks>Returns this array as an array of booleans. Will throw a PdfException when it encounters an issue.
+        ///     </remarks>
+        /// <returns>this array as an array of booleans</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a boolean</exception>
+        public virtual bool[] ToBooleanArray() {
+            bool[] rslt = new bool[Size()];
+            PdfBoolean tmp;
+            for (int k = 0; k < rslt.Length; ++k) {
+                tmp = GetAsBoolean(k);
+                if (tmp == null) {
+                    throw new PdfException(PdfException.CannotConvertPdfArrayToBooleanArray, this);
+                }
+                rslt[k] = tmp.GetValue();
+            }
+            return rslt;
+        }
+
         protected internal override PdfObject NewInstance() {
             return new iText.Kernel.Pdf.PdfArray();
         }
