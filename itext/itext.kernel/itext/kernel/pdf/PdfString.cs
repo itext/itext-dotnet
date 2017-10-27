@@ -165,7 +165,12 @@ namespace iText.Kernel.Pdf {
                 return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
             }
             else {
-                return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
+                if (b.Length >= 3 && b[0] == (byte)0xEF && b[1] == (byte)0xBB && b[2] == (byte)0xBF) {
+                    return PdfEncodings.ConvertToString(b, PdfEncodings.UTF8);
+                }
+                else {
+                    return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
+                }
             }
         }
 
