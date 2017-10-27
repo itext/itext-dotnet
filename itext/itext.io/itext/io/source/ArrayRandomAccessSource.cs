@@ -50,7 +50,7 @@ namespace iText.IO.Source {
 
         public ArrayRandomAccessSource(byte[] array) {
             if (array == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentException("Passed byte array can not be null.");
             }
             this.array = array;
         }

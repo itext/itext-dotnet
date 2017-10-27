@@ -1525,8 +1525,7 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    catch (Exception) {
-                        // TODO Review exception type when DEVSIX-1592 is resolved.
+                    catch (NullReferenceException) {
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                             "Some of the children might not end up aligned horizontally."));

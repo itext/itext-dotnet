@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </returns>
         public virtual Object AssignWaitingState(TagTreePointer pointer, Object associatedObj) {
             if (associatedObj == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentException("Passed associated object can not be null.");
             }
             return SaveAssociatedObjectForWaitingTag(associatedObj, pointer.GetCurrentStructElem());
         }
@@ -73,7 +73,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>true if object is currently associated with some waiting tag.</returns>
         public virtual bool IsObjectAssociatedWithWaitingTag(Object obj) {
             if (obj == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentException("Passed associated object can not be null.");
             }
             return associatedObjToWaitingTag.ContainsKey(obj);
         }

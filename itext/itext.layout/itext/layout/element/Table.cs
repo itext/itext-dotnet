@@ -130,7 +130,7 @@ namespace iText.Layout.Element {
             // Start number of the row "window" (range) that this table currently contain.
             // For large tables we might contain only a few rows, not all of them, other ones might have been flushed.
             if (columnWidths == null) {
-                throw new ArgumentNullException("The widths array in table constructor can not be null.");
+                throw new ArgumentException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");
@@ -172,7 +172,7 @@ namespace iText.Layout.Element {
         /// <seealso cref="SetFixedLayout()"/>
         public Table(UnitValue[] columnWidths, bool largeTable) {
             if (columnWidths == null) {
-                throw new ArgumentNullException("The widths array in table constructor can not be null.");
+                throw new ArgumentException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");

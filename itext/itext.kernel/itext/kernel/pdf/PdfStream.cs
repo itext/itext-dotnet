@@ -117,7 +117,7 @@ namespace iText.Kernel.Pdf {
             }
             MakeIndirect(doc);
             if (inputStream == null) {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentException("The input stream in PdfStream constructor can not be null.");
             }
             this.inputStream = inputStream;
             this.compressionLevel = compressionLevel;

@@ -449,7 +449,7 @@ namespace iText.Layout {
         /// <remarks>
         /// If an image is flushed automatically on draw, we will later check it for circular references
         /// as it is an XObject. This is a test for
-        /// <see cref="System.ArgumentNullException"/>
+        /// <see cref="System.NullReferenceException"/>
         /// that was caused by getting
         /// a value from flushed image.
         /// </remarks>

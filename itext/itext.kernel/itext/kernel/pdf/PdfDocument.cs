@@ -162,7 +162,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader) {
             if (reader == null) {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentException("The reader in PdfDocument constructor can not be null.");
             }
             documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
@@ -179,7 +179,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="writer">PDF writer</param>
         public PdfDocument(PdfWriter writer) {
             if (writer == null) {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
             documentId = lastDocumentId.IncrementAndGet();
             this.writer = writer;
@@ -205,10 +205,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="properties">properties of the stamping process</param>
         public PdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties) {
             if (reader == null) {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentException("The reader in PdfDocument constructor can not be null.");
             }
             if (writer == null) {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
             documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;

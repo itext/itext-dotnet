@@ -117,7 +117,7 @@ namespace iText.Signatures {
                         url = CertificateUtil.GetCRLURL(checkCert);
                     }
                     if (url == null) {
-                        throw new ArgumentNullException();
+                        throw new ArgumentException("Passed url can not be null.");
                     }
                     urllist.Add(new Uri(url));
                     LOGGER.Info("Found CRL url: " + url);

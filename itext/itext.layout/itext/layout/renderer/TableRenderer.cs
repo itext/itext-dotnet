@@ -1495,8 +1495,8 @@ namespace iText.Layout.Renderer {
                 try {
                     cell.Move(0, -(cumulativeShift - rowspanOffset));
                 }
-                catch (Exception) {
-                    // TODO Remove try-catch when DEVSIX-1001 is resolved. Review exception type when DEVSIX-1592 is resolved.
+                catch (NullReferenceException) {
+                    // TODO Remove try-catch when DEVSIX-1001 is resolved.
                     ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the cell's content might not end up placed correctly."));

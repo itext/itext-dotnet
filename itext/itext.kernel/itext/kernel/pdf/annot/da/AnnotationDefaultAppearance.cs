@@ -142,7 +142,7 @@ namespace iText.Kernel.Pdf.Annot.DA {
 
         private void SetRawFontName(String rawFontName) {
             if (rawFontName == null) {
-                throw new ArgumentNullException();
+                throw new ArgumentException("Passed raw font name can not be null");
             }
             this.rawFontName = rawFontName;
         }

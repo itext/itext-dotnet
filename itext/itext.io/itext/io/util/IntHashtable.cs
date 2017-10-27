@@ -163,7 +163,7 @@ namespace iText.IO.Util {
         /// determined by the <tt>equals</tt> method;
         /// <code>false</code> otherwise.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">if the value is <code>null</code>.</exception>
+        /// <exception cref="System.NullReferenceException">if the value is <code>null</code>.</exception>
         /// <seealso cref="ContainsKey(int)"/>
         /// <seealso cref="ContainsValue(int)"/>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
@@ -273,7 +273,7 @@ namespace iText.IO.Util {
         /// the previous value of the specified key in this hashtable,
         /// or <code>null</code> if it did not have one.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">if the key is <code>null</code>.</exception>
+        /// <exception cref="System.NullReferenceException">if the key is <code>null</code>.</exception>
         /// <seealso cref="Get(int)"/>
         public virtual int Put(int key, int value) {
             // Makes sure the key is not already in the hashtable.
