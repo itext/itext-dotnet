@@ -93,7 +93,7 @@ namespace iText.IO.Font {
         /// </remarks>
         public const String PDF_DOC_ENCODING = "PDF";
 
-        public const String UTF8 = "UTF8";
+        public const String UTF8 = "UTF-8";
 
         private const String EMPTY_STRING = "";
 
