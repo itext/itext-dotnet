@@ -117,7 +117,7 @@ namespace iText.IO.Font.Cmap {
         public virtual IntHashtable CreateDirectMapping() {
             IntHashtable result = new IntHashtable();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {
-                if (entry.Value.Length <= 2) {
+                if (entry.Value.Length == 1) {
                     result.Put((int)entry.Key, ConvertToInt(entry.Value));
                 }
             }
@@ -128,7 +128,7 @@ namespace iText.IO.Font.Cmap {
         public virtual IDictionary<int, int?> CreateReverseMapping() {
             IDictionary<int, int?> result = new Dictionary<int, int?>();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {
-                if (entry.Value.Length <= 2) {
+                if (entry.Value.Length == 1) {
                     result.Put(ConvertToInt(entry.Value), entry.Key);
                 }
             }

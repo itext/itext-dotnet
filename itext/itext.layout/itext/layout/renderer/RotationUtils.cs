@@ -71,7 +71,7 @@ namespace iText.Layout.Renderer {
             RotationUtils.PropertiesBackup backup = new RotationUtils.PropertiesBackup(renderer);
             float? rotation = backup.StoreFloatProperty(Property.ROTATION_ANGLE);
             if (rotation != null) {
-                float angle = rotation.Value;
+                float angle = (float)rotation;
                 //This width results in more accurate values for min-width calculations.
                 float layoutWidth = minMaxWidth.GetMaxWidth() + MinMaxWidthUtils.GetEps();
                 LayoutResult layoutResult = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(layoutWidth, 
@@ -90,18 +90,18 @@ namespace iText.Layout.Renderer {
                         , angle);
                     if (rotatedMinWidth != null) {
                         if (rotatedMinWidth > rotationMinMaxWidth.GetMaxWidth()) {
-                            rotationMinMaxWidth.SetChildrenMinWidth(rotatedMinWidth.Value);
+                            rotationMinMaxWidth.SetChildrenMinWidth((float)rotatedMinWidth);
                             float? rotatedMaxWidth = GetLayoutRotatedWidth(renderer, (float)rotationMinMaxWidth.GetMaxWidthOrigin(), layoutBBox
                                 , angle);
                             if (rotatedMaxWidth != null && rotatedMaxWidth > rotatedMinWidth) {
-                                rotationMinMaxWidth.SetChildrenMaxWidth(rotatedMaxWidth.Value);
+                                rotationMinMaxWidth.SetChildrenMaxWidth((float)rotatedMaxWidth);
                             }
                             else {
-                                rotationMinMaxWidth.SetChildrenMaxWidth(rotatedMinWidth.Value);
+                                rotationMinMaxWidth.SetChildrenMaxWidth((float)rotatedMinWidth);
                             }
                         }
                         else {
-                            rotationMinMaxWidth.SetChildrenMinWidth(rotatedMinWidth.Value);
+                            rotationMinMaxWidth.SetChildrenMinWidth((float)rotatedMinWidth);
                         }
                         backup.RestoreProperty(Property.ROTATION_ANGLE);
                         return rotationMinMaxWidth;
@@ -134,10 +134,10 @@ namespace iText.Layout.Renderer {
             RotationUtils.PropertiesBackup backup = new RotationUtils.PropertiesBackup(renderer);
             float? rotation = backup.StoreFloatProperty(Property.ROTATION_ANGLE);
             if (rotation != null && renderer.GetProperty<UnitValue>(Property.WIDTH) == null) {
-                float angle = rotation.Value;
-                backup.StoreFloatProperty(Property.HEIGHT);
-                backup.StoreFloatProperty(Property.MIN_HEIGHT);
-                backup.StoreFloatProperty(Property.MAX_HEIGHT);
+                float angle = (float)rotation;
+                backup.StoreProperty<UnitValue>(Property.HEIGHT);
+                backup.StoreProperty<UnitValue>(Property.MIN_HEIGHT);
+                backup.StoreProperty<UnitValue>(Property.MAX_HEIGHT);
                 MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
                 //Using this width for initial layout helps in case of small elements. They may have more free spaces but it's more likely they fit.
                 float length = (minMaxWidth.GetMaxWidth() + minMaxWidth.GetMinWidth()) / 2 + MinMaxWidthUtils.GetEps();

@@ -83,6 +83,7 @@ namespace iText.Forms.Xfa
 		}
 
 		/// <summary>Creates an XFA form by the stream containing all xml information</summary>
+		/// <param name="inputStream">the InputStream</param>
 		public XfaForm(Stream inputStream)
 		{
 			try
@@ -100,6 +101,7 @@ namespace iText.Forms.Xfa
 		/// <see cref="Document"/>
 		/// containing all xml information
 		/// </summary>
+		/// <param name="domDocument">The document</param>
 		public XfaForm(XDocument domDocument)
 		{
 			SetDomDocument(domDocument);
@@ -584,14 +586,14 @@ namespace iText.Forms.Xfa
 					break;
 				}
 			}
-			if (data == null)
-			{
-				datasetsNode.Add(new XElement((XNamespace)XFA_DATA_SCHEMA + "xfa:data"));
+			if (data == null) {
+				data = new XElement((XNamespace) XFA_DATA_SCHEMA + "data");
+				datasetsNode.Add(data);
 			}
 		    IEnumerable<XNode> list = ((XElement) data).Nodes();
 			if (list.Count() == 0)
 			{
-				((XElement)data).Add(node);
+				((XElement)data).Add(node is XDocument ? ((XDocument)node).Root : node);
 			}
 			else
 			{
@@ -600,7 +602,7 @@ namespace iText.Forms.Xfa
 				XNode firstNode = GetFirstElementNode(data);
 				if (firstNode != null)
 				{
-					firstNode.ReplaceWith(node is XDocument ? ((XDocument)node).FirstNode : node);
+					firstNode.ReplaceWith(node is XDocument ? ((XDocument)node).Root : node);
 				}
 			}
 			ExtractNodes();
@@ -755,13 +757,13 @@ namespace iText.Forms.Xfa
 		/// </remarks>
 		private void CreateDatasetsNode(XNode n)
 		{
-			while (((XElement)n).Nodes().Count() == 0) {
+			while (!(n is XElement) || !((XElement)n).Nodes().Any()) {
 			    n = n.NextNode;
 			}
 			if (n != null)
 			{
-				XElement e = new XElement("xfa:datasets");
-				e.SetAttributeValue("xmlns:xfa", XFA_DATA_SCHEMA);
+				XElement e = new XElement((XNamespace)XFA_DATA_SCHEMA + "datasets", 
+					new XAttribute(XNamespace.Xmlns + "xfa", XFA_DATA_SCHEMA));
 				datasetsNode = e;
 				((XElement)n).Add(datasetsNode);
 			}

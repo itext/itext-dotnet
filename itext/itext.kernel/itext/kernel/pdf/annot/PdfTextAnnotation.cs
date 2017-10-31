@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -50,6 +51,9 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfTextAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -72,6 +76,71 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel) {
             return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel);
+        }
+
+        /// <summary>A flag specifying whether the annotation shall initially be displayed open.</summary>
+        /// <remarks>
+        /// A flag specifying whether the annotation shall initially be displayed open.
+        /// This flag has affect to not all kinds of annotations.
+        /// </remarks>
+        /// <returns>true if annotation is initially open, false - if closed.</returns>
+        public override bool GetOpen() {
+            return PdfBoolean.TRUE.Equals(GetPdfObject().GetAsBoolean(PdfName.Open));
+        }
+
+        /// <summary>Sets a flag specifying whether the annotation shall initially be displayed open.</summary>
+        /// <remarks>
+        /// Sets a flag specifying whether the annotation shall initially be displayed open.
+        /// This flag has affect to not all kinds of annotations.
+        /// </remarks>
+        /// <param name="open">true if annotation shall initially be open, false - if closed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetOpen(bool open) {
+            return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.Open, PdfBoolean.ValueOf(open));
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <remarks>
+        /// The name of an icon that is used in displaying the annotation.
+        /// Possible values are described in
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation, or null if icon name is not specified.
+        /// </returns>
+        public override PdfName GetIconName() {
+            return GetPdfObject().GetAsName(PdfName.Name);
+        }
+
+        /// <summary>The name of an icon that is used in displaying the annotation.</summary>
+        /// <param name="name">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies the icon for displaying annotation. Possible values are:
+        /// <ul>
+        /// <li>Comment</li>
+        /// <li>Key</li>
+        /// <li>Note</li>
+        /// <li>Help</li>
+        /// <li>NewParagraph</li>
+        /// <li>Paragraph</li>
+        /// <li>Insert</li>
+        /// </ul>
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+            return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.Name, name);
         }
     }
 }

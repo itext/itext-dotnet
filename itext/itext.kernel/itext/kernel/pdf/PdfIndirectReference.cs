@@ -119,7 +119,8 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         public virtual PdfObject GetRefersTo(bool recursively) {
             if (!recursively) {
-                if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && GetReader() != null) {
+                if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && !CheckState(FREE) && GetReader() 
+                    != null) {
                     refersTo = GetReader().ReadObject(this);
                 }
                 return refersTo;
@@ -193,17 +194,46 @@ namespace iText.Kernel.Pdf {
             return pdfDocument;
         }
 
-        /// <summary>Releases indirect reference from the document.</summary>
+        /// <summary>Marks indirect reference as free in the document.</summary>
         /// <remarks>
-        /// Releases indirect reference from the document. Remove link to the referenced indirect object.
+        /// Marks indirect reference as free in the document. This doesn't "remove" indirect objects from the document,
+        /// it only ensures that corresponding xref entry is free and indirect object referred by this reference is no longer
+        /// linked to it. Actual object still might be written to the resultant document (and would get a new corresponding
+        /// indirect reference in this case) if it is still contained in some other object.
         /// <p>
-        /// Note: Be careful when using this method. Do not use this method for wrapper objects,
-        /// it can be cause of errors.
-        /// Free indirect reference could be reused for a new indirect object.
+        /// This method will not give any result if the corresponding indirect object or another object
+        /// that contains a reference to this object is already flushed.
+        /// </p>
+        /// <p>
+        /// Note: in some cases, removing a link of indirect object to it's indirect reference while
+        /// leaving the actual object in the document structure might lead to errors, because some objects are expected
+        /// to always have such explicit link (e.g. Catalog object, page objects, etc).
         /// </p>
         /// </remarks>
         public virtual void SetFree() {
             GetDocument().GetXref().FreeReference(this);
+        }
+
+        /// <summary>
+        /// Checks if this
+        /// <see cref="PdfIndirectReference"/>
+        /// instance corresponds to free indirect reference.
+        /// Indirect reference might be in a free state either because it was read as such from the opened existing
+        /// PDF document or because it was set free via
+        /// <see cref="SetFree()"/>
+        /// method.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this
+        /// <see cref="PdfIndirectReference"/>
+        /// is free,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
+        public virtual bool IsFree() {
+            return CheckState(FREE);
         }
 
         public override String ToString() {
@@ -252,10 +282,6 @@ namespace iText.Kernel.Pdf {
                 return GetDocument().GetReader();
             }
             return null;
-        }
-
-        protected internal virtual bool IsFree() {
-            return CheckState(FREE);
         }
 
         protected internal override PdfObject NewInstance() {

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel;
 using iText.Kernel.Font;
@@ -101,6 +102,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represents existing annotation in the document.
         /// </param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfTrapNetworkAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -141,7 +144,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// with date. The format should be a date string as described
-        /// in ISO-320001 7.9.4, “Dates”. See also
+        /// in ISO-320001 7.9.4, "Dates". See also
         /// <see cref="iText.Kernel.Pdf.PdfDate.Decode(System.String)"/>
         /// .
         /// </returns>
@@ -173,7 +176,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <li>all page content streams;</li>
         /// <li>all page resource objects (other than procedure sets);</li>
         /// <li>all resource objects (other than procedure sets) of any form XObjects on the page;</li>
-        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, “Open Prepress Interface (OPI)”)</li>
+        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")</li>
         /// </ul>
         /// </param>
         /// <returns>

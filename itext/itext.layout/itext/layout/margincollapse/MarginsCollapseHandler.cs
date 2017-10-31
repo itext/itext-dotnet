@@ -493,10 +493,10 @@ namespace iText.Layout.Margincollapse {
         private static bool HasPositiveHeight(IRenderer renderer) {
             float height = renderer.GetOccupiedArea().GetBBox().GetHeight();
             if (height == 0) {
-                float? heightPropVal = renderer.GetProperty<float?>(Property.HEIGHT);
-                float? minHeightPropVal = renderer.GetProperty<float?>(Property.MIN_HEIGHT);
-                height = minHeightPropVal != null ? (float)minHeightPropVal : heightPropVal != null ? (float)heightPropVal
-                     : 0;
+                UnitValue heightPropVal = renderer.GetProperty<UnitValue>(Property.HEIGHT);
+                UnitValue minHeightPropVal = renderer.GetProperty<UnitValue>(Property.MIN_HEIGHT);
+                height = minHeightPropVal != null ? (float)minHeightPropVal.GetValue() : heightPropVal != null ? (float)heightPropVal
+                    .GetValue() : 0;
             }
             return height > 0;
         }

@@ -211,8 +211,8 @@ namespace iText.IO.Codec {
             , 41, 41, 41, 41, 41, 41, 41, 41, 41 };
 
         /// <param name="fillOrder">The fill order of the compressed data bytes.</param>
-        /// <param name="w"/>
-        /// <param name="h"/>
+        /// <param name="w">width</param>
+        /// <param name="h">height</param>
         public TIFFFaxDecoder(int fillOrder, int w, int h) {
             // Data structures needed to store changing elements for the previous
             // and the current scanline

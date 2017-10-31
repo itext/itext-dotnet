@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -173,7 +174,6 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            OverrideHeightProperties();
             float? blockMinHeight = RetrieveMinHeight();
             float? blockMaxHeight = RetrieveMaxHeight();
             LayoutArea area = layoutContext.GetArea();
@@ -201,6 +201,7 @@ namespace iText.Layout.Renderer {
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
             bool isAndWasComplete = tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count;
+            bool isFirstOnThePage = 0 == rowRange.GetStartRow() || area.IsEmptyArea();
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
                     bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete ? rowRange
@@ -209,7 +210,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetFinishRow());
-            InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
+            InitializeHeaderAndFooter(isFirstOnThePage);
             // update
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);
@@ -725,7 +726,7 @@ namespace iText.Layout.Renderer {
                         else {
                             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                             // process bottom border of the last added row if there is no footer
-                            if (!isAndWasComplete) {
+                            if (!isAndWasComplete && !isFirstOnThePage) {
                                 bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
                                     );
                             }
@@ -756,8 +757,8 @@ namespace iText.Layout.Renderer {
                     else {
                         int status = ((occupiedArea.GetBBox().GetHeight() - (null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea
                             ().GetBBox().GetHeight()) - (null == headerRenderer ? 0 : headerRenderer.GetOccupiedArea().GetBBox().GetHeight
-                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && isAndWasComplete) ? LayoutResult.NOTHING
-                             : LayoutResult.PARTIAL;
+                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && (isAndWasComplete || isFirstOnThePage
+                            )) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
@@ -791,15 +792,7 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.FULL, editedArea, splitResult[0], null);
                         }
                         else {
-                            if (HasProperty(Property.HEIGHT)) {
-                                splitResult[1].UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MIN_HEIGHT)) {
-                                splitResult[1].UpdateMinHeight(RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
-                            if (HasProperty(Property.MAX_HEIGHT)) {
-                                splitResult[1].UpdateMaxHeight(RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
-                            }
+                            UpdateHeightsOnSplit(false, splitResult[0], splitResult[1]);
                             ApplyFixedXOrYPosition(false, layoutBox);
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             LayoutArea editedArea = null;
@@ -1504,7 +1497,15 @@ namespace iText.Layout.Renderer {
                 float shift = height - cell.GetOccupiedArea().GetBBox().GetHeight();
                 Rectangle bBox = cell.GetOccupiedArea().GetBBox();
                 bBox.MoveDown(shift);
-                cell.Move(0, -(cumulativeShift - rowspanOffset));
+                try {
+                    cell.Move(0, -(cumulativeShift - rowspanOffset));
+                }
+                catch (Exception) {
+                    // TODO Remove try-catch when DEVSIX-1001 is resolved. Review exception type when DEVSIX-1592 is resolved.
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
+                        "Some of the cell's content might not end up placed correctly."));
+                }
                 bBox.SetHeight(height);
                 cell.ApplyVerticalAlignment();
             }

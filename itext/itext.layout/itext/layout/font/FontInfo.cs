@@ -61,7 +61,7 @@ namespace iText.Layout.Font {
     /// </summary>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo)"/>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)">
-    /// <p/>
+    /// <p>
     /// Note,
     /// <see cref="GetAlias()"/>
     /// and
@@ -132,6 +132,8 @@ namespace iText.Layout.Font {
                  : null;
         }
 
+        /// <param name="fontProvider">fontprovider to get the PdfFont associated with this instance</param>
+        /// <returns>the PdfFont associated with this instance</returns>
         [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) instead.")]
         public PdfFont GetPdfFont(FontProvider fontProvider) {
             return fontProvider.GetPdfFont(this);
@@ -149,6 +151,7 @@ namespace iText.Layout.Font {
         /// <see cref="GetDescriptor()"/>
         /// .
         /// </summary>
+        /// <returns>the font name</returns>
         public String GetFontName() {
             return fontName;
         }
@@ -160,6 +163,7 @@ namespace iText.Layout.Font {
         /// <c>byte[]</c>
         /// .
         /// </summary>
+        /// <returns>the bytes of the font program</returns>
         [System.ObsoleteAttribute(@"use GetFontData() instead.")]
         public byte[] GetFontProgram() {
             return fontData;
@@ -172,6 +176,7 @@ namespace iText.Layout.Font {
         /// <c>byte[]</c>
         /// .
         /// </summary>
+        /// <returns>the font data</returns>
         public byte[] GetFontData() {
             return fontData;
         }
@@ -207,7 +212,7 @@ namespace iText.Layout.Font {
             String name = descriptor.GetFontName();
             if (name.Length > 0) {
                 if (encoding != null) {
-                    return String.Format("%s+%s", name, encoding);
+                    return MessageFormatUtil.Format("{0}+{1}", name, encoding);
                 }
                 else {
                     return name;

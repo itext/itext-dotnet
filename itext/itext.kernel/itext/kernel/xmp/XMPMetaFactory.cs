@@ -78,7 +78,7 @@ namespace iText.Kernel.XMP {
         /// object into RDF. The input for parsing may be any valid Unicode
         /// encoding. ISO Latin-1 is also recognized, but its use is strongly discouraged. Serialization
         /// is always as UTF-8.
-        /// <p/>
+        /// <br />
         /// <code>parseFromBuffer()</code> parses RDF from an <code>InputStream</code>. The encoding
         /// is recognized automatically.
         /// </remarks>

@@ -44,8 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -61,19 +63,23 @@ namespace iText.Kernel.Pdf {
 
         private int count = 0;
 
-        private readonly SortedSet<int> freeReferences;
+        /// <summary>
+        /// Free references linked list is stored in a form of a map, where:
+        /// key - free reference obj number;
+        /// value - previous item in the linked list of free references for the object denoted by the key.
+        /// </summary>
+        private readonly SortedDictionary<int, PdfIndirectReference> freeReferencesLinkedList;
 
         public PdfXrefTable()
             : this(INITIAL_CAPACITY) {
         }
 
         public PdfXrefTable(int capacity) {
-            // TODO not using this collection for now
             if (capacity < 1) {
                 capacity = INITIAL_CAPACITY;
             }
             xref = new PdfIndirectReference[capacity];
-            freeReferences = new SortedSet<int>();
+            freeReferencesLinkedList = new SortedDictionary<int, PdfIndirectReference>();
             Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState(PdfObject.FREE)));
         }
 
@@ -101,12 +107,54 @@ namespace iText.Kernel.Pdf {
             return xref[index];
         }
 
-        /// <summary>Creates next available indirect reference.</summary>
-        /// <returns>created indirect reference.</returns>
-        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
-            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
-            Add(reference);
-            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
+        internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
+            freeReferencesLinkedList.Clear();
+            xref[0].SetState(PdfObject.FREE);
+            // ensure zero object is free
+            SortedSet<int> freeReferences = new SortedSet<int>();
+            for (int i = 1; i < Size(); ++i) {
+                PdfIndirectReference @ref = xref[i];
+                if (@ref == null || @ref.IsFree()) {
+                    freeReferences.Add(i);
+                }
+            }
+            PdfIndirectReference prevFreeRef = xref[0];
+            while (!freeReferences.IsEmpty<int>()) {
+                int currFreeRefObjNr = -1;
+                if (prevFreeRef.GetOffset() <= int.MaxValue) {
+                    currFreeRefObjNr = (int)prevFreeRef.GetOffset();
+                }
+                if (!freeReferences.Contains(currFreeRefObjNr) || xref[currFreeRefObjNr] == null) {
+                    break;
+                }
+                freeReferencesLinkedList.Put(currFreeRefObjNr, prevFreeRef);
+                prevFreeRef = xref[currFreeRefObjNr];
+                freeReferences.Remove(currFreeRefObjNr);
+            }
+            while (!freeReferences.IsEmpty<int>()) {
+                int next = freeReferences.PollFirst();
+                if (xref[next] == null) {
+                    if (pdfDocument.properties.appendMode) {
+                        continue;
+                    }
+                    xref[next] = ((PdfIndirectReference)((PdfIndirectReference)new PdfIndirectReference(pdfDocument, next, 0).
+                        SetState(PdfObject.FREE)).SetState(PdfObject.MODIFIED));
+                }
+                else {
+                    if (xref[next].GetGenNumber() == MAX_GENERATION && xref[next].GetOffset() == 0) {
+                        continue;
+                    }
+                }
+                if (prevFreeRef.GetOffset() != (long)next) {
+                    ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(next);
+                }
+                freeReferencesLinkedList.Put(next, prevFreeRef);
+                prevFreeRef = xref[next];
+            }
+            if (prevFreeRef.GetOffset() != 0) {
+                ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(0);
+            }
+            freeReferencesLinkedList.Put(0, prevFreeRef);
         }
 
         //For Object streams
@@ -116,20 +164,35 @@ namespace iText.Kernel.Pdf {
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
-        protected internal virtual void FreeReference(PdfIndirectReference reference) {
-            FreeReference(reference, false);
+        /// <summary>Creates next available indirect reference.</summary>
+        /// <returns>created indirect reference.</returns>
+        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
+            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
-        internal virtual void FreeReference(PdfIndirectReference reference, bool readingFreeReference) {
-            reference.SetOffset(0);
-            reference.SetState(PdfObject.FREE);
-            if (!reference.CheckState(PdfObject.FLUSHED)) {
-                if (reference.refersTo != null) {
-                    reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
-                    reference.refersTo = null;
-                }
+        protected internal virtual void FreeReference(PdfIndirectReference reference) {
+            if (reference.IsFree()) {
+                return;
             }
-            if (!readingFreeReference && reference.GetGenNumber() < MAX_GENERATION) {
+            if (reference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                logger.Error(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
+                return;
+            }
+            if (reference.CheckState(PdfObject.FLUSHED)) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                logger.Error(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
+                return;
+            }
+            ((PdfIndirectReference)reference.SetState(PdfObject.FREE)).SetState(PdfObject.MODIFIED);
+            AppendNewRefToFreeList(reference);
+            if (reference.refersTo != null) {
+                reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
+                reference.refersTo = null;
+            }
+            if (reference.GetGenNumber() < MAX_GENERATION) {
                 reference.genNr++;
             }
         }
@@ -145,37 +208,25 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
-            for (int i = count; i > 0; --i) {
-                PdfIndirectReference lastRef = xref[i];
-                if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef.CheckState(PdfObject
-                    .FLUSHED) && !(document.properties.appendMode && !lastRef.CheckState(PdfObject.MODIFIED)))) {
-                    --count;
-                }
-                else {
-                    break;
-                }
-            }
-            int lastFreeObjNr = 0;
-            for (int i = count; i >= 0; --i) {
-                PdfIndirectReference @ref = xref[i];
-                if (@ref == null) {
-                    @ref = ((PdfIndirectReference)new PdfIndirectReference(document, i, 0).SetState(PdfObject.FREE));
-                    xref[i] = @ref;
-                }
-                if (@ref.IsFree()) {
-                    @ref.SetOffset(lastFreeObjNr);
-                    lastFreeObjNr = i;
+            if (!document.properties.appendMode) {
+                for (int i = count; i > 0; --i) {
+                    PdfIndirectReference lastRef = xref[i];
+                    if (lastRef == null || lastRef.IsFree()) {
+                        RemoveFreeRefFromList(i);
+                        --count;
+                    }
+                    else {
+                        break;
+                    }
                 }
             }
             IList<int> sections = new List<int>();
             int first = 0;
-            int len = 1;
-            for (int i = 1; i < Size(); i++) {
+            int len = 0;
+            for (int i = 0; i < Size(); i++) {
                 PdfIndirectReference reference = xref[i];
-                if (reference != null) {
-                    if (document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED) && !reference.IsFree()) {
-                        reference = null;
-                    }
+                if (document.properties.appendMode && reference != null && !reference.CheckState(PdfObject.MODIFIED)) {
+                    reference = null;
                 }
                 if (reference == null) {
                     if (len > 0) {
@@ -198,7 +249,7 @@ namespace iText.Kernel.Pdf {
                 sections.Add(first);
                 sections.Add(len);
             }
-            if (document.properties.appendMode && sections.Count == 2 && sections[1] == 1) {
+            if (document.properties.appendMode && sections.Count == 0) {
                 // no modifications.
                 xref = null;
                 return;
@@ -235,12 +286,8 @@ namespace iText.Kernel.Pdf {
                     len = (int)sections[k + 1];
                     for (int i = first; i < first + len; i++) {
                         PdfIndirectReference reference = xrefTable.Get(i);
-                        if (reference == null) {
-                            continue;
-                        }
                         if (reference.IsFree()) {
                             xrefStream.GetOutputStream().Write(0);
-                            //NOTE The object number of the next free object should be at this position due to spec.
                             System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
                             xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
                             xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
@@ -302,9 +349,10 @@ namespace iText.Kernel.Pdf {
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
-            WriteKeyInfo(writer);
+            WriteKeyInfo(document);
             writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
             xref = null;
+            freeReferencesLinkedList.Clear();
         }
 
         internal virtual void Clear() {
@@ -317,7 +365,30 @@ namespace iText.Kernel.Pdf {
             count = 1;
         }
 
+        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
+        /// <remarks>
+        /// Convenience method to write the fingerprint preceding the trailer.
+        /// The fingerprint contains information on iText products used in the generation or manipulation
+        /// of an outputted PDF file.
+        /// </remarks>
+        /// <param name="document">pdfDocument to write the fingerprint to</param>
+        protected internal static void WriteKeyInfo(PdfDocument document) {
+            PdfWriter writer = document.GetWriter();
+            FingerPrint fingerPrint = document.GetFingerPrint();
+            String platform = " for .NET";
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
+            String k = version.GetKey();
+            if (k == null) {
+                k = "iText";
+            }
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
+                writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
+            }
+        }
+
         /// <exception cref="System.IO.IOException"/>
+        [Obsolete]
         protected internal static void WriteKeyInfo(PdfWriter writer) {
             String platform = " for .NET";
             iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
@@ -326,6 +397,72 @@ namespace iText.Kernel.Pdf {
                 k = "iText";
             }
             writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+        }
+
+        private void AppendNewRefToFreeList(PdfIndirectReference reference) {
+            reference.SetOffset(0);
+            if (freeReferencesLinkedList.IsEmpty<int, PdfIndirectReference>()) {
+                System.Diagnostics.Debug.Assert(false);
+                // free references list is not initialized yet
+                return;
+            }
+            PdfIndirectReference lastFreeRef = freeReferencesLinkedList.Get(0);
+            ((PdfIndirectReference)lastFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(reference.GetObjNumber());
+            freeReferencesLinkedList.Put(reference.GetObjNumber(), lastFreeRef);
+            freeReferencesLinkedList.Put(0, reference);
+        }
+
+        /// <summary>Removes indirect reference from free references linked list.</summary>
+        /// <remarks>
+        /// Removes indirect reference from free references linked list.
+        /// It does not removes it from xref table and affects only the linked list formed by offset values of free references.
+        /// </remarks>
+        /// <param name="freeRefObjNr">
+        /// object number of the reference to be removed.
+        /// Removes the free reference with the least object number if this parameter is less than zero:
+        /// this could be used for finding the next free reference for reusing.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfIndirectReference"/>
+        /// instance of the removed free reference corresponding to the object number
+        /// passed as parameter.
+        /// <see langword="null"/>
+        /// - if given object number doesn't correspond to free reference or equals to zero.
+        /// </returns>
+        private PdfIndirectReference RemoveFreeRefFromList(int freeRefObjNr) {
+            if (freeReferencesLinkedList.IsEmpty<int, PdfIndirectReference>()) {
+                System.Diagnostics.Debug.Assert(false);
+                // free references list is not initialized yet
+                return null;
+            }
+            if (freeRefObjNr == 0) {
+                return null;
+            }
+            if (freeRefObjNr < 0) {
+                int? leastFreeRefObjNum = null;
+                foreach (KeyValuePair<int, PdfIndirectReference> entry in freeReferencesLinkedList) {
+                    if (entry.Key <= 0 || xref[entry.Key].GetGenNumber() >= MAX_GENERATION) {
+                        continue;
+                    }
+                    leastFreeRefObjNum = entry.Key;
+                    break;
+                }
+                if (leastFreeRefObjNum == null) {
+                    return null;
+                }
+                freeRefObjNr = (int)leastFreeRefObjNum;
+            }
+            PdfIndirectReference freeRef = xref[freeRefObjNr];
+            if (!freeRef.IsFree()) {
+                return null;
+            }
+            PdfIndirectReference prevFreeRef = freeReferencesLinkedList.JRemove(freeRef.GetObjNumber());
+            if (prevFreeRef != null) {
+                freeReferencesLinkedList.Put((int)freeRef.GetOffset(), prevFreeRef);
+                ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(freeRef.GetOffset());
+            }
+            return freeRef;
         }
 
         private void EnsureCount(int count) {

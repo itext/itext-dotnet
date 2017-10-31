@@ -82,7 +82,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// </param>
         public Link(String text, PdfAction action)
-            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action))) {
+            : this(text, (PdfLinkAnnotation)((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction
+                (action)).SetFlags(PdfAnnotation.PRINT)) {
         }
 
         /// <summary>Creates a Link to another location in the document.</summary>
@@ -92,7 +93,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>
         /// </param>
         public Link(String text, PdfDestination destination)
-            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination)) {
+            : this(text, (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination
+                ).SetFlags(PdfAnnotation.PRINT)) {
         }
 
         /// <summary>Gets the link annotation dictionary associated with this link.</summary>

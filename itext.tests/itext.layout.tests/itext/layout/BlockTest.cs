@@ -136,7 +136,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph(textByron);
             Div div = new Div();
-            div.SetBorder(new SolidBorder(Color.RED, 2));
+            div.SetBorder(new SolidBorder(ColorConstants.RED, 2));
             for (int i = 0; i < 5; i++) {
                 div.Add(p);
             }
@@ -181,6 +181,176 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [NUnit.Framework.Test]
+        public virtual void BlockWithSetHeightProperties03() {
+            //Relative height declaration tests
+            String outFileName = destinationFolder + "blockWithSetHeightProperties03.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            float parentHeight = 650;
+            Div d = new Div();
+            d.Add(new Paragraph(textByron));
+            d.SetBorder(new SolidBorder(0.5f));
+            doc.Add(new Paragraph("Default layout:"));
+            Div parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 150% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(150f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 10% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(10f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 40% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(40f));
+            parent.Add(d);
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 50% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(50f));
+            parent.Add(d);
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's min height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's max height is set to 30% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            d.DeleteOwnProperty(Property.MIN_HEIGHT);
+            //Min-height trumps max-height, so we have to remove it when re-using the div
+            d.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
+            parent.Add(d);
+            doc.Add(parent);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [NUnit.Framework.Test]
+        public virtual void BlockWithSetHeightProperties04() {
+            //Relative height declaration tests
+            String outFileName = destinationFolder + "blockWithSetHeightProperties04.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            float parentHeight = 650;
+            Paragraph p = new Paragraph();
+            p.Add(new Text(textByron));
+            p.SetBorder(new SolidBorder(0.5f));
+            doc.Add(new Paragraph("Default layout:"));
+            Div parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 150% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(150f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 10% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(10f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 40% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(40f));
+            parent.Add(p);
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's height is set to 50% of the parent and two paragraphs are added"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(50f));
+            parent.Add(p);
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's min height is set to 80% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePercentValue(80f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Paragraph's max height is set to 30% of the parent"));
+            parent = new Div();
+            parent.SetHeight(parentHeight);
+            parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.DeleteOwnProperty(Property.MIN_HEIGHT);
+            //Min-height trumps max, so we have to remove it when re-using the paragraph
+            p.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
+            parent.Add(p);
+            doc.Add(parent);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowTest01() {
             // TODO DEVSIX-1373
@@ -193,11 +363,11 @@ namespace iText.Layout {
             doc.Add(explanation);
             Paragraph p = new Paragraph(textByronNarrow);
             p.SetWidth(200);
-            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
             Div div = new Div();
             div.SetWidth(100);
-            div.SetBorder(new SolidBorder(Color.BLACK, 1));
+            div.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
             div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             div.Add(p);
             doc.Add(div);
@@ -217,14 +387,14 @@ namespace iText.Layout {
             Paragraph p = new Paragraph();
             p.SetWidth(200);
             p.SetHeight(100);
-            p.SetBorder(new SolidBorder(Color.BLUE, 1));
-            p.SetBackgroundColor(Color.YELLOW);
+            p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetBackgroundColor(ColorConstants.YELLOW);
             for (int i = 0; i < 10; i++) {
                 p.Add(textByronNarrow);
             }
             p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
-            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -241,15 +411,15 @@ namespace iText.Layout {
             Paragraph p = new Paragraph();
             p.SetWidth(1400);
             p.SetHeight(1400);
-            p.SetBorder(new SolidBorder(Color.BLUE, 1));
-            p.SetBackgroundColor(Color.YELLOW);
+            p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+            p.SetBackgroundColor(ColorConstants.YELLOW);
             for (int i = 0; i < 100; i++) {
                 p.Add(textByronNarrow);
             }
             p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
-            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -271,12 +441,12 @@ namespace iText.Layout {
             p.SetRotationAngle(Math.PI / 2);
             p.SetWidth(100);
             p.SetHeight(100);
-            p.SetBorder(new SolidBorder(Color.BLUE, 1));
+            p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             p.Add(image);
             doc.Add(p);
-            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -294,7 +464,7 @@ namespace iText.Layout {
             Div div = new Div();
             div.SetWidth(100);
             div.SetHeight(150);
-            div.SetBackgroundColor(Color.GREEN);
+            div.SetBackgroundColor(ColorConstants.GREEN);
             div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             List list = new List();
@@ -304,7 +474,7 @@ namespace iText.Layout {
             list.Add("Again Make Greeeeeeeeeetzky Great");
             div.Add(list);
             doc.Add(div);
-            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -322,11 +492,11 @@ namespace iText.Layout {
             Div div = new Div();
             div.SetWidth(100);
             div.SetHeight(100);
-            div.SetBackgroundColor(Color.GREEN);
+            div.SetBackgroundColor(ColorConstants.GREEN);
             div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             div.Add(new Paragraph(textByron));
             doc.Add(div);
-            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(Color.RED));
+            doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -397,10 +567,11 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(760).SetBackgroundColor(Color.DARK_GRAY);
+            div.SetHeight(760).SetBackgroundColor(ColorConstants.DARK_GRAY);
             doc.Add(div);
             // TODO overflow of this div on second page is of much bigger height than 1pt
-            Div div1 = new Div().SetMarginTop(42).SetMarginBottom(42).SetBackgroundColor(Color.BLUE).SetHeight(1);
+            Div div1 = new Div().SetMarginTop(42).SetMarginBottom(42).SetBackgroundColor(ColorConstants.BLUE).SetHeight
+                (1);
             doc.Add(div1);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -418,7 +589,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             // TODO div with fixed height is bigger than 60pt
             Div div = new Div();
-            div.SetHeight(60).SetBackgroundColor(Color.DARK_GRAY);
+            div.SetHeight(60).SetBackgroundColor(ColorConstants.DARK_GRAY);
             Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
             div.Add(div1);
             doc.Add(div);
@@ -437,7 +608,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            div.SetHeight(710).SetBackgroundColor(Color.DARK_GRAY);
+            div.SetHeight(710).SetBackgroundColor(ColorConstants.DARK_GRAY);
             doc.Add(div);
             // TODO this element is below first page visible area
             Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
@@ -467,29 +638,33 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.BLUE);
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.BLUE);
             divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(50));
             // solid
             div.AddStyle(divStyle);
-            div.SetBorderTop(new SolidBorder(Color.RED, 20)).SetBorderRight(new SolidBorder(Color.YELLOW, 20));
+            div.SetBorderTop(new SolidBorder(ColorConstants.RED, 20)).SetBorderRight(new SolidBorder(ColorConstants.YELLOW
+                , 20));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dashed
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderTop(new DashedBorder(Color.RED, 20)).SetBorderRight(new DashedBorder(Color.YELLOW, 20));
+            div.SetBorderTop(new DashedBorder(ColorConstants.RED, 20)).SetBorderRight(new DashedBorder(ColorConstants.
+                YELLOW, 20));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderTop(new DottedBorder(Color.RED, 20)).SetBorderRight(new DottedBorder(Color.YELLOW, 20));
+            div.SetBorderTop(new DottedBorder(ColorConstants.RED, 20)).SetBorderRight(new DottedBorder(ColorConstants.
+                YELLOW, 20));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // round dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderTop(new RoundDotsBorder(Color.RED, 20)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 20));
+            div.SetBorderTop(new RoundDotsBorder(ColorConstants.RED, 20)).SetBorderRight(new RoundDotsBorder(ColorConstants
+                .YELLOW, 20));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -506,20 +681,20 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             // width and height > 2 * radius
             Div div = new Div();
-            div.SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
-                .CreatePointValue(100));
+            div.SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
+                , UnitValue.CreatePointValue(100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // 2 * radius > width and height > radius
             div = new Div();
-            div.SetHeight(150).SetWidth(150).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
-                .CreatePointValue(100));
+            div.SetHeight(150).SetWidth(150).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
+                , UnitValue.CreatePointValue(100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // radius > width and height
             div = new Div();
-            div.SetHeight(50).SetWidth(50).SetBackgroundColor(Color.GREEN).SetProperty(Property.BORDER_RADIUS, UnitValue
-                .CreatePointValue(100));
+            div.SetHeight(50).SetWidth(50).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
+                , UnitValue.CreatePointValue(100));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -535,34 +710,37 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(Color.GREEN);
+            Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.GREEN);
             divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(200));
             // solid
             div.AddStyle(divStyle);
-            div.SetBorderLeft(new SolidBorder(Color.MAGENTA, 100)).SetBorderBottom(new SolidBorder(Color.BLACK, 100)).
-                SetBorderTop(new SolidBorder(Color.RED, 100)).SetBorderRight(new SolidBorder(Color.BLUE, 100));
+            div.SetBorderLeft(new SolidBorder(ColorConstants.MAGENTA, 100)).SetBorderBottom(new SolidBorder(ColorConstants
+                .BLACK, 100)).SetBorderTop(new SolidBorder(ColorConstants.RED, 100)).SetBorderRight(new SolidBorder(ColorConstants
+                .BLUE, 100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dashed
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderLeft(new DashedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DashedBorder(Color.BLACK, 100)
-                ).SetBorderTop(new DashedBorder(Color.RED, 100)).SetBorderRight(new DashedBorder(Color.BLUE, 100));
+            div.SetBorderLeft(new DashedBorder(ColorConstants.MAGENTA, 100)).SetBorderBottom(new DashedBorder(ColorConstants
+                .BLACK, 100)).SetBorderTop(new DashedBorder(ColorConstants.RED, 100)).SetBorderRight(new DashedBorder(
+                ColorConstants.BLUE, 100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderLeft(new DottedBorder(Color.MAGENTA, 100)).SetBorderBottom(new DottedBorder(Color.BLACK, 100)
-                ).SetBorderTop(new DottedBorder(Color.RED, 100)).SetBorderRight(new DottedBorder(Color.BLUE, 100));
+            div.SetBorderLeft(new DottedBorder(ColorConstants.MAGENTA, 100)).SetBorderBottom(new DottedBorder(ColorConstants
+                .BLACK, 100)).SetBorderTop(new DottedBorder(ColorConstants.RED, 100)).SetBorderRight(new DottedBorder(
+                ColorConstants.BLUE, 100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // round dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderLeft(new RoundDotsBorder(Color.MAGENTA, 100)).SetBorderBottom(new RoundDotsBorder(Color.BLACK
-                , 100)).SetBorderTop(new RoundDotsBorder(Color.RED, 100)).SetBorderRight(new RoundDotsBorder(Color.BLUE
-                , 100));
+            div.SetBorderLeft(new RoundDotsBorder(ColorConstants.MAGENTA, 100)).SetBorderBottom(new RoundDotsBorder(ColorConstants
+                .BLACK, 100)).SetBorderTop(new RoundDotsBorder(ColorConstants.RED, 100)).SetBorderRight(new RoundDotsBorder
+                (ColorConstants.BLUE, 100));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -578,34 +756,37 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            Style divStyle = new Style().SetHeight(120).SetWidth(120).SetBackgroundColor(Color.MAGENTA);
+            Style divStyle = new Style().SetHeight(120).SetWidth(120).SetBackgroundColor(ColorConstants.MAGENTA);
             divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(90));
             // solid
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.GREEN, 15)).SetBorderTop
-                (new SolidBorder(Color.BLACK, 60)).SetBorderRight(new SolidBorder(Color.BLUE, 150));
+            div.SetBorderBottom(new SolidBorder(ColorConstants.RED, 30)).SetBorderLeft(new SolidBorder(ColorConstants.
+                GREEN, 15)).SetBorderTop(new SolidBorder(ColorConstants.BLACK, 60)).SetBorderRight(new SolidBorder(ColorConstants
+                .BLUE, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dashed
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.GREEN, 15)).SetBorderTop
-                (new DashedBorder(Color.BLACK, 60)).SetBorderRight(new DashedBorder(Color.BLUE, 150));
+            div.SetBorderBottom(new DashedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DashedBorder(ColorConstants
+                .GREEN, 15)).SetBorderTop(new DashedBorder(ColorConstants.BLACK, 60)).SetBorderRight(new DashedBorder(
+                ColorConstants.BLUE, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.GREEN, 15)).SetBorderTop
-                (new DottedBorder(Color.BLACK, 60)).SetBorderRight(new DottedBorder(Color.BLUE, 150));
+            div.SetBorderBottom(new DottedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DottedBorder(ColorConstants
+                .GREEN, 15)).SetBorderTop(new DottedBorder(ColorConstants.BLACK, 60)).SetBorderRight(new DottedBorder(
+                ColorConstants.BLUE, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // round dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.GREEN, 15)
-                ).SetBorderTop(new RoundDotsBorder(Color.BLACK, 60)).SetBorderRight(new RoundDotsBorder(Color.BLUE, 150
-                ));
+            div.SetBorderBottom(new RoundDotsBorder(ColorConstants.RED, 30)).SetBorderLeft(new RoundDotsBorder(ColorConstants
+                .GREEN, 15)).SetBorderTop(new RoundDotsBorder(ColorConstants.BLACK, 60)).SetBorderRight(new RoundDotsBorder
+                (ColorConstants.BLUE, 150));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -621,34 +802,37 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
-            Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(Color.MAGENTA);
+            Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(ColorConstants.MAGENTA);
             divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(100));
             // solid
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new SolidBorder(Color.RED, 30)).SetBorderLeft(new SolidBorder(Color.BLUE, 15)).SetBorderTop
-                (new SolidBorder(Color.GREEN, 60)).SetBorderRight(new SolidBorder(Color.YELLOW, 150));
+            div.SetBorderBottom(new SolidBorder(ColorConstants.RED, 30)).SetBorderLeft(new SolidBorder(ColorConstants.
+                BLUE, 15)).SetBorderTop(new SolidBorder(ColorConstants.GREEN, 60)).SetBorderRight(new SolidBorder(ColorConstants
+                .YELLOW, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dashed
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new DashedBorder(Color.RED, 30)).SetBorderLeft(new DashedBorder(Color.BLUE, 15)).SetBorderTop
-                (new DashedBorder(Color.GREEN, 60)).SetBorderRight(new DashedBorder(Color.YELLOW, 150));
+            div.SetBorderBottom(new DashedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DashedBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new DashedBorder(ColorConstants.GREEN, 60)).SetBorderRight(new DashedBorder(ColorConstants
+                .YELLOW, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new DottedBorder(Color.RED, 30)).SetBorderLeft(new DottedBorder(Color.BLUE, 15)).SetBorderTop
-                (new DottedBorder(Color.GREEN, 60)).SetBorderRight(new DottedBorder(Color.YELLOW, 150));
+            div.SetBorderBottom(new DottedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DottedBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new DottedBorder(ColorConstants.GREEN, 60)).SetBorderRight(new DottedBorder(ColorConstants
+                .YELLOW, 150));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // round dotted
             div = new Div();
             div.AddStyle(divStyle);
-            div.SetBorderBottom(new RoundDotsBorder(Color.RED, 30)).SetBorderLeft(new RoundDotsBorder(Color.BLUE, 15))
-                .SetBorderTop(new RoundDotsBorder(Color.GREEN, 60)).SetBorderRight(new RoundDotsBorder(Color.YELLOW, 150
-                ));
+            div.SetBorderBottom(new RoundDotsBorder(ColorConstants.RED, 30)).SetBorderLeft(new RoundDotsBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new RoundDotsBorder(ColorConstants.GREEN, 60)).SetBorderRight(new RoundDotsBorder
+                (ColorConstants.YELLOW, 150));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

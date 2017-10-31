@@ -78,7 +78,7 @@ namespace iText.Layout {
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!").SetBackgroundColor
-                    (DeviceRgb.RED));
+                    (ColorConstants.RED));
             }
             document.Add(paragraph);
             document.Close();
@@ -113,7 +113,7 @@ namespace iText.Layout {
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!").SetBorder
-                    (new SolidBorder(Color.GREEN, 0.1f))).SetMultipliedLeading(1);
+                    (new SolidBorder(ColorConstants.GREEN, 0.1f))).SetMultipliedLeading(1);
             }
             document.Add(paragraph);
             document.Close();
@@ -217,9 +217,9 @@ namespace iText.Layout {
             }
             list.SetWidth(250);
             list.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            list.SetBackgroundColor(Color.GREEN);
+            list.SetBackgroundColor(ColorConstants.GREEN);
             document.Add(list);
-            list.SetHorizontalAlignment(HorizontalAlignment.RIGHT).SetBackgroundColor(Color.RED);
+            list.SetHorizontalAlignment(HorizontalAlignment.RIGHT).SetBackgroundColor(ColorConstants.RED);
             list.SetTextAlignment(TextAlignment.CENTER);
             document.Add(list);
             document.Close();

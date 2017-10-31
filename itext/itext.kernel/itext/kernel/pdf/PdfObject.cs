@@ -150,8 +150,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null) {
-                // TODO here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
-                // TODO DEVSIX-744
+                // TODO DEVSIX-744: here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
                 //            Logger logger = LoggerFactory.getLogger(PdfObject.class);
                 //            if (isFlushed()) {
                 //                logger.warn("Meaningless call, the object has already flushed");
@@ -277,7 +276,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies object to a specified document.</summary>
         /// <remarks>
         /// Copies object to a specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
@@ -289,7 +288,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies object to a specified document.</summary>
         /// <remarks>
         /// Copies object to a specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>

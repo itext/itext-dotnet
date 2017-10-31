@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// class is used to track necessary information of document's tag structure.
     /// It is also used to make some global modifications of the tag tree like removing or flushing page tags, however
     /// these two methods and also others are called automatically and are for the most part for internal usage.
-    /// <br/><br/>
+    /// <br />
     /// There shall be only one instance of this class per
     /// <c>PdfDocument</c>
     /// . To obtain instance of this class use
@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Do not use this constructor, instead use
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
         /// method.
-        /// <br/><br/>
+        /// <br />
         /// Creates
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this
@@ -241,7 +241,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Removes content item from the tag structure.</summary>
         /// <remarks>
         /// Removes content item from the tag structure.
-        /// <br/>
+        /// <br />
         /// Nothing happens if there is no such mcid on given page.
         /// </remarks>
         /// <param name="page">page, which contains this content item</param>
@@ -356,10 +356,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Transforms root tags in a way that complies with the PDF References.</summary>
         /// <remarks>
         /// Transforms root tags in a way that complies with the PDF References.
-        /// <br/><br/>
+        /// <br />
         /// PDF Reference
         /// 10.7.3 Grouping Elements:
-        /// <br/><br/>
+        /// <br />
         /// For most content extraction formats, the document must be a tree with a single top-level element;
         /// the structure tree root (identified by the StructTreeRoot entry in the document catalog) must have
         /// only one child in its K (kids) array. If the PDF file contains a complete document, the structure

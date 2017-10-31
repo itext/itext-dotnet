@@ -52,7 +52,7 @@ namespace iText.Layout.Font {
 
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
-        /// <param name="fontFamilies">sorted list of preferred font families.</param>
+        /// <param name="fontFamilies">Sorted list of preferred font families.</param>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual protected member in constructor.
@@ -66,11 +66,14 @@ namespace iText.Layout.Font {
         /// <see cref="GetFonts()"/>
         /// doesn't contain requested glyphs, this font will be used.
         /// </remarks>
+        /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
             return fonts[0];
         }
 
+        // fonts is sorted best to worst, get(0) returns the best matched FontInfo
         /// <summary>Sorted set of fonts.</summary>
+        /// <returns>sorted set of fonts</returns>
         public IEnumerable<FontInfo> GetFonts() {
             return fonts;
         }
@@ -176,15 +179,26 @@ namespace iText.Layout.Font {
                 FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
                 // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
                 // it should not be any 'contains' with aliases.
-                if (fontName.Equals(descriptor.GetFullNameLowerCase()) || fontName.Equals(descriptor.GetFontNameLowerCase(
-                    )) || fontName.Equals(fontInfo.GetAlias())) {
-                    score += 10;
+                bool checkContains = true;
+                if (fontName.Equals(descriptor.GetFullNameLowerCase())) {
+                    score += 4;
+                    checkContains = false;
                 }
-                else {
-                    if (descriptor.GetFullNameLowerCase().Contains(fontName) || descriptor.GetFontNameLowerCase().Contains(fontName
-                        )) {
-                        //yes, we will not find contains for each alias.
-                        score += 7;
+                if (fontName.Equals(descriptor.GetFontNameLowerCase())) {
+                    score += 4;
+                    checkContains = false;
+                }
+                if (fontName.Equals(fontInfo.GetAlias())) {
+                    score += 4;
+                    checkContains = false;
+                }
+                if (checkContains) {
+                    //yes, we will not find contains for each alias.
+                    if (descriptor.GetFullNameLowerCase().Contains(fontName)) {
+                        score += 3;
+                    }
+                    if (descriptor.GetFontNameLowerCase().Contains(fontName)) {
+                        score += 3;
                     }
                 }
                 return score;

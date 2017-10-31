@@ -66,6 +66,7 @@ namespace iText.Test {
         /// Add class to runner if it has <see cref="WrapToTestAttribute"/> attribute. 
         /// </summary>
         /// <param name="fullName">full name of class to be checked.</param>
+        /// <returns>this RunnerSearchConfig</returns>
         public virtual RunnerSearchConfig AddClassToRunnerSearchPath(String fullName) {
             searchClasses.Add(fullName);
             return this;
@@ -76,6 +77,7 @@ namespace iText.Test {
         /// </summary>
         /// <param name="name">full or partial name of the namespace or class to be omitted by this runner.
         ///                 E.g. "Highlevel.Appendix" or "iText.Highlevel.Appendix.TableProperties".</param>
+        /// <returns>this RunnerSearchConfig</returns>
         public virtual RunnerSearchConfig IgnorePackageOrClass(String name) {
             ignoredPaths.Add(name);
             return this;
@@ -85,6 +87,7 @@ namespace iText.Test {
         /// If a class was found in search path, and it has DEST field and main method, but it doesn't have 
         /// WrapToTest attribute, this test will be marked as ignored with corresponding message in case this option is used.
         /// </summary>
+        /// <returns>this RunnerSearchConfig</returns>
         public virtual RunnerSearchConfig MarkTestsWithoutAnnotationAsIgnored() {
             isToMarkTestsWithoutAnnotationAsIgnored = true;
             return this;

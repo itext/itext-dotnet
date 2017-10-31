@@ -59,7 +59,7 @@ namespace iText.Layout.Element {
     /// grid. It is filled with
     /// <see cref="Cell">cells</see>
     /// , ordered in rows and columns.
-    /// <p/>
+    /// <p>
     /// It is an implementation of
     /// <see cref="ILargeElement"/>
     /// , which means it can be flushed
@@ -100,10 +100,10 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -144,10 +144,10 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -190,9 +190,9 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -219,9 +219,9 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -249,10 +249,10 @@ namespace iText.Layout.Element {
         /// <c>Table</c>
         /// with specified number of columns. Each column will get equal percent width,
         /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -294,10 +294,10 @@ namespace iText.Layout.Element {
         /// <c>Table</c>
         /// with specified number of columns. Each column will get equal percent width,
         /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
-        /// <br/>
+        /// <br />
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
-        /// <br/>
+        /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -361,31 +361,31 @@ namespace iText.Layout.Element {
         /// <c>table-layout:fixed</c>
         /// CSS property.
         /// Note, the table must have width property, otherwise auto layout will be used.
-        /// <p/>
+        /// <p>
         /// Algorithm description
-        /// <br/>
+        /// <br />
         /// 1. Scan columns for width property and set it. All the rest columns get undefined value.
         /// Column width includes borders and paddings. Columns have set in constructor, analog of
         /// <c>&lt;colgroup&gt;</c>
         /// element in HTML.
-        /// <br/>
+        /// <br />
         /// 2. Scan the very first row of table for width property and set it to undefined columns.
         /// Cell width has lower priority in comparing with column. Cell width doesn't include borders and paddings.
-        /// <br/>
+        /// <br />
         /// 2.1 If cell has colspan and all columns are undefined, each column will get equal width:
         /// <c>width/colspan</c>
         /// .
-        /// <br/>
+        /// <br />
         /// 2.2 If some columns already have width, equal remain (original width minus existed) width will be added
         /// <c>remainWidth/colspan</c>
         /// to each column.
-        /// <br/>
+        /// <br />
         /// 3. If sum of columns is less, than table width, there are two options:
-        /// <br/>
+        /// <br />
         /// 3.1. If undefined columns still exist, they will get the rest remaining width.
-        /// <br/>
+        /// <br />
         /// 3.2. Otherwise all columns will be expanded proportionally based on its width.
-        /// <br/>
+        /// <br />
         /// 4. If sum of columns is greater, than table width, nothing to do.
         /// </remarks>
         /// <returns>this element.</returns>
@@ -400,17 +400,17 @@ namespace iText.Layout.Element {
         /// <c>table-layout:auto</c>
         /// CSS property. <br />
         /// Note, large table does not support auto layout.
-        /// <p/>
+        /// <p>
         /// Algorithm principles.
-        /// <br/>
+        /// <br />
         /// 1. Column width cannot be less, than min-width of any cell in the column (calculated by layout).
-        /// <br/>
+        /// <br />
         /// 2. Specified table width has higher priority, than sum of column and cell widths.
-        /// <br/>
+        /// <br />
         /// 3. Percent value of cell and column width has higher priority, than point value.
-        /// <br/>
+        /// <br />
         /// 4. Cell width has higher priority, than column width.
-        /// <br/>
+        /// <br />
         /// 5. If column has no width, it will try to reach max-value (calculated by layout).
         /// </remarks>
         /// <returns>this element.</returns>
@@ -424,6 +424,7 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Properties.Property.WIDTH"/>
         /// = 100%.
         /// </summary>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table UseAllAvailableWidth() {
             SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(100));
             return this;
@@ -457,6 +458,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="headerCell">a header cell to be added</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddHeaderCell(Cell headerCell) {
             EnsureHeaderIsInitialized();
             header.AddCell(headerCell);
@@ -472,6 +474,8 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="blockElement">an element to be added to a header cell</param>
+        /// 
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddHeaderCell<T>(BlockElement<T> blockElement)
             where T : IElement {
             EnsureHeaderIsInitialized();
@@ -488,6 +492,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="image">an element to be added to a header cell</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddHeaderCell(Image image) {
             EnsureHeaderIsInitialized();
             header.AddCell(image);
@@ -503,6 +508,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="content">a string to be added to a header cell</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddHeaderCell(String content) {
             EnsureHeaderIsInitialized();
             header.AddCell(content);
@@ -532,6 +538,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="footerCell">a footer cell</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddFooterCell(Cell footerCell) {
             EnsureFooterIsInitialized();
             footer.AddCell(footerCell);
@@ -547,6 +554,8 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="blockElement">an element to be added to a footer cell</param>
+        /// 
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddFooterCell<T>(BlockElement<T> blockElement)
             where T : IElement {
             EnsureFooterIsInitialized();
@@ -563,6 +572,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="image">an image to be added to a footer cell</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddFooterCell(Image image) {
             EnsureFooterIsInitialized();
             footer.AddCell(image);
@@ -578,6 +588,7 @@ namespace iText.Layout.Element {
         /// .
         /// </remarks>
         /// <param name="content">a content string to be added to a footer cell</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddFooterCell(String content) {
             EnsureFooterIsInitialized();
             footer.AddCell(content);
@@ -700,6 +711,7 @@ namespace iText.Layout.Element {
 
         /// <summary>Adds a new cell with received blockElement as a content.</summary>
         /// <param name="blockElement">a blockElement to add to the cell and then to the table</param>
+        /// 
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddCell<T>(BlockElement<T> blockElement)
             where T : IElement {
@@ -818,9 +830,7 @@ namespace iText.Layout.Element {
         /// so we might not place the content in the bottom of the page where it would fit, but instead add a footer, and
         /// place that content in the start of the page. Technically such result would look all right, but it would be
         /// more concise if we placed the content in the bottom and did not start new page. For such cases to be
-        /// renderered more accurately, one can call
-        /// <see cref="Complete()"/>
-        /// when some content is still there and not flushed.
+        /// renderered more accurately, one can call complete() when some content is still there and not flushed.
         /// </remarks>
         public virtual void Complete() {
             System.Diagnostics.Debug.Assert(!isComplete);

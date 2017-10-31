@@ -74,7 +74,7 @@ namespace iText.Barcodes {
             barcode.SetGenerateChecksum(true);
             barcode.SetCode("41-1200076041-001");
             barcode.SetTextAlignment(Barcode1D.ALIGN_CENTER);
-            barcode.PlaceBarcode(canvas, Color.BLUE, Color.GREEN);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLUE, ColorConstants.GREEN);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

@@ -205,6 +205,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfFormField"/>
         /// .
         /// </summary>
+        /// <param name="pdfDocument">The document</param>
         protected internal PdfFormField(PdfDocument pdfDocument)
             : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
             PdfName formType = GetFormType();
@@ -219,9 +220,10 @@ namespace iText.Forms.Fields {
         /// .
         /// </summary>
         /// <param name="widget">
-        /// the widget which will be a kid of the
+        /// The widget which will be a kid of the
         /// <see cref="PdfFormField"/>
         /// </param>
+        /// <param name="pdfDocument">The document</param>
         protected internal PdfFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
             widget.MakeIndirect(pdfDocument);
@@ -1344,9 +1346,6 @@ namespace iText.Forms.Fields {
                 if (kids != null) {
                     for (int i = 0; i < kids.Size(); i++) {
                         PdfObject kid = kids.Get(i);
-                        if (kid.IsIndirectReference()) {
-                            kid = ((PdfIndirectReference)kid).GetRefersTo();
-                        }
                         iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                         field.font = font;
                         field.fontSize = fontSize;
@@ -1854,9 +1853,6 @@ namespace iText.Forms.Fields {
             if (kids != null) {
                 for (int i = 0; i < kids.Size(); i++) {
                     PdfObject kid = kids.Get(i);
-                    if (kid.IsIndirectReference()) {
-                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                    }
                     subType = ((PdfDictionary)kid).GetAsName(PdfName.Subtype);
                     if (subType != null && subType.Equals(PdfName.Widget)) {
                         widgets.Add((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(kid));
@@ -1973,7 +1969,7 @@ namespace iText.Forms.Fields {
         /// .
         /// </remarks>
         /// <param name="richText">a new rich text value</param>
-        /// <returns>the edited field</returns>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetRichText(PdfObject richText) {
             GetPdfObject().Put(PdfName.RV, richText);
             return this;
@@ -1993,7 +1989,8 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>font</code> property. Regenerates the field
         /// appearance after setting the new value.
         /// </remarks>
-        /// <param name="font">the new font to be set</param>
+        /// <param name="font">The new font to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFont(PdfFont font) {
             this.font = font;
             RegenerateField();
@@ -2005,7 +2002,8 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>fontSize</code> property. Regenerates the
         /// field appearance after setting the new value.
         /// </remarks>
-        /// <param name="fontSize">the new font size to be set</param>
+        /// <param name="fontSize">The new font size to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFontSize(float fontSize) {
             this.fontSize = fontSize;
             RegenerateField();
@@ -2017,7 +2015,8 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>fontSize</code> property. Regenerates the
         /// field appearance after setting the new value.
         /// </remarks>
-        /// <param name="fontSize">the new font size to be set</param>
+        /// <param name="fontSize">The new font size to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFontSize(int fontSize) {
             SetFontSize((float)fontSize);
             return this;
@@ -2031,8 +2030,9 @@ namespace iText.Forms.Fields {
         /// Combined setter for the <code>font</code> and <code>fontSize</code>
         /// properties. Regenerates the field appearance after setting the new value.
         /// </remarks>
-        /// <param name="font">the new font to be set</param>
-        /// <param name="fontSize">the new font size to be set</param>
+        /// <param name="font">The new font to be set</param>
+        /// <param name="fontSize">The new font size to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFontAndSize(PdfFont font, int fontSize) {
             this.font = font;
             this.fontSize = fontSize;
@@ -2045,7 +2045,8 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>backgroundColor</code> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
-        /// <param name="backgroundColor">the new color to be set</param>
+        /// <param name="backgroundColor">The new color to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
@@ -2062,7 +2063,8 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>degRotation</code> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
-        /// <param name="degRotation">the new degRotation to be set</param>
+        /// <param name="degRotation">The new degRotation to be set</param>
+        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetRotation(int degRotation) {
             if (degRotation % 90 != 0) {
                 throw new ArgumentException("degRotation.must.be.a.multiple.of.90");
@@ -2090,8 +2092,8 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation">widgets</see>
         /// of this form field.
         /// </summary>
-        /// <param name="action">the action</param>
-        /// <returns>the edited field</returns>
+        /// <param name="action">The action</param>
+        /// <returns>The edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetAction(PdfAction action) {
             IList<PdfWidgetAnnotation> widgets = GetWidgets();
             if (widgets != null) {
@@ -2110,6 +2112,7 @@ namespace iText.Forms.Fields {
         /// method
         /// </remarks>
         /// <param name="checkType">the new checkbox marker</param>
+        /// <returns>The edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetCheckType(int checkType) {
             if (checkType < TYPE_CHECK || checkType > TYPE_STAR) {
                 checkType = TYPE_CROSS;
@@ -2133,7 +2136,7 @@ namespace iText.Forms.Fields {
         /// Options are: HIDDEN, HIDDEN_BUT_PRINTABLE, VISIBLE, VISIBLE_BUT_DOES_NOT_PRINT
         /// </summary>
         /// <param name="visibility">visibility option</param>
-        /// <returns>the edited form field annotation</returns>
+        /// <returns>The edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetVisibility(int visibility) {
             switch (visibility) {
                 case HIDDEN: {
@@ -2372,9 +2375,6 @@ namespace iText.Forms.Fields {
                             if (null != kids) {
                                 for (int i = 0; i < kids.Size(); i++) {
                                     PdfObject kid = kids.Get(i);
-                                    if (kid.IsIndirectReference()) {
-                                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                                    }
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
                                     PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
@@ -2566,7 +2566,8 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Sets the border width for the field.</summary>
-        /// <param name="borderWidth">the new border width.</param>
+        /// <param name="borderWidth">The new border width.</param>
+        /// <returns>The edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBorderWidth(float borderWidth) {
             PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
             if (bs == null) {
@@ -2833,6 +2834,10 @@ namespace iText.Forms.Fields {
             return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
         }
 
+        /// <param name="font">The font</param>
+        /// <param name="fontSize">The font size</param>
+        /// <param name="res">The resources</param>
+        /// <returns>The default appearance string</returns>
         [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, float, iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfResources) instead."
             )]
         protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, int fontSize, PdfResources
@@ -2993,13 +2998,14 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Draws the visual appearance of text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
+        /// <param name="rect">The location on the page for the list field</param>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
+        /// <param name="fontSize">The size of the font</param>
+        /// <param name="value">The initial value</param>
+        /// <param name="appearance">The appearance</param>
         protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, float fontSize, String value
             , PdfFormXObject appearance) {
             PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
@@ -3014,16 +3020,11 @@ namespace iText.Forms.Fields {
                 value = ObfuscatePassword(value);
             }
             canvas.BeginVariableText().SaveState().NewPath();
-            Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
-                (0, X_OFFSET, 0, X_OFFSET);
-            if (color != null) {
-                paragraph.SetFontColor(color);
-            }
+            float x = X_OFFSET;
             int? justification = GetJustification();
             if (justification == null) {
                 justification = 0;
             }
-            float x = X_OFFSET;
             TextAlignment? textAlignment = TextAlignment.LEFT;
             if (justification == ALIGN_RIGHT) {
                 textAlignment = TextAlignment.RIGHT;
@@ -3038,19 +3039,53 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
                 0, 2 * height));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            // check if /Comb has been set
+            if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
+                // calculate space per character
+                PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
+                if (maxLenEntry == null) {
+                    throw new PdfException(PdfException.NoMaxLenPresent);
+                }
+                int maxLen = maxLenEntry.IntValue();
+                float widthPerCharacter = width / maxLen;
+                Paragraph paragraph = new Paragraph().SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1);
+                if (color != null) {
+                    paragraph.SetFontColor(color);
+                }
+                int numberOfCharacters = maxLen >= value.Length ? value.Length : maxLen;
+                for (int i = 0; i < numberOfCharacters; i++) {
+                    // Get width of each character
+                    String characterToPlace = value.JSubstring(i, i + 1);
+                    float characterWidth = font.GetWidth(characterToPlace, fontSize);
+                    // Find x-offset for this character so that we can place it in the center of this comb-section
+                    float xOffset = characterWidth == 0 ? characterWidth : (widthPerCharacter - characterWidth) / 2;
+                    paragraph.SetPaddings(0f, xOffset, 0f, xOffset);
+                    paragraph.Add(characterToPlace);
+                    modelCanvas.ShowTextAligned(paragraph, widthPerCharacter * i, 0, textAlignment);
+                    paragraph.GetChildren().JRemoveAt(0);
+                }
+            }
+            else {
+                Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
+                    (0, X_OFFSET, 0, X_OFFSET);
+                if (color != null) {
+                    paragraph.SetFontColor(color);
+                }
+                modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
 
         /// <summary>Draws the visual appearance of text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
+        /// <param name="rect">The location on the page for the list field</param>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
+        /// <param name="fontSize">The size of the font</param>
+        /// <param name="value">The initial value</param>
+        /// <param name="appearance">The appearance</param>
         [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, float, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
             )]
         protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, int fontSize, String value
@@ -3059,13 +3094,14 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Draws the visual appearance of multiline text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
+        /// <param name="rect">The location on the page for the list field</param>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
+        /// <param name="fontSize">The size of the font</param>
+        /// <param name="value">The initial value</param>
+        /// <param name="appearance">The appearance</param>
         protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, float fontSize, 
             String value, PdfFormXObject appearance) {
             PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
@@ -3099,7 +3135,7 @@ namespace iText.Forms.Fields {
                         }
                         if (((PdfNumber)ind).GetValue() == index) {
                             paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                            paragraph.SetFontColor(Color.LIGHT_GRAY);
+                            paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
                         }
                     }
                 }
@@ -3110,13 +3146,14 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Draws the visual appearance of multiline text in a form field.</summary>
-        /// <param name="rect">the location on the page for the list field</param>
+        /// <param name="rect">The location on the page for the list field</param>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <param name="value">the initial value</param>
+        /// <param name="fontSize">The size of the font</param>
+        /// <param name="value">The initial value</param>
+        /// <param name="appearance">The appearance</param>
         [System.ObsoleteAttribute(@"Will be removed in 7.1. Use DrawMultiLineTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, float, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
             )]
         protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, int fontSize, String
@@ -3126,12 +3163,13 @@ namespace iText.Forms.Fields {
 
         /// <summary>Draws a border using the borderWidth and borderColor of the form field.</summary>
         /// <param name="canvas">
-        /// the
+        /// The
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// on which to draw
         /// </param>
-        /// <param name="width">the width of the rectangle to draw</param>
-        /// <param name="height">the height of the rectangle to draw</param>
+        /// <param name="xObject">The PdfFormXObject</param>
+        /// <param name="width">The width of the rectangle to draw</param>
+        /// <param name="height">The height of the rectangle to draw</param>
         protected internal virtual void DrawBorder(PdfCanvas canvas, PdfFormXObject xObject, float width, float height
             ) {
             canvas.SaveState();
@@ -3141,7 +3179,7 @@ namespace iText.Forms.Fields {
                 borderWidth = 0;
             }
             if (borderColor == null) {
-                borderColor = Color.BLACK;
+                borderColor = ColorConstants.BLACK;
             }
             if (backgroundColor != null) {
                 canvas.SetFillColor(backgroundColor).Rectangle(borderWidth / 2, borderWidth / 2, width - borderWidth, height
@@ -3346,7 +3384,7 @@ namespace iText.Forms.Fields {
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (backgroundColor == null) {
-                backgroundColor = Color.LIGHT_GRAY;
+                backgroundColor = ColorConstants.LIGHT_GRAY;
             }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
@@ -3410,7 +3448,7 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
             String text, PdfFont font, float fontSize) {
             if (color == null) {
-                color = Color.BLACK;
+                color = ColorConstants.BLACK;
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);

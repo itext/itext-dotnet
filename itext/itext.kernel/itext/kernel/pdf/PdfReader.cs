@@ -701,17 +701,21 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference reference = table.Get(num);
                     if (reference != null) {
                         if (reference.IsFree()) {
-                            return PdfNull.PDF_NULL;
+                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                                (), tokens.GetGenNr()));
+                            return CreatePdfNullInstance(readAsDirect);
                         }
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                                 logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
                                     (), tokens.GetGenNr()));
-                                return new PdfNull();
+                                return CreatePdfNullInstance(readAsDirect);
                             }
                             else {
-                                throw new PdfException(PdfException.InvalidIndirectReference1);
+                                throw new PdfException(PdfException.InvalidIndirectReference1, MessageFormatUtil.Format("{0} {1} R", reference
+                                    .GetObjNumber(), reference.GetGenNumber()));
                             }
                         }
                     }
@@ -728,12 +732,7 @@ namespace iText.Kernel.Pdf {
 
                 default: {
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.Null)) {
-                        if (readAsDirect) {
-                            return PdfNull.PDF_NULL;
-                        }
-                        else {
-                            return new PdfNull();
-                        }
+                        return CreatePdfNullInstance(readAsDirect);
                     }
                     else {
                         if (tokens.TokenValueEqualsTo(PdfTokenizer.True)) {
@@ -908,7 +907,11 @@ namespace iText.Kernel.Pdf {
                         continue;
                     }
                     PdfIndirectReference reference = xref.Get(num);
-                    if (reference == null) {
+                    bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
+                        () == gen;
+                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
+                    // for references that are added by xref table itself (like 0 entry)
+                    if (refFirstEncountered) {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
                     }
                     else {
@@ -921,23 +924,22 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.N)) {
-                        if (xref.Get(num) == null) {
-                            if (pos == 0) {
-                                tokens.ThrowError(PdfException.FilePosition1CrossReferenceEntryInThisXrefSubsection);
-                            }
-                            xref.Add(reference);
+                        if (pos == 0) {
+                            tokens.ThrowError(PdfException.FilePosition1CrossReferenceEntryInThisXrefSubsection);
                         }
                     }
                     else {
                         if (tokens.TokenValueEqualsTo(PdfTokenizer.F)) {
-                            if (xref.Get(num) == null) {
-                                xref.FreeReference(reference, true);
-                                xref.Add(reference);
+                            if (refFirstEncountered) {
+                                reference.SetState(PdfObject.FREE);
                             }
                         }
                         else {
                             tokens.ThrowError(PdfException.InvalidCrossReferenceEntryInThisXrefSubsection);
                         }
+                    }
+                    if (refFirstEncountered) {
+                        xref.Add(reference);
                     }
                 }
             }
@@ -1041,14 +1043,8 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference newReference;
                     switch (type) {
                         case 0: {
-                            if (@base == 0) {
-                                //indirect reference with number = 0 can't be overridden
-                                //xref table already has indirect reference 0 65535 R
-                                newReference = xref.Get(@base);
-                            }
-                            else {
-                                newReference = new PdfIndirectReference(pdfDocument, @base, field3, 0);
-                            }
+                            newReference = ((PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
+                                (PdfObject.FREE));
                             break;
                         }
 
@@ -1067,18 +1063,16 @@ namespace iText.Kernel.Pdf {
                             throw new PdfException(PdfException.InvalidXrefStream);
                         }
                     }
-                    if (xref.Get(@base) == null) {
-                        // we should postpone freeing reference, because if we won't add it to xref,
-                        // it will be removed from xref in any case inside setFree() method.
-                        if (type == 0) {
-                            newReference.SetFree();
-                        }
+                    PdfIndirectReference reference = xref.Get(@base);
+                    bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
+                        () == newReference.GetGenNumber();
+                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
+                    // for references that are added by xref table itself (like 0 entry)
+                    if (refFirstEncountered) {
                         xref.Add(newReference);
                     }
                     else {
-                        if (xref.Get(@base).CheckState(PdfObject.READING) && xref.Get(@base).GetObjNumber() == newReference.GetObjNumber
-                            () && xref.Get(@base).GetGenNumber() == newReference.GetGenNumber()) {
-                            PdfIndirectReference reference = xref.Get(@base);
+                        if (refReadingState) {
                             reference.SetOffset(newReference.GetOffset());
                             reference.SetObjStreamNumber(newReference.GetObjStreamNumber());
                             reference.ClearState(PdfObject.READING);
@@ -1335,6 +1329,15 @@ namespace iText.Kernel.Pdf {
                 }
                 pdfNumber.SetValue(streamLength);
                 pdfStream.UpdateLength(streamLength);
+            }
+        }
+
+        private PdfObject CreatePdfNullInstance(bool readAsDirect) {
+            if (readAsDirect) {
+                return PdfNull.PDF_NULL;
+            }
+            else {
+                return new PdfNull();
             }
         }
 

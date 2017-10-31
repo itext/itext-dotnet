@@ -80,7 +80,7 @@ namespace iText.Layout.Renderer {
                 float[] ascenderDescender = CalculateAscenderDescender();
                 float minHeight = Math.Max(symbolRenderer.GetOccupiedArea().GetBBox().GetHeight(), ascenderDescender[0] - 
                     ascenderDescender[1]);
-                UpdateMinHeight(minHeight);
+                UpdateMinHeight(UnitValue.CreatePointValue(minHeight));
             }
             ApplyListSymbolPosition();
             LayoutResult result = base.Layout(layoutContext);
@@ -106,7 +106,7 @@ namespace iText.Layout.Renderer {
                 if (role != null && !PdfName.Artifact.Equals(role)) {
                     bool lBodyTagIsCreated = tagPointer.IsElementConnectedToTag(modelElement);
                     if (!lBodyTagIsCreated) {
-                        tagPointer.AddTag(PdfName.LI);
+                        tagPointer.AddTag(IsPossibleBadTagging(PdfName.LI) ? PdfName.Div : PdfName.LI);
                     }
                     else {
                         tagPointer.MoveToTag(modelElement).MoveToParent();
@@ -176,7 +176,7 @@ namespace iText.Layout.Renderer {
                 symbolRenderer.Move(xPosition, 0);
                 if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
                     if (isTagged) {
-                        tagPointer.AddTag(0, PdfName.Lbl);
+                        tagPointer.AddTag(0, IsPossibleBadTagging(PdfName.Lbl) ? PdfName.P : PdfName.Lbl);
                     }
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
@@ -201,6 +201,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
+            splitRenderer.isLastRendererForModelElement = false;
             if (layoutResult == LayoutResult.PARTIAL) {
                 splitRenderer.symbolRenderer = symbolRenderer;
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;

@@ -155,7 +155,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets a page mode of the document.</summary>
         /// <remarks>
         /// This method sets a page mode of the document.
-        /// </p>
+        /// <br />
         /// Valid values are:
         /// <c>PdfName.UseNone</c>
         /// ,

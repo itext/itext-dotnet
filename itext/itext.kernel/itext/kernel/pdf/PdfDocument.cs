@@ -121,6 +121,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
 
+        protected internal FingerPrint fingerPrint;
+
         protected internal readonly StampingProperties properties;
 
         protected internal PdfStructTreeRoot structTreeRoot;
@@ -198,7 +200,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Opens PDF document in the stamping mode.</summary>
         /// <remarks>
         /// Opens PDF document in the stamping mode.
-        /// <br/>
+        /// <br />
         /// </remarks>
         /// <param name="reader">PDF reader.</param>
         /// <param name="writer">PDF writer.</param>
@@ -493,8 +495,8 @@ namespace iText.Kernel.Pdf {
                 }
                 if (!removedPage.GetPdfObject().IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
+                    removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 }
-                removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
             return removedPage;
@@ -623,16 +625,20 @@ namespace iText.Kernel.Pdf {
                     }
                     UpdateXmpMetadata();
                     if (GetXmpMetadata() != null) {
-                        PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
-                        xmp.GetOutputStream().Write(xmpMetadata);
+                        PdfStream xmp = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                        if (xmp == null) {
+                            xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
+                            catalog.Put(PdfName.Metadata, xmp);
+                        }
+                        xmp.SetData(xmpMetadata);
                         xmp.Put(PdfName.Type, PdfName.Metadata);
                         xmp.Put(PdfName.Subtype, PdfName.XML);
+                        xmp.SetModified();
                         if (writer.crypto != null && !writer.crypto.IsMetadataEncrypted()) {
                             PdfArray ar = new PdfArray();
                             ar.Add(PdfName.Crypt);
                             xmp.Put(PdfName.Filter, ar);
                         }
-                        catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                     }
                     String producer = null;
                     if (reader == null) {
@@ -662,22 +668,29 @@ namespace iText.Kernel.Pdf {
                         if (catalog.pageLabels != null) {
                             catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());
                         }
-                        PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
-                        if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
-                            catalog.Put(PdfName.Pages, pageRoot);
-                            catalog.GetPdfObject().Flush(false);
-                        }
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
                             PdfNameTree tree = entry.Value;
                             if (tree.IsModified()) {
                                 EnsureTreeRootAddedToNames(((PdfDictionary)tree.BuildTree().MakeIndirect(this)), entry.Key);
                             }
                         }
+                        PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
+                        if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
+                            catalog.Put(PdfName.Pages, pageRoot);
+                            catalog.GetPdfObject().Flush(false);
+                        }
                         if (info.GetPdfObject().IsModified()) {
                             info.Flush();
                         }
                         FlushFonts();
                         writer.FlushModifiedWaitingObjects();
+                        for (int i = 0; i < xref.Size(); i++) {
+                            PdfIndirectReference indirectReference = xref.Get(i);
+                            if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MODIFIED
+                                ) && !indirectReference.CheckState(PdfObject.FLUSHED)) {
+                                indirectReference.SetFree();
+                            }
+                        }
                         if (writer.crypto != null) {
                             System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject(), "Conflict with source encryption"
                                 );
@@ -709,13 +722,13 @@ namespace iText.Kernel.Pdf {
                         info.Flush();
                         FlushFonts();
                         writer.FlushWaitingObjects();
-                        // flush unused objects
                         for (int i = 0; i < xref.Size(); i++) {
                             PdfIndirectReference indirectReference = xref.Get(i);
                             if (indirectReference != null && !indirectReference.IsFree() && !indirectReference.CheckState(PdfObject.FLUSHED
                                 )) {
-                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM)) {
-                                    PdfObject @object = indirectReference.GetRefersTo();
+                                PdfObject @object;
+                                if (IsFlushUnusedObjects() && !indirectReference.CheckState(PdfObject.ORIGINAL_OBJECT_STREAM) && (@object 
+                                    = indirectReference.GetRefersTo(false)) != null) {
                                     @object.Flush();
                                 }
                                 else {
@@ -1606,6 +1619,19 @@ namespace iText.Kernel.Pdf {
             return font;
         }
 
+        /// <summary>Registers a product for debugging purposes.</summary>
+        /// <param name="productInfo">product to be registered.</param>
+        /// <returns>true if the product hadn't been registered before.</returns>
+        public virtual bool RegisterProduct(ProductInfo productInfo) {
+            return this.fingerPrint.RegisterProduct(productInfo);
+        }
+
+        /// <summary>Returns the object containing the registered products.</summary>
+        /// <returns>fingerprint object</returns>
+        public virtual FingerPrint GetFingerPrint() {
+            return fingerPrint;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -1656,7 +1682,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="pdfObject">an object to mark.</param>
         protected internal virtual void MarkObjectAsMustBeFlushed(PdfObject pdfObject) {
-            if (pdfObject.IsIndirect()) {
+            if (pdfObject.GetIndirectReference() != null) {
                 pdfObject.GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
             }
         }
@@ -1677,6 +1703,7 @@ namespace iText.Kernel.Pdf {
         /// otherwise
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
+            this.fingerPrint = new FingerPrint();
             try {
                 if (reader != null) {
                     reader.pdfDocument = this;
@@ -1710,7 +1737,7 @@ namespace iText.Kernel.Pdf {
                         catch (XMPException) {
                         }
                     }
-                    PdfObject infoDict = trailer.Get(PdfName.Info, true);
+                    PdfObject infoDict = trailer.Get(PdfName.Info);
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
@@ -1721,6 +1748,7 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(PdfException.AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible);
                     }
                 }
+                xref.InitFreeReferencesList(this);
                 if (writer != null) {
                     if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression == null) {
                         writer.properties.isFullCompression = true;

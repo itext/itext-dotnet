@@ -126,12 +126,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoveFromParent() {
             if (parent != null) {
                 System.Diagnostics.Debug.Assert(GetCount() == 0);
-                if (parent.kids.Contains(GetPdfObject().GetIndirectReference())) {
-                    parent.kids.Remove(GetPdfObject().GetIndirectReference());
-                }
-                else {
-                    parent.kids.Remove(GetPdfObject());
-                }
+                parent.kids.Remove(GetPdfObject().GetIndirectReference());
                 if (parent.GetCount() == 0) {
                     parent.RemoveFromParent();
                 }

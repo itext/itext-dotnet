@@ -369,8 +369,15 @@ namespace iText.Layout.Renderer {
                         currentSymbolRenderer.SetParent(null);
                     }
                     childRenderers[i].SetParent(null);
+                    bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
+                    bool listSymbolNotFit = listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult
+                        .FULL;
+                    // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
+                    if (listSymbolNotFit && isForcedPlacement) {
+                        currentSymbolRenderer = null;
+                    }
                     symbolRenderers.Add(currentSymbolRenderer);
-                    if (listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
+                    if (listSymbolNotFit && !isForcedPlacement) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
                             );
                     }

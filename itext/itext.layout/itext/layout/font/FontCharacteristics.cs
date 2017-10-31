@@ -110,6 +110,7 @@ namespace iText.Layout.Font {
 
         /// <summary>Set font style</summary>
         /// <param name="fs">shall be 'normal', 'italic' or 'oblique'.</param>
+        /// <returns>this element</returns>
         public iText.Layout.Font.FontCharacteristics SetFontStyle(String fs) {
             if (fs != null && fs.Length > 0) {
                 fs = fs.Trim().ToLowerInvariant();

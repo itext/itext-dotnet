@@ -48,11 +48,14 @@ namespace iText.Kernel.Pdf {
         DRAWMODE_FILL,
         DRAWMODE_FILL_STROKE,
         DRAWMODE_STROKE,
+        FILL_COLOR,
+        EXTENDED_GRAPHICS_STATE,
         GRAPHIC_STATE_ONLY,
         INLINE_IMAGE,
         PAGE,
         PDF_OBJECT,
         RENDERING_INTENT,
+        STROKE_COLOR,
         TAG_STRUCTURE_ELEMENT
     }
 }

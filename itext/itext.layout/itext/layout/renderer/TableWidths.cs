@@ -505,7 +505,8 @@ namespace iText.Layout.Renderer {
                     firtsRow = null;
                 }
             }
-            if (firtsRow != null) {
+            if (firtsRow != null && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count) {
+                // only for not large tables
                 for (int i = 0; i < numberOfColumns; i++) {
                     if (columnWidths[i] == -1) {
                         CellRenderer cell = firtsRow[i];
@@ -526,6 +527,14 @@ namespace iText.Layout.Renderer {
                     else {
                         remainWidth -= columnWidths[i];
                         processedColumns++;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < numberOfColumns; i++) {
+                    if (columnWidths[i] != -1) {
+                        processedColumns++;
+                        remainWidth -= columnWidths[i];
                     }
                 }
             }
@@ -806,7 +815,7 @@ namespace iText.Layout.Renderer {
 
         private static readonly UnitValue ZeroWidth = UnitValue.CreatePointValue(0);
 
-        internal UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
+        private UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
             UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
             //zero has special meaning in fixed layout, we shall not add padding to zero value
             if (widthValue == null || widthValue.GetValue() < 0) {
@@ -821,6 +830,7 @@ namespace iText.Layout.Renderer {
                         return widthValue;
                     }
                     else {
+                        widthValue = ResolveMinMaxCollision(cell, widthValue);
                         if (!AbstractRenderer.IsBorderBoxSizing(cell)) {
                             Border[] borders = cell.GetBorders();
                             if (borders[1] != null) {
@@ -836,6 +846,21 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private UnitValue ResolveMinMaxCollision(CellRenderer cell, UnitValue widthValue) {
+            System.Diagnostics.Debug.Assert(widthValue.IsPointValue());
+            UnitValue minWidthValue = cell.GetProperty<UnitValue>(Property.MIN_WIDTH);
+            if (minWidthValue != null && minWidthValue.IsPointValue() && minWidthValue.GetValue() > widthValue.GetValue
+                ()) {
+                return minWidthValue;
+            }
+            UnitValue maxWidthValue = cell.GetProperty<UnitValue>(Property.MAX_WIDTH);
+            if (maxWidthValue != null && maxWidthValue.IsPointValue() && maxWidthValue.GetValue() < widthValue.GetValue
+                ()) {
+                return maxWidthValue;
+            }
+            return widthValue;
         }
 
         private class CellInfo : IComparable<TableWidths.CellInfo> {

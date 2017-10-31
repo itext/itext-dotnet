@@ -113,14 +113,11 @@ namespace iText.IO.Codec.Brotli.Dec
 			}
 		}
 
-		/// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
-		public override void Close()
-		{
-			iText.IO.Codec.Brotli.Dec.State.Close(state);
-		}
+	    protected override void Dispose(bool disposing) {
+	        iText.IO.Codec.Brotli.Dec.State.Close(state);
+	    }
 
-		/// <summary><inheritDoc/></summary>
+	    /// <summary><inheritDoc/></summary>
 		/// <exception cref="System.IO.IOException"/>
 		public override int ReadByte()
 		{
@@ -210,10 +207,14 @@ namespace iText.IO.Codec.Brotli.Dec
 		}
 
 		public override bool CanWrite{get{return false;}}
-		public override System.IAsyncResult BeginWrite(byte[] buffer, int offset,
+
+#if !NETSTANDARD1_6
+        public override System.IAsyncResult BeginWrite(byte[] buffer, int offset,
 				int count, System.AsyncCallback callback, object state) {
 			throw new System.NotSupportedException();
 		}
+#endif
+
 		public override void Write(byte[] buffer, int offset, int count) {
 			throw new System.NotSupportedException();
 		}

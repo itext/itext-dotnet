@@ -41,8 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -97,6 +99,35 @@ namespace iText.Barcodes {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MacroPDF417Test01() {
+            String filename = "barcode417Macro_01.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
+            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0", 1, 1, 0), 1, 0, 0, 1, 
+                36, 791);
+            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1", 1, 1, 1), 1, 0, 0, 1, 
+                36, 676);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        private PdfFormXObject CreateMacroBarcodePart(PdfDocument document, String text, float mh, float mw, int segmentId
+            ) {
+            BarcodePDF417 pf = new BarcodePDF417();
+            // MacroPDF417 setup
+            pf.SetOptions(BarcodePDF417.PDF417_USE_MACRO);
+            pf.SetMacroFileId("12");
+            pf.SetMacroSegmentCount(2);
+            pf.SetMacroSegmentId(segmentId);
+            pf.SetCode(text);
+            return pf.CreateFormXObject(ColorConstants.BLACK, mw, mh, document);
         }
     }
 }

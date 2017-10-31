@@ -225,10 +225,10 @@ namespace iText.Kernel.Pdf.Canvas {
         protected internal IList<int> layerDepth;
 
         /// <summary>Creates PdfCanvas from content stream of page, form XObject, pattern etc.</summary>
-        /// <param name="contentStream">@see PdfStream.</param>
-        /// <param name="resources">the resources, a specialized dictionary that can be used by PDF instructions in the content stream
+        /// <param name="contentStream">The content stream</param>
+        /// <param name="resources">The resources, a specialized dictionary that can be used by PDF instructions in the content stream
         ///     </param>
-        /// <param name="document">the document that the resulting content stream will be written to</param>
+        /// <param name="document">The document that the resulting content stream will be written to</param>
         public PdfCanvas(PdfStream contentStream, PdfResources resources, PdfDocument document) {
             this.contentStream = EnsureStreamDataIsReadyToBeProcessed(contentStream);
             this.resources = resources;
@@ -271,8 +271,8 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Convenience method for fast PdfCanvas creation by a certain page.</summary>
-        /// <param name="doc">@see PdfDocument.</param>
-        /// <param name="pageNum">page number.</param>
+        /// <param name="doc">The document</param>
+        /// <param name="pageNum">The page number</param>
         public PdfCanvas(PdfDocument doc, int pageNum)
             : this(doc.GetPage(pageNum)) {
         }
@@ -433,9 +433,9 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Sets font and size (PDF Tf operator).</summary>
-        /// <param name="font">@see PdfFont.</param>
-        /// <param name="size">Font size.</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="font">The font</param>
+        /// <param name="size">The font size.</param>
+        /// <returns>The edited canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetFontAndSize(PdfFont font, float size) {
             if (size < 0.0001f && size > -0.0001f) {
                 throw new PdfException(PdfException.FontSizeIsTooSmall, size);
@@ -459,9 +459,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Sets the text leading parameter.</summary>
         /// <remarks>
         /// Sets the text leading parameter.
-        /// <p/>
+        /// <br />
         /// The leading parameter is measured in text space units. It specifies the vertical distance
-        /// between the baselines of adjacent lines of text.</P>
+        /// between the baselines of adjacent lines of text.
+        /// <br />
         /// </remarks>
         /// <param name="leading">the new leading.</param>
         /// <returns>current canvas.</returns>
@@ -474,8 +475,9 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Moves to the start of the next line, offset from the start of the current line.</summary>
         /// <remarks>
         /// Moves to the start of the next line, offset from the start of the current line.
-        /// <p/>
-        /// As a side effect, this sets the leading parameter in the text state.</P>
+        /// <br />
+        /// As a side effect, this sets the leading parameter in the text state.
+        /// <br />
         /// </remarks>
         /// <param name="x">offset of the new current point</param>
         /// <param name="y">y-coordinate of the new current point</param>
@@ -501,7 +503,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">the text to write</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(String text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('\'').WriteNewLine();
             return this;
@@ -515,7 +516,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(float wordSpacing, float charSpacing, String
              text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             contentStream.GetOutputStream().WriteFloat(wordSpacing).WriteSpace().WriteFloat(charSpacing);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('"').WriteNewLine();
@@ -538,8 +538,9 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Sets the text rise parameter.</summary>
         /// <remarks>
         /// Sets the text rise parameter.
-        /// <p/>
-        /// This allows to write text in subscript or superscript mode.</P>
+        /// <br />
+        /// This allows to write text in subscript or superscript mode.
+        /// <br />
         /// </remarks>
         /// <param name="textRise">a parameter</param>
         /// <returns>current canvas.</returns>
@@ -620,7 +621,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">text to show.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(String text) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteBytes(Tj);
             return this;
@@ -642,7 +642,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
             > iterator) {
-            document.CheckShowTextIsoConformance(currentGs, resources);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
@@ -774,7 +773,6 @@ namespace iText.Kernel.Pdf.Canvas {
             if (currentGs.GetFont() == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
             }
-            document.CheckShowTextIsoConformance(currentGs, resources);
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {
@@ -897,17 +895,17 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Generates an array of bezier curves to draw an arc.</summary>
         /// <remarks>
         /// Generates an array of bezier curves to draw an arc.
-        /// <p/>
+        /// <br />
         /// (x1, y1) and (x2, y2) are the corners of the enclosing rectangle.
         /// Angles, measured in degrees, start with 0 to the right (the positive X
         /// axis) and increase counter-clockwise.  The arc extends from startAng
         /// to startAng+extent.  i.e. startAng=0 and extent=180 yields an openside-down
         /// semi-circle.
-        /// <p/>
+        /// <br />
         /// The resulting coordinates are of the form double[]{x1,y1,x2,y2,x3,y3, x4,y4}
         /// such that the curve goes from (x1, y1) to (x4, y4) with (x2, y2) and
         /// (x3, y3) as their respective Bezier control points.
-        /// <p/>
+        /// <br />
         /// Note: this code was taken from ReportLab (www.reportlab.org), an excellent
         /// PDF generator for Python (BSD license: http://www.reportlab.org/devfaq.html#1.3 ).
         /// </remarks>
@@ -1044,7 +1042,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas PaintShading(PdfShading shading) {
             PdfName shadingName = resources.AddShading(shading);
-            document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY);
             contentStream.GetOutputStream().Write((PdfObject)shadingName).WriteSpace().WriteBytes(sh);
             return this;
         }
@@ -1063,7 +1060,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathEoFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(bStar);
             return this;
         }
@@ -1072,7 +1068,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(b);
             return this;
         }
@@ -1087,7 +1082,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Strokes the path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Stroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(S);
             return this;
         }
@@ -1122,7 +1116,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Fill() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
             contentStream.GetOutputStream().WriteBytes(f);
             return this;
         }
@@ -1131,7 +1124,6 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas FillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(B);
             return this;
         }
@@ -1139,7 +1131,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>EOFills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFill() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
             contentStream.GetOutputStream().WriteBytes(fStar);
             return this;
         }
@@ -1147,7 +1138,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills the path, using the even-odd rule to determine the region to fill and strokes it.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFillStroke() {
-            document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
             contentStream.GetOutputStream().WriteBytes(BStar);
             return this;
         }
@@ -1214,7 +1204,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
         /// Changes the value of the <VAR>line dash pattern</VAR>.
-        /// <p/>
+        /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
         /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
@@ -1232,7 +1222,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
         /// Changes the value of the <VAR>line dash pattern</VAR>.
-        /// <p/>
+        /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
         /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
@@ -1252,7 +1242,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
         /// Changes the value of the <VAR>line dash pattern</VAR>.
-        /// <p/>
+        /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
         /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
@@ -1272,7 +1262,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
         /// Changes the value of the <VAR>line dash pattern</VAR>.
-        /// <p/>
+        /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
         /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
@@ -1315,7 +1305,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the <VAR>Flatness</VAR>.</summary>
         /// <remarks>
         /// Changes the <VAR>Flatness</VAR>.
-        /// <p/>
+        /// <br />
         /// <VAR>Flatness</VAR> sets the maximum permitted distance in device pixels between the
         /// mathematically correct path and an approximation constructed from straight line segments.<BR>
         /// </remarks>
@@ -1435,6 +1425,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     }
                 }
             }
+            document.CheckIsoConformance(currentGs, fill ? IsoKey.FILL_COLOR : IsoKey.STROKE_COLOR, resources);
             return this;
         }
 
@@ -1554,8 +1545,8 @@ namespace iText.Kernel.Pdf.Canvas {
         /// ; all the nesting control
         /// is built in.
         /// </remarks>
-        /// <param name="layer">@see PdfLayer.</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="layer">The layer to begin</param>
+        /// <returns>The edited canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas BeginLayer(IPdfOCG layer) {
             if (layer is PdfLayer && ((PdfLayer)layer).GetTitle() != null) {
                 throw new ArgumentException("Illegal layer argument.");
@@ -1637,7 +1628,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
             bool asInline) {
-            document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY, null);
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreatePdfForm(document);
@@ -1873,6 +1863,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);
+            document.CheckIsoConformance(currentGs, IsoKey.EXTENDED_GRAPHICS_STATE);
             return this;
         }
 

@@ -360,7 +360,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -378,7 +378,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             image.SetAutoScale(true);
             image.SetRotationAngle(Math.PI / 2);
             doc.Add(image);
@@ -399,16 +399,116 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "Desert.jpg"));
-            image1.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image1.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "scarf.jpg"));
-            image2.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image2.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             for (int i = 0; i <= 24; i++) {
                 image1.SetRotationAngle(i * Math.PI / 12);
                 image2.SetRotationAngle(i * Math.PI / 12);
                 doc.Add(image1);
                 doc.Add(image2);
             }
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest18() {
+            String outFileName = destinationFolder + "imageTest18.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest18.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScale(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        //TODO(DEVSIX-1658)
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest19() {
+            String outFileName = destinationFolder + "imageTest19.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest19.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest20() {
+            String outFileName = destinationFolder + "imageTest20.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest20.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleWidth(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(60f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        //TODO(DEVSIX-1658)
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest21() {
+            String outFileName = destinationFolder + "imageTest21.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest21.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            float[] colWidths = new float[] { 1f, 1f };
+            Table container = new Table(UnitValue.CreatePercentArray(colWidths));
+            container.AddCell("Text");
+            container.AddCell("autoscaling image, height only");
+            int textIterations = 50;
+            Paragraph p = new Paragraph();
+            for (int i = 0; i < textIterations; i++) {
+                p.Add("Text will wrap");
+            }
+            container.AddCell(p);
+            container.AddCell(image);
+            doc.Add(container);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -501,10 +601,10 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(new Text("before image"));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             p.Add(new Text("after image"));
             doc.Add(p);
             doc.Close();
@@ -524,19 +624,19 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1022)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1022")]
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageRelativePositionTest.pdf";
@@ -547,9 +647,9 @@ namespace iText.Layout {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100).SetRelativePosition(30, 30
                 , 0, 0);
             Paragraph p = new Paragraph();
-            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             p.Add(image);
-            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -569,7 +669,7 @@ namespace iText.Layout {
                 ));
             Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.SetMaxHeight(300);
-            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell(c);
             document.Add(table);
@@ -596,7 +696,7 @@ namespace iText.Layout {
                 ));
             Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.SetMaxHeight(300);
-            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell("First cell");
             table.AddCell(c);
@@ -611,10 +711,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1045)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1045")]
         public virtual void FixedPositionImageTest01() {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositionImageTest01.pdf";
@@ -622,7 +722,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             document.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath), 12, pdfDoc.GetDefaultPageSize
-                ().GetHeight() - 36, 24).SetBorder(new SolidBorder(Color.RED, 5)));
+                ().GetHeight() - 36, 24).SetBorder(new SolidBorder(ColorConstants.RED, 5)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

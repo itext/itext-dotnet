@@ -42,6 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Geom {
     /// <summary>Class that represent rectangle object.</summary>
@@ -117,11 +120,74 @@ namespace iText.Kernel.Geom {
             return new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
         }
 
+        /// <summary>Get the rectangle representation of the intersection between this rectangle and the passed rectangle
+        ///     </summary>
+        /// <param name="rect">the rectangle to find the intersection with</param>
+        /// <returns>
+        /// the intersection rectangle if the passed rectangles intersects with this rectangle,
+        /// a rectangle representing a line if the intersection is along an edge or
+        /// a rectangle representing a point if the intersection is a single point,
+        /// null otherwise
+        /// </returns>
+        public virtual iText.Kernel.Geom.Rectangle GetIntersection(iText.Kernel.Geom.Rectangle rect) {
+            iText.Kernel.Geom.Rectangle result = null;
+            //Calculate possible lower-left corner and upper-right corner
+            float llx = Math.Max(x, rect.x);
+            float lly = Math.Max(y, rect.y);
+            float urx = Math.Min(GetRight(), rect.GetRight());
+            float ury = Math.Min(GetTop(), rect.GetTop());
+            //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
+            float width = urx - llx;
+            float height = ury - lly;
+            if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) >= 0 && iText.IO.Util.JavaUtil.FloatCompare(height, 0) >=
+                 0) {
+                if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) < 0) {
+                    width = 0;
+                }
+                if (iText.IO.Util.JavaUtil.FloatCompare(height, 0) < 0) {
+                    height = 0;
+                }
+                result = new iText.Kernel.Geom.Rectangle(llx, lly, width, height);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Check if this rectangle contains the passed rectangle
+        /// A rectangle will envelop itself
+        /// </summary>
+        /// <param name="rect"/>
+        /// <returns>true if this rectangle contains the passed rectangle, false otherwise.</returns>
+        public virtual bool Contains(iText.Kernel.Geom.Rectangle rect) {
+            float llx = this.GetX();
+            float lly = this.GetY();
+            float urx = llx + this.GetWidth();
+            float ury = lly + this.GetHeight();
+            float rllx = rect.GetX();
+            float rlly = rect.GetY();
+            float rurx = rllx + rect.GetWidth();
+            float rury = rlly + rect.GetHeight();
+            return llx <= rllx && lly <= rlly && rurx <= urx && rury <= ury;
+        }
+
+        /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
+        /// <param name="rect"/>
+        /// <returns>true if there is overlap of some kind</returns>
+        public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
+            // Two rectangles do not overlap if any of the following holds
+            return !(this.GetX() + this.GetWidth() < rect.GetX() || this.GetY() + this.GetHeight() < rect.GetY() || this
+                .GetX() > rect.GetX() + rect.GetWidth() || this.GetY() > rect.GetY() + rect.GetHeight());
+        }
+
+        //1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
+        //2. the lower left corner of the second rectangle is above the upper right corner of the first.
+        //3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
+        //4. the upper right corner of the second rectangle is below the lower left corner of the first.
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
         /// <remarks>
         /// Sets the rectangle by the coordinates, specifying its lower left and upper right points. May be used in chain.
-        /// <br/>
-        /// <br/>
+        /// <br />
+        /// <br />
         /// Note: this method will normalize coordinates, so the rectangle will have non negative width and height,
         /// and its x and y coordinates specified lower left point.
         /// </remarks>
@@ -477,6 +543,57 @@ namespace iText.Kernel.Geom {
             }
             double BvC = x3 * y4 - x4 * y3;
             return (AvB * AvC <= 0.0) && (BvC * (AvB + BvC - AvC) <= 0.0);
+        }
+
+        /// <summary>Create a list of bounding rectangles from an 8 x n array of Quadpoints.</summary>
+        /// <param name="quadPoints">8xn array of numbers representing 4 points</param>
+        /// <returns>a list of bounding rectangles for the passed quadpoints</returns>
+        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
+        public static IList<iText.Kernel.Geom.Rectangle> CreateBoundingRectanglesFromQuadPoint(PdfArray quadPoints
+            ) {
+            IList<iText.Kernel.Geom.Rectangle> boundingRectangles = new List<iText.Kernel.Geom.Rectangle>();
+            if (quadPoints.Size() % 8 != 0) {
+                throw new PdfException(PdfException.QuadPointArrayLengthIsNotAMultipleOfEight);
+            }
+            for (int i = 0; i < quadPoints.Size(); i += 8) {
+                float[] quadPointEntry = iText.IO.Util.JavaUtil.ArraysCopyOfRange(quadPoints.ToFloatArray(), i, i + 8);
+                PdfArray quadPointEntryFA = new PdfArray(quadPointEntry);
+                boundingRectangles.Add(CreateBoundingRectangleFromQuadPoint(quadPointEntryFA));
+            }
+            return boundingRectangles;
+        }
+
+        /// <summary>Create the bounding rectangle for the given array of quadpoints.</summary>
+        /// <param name="quadPoints">an array containing 8 numbers that correspond to 4 points.</param>
+        /// <returns>The smallest orthogonal rectangle containing the quadpoints.</returns>
+        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
+        public static iText.Kernel.Geom.Rectangle CreateBoundingRectangleFromQuadPoint(PdfArray quadPoints) {
+            //Check if array length is a multiple of 8
+            if (quadPoints.Size() % 8 != 0) {
+                throw new PdfException(PdfException.QuadPointArrayLengthIsNotAMultipleOfEight);
+            }
+            float llx = float.MaxValue;
+            float lly = float.MaxValue;
+            float urx = -float.MaxValue;
+            float ury = -float.MaxValue;
+            for (int j = 0; j < 8; j += 2) {
+                float x = quadPoints.GetAsNumber(j).FloatValue();
+                float y = quadPoints.GetAsNumber(j + 1).FloatValue();
+                if (x < llx) {
+                    llx = x;
+                }
+                if (x > urx) {
+                    urx = x;
+                }
+                if (y < lly) {
+                    lly = y;
+                }
+                if (y > ury) {
+                    ury = y;
+                }
+            }
+            // QuadPoints in redact annotations have "Z" order, in spec they're specified
+            return (new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly));
         }
     }
 }

@@ -185,7 +185,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 IList<Rectangle> rectangles = myEventListener.GetRectangles();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetPage(pageNum));
                 canvas.SetLineWidth(0.5f);
-                canvas.SetStrokeColor(Color.RED);
+                canvas.SetStrokeColor(ColorConstants.RED);
                 foreach (Rectangle rectangle in rectangles) {
                     canvas.Rectangle(rectangle);
                     canvas.Stroke();

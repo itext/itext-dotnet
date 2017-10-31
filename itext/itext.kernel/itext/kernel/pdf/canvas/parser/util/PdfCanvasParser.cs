@@ -157,7 +157,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             PdfArray array = new PdfArray();
             while (true) {
                 PdfObject obj = ReadObject();
-                if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
+                if (!obj.IsArray() && tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
                     break;
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic && obj.GetObjectType() != PdfObject.DICTIONARY

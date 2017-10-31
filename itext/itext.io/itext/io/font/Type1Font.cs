@@ -57,7 +57,7 @@ namespace iText.IO.Font {
         /// <summary>Represents the section KernPairs in the AFM file.</summary>
         /// <remarks>
         /// Represents the section KernPairs in the AFM file.
-        /// Key is uni1&lt;&lt;32 + uni2. Value is kerning value.
+        /// Key is uni1 &lt;&lt; 32 + uni2. Value is kerning value.
         /// </remarks>
         private IDictionary<long, int?> kernPairs = new Dictionary<long, int?>();
 

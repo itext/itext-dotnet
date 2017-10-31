@@ -263,7 +263,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Processes PDF syntax.</summary>
         /// <remarks>
         /// Processes PDF syntax.
-        /// <br/>
         /// <strong>Note:</strong> If you re-use a given
         /// <see cref="PdfCanvasProcessor"/>
         /// , you must call
@@ -449,19 +448,27 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
         }
 
-        /// <summary>Gets the font pointed to by the indirect reference.</summary>
-        /// <remarks>Gets the font pointed to by the indirect reference. The font may have been cached.</remarks>
+        /// <summary>
+        /// Creates a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// object by a font dictionary. The font may have been cached in case it is an indirect object.
+        /// </summary>
         /// <param name="fontDict"/>
         /// <returns>the font</returns>
         protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {
-            int n = fontDict.GetIndirectReference().GetObjNumber();
-            WeakReference fontRef = cachedFonts.Get(n);
-            PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
-            if (font == null) {
-                font = PdfFontFactory.CreateFont(fontDict);
-                cachedFonts.Put(n, new WeakReference(font));
+            if (fontDict.GetIndirectReference() == null) {
+                return PdfFontFactory.CreateFont(fontDict);
             }
-            return font;
+            else {
+                int n = fontDict.GetIndirectReference().GetObjNumber();
+                WeakReference fontRef = cachedFonts.Get(n);
+                PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
+                if (font == null) {
+                    font = PdfFontFactory.CreateFont(fontDict);
+                    cachedFonts.Put(n, new WeakReference(font));
+                }
+                return font;
+            }
         }
 
         /// <summary>Add to the marked content stack</summary>

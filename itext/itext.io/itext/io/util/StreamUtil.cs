@@ -125,7 +125,7 @@ namespace iText.IO.Util {
         /// <param name="bytes">
         /// the
         /// <c>byte</c>
-        /// &gt; array to escape.
+        /// array to escape.
         /// </param>
         public static void WriteEscapedString(Stream outputStream, byte[] bytes) {
             ByteBuffer buf = CreateBufferedEscapedString(bytes);

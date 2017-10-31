@@ -386,9 +386,9 @@ namespace iText.IO.Font {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
         }
 
-        /// <summary>Function builds the new local & global subsrs indices.</summary>
+        /// <summary>Function builds the new local and global subsrs indices.</summary>
         /// <remarks>
-        /// Function builds the new local & global subsrs indices. IF CID then All of
+        /// Function builds the new local and global subsrs indices. IF CID then All of
         /// the FD Array lsubrs will be subsetted.
         /// </remarks>
         /// <param name="Font">the font</param>
@@ -449,7 +449,12 @@ namespace iText.IO.Font {
                 NewSubrsIndexNonCID = BuildNewIndex(fonts[Font].SubrsOffsets, hSubrsUsedNonCID, RETURN_OP);
             }
             //Builds the New Global Subrs index
-            NewGSubrsIndex = BuildNewIndex(gsubrOffsets, hGSubrsUsed, RETURN_OP);
+            // NOTE We copy all global subroutines to index here.
+            // In some fonts (see NotoSansCJKjp-Bold.otf, Version 1.004;PS 1.004;hotconv 1.0.82;makeotf.lib2.5.63406)
+            // global subroutines are not derived from local ones. Previously in such cases iText didn't build global subroutines
+            // and, if one had set subset as true, produced pdf-document with incorrect cff table.
+            // However the code isn't optimised. One can parse all used glyphs and copy not all global subroutines, but only needed.
+            NewGSubrsIndex = BuildNewIndexAndCopyAllGSubrs(gsubrOffsets, RETURN_OP);
         }
 
         /// <summary>
@@ -477,10 +482,10 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Function uses ReadAsubr on the glyph used to build the LSubr & Gsubr Map.</summary>
+        /// <summary>Function uses ReadAsubr on the glyph used to build the LSubr and Gsubr Map.</summary>
         /// <remarks>
-        /// Function uses ReadAsubr on the glyph used to build the LSubr & Gsubr Map.
-        /// The Map (of the lsubr only) is then scanned recursively for Lsubr & Gsubrs
+        /// Function uses ReadAsubr on the glyph used to build the LSubr and Gsubr Map.
+        /// The Map (of the lsubr only) is then scanned recursively for Lsubr and Gsubrs
         /// calls.
         /// </remarks>
         /// <param name="Font">the font</param>
@@ -532,7 +537,7 @@ namespace iText.IO.Font {
 
         /// <summary>
         /// Function scans the Glsubr used list to find recursive calls
-        /// to Gsubrs and adds to Map & list
+        /// to Gsubrs and adds to Map and list
         /// </summary>
         /// <param name="Font">the font</param>
         protected internal virtual void BuildGSubrsUsed(int Font) {
@@ -960,6 +965,55 @@ namespace iText.IO.Font {
             return AssembleIndex(NewOffsets, NewObjects);
         }
 
+        /// <summary>Function builds the new offset array, object array and assembles the index.</summary>
+        /// <remarks>
+        /// Function builds the new offset array, object array and assembles the index.
+        /// used for creating the glyph and subrs subsetted index
+        /// </remarks>
+        /// <param name="Offsets">the offset array of the original index</param>
+        /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
+        /// <returns>the new index subset version</returns>
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual byte[] BuildNewIndexAndCopyAllGSubrs(int[] Offsets, byte OperatorForUnusedEntries
+            ) {
+            int unusedCount = 0;
+            int Offset = 0;
+            int[] NewOffsets = new int[Offsets.Length];
+            // Build the Offsets Array for the Subset
+            for (int i = 0; i < Offsets.Length - 1; ++i) {
+                NewOffsets[i] = Offset;
+                Offset += Offsets[i + 1] - Offsets[i];
+            }
+            // Else the same offset is kept in i+1.
+            NewOffsets[Offsets.Length - 1] = Offset;
+            unusedCount++;
+            // Offset var determines the size of the object array
+            byte[] NewObjects = new byte[Offset + unusedCount];
+            // Build the new Object array
+            int unusedOffset = 0;
+            for (int i = 0; i < Offsets.Length - 1; ++i) {
+                int start = NewOffsets[i];
+                int end = NewOffsets[i + 1];
+                NewOffsets[i] = start + unusedOffset;
+                // If start != End then the Object is used
+                // So, we will copy the object data from the font file
+                if (start != end) {
+                    // All offsets are Global Offsets relative to the beginning of the font file.
+                    // Jump the file pointer to the start address to read from.
+                    buf.Seek(Offsets[i]);
+                    // Read from the buffer and write into the array at start.
+                    buf.ReadFully(NewObjects, start + unusedOffset, end - start);
+                }
+                else {
+                    NewObjects[start + unusedOffset] = OperatorForUnusedEntries;
+                    unusedOffset++;
+                }
+            }
+            NewOffsets[Offsets.Length - 1] += unusedOffset;
+            // Use AssembleIndex to build the index from the offset & object arrays
+            return AssembleIndex(NewOffsets, NewObjects);
+        }
+
         /// <summary>
         /// Function creates the new index, inserting the count,offsetsize,offset array
         /// and object array.
@@ -974,15 +1028,17 @@ namespace iText.IO.Font {
             int Size = NewOffsets[NewOffsets.Length - 1];
             // Calc the Offsize
             byte Offsize;
-            if (Size <= 0xff) {
+            // Previously the condition wasn't strict. However while writing offsets iText adds 1 to them.
+            // That can cause overflow (f.e., offset 0xffff will result in 0x0000).
+            if (Size < 0xff) {
                 Offsize = 1;
             }
             else {
-                if (Size <= 0xffff) {
+                if (Size < 0xffff) {
                     Offsize = 2;
                 }
                 else {
-                    if (Size <= 0xffffff) {
+                    if (Size < 0xffffff) {
                         Offsize = 3;
                     }
                     else {

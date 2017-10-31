@@ -50,7 +50,7 @@ namespace iText.Layout.Font {
     /// <remarks>
     /// Reusable font set for FontProgram related data.
     /// Add and search fonts.
-    /// <p/>
+    /// <p>
     /// A FontSet instance could be shared for multiple threads.
     /// However FontSet filling is not thread safe operation.
     /// </remarks>
@@ -122,7 +122,7 @@ namespace iText.Layout.Font {
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
         /// <remarks>
         /// Add not supported for auto creating FontPrograms.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -157,7 +157,7 @@ namespace iText.Layout.Font {
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
         /// <remarks>
         /// Add not supported for auto creating FontPrograms.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -189,7 +189,7 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -216,7 +216,7 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -242,7 +242,7 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -269,7 +269,7 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -297,7 +297,7 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -323,7 +323,7 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -341,7 +341,7 @@ namespace iText.Layout.Font {
         /// Adds
         /// <see cref="FontInfo"/>
         /// with alias. Could be used to fill temporary font set.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -360,7 +360,7 @@ namespace iText.Layout.Font {
         /// Adds
         /// <see cref="FontInfo"/>
         /// . Could be used to fill temporary font set.
-        /// <p/>
+        /// <p>
         /// Note,
         /// <see cref="FontInfo.GetAlias()"/>
         /// do not taken into account in
@@ -386,7 +386,7 @@ namespace iText.Layout.Font {
         /// <summary>Search in existed fonts for PostScript name or full font name.</summary>
         /// <remarks>
         /// Search in existed fonts for PostScript name or full font name.
-        /// <p/>
+        /// <p>
         /// Note, this method has O(n) complexity.
         /// </remarks>
         /// <param name="fontName">PostScript or full name.</param>
@@ -412,7 +412,7 @@ namespace iText.Layout.Font {
         /// <summary>Search in existed fonts for PostScript name or full font name.</summary>
         /// <remarks>
         /// Search in existed fonts for PostScript name or full font name.
-        /// <p/>
+        /// <p>
         /// Note, this method has O(n) complexity.
         /// </remarks>
         /// <param name="fontName">PostScript or full name.</param>
@@ -439,7 +439,7 @@ namespace iText.Layout.Font {
         /// <summary>Gets available fonts.</summary>
         /// <remarks>
         /// Gets available fonts.
-        /// <p/>
+        /// <p>
         /// Note, the collection is unmodifiable.
         /// </remarks>
         public ICollection<FontInfo> GetFonts() {
@@ -449,7 +449,7 @@ namespace iText.Layout.Font {
         /// <summary>Gets union of available and temporary fonts.</summary>
         /// <remarks>
         /// Gets union of available and temporary fonts.
-        /// <p/>
+        /// <p>
         /// Note, the collection is unmodifiable.
         /// </remarks>
         public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet tempFonts) {

@@ -83,9 +83,19 @@ namespace iText.Kernel {
 
         public const String CannotAddNonStreamImageToResources1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream.";
 
+        public const String CannotBeEmbeddedDueToLicensingRestrictions = "{0} cannot be embedded due to licensing restrictions.";
+
         public const String CannotCloseDocument = "Cannot close document.";
 
         public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "Cannot close document with already flushed PDF Catalog.";
+
+        public const String CannotConvertPdfArrayToDoubleArray = "Cannot convert PdfArray to an array of doubles.";
+
+        public const String CannotConvertPdfArrayToIntArray = "Cannot convert PdfArray to an array of integers.";
+
+        public const String CannotConvertPdfArrayToFloatArray = "Cannot convert PdfArray to an array of floats.";
+
+        public const String CannotConvertPdfArrayToLongArray = "Cannot convert PdfArray to an array of longs.";
 
         public const String CannotConvertPdfArrayToRectanle = "Cannot convert PdfArray to Rectangle.";
 
@@ -132,6 +142,8 @@ namespace iText.Kernel {
         public const String CannotReadAStreamInOrderToAppendNewBytes = "Cannot read a stream in order to append new bytes.";
 
         public const String CannotReadPdfObject = "Cannot read PdfObject.";
+
+        public const String CannotRecogniseDocumentFontWithEncoding = "Cannot recognise document font {0} with {1} encoding";
 
         public const String CannotRemoveDocumentRootTag = "Cannot remove document root tag.";
 
@@ -357,6 +369,8 @@ namespace iText.Kernel {
 
         public const String NoKidWithSuchRole = "No kid with such role.";
 
+        public const String NoMaxLenPresent = "No /MaxLen has been set even though the Comb flag has been set.";
+
         public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";
 
         public const String NotAValidPkcs7ObjectNotASequence = "Not a valid PKCS#7 object - not a sequence";
@@ -372,6 +386,8 @@ namespace iText.Kernel {
         public const String ObjectMustBeIndirectToWorkWithThisWrapper = "Object must be indirect to work with this wrapper.";
 
         public const String ObjectNumberOfTheFirstObjectInThisXrefSubsectionNotFound = "Object number of the first object in this xref subsection not found.";
+
+        public const String OnlyIdentityCMapsSupportsWithTrueType = "Only Identity CMaps supports with truetype";
 
         public const String OcspStatusIsRevoked = "OCSP status is revoked.";
 
@@ -545,6 +561,8 @@ namespace iText.Kernel {
         public const String YouMustSetAValueBeforeAddingAPrefix = "You must set a value before adding a prefix.";
 
         public const String YouNeedASingleBooleanForThisCollectionSortDictionary = "You need a single boolean for this collection sort dictionary.";
+
+        public const String QuadPointArrayLengthIsNotAMultipleOfEight = "The QuadPoint Array length is not a multiple of 8.";
 
         /// <summary>Object for more details</summary>
         protected internal Object @object;

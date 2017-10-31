@@ -91,7 +91,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Text overflowText = new iText.Layout.Element.Text("This is a long-long and large text which will not overflow"
-                ).SetFontSize(19).SetFontColor(Color.RED);
+                ).SetFontSize(19).SetFontColor(ColorConstants.RED);
             iText.Layout.Element.Text followText = new iText.Layout.Element.Text("This is a text which follows overflowed text and will be wrapped"
                 );
             document.Add(new Paragraph().Add(overflowText).Add(followText));
@@ -109,7 +109,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Text overflowText = new iText.Layout.Element.Text("This is a long-long and large text which will overflow"
-                ).SetFontSize(25).SetFontColor(Color.RED);
+                ).SetFontSize(25).SetFontColor(ColorConstants.RED);
             iText.Layout.Element.Text followText = new iText.Layout.Element.Text("This is a text which follows overflowed text and will not be wrapped"
                 );
             document.Add(new Paragraph().Add(overflowText).Add(followText));

@@ -62,7 +62,7 @@ namespace iText.Forms {
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>
         /// .
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// If set, the document contains at least one signature field. This flag
         /// allows a conforming reader to enable user interface items (such as menu
@@ -77,7 +77,7 @@ namespace iText.Forms {
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>
         /// .
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// If set, the document contains signatures that may be invalidated if the
         /// file is saved (written) in a way that alters its previous contents, as
@@ -331,7 +331,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
         /// streams and appearance dictionaries for all widget annotations in the
@@ -348,7 +348,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>NeedAppearances</code> boolean property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
         /// streams and appearance dictionaries for all widget annotations in the
@@ -368,7 +368,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>SigFlags</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>SigFlags</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields.
@@ -392,7 +392,7 @@ namespace iText.Forms {
         /// <remarks>
         /// Changes the <code>SigFlags</code> integer property on the AcroForm.
         /// This method allows only to add flags, not to remove them.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields.
@@ -417,7 +417,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>SigFlags</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>SigFlags</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// SigFlags is a set of flags specifying various document-level
         /// characteristics related to signature fields
@@ -438,7 +438,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>CO</code> array property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>CO</code> array property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>CO</code>, Calculation Order, is an array of indirect references to
         /// field dictionaries with calculation actions, defining the calculation
@@ -456,7 +456,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>CO</code> array property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>CO</code> array property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>CO</code>, Calculation Order, is an array of indirect references to
         /// field dictionaries with calculation actions, defining the calculation
@@ -473,7 +473,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>DR</code> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>DR</code> dictionary property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>DR</code> is a resource dictionary containing default resources
         /// (such as fonts, patterns, or colour spaces) that shall be used by form
@@ -492,7 +492,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>DR</code> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>DR</code> dictionary property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <blockquote>
         /// <code>DR</code> is a resource dictionary containing default resources
         /// (such as fonts, patterns, or colour spaces) that shall be used by form
@@ -510,7 +510,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>DA</code> String property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>DA</code> String property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method sets a default (fallback value) for the <code>DA</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -526,7 +526,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>DA</code> String property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>DA</code> String property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method returns the default (fallback value) for the <code>DA</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -540,7 +540,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>Q</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>Q</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method sets a default (fallback value) for the <code>Q</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -556,7 +556,7 @@ namespace iText.Forms {
         /// <summary>Gets the <code>Q</code> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>Q</code> integer property on the AcroForm.
-        /// <p>
+        /// <br />
         /// This method gets the default (fallback value) for the <code>Q</code>
         /// attribute of variable text
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -571,7 +571,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>XFA</code> property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <code>XFA</code> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
@@ -588,7 +588,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>XFA</code> property on the AcroForm.
-        /// <p>
+        /// <br />
         /// <code>XFA</code> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
@@ -768,6 +768,14 @@ namespace iText.Forms {
                             TagReference tagRef = tagPointer.GetTagReference();
                             canvas.OpenTag(tagRef);
                         }
+                        PdfArray oldMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
+                        if (oldMatrix != null && iText.IO.Util.JavaUtil.ArraysEquals(oldMatrix.ToFloatArray(), new float[] { 1, 0, 
+                            0, 1, 0, 0 })) {
+                            Rectangle boundingBox = xObject.GetBBox().ToRectangle();
+                            PdfArray newMatrixArray = new PdfArray(new float[] { box.GetWidth() / boundingBox.GetWidth(), 0, 0, box.GetHeight
+                                () / boundingBox.GetHeight(), 0, 0 });
+                            xObject.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+                        }
                         canvas.AddXObject(xObject, box.GetX(), box.GetY());
                         if (tagPointer != null) {
                             canvas.CloseTag();
@@ -775,18 +783,18 @@ namespace iText.Forms {
                     }
                 }
                 PdfArray fFields = GetFields();
-                RemoveObjectFromArray(fFields, fieldObject);
+                fFields.Remove(fieldObject);
                 if (annotation != null) {
                     page.RemoveAnnotation(annotation);
                 }
                 PdfDictionary parent = fieldObject.GetAsDictionary(PdfName.Parent);
                 if (parent != null) {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                    RemoveObjectFromArray(kids, fieldObject);
+                    kids.Remove(fieldObject);
                     // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
                     // shouldn't we remove them recursively? check it
                     if (kids.IsEmpty()) {
-                        RemoveObjectFromArray(fFields, parent);
+                        fFields.Remove(parent);
                     }
                 }
             }
@@ -824,12 +832,14 @@ namespace iText.Forms {
             }
             PdfDictionary parent = field.GetParent();
             if (parent != null) {
-                RemoveObjectFromArray(parent.GetAsArray(PdfName.Kids), fieldObject);
+                parent.GetAsArray(PdfName.Kids).Remove(fieldObject);
                 fields.JRemove(fieldName);
                 return true;
             }
-            if (RemoveObjectFromArray(GetFields(), fieldObject)) {
-                fields.JRemove(fieldName);
+            PdfArray fieldsPdfArray = GetFields();
+            if (fieldsPdfArray.Contains(fieldObject)) {
+                fieldsPdfArray.Remove(fieldObject);
+                this.fields.JRemove(fieldName);
                 return true;
             }
             return false;
@@ -1000,9 +1010,6 @@ namespace iText.Forms {
             else {
                 for (int i = 0; i < kids.Size(); i++) {
                     PdfObject kid = kids.Get(i);
-                    if (kid.IsIndirectReference()) {
-                        kid = ((PdfIndirectReference)kid).GetRefersTo();
-                    }
                     PdfArray otherKids = ((PdfDictionary)kid).GetAsArray(PdfName.Kids);
                     if (otherKids != null) {
                         ProcessKids(otherKids, (PdfDictionary)kid, page);
@@ -1200,20 +1207,6 @@ namespace iText.Forms {
                 }
             }
             return preparedFields;
-        }
-
-        private bool RemoveObjectFromArray(PdfArray array, PdfObject toRemove) {
-            if (array.Contains(toRemove)) {
-                array.Remove(toRemove);
-                return true;
-            }
-            else {
-                if (array.Contains(toRemove.GetIndirectReference())) {
-                    array.Remove(toRemove.GetIndirectReference());
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

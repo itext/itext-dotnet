@@ -57,18 +57,18 @@ namespace iText.IO.Codec {
     /// A class representing an Image File Directory (IFD) from a TIFF 6.0
     /// stream.  The TIFF file format is described in more detail in the
     /// comments for the TIFFDescriptor class.
-    /// <p/>
+    /// <br />
     /// <p> A TIFF IFD consists of a set of TIFFField tags.  Methods are
     /// provided to query the set of tags and to obtain the raw field
     /// array.  In addition, convenience methods are provided for acquiring
     /// the values of tags that contain a single value that fits into a
     /// byte, int, long, float, or double.
-    /// <p/>
+    /// <br />
     /// <p> Every TIFF file is made up of one or more public IFDs that are
     /// joined in a linked list, rooted in the file header.  A file may
     /// also contain so-called private IFDs that are referenced from
     /// tag data and do not appear in the main list.
-    /// <p/>
+    /// <br />
     /// <p><b> This class is not a committed part of the JAI API.  It may
     /// be removed or changed in future releases of JAI.</b>
     /// </remarks>
@@ -365,6 +365,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Returns the number of directory entries.</summary>
+        /// <returns>The number of directory entries</returns>
         public virtual int GetNumEntries() {
             return numEntries;
         }
@@ -373,6 +374,8 @@ namespace iText.IO.Codec {
         /// Returns the value of a given tag as a TIFFField,
         /// or null if the tag is not present.
         /// </summary>
+        /// <param name="tag">The tag</param>
+        /// <returns>The value of the given tag as a TIFFField or null</returns>
         public virtual TIFFField GetField(int tag) {
             int? i = fieldIndex.Get(tag);
             if (i == null) {
@@ -384,14 +387,17 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Returns true if a tag appears in the directory.</summary>
+        /// <param name="tag">The tag</param>
+        /// <returns>True if the tag appears in the directory, false otherwise</returns>
         public virtual bool IsTagPresent(int tag) {
             return fieldIndex.ContainsKey(tag);
         }
 
         /// <summary>
-        /// Returns an ordered array of ints indicating the tag
+        /// Returns an ordered array of integers indicating the tags
         /// values.
         /// </summary>
+        /// <returns>an ordered array of integers indicating the tags</returns>
         public virtual int[] GetTags() {
             int[] tags = new int[fieldIndex.Count];
             int i = 0;
@@ -405,6 +411,7 @@ namespace iText.IO.Codec {
         /// Returns an array of TIFFFields containing all the fields
         /// in this directory.
         /// </summary>
+        /// <returns>an array of TIFFFields containing all the fields in this directory</returns>
         public virtual TIFFField[] GetFields() {
             return fields;
         }
@@ -419,6 +426,9 @@ namespace iText.IO.Codec {
         /// present and has type TIFFField.TIFF_SBYTE, TIFF_BYTE, or
         /// TIFF_UNDEFINED.
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <param name="index">The index</param>
+        /// <returns>the value of a particular index of a given tag as a byte</returns>
         public virtual byte GetFieldAsByte(int tag, int index) {
             int? i = fieldIndex.Get(tag);
             byte[] b = fields[(int)i].GetAsBytes();
@@ -435,6 +445,8 @@ namespace iText.IO.Codec {
         /// present and has  type TIFFField.TIFF_SBYTE, TIFF_BYTE, or
         /// TIFF_UNDEFINED.
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <returns>The value of index 0 of the given tag as a byte</returns>
         public virtual byte GetFieldAsByte(int tag) {
             return GetFieldAsByte(tag, 0);
         }

@@ -52,7 +52,7 @@ namespace iText.Kernel.Font {
     /// <summary>Low-level API class for Type 3 fonts.</summary>
     /// <remarks>
     /// Low-level API class for Type 3 fonts.
-    /// <p/>
+    /// <p>
     /// In Type 3 fonts, glyphs are defined by streams of PDF graphics operators.
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.
@@ -87,7 +87,7 @@ namespace iText.Kernel.Font {
             embedded = true;
             fontProgram = new Type3FontProgram(false);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             PdfDictionary charProcsDic = GetPdfObject().GetAsDictionary(PdfName.CharProcs);
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (GetPdfObject().ContainsKey(PdfName.FontBBox)) {
@@ -226,8 +226,10 @@ namespace iText.Kernel.Font {
             for (int i = 0; i < 256; i++) {
                 if (fontEncoding.CanDecode(i)) {
                     Type3Glyph glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
-                    charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
-                    glyph.GetContentStream().Flush();
+                    if (glyph != null) {
+                        charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
+                        glyph.GetContentStream().Flush();
+                    }
                 }
             }
             GetPdfObject().Put(PdfName.CharProcs, charProcs);

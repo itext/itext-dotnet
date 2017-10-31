@@ -138,8 +138,9 @@ namespace iText.Test {
         /// Returns a string value that is stored as a static variable
         /// inside an example class.
         /// </summary>
-        /// <param name="name">the name of the variable</param>
-        /// <returns>the value of the variable</returns>
+        /// <param name="c">The example class</param>
+        /// <param name="name">The name of the variable</param>
+        /// <returns>The value of the variable</returns>
         protected internal static String GetStringField(Type c, String name) {
             try {
                 FieldInfo field = c.GetField(name);

@@ -194,6 +194,8 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.PdfIndirectObjectBelongsToOtherPdfDocument);
             }
             if (indirectReference.GetRefersTo() == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+                logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT);
                 Write(PdfNull.PDF_NULL);
             }
             else {

@@ -176,7 +176,7 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// behavior.
         /// </summary>
-        /// <param name="documentRenderer"/>
+        /// <param name="documentRenderer">the DocumentRenderer to set</param>
         public virtual void SetRenderer(DocumentRenderer documentRenderer) {
             this.rootRenderer = documentRenderer;
         }

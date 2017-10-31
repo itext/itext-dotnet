@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns an iterator over an array of PdfObject elements.</summary>
         /// <remarks>
         /// Returns an iterator over an array of PdfObject elements.
-        /// <br/>
+        /// <br />
         /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
         /// If you want to get
         /// <see cref="PdfIndirectReference"/>
@@ -524,6 +524,75 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception e) {
                 throw new PdfException(PdfException.CannotConvertPdfArrayToRectanle, e, this);
+            }
+        }
+
+        /// <summary>Returns this array as an array of floats.</summary>
+        /// <remarks>Returns this array as an array of floats. Will throw a PdfException when it encounters an issue.</remarks>
+        /// <returns>this array as an array of floats</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
+        public virtual float[] ToFloatArray() {
+            try {
+                float[] rslt = new float[Size()];
+                for (int k = 0; k < rslt.Length; ++k) {
+                    rslt[k] = GetAsNumber(k).FloatValue();
+                }
+                return rslt;
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.CannotConvertPdfArrayToFloatArray, e, this);
+            }
+        }
+
+        /// <summary>Returns this array as an array of doubles.</summary>
+        /// <remarks>Returns this array as an array of doubles. Will throw a PdfException when it encounters an issue.
+        ///     </remarks>
+        /// <returns>this array as an array of doubles</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
+        public virtual double[] ToDoubleArray() {
+            try {
+                double[] rslt = new double[Size()];
+                for (int k = 0; k < rslt.Length; ++k) {
+                    rslt[k] = GetAsNumber(k).DoubleValue();
+                }
+                return rslt;
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.CannotConvertPdfArrayToDoubleArray, e, this);
+            }
+        }
+
+        /// <summary>Returns this array as an array of longs.</summary>
+        /// <remarks>Returns this array as an array of longs. Will throw a PdfException when it encounters an issue.</remarks>
+        /// <returns>this array as an array of longs</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
+        public virtual long[] ToLongArray() {
+            try {
+                long[] rslt = new long[Size()];
+                for (int k = 0; k < rslt.Length; ++k) {
+                    rslt[k] = GetAsNumber(k).LongValue();
+                }
+                return rslt;
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.CannotConvertPdfArrayToLongArray, e, this);
+            }
+        }
+
+        /// <summary>Returns this array as an array of ints.</summary>
+        /// <remarks>Returns this array as an array of ints. Will throw a PdfException when it encounters an issue.</remarks>
+        /// <returns>this array as an array of ints</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
+        public virtual int[] ToIntArray() {
+            try {
+                int[] rslt = new int[Size()];
+                for (int k = 0; k < rslt.Length; ++k) {
+                    rslt[k] = GetAsNumber(k).IntValue();
+                }
+                return rslt;
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.CannotConvertPdfArrayToIntArray, e, this);
             }
         }
 

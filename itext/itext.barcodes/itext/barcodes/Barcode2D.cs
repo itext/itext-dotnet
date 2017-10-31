@@ -78,13 +78,15 @@ namespace iText.Barcodes {
         /// Creates a PdfFormXObject with the barcode.
         /// Default foreground color will be used.
         /// </remarks>
+        /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(PdfDocument document) {
             return CreateFormXObject(null, document);
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
         public abstract PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document);
     }

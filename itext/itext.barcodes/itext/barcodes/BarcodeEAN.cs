@@ -146,6 +146,7 @@ namespace iText.Barcodes {
             , ODD, EVEN } };
 
         /// <summary>Creates new BarcodeEAN</summary>
+        /// <param name="document">The document</param>
         public BarcodeEAN(PdfDocument document)
             : base(document) {
             // 0
@@ -538,8 +539,9 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// The bars and text are written in the following colors:
+        /// <br />
+        /// <TABLE BORDER=1 SUMMARY="barcode properties">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>

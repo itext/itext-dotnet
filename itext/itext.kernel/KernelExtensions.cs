@@ -171,6 +171,12 @@ internal static class KernelExtensions {
 
         return r;
     }
+    
+    public static T[] ToArray<T>(this ICollection<T> col) {
+        T[] r = new T[col.Count];
+        col.CopyTo(r, 0);
+        return r;
+    }
 
     public static void ReadFully(this BinaryReader input, byte[] b, int off, int len) {
         if (len < 0) {
@@ -232,6 +238,10 @@ internal static class KernelExtensions {
         set.Remove(item);
 
         return item;
+    }
+
+    public static bool IsEmpty<T1, T2>(this ICollection<KeyValuePair<T1, T2>> collection) {
+        return collection.Count == 0;
     }
 
     public static bool IsEmpty<T>(this ICollection<T> collection) {

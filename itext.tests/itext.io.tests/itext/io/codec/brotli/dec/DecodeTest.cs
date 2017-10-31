@@ -45,7 +45,7 @@ namespace iText.IO.Codec.Brotli.Dec
 					output.Write(buffer, 0, len);
 				}
 			}
-			brotliInput.Close();
+			brotliInput.Dispose();
 			return output.ToArray();
 		}
 
@@ -65,7 +65,7 @@ namespace iText.IO.Codec.Brotli.Dec
 				}
 				output.Write(buffer, 0, len);
 			}
-			brotliInput.Close();
+			brotliInput.Dispose();
 			return output.ToArray();
 		}
 

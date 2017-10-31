@@ -83,7 +83,7 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <param name="optionBit">the binary bit or bits that are requested</param>
-        /// <returns>Returns if <emp>all</emp> of the requested bits are set or not.</returns>
+        /// <returns>Returns if <b>all</b> of the requested bits are set or not.</returns>
         protected internal virtual bool GetOption(int optionBit) {
             return (options & optionBit) != 0;
         }

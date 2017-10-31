@@ -49,7 +49,7 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Split css font-family string into list of font-families or generic-families
     /// </summary>
-    internal sealed class FontFamilySplitter {
+    public sealed class FontFamilySplitter {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
 
         private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
@@ -76,6 +76,14 @@ namespace iText.Layout.Font {
                 }
             }
             return result;
+        }
+
+        public static String RemoveQuotes(String fontFamily) {
+            Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
+            if (selectMatcher.Success) {
+                return iText.IO.Util.StringUtil.Group(selectMatcher);
+            }
+            return null;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
     /// <see cref="ILineDrawer"/>
     /// defines a drawing operation on a
     /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-    /// <p/>
+    /// <br />
     /// This interface allows to customize the 'empty' space in a
     /// <c>com.itextpdf.layout.element.TabStop</c>
     /// through a Strategy design

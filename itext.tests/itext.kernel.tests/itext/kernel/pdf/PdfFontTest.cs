@@ -440,6 +440,37 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithTrueTypeFont1NotEmbedded() {
+            String filename = destinationFolder + "createDocumentWithTrueTypeFont1NotEmbedded.pdf";
+            String cmpFilename = sourceFolder + "cmp_createDocumentWithTrueTypeFont1NotEmbedded.pdf";
+            String title = "Empty iText 7 Document";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            String font = fontsFolder + "abserif4_5.ttf";
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, false);
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
+            pdfTrueTypeFont.SetSubset(true);
+            PdfPage page = pdfDoc.AddNewPage();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
+            page.Flush();
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, false);
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
+            pdfTrueTypeFont.SetSubset(true);
+            page = pdfDoc.AddNewPage();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeOtfFont() {
             String filename = destinationFolder + "DocumentWithTrueTypeOtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFont.pdf";
@@ -1026,6 +1057,41 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TestWriteTTCNotEmbedded() {
+            String filename = destinationFolder + "testWriteTTCNotEmbedded.pdf";
+            String cmpFilename = sourceFolder + "cmp_testWriteTTCNotEmbedded.pdf";
+            String title = "Empty iText 7 Document";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            String font = fontsFolder + "uming.ttc";
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, false, false);
+            pdfTrueTypeFont.SetSubset(true);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
+            canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            page.Flush();
+            byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
+            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, false, false);
+            pdfTrueTypeFont.SetSubset(true);
+            page = pdfDoc.AddNewPage();
+            canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
+            canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void TestNotoFont() {
             String filename = destinationFolder + "testNotoFont.pdf";
             String cmpFilename = sourceFolder + "cmp_testNotoFont.pdf";
@@ -1062,26 +1128,114 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Invalid subset")]
         public virtual void NotoSansCJKjpTest() {
             String filename = destinationFolder + "NotoSansCJKjpTest.pdf";
-            String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
+            String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
             // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
-            //        canvas.saveState()
-            //                .setFillColor(DeviceRgb.GREEN)
-            //                .beginText()
-            //                .moveText(36, 700)
-            //                .setFontAndSize(font, 12)
-            //                .showText(pangramme)
-            //                .endText()
-            //                .restoreState();
-            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
-                ("1").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("1").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NotoSansCJKjpTest02() {
+            String filename = destinationFolder + "NotoSansCJKjpTest02.pdf";
+            String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest02.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
+            // font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("\u3000").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NotoSansCJKjpTest03() {
+            String filename = destinationFolder + "NotoSansCJKjpTest03.pdf";
+            String cmpFilename = sourceFolder + "cmp_NotoSansCJKjpTest03.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
+            // font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("\u0BA4").EndText().RestoreState();
+            // there is no such glyph in provided cff
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SourceHanSansHWTest() {
+            String filename = destinationFolder + "SourceHanSansHWTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_SourceHanSansHWTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSansHW-Regular.otf", "Identity-H");
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("12").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1579")]
+        public virtual void SourceHanSerifKRRegularTest() {
+            String filename = destinationFolder + "SourceHanSerifKRRegularTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf", "Identity-H");
+            //font.setSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("\ube48\uc9d1").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1579")]
+        public virtual void SourceHanSerifKRRegularFullTest() {
+            String filename = destinationFolder + "SourceHanSerifKRRegularFullTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularFullTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            // Identity-H must be embedded
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf", "Identity-H");
+            font.SetSubset(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
+                .ShowText("\ube48\uc9d1").EndText().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));

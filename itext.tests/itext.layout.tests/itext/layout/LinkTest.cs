@@ -139,7 +139,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             Link link = new Link("Link with orange border", PdfAction.CreateURI("http://itextpdf.com"));
-            link.SetBorder(new SolidBorder(Color.ORANGE, 5));
+            link.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));
             doc.Add(new Paragraph(link));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -208,8 +208,8 @@ namespace iText.Layout {
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
-            Paragraph p = new Paragraph(link).SetRotationAngle(Math.PI / 4).SetBackgroundColor(Color.RED);
-            Div div = new Div().Add(p).SetRotationAngle(Math.PI / 3).SetBackgroundColor(Color.BLUE);
+            Paragraph p = new Paragraph(link).SetRotationAngle(Math.PI / 4).SetBackgroundColor(ColorConstants.RED);
+            Div div = new Div().Add(p).SetRotationAngle(Math.PI / 3).SetBackgroundColor(ColorConstants.BLUE);
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -226,7 +226,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
-            link.SetBorder(new SolidBorder(Color.BLUE, 20));
+            link.SetBorder(new SolidBorder(ColorConstants.BLUE, 20));
             link.SetProperty(Property.MARGIN_LEFT, 50);
             link.SetProperty(Property.MARGIN_RIGHT, 50);
             doc.Add(new Paragraph(link).SetBorder(new SolidBorder(10)));

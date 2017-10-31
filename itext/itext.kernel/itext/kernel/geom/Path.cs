@@ -110,6 +110,8 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Begins a new subpath by moving the current point to coordinates <CODE>(x, y)</CODE>.</summary>
+        /// <param name="x">x-coordinate of the new point</param>
+        /// <param name="y">y-coordinate of the new point</param>
         public virtual void MoveTo(float x, float y) {
             currentPoint = new Point(x, y);
             Subpath lastSubpath = subpaths.Count > 0 ? subpaths[subpaths.Count - 1] : null;
@@ -122,6 +124,8 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Appends a straight line segment from the current point to the point <CODE>(x, y)</CODE>.</summary>
+        /// <param name="x">x-coordinate of the new point</param>
+        /// <param name="y">y-coordinate of the new point</param>
         public virtual void LineTo(float x, float y) {
             if (currentPoint == null) {
                 throw new Exception(START_PATH_ERR_MSG);
@@ -136,6 +140,12 @@ namespace iText.Kernel.Geom {
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
         /// the current point to the point <CODE>(x3, y3)</CODE>.
         /// </remarks>
+        /// <param name="x1">x-coordinate of the first control point</param>
+        /// <param name="y1">y-coordinate of the first control point</param>
+        /// <param name="x2">x-coordinate of the second control point</param>
+        /// <param name="y2">y-coordinate of the second control point</param>
+        /// <param name="x3">x-coordinate of the third control point</param>
+        /// <param name="y3">y-coordinate of the third control point</param>
         public virtual void CurveTo(float x1, float y1, float x2, float y2, float x3, float y3) {
             if (currentPoint == null) {
                 throw new Exception(START_PATH_ERR_MSG);

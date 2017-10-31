@@ -41,8 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfScreenAnnotation : PdfAnnotation {
@@ -50,12 +52,128 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
+        /// <param name="pdfObject">object representing this annotation</param>
+        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
+            )]
         public PdfScreenAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
         public override PdfName GetSubtype() {
             return PdfName.Screen;
+        }
+
+        /// <summary>
+        /// An
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to perform, such as launching an application, playing a sound,
+        /// changing an annotation’s appearance state etc, when the annotation is activated.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// which defines the characteristics and behaviour of an action.
+        /// </returns>
+        public override PdfDictionary GetAction() {
+            return GetPdfObject().GetAsDictionary(PdfName.A);
+        }
+
+        /// <summary>
+        /// Sets a
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed when the annotation is activated.
+        /// </summary>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to set to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfScreenAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAction(PdfAction action) {
+            return (iText.Kernel.Pdf.Annot.PdfScreenAnnotation)Put(PdfName.A, action.GetPdfObject());
+        }
+
+        /// <summary>An additional actions dictionary that extends the set of events that can trigger the execution of an action.
+        ///     </summary>
+        /// <remarks>
+        /// An additional actions dictionary that extends the set of events that can trigger the execution of an action.
+        /// See ISO-320001 12.6.3 Trigger Events.
+        /// </remarks>
+        /// <returns>
+        /// an additional actions
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// .
+        /// </returns>
+        /// <seealso cref="GetAction()"/>
+        public override PdfDictionary GetAdditionalAction() {
+            return GetPdfObject().GetAsDictionary(PdfName.AA);
+        }
+
+        /// <summary>
+        /// Sets an additional
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed in response to
+        /// the specific trigger event defined by
+        /// <paramref name="key"/>
+        /// . See ISO-320001 12.6.3, "Trigger Events".
+        /// </summary>
+        /// <param name="key">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that denotes a type of the additional action to set.
+        /// </param>
+        /// <param name="action">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to set as additional to this annotation.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfScreenAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
+            PdfAction.SetAdditionalAction(this, key, action);
+            return this;
+        }
+
+        /// <summary>
+        /// An appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream.
+        /// </summary>
+        /// <remarks>
+        /// An appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream. See ISO-320001, Table 189.
+        /// </remarks>
+        /// <returns>an appearance characteristics dictionary or null if it isn't specified.</returns>
+        public override PdfDictionary GetAppearanceCharacteristics() {
+            return GetPdfObject().GetAsDictionary(PdfName.MK);
+        }
+
+        /// <summary>
+        /// Sets an appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream.
+        /// </summary>
+        /// <remarks>
+        /// Sets an appearance characteristics dictionary containing additional information for constructing the
+        /// annotation’s appearance stream. See ISO-320001, Table 189.
+        /// </remarks>
+        /// <param name="characteristics">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// with additional information for appearance stream.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfScreenAnnotation"/>
+        /// instance.
+        /// </returns>
+        public override PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics) {
+            return (iText.Kernel.Pdf.Annot.PdfScreenAnnotation)Put(PdfName.MK, characteristics);
         }
     }
 }

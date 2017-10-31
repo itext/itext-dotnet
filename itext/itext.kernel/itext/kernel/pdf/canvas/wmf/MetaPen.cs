@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         internal int penWidth = 1;
 
-        internal Color color = DeviceRgb.BLACK;
+        internal Color color = ColorConstants.BLACK;
 
         /// <summary>Creates a MetaPen object.</summary>
         public MetaPen()

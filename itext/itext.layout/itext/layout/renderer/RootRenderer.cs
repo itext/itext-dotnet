@@ -110,6 +110,7 @@ namespace iText.Layout.Renderer {
                 bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
                     (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
+                    bool currentAreaNeedsToBeUpdated = false;
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (rendererIsFloat) {
                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
@@ -127,7 +128,7 @@ namespace iText.Layout.Renderer {
                                     nextStoredArea = null;
                                 }
                                 else {
-                                    UpdateCurrentAndInitialArea(result);
+                                    currentAreaNeedsToBeUpdated = true;
                                 }
                             }
                         }
@@ -141,7 +142,7 @@ namespace iText.Layout.Renderer {
                                         waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                         break;
                                     }
-                                    UpdateCurrentAndInitialArea(result);
+                                    currentAreaNeedsToBeUpdated = true;
                                 }
                                 else {
                                     ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
@@ -180,9 +181,19 @@ namespace iText.Layout.Renderer {
                                                 ));
                                         }
                                         else {
-                                            result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                            if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                                                result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
+                                                ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                            }
+                                            else {
+                                                // FORCED_PLACEMENT was already set to the renderer and
+                                                // LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA message was logged.
+                                                // This else-clause should never be hit, otherwise there is a bug in FORCED_PLACEMENT implementation.
+                                                System.Diagnostics.Debug.Assert(false);
+                                                // Still handling this case in order to avoid nasty infinite loops.
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -198,7 +209,7 @@ namespace iText.Layout.Renderer {
                                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                             break;
                                         }
-                                        UpdateCurrentAndInitialArea(result);
+                                        currentAreaNeedsToBeUpdated = true;
                                     }
                                 }
                             }
@@ -207,6 +218,11 @@ namespace iText.Layout.Renderer {
                     renderer = result.GetOverflowRenderer();
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
+                    }
+                    if (currentAreaNeedsToBeUpdated) {
+                        UpdateCurrentAndInitialArea(result);
+                    }
+                    if (marginsCollapsingEnabled) {
                         marginsCollapseHandler = new MarginsCollapseHandler(this, null);
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }

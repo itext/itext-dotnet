@@ -72,7 +72,8 @@ namespace iText.Layout.Borders {
         /// the specified color for the two borders. The space in between the two borders is either colorless or will
         /// be filled with the background color of the element, if a color has been set.
         /// </remarks>
-        /// <param name="width">width of the borders and the space between them</param>
+        /// <param name="color">The color of the borders</param>
+        /// <param name="width">The width of the borders and the space between them</param>
         public DoubleBorder(Color color, float width)
             : base(color, width) {
         }
@@ -86,7 +87,9 @@ namespace iText.Layout.Borders {
         /// the specified color for the two borders. The space in between the two borders is either colorless or will
         /// be filled with the background color of the element, if a color has been set.
         /// </remarks>
-        /// <param name="width">width of the borders and the space between them</param>
+        /// <param name="color">The color of the borders</param>
+        /// <param name="width">The width of the borders and the space between them</param>
+        /// <param name="opacity">The opacity</param>
         public DoubleBorder(Color color, float width, float opacity)
             : base(color, width, opacity) {
         }

@@ -333,7 +333,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns all the values of this map in a Collection.</summary>
         /// <remarks>
         /// Returns all the values of this map in a Collection.
-        /// <br/>
+        /// <br />
         /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
         /// If you want to get
         /// <see cref="PdfIndirectReference"/>
@@ -372,7 +372,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
         /// <remarks>
         /// Returns a Set holding the key-value pairs as Map#Entry objects.
-        /// <br/>
+        /// <br />
         /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
         /// If you want to get
         /// <see cref="PdfIndirectReference"/>

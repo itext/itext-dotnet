@@ -79,24 +79,24 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             List list = new List();
             ListItem solidBorderItem = new ListItem("solid");
-            solidBorderItem.SetBorder(new SolidBorder(Color.RED, 6)).SetMarginBottom(5);
-            solidBorderItem.SetBorderTop(new SolidBorder(Color.BLUE, 10));
+            solidBorderItem.SetBorder(new SolidBorder(ColorConstants.RED, 6)).SetMarginBottom(5);
+            solidBorderItem.SetBorderTop(new SolidBorder(ColorConstants.BLUE, 10));
             list.Add(solidBorderItem);
             ListItem doubleBorderItem = new ListItem("double");
-            doubleBorderItem.SetBorder(new DoubleBorder(Color.RED, 10)).SetMarginBottom(5);
-            doubleBorderItem.SetBorderRight(new DoubleBorder(Color.BLUE, 6));
+            doubleBorderItem.SetBorder(new DoubleBorder(ColorConstants.RED, 10)).SetMarginBottom(5);
+            doubleBorderItem.SetBorderRight(new DoubleBorder(ColorConstants.BLUE, 6));
             list.Add(doubleBorderItem);
             ListItem dashedBorderItem = new ListItem("dashed");
-            dashedBorderItem.SetBorder(new DashedBorder(Color.GRAY, 2)).SetMarginBottom(5);
-            dashedBorderItem.SetBorderBottom(new DashedBorder(Color.BLACK, 4));
+            dashedBorderItem.SetBorder(new DashedBorder(ColorConstants.GRAY, 2)).SetMarginBottom(5);
+            dashedBorderItem.SetBorderBottom(new DashedBorder(ColorConstants.BLACK, 4));
             list.Add(dashedBorderItem);
             ListItem dottedBorderItem = new ListItem("dotted");
-            dottedBorderItem.SetBorder(new DottedBorder(Color.BLACK, 3)).SetMarginBottom(5);
-            dottedBorderItem.SetBorderLeft(new DottedBorder(Color.GRAY, 6));
+            dottedBorderItem.SetBorder(new DottedBorder(ColorConstants.BLACK, 3)).SetMarginBottom(5);
+            dottedBorderItem.SetBorderLeft(new DottedBorder(ColorConstants.GRAY, 6));
             list.Add(dottedBorderItem);
             ListItem roundDotsBorderItem = new ListItem("round dots");
-            roundDotsBorderItem.SetBorder(new RoundDotsBorder(Color.LIGHT_GRAY, 3)).SetMarginBottom(5);
-            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(Color.BLUE, 5));
+            roundDotsBorderItem.SetBorder(new RoundDotsBorder(ColorConstants.LIGHT_GRAY, 3)).SetMarginBottom(5);
+            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(ColorConstants.BLUE, 5));
             list.Add(roundDotsBorderItem);
             doc.Add(list);
             CloseDocumentAndCompareOutputs(doc);
@@ -173,12 +173,12 @@ namespace iText.Layout {
                  + "<p class=\"hidden\">A hidden border.</p>";
             Paragraph p = new Paragraph(text);
             p.SetBorderTop(new SolidBorder(DeviceCmyk.MAGENTA, 4));
-            p.SetBorderRight(new DoubleBorder(DeviceRgb.RED, 6));
+            p.SetBorderRight(new DoubleBorder(ColorConstants.RED, 6));
             p.SetBorderBottom(new RoundDotsBorder(DeviceCmyk.CYAN, 2));
             p.SetBorderLeft(new DashedBorder(DeviceGray.BLACK, 3));
             doc.Add(p);
             doc.Add(new Paragraph(text).SetBorderTop(new SolidBorder(DeviceCmyk.MAGENTA, 8)));
-            doc.Add(new Paragraph(text).SetBorderRight(new DoubleBorder(DeviceRgb.RED, 4)));
+            doc.Add(new Paragraph(text).SetBorderRight(new DoubleBorder(ColorConstants.RED, 4)));
             doc.Add(new Paragraph(text).SetBorderBottom(new RoundDotsBorder(DeviceCmyk.CYAN, 3)));
             doc.Add(new Paragraph(text).SetBorderLeft(new DashedBorder(DeviceGray.BLACK, 5)));
             doc.Add(new Paragraph(text).SetBorder(new DottedBorder(DeviceGray.BLACK, 1)));
@@ -212,13 +212,13 @@ namespace iText.Layout {
                  + "its high silica content, so often does not reach the surface and cools at depth. When it does reach the surface, a volcano is formed. Typical examples"
                  + " of this kind of volcano are Mount Etna and the volcanoes in the Pacific Ring of Fire.";
             doc.Add(new Paragraph(textBefore).SetMargins(25, 60, 70, 80));
-            Paragraph p = new Paragraph(text).SetBackgroundColor(Color.GRAY);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(ColorConstants.GRAY);
             p.SetMargins(25, 60, 70, 80);
-            p.SetBorderLeft(new DoubleBorder(DeviceRgb.RED, 25));
-            p.SetBorder(new DoubleBorder(DeviceRgb.BLACK, 6));
+            p.SetBorderLeft(new DoubleBorder(ColorConstants.RED, 25));
+            p.SetBorder(new DoubleBorder(ColorConstants.BLACK, 6));
             doc.Add(p);
-            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(Color.BLACK, 3)).SetBorderRight(new DottedBorder
-                (Color.BLACK, 12)));
+            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(ColorConstants.BLACK, 3)).SetBorderRight(new DottedBorder
+                (ColorConstants.BLACK, 12)));
             CloseDocumentAndCompareOutputs(doc);
         }
 

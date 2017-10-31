@@ -324,13 +324,13 @@ namespace iText.Kernel.Pdf {
         /// wrapper object for this page resources.
         /// If page doesn't have resource object, then it will be inherited from page's parents.
         /// If neither parents nor page has the resource object, then the new one is created and added to page dictionary.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: If you'll try to modify the inherited resources, then the new resources object will be created,
         /// so you won't change the parent's resources.
         /// This new object under the wrapper will be added to page dictionary on
         /// <see cref="Flush()"/>
         /// ,
-        /// or you can add it manually with this line, if needed:<br/>
+        /// or you can add it manually with this line, if needed:<br />
         /// <c>getPdfObject().put(PdfName.Resources, getResources().getPdfObject());</c>
         /// </summary>
         /// <returns>
@@ -441,7 +441,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies page to the specified document.</summary>
         /// <remarks>
         /// Copies page to the specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
@@ -457,7 +457,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies page to the specified document.</summary>
         /// <remarks>
         /// Copies page to the specified document.
-        /// <br/><br/>
+        /// <br /><br />
         /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
@@ -1007,7 +1007,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <br/>
+        /// the added annotation will be autotagged. <br />
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )
@@ -1065,12 +1065,7 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation) {
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
-                if (annots.Contains(annotation.GetPdfObject())) {
-                    annots.Remove(annotation.GetPdfObject());
-                }
-                else {
-                    annots.Remove(annotation.GetPdfObject().GetIndirectReference());
-                }
+                annots.Remove(annotation.GetPdfObject());
                 if (annots.IsEmpty()) {
                     GetPdfObject().Remove(PdfName.Annots);
                     SetModified();
@@ -1346,7 +1341,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// This flag is meaningful for the case, when page rotation is applied and ignorePageRotationForContent
         /// is set to true. NOTE: It is needed for the internal usage.
-        /// <br/><br/>
+        /// <br /><br />
         /// This flag defines if inverse matrix (which rotates content into the opposite direction from page rotation
         /// direction in order to give the impression of the not rotated text) is already applied to the page content stream.
         /// See
@@ -1360,7 +1355,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>NOTE: For internal usage! Use this method only if you know what you are doing.</summary>
         /// <remarks>
         /// NOTE: For internal usage! Use this method only if you know what you are doing.
-        /// <br/><br/>
+        /// <br /><br />
         /// This method is called when inverse matrix (which rotates content into the opposite direction from page rotation
         /// direction in order to give the impression of the not rotated text) is applied to the page content stream.
         /// See

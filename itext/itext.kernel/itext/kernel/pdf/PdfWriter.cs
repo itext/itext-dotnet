@@ -161,7 +161,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Sets the smart mode.</summary>
         /// <remarks>
         /// Sets the smart mode.
-        /// <p/>
+        /// <br />
         /// In smart mode when resources (such as fonts, images,...) are
         /// encountered, a reference to these resources is saved
         /// in a cache, so that they can be reused.
@@ -318,7 +318,8 @@ namespace iText.Kernel.Pdf {
                 needFlush = false;
                 for (int i = 1; i < xref.Size(); i++) {
                     PdfIndirectReference indirectReference = xref.Get(i);
-                    if (indirectReference != null && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
+                    if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
+                        )) {
                         PdfObject obj = indirectReference.GetRefersTo(false);
                         if (obj != null) {
                             obj.Flush();
@@ -339,10 +340,15 @@ namespace iText.Kernel.Pdf {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {
                 PdfIndirectReference indirectReference = xref.Get(i);
-                if (null != indirectReference) {
-                    PdfObject obj = indirectReference.GetRefersTo(false);
-                    if (obj != null && !obj.Equals(objectStream) && obj.IsModified()) {
-                        obj.Flush();
+                if (null != indirectReference && !indirectReference.IsFree()) {
+                    bool isModified = indirectReference.CheckState(PdfObject.MODIFIED);
+                    if (isModified) {
+                        PdfObject obj = indirectReference.GetRefersTo(false);
+                        if (obj != null) {
+                            if (!obj.Equals(objectStream)) {
+                                obj.Flush();
+                            }
+                        }
                     }
                 }
             }

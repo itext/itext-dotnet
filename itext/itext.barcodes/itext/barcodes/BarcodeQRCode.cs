@@ -82,6 +82,7 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Gets the current data.</summary>
+        /// <returns>the encoded data</returns>
         public virtual String GetCode() {
             return code;
         }
@@ -89,6 +90,7 @@ namespace iText.Barcodes {
         /// <summary>Sets the data to be encoded by the barcode.</summary>
         /// <remarks>Sets the data to be encoded by the barcode. If not specified in hints otherwise, the character set should be ISO-8859-1.
         ///     </remarks>
+        /// <param name="code">The data to encode</param>
         public virtual void SetCode(String code) {
             this.code = code;
             Regenerate();
@@ -130,6 +132,8 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Gets the barcode size</summary>
+        /// <param name="moduleSize">The module size</param>
+        /// <returns>The size of the barcode</returns>
         public virtual Rectangle GetBarcodeSize(float moduleSize) {
             return new Rectangle(0, 0, bm.GetWidth() * moduleSize, bm.GetHeight() * moduleSize);
         }
@@ -175,8 +179,9 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-        /// <param name="moduleSize">the size of the pixels.</param>
+        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="moduleSize">The size of the pixels.</param>
+        /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleSize, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);

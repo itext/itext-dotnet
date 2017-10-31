@@ -43,11 +43,27 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
     /// <summary>Color space to specify colors according to RGB color model.</summary>
     public class DeviceRgb : Color {
+        /// <summary>Predefined black DeviceRgb color</summary>
+        public static readonly Color BLACK = new iText.Kernel.Colors.DeviceRgb(0, 0, 0);
+
+        /// <summary>Predefined white DeviceRgb color</summary>
+        public static readonly Color WHITE = new iText.Kernel.Colors.DeviceRgb(255, 255, 255);
+
+        /// <summary>Predefined red DeviceRgb color</summary>
+        public static readonly Color RED = new iText.Kernel.Colors.DeviceRgb(255, 0, 0);
+
+        /// <summary>Predefined green DeviceRgb color</summary>
+        public static readonly Color GREEN = new iText.Kernel.Colors.DeviceRgb(0, 255, 0);
+
+        /// <summary>Predefined blue  DeviceRgb color</summary>
+        public static readonly Color BLUE = new iText.Kernel.Colors.DeviceRgb(0, 0, 255);
+
         /// <summary>Creates DeviceRgb color by intensities of red, green and blue colorants.</summary>
         /// <remarks>
         /// Creates DeviceRgb color by intensities of red, green and blue colorants.
@@ -85,6 +101,24 @@ namespace iText.Kernel.Colors {
         public DeviceRgb()
             : this(0f, 0f, 0f) {
         }
+
+#if !NETSTANDARD1_6
+        /// <summary>
+        /// Create DeviceRGB color from R, G, B values of System.Drawing.Color
+        /// <br/>
+        /// Note, that alpha chanel is ignored, but opacity still can be achieved
+        /// in some places by using 'setOpacity' method or 'TransparentColor' class.
+        /// </summary>
+        /// <param name="color">the color which RGB values are used</param>
+        public DeviceRgb(System.Drawing.Color color)
+            : this(color.R, color.G, color.B) {
+            if (color.A != 255) {
+                ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
+            }
+        }
+#endif
+
 
         /// <summary>
         /// Returns
