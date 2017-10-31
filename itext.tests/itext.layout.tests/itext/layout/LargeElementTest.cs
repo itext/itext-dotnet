@@ -468,6 +468,37 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void LargeTableOnDifferentPages01() {
+            String testName = "largeTableOnDifferentPages01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            float[] colWidths = new float[] { 200, -1, 20, 40 };
+            Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
+            doc.Add(table);
+            // change the second page's size
+            pdfDoc.SetDefaultPageSize(PageSize.A3.Rotate());
+            for (int i = 0; i < 25; i++) {
+                table.AddCell(new Cell().Add("Cell" + (i * 4 + 0)));
+                table.AddCell(new Cell().Add("Cell" + (i * 4 + 1)));
+                table.AddCell(new Cell().Add("Cell" + (i * 4 + 2)));
+                table.AddCell(new Cell().Add("Cell" + (i * 4 + 3)));
+                table.Flush();
+                // change the third page's size
+                if (i == 20) {
+                    pdfDoc.SetDefaultPageSize(PageSize.A5.Rotate());
+                }
+            }
+            table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void LargeEmptyTableTest() {
             String testName = "largeEmptyTableTest.pdf";
             String outFileName = destinationFolder + testName;
