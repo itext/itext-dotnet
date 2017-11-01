@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns an iterator over an array of PdfObject elements.</summary>
         /// <remarks>
         /// Returns an iterator over an array of PdfObject elements.
-        /// <br/>
+        /// <br />
         /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
         /// If you want to get
         /// <see cref="PdfIndirectReference"/>

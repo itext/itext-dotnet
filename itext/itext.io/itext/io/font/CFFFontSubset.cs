@@ -386,9 +386,9 @@ namespace iText.IO.Font {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
         }
 
-        /// <summary>Function builds the new local & global subsrs indices.</summary>
+        /// <summary>Function builds the new local and global subsrs indices.</summary>
         /// <remarks>
-        /// Function builds the new local & global subsrs indices. IF CID then All of
+        /// Function builds the new local and global subsrs indices. IF CID then All of
         /// the FD Array lsubrs will be subsetted.
         /// </remarks>
         /// <param name="Font">the font</param>
@@ -482,10 +482,10 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Function uses ReadAsubr on the glyph used to build the LSubr & Gsubr Map.</summary>
+        /// <summary>Function uses ReadAsubr on the glyph used to build the LSubr and Gsubr Map.</summary>
         /// <remarks>
-        /// Function uses ReadAsubr on the glyph used to build the LSubr & Gsubr Map.
-        /// The Map (of the lsubr only) is then scanned recursively for Lsubr & Gsubrs
+        /// Function uses ReadAsubr on the glyph used to build the LSubr and Gsubr Map.
+        /// The Map (of the lsubr only) is then scanned recursively for Lsubr and Gsubrs
         /// calls.
         /// </remarks>
         /// <param name="Font">the font</param>
@@ -537,7 +537,7 @@ namespace iText.IO.Font {
 
         /// <summary>
         /// Function scans the Glsubr used list to find recursive calls
-        /// to Gsubrs and adds to Map & list
+        /// to Gsubrs and adds to Map and list
         /// </summary>
         /// <param name="Font">the font</param>
         protected internal virtual void BuildGSubrsUsed(int Font) {

@@ -66,7 +66,7 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="message">The message you want to be hashed and signed.</param>
         /// <returns>A signed message digest.</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">Thrown when something goes wrong in calculating the digest.</exception>
         byte[] Sign(byte[] message);
     }
 }

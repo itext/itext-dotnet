@@ -23,14 +23,17 @@ using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
-    /// <p>This tree structure stores the hyphenation patterns in an efficient
+    /// <p>
+    /// This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup.
     /// </summary>
     /// <remarks>
-    /// <p>This tree structure stores the hyphenation patterns in an efficient
+    /// <p>
+    /// This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup. It provides the provides the method to
-    /// hyphenate a word.</p>
-    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// hyphenate a word.
+    /// <p>
+    /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class HyphenationTree : TernaryTree, IPatternConsumer {
         /// <summary>value space: stores the interletter values</summary>

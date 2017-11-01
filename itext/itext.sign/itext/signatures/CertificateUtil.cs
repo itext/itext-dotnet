@@ -55,12 +55,13 @@ namespace iText.Signatures {
     /// </summary>
     public class CertificateUtil {
         // Certificate Revocation Lists
-        /// <summary>Gets a CRL from a certificate</summary>
-        /// <param name="certificate"/>
-        /// <returns>the CRL or null if there's no CRL available</returns>
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
-        /// <exception cref="Java.Security.Cert.CRLException"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Gets a CRL from an X509 certificate.</summary>
+        /// <param name="certificate">the X509Certificate to extract the CRL from</param>
+        /// <returns>CRL or null if there's no CRL available</returns>
+        /// <exception cref="System.IO.IOException">thrown when the URL couldn't be opened properly.</exception>
+        /// <exception cref="Java.Security.Cert.CertificateException">thrown if there's no X509 implementation in the provider.
+        ///     </exception>
+        /// <exception cref="Java.Security.Cert.CRLException">thrown when encountering errors when parsing the CRL.</exception>
         public static X509Crl GetCRL(X509Certificate certificate) {
             return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
         }
@@ -69,7 +70,6 @@ namespace iText.Signatures {
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException"/>
-        /// <exception cref="System.IO.IOException"/>
         public static String GetCRLURL(X509Certificate certificate) {
             Asn1Object obj;
             try {
@@ -102,11 +102,12 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets the CRL object using a CRL URL.</summary>
-        /// <param name="url">the URL where to get the CRL</param>
-        /// <returns>a CRL object</returns>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
-        /// <exception cref="Java.Security.Cert.CRLException"/>
+        /// <param name="url">the URL where the CRL is located</param>
+        /// <returns>CRL object</returns>
+        /// <exception cref="System.IO.IOException">thrown when the URL couldn't be opened properly.</exception>
+        /// <exception cref="Java.Security.Cert.CertificateException">thrown if there's no X509 implementation in the provider.
+        ///     </exception>
+        /// <exception cref="Java.Security.Cert.CRLException">thrown when encountering errors when parsing the CRL.</exception>
         public static X509Crl GetCRL(String url) {
             if (url == null) {
                 return null;
@@ -118,7 +119,6 @@ namespace iText.Signatures {
         /// <summary>Retrieves the OCSP URL from the given certificate.</summary>
         /// <param name="certificate">the certificate</param>
         /// <returns>the URL or null</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static String GetOCSPURL(X509Certificate certificate) {
             Asn1Object obj;
             try {
@@ -159,7 +159,6 @@ namespace iText.Signatures {
         /// <summary>Gets the URL of the TSA if it's available on the certificate</summary>
         /// <param name="certificate">a certificate</param>
         /// <returns>a TSA URL</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static String GetTSAURL(X509Certificate certificate) {
             byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
             if (der == null) {

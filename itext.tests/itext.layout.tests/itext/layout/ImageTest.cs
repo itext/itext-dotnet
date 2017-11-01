@@ -414,6 +414,106 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest18() {
+            String outFileName = destinationFolder + "imageTest18.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest18.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScale(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        //TODO(DEVSIX-1658)
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest19() {
+            String outFileName = destinationFolder + "imageTest19.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest19.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(50f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest20() {
+            String outFileName = destinationFolder + "imageTest20.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest20.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleWidth(true);
+            Div container = new Div();
+            container.SetBorder(new SolidBorder(1f));
+            container.SetWidth(UnitValue.CreatePercentValue(60f));
+            container.SetHeight(UnitValue.CreatePointValue(300f));
+            container.Add(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        //TODO(DEVSIX-1658)
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest21() {
+            String outFileName = destinationFolder + "imageTest21.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest21.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetAutoScaleHeight(true);
+            float[] colWidths = new float[] { 1f, 1f };
+            Table container = new Table(UnitValue.CreatePercentArray(colWidths));
+            container.AddCell("Text");
+            container.AddCell("autoscaling image, height only");
+            int textIterations = 50;
+            Paragraph p = new Paragraph();
+            for (int i = 0; i < textIterations; i++) {
+                p.Add("Text will wrap");
+            }
+            container.AddCell(p);
+            container.AddCell(image);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
@@ -533,10 +633,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1022)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1022")]
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageRelativePositionTest.pdf";
@@ -617,10 +717,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        //TODO(DEVSIX-1045)
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1045")]
         public virtual void FixedPositionImageTest01() {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositionImageTest01.pdf";

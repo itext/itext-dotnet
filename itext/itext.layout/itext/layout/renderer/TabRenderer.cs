@@ -65,9 +65,9 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea();
             float? width = RetrieveWidth(area.GetBBox().GetWidth());
-            float? height = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+            UnitValue height = this.GetProperty<UnitValue>(Property.MIN_HEIGHT);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().GetX(), area.GetBBox().GetY
-                () + area.GetBBox().GetHeight(), (float)width, (float)height));
+                () + area.GetBBox().GetHeight(), (float)width, (float)height.GetValue()));
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 

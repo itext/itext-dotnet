@@ -82,8 +82,12 @@ namespace iText.Forms.Xfa
 		{
 		}
 
-		/// <summary>Creates an XFA form by the stream containing all xml information</summary>
-		public XfaForm(Stream inputStream)
+        /// <summary>Creates an XFA form by the stream containing all xml information</summary>
+        /// <param name="inputStream">
+        /// The InputStream
+        /// </param>
+
+        public XfaForm(Stream inputStream)
 		{
 			try
 			{
@@ -95,12 +99,15 @@ namespace iText.Forms.Xfa
 			}
 		}
 
-		/// <summary>
-		/// Creates an XFA form by the
-		/// <see cref="Document"/>
-		/// containing all xml information
-		/// </summary>
-		public XfaForm(XDocument domDocument)
+        /// <summary>
+        /// Creates an XFA form by the
+        /// <see cref="Document"/>
+        /// containing all xml information
+        /// </summary>
+        /// <param name="domDocument">
+        /// The document
+        /// </param>
+        public XfaForm(XDocument domDocument)
 		{
 			SetDomDocument(domDocument);
 		}

@@ -264,9 +264,9 @@ namespace iText.Layout.Renderer {
             else {
                 attributes.Put(PdfName.Width, new PdfNumber(bbox.GetWidth()));
             }
-            float? height = renderer.GetPropertyAsFloat(Property.HEIGHT);
+            UnitValue height = renderer.GetProperty<UnitValue>(Property.HEIGHT);
             if (height != null) {
-                attributes.Put(PdfName.Height, new PdfNumber((float)height));
+                attributes.Put(PdfName.Height, new PdfNumber(height.GetValue()));
             }
             else {
                 attributes.Put(PdfName.Height, new PdfNumber(bbox.GetHeight()));

@@ -77,7 +77,7 @@ namespace iText.IO.Codec {
         /// <summary>CCITT Group 4 fax encoding</summary>
         public const int COMPRESSION_CCITTFAX4 = 4;
 
-        /// <summary>Lempel-Ziv & Welch</summary>
+        /// <summary>Lempel-Ziv &amp; Welch</summary>
         public const int COMPRESSION_LZW = 5;
 
         /// <summary>!6.0 JPEG</summary>
@@ -170,7 +170,7 @@ namespace iText.IO.Codec {
         /// <summary>+thresholding used on data</summary>
         public const int TIFFTAG_THRESHHOLDING = 263;
 
-        /// <summary>b&w art scan</summary>
+        /// <summary>b&amp;w art scan</summary>
         public const int THRESHHOLD_BILEVEL = 1;
 
         /// <summary>or dithered scan</summary>
@@ -357,7 +357,7 @@ namespace iText.IO.Codec {
         /// <summary>!colorimetry info</summary>
         public const int TIFFTAG_TRANSFERFUNCTION = 301;
 
-        /// <summary>name & release</summary>
+        /// <summary>name and release</summary>
         public const int TIFFTAG_SOFTWARE = 305;
 
         /// <summary>creation date and time</summary>
@@ -567,7 +567,7 @@ namespace iText.IO.Codec {
         /// <summary>texture map format</summary>
         public const int TIFFTAG_PIXAR_TEXTUREFORMAT = 33302;
 
-        /// <summary>s & t wrap modes</summary>
+        /// <summary>s &amp; t wrap modes</summary>
         public const int TIFFTAG_PIXAR_WRAPMODES = 33303;
 
         /// <summary>cotan(fov) for env.</summary>

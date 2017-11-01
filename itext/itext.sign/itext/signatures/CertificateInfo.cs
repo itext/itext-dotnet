@@ -192,7 +192,7 @@ namespace iText.Signatures {
             }
 
             /// <summary>Gets a field array from the values Map.</summary>
-            /// <param name="name"/>
+            /// <param name="name">The field name</param>
             /// <returns>List</returns>
             public virtual IList<String> GetFieldArray(String name) {
                 return values.Get(name);

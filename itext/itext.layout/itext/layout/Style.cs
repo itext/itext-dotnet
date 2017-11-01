@@ -228,6 +228,7 @@ namespace iText.Layout {
         /// If <b>ratio</b> is 1, additional character spacing will not be applied.
         /// If <b>ratio</b> is 0, additional word spacing will not be applied.
         /// </param>
+        /// <returns/>
         public virtual Style SetSpacingRatio(float ratio) {
             SetProperty(Property.SPACING_RATIO, ratio);
             return (Style)(Object)this;

@@ -52,7 +52,7 @@ namespace iText.Kernel.Font {
     /// <summary>Low-level API class for Type 3 fonts.</summary>
     /// <remarks>
     /// Low-level API class for Type 3 fonts.
-    /// <p/>
+    /// <p>
     /// In Type 3 fonts, glyphs are defined by streams of PDF graphics operators.
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.

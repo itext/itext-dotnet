@@ -59,7 +59,7 @@ namespace iText.Kernel.Pdf {
     /// <P><BLOCKQUOTE>
     /// (D:YYYYMMDDHHmmSSOHH'mm')
     /// </BLOCKQUOTE><P>
-    /// See also ISO-320001 7.9.4, “Dates”.
+    /// See also ISO-320001 7.9.4, "Dates".
     /// </summary>
     /// <seealso cref="PdfString"/>
     /// <seealso cref="Java.Util.GregorianCalendar"/>

@@ -56,12 +56,18 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Constructs a new line based on the given coordinates.</summary>
+        /// <param name="x1">x-coordinate of start point of this Line</param>
+        /// <param name="y1">y-coordinate of start point of this Line</param>
+        /// <param name="x2">x-coordinate of end point of this Line</param>
+        /// <param name="y2">y-coordinate of end point of this Line</param>
         public Line(float x1, float y1, float x2, float y2) {
             p1 = new Point(x1, y1);
             p2 = new Point(x2, y2);
         }
 
         /// <summary>Constructs a new line based on the given coordinates.</summary>
+        /// <param name="p1">start point of this Line</param>
+        /// <param name="p2">end point of this Line</param>
         public Line(Point p1, Point p2)
             : this((float)p1.GetX(), (float)p1.GetY(), (float)p2.GetX(), (float)p2.GetY()) {
         }

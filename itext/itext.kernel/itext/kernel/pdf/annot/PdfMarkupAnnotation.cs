@@ -146,7 +146,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// A rich text string (see ISO-320001 12.7.3.4, “Rich Text Strings”) that
+        /// A rich text string (see ISO-320001 12.7.3.4, "Rich Text Strings") that
         /// shall be displayed in the pop-up window when the annotation is opened.
         /// </summary>
         /// <returns>
@@ -158,7 +158,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Sets a rich text string (see ISO-320001 12.7.3.4, “Rich Text Strings”) that
+        /// Sets a rich text string (see ISO-320001 12.7.3.4, "Rich Text Strings") that
         /// shall be displayed in the pop-up window when the annotation is opened.
         /// </summary>
         /// <param name="richText">text string or text stream that specifies rich text.</param>
@@ -175,7 +175,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// which value should be in the date format specified in (ISO-320001 7.9.4, “Dates”).
+        /// which value should be in the date format specified in (ISO-320001 7.9.4, "Dates").
         /// </returns>
         public virtual PdfString GetCreationDate() {
             return GetPdfObject().GetAsString(PdfName.CreationDate);
@@ -186,7 +186,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// which value should be in the date format
-        /// specified in (ISO-320001 7.9.4, “Dates”).
+        /// specified in (ISO-320001 7.9.4, "Dates").
         /// </param>
         /// <returns>
         /// this
@@ -198,11 +198,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// An annotation object that this annotation is “in reply to.”
+        /// An annotation object that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// </summary>
         /// <remarks>
-        /// An annotation object that this annotation is “in reply to.”
+        /// An annotation object that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// The relationship between the two annotations shall be specified by the RT entry
         /// (see
@@ -212,18 +212,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents an annotation that this annotation is “in reply to.”
+        /// that represents an annotation that this annotation is "in reply to."
         /// </returns>
         public virtual PdfDictionary GetInReplyToObject() {
             return GetPdfObject().GetAsDictionary(PdfName.IRT);
         }
 
         /// <summary>
-        /// An annotation that this annotation is “in reply to.”
+        /// An annotation that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// </summary>
         /// <remarks>
-        /// An annotation that this annotation is “in reply to.”
+        /// An annotation that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// The relationship between the two annotations shall be specified by the RT entry
         /// (see
@@ -233,7 +233,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// a
         /// <see cref="PdfAnnotation"/>
-        /// that this annotation is “in reply to.”
+        /// that this annotation is "in reply to."
         /// </returns>
         public virtual PdfAnnotation GetInReplyTo() {
             if (inReplyTo == null) {
@@ -243,11 +243,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Sets an annotation that this annotation is “in reply to.”
+        /// Sets an annotation that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// </summary>
         /// <remarks>
-        /// Sets an annotation that this annotation is “in reply to.”
+        /// Sets an annotation that this annotation is "in reply to."
         /// Both annotations shall be on the same page of the document.
         /// The relationship between the two annotations shall be specified by the RT entry
         /// (see
@@ -257,7 +257,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="inReplyTo">
         /// a
         /// <see cref="PdfAnnotation"/>
-        /// that this annotation is “in reply to.”
+        /// that this annotation is "in reply to."
         /// </param>
         /// <returns>
         /// this
@@ -367,7 +367,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// A name specifying the relationship (the “reply type”) between this annotation and one specified by IRT entry
+        /// A name specifying the relationship (the "reply type") between this annotation and one specified by IRT entry
         /// (see
         /// <see cref="GetInReplyTo()"/>
         /// ). Valid values are:
@@ -395,7 +395,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Sets the relationship (the “reply type”) between this annotation and one specified by IRT entry
+        /// Sets the relationship (the "reply type") between this annotation and one specified by IRT entry
         /// (see
         /// <see cref="SetInReplyTo(PdfAnnotation)"/>
         /// ). For valid values see

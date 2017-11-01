@@ -972,7 +972,7 @@ namespace iText.Layout.Renderer {
             childRenderer.SetProperty(Property.TAB_LEADER, nextTabStop.GetTabLeader());
             childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth
                 ));
-            childRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
+            childRenderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(maxAscent - maxDescent));
             if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT) {
                 return null;
             }
@@ -1029,7 +1029,7 @@ namespace iText.Layout.Renderer {
                 tabWidth -= (curWidth + sumOfAffectedRendererWidths + tabWidth) - layoutBox.GetWidth();
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
-            tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
+            tabRenderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(maxAscent - maxDescent));
             return tabWidth;
         }
 
@@ -1040,7 +1040,7 @@ namespace iText.Layout.Renderer {
                 tabWidth = lineWidth - curWidth;
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue((float)tabWidth));
-            tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
+            tabRenderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(maxAscent - maxDescent));
         }
 
         private void UpdateChildrenParent() {

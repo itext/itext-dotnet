@@ -115,7 +115,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
 #if !NETSTANDARD1_6
-        [NUnit.Framework.Timeout(60000)]
+        [NUnit.Framework.Timeout(100000)]
 #endif
         [NUnit.Framework.Test]
         public virtual void LargeFilePerformanceTest() {

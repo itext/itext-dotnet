@@ -557,7 +557,7 @@ namespace iText.IO.Source {
         /// <summary>Resolve escape symbols or hexadecimal symbols.</summary>
         /// <remarks>
         /// Resolve escape symbols or hexadecimal symbols.
-        /// <p/>
+        /// <br />
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
@@ -678,7 +678,7 @@ namespace iText.IO.Source {
         /// <summary>Resolve escape symbols or hexadecimal symbols.</summary>
         /// <remarks>
         /// Resolve escape symbols or hexadecimal symbols.
-        /// <p/>
+        /// <br />
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
@@ -695,7 +695,8 @@ namespace iText.IO.Source {
         ///     </summary>
         /// <remarks>
         /// Is a certain character a whitespace? Currently checks on the following: '0', '9', '10', '12', '13', '32'.
-        /// <br />The same as calling
+        /// <br />
+        /// The same as calling
         /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>
         /// .
         /// </remarks>
@@ -775,7 +776,8 @@ namespace iText.IO.Source {
         /// or
         /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(int, boolean)</see>
         /// for a list of whitespace characters.
-        /// <br />The same as calling
+        /// <br />
+        /// The same as calling
         /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>
         /// .
         /// </remarks>

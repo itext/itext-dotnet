@@ -61,7 +61,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// methods. For the current tag you can add new tags,
     /// modify it's role and properties, etc. Also, using instance of this class, you can change tag position in the tag structure,
     /// you can flush current tag or remove it.
-    /// <br/><br/>
+    /// <br /><br />
     /// <p>
     /// There could be any number of the instances of this class, simultaneously pointing to different (or the same) parts of
     /// the tag structure. Because of this, you can for example remove the tag at which another instance is currently pointing.
@@ -309,7 +309,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
@@ -336,7 +336,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// </remarks>
         /// <param name="element">accessible element which represents a new tag.</param>
@@ -356,7 +356,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the added kid.
-        /// <br/>
+        /// <br />
         /// New tag will have a role and attributes defined by the given IAccessibleElement.
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
@@ -382,7 +382,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Adds a new content item for the given
         /// <c>PdfAnnotation</c>
         /// under the current tag.
-        /// <br/><br/>
+        /// <br /><br />
         /// By default, when annotation is added to the page it is automatically tagged with auto tagging pointer
         /// (see
         /// <see cref="TagStructureContext.GetAutoTaggingPointer()"/>
@@ -416,7 +416,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Sets index of the next added to the current tag kid, which could be another tag or content item.
         /// By default, new tag is added at the end of the parent kids array. This property affects only the next added tag,
         /// all tags added after will be added with the default behaviour.
-        /// <br/><br/>
+        /// <br /><br />
         /// This method could be used with any overload of
         /// <see cref="AddTag(iText.Kernel.Pdf.PdfName)"/>
         /// method,
@@ -425,7 +425,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// and
         /// <see cref="AddAnnotationTag(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>
         /// .
-        /// <br/>
+        /// <br />
         /// Keep in mind, that this method set property to the
         /// <c>TagTreePointer</c>
         /// and not to the tag itself, which means
@@ -450,7 +450,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
-        /// <br/><br/>
+        /// <br /><br />
         /// You cannot remove root tag, and also you cannot remove the tag if it's parent is already flushed;
         /// in this two cases an exception will be thrown.
         /// </remarks>

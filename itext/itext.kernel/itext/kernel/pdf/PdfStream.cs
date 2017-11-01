@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf {
         /// Creates an efficient stream. No temporary array is ever created. The
         /// <c>InputStream</c>
         /// is totally consumed but is not closed. The general usage is:
-        /// <p/>
+        /// <br />
         /// <pre>
         /// PdfDocument document = ?;
         /// InputStream in = ?;
@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf {
         /// Creates an efficient stream. No temporary array is ever created. The
         /// <c>InputStream</c>
         /// is totally consumed but is not closed. The general usage is:
-        /// <p/>
+        /// <br />
         /// <pre>
         /// PdfDocument document = ?;
         /// InputStream in = ?;

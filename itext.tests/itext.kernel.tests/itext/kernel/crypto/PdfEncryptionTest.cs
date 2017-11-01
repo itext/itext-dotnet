@@ -115,7 +115,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordStandard128() {
             String filename = "encryptWithPasswordStandard128.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -125,7 +125,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordStandard40() {
             String filename = "encryptWithPasswordStandard40.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -135,7 +135,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordStandard128NoCompression() {
             String filename = "encryptWithPasswordStandard128NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -145,7 +145,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordStandard40NoCompression() {
             String filename = "encryptWithPasswordStandard40NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -155,7 +155,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes128() {
             String filename = "encryptWithPasswordAes128.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -165,7 +165,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes256() {
             String filename = "encryptWithPasswordAes256.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -175,7 +175,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes128NoCompression() {
             String filename = "encryptWithPasswordAes128NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -185,7 +185,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes256NoCompression() {
             String filename = "encryptWithPasswordAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -470,7 +470,66 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptAes256Pdf2NotEncryptMetadata() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256Pdf2NotEncryptMetadata02() {
+            String filename = "encryptAes256Pdf2NotEncryptMetadata02.pdf";
+            int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
+            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256EncryptedStampingPreserve() {
+            String filename = "encryptAes256EncryptedStampingPreserve.pdf";
+            String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
+            String @out = destinationFolder + filename;
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
+                (@out, new WriterProperties()), new StampingProperties().PreserveEncryption());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff_", USER, USER);
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256EncryptedStampingUpdate() {
+            String filename = "encryptAes256EncryptedStampingUpdate.pdf";
+            String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
+            String @out = destinationFolder + filename;
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
+                (@out, new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants
+                .STANDARD_ENCRYPTION_40)), new StampingProperties());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff_", USER, USER);
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256FullCompression() {
+            String filename = "encryptAes256FullCompression.pdf";
+            int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
         }
 
         /// <exception cref="System.Exception"/>
@@ -480,7 +539,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes256Pdf2() {
             String filename = "encryptWithPasswordAes256Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
         }
 
         /// <exception cref="System.Exception"/>
@@ -491,7 +550,7 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPasswordAes128Pdf2() {
             String filename = "encryptWithPasswordAes128Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
-            EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
+            EncryptWithPassword2(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION, true);
         }
 
         /// <exception cref="System.Exception"/>
@@ -555,14 +614,15 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression) {
-            EncryptWithPassword(filename, encryptionType, compression, false);
+        public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
+            EncryptWithPassword2(filename, encryptionType, compression, false);
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression, bool isPdf2) {
+        public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression, bool isPdf2
+            ) {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(USER, OWNER, permissions, 
                 encryptionType);
@@ -570,6 +630,34 @@ namespace iText.Kernel.Crypto {
                 writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
             }
             PdfWriter writer = new PdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata());
+            writer.SetCompressionLevel(compression);
+            PdfDocument document = new PdfDocument(writer);
+            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            PdfPage page = document.AddNewPage();
+            WriteTextBytesOnPageContent(page, pageTextContent);
+            page.Flush();
+            document.Close();
+            CompareEncryptedPdf(filename);
+            CheckEncryptedWithPasswordDocumentStamping(filename, OWNER);
+            CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression) {
+            EncryptWithPassword(filename, encryptionType, compression, false);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression, bool fullCompression
+            ) {
+            String outFileName = destinationFolder + filename;
+            int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
+            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
+                , encryptionType).AddXmpMetadata().SetFullCompressionMode(fullCompression));
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);

@@ -738,9 +738,10 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-        /// <param name="moduleWidth">the width of the pixels.</param>
-        /// <param name="moduleHeight">the height of the pixels.</param>
+        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="moduleWidth">The width of the pixels.</param>
+        /// <param name="moduleHeight">The height of the pixels.</param>
+        /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleWidth, float moduleHeight, PdfDocument
              document) {

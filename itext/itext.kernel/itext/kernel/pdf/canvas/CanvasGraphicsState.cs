@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private PdfObject htp;
 
-        /// <summary>Internal empty & default constructor.</summary>
+        /// <summary>Internal empty and default constructor.</summary>
         protected internal CanvasGraphicsState() {
         }
 

@@ -120,9 +120,10 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(layoutBox, borders, false);
             OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
                 ) : OverflowPropertyValue.FIT;
-            OverflowPropertyValue? overflowY = null == parent || ((null == RetrieveMaxHeight() || RetrieveMaxHeight() 
-                > layoutBox.GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty
-                <OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            float? declaredMaxHeight = RetrieveMaxHeight();
+            OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
+                .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
+                >(Property.OVERFLOW_Y);
             bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
             bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
             if (IsAbsolutePosition()) {
@@ -194,6 +195,7 @@ namespace iText.Layout.Renderer {
             // Constrain width and height according to min/max height, which has precedence over width settings
             float? minHeight = RetrieveMinHeight();
             float? maxHeight = RetrieveMaxHeight();
+            float? declaredHeight = RetrieveHeight();
             if (null != minHeight && height < minHeight) {
                 width *= minHeight / height;
                 height = minHeight;
@@ -201,12 +203,12 @@ namespace iText.Layout.Renderer {
             else {
                 if (null != maxHeight && height > maxHeight) {
                     width *= maxHeight / height;
-                    height = maxHeight;
+                    this.height = maxHeight;
                 }
                 else {
-                    if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
-                        width *= RetrieveHeight() / height;
-                        height = RetrieveHeight();
+                    if (null != declaredHeight && !height.Equals(declaredHeight)) {
+                        width *= declaredHeight / height;
+                        height = declaredHeight;
                     }
                 }
             }
@@ -412,7 +414,7 @@ namespace iText.Layout.Renderer {
             // if rotation was applied, width would be equal to the width of rectangle bounding the rotated image
             float angleScaleCoef = imageWidth / (float)width;
             if (width > angleScaleCoef * area.GetWidth()) {
-                UpdateHeight(area.GetWidth() / width * imageHeight);
+                UpdateHeight(UnitValue.CreatePointValue(area.GetWidth() / (float)width * imageHeight));
                 UpdateWidth(UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;

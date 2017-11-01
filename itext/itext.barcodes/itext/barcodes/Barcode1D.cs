@@ -325,8 +325,9 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// The bars and text are written in the following colors:
+        /// <br />
+        /// <TABLE BORDER=1 SUMMARY="barcode properties">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>
@@ -395,7 +396,8 @@ namespace iText.Barcodes {
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.</remarks>
-        /// <returns>the XObject</returns>
+        /// <param name="document">The document</param>
+        /// <returns>The XObject</returns>
         /// <seealso cref="CreateFormXObject(iText.Kernel.Colors.Color, iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfDocument)
         ///     "/>
         public virtual PdfFormXObject CreateFormXObject(PdfDocument document) {
@@ -403,8 +405,9 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="barColor">The color of the bars. It can be <CODE>null</CODE></param>
+        /// <param name="textColor">The color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="document">The document</param>
         /// <returns>the XObject</returns>
         /// <seealso cref="PlaceBarcode(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Colors.Color, iText.Kernel.Colors.Color)
         ///     "/>
@@ -420,6 +423,7 @@ namespace iText.Barcodes {
         /// Make the barcode occupy the specified width.
         /// Usually this is achieved by adjusting bar widths.
         /// </remarks>
+        /// <param name="width">The width</param>
         public virtual void FitWidth(float width) {
             SetX(x * width / GetBarcodeSize().GetWidth());
         }

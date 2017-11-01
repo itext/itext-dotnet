@@ -107,12 +107,12 @@ namespace iText.Test {
             System.Console.Out.WriteLine("Test complete.");
 
         }
-
+        
         /// <summary>Compares two PDF files using iText's CompareTool.</summary>
-        /// <param name="outPath">path to the working folder where comparison results and temp files will be created</param>
-        /// <param name="dest">the PDF that resulted from the test</param>
-        /// <param name="cmp">the reference PDF</param>
-        /// <exception cref="System.Exception"/>
+        /// <param name="outPath">The path to the working folder where comparison results and temp files will be created</param>
+        /// <param name="dest">The PDF that resulted from the test</param>
+        /// <param name="cmp">The reference PDF</param>
+        /// <exception cref="System.Exception">If there is a problem opening the compare files</exception>
         protected internal abstract void ComparePdf(String outPath, String dest, String cmp);
 
         /// <summary>Gets the path to the resulting PDF from the sample class;</summary>

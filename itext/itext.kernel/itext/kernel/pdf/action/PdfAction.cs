@@ -268,7 +268,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>Creates a Thread action (section 12.6.4.6 of ISO 32000-1).</summary>
         /// <remarks>
         /// Creates a Thread action (section 12.6.4.6 of ISO 32000-1).
-        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, “Articles”),
+        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, "Articles"),
         /// in either the current document or a different one. Table 205 shows the action dictionary
         /// entries specific to this type of action.
         /// </remarks>
@@ -290,7 +290,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>Creates a Thread action (section 12.6.4.6 of ISO 32000-1).</summary>
         /// <remarks>
         /// Creates a Thread action (section 12.6.4.6 of ISO 32000-1).
-        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, “Articles”),
+        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, "Articles"),
         /// in either the current document or a different one. Table 205 shows the action dictionary
         /// entries specific to this type of action.
         /// </remarks>

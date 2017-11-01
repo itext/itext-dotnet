@@ -487,12 +487,26 @@ namespace iText.Kernel.Font {
         /// <summary>Creates a unique subset prefix to be added to the font name when the font is embedded and subset.
         ///     </summary>
         /// <returns>the subset prefix</returns>
+        [Obsolete]
         protected internal static String CreateSubsetPrefix() {
             StringBuilder s = new StringBuilder("");
             for (int k = 0; k < 6; ++k) {
                 s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
             }
             return s + "+";
+        }
+
+        /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subset.</summary>
+        /// <returns>the font name with subset prefix if isSubset and isEmbedded are true.s</returns>
+        protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
+            if (isSubset && isEmbedded) {
+                StringBuilder s = new StringBuilder(fontName.Length + 7);
+                for (int k = 0; k < 6; ++k) {
+                    s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                }
+                return s.Append('+').Append(fontName).ToString();
+            }
+            return fontName;
         }
 
         /// <summary>

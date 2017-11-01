@@ -83,6 +83,7 @@ namespace iText.Barcodes {
              + "+A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z" + "%P%Q%R%S%T";
 
         /// <summary>Creates a new Barcode39.</summary>
+        /// <param name="document">The document</param>
         public Barcode39(PdfDocument document)
             : base(document) {
             x = 0.8f;
@@ -209,8 +210,9 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// The bars and text are written in the following colors:
+        /// <br />
+        /// <TABLE BORDER=1 SUMMARY="barcode properties">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>

@@ -68,7 +68,7 @@ namespace iText.Kernel.Crypto
 		/// <c>close</c>
 		/// is that it closes the output stream. A closed stream cannot perform
 		/// output operations and cannot be reopened.
-		/// <p/>
+		/// <p>
 		/// The
 		/// <c>close</c>
 		/// method of
@@ -97,7 +97,7 @@ namespace iText.Kernel.Crypto
 		/// written have been buffered by the implementation of the output
 		/// stream, such bytes should immediately be written to their
 		/// intended destination.
-		/// <p/>
+		/// <p>
 		/// The
 		/// <c>flush</c>
 		/// method of
@@ -141,7 +141,7 @@ namespace iText.Kernel.Crypto
 		/// high-order bits of
 		/// <paramref name="b"/>
 		/// are ignored.
-		/// <p/>
+		/// <p>
 		/// Subclasses of
 		/// <c>OutputStream</c>
 		/// must provide an
@@ -184,7 +184,7 @@ namespace iText.Kernel.Crypto
 		/// <c>b[off+len-1]</c>
 		/// is the last byte written
 		/// by this operation.
-		/// <p/>
+		/// <p>
 		/// The
 		/// <c>write</c>
 		/// method of
@@ -193,7 +193,7 @@ namespace iText.Kernel.Crypto
 		/// the write method of one argument on each of the bytes to be
 		/// written out. Subclasses are encouraged to override this method and
 		/// provide a more efficient implementation.
-		/// <p/>
+		/// <p>
 		/// If
 		/// <paramref name="b"/>
 		/// is
@@ -201,7 +201,7 @@ namespace iText.Kernel.Crypto
 		/// , a
 		/// <c>NullPointerException</c>
 		/// is thrown.
-		/// <p/>
+		/// <p>
 		/// If
 		/// <paramref name="off"/>
 		/// is negative, or

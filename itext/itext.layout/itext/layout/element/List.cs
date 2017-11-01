@@ -227,6 +227,8 @@ namespace iText.Layout.Element {
         /// 9. Item 9
         /// 10. Item 10
         /// </remarks>
+        /// <param name="alignment">the alignment of the list symbols</param>
+        /// <returns>this element</returns>
         public virtual iText.Layout.Element.List SetListSymbolAlignment(ListSymbolAlignment alignment) {
             SetProperty(Property.LIST_SYMBOL_ALIGNMENT, alignment);
             return this;

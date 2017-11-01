@@ -73,7 +73,7 @@ namespace iText.Kernel.XMP.Options {
         /// </remarks>
         public const int EXACT_PACKET_LENGTH = 0x0200;
 
-        /// <summary>Omit the &lt;x:xmpmeta&bt;-tag</summary>
+        /// <summary>Omit the &lt;x:xmpmeta&gt;-tag</summary>
         public const int OMIT_XMPMETA_ELEMENT = 0x1000;
 
         /// <summary>Sort the struct properties and qualifier before serializing</summary>

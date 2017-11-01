@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// with date. The format should be a date string as described
-        /// in ISO-320001 7.9.4, “Dates”. See also
+        /// in ISO-320001 7.9.4, "Dates". See also
         /// <see cref="iText.Kernel.Pdf.PdfDate.Decode(System.String)"/>
         /// .
         /// </returns>
@@ -180,7 +180,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <li>all page content streams;</li>
         /// <li>all page resource objects (other than procedure sets);</li>
         /// <li>all resource objects (other than procedure sets) of any form XObjects on the page;</li>
-        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, “Open Prepress Interface (OPI)”)</li>
+        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")</li>
         /// </ul>
         /// </param>
         /// <returns>

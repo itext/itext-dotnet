@@ -239,6 +239,7 @@ namespace iText.Layout.Borders {
         /// Returns the type of the
         /// <see cref="Border">border</see>
         /// </summary>
+        /// <returns>the type of border.</returns>
         public abstract int GetBorderType();
 
         /// <summary>
@@ -280,6 +281,7 @@ namespace iText.Layout.Borders {
         /// of the
         /// <see cref="Border">border</see>
         /// </summary>
+        /// <param name="color">The color</param>
         public virtual void SetColor(Color color) {
             this.transparentColor = new TransparentColor(color, this.transparentColor.GetOpacity());
         }
@@ -288,6 +290,7 @@ namespace iText.Layout.Borders {
         /// Sets the width of the
         /// <see cref="Border">border</see>
         /// </summary>
+        /// <param name="width">The width</param>
         public virtual void SetWidth(float width) {
             this.width = width;
         }

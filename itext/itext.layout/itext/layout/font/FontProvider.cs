@@ -173,6 +173,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontSet"/>
         /// .
         /// </summary>
+        /// <returns>the fontset</returns>
         public virtual FontSet GetFontSet() {
             return fontSet;
         }
@@ -311,11 +312,6 @@ namespace iText.Layout.Font {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// .
         /// </returns>
-        /// <exception cref="System.IO.IOException">
-        /// on I/O exceptions in
-        /// <see cref="iText.IO.Font.FontProgramFactory"/>
-        /// .
-        /// </exception>
         public virtual PdfFont GetPdfFont(FontInfo fontInfo) {
             return GetPdfFont(fontInfo, null);
         }

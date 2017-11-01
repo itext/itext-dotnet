@@ -263,7 +263,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Processes PDF syntax.</summary>
         /// <remarks>
         /// Processes PDF syntax.
-        /// <br/>
         /// <strong>Note:</strong> If you re-use a given
         /// <see cref="PdfCanvasProcessor"/>
         /// , you must call

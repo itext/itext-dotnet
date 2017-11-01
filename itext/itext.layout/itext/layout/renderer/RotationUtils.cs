@@ -135,9 +135,9 @@ namespace iText.Layout.Renderer {
             float? rotation = backup.StoreFloatProperty(Property.ROTATION_ANGLE);
             if (rotation != null && renderer.GetProperty<UnitValue>(Property.WIDTH) == null) {
                 float angle = (float)rotation;
-                backup.StoreFloatProperty(Property.HEIGHT);
-                backup.StoreFloatProperty(Property.MIN_HEIGHT);
-                backup.StoreFloatProperty(Property.MAX_HEIGHT);
+                backup.StoreProperty<UnitValue>(Property.HEIGHT);
+                backup.StoreProperty<UnitValue>(Property.MIN_HEIGHT);
+                backup.StoreProperty<UnitValue>(Property.MAX_HEIGHT);
                 MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
                 //Using this width for initial layout helps in case of small elements. They may have more free spaces but it's more likely they fit.
                 float length = (minMaxWidth.GetMaxWidth() + minMaxWidth.GetMinWidth()) / 2 + MinMaxWidthUtils.GetEps();

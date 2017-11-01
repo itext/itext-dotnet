@@ -150,15 +150,40 @@ namespace iText.Layout {
         }
 
         /// <summary>Gets the height property of the Element.</summary>
-        /// <returns>the height of the element, as a floating point value.</returns>
+        /// <returns>the height of the element, as a floating point value. Null if the property is not present</returns>
         public virtual float? GetHeight() {
-            return this.GetProperty<float?>(Property.HEIGHT);
+            return this.GetProperty<UnitValue>(Property.HEIGHT).GetValue();
         }
 
-        /// <summary>Sets the height property of the Element.</summary>
+        /// <summary>Sets the height property of the Element as a point-value.</summary>
         /// <param name="height">a floating point value for the new height</param>
         /// <returns>this Element.</returns>
         public virtual T SetHeight(float height) {
+            UnitValue heightAsUV = UnitValue.CreatePointValue(height);
+            SetProperty(Property.HEIGHT, heightAsUV);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the height property of the Element, measured in percentage.</summary>
+        /// <param name="heightPercent">a value measured in percentage.</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetHeightPercent(float heightPercent) {
+            SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(heightPercent));
+            return (T)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the width property of the Element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="height">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetHeight(UnitValue height) {
             SetProperty(Property.HEIGHT, height);
             return (T)(Object)this;
         }
@@ -758,7 +783,7 @@ namespace iText.Layout {
         /// Sets a custom hyphenation configuration which will hyphenate words automatically accordingly to the
         /// language and country.
         /// </summary>
-        /// <param name="hyphenationConfig"/>
+        /// <param name="hyphenationConfig">The hyphenation configuration</param>
         /// <returns>this element</returns>
         public virtual T SetHyphenation(HyphenationConfig hyphenationConfig) {
             SetProperty(Property.HYPHENATION, hyphenationConfig);

@@ -63,7 +63,6 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            OverrideHeightProperties();
             IDictionary<int, IRenderer> waitingFloatsSplitRenderers = new LinkedDictionary<int, IRenderer>();
             IList<IRenderer> waitingOverflowFloatRenderers = new List<IRenderer>();
             bool wasHeightClipped = false;
@@ -365,9 +364,10 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                            overflowRenderer_1.UpdateMinHeight(blockMinHeight);
+                            overflowRenderer_1.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight));
                             if (HasProperty(Property.HEIGHT)) {
-                                overflowRenderer_1.UpdateHeight(RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                                overflowRenderer_1.UpdateHeight(UnitValue.CreatePointValue((float)RetrieveHeight() - occupiedArea.GetBBox(
+                                    ).GetHeight()));
                             }
                         }
                     }

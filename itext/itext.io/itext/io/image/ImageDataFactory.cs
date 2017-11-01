@@ -461,8 +461,8 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.
-        /// <br/>
-        /// <br/>
+        /// <br />
+        /// <br />
         /// <b>Note:</b>if this method returns <code>true</code> it doesn't means that <see cref="Create(byte[])"/> won't throw exception
         /// </summary>
         /// <param name="source">image raw bytes</param>

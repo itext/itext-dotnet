@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Annot {
     /// <summary>This is a super class for the annotation dictionary wrappers.</summary>
     /// <remarks>
     /// This is a super class for the annotation dictionary wrappers. Derived classes represent
-    /// different standard types of annotations. See ISO-320001 12.5.6, “Annotation Types.”
+    /// different standard types of annotations. See ISO-320001 12.5.6, "Annotation Types."
     /// </remarks>
     public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Annotation flag.</summary>
@@ -445,7 +445,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Gets a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// which value is a subtype of this annotation.
-        /// See ISO-320001 12.5.6, “Annotation Types” for the reference to the possible types.
+        /// See ISO-320001 12.5.6, "Annotation Types" for the reference to the possible types.
         /// </summary>
         /// <returns>subtype of this annotation.</returns>
         public abstract PdfName GetSubtype();
@@ -527,8 +527,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// on which annotation is placed or null if annotation is not placed yet.
         /// </returns>
         public virtual PdfPage GetPage() {
-            if (page == null && GetPdfObject().IsIndirect()) {
-                PdfIndirectReference annotationIndirectReference = GetPdfObject().GetIndirectReference();
+            PdfIndirectReference annotationIndirectReference;
+            if (page == null && (annotationIndirectReference = GetPdfObject().GetIndirectReference()) != null) {
                 PdfDocument doc = annotationIndirectReference.GetDocument();
                 PdfDictionary pageDictionary = GetPageObject();
                 if (pageDictionary != null) {
@@ -538,7 +538,7 @@ namespace iText.Kernel.Pdf.Annot {
                     for (int i = 1; i <= doc.GetNumberOfPages(); i++) {
                         PdfPage docPage = doc.GetPage(i);
                         foreach (iText.Kernel.Pdf.Annot.PdfAnnotation annot in docPage.GetAnnotations()) {
-                            if (annot.GetPdfObject().GetIndirectReference().Equals(annotationIndirectReference)) {
+                            if (annotationIndirectReference.Equals(annot.GetPdfObject().GetIndirectReference())) {
                                 page = docPage;
                                 break;
                             }
@@ -624,7 +624,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// with date. The format should be a date string as described
-        /// in ISO-320001 7.9.4, “Dates”.
+        /// in ISO-320001 7.9.4, "Dates".
         /// </param>
         /// <returns>
         /// this
@@ -635,10 +635,10 @@ namespace iText.Kernel.Pdf.Annot {
             return Put(PdfName.M, date);
         }
 
-        /// <summary>A set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// <summary>A set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, "Annotation Flags").
         ///     </summary>
         /// <remarks>
-        /// A set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// A set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, "Annotation Flags").
         /// For specific annotation flag constants see
         /// <see cref="SetFlag(int)"/>
         /// .
@@ -655,10 +655,10 @@ namespace iText.Kernel.Pdf.Annot {
             }
         }
 
-        /// <summary>Sets a set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// <summary>Sets a set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, "Annotation Flags").
         ///     </summary>
         /// <remarks>
-        /// Sets a set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// Sets a set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, "Annotation Flags").
         /// On the contrary from
         /// <see cref="SetFlag(int)"/>
         /// , this method sets a complete set of enabled and disabled flags at once.
@@ -675,10 +675,10 @@ namespace iText.Kernel.Pdf.Annot {
             return Put(PdfName.F, new PdfNumber(flags));
         }
 
-        /// <summary>Sets a flag that specifies a characteristic of the annotation to enabled state (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// <summary>Sets a flag that specifies a characteristic of the annotation to enabled state (see ISO-320001 12.5.3, "Annotation Flags").
         ///     </summary>
         /// <remarks>
-        /// Sets a flag that specifies a characteristic of the annotation to enabled state (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// Sets a flag that specifies a characteristic of the annotation to enabled state (see ISO-320001 12.5.3, "Annotation Flags").
         /// On the contrary from
         /// <see cref="SetFlags(int)"/>
         /// , this method sets only specified flags to enabled state,
@@ -756,7 +756,7 @@ namespace iText.Kernel.Pdf.Annot {
             return SetFlags(flags);
         }
 
-        /// <summary>Resets a flag that specifies a characteristic of the annotation to disabled state (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// <summary>Resets a flag that specifies a characteristic of the annotation to disabled state (see ISO-320001 12.5.3, "Annotation Flags").
         ///     </summary>
         /// <param name="flag">an integer interpreted as set of one-bit flags which will be reset to disabled state.</param>
         /// <returns>
@@ -772,11 +772,11 @@ namespace iText.Kernel.Pdf.Annot {
 
         /// <summary>
         /// Checks if the certain flag that specifies a characteristic of the annotation
-        /// is in enabled state (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// is in enabled state (see ISO-320001 12.5.3, "Annotation Flags").
         /// </summary>
         /// <remarks>
         /// Checks if the certain flag that specifies a characteristic of the annotation
-        /// is in enabled state (see ISO-320001 12.5.3, “Annotation Flags”).
+        /// is in enabled state (see ISO-320001 12.5.3, "Annotation Flags").
         /// This method allows only one flag to be checked at once, use constants listed in
         /// <see cref="SetFlag(int)"/>
         /// .
@@ -799,11 +799,11 @@ namespace iText.Kernel.Pdf.Annot {
 
         /// <summary>
         /// An appearance dictionary specifying how the annotation shall be presented visually on the page during its
-        /// interactions with the user (see ISO-320001 12.5.5, “Appearance Streams”).
+        /// interactions with the user (see ISO-320001 12.5.5, "Appearance Streams").
         /// </summary>
         /// <remarks>
         /// An appearance dictionary specifying how the annotation shall be presented visually on the page during its
-        /// interactions with the user (see ISO-320001 12.5.5, “Appearance Streams”). An appearance dictionary is a dictionary
+        /// interactions with the user (see ISO-320001 12.5.5, "Appearance Streams"). An appearance dictionary is a dictionary
         /// containing one or several appearance streams or subdictionaries.
         /// </remarks>
         /// <returns>
@@ -819,7 +819,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Specific appearance object corresponding to the specific appearance type. This object might be either an appearance
         /// stream or an appearance subdictionary. In the latter case, the subdictionary defines multiple appearance streams
-        /// corresponding to different appearance states of the annotation. See ISO-320001 12.5.5, “Appearance Streams”.
+        /// corresponding to different appearance states of the annotation. See ISO-320001 12.5.5, "Appearance Streams".
         /// </remarks>
         /// <param name="appearanceType">
         /// a
@@ -1155,7 +1155,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// If the corner radii are 0, the border has square (not rounded) corners; if
         /// the border width is 0, no border is drawn.
         /// <p>
-        /// The array may have a fourth element, an optional dash array (see ISO-320001 8.4.3.6, “Line Dash Pattern”).
+        /// The array may have a fourth element, an optional dash array (see ISO-320001 8.4.3.6, "Line Dash Pattern").
         /// </remarks>
         /// <returns>
         /// an
@@ -1287,7 +1287,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         /// <summary>
         /// The integer key of the annotation’s entry in the structural parent tree
-        /// (see ISO-320001 14.7.4.4, “Finding Structure Elements from Content Items”).
+        /// (see ISO-320001 14.7.4.4, "Finding Structure Elements from Content Items").
         /// </summary>
         /// <returns>integer key in structural parent tree or -1 if annotation is not tagged.</returns>
         public virtual int GetStructParentIndex() {
@@ -1302,11 +1302,11 @@ namespace iText.Kernel.Pdf.Annot {
 
         /// <summary>
         /// Sets he integer key of the annotation’s entry in the structural parent tree
-        /// (see ISO-320001 14.7.4.4, “Finding Structure Elements from Content Items”).
+        /// (see ISO-320001 14.7.4.4, "Finding Structure Elements from Content Items").
         /// </summary>
         /// <remarks>
         /// Sets he integer key of the annotation’s entry in the structural parent tree
-        /// (see ISO-320001 14.7.4.4, “Finding Structure Elements from Content Items”).
+        /// (see ISO-320001 14.7.4.4, "Finding Structure Elements from Content Items").
         /// Note: Normally, there is no need to take care of this manually, struct parent index is set automatically
         /// if annotation is added to the tagged document's page.
         /// </remarks>
@@ -1343,7 +1343,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation title. For example for markup annotations, the title is the text label that shall be displayed in the
         /// title bar of the annotation’s pop-up window when open and active. For movie annotation Movie actions
-        /// (ISO-320001 12.6.4.9, “Movie Actions”) may use this title to reference the movie annotation.
+        /// (ISO-320001 12.6.4.9, "Movie Actions") may use this title to reference the movie annotation.
         /// </remarks>
         /// <returns>
         /// 

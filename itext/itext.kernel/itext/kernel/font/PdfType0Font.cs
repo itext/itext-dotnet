@@ -829,10 +829,7 @@ namespace iText.Kernel.Font {
                     int[] metrics = HashSetToArray(longTag);
                     iText.IO.Util.JavaUtil.Sort(metrics);
                     PdfStream fontStream;
-                    String fontName = ttf.GetFontNames().GetFontName();
-                    if (subset) {
-                        fontName = CreateSubsetPrefix() + fontName;
-                    }
+                    String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
                     if (ttf.IsCff()) {
                         byte[] cffBytes = ttf.GetFontStreamBytes();
