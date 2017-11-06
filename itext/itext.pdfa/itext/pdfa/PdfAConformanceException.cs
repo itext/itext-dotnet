@@ -247,8 +247,12 @@ namespace iText.Pdfa {
 
         public const String TheValueOfTheMethEntryInColrBoxShallBe123 = "The value of the meth entry in colr box shall be 123";
 
+        [Obsolete]
         public const String TintTransformAndAlternateSpaceOfSeparationArraysInTheColorantsOfDeviceNShallBeConsistentWithSameAttributesOfDeviceN
              = "TintTransform and alternateSpace of separation arrays in the colorants of deviceN shall be consistent with same attributes of deviceN";
+
+        public const String WarningTintTransformAndAlternateSpaceOfSeparationArraysInTheColorantsOfDeviceNShallBeConsistentWithSameAttributesOfDeviceN
+             = "WARNING: TintTransform and alternateSpace of separation arrays in the colorants of deviceN is not consistent with same attributes of deviceN";
 
         public const String TintTransformAndAlternateSpaceShallBeTheSameForTheAllSeparationCSWithTheSameName = "TintTransform and alternateSpace shall be the same for the all separation cs with the same name";
 
@@ -272,5 +276,7 @@ namespace iText.Pdfa {
         public PdfAConformanceException(String message, Object @object)
             : base(message, @object) {
         }
+        //TODO(DEVSIX-1672): remove in 7.1
+        //TODO(DEVSIX-1672): move to LogConstants
     }
 }

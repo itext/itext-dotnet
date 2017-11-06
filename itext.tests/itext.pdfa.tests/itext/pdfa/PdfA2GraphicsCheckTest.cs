@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -50,6 +51,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Function;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -480,6 +482,82 @@ namespace iText.Pdfa {
             }
             , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyStandardBlendModesShallBeusedForTheValueOfTheBMKeyOnAnExtendedGraphicStateDictionary));
 ;
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest01() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a stream
+            byte[] samples = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 };
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray size = new PdfArray(new float[] { 2 });
+            PdfNumber bitsPerSample = new PdfNumber(8);
+            PdfFunction.Type0 type0 = new PdfFunction.Type0(domain, range, size, bitsPerSample, samples);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction0", alternateSpace
+                , type0);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest02() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
+            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
+            PdfNumber n = new PdfNumber(1);
+            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction2", alternateSpace
+                , type2);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest03() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
+            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
+            PdfNumber n = new PdfNumber(1);
+            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            PdfCanvas canvas = new PdfCanvas(page);
+            String separationName = "separationTest";
+            canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);
+            PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colorantsDict = new PdfDictionary();
+            colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
+                type2).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colorantsDict);
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList<String>(separationName
+                ), alternateSpace, type2, attributes), new float[] { 0.5f });
+            canvas.SetColor(deviceN, true);
+            doc.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
