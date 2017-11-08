@@ -1677,6 +1677,11 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal virtual MinMaxWidth GetMinMaxWidth() {
+            return GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+        }
+
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GetMinMaxWidth() instead.")]
         protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
