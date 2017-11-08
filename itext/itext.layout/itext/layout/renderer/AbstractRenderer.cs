@@ -1670,8 +1670,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+        protected internal virtual MinMaxWidth GetMinMaxWidth() {
+            return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
 
         protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
@@ -2092,8 +2092,7 @@ namespace iText.Layout.Renderer {
             }
             if (left == null && right == null && !renderer.HasProperty(Property.WIDTH)) {
                 // Other, non-block renderers won't occupy full width anyway
-                MinMaxWidth minMaxWidth = renderer is BlockRenderer ? ((BlockRenderer)renderer).GetMinMaxWidth(MinMaxWidthUtils
-                    .GetInfWidth()) : null;
+                MinMaxWidth minMaxWidth = renderer is BlockRenderer ? ((BlockRenderer)renderer).GetMinMaxWidth() : null;
                 if (minMaxWidth != null && minMaxWidth.GetMaxWidth() < fullBbox.GetWidth()) {
                     fullBbox.SetWidth(minMaxWidth.GetMaxWidth() + iText.Layout.Renderer.AbstractRenderer.EPS);
                 }

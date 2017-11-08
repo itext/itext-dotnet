@@ -50,18 +50,18 @@ namespace iText.Layout.Minmaxwidth {
 
         private float additionalWidth;
 
-        private float availableWidth;
-
-        public MinMaxWidth(float additionalWidth, float availableWidth)
-            : this(additionalWidth, availableWidth, 0, 0) {
+        public MinMaxWidth()
+            : this(0) {
         }
 
-        public MinMaxWidth(float additionalWidth, float availableWidth, float childrenMinWidth, float childrenMaxWidth
-            ) {
+        public MinMaxWidth(float additionalWidth)
+            : this(0, 0, additionalWidth) {
+        }
+
+        public MinMaxWidth(float childrenMinWidth, float childrenMaxWidth, float additionalWidth) {
             this.childrenMinWidth = childrenMinWidth;
             this.childrenMaxWidth = childrenMaxWidth;
             this.additionalWidth = additionalWidth;
-            this.availableWidth = availableWidth;
         }
 
         public virtual float GetChildrenMinWidth() {
@@ -84,16 +84,12 @@ namespace iText.Layout.Minmaxwidth {
             return additionalWidth;
         }
 
-        public virtual float GetAvailableWidth() {
-            return availableWidth;
-        }
-
         public virtual void SetAdditionalWidth(float additionalWidth) {
             this.additionalWidth = additionalWidth;
         }
 
         public virtual float GetMaxWidth() {
-            return Math.Min(childrenMaxWidth + additionalWidth, availableWidth);
+            return Math.Min(childrenMaxWidth + additionalWidth, MinMaxWidthUtils.GetInfWidth());
         }
 
         public virtual float GetMinWidth() {
@@ -101,8 +97,7 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public override String ToString() {
-            return "min=" + (childrenMinWidth + additionalWidth) + ", max=" + (childrenMaxWidth + additionalWidth) + "; ("
-                 + availableWidth + ")";
+            return "min=" + (childrenMinWidth + additionalWidth) + ", max=" + (childrenMaxWidth + additionalWidth);
         }
     }
 }

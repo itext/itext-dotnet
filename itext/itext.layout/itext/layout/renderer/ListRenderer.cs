@@ -102,13 +102,13 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                , AbstractRenderer.INF))));
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))));
             if (errorResult != null) {
-                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
             }
-            return base.GetMinMaxWidth(availableWidth);
+            return base.GetMinMaxWidth();
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {

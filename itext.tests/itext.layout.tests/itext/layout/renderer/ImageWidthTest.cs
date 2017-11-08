@@ -121,27 +121,25 @@ namespace iText.Layout.Renderer {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject);
             ImageRenderer renderer = new ImageRenderer(image);
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(50));
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(5000);
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
             NUnit.Framework.Assert.AreEqual(50.0, minMaxWidth.GetMaxWidth(), EPSILON);
             NUnit.Framework.Assert.AreEqual(0.0, minMaxWidth.GetMaxWidth() - minMaxWidth.GetMinWidth(), EPSILON);
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePercentValue(50));
-            minMaxWidth = renderer.GetMinMaxWidth(5000);
+            minMaxWidth = renderer.GetMinMaxWidth();
             NUnit.Framework.Assert.AreEqual(1024.0, minMaxWidth.GetMaxWidth(), EPSILON);
-            minMaxWidth = renderer.GetMinMaxWidth(500);
-            NUnit.Framework.Assert.AreEqual(250.0, minMaxWidth.GetMaxWidth(), EPSILON);
             image.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(100f));
-            minMaxWidth = renderer.GetMinMaxWidth(500);
+            minMaxWidth = renderer.GetMinMaxWidth();
             NUnit.Framework.Assert.AreEqual(100.0 * 1024.0 / 768.0, minMaxWidth.GetMaxWidth(), EPSILON);
             image = new iText.Layout.Element.Image(xObject);
             renderer = new ImageRenderer(image);
             image.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(2000));
             image.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(3000));
-            minMaxWidth = renderer.GetMinMaxWidth(5000);
+            minMaxWidth = renderer.GetMinMaxWidth();
             NUnit.Framework.Assert.AreEqual(2000.0, minMaxWidth.GetMaxWidth(), EPSILON);
             NUnit.Framework.Assert.AreEqual(0.0, minMaxWidth.GetMaxWidth() - minMaxWidth.GetMinWidth(), EPSILON);
             image.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(100f));
             image.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100f));
-            minMaxWidth = renderer.GetMinMaxWidth(5000);
+            minMaxWidth = renderer.GetMinMaxWidth();
             NUnit.Framework.Assert.AreEqual(100.0 * 1024.0 / 768.0, minMaxWidth.GetMaxWidth(), EPSILON);
         }
     }

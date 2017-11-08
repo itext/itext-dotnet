@@ -782,8 +782,8 @@ namespace iText.Layout.Renderer {
             return parentWidth - parentBBox.GetWidth();
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this), availableWidth);
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this));
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
                 float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
@@ -796,10 +796,10 @@ namespace iText.Layout.Renderer {
                         MinMaxWidth childMinMaxWidth;
                         childRenderer.SetParent(this);
                         if (childRenderer is AbstractRenderer) {
-                            childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(availableWidth);
+                            childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
                         }
                         else {
-                            childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, availableWidth);
+                            childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer);
                         }
                         handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth() + (FloatingHelper.IsRendererFloating(childRenderer
                             ) ? previousFloatingChildWidth : 0));

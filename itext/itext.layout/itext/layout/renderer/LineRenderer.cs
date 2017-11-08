@@ -98,7 +98,7 @@ namespace iText.Layout.Renderer {
             maxBlockAscent = -1e20f;
             maxBlockDescent = 1e20f;
             int childPos = 0;
-            MinMaxWidth minMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
+            MinMaxWidth minMaxWidth = new MinMaxWidth();
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
             UpdateChildrenParent();
             ResolveChildrenFonts();
@@ -192,12 +192,10 @@ namespace iText.Layout.Renderer {
                     float maxChildWidth = 0;
                     if (childResult is MinMaxWidthLayoutResult) {
                         if (!childWidthWasReplaced) {
-                            minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
-                                );
+                            minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
                         }
                         // TODO if percents width was used, max width might be huge
-                        maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
-                            );
+                        maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMaxWidth();
                         widthHandler.UpdateMinChildWidth(minChildWidth + AbstractRenderer.EPS);
                         widthHandler.UpdateMaxChildWidth(maxChildWidth + AbstractRenderer.EPS);
                     }
@@ -248,7 +246,7 @@ namespace iText.Layout.Renderer {
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
                 if (!childWidthWasReplaced) {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
+                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
                         float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                         if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
                             childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
@@ -298,11 +296,9 @@ namespace iText.Layout.Renderer {
                 float maxChildWidth_1 = 0;
                 if (childResult is MinMaxWidthLayoutResult) {
                     if (!childWidthWasReplaced) {
-                        minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth
-                            ();
+                        minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
                     }
-                    maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth
-                        ();
+                    maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMaxWidth();
                 }
                 else {
                     if (childBlockMinMaxWidth != null) {
@@ -843,10 +839,10 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                , AbstractRenderer.INF))));
-            return result.GetNotNullMinMaxWidth(availableWidth);
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))));
+            return result.GetMinMaxWidth();
         }
 
         internal virtual float GetTopLeadingIndent(Leading leading) {

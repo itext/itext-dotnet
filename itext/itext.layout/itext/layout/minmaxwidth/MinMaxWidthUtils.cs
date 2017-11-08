@@ -70,11 +70,11 @@ namespace iText.Layout.Minmaxwidth {
             return Math.Abs(x - y) < eps;
         }
 
-        public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {
-            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, GetInfHeight
+        public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer) {
+            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(GetInfWidth(), GetInfHeight
                 ()))));
-            return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth(0, availableWidth) : new MinMaxWidth(0
-                , availableWidth, 0, result.GetOccupiedArea().GetBBox().GetWidth());
+            return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth() : new MinMaxWidth(0, result.GetOccupiedArea
+                ().GetBBox().GetWidth(), 0);
         }
 
         public static float GetBorderWidth(IPropertyContainer element) {

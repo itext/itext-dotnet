@@ -251,7 +251,7 @@ namespace iText.Layout.Renderer {
             ) {
             bool floatPropIsRendererOwn = renderer.HasOwnProperty(Property.FLOAT);
             renderer.SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
-            MinMaxWidth kidMinMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetInfWidth());
+            MinMaxWidth kidMinMaxWidth = renderer.GetMinMaxWidth();
             if (floatPropIsRendererOwn) {
                 renderer.SetProperty(Property.FLOAT, floatPropertyVal);
             }

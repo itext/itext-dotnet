@@ -159,8 +159,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(layoutBox, borders, false);
             float[] paddings = GetPaddings();
             ApplyPaddings(layoutBox, paddings, false);
-            MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox
-                ().GetWidth());
+            MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth());
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
@@ -666,7 +665,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_701();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_702();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -731,8 +730,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_701 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_701() {
+        private sealed class _IGlyphLineFilter_702 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_702() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -992,10 +991,10 @@ namespace iText.Layout.Renderer {
             return count;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            TextLayoutResult result = (TextLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                , AbstractRenderer.INF))));
-            return result.GetNotNullMinMaxWidth(availableWidth);
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            TextLayoutResult result = (TextLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))));
+            return result.GetMinMaxWidth();
         }
 
         protected internal virtual int GetNumberOfSpaces() {

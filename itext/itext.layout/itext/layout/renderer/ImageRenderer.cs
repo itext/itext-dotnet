@@ -260,7 +260,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout((float)angle);
             }
             float unscaledWidth = occupiedArea.GetBBox().GetWidth() / scaleCoef;
-            MinMaxWidth minMaxWidth = new MinMaxWidth(0, area.GetBBox().GetWidth(), unscaledWidth, unscaledWidth);
+            MinMaxWidth minMaxWidth = new MinMaxWidth(unscaledWidth, unscaledWidth, 0);
             UnitValue rendererWidth = this.GetProperty<UnitValue>(Property.WIDTH);
             if (rendererWidth != null && rendererWidth.IsPercentValue()) {
                 minMaxWidth.SetChildrenMinWidth(0);
@@ -402,9 +402,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
-                AbstractRenderer.INF))))).GetMinMaxWidth();
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))))).GetMinMaxWidth();
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {

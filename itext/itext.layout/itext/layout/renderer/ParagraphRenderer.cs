@@ -132,7 +132,7 @@ namespace iText.Layout.Renderer {
             ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);
-            MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
+            MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -181,8 +181,8 @@ namespace iText.Layout.Renderer {
                 float minChildWidth = 0;
                 float maxChildWidth = 0;
                 if (result is MinMaxWidthLayoutResult) {
-                    minChildWidth = ((MinMaxWidthLayoutResult)result).GetNotNullMinMaxWidth(childBBoxWidth).GetMinWidth();
-                    maxChildWidth = ((MinMaxWidthLayoutResult)result).GetNotNullMinMaxWidth(childBBoxWidth).GetMaxWidth();
+                    minChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMinWidth();
+                    maxChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMaxWidth();
                 }
                 widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
                 widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
@@ -530,8 +530,8 @@ namespace iText.Layout.Renderer {
             return splitRenderer;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            MinMaxWidth minMaxWidth = new MinMaxWidth(0, availableWidth);
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            MinMaxWidth minMaxWidth = new MinMaxWidth();
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
@@ -540,14 +540,14 @@ namespace iText.Layout.Renderer {
                     bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
                     SetProperty(Property.ROTATION_ANGLE, null);
                     MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
-                        (availableWidth, AbstractRenderer.INF))));
+                        (MinMaxWidthUtils.GetInfWidth(), AbstractRenderer.INF))));
                     if (restoreRotation) {
                         SetProperty(Property.ROTATION_ANGLE, rotation);
                     }
                     else {
                         DeleteOwnProperty(Property.ROTATION_ANGLE);
                     }
-                    minMaxWidth = result.GetNotNullMinMaxWidth(availableWidth);
+                    minMaxWidth = result.GetMinMaxWidth();
                 }
                 if (minWidth != null) {
                     minMaxWidth.SetChildrenMinWidth((float)minWidth);

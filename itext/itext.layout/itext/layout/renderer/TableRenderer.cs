@@ -1178,11 +1178,12 @@ namespace iText.Layout.Renderer {
             return tableWidth;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal override MinMaxWidth GetMinMaxWidth() {
             InitializeTableLayoutBorders();
             float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
-            TableWidths tableWidths = new TableWidths(this, availableWidth, true, rightMaxBorder, leftMaxBorder);
+            TableWidths tableWidths = new TableWidths(this, MinMaxWidthUtils.GetInfWidth(), true, rightMaxBorder, leftMaxBorder
+                );
             float[] columns = tableWidths.Layout();
             float minWidth = tableWidths.GetMinWidth();
             CleanTableLayoutBorders();
@@ -1192,7 +1193,7 @@ namespace iText.Layout.Renderer {
             }
             float additionalWidth = (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT) + (float)this.GetPropertyAsFloat
                 (Property.MARGIN_LEFT) + rightMaxBorder / 2 + leftMaxBorder / 2;
-            return new MinMaxWidth(additionalWidth, availableWidth, minWidth, maxColTotalWidth);
+            return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
         }
 
         protected internal override float? GetLastYLineRecursively() {
