@@ -77,7 +77,7 @@ namespace iText.Signatures {
 
         /// <summary>Creates a CrlClientOnline instance using one or more URLs.</summary>
         public CrlClientOnline(params Uri[] crls) {
-            foreach (Uri url in urls) {
+            foreach (Uri url in crls) {
                 AddUrl(url);
             }
         }
