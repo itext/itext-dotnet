@@ -322,5 +322,26 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RegenerateAppearance() {
+            String input = "regenerateAppearance.pdf";
+            String output = "regenerateAppearance.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + input), new PdfWriter(destinationFolder
+                 + output), new StampingProperties().UseAppendMode());
+            PdfAcroForm acro = PdfAcroForm.GetAcroForm(document, false);
+            int i = 1;
+            foreach (KeyValuePair<String, PdfFormField> entry in acro.GetFormFields()) {
+                if (entry.Key.Contains("field")) {
+                    PdfFormField field = entry.Value;
+                    field.SetValue("test" + i++, false);
+                }
+            }
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + output, sourceFolder 
+                + "cmp_" + output, destinationFolder, "diff"));
+        }
     }
 }

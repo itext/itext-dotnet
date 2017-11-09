@@ -1390,12 +1390,7 @@ namespace iText.Forms.Fields {
                     Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
                 }
             }
-            if (PdfName.Btn.Equals(formType) && (GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) == 0) {
-                if (generateAppearance) {
-                    RegenerateField();
-                }
-            }
-            else {
+            if (generateAppearance) {
                 RegenerateField();
             }
             this.SetModified();
