@@ -343,5 +343,22 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + output, sourceFolder 
                 + "cmp_" + output, destinationFolder, "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RegenerateAppearance2() {
+            String input = "regenerateAppearance2.pdf";
+            String output = "regenerateAppearance2.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + input), new PdfWriter(destinationFolder
+                 + output), new StampingProperties().UseAppendMode());
+            PdfAcroForm acro = PdfAcroForm.GetAcroForm(document, false);
+            acro.SetNeedAppearances(true);
+            PdfFormField field = acro.GetField("number");
+            field.SetValue("20150044DR");
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + output, sourceFolder 
+                + "cmp_" + output, destinationFolder, "diff"));
+        }
     }
 }
