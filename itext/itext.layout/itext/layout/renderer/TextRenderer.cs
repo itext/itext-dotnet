@@ -153,11 +153,11 @@ namespace iText.Layout.Renderer {
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
             }
-            float[] margins = GetMargins();
+            UnitValue[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            float[] paddings = GetPaddings();
+            UnitValue[] paddings = GetPaddings();
             ApplyPaddings(layoutBox, paddings, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth());
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
@@ -165,16 +165,21 @@ namespace iText.Layout.Renderer {
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
             int currentTextPos = text.start;
-            float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
+            UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (!fontSize.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .FONT_SIZE));
+            }
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
             float hScale = (float)this.GetProperty(Property.HORIZONTAL_SCALING, (float?)1f);
             ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(Property.SPLIT_CHARACTERS);
             float italicSkewAddition = true.Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION)) ? ITALIC_ANGLE * 
-                fontSize : 0;
+                fontSize.GetValue() : 0;
             float boldSimulationAddition = true.Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION)) ? BOLD_SIMULATION_STROKE_COEFF
-                 * fontSize : 0;
+                 * fontSize.GetValue() : 0;
             line = new GlyphLine(text);
             line.start = line.end = -1;
             float[] ascenderDescender = CalculateAscenderDescender(font);
@@ -251,10 +256,11 @@ namespace iText.Layout.Renderer {
                         tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
                         tabAnchorCharacter = null;
                     }
-                    float glyphWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
+                    float glyphWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing) 
+                        / TEXT_SPACE_COEFF;
                     float xAdvance = previousCharPos != -1 ? text.Get(previousCharPos).GetXAdvance() : 0;
                     if (xAdvance != 0) {
-                        xAdvance = ScaleXAdvance(xAdvance, fontSize, hScale) / TEXT_SPACE_COEFF;
+                        xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
                     }
                     if ((nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition) > layoutBox
                         .GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
@@ -274,8 +280,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartFullWidth += glyphWidth + xAdvance;
                     nonBreakablePartMaxAscender = Math.Max(nonBreakablePartMaxAscender, ascender);
                     nonBreakablePartMaxDescender = Math.Min(nonBreakablePartMaxDescender, descender);
-                    nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize / TEXT_SPACE_COEFF
-                         + textRise;
+                    nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
+                        () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
                     if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
                         if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX))) {
@@ -339,7 +345,7 @@ namespace iText.Layout.Renderer {
                                         String pre = hyph.GetPreHyphenText(i);
                                         String pos = hyph.GetPostHyphenText(i);
                                         float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(pre + hyphenationConfig.
-                                            GetHyphenSymbol()), fontSize, hScale, characterSpacing, wordSpacing);
+                                            GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing, wordSpacing);
                                         if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
                                             <= layoutBox.GetWidth()) {
                                             hyphenationApplied = true;
@@ -392,9 +398,10 @@ namespace iText.Layout.Renderer {
                                 // process empty line (e.g. '\n')
                                 currentLineAscender = ascender;
                                 currentLineDescender = descender;
-                                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize / TEXT_SPACE_COEFF + textRise;
-                                currentLineWidth += GetCharWidth(line.Get(line.start), fontSize, hScale, characterSpacing, wordSpacing) / 
-                                    TEXT_SPACE_COEFF;
+                                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
+                                    + textRise;
+                                currentLineWidth += GetCharWidth(line.Get(line.start), fontSize.GetValue(), hScale, characterSpacing, wordSpacing
+                                    ) / TEXT_SPACE_COEFF;
                             }
                         }
                         if (line.end <= line.start) {
@@ -422,7 +429,7 @@ namespace iText.Layout.Renderer {
                     isPlacingForcedWhileNothing = true;
                 }
             }
-            yLineOffset = currentLineAscender * fontSize / TEXT_SPACE_COEFF;
+            yLineOffset = currentLineAscender * fontSize.GetValue() / TEXT_SPACE_COEFF;
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));
@@ -575,7 +582,12 @@ namespace iText.Layout.Renderer {
             }
             float leftBBoxX = occupiedArea.GetBBox().GetX();
             if (line.end > line.start || savedWordBreakAtLineEnding != null) {
-                float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
+                UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+                if (!fontSize.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .FONT_SIZE));
+                }
                 TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
                 float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
@@ -588,7 +600,7 @@ namespace iText.Layout.Renderer {
                 float? strokeWidth = null;
                 if (boldSimulation) {
                     textRenderingMode = PdfCanvasConstants.TextRenderingMode.FILL_STROKE;
-                    strokeWidth = fontSize / 30;
+                    strokeWidth = fontSize.GetValue() / 30;
                 }
                 PdfCanvas canvas = drawContext.GetCanvas();
                 if (isTagged) {
@@ -600,7 +612,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 BeginElementOpacityApplying(drawContext);
-                canvas.SaveState().BeginText().SetFontAndSize(font, fontSize);
+                canvas.SaveState().BeginText().SetFontAndSize(font, fontSize.GetValue());
                 if (skew != null && skew.Length == 2) {
                     canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
                 }
@@ -651,7 +663,7 @@ namespace iText.Layout.Renderer {
                         for (int gInd = line.start; gInd < line.end; gInd++) {
                             if (TextUtil.IsUni0020(line.Get(gInd))) {
                                 short advance = (short)(iText.Layout.Renderer.TextRenderer.TEXT_SPACE_COEFF * (float)wordSpacing / fontSize
-                                    );
+                                    .GetValue());
                                 Glyph copy = new Glyph(line.Get(gInd));
                                 copy.SetXAdvance(advance);
                                 line.Set(gInd, copy);
@@ -665,7 +677,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_702();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_711();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -701,15 +713,15 @@ namespace iText.Layout.Renderer {
                 if (underlines is IList) {
                     foreach (Object underline in (IList)underlines) {
                         if (underline is Underline) {
-                            DrawSingleUnderline((Underline)underline, fontColor, canvas, fontSize, italicSimulation ? ITALIC_ANGLE : 0
-                                );
+                            DrawSingleUnderline((Underline)underline, fontColor, canvas, fontSize.GetValue(), italicSimulation ? ITALIC_ANGLE
+                                 : 0);
                         }
                     }
                 }
                 else {
                     if (underlines is Underline) {
-                        DrawSingleUnderline((Underline)underlines, fontColor, canvas, fontSize, italicSimulation ? ITALIC_ANGLE : 
-                            0);
+                        DrawSingleUnderline((Underline)underlines, fontColor, canvas, fontSize.GetValue(), italicSimulation ? ITALIC_ANGLE
+                             : 0);
                     }
                 }
                 if (isTagged) {
@@ -730,8 +742,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_702 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_702() {
+        private sealed class _IGlyphLineFilter_711 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_711() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -784,7 +796,12 @@ namespace iText.Layout.Renderer {
             if (line.end <= 0) {
                 return trimmedSpace;
             }
-            float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
+            UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (!fontSize.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .FONT_SIZE));
+            }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
             float hScale = (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
@@ -795,9 +812,10 @@ namespace iText.Layout.Renderer {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
-                float currentCharWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
+                float currentCharWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing
+                    ) / TEXT_SPACE_COEFF;
                 float xAdvance = firstNonSpaceCharIndex > line.start ? ScaleXAdvance(line.Get(firstNonSpaceCharIndex - 1).
-                    GetXAdvance(), fontSize, hScale) / TEXT_SPACE_COEFF : 0;
+                    GetXAdvance(), fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF : 0;
                 trimmedSpace += currentCharWidth - xAdvance;
                 occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - currentCharWidth);
                 firstNonSpaceCharIndex--;
@@ -1062,9 +1080,15 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float CalculateLineWidth() {
-            return GetGlyphLineWidth(line, (float)this.GetPropertyAsFloat(Property.FONT_SIZE), (float)this.GetPropertyAsFloat
-                (Property.HORIZONTAL_SCALING, 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat
-                (Property.WORD_SPACING));
+            UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (!fontSize.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .FONT_SIZE));
+            }
+            return GetGlyphLineWidth(line, fontSize.GetValue(), (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING
+                , 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat(Property.WORD_SPACING
+                ));
         }
 
         /// <summary>

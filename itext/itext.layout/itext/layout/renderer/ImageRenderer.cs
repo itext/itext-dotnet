@@ -248,10 +248,20 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
-            float leftMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
-            float topMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_TOP);
-            if (leftMargin != 0 || topMargin != 0) {
-                TranslateImage(leftMargin, topMargin, t);
+            UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+            if (!leftMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
+            if (!topMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_TOP));
+            }
+            if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
+                TranslateImage(leftMargin.GetValue(), topMargin.GetValue(), t);
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -384,7 +394,7 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
-        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
             return rect;
         }
 

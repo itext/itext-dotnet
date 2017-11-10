@@ -221,8 +221,8 @@ namespace iText.Layout {
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             link.SetBorder(new SolidBorder(ColorConstants.BLUE, 20));
-            link.SetProperty(Property.MARGIN_LEFT, 50);
-            link.SetProperty(Property.MARGIN_RIGHT, 50);
+            link.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(50));
+            link.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(50));
             doc.Add(new Paragraph(link).SetBorder(new SolidBorder(10)));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

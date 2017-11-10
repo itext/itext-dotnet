@@ -215,7 +215,7 @@ namespace iText.Layout.Element {
                 case Property.PADDING_LEFT:
                 case Property.PADDING_RIGHT:
                 case Property.PADDING_TOP: {
-                    return (T1)(Object)2f;
+                    return (T1)(Object)UnitValue.CreatePointValue(2f);
                 }
 
                 default: {

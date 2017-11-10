@@ -216,7 +216,8 @@ namespace iText.Layout.Renderer {
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject);
             Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
-            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidth(UnitValue.CreatePercentValue
+                (50));
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 ();
@@ -243,8 +244,8 @@ namespace iText.Layout.Renderer {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject).SetRotationAngle(Math.PI * 3
                  / 8);
             Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
-            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50).SetRotationAngle
-                (Math.PI * 3 / 8);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidth(UnitValue.CreatePercentValue
+                (50)).SetRotationAngle(Math.PI * 3 / 8);
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 ();

@@ -173,7 +173,7 @@ namespace iText.Layout {
                     }
 
                     case Property.FONT_SIZE: {
-                        return (T1)(Object)12;
+                        return (T1)(Object)UnitValue.CreatePointValue(12);
                     }
 
                     case Property.TEXT_RENDERING_MODE: {

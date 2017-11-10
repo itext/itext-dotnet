@@ -241,7 +241,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.Add(new Paragraph("ROWS SHOULD BE THE SAME"));
             Table table = new Table(new float[] { 1, 3 });
-            table.SetWidthPercent(50);
+            table.SetWidth(UnitValue.CreatePercentValue(50));
             Cell cell;
             // row 21, cell 1
             cell = new Cell().Add(new Paragraph("BORDERS"));
@@ -563,7 +563,7 @@ namespace iText.Layout {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 3 }));
-            table.SetWidthPercent(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
+            table.SetWidth(UnitValue.CreatePercentValue(50)).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add(new Paragraph("1ORD"));
@@ -1407,7 +1407,7 @@ namespace iText.Layout {
             fileName = "bordersWithSpansTest01.pdf";
             Document doc = CreateDocument();
             Table table = new Table(UnitValue.CreatePercentArray(10)).UseAllAvailableWidth();
-            table.SetWidthPercent(100);
+            table.SetWidth(UnitValue.CreatePercentValue(100));
             table.AddCell(new Cell(1, 3).Add(new Paragraph(1 + "_" + 3 + "_")));
             table.AddCell(new Cell(1, 7).Add(new Paragraph(1 + "_" + 7 + "_")));
             table.AddCell(new Cell(6, 1).Add(new Paragraph(6 + "_" + 1 + "_")));

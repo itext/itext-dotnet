@@ -101,91 +101,13 @@ namespace iText.Layout {
                 case Property.PADDING_RIGHT:
                 case Property.PADDING_BOTTOM:
                 case Property.PADDING_LEFT: {
-                    return (T1)(Object)0f;
+                    return (T1)(Object)UnitValue.CreatePointValue(0f);
                 }
 
                 default: {
                     return (T1)(Object)null;
                 }
             }
-        }
-
-        /// <summary>Gets the width property of the Element.</summary>
-        /// <returns>the width of the element, with a value and a measurement unit.</returns>
-        /// <seealso cref="iText.Layout.Properties.UnitValue"/>
-        public virtual UnitValue GetWidth() {
-            return (UnitValue)this.GetProperty<UnitValue>(Property.WIDTH);
-        }
-
-        /// <summary>Sets the width property of the Element, measured in points.</summary>
-        /// <param name="width">a value measured in points.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidth(float width) {
-            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
-            return (T)(Object)this;
-        }
-
-        /// <summary>Sets the width property of the Element, measured in percentage.</summary>
-        /// <param name="widthPercent">a value measured in percentage.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidthPercent(float widthPercent) {
-            SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
-            return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// Sets the width property of the Element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
-        /// </summary>
-        /// <param name="width">
-        /// a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// object
-        /// </param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidth(UnitValue width) {
-            SetProperty(Property.WIDTH, width);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Gets the height property of the Element.</summary>
-        /// <returns>the height of the element, as a floating point value. Null if the property is not present</returns>
-        public virtual float? GetHeight() {
-            return this.GetProperty<UnitValue>(Property.HEIGHT).GetValue();
-        }
-
-        /// <summary>Sets the height property of the Element as a point-value.</summary>
-        /// <param name="height">a floating point value for the new height</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeight(float height) {
-            UnitValue heightAsUV = UnitValue.CreatePointValue(height);
-            SetProperty(Property.HEIGHT, heightAsUV);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Sets the height property of the Element, measured in percentage.</summary>
-        /// <param name="heightPercent">a value measured in percentage.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeightPercent(float heightPercent) {
-            SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(heightPercent));
-            return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// Sets the width property of the Element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
-        /// </summary>
-        /// <param name="height">
-        /// a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// object
-        /// </param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeight(UnitValue height) {
-            SetProperty(Property.HEIGHT, height);
-            return (T)(Object)this;
         }
 
         /// <summary>Sets values for a relative repositioning of the Element.</summary>
@@ -373,11 +295,12 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the font size of this Element.</summary>
+        /// <summary>Sets the font size of this Element, measured in points.</summary>
         /// <param name="fontSize">a floating point value</param>
         /// <returns>this Element.</returns>
         public virtual T SetFontSize(float fontSize) {
-            SetProperty(Property.FONT_SIZE, fontSize);
+            UnitValue fontSizeAsUV = UnitValue.CreatePointValue(fontSize);
+            SetProperty(Property.FONT_SIZE, fontSizeAsUV);
             return (T)(Object)this;
         }
 

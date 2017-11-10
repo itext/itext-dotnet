@@ -138,7 +138,7 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal override Rectangle ApplyMargins(Rectangle rect, float[] margins, bool reverse) {
+        protected internal override Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
             // Do nothing here. Margins shouldn't be processed on cells.
             return rect;
         }

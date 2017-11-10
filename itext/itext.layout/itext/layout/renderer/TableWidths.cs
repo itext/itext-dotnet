@@ -839,8 +839,18 @@ namespace iText.Layout.Renderer {
                             if (borders[3] != null) {
                                 widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
                             }
-                            float[] paddings = cell.GetPaddings();
-                            widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
+                            UnitValue[] paddings = cell.GetPaddings();
+                            if (!paddings[1].IsPointValue()) {
+                                ILog logger = LogManager.GetLogger(typeof(TableWidths));
+                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                    .PADDING_LEFT));
+                            }
+                            if (!paddings[3].IsPointValue()) {
+                                ILog logger = LogManager.GetLogger(typeof(TableWidths));
+                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                    .PADDING_RIGHT));
+                            }
+                            widthValue.SetValue(widthValue.GetValue() + paddings[1].GetValue() + paddings[3].GetValue());
                         }
                         return widthValue;
                     }

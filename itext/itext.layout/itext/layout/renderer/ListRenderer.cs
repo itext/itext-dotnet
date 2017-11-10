@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Font;
@@ -214,7 +215,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_202(constantFont, textElement);
+                            textRenderer = new _TextRenderer_207(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -243,8 +244,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_202 : TextRenderer {
-            public _TextRenderer_202(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_207 : TextRenderer {
+            public _TextRenderer_207(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -332,7 +333,7 @@ namespace iText.Layout.Renderer {
                 newOverflowRenderer.GetChildRenderers()[0].GetChildRenderers().AddAll(childrenStillRemainingToRender);
                 splitRenderer.GetChildRenderers()[0].GetChildRenderers().RemoveAll(childrenStillRemainingToRender);
                 newOverflowRenderer.GetChildRenderers()[0].SetProperty(Property.MARGIN_LEFT, splitRenderer.GetChildRenderers
-                    ()[0].GetProperty<float?>(Property.MARGIN_LEFT));
+                    ()[0].GetProperty<UnitValue>(Property.MARGIN_LEFT));
             }
             else {
                 newOverflowRenderer.childRenderers.JRemoveAt(0);
@@ -398,12 +399,18 @@ namespace iText.Layout.Renderer {
                 foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.SetParent(this);
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
+                    UnitValue marginLeftUV = childRenderer.GetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0f));
+                    if (!marginLeftUV.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .MARGIN_LEFT));
+                    }
+                    float calculatedMargin = marginLeftUV.GetValue();
                     if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, this, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
                         .DEFAULT) {
                         calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
-                    childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
+                    childRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(calculatedMargin));
                     IRenderer symbolRenderer = symbolRenderers[listItemNum++];
                     ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
                 }

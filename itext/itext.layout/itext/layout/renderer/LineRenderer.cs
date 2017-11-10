@@ -594,8 +594,18 @@ namespace iText.Layout.Renderer {
                             float currentWidth;
                             if (child is TextRenderer) {
                                 currentWidth = ((TextRenderer)child).CalculateLineWidth();
-                                float[] margins = ((TextRenderer)child).GetMargins();
-                                currentWidth += margins[1] + margins[3];
+                                UnitValue[] margins = ((TextRenderer)child).GetMargins();
+                                if (!margins[1].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .MARGIN_RIGHT));
+                                }
+                                if (!margins[3].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .MARGIN_LEFT));
+                                }
+                                currentWidth += margins[1].GetValue() + margins[3].GetValue();
                                 ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             }
                             else {
@@ -853,15 +863,20 @@ namespace iText.Layout.Renderer {
                 }
 
                 case Leading.MULTIPLIED: {
-                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
+                    if (!fontSize.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .FONT_SIZE));
+                    }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
                     // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
                     // between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent)
-                         != 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
+                         != 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent
-                        ) != 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                        ) != 0 && !ContainsImage() ? -fontSize.GetValue() * 0.2f : maxTextDescent;
                     return Math.Max(textAscent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, maxBlockAscent) 
                         - maxAscent;
                 }
@@ -880,13 +895,20 @@ namespace iText.Layout.Renderer {
                 }
 
                 case Leading.MULTIPLIED: {
-                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
+                    if (!fontSize.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .FONT_SIZE));
+                    }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
                     // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
                     // between the two possible scenarios in HTML.
-                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
-                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f
+                         : maxTextAscent;
+                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize.GetValue() *
+                         0.2f : maxTextDescent;
                     return Math.Max(-textDescent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, -maxBlockDescent
                         ) + maxDescent;
                 }

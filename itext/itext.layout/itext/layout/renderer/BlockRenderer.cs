@@ -99,7 +99,7 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             Border[] borders = GetBorders();
-            float[] paddings = GetPaddings();
+            UnitValue[] paddings = GetPaddings();
             ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             float? blockMaxHeight = RetrieveMaxHeight();
@@ -770,7 +770,7 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
+        protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, UnitValue
             [] paddings) {
             float parentWidth = parentBBox.GetWidth();
             ApplyMargins(parentBBox, false);

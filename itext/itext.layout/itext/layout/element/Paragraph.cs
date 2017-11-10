@@ -194,7 +194,7 @@ namespace iText.Layout.Element {
 
                 case Property.MARGIN_TOP:
                 case Property.MARGIN_BOTTOM: {
-                    return (T1)(Object)4f;
+                    return (T1)(Object)UnitValue.CreatePointValue(4f);
                 }
 
                 case Property.TAB_DEFAULT: {

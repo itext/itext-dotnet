@@ -251,7 +251,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc, new PageSize(500, 300));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetWidthPercent(100);
+            image.SetWidth(UnitValue.CreatePercentValue(100));
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -528,12 +528,11 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
             Table table = new Table(UnitValue.CreatePercentArray(8)).UseAllAvailableWidth();
-            table.SetWidthPercent(100);
             for (int k = 0; k < rowCount; k++) {
                 for (int j = 0; j < 7; j++) {
                     table.AddCell("Hello");
                 }
-                Cell c = new Cell().Add(img.SetWidthPercent(50));
+                Cell c = new Cell().Add(img.SetWidth(UnitValue.CreatePercentValue(50)));
                 table.AddCell(c);
             }
             document.Add(table);
@@ -566,7 +565,6 @@ namespace iText.Layout {
                 ));
             img.SetAutoScale(true);
             Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
-            table.SetWidthPercent(100);
             for (int k = 0; k < 5; k++) {
                 table.AddCell("Hello World from iText7");
                 List list = new List().SetListSymbol("-> ");

@@ -129,7 +129,13 @@ namespace iText.Layout.Renderer {
                     float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                     x -= symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent);
                     if (symbolPosition == ListSymbolPosition.OUTSIDE) {
-                        x += (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
+                        UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+                        if (!marginLeftUV.IsPointValue()) {
+                            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                .MARGIN_LEFT));
+                        }
+                        x += marginLeftUV.GetValue();
                     }
                 }
                 ApplyMargins(occupiedArea.GetBBox(), false);
@@ -209,7 +215,7 @@ namespace iText.Layout.Renderer {
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            splitRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
+            splitRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<UnitValue>(Property.MARGIN_LEFT));
             return splitRenderer;
         }
 
@@ -223,7 +229,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
+            overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<UnitValue>(Property.MARGIN_LEFT));
             return overflowRenderer;
         }
 
@@ -236,7 +242,7 @@ namespace iText.Layout.Renderer {
                         ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                         if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                         }
                         paragraphRenderer.childRenderers.Add(0, symbolRenderer);
                         symbolAddedInside = true;
@@ -246,7 +252,7 @@ namespace iText.Layout.Renderer {
                             IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
                             float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                             if (symbolIndent != null) {
-                                symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                                symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                             }
                             paragraphRenderer.AddChild(symbolRenderer);
                             paragraphRenderer.AddChild(childRenderers[0]);
@@ -258,7 +264,7 @@ namespace iText.Layout.Renderer {
                         IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                         if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                         }
                         paragraphRenderer.AddChild(symbolRenderer);
                         childRenderers.Add(0, paragraphRenderer);
@@ -275,11 +281,16 @@ namespace iText.Layout.Renderer {
 
         private float[] CalculateAscenderDescender() {
             PdfFont listItemFont = ResolveFirstPdfFont();
-            float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
+            UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
+                if (!fontSize.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .FONT_SIZE));
+                }
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
-                return new float[] { (float)fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, (float)fontSize
-                     * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
+                return new float[] { fontSize.GetValue() * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize.
+                    GetValue() * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
             }
             return new float[] { 0, 0 };
         }

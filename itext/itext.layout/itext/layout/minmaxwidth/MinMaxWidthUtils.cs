@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -93,18 +95,38 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public static float GetMarginsWidth(IPropertyContainer element) {
-            float? rightMargin = element.GetProperty<float?>(Property.MARGIN_RIGHT);
-            float? leftMargin = element.GetProperty<float?>(Property.MARGIN_LEFT);
-            float rightMarginWidth = rightMargin != null ? (float)rightMargin : 0;
-            float leftMarginWidth = leftMargin != null ? (float)leftMargin : 0;
+            UnitValue rightMargin = element.GetProperty<UnitValue>(Property.MARGIN_RIGHT);
+            if (null != rightMargin && !rightMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(MinMaxWidthUtils));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_RIGHT));
+            }
+            UnitValue leftMargin = element.GetProperty<UnitValue>(Property.MARGIN_LEFT);
+            if (null != leftMargin && !leftMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(MinMaxWidthUtils));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            float rightMarginWidth = rightMargin != null ? rightMargin.GetValue() : 0;
+            float leftMarginWidth = leftMargin != null ? leftMargin.GetValue() : 0;
             return rightMarginWidth + leftMarginWidth;
         }
 
         public static float GetPaddingWidth(IPropertyContainer element) {
-            float? rightPadding = element.GetProperty<float?>(Property.PADDING_RIGHT);
-            float? leftPadding = element.GetProperty<float?>(Property.PADDING_LEFT);
-            float rightPaddingWidth = rightPadding != null ? (float)rightPadding : 0;
-            float leftPaddingWidth = leftPadding != null ? (float)leftPadding : 0;
+            UnitValue rightPadding = element.GetProperty<UnitValue>(Property.PADDING_RIGHT);
+            if (null != rightPadding && !rightPadding.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(MinMaxWidthUtils));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_RIGHT));
+            }
+            UnitValue leftPadding = element.GetProperty<UnitValue>(Property.PADDING_LEFT);
+            if (null != leftPadding && !leftPadding.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(MinMaxWidthUtils));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_LEFT));
+            }
+            float rightPaddingWidth = rightPadding != null ? rightPadding.GetValue() : 0;
+            float leftPaddingWidth = leftPadding != null ? leftPadding.GetValue() : 0;
             return rightPaddingWidth + leftPaddingWidth;
         }
     }

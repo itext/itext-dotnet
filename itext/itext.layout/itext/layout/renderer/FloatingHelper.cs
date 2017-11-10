@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
@@ -130,9 +132,19 @@ namespace iText.Layout.Renderer {
         internal static void AdjustFloatedTableLayoutBox(TableRenderer tableRenderer, Rectangle layoutBox, float tableWidth
             , IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
             tableRenderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
-            float[] margins = tableRenderer.GetMargins();
-            AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1] + margins[
-                3], FloatPropertyValue.LEFT.Equals(floatPropertyValue));
+            UnitValue[] margins = tableRenderer.GetMargins();
+            if (!margins[1].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.FloatingHelper));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_RIGHT));
+            }
+            if (!margins[3].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.FloatingHelper));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1].GetValue()
+                 + margins[3].GetValue(), FloatPropertyValue.LEFT.Equals(floatPropertyValue));
         }
 
         internal static float? AdjustFloatedBlockLayoutBox(AbstractRenderer renderer, Rectangle parentBBox, float?

@@ -140,7 +140,7 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
             // Do nothing here. Tables don't have padding.
             return rect;
         }
@@ -182,10 +182,10 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             Table tableModel = (Table)GetModelElement();
             if (!tableModel.IsComplete()) {
-                SetProperty(Property.MARGIN_BOTTOM, 0);
+                SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0f));
             }
             if (rowRange.GetStartRow() != 0) {
-                SetProperty(Property.MARGIN_TOP, 0);
+                SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0f));
             }
             // we can invoke #layout() twice (processing KEEP_TOGETHER for instance)
             // so we need to clear the results of previous #layout() invocation
@@ -218,8 +218,18 @@ namespace iText.Layout.Renderer {
                 CorrectRowRange();
             }
             if (IsOriginalRenderer()) {
-                float[] margins = GetMargins();
-                CalculateColumnWidths(layoutBox.GetWidth() - margins[1] - margins[3]);
+                UnitValue[] margins = GetMargins();
+                if (!margins[1].IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_RIGHT));
+                }
+                if (!margins[3].IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue());
             }
             float tableWidth = GetTableWidth();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -464,10 +474,10 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.rows = rows.SubList(row, rows.Count);
                                     overflowRenderer.SetProperty(Property.IGNORE_HEADER, true);
                                     overflowRenderer.SetProperty(Property.IGNORE_FOOTER, true);
-                                    overflowRenderer.SetProperty(Property.MARGIN_TOP, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_LEFT, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(0));
                                     // we've already applied the top table border on header
                                     if (null != headerRenderer) {
                                         overflowRenderer.SetProperty(Property.BORDER_TOP, Border.NO_BORDER);
@@ -1191,8 +1201,20 @@ namespace iText.Layout.Renderer {
             foreach (float column in columns) {
                 maxColTotalWidth += column;
             }
-            float additionalWidth = (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT) + (float)this.GetPropertyAsFloat
-                (Property.MARGIN_LEFT) + rightMaxBorder / 2 + leftMaxBorder / 2;
+            UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
+            if (!marginRightUV.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_RIGHT));
+            }
+            UnitValue marginLefttUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+            if (!marginLefttUV.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
+                 / 2;
             return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
         }
 
@@ -1258,12 +1280,22 @@ namespace iText.Layout.Renderer {
                 startY -= topBorderMaxWidth / 2;
             }
             if (HasProperty(Property.MARGIN_TOP)) {
-                float? topMargin = this.GetPropertyAsFloat(Property.MARGIN_TOP);
-                startY -= null == topMargin ? 0 : (float)topMargin;
+                UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
+                if (null != topMargin && !topMargin.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                startY -= null == topMargin ? 0 : topMargin.GetValue();
             }
             if (HasProperty(Property.MARGIN_LEFT)) {
-                float? leftMargin = this.GetPropertyAsFloat(Property.MARGIN_LEFT);
-                startX += +(null == leftMargin ? 0 : (float)leftMargin);
+                UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+                if (null != leftMargin && !leftMargin.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
             }
             // process halves of the borders here
             if (childRenderers.Count == 0) {

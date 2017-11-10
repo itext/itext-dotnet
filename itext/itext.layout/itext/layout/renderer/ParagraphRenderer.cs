@@ -127,7 +127,7 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             Border[] borders = GetBorders();
-            float[] paddings = GetPaddings();
+            UnitValue[] paddings = GetPaddings();
             float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
@@ -433,7 +433,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override T1 GetDefaultProperty<T1>(int property) {
             if ((property == Property.MARGIN_TOP || property == Property.MARGIN_BOTTOM) && parent is CellRenderer) {
-                return (T1)(Object)0f;
+                return (T1)(Object)UnitValue.CreatePointValue(0f);
             }
             return base.GetDefaultProperty<T1>(property);
         }

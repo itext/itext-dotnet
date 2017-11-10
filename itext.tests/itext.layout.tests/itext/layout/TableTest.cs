@@ -1509,7 +1509,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1.3f, 1f, 1f, 1f, 1f, 1f, 1f }));
-            table.SetWidthPercent(100f).SetFixedLayout();
+            table.SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             for (int i = 1; i <= 7 * 100; i++) {
                 Cell cell = new Cell().SetKeepTogether(true).SetMinHeight(45).Add(new Paragraph("" + i));
                 table.AddCell(cell);
@@ -2078,7 +2078,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 2, 1, 1 }));
-            table.SetWidthPercent(80);
+            table.SetWidth(UnitValue.CreatePercentValue(80));
             table.SetHorizontalAlignment(HorizontalAlignment.CENTER);
             table.AddCell(new Cell(1, 3).Add(new Paragraph("Cell with colspan 3")));
             table.AddCell(new Cell(2, 1).Add(new Paragraph("Cell with rowspan 2")));
