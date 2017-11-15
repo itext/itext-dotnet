@@ -1934,22 +1934,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Gets the last registered
-        /// <see cref="iText.Kernel.Log.Counter"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Log.Counter"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.1 use GetCounters() instead.")]
-        protected internal virtual Counter GetCounter() {
-            IList<Counter> counters = CounterFactory.GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
-            return counters.IsEmpty() ? null : counters[counters.Count - 1];
-        }
-
-        /// <summary>
         /// Gets all
         /// <see cref="iText.Kernel.Log.Counter"/>
         /// instances.

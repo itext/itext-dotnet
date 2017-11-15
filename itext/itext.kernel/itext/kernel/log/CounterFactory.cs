@@ -76,13 +76,7 @@ namespace iText.Kernel.Log {
             return instance;
         }
 
-        /// <summary>Returns a last registered counter for specific class.</summary>
-        [System.ObsoleteAttribute(@"will be removed in 7.1, work with GetCounters(System.Type{T}) instead")]
-        public static Counter GetCounter(Type cls) {
-            IList<Counter> counters = GetCounters(cls);
-            return counters.IsEmpty() ? null : counters[counters.Count - 1];
-        }
-
+        /// <summary>Returns a list of registered counters for specific class.</summary>
         public static IList<Counter> GetCounters(Type cls) {
             List<Counter> result = new List<Counter>();
             foreach (Counter counter in GetInstance().counters) {
@@ -92,19 +86,6 @@ namespace iText.Kernel.Log {
                 }
             }
             return result;
-        }
-
-        /// <summary>Return last registered counter.</summary>
-        [System.ObsoleteAttribute(@"By design counter should be configured before registration, so this method will be removed in 7.1."
-            )]
-        public virtual Counter GetCounter() {
-            return counters.IsEmpty() ? null : counters[counters.Count - 1];
-        }
-
-        /// <summary>Register new counter.</summary>
-        [System.ObsoleteAttribute(@"use RegisterCounter(Counter) instead. Will be removed in 7.1.")]
-        public virtual void SetCounter(Counter counter) {
-            RegisterCounter(counter);
         }
 
         /// <summary>Register new counter.</summary>
