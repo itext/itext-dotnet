@@ -73,8 +73,8 @@ namespace iText.Kernel.Log {
         /// <summary>The singleton instance.</summary>
         private static iText.Kernel.Log.CounterManager instance = new iText.Kernel.Log.CounterManager();
 
-        /// <summary>List of all registered factories.</summary>
-        private IList<ICounterFactory> factories = new List<ICounterFactory>();
+        /// <summary>All registered factories.</summary>
+        private ICollection<ICounterFactory> factories = new HashSet<ICounterFactory>();
 
         private CounterManager() {
             Register(new SimpleCounterFactory(new DefaultCounter()));
@@ -100,7 +100,7 @@ namespace iText.Kernel.Log {
         /// <summary>
         /// Register new
         /// <see cref="ICounterFactory"/>
-        /// .
+        /// . Does nothing if same factory was already registered.
         /// </summary>
         /// <param name="factory">
         /// 
@@ -111,6 +111,28 @@ namespace iText.Kernel.Log {
             if (factory != null) {
                 factories.Add(factory);
             }
+        }
+
+        /// <summary>
+        /// Unregister specified
+        /// <see cref="ICounterFactory"/>
+        /// . Does nothing if this factory wasn't registered first.
+        /// </summary>
+        /// <param name="factory">
+        /// 
+        /// <see cref="ICounterFactory"/>
+        /// to be unregistered
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if specified factory was registered first
+        /// </returns>
+        public virtual bool Unregister(ICounterFactory factory) {
+            if (factory != null) {
+                return factories.Remove(factory);
+            }
+            return false;
         }
     }
 }
