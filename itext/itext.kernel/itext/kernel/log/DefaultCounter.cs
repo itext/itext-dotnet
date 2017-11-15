@@ -46,8 +46,8 @@ using Common.Logging;
 using iText.IO.Codec;
 
 namespace iText.Kernel.Log {
-    /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
-    public class DefaultCounter : Counter {
+    /// <summary>Default implementation of the ICounter interface that essentially doesn't do anything.</summary>
+    public class DefaultCounter : ICounter {
         private volatile int count = 0;
 
         private int level = 0;
@@ -75,10 +75,6 @@ namespace iText.Kernel.Log {
              + "HRTaGFycA0KYW5kIHdlJ2xsIGV4cGxhaW4gaG93IHRvIHJlbW92ZSB0aGlzIG1lc3" + "NhZ2UgZnJvbSB5b3VyIGVycm9yIGxvZ3MuDQoNCklmIHRoaXMgd2Fzbid0IHlvdXI"
              + "gaW50ZW50aW9uLCBwbGVhc2UgY29udGFjdCB1cyBieSBmaWxsaW5nIG91dCB0aGlz" + "IGZvcm06IGh0dHA6Ly9pdGV4dHBkZi5jb20vc2FsZXMgb3IgYnkgY29udGFjdGluZ"
              + "yBvdXIgc2FsZXMgZGVwYXJ0bWVudC4=");
-
-        public virtual Counter GetCounter(Type cls) {
-            return this;
-        }
 
         public virtual void OnDocumentRead(long size) {
             PlusOne();

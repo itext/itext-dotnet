@@ -45,26 +45,14 @@ using System;
 
 namespace iText.Kernel.Log {
     /// <summary>
-    /// Interface that can be implemented if you want to count the number of documents
-    /// that are being processed by iText.
+    /// <see cref="ICounterFactory"/>
+    /// implementation that creates new
+    /// <see cref="SystemOutCounter"/>
+    /// on each call
     /// </summary>
-    /// <remarks>
-    /// Interface that can be implemented if you want to count the number of documents
-    /// that are being processed by iText.
-    /// <p>
-    /// Implementers may use this method to record actual system usage for licensing purposes
-    /// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
-    /// </remarks>
-    public interface Counter {
-        /// <summary>Gets a Counter instance for a specific class.</summary>
-        Counter GetCounter(Type cls);
-
-        /// <summary>This method gets triggered if a document is read.</summary>
-        /// <param name="size">the length of the document that was read</param>
-        void OnDocumentRead(long size);
-
-        /// <summary>This method gets triggered if a document is written.</summary>
-        /// <param name="size">the length of the document that was written</param>
-        void OnDocumentWritten(long size);
+    public class SystemOutCounterFactory : ICounterFactory {
+        public virtual ICounter GetCounter(Type cls) {
+            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
+        }
     }
 }

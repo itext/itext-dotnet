@@ -42,40 +42,21 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
 
 namespace iText.Kernel.Log {
     /// <summary>
-    /// A
-    /// <see cref="ICounter"/>
-    /// implementation that outputs information about read and written documents to
-    /// <see cref="System.Console.Out"/>
+    /// <see cref="ICounterFactory"/>
+    /// implementation that always returns counter instance passed to it in constructor
     /// </summary>
-    public class SystemOutCounter : ICounter {
-        /// <summary>
-        /// The name of the class for which the ICounter was created
-        /// (or iText if no name is available)
-        /// </summary>
-        protected internal String name;
+    public class SimpleCounterFactory : ICounterFactory {
+        private ICounter counter;
 
-        public SystemOutCounter(String name) {
-            this.name = name;
+        public SimpleCounterFactory(ICounter counter) {
+            this.counter = counter;
         }
 
-        public SystemOutCounter()
-            : this("iText") {
-        }
-
-        public SystemOutCounter(Type cls)
-            : this(cls.FullName) {
-        }
-
-        public virtual void OnDocumentRead(long size) {
-            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes read", name, size));
-        }
-
-        public virtual void OnDocumentWritten(long size) {
-            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes written", name, size));
+        public virtual ICounter GetCounter(Type cls) {
+            return counter;
         }
     }
 }

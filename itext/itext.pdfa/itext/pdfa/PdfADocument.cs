@@ -347,8 +347,8 @@ namespace iText.Pdfa {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
-        protected override IList<Counter> GetCounters() {
-            return CounterFactory.GetCounters(typeof(iText.Pdfa.PdfADocument));
+        protected override IList<ICounter> GetCounters() {
+            return CounterManager.GetInstance().GetCounters(typeof(iText.Pdfa.PdfADocument));
         }
 
         private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {

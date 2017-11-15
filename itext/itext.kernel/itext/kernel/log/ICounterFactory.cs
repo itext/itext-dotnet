@@ -42,40 +42,28 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
 
 namespace iText.Kernel.Log {
     /// <summary>
-    /// A
-    /// <see cref="ICounter"/>
-    /// implementation that outputs information about read and written documents to
+    /// Factory that can be registered in
+    /// <see cref="CounterManager"/>
+    /// and creates a counter for every reader or writer class.
+    /// <br/>
+    /// You can implement your own counter factory and register it like this:
+    /// <code>CounterManager.getInstance().registerCounter(new SystemOutCounterFactory());</code>
+    /// <br/>
+    /// <see cref="SystemOutCounterFactory"/>
+    /// is just an example of
+    /// <see cref="ICounterFactory"/>
+    /// implementation.
+    /// It creates
+    /// <see cref="SystemOutCounter"/>
+    /// that writes info about files being read and written to the
     /// <see cref="System.Console.Out"/>
+    /// <p>
+    /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
-    public class SystemOutCounter : ICounter {
-        /// <summary>
-        /// The name of the class for which the ICounter was created
-        /// (or iText if no name is available)
-        /// </summary>
-        protected internal String name;
-
-        public SystemOutCounter(String name) {
-            this.name = name;
-        }
-
-        public SystemOutCounter()
-            : this("iText") {
-        }
-
-        public SystemOutCounter(Type cls)
-            : this(cls.FullName) {
-        }
-
-        public virtual void OnDocumentRead(long size) {
-            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes read", name, size));
-        }
-
-        public virtual void OnDocumentWritten(long size) {
-            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} bytes written", name, size));
-        }
+    public interface ICounterFactory {
+        ICounter GetCounter(Type cls);
     }
 }

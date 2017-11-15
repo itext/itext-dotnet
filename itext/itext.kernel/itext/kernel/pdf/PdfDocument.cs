@@ -789,7 +789,7 @@ namespace iText.Kernel.Pdf {
                     trailer.Put(PdfName.Info, info.GetPdfObject());
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
-                    foreach (Counter counter in GetCounters()) {
+                    foreach (ICounter counter in GetCounters()) {
                         counter.OnDocumentWritten(writer.GetCurrentPos());
                     }
                 }
@@ -1682,7 +1682,7 @@ namespace iText.Kernel.Pdf {
                 if (reader != null) {
                     reader.pdfDocument = this;
                     reader.ReadPdf();
-                    foreach (Counter counter in GetCounters()) {
+                    foreach (ICounter counter in GetCounters()) {
                         counter.OnDocumentRead(reader.GetFileLength());
                     }
                     pdfVersion = reader.headerPdfVersion;
@@ -1935,16 +1935,16 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets all
-        /// <see cref="iText.Kernel.Log.Counter"/>
+        /// <see cref="iText.Kernel.Log.ICounter"/>
         /// instances.
         /// </summary>
         /// <returns>
         /// list of
-        /// <see cref="iText.Kernel.Log.Counter"/>
+        /// <see cref="iText.Kernel.Log.ICounter"/>
         /// instances.
         /// </returns>
-        protected internal virtual IList<Counter> GetCounters() {
-            return CounterFactory.GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
+        protected internal virtual IList<ICounter> GetCounters() {
+            return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }
 
         private void UpdateProducerInInfoDictionary() {

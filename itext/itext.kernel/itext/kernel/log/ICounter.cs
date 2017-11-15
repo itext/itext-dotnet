@@ -41,56 +41,25 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.Collections.Generic;
-
 namespace iText.Kernel.Log {
-    /// <summary>Factory that creates a counter for every reader or writer class.</summary>
+    /// <summary>
+    /// Interface that can be implemented if you want to count the number of documents
+    /// that are being processed by iText.
+    /// </summary>
     /// <remarks>
-    /// Factory that creates a counter for every reader or writer class.
-    /// You can implement your own counter and declare it like this:
-    /// <code>CounterFactory.getInstance().setCounter(new SysoCounter());</code>
-    /// SysoCounter is just an example of a Counter implementation.
-    /// It writes info about files being read and written to the System.out.
+    /// Interface that can be implemented if you want to count the number of documents
+    /// that are being processed by iText.
     /// <p>
-    /// This functionality can be used to create metrics in a SaaS context.
+    /// Implementers may use this method to record actual system usage for licensing purposes
+    /// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
     /// </remarks>
-    public class CounterFactory {
-        /// <summary>The singleton instance.</summary>
-        private static iText.Kernel.Log.CounterFactory instance;
+    public interface ICounter {
+        /// <summary>This method gets triggered if a document is read.</summary>
+        /// <param name="size">the length of the document that was read</param>
+        void OnDocumentRead(long size);
 
-        /// <summary>The current counter implementation.</summary>
-        private IList<Counter> counters = new List<Counter>();
-
-        static CounterFactory() {
-            instance = new iText.Kernel.Log.CounterFactory();
-        }
-
-        /// <summary>The empty constructor.</summary>
-        private CounterFactory() {
-            RegisterCounter(new DefaultCounter());
-        }
-
-        /// <summary>Returns the singleton instance of the factory.</summary>
-        public static iText.Kernel.Log.CounterFactory GetInstance() {
-            return instance;
-        }
-
-        /// <summary>Returns a list of registered counters for specific class.</summary>
-        public static IList<Counter> GetCounters(Type cls) {
-            List<Counter> result = new List<Counter>();
-            foreach (Counter counter in GetInstance().counters) {
-                Counter counterInstance = counter.GetCounter(cls);
-                if (counterInstance != null) {
-                    result.Add(counterInstance);
-                }
-            }
-            return result;
-        }
-
-        /// <summary>Register new counter.</summary>
-        public virtual void RegisterCounter(Counter counter) {
-            counters.Add(counter);
-        }
+        /// <summary>This method gets triggered if a document is written.</summary>
+        /// <param name="size">the length of the document that was written</param>
+        void OnDocumentWritten(long size);
     }
 }
