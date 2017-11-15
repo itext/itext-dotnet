@@ -165,7 +165,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
-            String baseName = FontProgram.GetBaseName(name);
+            String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);

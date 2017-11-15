@@ -107,7 +107,7 @@ namespace iText.Kernel.Font {
             else {
                 for (int i = from; i <= to; i++) {
                     Glyph glyph = GetGlyph((int)text[i]);
-                    if (glyph != null && (ContainsGlyph(text, i) || IsAppendableGlyph(glyph))) {
+                    if (glyph != null && (ContainsGlyph(glyph.GetUnicode()) || IsAppendableGlyph(glyph))) {
                         glyphs.Add(glyph);
                         processed++;
                     }

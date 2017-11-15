@@ -118,10 +118,6 @@ namespace iText.Kernel.Font {
             return null;
         }
 
-        public override bool ContainsGlyph(String text, int from) {
-            return ContainsGlyph((int)text[from]);
-        }
-
         public override bool ContainsGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {
                 if (fontEncoding.IsFontSpecific()) {

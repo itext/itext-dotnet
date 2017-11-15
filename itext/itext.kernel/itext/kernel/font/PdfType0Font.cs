@@ -217,31 +217,6 @@ namespace iText.Kernel.Font {
             return glyph;
         }
 
-        public override bool ContainsGlyph(String text, int from) {
-            if (cidFontType == CID_FONT_TYPE_0) {
-                if (cmapEncoding.IsDirect()) {
-                    return fontProgram.GetGlyphByCode((int)text[from]) != null;
-                }
-                else {
-                    return ContainsUnicodeGlyph(text, from);
-                }
-            }
-            else {
-                if (cidFontType == CID_FONT_TYPE_2) {
-                    if (fontProgram.IsFontSpecific()) {
-                        byte[] b = PdfEncodings.ConvertToBytes(text[from], "symboltt");
-                        return b.Length > 0 && fontProgram.GetGlyph(b[0] & 0xff) != null;
-                    }
-                    else {
-                        return ContainsUnicodeGlyph(text, from);
-                    }
-                }
-                else {
-                    throw new PdfException("Invalid CID font type: " + cidFontType);
-                }
-            }
-        }
-
         public override bool ContainsGlyph(int unicode) {
             if (cidFontType == CID_FONT_TYPE_0) {
                 if (cmapEncoding.IsDirect()) {

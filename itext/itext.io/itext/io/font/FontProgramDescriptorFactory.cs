@@ -51,7 +51,7 @@ namespace iText.IO.Font {
             if (fontName == null || fontName.Length == 0) {
                 return null;
             }
-            String baseName = FontProgram.GetBaseName(fontName);
+            String baseName = FontProgram.TrimFontStyle(fontName);
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(fontName);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);

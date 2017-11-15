@@ -84,7 +84,10 @@ namespace iText.Layout.Font {
             if (nextUnignorable < text.Length) {
                 foreach (FontInfo f in selector.GetFonts()) {
                     PdfFont currentFont = GetPdfFont(f);
-                    if (currentFont.ContainsGlyph(text, nextUnignorable)) {
+                    int codePoint = IsSurrogatePair(text, nextUnignorable) ? TextUtil.ConvertToUtf32(text, nextUnignorable) : 
+                        (int)text[nextUnignorable];
+                    Glyph glyph = currentFont.GetGlyph(codePoint);
+                    if (null != glyph && 0 != glyph.GetCode()) {
                         font = currentFont;
                         break;
                     }

@@ -157,7 +157,7 @@ namespace iText.IO.Font {
         /// <summary>Gets the name without the modifiers Bold, Italic or BoldItalic.</summary>
         /// <param name="name">the full name of the font</param>
         /// <returns>the name without the modifiers Bold, Italic or BoldItalic</returns>
-        protected internal static String GetBaseName(String name) {
+        internal static String TrimFontStyle(String name) {
             if (name == null) {
                 return null;
             }
