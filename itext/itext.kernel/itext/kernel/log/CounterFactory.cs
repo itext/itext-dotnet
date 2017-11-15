@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 
 namespace iText.Kernel.Log {
     /// <summary>Factory that creates a counter for every reader or writer class.</summary>
@@ -59,7 +60,7 @@ namespace iText.Kernel.Log {
         private static iText.Kernel.Log.CounterFactory instance;
 
         /// <summary>The current counter implementation.</summary>
-        private Counter counter = new DefaultCounter();
+        private IList<Counter> counters = new List<Counter>();
 
         static CounterFactory() {
             instance = new iText.Kernel.Log.CounterFactory();
@@ -67,6 +68,7 @@ namespace iText.Kernel.Log {
 
         /// <summary>The empty constructor.</summary>
         private CounterFactory() {
+            RegisterCounter(new DefaultCounter());
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>
@@ -74,19 +76,40 @@ namespace iText.Kernel.Log {
             return instance;
         }
 
-        /// <summary>Returns a counter factory.</summary>
+        /// <summary>Returns a last registered counter for specific class.</summary>
+        [System.ObsoleteAttribute(@"will be removed in 7.1, work with GetCounters(System.Type{T}) instead")]
         public static Counter GetCounter(Type cls) {
-            return instance.counter.GetCounter(cls);
+            IList<Counter> counters = GetCounters(cls);
+            return counters.IsEmpty() ? null : counters[counters.Count - 1];
         }
 
-        /// <summary>Getter for the counter.</summary>
+        public static IList<Counter> GetCounters(Type cls) {
+            List<Counter> result = new List<Counter>();
+            foreach (Counter counter in GetInstance().counters) {
+                Counter counterInstance = counter.GetCounter(cls);
+                if (counterInstance != null) {
+                    result.Add(counterInstance);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>Return last registered counter.</summary>
+        [System.ObsoleteAttribute(@"By design counter should be configured before registration, so this method will be removed in 7.1."
+            )]
         public virtual Counter GetCounter() {
-            return counter;
+            return counters.IsEmpty() ? null : counters[counters.Count - 1];
         }
 
-        /// <summary>Setter for the counter.</summary>
+        /// <summary>Register new counter.</summary>
+        [System.ObsoleteAttribute(@"use RegisterCounter(Counter) instead. Will be removed in 7.1.")]
         public virtual void SetCounter(Counter counter) {
-            this.counter = counter;
+            RegisterCounter(counter);
+        }
+
+        /// <summary>Register new counter.</summary>
+        public virtual void RegisterCounter(Counter counter) {
+            counters.Add(counter);
         }
     }
 }

@@ -789,8 +789,7 @@ namespace iText.Kernel.Pdf {
                     trailer.Put(PdfName.Info, info.GetPdfObject());
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
-                    Counter counter = GetCounter();
-                    if (counter != null) {
+                    foreach (Counter counter in GetCounters()) {
                         counter.OnDocumentWritten(writer.GetCurrentPos());
                     }
                 }
@@ -1683,8 +1682,7 @@ namespace iText.Kernel.Pdf {
                 if (reader != null) {
                     reader.pdfDocument = this;
                     reader.ReadPdf();
-                    Counter counter = GetCounter();
-                    if (counter != null) {
+                    foreach (Counter counter in GetCounters()) {
                         counter.OnDocumentRead(reader.GetFileLength());
                     }
                     pdfVersion = reader.headerPdfVersion;
@@ -1936,7 +1934,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Gets
+        /// Gets the last registered
         /// <see cref="iText.Kernel.Log.Counter"/>
         /// instance.
         /// </summary>
@@ -1945,8 +1943,24 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Log.Counter"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.1 use GetCounters() instead.")]
         protected internal virtual Counter GetCounter() {
-            return CounterFactory.GetCounter(typeof(iText.Kernel.Pdf.PdfDocument));
+            IList<Counter> counters = CounterFactory.GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
+            return counters.IsEmpty() ? null : counters[counters.Count - 1];
+        }
+
+        /// <summary>
+        /// Gets all
+        /// <see cref="iText.Kernel.Log.Counter"/>
+        /// instances.
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <see cref="iText.Kernel.Log.Counter"/>
+        /// instances.
+        /// </returns>
+        protected internal virtual IList<Counter> GetCounters() {
+            return CounterFactory.GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }
 
         private void UpdateProducerInInfoDictionary() {

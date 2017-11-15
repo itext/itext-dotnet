@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using Common.Logging;
 using iText.Kernel.Font;
 using iText.Kernel.Log;
@@ -346,8 +347,8 @@ namespace iText.Pdfa {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
-        protected override Counter GetCounter() {
-            return CounterFactory.GetCounter(typeof(iText.Pdfa.PdfADocument));
+        protected override IList<Counter> GetCounters() {
+            return CounterFactory.GetCounters(typeof(iText.Pdfa.PdfADocument));
         }
 
         private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {
