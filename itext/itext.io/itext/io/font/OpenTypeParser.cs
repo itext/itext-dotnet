@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -358,8 +359,8 @@ namespace iText.IO.Font {
             if (cidName != null) {
                 fontNames.SetCidFontName(cidName[0][3]);
             }
-            fontNames.SetWeight(os_2.usWeightClass);
-            fontNames.SetWidth(os_2.usWidthClass);
+            fontNames.SetFontWeight(os_2.usWeightClass);
+            fontNames.SetFontWidth(FontWidths.FromOpenTypeFontWidth(os_2.usWidthClass));
             fontNames.SetMacStyle(head.macStyle);
             fontNames.SetAllowEmbedding(os_2.fsType != 2);
             return fontNames;

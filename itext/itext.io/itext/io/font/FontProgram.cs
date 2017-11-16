@@ -212,56 +212,14 @@ namespace iText.IO.Font {
             fontNames.SetFontWeight(fontWeight);
         }
 
+        /// <summary>Sets font width in css notation (font-stretch property)</summary>
+        /// <param name="fontWidth">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontWidths"/>
+        /// .
+        /// </param>
         protected internal virtual void SetFontWidth(String fontWidth) {
-            fontWidth = fontWidth.ToLowerInvariant();
-            int fontWidthValue = FontNames.FWIDTH_NORMAL;
-            switch (fontWidth) {
-                case "ultracondensed": {
-                    fontWidthValue = FontNames.FWIDTH_ULTRA_CONDENSED;
-                    break;
-                }
-
-                case "extracondensed": {
-                    fontWidthValue = FontNames.FWIDTH_EXTRA_CONDENSED;
-                    break;
-                }
-
-                case "condensed": {
-                    fontWidthValue = FontNames.FWIDTH_CONDENSED;
-                    break;
-                }
-
-                case "semicondensed": {
-                    fontWidthValue = FontNames.FWIDTH_SEMI_CONDENSED;
-                    break;
-                }
-
-                case "normal": {
-                    fontWidthValue = FontNames.FWIDTH_NORMAL;
-                    break;
-                }
-
-                case "semiexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_SEMI_EXPANDED;
-                    break;
-                }
-
-                case "expanded": {
-                    fontWidthValue = FontNames.FWIDTH_EXPANDED;
-                    break;
-                }
-
-                case "extraexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_EXTRA_EXPANDED;
-                    break;
-                }
-
-                case "ultraexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_ULTRA_EXPANDED;
-                    break;
-                }
-            }
-            fontNames.SetFontWidth(fontWidthValue);
+            fontNames.SetFontWidth(fontWidth);
         }
 
         protected internal virtual void SetFixedPitch(bool isFixedPitch) {

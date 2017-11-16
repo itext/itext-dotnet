@@ -61,24 +61,6 @@ namespace iText.IO.Font {
 
         protected internal const int EXTENDED_FLAG = 64;
 
-        protected internal const int FWIDTH_ULTRA_CONDENSED = 1;
-
-        protected internal const int FWIDTH_EXTRA_CONDENSED = 2;
-
-        protected internal const int FWIDTH_CONDENSED = 3;
-
-        protected internal const int FWIDTH_SEMI_CONDENSED = 4;
-
-        protected internal const int FWIDTH_NORMAL = 5;
-
-        protected internal const int FWIDTH_SEMI_EXPANDED = 6;
-
-        protected internal const int FWIDTH_EXPANDED = 7;
-
-        protected internal const int FWIDTH_EXTRA_EXPANDED = 8;
-
-        protected internal const int FWIDTH_ULTRA_EXPANDED = 9;
-
         protected internal IDictionary<int, IList<String[]>> allNames;
 
         private String[][] fullName;
@@ -95,7 +77,7 @@ namespace iText.IO.Font {
 
         private int weight = FontWeights.NORMAL;
 
-        private int width = FWIDTH_NORMAL;
+        private String width = FontWidths.NORMAL;
 
         private int macStyle;
 
@@ -109,15 +91,6 @@ namespace iText.IO.Font {
         // Bit 4: Shadow (if set to 1)
         // Bit 5: Condensed (if set to 1)
         // Bit 6: Extended (if set to 1)
-        // Font width Ultra-condensed, 50%
-        // Font width Extra-condensed, 62.5%
-        // Font width Condensed, 75%
-        // Font width Semi-condensed, 87.5%
-        // Font width Medium (normal), 100%
-        // Font width Semi-expanded, 112.5%
-        // Font width Expanded, 125%
-        // Font width Extra-expanded, 150%
-        // Font width Ultra-expanded, 200%
         // name, ID = 4
         // name, ID = 1 or 16
         // name, ID = 2 or 17
@@ -174,11 +147,17 @@ namespace iText.IO.Font {
             this.weight = weight;
         }
 
-        public virtual int GetFontWidth() {
+        public virtual String GetFontWidth() {
             return width;
         }
 
-        public virtual void SetFontWidth(int width) {
+        /// <summary>Sets font width in css notation (font-stretch property).</summary>
+        /// <param name="width">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontWidths"/>
+        /// .
+        /// </param>
+        public virtual void SetFontWidth(String width) {
             this.width = width;
         }
 
@@ -254,14 +233,6 @@ namespace iText.IO.Font {
             this.subfamily = subfamily;
         }
 
-        protected internal virtual void SetWeight(int weight) {
-            this.weight = weight;
-        }
-
-        protected internal virtual void SetWidth(int width) {
-            this.width = width;
-        }
-
         protected internal virtual void SetMacStyle(int macStyle) {
             this.macStyle = macStyle;
         }
@@ -272,64 +243,6 @@ namespace iText.IO.Font {
 
         protected internal virtual void SetAllowEmbedding(bool allowEmbedding) {
             this.allowEmbedding = allowEmbedding;
-        }
-
-        protected internal static int ConvertFontWeight(String weight) {
-            String fontWeight = weight.ToLowerInvariant();
-            switch (fontWeight) {
-                case "ultralight": {
-                    return 100;
-                }
-
-                case "thin":
-                case "extralight": {
-                    return 200;
-                }
-
-                case "light": {
-                    return 300;
-                }
-
-                case "book":
-                case "regular":
-                case "normal": {
-                    return 400;
-                }
-
-                case "medium": {
-                    return 500;
-                }
-
-                case "demibold":
-                case "semibold": {
-                    return 600;
-                }
-
-                case "bold": {
-                    return 700;
-                }
-
-                case "extrabold":
-                case "ultrabold": {
-                    return 800;
-                }
-
-                case "heavy":
-                case "black":
-                case "ultra":
-                case "ultrablack": {
-                    return 900;
-                }
-
-                case "fat":
-                case "extrablack": {
-                    return 1000;
-                }
-
-                default: {
-                    return 400;
-                }
-            }
         }
 
         private String[][] ListToArray(IList<String[]> list) {

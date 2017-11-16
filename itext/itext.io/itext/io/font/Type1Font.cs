@@ -271,7 +271,7 @@ namespace iText.IO.Font {
                     }
 
                     case "Weight": {
-                        fontNames.SetWeight(FontNames.ConvertFontWeight(tok.NextToken("\u00ff").Substring(1)));
+                        fontNames.SetFontWeight(FontWeights.FromType1FontWeight(tok.NextToken("\u00ff").Substring(1)));
                         break;
                     }
 
