@@ -65,14 +65,14 @@ namespace iText.Kernel.Font {
     /// must be indirect.
     /// </remarks>
     public class PdfType3Font : PdfSimpleFont<Type3Font> {
-        private double[] fontMatrix = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
+        private double[] fontMatrix = DEFAULT_FONT_MATRIX;
 
-        /// <summary>Creates a Type3 font.</summary>
+        /// <summary>Creates a Type 3 font.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
         ///     </param>
+        [System.ObsoleteAttribute(@"Type 3 font should contain font name and font family in case tagged PDF.")]
         internal PdfType3Font(PdfDocument document, bool colorized)
             : base() {
-            //todo use default font matrix constant
             MakeIndirect(document);
             subset = true;
             embedded = true;
@@ -80,7 +80,18 @@ namespace iText.Kernel.Font {
             fontEncoding = FontEncoding.CreateEmptyFontEncoding();
         }
 
-        /// <summary>Creates a Type3 font based on an existing font dictionary, which must be an indirect object.</summary>
+        /// <summary>Creates a Type 3 font.</summary>
+        /// <param name="document">the target document of the new font.</param>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        /// <param name="colorized">indicates whether the font will be colorized</param>
+        internal PdfType3Font(PdfDocument document, String fontName, String fontFamily, bool colorized)
+            : this(document, colorized) {
+            ((Type3Font)fontProgram).SetFontName(fontName);
+            ((Type3Font)fontProgram).SetFontFamily(fontFamily);
+        }
+
+        /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
         /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
@@ -116,6 +127,49 @@ namespace iText.Kernel.Font {
                         (glyphName), GetDocument()));
                 }
             }
+        }
+
+        /// <summary>Sets the PostScript name of the font.</summary>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        public virtual void SetFontName(String fontName) {
+            ((Type3Font)fontProgram).SetFontName(fontName);
+        }
+
+        /// <summary>Sets a preferred font family name.</summary>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        public virtual void SetFontFamily(String fontFamily) {
+            ((Type3Font)fontProgram).SetFontFamily(fontFamily);
+        }
+
+        /// <summary>Sets font weight.</summary>
+        /// <param name="fontWeight">
+        /// integer form 100 to 900. See
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
+        /// .
+        /// </param>
+        public virtual void SetFontWeight(int fontWeight) {
+            ((Type3Font)fontProgram).SetFontWeight(fontWeight);
+        }
+
+        /// <summary>Sets the PostScript italic angel.</summary>
+        /// <remarks>
+        /// Sets the PostScript italic angel.
+        /// <br/>
+        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
+        /// </remarks>
+        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
+        public virtual void SetItalicAngle(int italicAngle) {
+            ((Type3Font)fontProgram).SetItalicAngle(italicAngle);
+        }
+
+        /// <summary>Sets font width in css notation (font-stretch property)</summary>
+        /// <param name="fontWidth">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
+        /// .
+        /// </param>
+        public virtual void SetFontStretch(String fontWidth) {
+            ((Type3Font)fontProgram).SetFontStretch(fontWidth);
         }
 
         public virtual Type3Glyph GetType3Glyph(int unicode) {
@@ -204,7 +258,31 @@ namespace iText.Kernel.Font {
         }
 
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
-            return null;
+            System.Diagnostics.Debug.Assert(fontName != null && fontName.Length > 0);
+            PdfDictionary fontDescriptor = new PdfDictionary();
+            MakeObjectIndirect(fontDescriptor);
+            FontMetrics fontMetrics = fontProgram.GetFontMetrics();
+            FontNames fontNames = fontProgram.GetFontNames();
+            fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
+            fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
+            fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
+            fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
+            fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
+            if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
+                [0].Length >= 4) {
+                fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
+            }
+            //add font stream and flush it immediately
+            AddFontStream(fontDescriptor);
+            int flags = fontProgram.GetPdfFontFlags();
+            if (fontProgram.IsFontSpecific() != fontEncoding.IsFontSpecific()) {
+                flags &= ~(4 | 32);
+                // reset both flags
+                flags |= fontEncoding.IsFontSpecific() ? 4 : 32;
+            }
+            // set based on font encoding
+            fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
+            return fontDescriptor;
         }
 
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
@@ -232,6 +310,17 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
             GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
             GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox()));
+            if (fontProgram.GetFontNames().GetFontName() != null) {
+                System.Diagnostics.Debug.Assert(fontProgram.GetFontNames().GetFontName().Length > 0);
+                PdfDictionary fontDescriptor = !IsBuiltInFont() ? GetFontDescriptor(fontProgram.GetFontNames().GetFontName
+                    ()) : null;
+                if (fontDescriptor != null) {
+                    GetPdfObject().Put(PdfName.FontDescriptor, fontDescriptor);
+                    if (fontDescriptor.GetIndirectReference() != null) {
+                        fontDescriptor.Flush();
+                    }
+                }
+            }
             base.FlushFontData(null, PdfName.Type3);
             base.Flush();
         }

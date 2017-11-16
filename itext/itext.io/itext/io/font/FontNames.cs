@@ -121,8 +121,14 @@ namespace iText.IO.Font {
             return weight;
         }
 
-        public virtual void SetFontWeight(int weight) {
-            this.weight = weight;
+        /// <summary>Sets font weight.</summary>
+        /// <param name="weight">
+        /// integer form 100 to 900. See
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
+        /// .
+        /// </param>
+        protected internal virtual void SetFontWeight(int weight) {
+            this.weight = FontWeights.NormalizeFontWeight(weight);
         }
 
         /// <summary>Gets font stretch in css notation (font-stretch property).</summary>
@@ -141,7 +147,7 @@ namespace iText.IO.Font {
         /// <see cref="iText.IO.Font.Constants.FontStretches"/>
         /// .
         /// </param>
-        public virtual void SetFontStretch(String fontStretch) {
+        protected internal virtual void SetFontStretch(String fontStretch) {
             this.fontStretch = fontStretch;
         }
 

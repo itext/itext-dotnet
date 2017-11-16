@@ -196,6 +196,13 @@ namespace iText.IO.Font {
             fontMetrics.SetXHeight(xHeight);
         }
 
+        /// <summary>Sets the PostScript italic angel.</summary>
+        /// <remarks>
+        /// Sets the PostScript italic angel.
+        /// <br/>
+        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
+        /// </remarks>
+        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal virtual void SetItalicAngle(int italicAngle) {
             fontMetrics.SetItalicAngle(italicAngle);
         }
@@ -208,6 +215,12 @@ namespace iText.IO.Font {
             fontMetrics.SetStemH(stemH);
         }
 
+        /// <summary>Sets font weight.</summary>
+        /// <param name="fontWeight">
+        /// integer form 100 to 900. See
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
+        /// .
+        /// </param>
         protected internal virtual void SetFontWeight(int fontWeight) {
             fontNames.SetFontWeight(fontWeight);
         }
@@ -218,7 +231,7 @@ namespace iText.IO.Font {
         /// <see cref="iText.IO.Font.Constants.FontStretches"/>
         /// .
         /// </param>
-        protected internal virtual void SetFontWidth(String fontWidth) {
+        protected internal virtual void SetFontStretch(String fontWidth) {
             fontNames.SetFontStretch(fontWidth);
         }
 
@@ -239,12 +252,16 @@ namespace iText.IO.Font {
             fontMetrics.SetBbox(bbox[0], bbox[1], bbox[2], bbox[3]);
         }
 
+        /// <summary>Sets a preferred font family name.</summary>
+        /// <param name="fontFamily">a preferred font family name.</param>
         protected internal virtual void SetFontFamily(String fontFamily) {
             fontNames.SetFamilyName(fontFamily);
         }
 
-        protected internal virtual void SetFontName(String psFontName) {
-            fontNames.SetFontName(psFontName);
+        /// <summary>Sets the PostScript name of the font.</summary>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        protected internal virtual void SetFontName(String fontName) {
+            fontNames.SetFontName(fontName);
         }
 
         protected internal virtual void CheckFilePath(String path) {

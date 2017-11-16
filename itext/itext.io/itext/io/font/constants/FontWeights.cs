@@ -96,5 +96,16 @@ namespace iText.IO.Font.Constants {
             }
             return fontWeight;
         }
+
+        public static int NormalizeFontWeight(int fontWeight) {
+            fontWeight = (fontWeight / 100) * 100;
+            if (fontWeight < iText.IO.Font.Constants.FontWeights.THIN) {
+                return iText.IO.Font.Constants.FontWeights.THIN;
+            }
+            if (fontWeight > iText.IO.Font.Constants.FontWeights.BLACK) {
+                return iText.IO.Font.Constants.FontWeights.BLACK;
+            }
+            return fontWeight;
+        }
     }
 }

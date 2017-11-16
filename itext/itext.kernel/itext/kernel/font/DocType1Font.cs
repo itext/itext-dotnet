@@ -178,7 +178,7 @@ namespace iText.Kernel.Font {
             }
             PdfName fontStretch = fontDesc.GetAsName(PdfName.FontStretch);
             if (fontStretch != null) {
-                font.SetFontWidth(fontStretch.GetValue());
+                font.SetFontStretch(fontStretch.GetValue());
             }
             PdfArray bboxValue = fontDesc.GetAsArray(PdfName.FontBBox);
             if (bboxValue != null) {
