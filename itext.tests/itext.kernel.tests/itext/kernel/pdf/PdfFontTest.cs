@@ -48,6 +48,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -1268,6 +1269,37 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
                 .ShowText("\ube48\uc9d1").EndText().RestoreState();
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestFontStyleProcessing() {
+            String filename = destinationFolder + "testFontStyleProcessing.pdf";
+            String cmpFilename = sourceFolder + "cmp_testFontStyleProcessing.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfFont romanDefault = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false);
+            PdfFont romanNormal = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+                .NORMAL);
+            PdfFont romanBold = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+                .BOLD);
+            PdfFont romanItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+                .ITALIC);
+            PdfFont romanBoldItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, 
+                FontConstants.BOLDITALIC);
+            PdfPage page = pdfDoc.AddNewPage(PageSize.A4.Rotate());
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 400).SetFontAndSize(romanDefault, 72).ShowText("Times-Roman default"
+                ).EndText().BeginText().MoveText(36, 350).SetFontAndSize(romanNormal, 72).ShowText("Times-Roman normal"
+                ).EndText().BeginText().MoveText(36, 300).SetFontAndSize(romanBold, 72).ShowText("Times-Roman bold").EndText
+                ().BeginText().MoveText(36, 250).SetFontAndSize(romanItalic, 72).ShowText("Times-Roman italic").EndText
+                ().BeginText().MoveText(36, 200).SetFontAndSize(romanBoldItalic, 72).ShowText("Times-Roman bolditalic"
+                ).EndText().RestoreState();
+            canvas.Release();
+            page.Flush();
+            pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
         }
