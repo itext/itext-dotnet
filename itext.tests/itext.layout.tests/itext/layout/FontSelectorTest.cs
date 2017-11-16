@@ -142,7 +142,7 @@ namespace iText.Layout {
             sel.GetFontSet().AddFont(FontConstants.HELVETICA);
             sel.GetFontSet().AddFont(FontConstants.HELVETICA_BOLD);
             sel.GetFontSet().AddFont(FontConstants.TIMES_ROMAN);
-            sel.GetFontSet().AddFont(FontConstants.TIMES_BOLD);
+            sel.GetFontSet().AddFont(FontConstants.TIMES_BOLD, null, "Times-Roman Bold");
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
