@@ -23,23 +23,23 @@ namespace iText.IO.Font.Constants {
 
         private const int FWIDTH_ULTRA_EXPANDED = 9;
 
-        public const String ULTRA_CONDENSED = "ultra-condensed";
+        public const String ULTRA_CONDENSED = "UltraCondensed";
 
-        public const String EXTRA_CONDENSED = "extra-condensed";
+        public const String EXTRA_CONDENSED = "ExtraCondensed";
 
-        public const String CONDENSED = "condensed";
+        public const String CONDENSED = "Condensed";
 
-        public const String SEMI_CONDENSED = "semi-condensed";
+        public const String SEMI_CONDENSED = "SemiCondensed";
 
-        public const String NORMAL = "normal";
+        public const String NORMAL = "Normal";
 
-        public const String SEMI_EXPANDED = "semi-expanded";
+        public const String SEMI_EXPANDED = "SemiExpanded";
 
-        public const String EXPANDED = "expanded";
+        public const String EXPANDED = "Expanded";
 
-        public const String EXTRA_EXPANDED = "extra-expanded";
+        public const String EXTRA_EXPANDED = "ExtraExpanded";
 
-        public const String ULTRA_EXPANDED = "ultra-expanded";
+        public const String ULTRA_EXPANDED = "UltraExpanded";
 
         /// <summary>Convert from Open Type font width class notation.</summary>
         /// <remarks>
