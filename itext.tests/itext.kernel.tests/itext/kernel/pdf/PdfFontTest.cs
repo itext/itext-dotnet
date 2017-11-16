@@ -601,7 +601,7 @@ namespace iText.Kernel.Pdf {
             // é ö
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram()).GetGlyphsCount());
+            NUnit.Framework.Assert.AreEqual(6, ((Type3Font)pdfType3Font.GetFontProgram()).GetGlyphsCount());
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
         }
@@ -635,7 +635,7 @@ namespace iText.Kernel.Pdf {
             // é ö
             page.Flush();
             outputPdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram()).GetGlyphsCount());
+            NUnit.Framework.Assert.AreEqual(6, ((Type3Font)pdfType3Font.GetFontProgram()).GetGlyphsCount());
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
         }

@@ -64,7 +64,7 @@ namespace iText.Kernel.Font {
     /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </remarks>
-    public class PdfType3Font : PdfSimpleFont<Type3FontProgram> {
+    public class PdfType3Font : PdfSimpleFont<Type3Font> {
         private double[] fontMatrix = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
         /// <summary>Creates a Type3 font.</summary>
@@ -72,10 +72,11 @@ namespace iText.Kernel.Font {
         ///     </param>
         internal PdfType3Font(PdfDocument document, bool colorized)
             : base() {
+            //todo use default font matrix constant
             MakeIndirect(document);
             subset = true;
             embedded = true;
-            fontProgram = new Type3FontProgram(colorized);
+            fontProgram = new Type3Font(colorized);
             fontEncoding = FontEncoding.CreateEmptyFontEncoding();
         }
 
@@ -86,7 +87,7 @@ namespace iText.Kernel.Font {
             EnsureObjectIsAddedToDocument(fontDictionary);
             subset = true;
             embedded = true;
-            fontProgram = new Type3FontProgram(false);
+            fontProgram = new Type3Font(false);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             PdfDictionary charProcsDic = GetPdfObject().GetAsDictionary(PdfName.CharProcs);
@@ -111,14 +112,14 @@ namespace iText.Kernel.Font {
                 int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 if (unicode != -1 && fontEncoding.CanEncode(unicode)) {
                     int code = fontEncoding.ConvertToByte(unicode);
-                    ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic
-                        .GetAsStream(glyphName), GetDocument()));
+                    ((Type3Font)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic.GetAsStream
+                        (glyphName), GetDocument()));
                 }
             }
         }
 
         public virtual Type3Glyph GetType3Glyph(int unicode) {
-            return ((Type3FontProgram)GetFontProgram()).GetType3Glyph(unicode);
+            return ((Type3Font)GetFontProgram()).GetType3Glyph(unicode);
         }
 
         public override bool IsSubset() {
@@ -164,11 +165,10 @@ namespace iText.Kernel.Font {
                 return glyph;
             }
             int code = GetFirstEmptyCode();
-            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3FontProgram)GetFontProgram()).IsColorized
-                ());
-            ((Type3FontProgram)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
+            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3Font)GetFontProgram()).IsColorized());
+            ((Type3Font)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
             fontEncoding.AddSymbol((byte)code, c);
-            if (!((Type3FontProgram)GetFontProgram()).IsColorized()) {
+            if (!((Type3Font)GetFontProgram()).IsColorized()) {
                 if (fontProgram.CountOfGlyphs() == 0) {
                     fontProgram.GetFontMetrics().SetBbox(llx, lly, urx, ury);
                 }
@@ -216,7 +216,7 @@ namespace iText.Kernel.Font {
 
         public override void Flush() {
             EnsureUnderlyingObjectHasIndirectReference();
-            if (((Type3FontProgram)GetFontProgram()).GetGlyphsCount() < 1) {
+            if (((Type3Font)GetFontProgram()).GetGlyphsCount() < 1) {
                 throw new PdfException("no.glyphs.defined.fo r.type3.font");
             }
             PdfDictionary charProcs = new PdfDictionary();

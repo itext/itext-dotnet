@@ -46,12 +46,12 @@ using iText.IO.Font;
 using iText.IO.Font.Otf;
 
 namespace iText.Kernel.Font {
-    public class Type3FontProgram : FontProgram {
+    public class Type3Font : FontProgram {
         private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
 
         private bool colorized = false;
 
-        public Type3FontProgram(bool colorized) {
+        public Type3Font(bool colorized) {
             this.colorized = colorized;
             GetFontMetrics().SetBbox(0, 0, 0, 0);
             fontNames = new FontNames();
