@@ -58,8 +58,10 @@ namespace iText.Kernel.Font {
         private static readonly byte[] rotbits = new byte[] { (byte)0x80, (byte)0x40, (byte)0x20, (byte)0x10, (byte
             )0x08, (byte)0x04, (byte)0x02, (byte)0x01 };
 
+        /// <summary>CIDFont Type0 (Type1 outlines).</summary>
         protected internal const int CID_FONT_TYPE_0 = 0;
 
+        /// <summary>CIDFont Type2 (TrueType outlines).</summary>
         protected internal const int CID_FONT_TYPE_2 = 2;
 
         protected internal bool vertical;

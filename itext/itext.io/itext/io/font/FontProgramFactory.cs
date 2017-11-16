@@ -404,15 +404,15 @@ namespace iText.IO.Font {
         /// <see cref="FontConstants"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="FontConstants#BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="FontConstants#ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="FontConstants#NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="FontConstants#BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="FontConstants#UNDEFINED"/>
         /// </param>
         /// <param name="cached">whether to try to get the font program from cache</param>
         /// <returns>
@@ -434,15 +434,15 @@ namespace iText.IO.Font {
         /// <see cref="FontConstants"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="FontConstants#BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="FontConstants#ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="FontConstants#NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="FontConstants#BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="FontConstants#UNDEFINED"/>
         /// </param>
         /// <returns>
         /// created
@@ -464,7 +464,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName) {
-            return fontRegisterProvider.GetFont(fontName, FontConstants.UNDEFINED);
+            return fontRegisterProvider.GetFont(fontName, FontStyles.UNDEFINED);
         }
 
         /// <summary>Register a font by giving explicitly the font family and name.</summary>

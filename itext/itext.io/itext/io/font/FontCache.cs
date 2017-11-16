@@ -46,6 +46,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font.Cmap;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -172,7 +173,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry() {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + CJK_REGISTRY_FILENAME);
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + CJK_REGISTRY_FILENAME);
             try {
                 Properties p = new Properties();
                 p.Load(resource);
@@ -197,7 +198,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static IDictionary<String, Object> ReadFontProperties(String name) {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name + ".properties");
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + name + ".properties");
             try {
                 Properties p = new Properties();
                 p.Load(resource);

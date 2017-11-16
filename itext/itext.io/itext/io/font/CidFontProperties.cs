@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -112,8 +113,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry() {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + "cjk_registry.properties"
-                );
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + "cjk_registry.properties");
             Properties p = new Properties();
             p.Load(resource);
             resource.Dispose();
@@ -133,7 +133,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         private static IDictionary<String, Object> ReadFontProperties(String name) {
             name += ".properties";
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name);
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + name);
             Properties p = new Properties();
             p.Load(resource);
             resource.Dispose();

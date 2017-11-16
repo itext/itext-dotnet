@@ -98,17 +98,17 @@ namespace iText.IO.Font {
             if (family != null) {
                 lock (family) {
                     // some bugs were fixed here by Daniel Marczisovszky
-                    int s = style == FontConstants.UNDEFINED ? FontConstants.NORMAL : style;
+                    int s = style == FontStyles.UNDEFINED ? FontStyles.NORMAL : style;
                     foreach (String f in family) {
                         String lcf = f.ToLowerInvariant();
-                        int fs = FontConstants.NORMAL;
+                        int fs = FontStyles.NORMAL;
                         if (lcf.Contains("bold")) {
-                            fs |= FontConstants.BOLD;
+                            fs |= FontStyles.BOLD;
                         }
                         if (lcf.Contains("italic") || lcf.Contains("oblique")) {
-                            fs |= FontConstants.ITALIC;
+                            fs |= FontStyles.ITALIC;
                         }
-                        if ((s & FontConstants.BOLDITALIC) == fs) {
+                        if ((s & FontStyles.BOLDITALIC) == fs) {
                             fontName = f;
                             break;
                         }

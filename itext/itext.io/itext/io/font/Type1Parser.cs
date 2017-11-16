@@ -86,7 +86,7 @@ namespace iText.IO.Font {
                 byte[] buf = new byte[1024];
                 Stream resource = null;
                 try {
-                    String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
+                    String resourcePath = FontResources.AFMS + afmPath + ".afm";
                     resource = ResourceUtil.GetResourceStream(resourcePath);
                     if (resource == null) {
                         throw new iText.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath);

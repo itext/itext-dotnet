@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-
 namespace iText.IO.Font {
     /// <summary>
     /// Font constants for
@@ -50,46 +48,6 @@ namespace iText.IO.Font {
     /// and PdfFontFactory.
     /// </summary>
     public class FontConstants {
-        /// <summary>The path to the font resources.</summary>
-        public const String RESOURCE_PATH = "iText.IO.Font.";
-
-        public const String AFM_RESOURCE_PATH = "iText.IO.Font.Afm.";
-
-        public const String CMAP_RESOURCE_PATH = "iText.IO.Font.Cmap.";
-
-        /// <summary>Undefined font style.</summary>
-        public const int UNDEFINED = -1;
-
-        /// <summary>Normal font style.</summary>
-        public const int NORMAL = 0;
-
-        /// <summary>Bold font style.</summary>
-        public const int BOLD = 1;
-
-        /// <summary>Italic font style.</summary>
-        public const int ITALIC = 2;
-
-        /// <summary>Bold-Italic font style.</summary>
-        public const int BOLDITALIC = BOLD | ITALIC;
-
-        /// <summary>Type 1 PostScript font.</summary>
-        public const int TYPE_1_FONT = 1;
-
-        /// <summary>Compact Font Format PostScript font.</summary>
-        public const int TYPE_1_COMPACT_FONT = 2;
-
-        /// <summary>TrueType or OpenType with TrueType outlines font.</summary>
-        public const int TRUE_TYPE_FONT = 3;
-
-        /// <summary>CIDFont Type0 (Type1 outlines).</summary>
-        public const int CID_FONT_TYPE_0_FONT = 4;
-
-        /// <summary>CIDFont Type2 (TrueType outlines).</summary>
-        public const int CID_FONT_TYPE_2_FONT = 5;
-
-        /// <summary>OpenType with Type1 outlines.</summary>
-        public const int OPEN_TYPE_FONT = 6;
-
         /// <summary>
         /// The maximum height above the baseline reached by glyphs in this
         /// font, excluding the height of glyphs for accented characters.
@@ -189,8 +147,8 @@ namespace iText.IO.Font {
         /// </remarks>
         public const int FONT_WEIGHT = 23;
         //-Font styles------------------------------------------------------------------------------------------------------
-        //-Font types-------------------------------------------------------------------------------------------------------
         //-Default fonts----------------------------------------------------------------------------------------------------
+        //TODO return and deprecate!
         //-Font Descriptor--------------------------------------------------------------------------------------------------
     }
 }

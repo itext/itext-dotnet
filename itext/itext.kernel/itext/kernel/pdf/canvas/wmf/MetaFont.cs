@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A Meta Font.</summary>
@@ -156,8 +157,8 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             if (font != null) {
                 return font;
             }
-            FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0) ? FontConstants.ITALIC : 
-                0) | ((bold != 0) ? FontConstants.BOLD : 0));
+            FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0) ? FontStyles.ITALIC : 0
+                ) | ((bold != 0) ? FontStyles.BOLD : 0));
             encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
             font = ff2;
             if (font != null) {

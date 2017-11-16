@@ -2,7 +2,10 @@ using System;
 
 namespace iText.IO.Font.Constants {
     /// <summary>The code pages possible for a True Type font.</summary>
-    public class TrueTypeCodePages {
+    public sealed class TrueTypeCodePages {
+        private TrueTypeCodePages() {
+        }
+
         private static readonly String[] codePages = new String[] { "1252 Latin 1", "1250 Latin 2: Eastern Europe"
             , "1251 Cyrillic", "1253 Greek", "1254 Turkish", "1255 Hebrew", "1256 Arabic", "1257 Windows Baltic", 
             "1258 Vietnamese", null, null, null, null, null, null, null, "874 Thai", "932 JIS/Japan", "936 Chinese: Simplified chars--PRC and Singapore"

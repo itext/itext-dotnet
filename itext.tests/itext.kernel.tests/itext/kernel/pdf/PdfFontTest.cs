@@ -1282,14 +1282,14 @@ namespace iText.Kernel.Pdf {
             String cmpFilename = sourceFolder + "cmp_testFontStyleProcessing.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfFont romanDefault = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false);
-            PdfFont romanNormal = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+            PdfFont romanNormal = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
                 .NORMAL);
-            PdfFont romanBold = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+            PdfFont romanBold = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
                 .BOLD);
-            PdfFont romanItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontConstants
+            PdfFont romanItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
                 .ITALIC);
             PdfFont romanBoldItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, 
-                FontConstants.BOLDITALIC);
+                FontStyles.BOLDITALIC);
             PdfPage page = pdfDoc.AddNewPage(PageSize.A4.Rotate());
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 400).SetFontAndSize(romanDefault, 72).ShowText("Times-Roman default"
