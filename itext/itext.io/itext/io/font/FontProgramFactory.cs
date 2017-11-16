@@ -404,15 +404,15 @@ namespace iText.IO.Font {
         /// <see cref="FontConstants"/>
         /// .
         /// See
-        /// <see cref="FontConstants#BOLD"/>
+        /// <see cref="FontConstants.BOLD"/>
         /// ,
-        /// <see cref="FontConstants#ITALIC"/>
+        /// <see cref="FontConstants.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants#NORMAL"/>
+        /// <see cref="FontConstants.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants#BOLDITALIC"/>
+        /// <see cref="FontConstants.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants#UNDEFINED"/>
+        /// <see cref="FontConstants.UNDEFINED"/>
         /// </param>
         /// <param name="cached">whether to try to get the font program from cache</param>
         /// <returns>
@@ -434,15 +434,15 @@ namespace iText.IO.Font {
         /// <see cref="FontConstants"/>
         /// .
         /// See
-        /// <see cref="FontConstants#BOLD"/>
+        /// <see cref="FontConstants.BOLD"/>
         /// ,
-        /// <see cref="FontConstants#ITALIC"/>
+        /// <see cref="FontConstants.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants#NORMAL"/>
+        /// <see cref="FontConstants.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants#BOLDITALIC"/>
+        /// <see cref="FontConstants.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants#UNDEFINED"/>
+        /// <see cref="FontConstants.UNDEFINED"/>
         /// </param>
         /// <returns>
         /// created
