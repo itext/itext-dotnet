@@ -256,7 +256,34 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfFormField"/>
         /// </returns>
         public static iText.Forms.Fields.PdfFormField CreateEmptyField(PdfDocument doc) {
-            return new iText.Forms.Fields.PdfFormField(doc);
+            return CreateEmptyField(doc, null);
+        }
+
+        /// <summary>
+        /// Creates an empty form field without a predefined set of layout or
+        /// behavior.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the field in
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfFormField"/>
+        /// </returns>
+        public static iText.Forms.Fields.PdfFormField CreateEmptyField(PdfDocument doc, PdfAConformanceLevel pdfAConformanceLevel
+            ) {
+            iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField(doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
+            return field;
         }
 
         /// <summary>
@@ -281,8 +308,45 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
         public static PdfButtonFormField CreateButton(PdfDocument doc, Rectangle rect, int flags) {
+            return CreateButton(doc, rect, flags, null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfButtonFormField">button form field</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the button field in
+        /// </param>
+        /// <param name="rect">the location on the page for the button</param>
+        /// <param name="flags">
+        /// an <code>int</code>, containing a set of binary behavioral
+        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// flags you require.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfButtonFormField"/>
+        /// </returns>
+        public static PdfButtonFormField CreateButton(PdfDocument doc, Rectangle rect, int flags, PdfAConformanceLevel
+             pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             PdfButtonFormField field = new PdfButtonFormField(annot, doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             field.SetFieldFlags(flags);
             return field;
         }
@@ -308,7 +372,40 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
         public static PdfButtonFormField CreateButton(PdfDocument doc, int flags) {
+            return CreateButton(doc, flags, null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfButtonFormField">button form field</see>
+        /// with custom
+        /// behavior and layout.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the button field in
+        /// </param>
+        /// <param name="flags">
+        /// an <code>int</code>, containing a set of binary behavioral
+        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// flags you require.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfButtonFormField"/>
+        /// </returns>
+        public static PdfButtonFormField CreateButton(PdfDocument doc, int flags, PdfAConformanceLevel pdfAConformanceLevel
+            ) {
             PdfButtonFormField field = new PdfButtonFormField(doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
             field.SetFieldFlags(flags);
             return field;
         }
@@ -328,7 +425,27 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfTextFormField"/>
         /// </returns>
         public static PdfTextFormField CreateText(PdfDocument doc) {
-            return new PdfTextFormField(doc);
+            return CreateText(doc, (PdfAConformanceLevel)null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfTextFormField">text form field</see>
+        /// .
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the text field in
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfTextFormField"/>
+        /// </returns>
+        public static PdfTextFormField CreateText(PdfDocument doc, PdfAConformanceLevel pdfAConformanceLevel) {
+            PdfTextFormField textFormField = new PdfTextFormField(doc);
+            textFormField.pdfAConformanceLevel = pdfAConformanceLevel;
+            return textFormField;
         }
 
         /// <summary>
@@ -457,8 +574,48 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfTextFormField CreateText(PdfDocument doc, Rectangle rect, String name, String value, PdfFont
              font, float fontSize, bool multiline) {
+            return CreateText(doc, rect, name, value, font, fontSize, multiline, null);
+        }
+
+        /// <summary>
+        /// Creates a named
+        /// <see cref="PdfTextFormField">text form field</see>
+        /// with an initial
+        /// value, with a specified font and font size.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the text field in
+        /// </param>
+        /// <param name="rect">the location on the page for the text field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </param>
+        /// <param name="fontSize">the size of the font</param>
+        /// <param name="multiline">true for multiline text field</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfTextFormField"/>
+        /// </returns>
+        public static PdfTextFormField CreateText(PdfDocument doc, Rectangle rect, String name, String value, PdfFont
+             font, float fontSize, bool multiline, PdfAConformanceLevel pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             PdfTextFormField field = new PdfTextFormField(annot, doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             field.SetMultiline(multiline);
             field.font = font;
             field.fontSize = fontSize;
@@ -545,7 +702,39 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public static PdfChoiceFormField CreateChoice(PdfDocument doc, int flags) {
+            return CreateChoice(doc, flags, null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfChoiceFormField">choice form field</see>
+        /// .
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the choice field in
+        /// </param>
+        /// <param name="flags">
+        /// an <code>int</code>, containing a set of binary behavioral
+        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// flags you require.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// </returns>
+        public static PdfChoiceFormField CreateChoice(PdfDocument doc, int flags, PdfAConformanceLevel pdfAConformanceLevel
+            ) {
             PdfChoiceFormField field = new PdfChoiceFormField(doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
             field.SetFieldFlags(flags);
             return field;
         }
@@ -632,6 +821,48 @@ namespace iText.Forms.Fields {
         /// <param name="rect">the location on the page for the choice field</param>
         /// <param name="name">the name of the form field</param>
         /// <param name="value">the initial value</param>
+        /// <param name="options">
+        /// an array of
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// objects that each represent
+        /// the 'on' state of one of the choices.
+        /// </param>
+        /// <param name="flags">
+        /// an <code>int</code>, containing a set of binary behavioral
+        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// flags you require.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// </returns>
+        public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
+            PdfArray options, int flags, PdfFont font, PdfAConformanceLevel pdfAConformanceLevel) {
+            return CreateChoice(doc, rect, name, value, font, (float)DEFAULT_FONT_SIZE, options, flags, pdfAConformanceLevel
+                );
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">choice form field</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the choice field in
+        /// </param>
+        /// <param name="rect">the location on the page for the choice field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
@@ -654,8 +885,58 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
             PdfFont font, float fontSize, PdfArray options, int flags) {
+            return CreateChoice(doc, rect, name, value, font, fontSize, options, flags, null);
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">choice form field</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the choice field in
+        /// </param>
+        /// <param name="rect">the location on the page for the choice field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </param>
+        /// <param name="fontSize">the size of the font</param>
+        /// <param name="options">
+        /// an array of
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// objects that each represent
+        /// the 'on' state of one of the choices.
+        /// </param>
+        /// <param name="flags">
+        /// an <code>int</code>, containing a set of binary behavioral
+        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// flags you require.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// </returns>
+        public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
+            PdfFont font, float fontSize, PdfArray options, int flags, PdfAConformanceLevel pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             iText.Forms.Fields.PdfFormField field = new PdfChoiceFormField(annot, doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             field.font = font;
             field.fontSize = fontSize;
             field.Put(PdfName.Opt, options);
@@ -687,7 +968,35 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfSignatureFormField"/>
         /// </returns>
         public static PdfSignatureFormField CreateSignature(PdfDocument doc) {
-            return new PdfSignatureFormField(doc);
+            return CreateSignature(doc, (PdfAConformanceLevel)null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfSignatureFormField">signature form field</see>
+        /// .
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the signature field in
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfSignatureFormField"/>
+        /// </returns>
+        public static PdfSignatureFormField CreateSignature(PdfDocument doc, PdfAConformanceLevel pdfAConformanceLevel
+            ) {
+            PdfSignatureFormField signatureFormField = new PdfSignatureFormField(doc);
+            signatureFormField.pdfAConformanceLevel = pdfAConformanceLevel;
+            return signatureFormField;
         }
 
         /// <summary>
@@ -706,8 +1015,40 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfSignatureFormField"/>
         /// </returns>
         public static PdfSignatureFormField CreateSignature(PdfDocument doc, Rectangle rect) {
+            return CreateSignature(doc, rect, null);
+        }
+
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="PdfSignatureFormField">signature form field</see>
+        /// .
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the signature field in
+        /// </param>
+        /// <param name="rect">the location on the page for the signature field</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfSignatureFormField"/>
+        /// </returns>
+        public static PdfSignatureFormField CreateSignature(PdfDocument doc, Rectangle rect, PdfAConformanceLevel 
+            pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
-            return new PdfSignatureFormField(annot, doc);
+            PdfSignatureFormField signatureFormField = new PdfSignatureFormField(annot, doc);
+            signatureFormField.pdfAConformanceLevel = pdfAConformanceLevel;
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
+            return signatureFormField;
         }
 
         /// <summary>
@@ -727,9 +1068,38 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfButtonFormField">radio group</see>
         /// </returns>
         public static PdfButtonFormField CreateRadioGroup(PdfDocument doc, String name, String value) {
+            return CreateRadioGroup(doc, name, value, null);
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfButtonFormField">radio group form field</see>
+        /// .
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the radio group in
+        /// </param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfButtonFormField">radio group</see>
+        /// </returns>
+        public static PdfButtonFormField CreateRadioGroup(PdfDocument doc, String name, String value, PdfAConformanceLevel
+             pdfAConformanceLevel) {
             PdfButtonFormField radio = CreateButton(doc, PdfButtonFormField.FF_RADIO);
             radio.SetFieldName(name);
             radio.Put(PdfName.V, new PdfName(value));
+            radio.pdfAConformanceLevel = pdfAConformanceLevel;
             return radio;
         }
 
@@ -797,7 +1167,9 @@ namespace iText.Forms.Fields {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             iText.Forms.Fields.PdfFormField radio = new PdfButtonFormField(annot, doc);
             radio.pdfAConformanceLevel = pdfAConformanceLevel;
-            annot.SetFlag(PdfAnnotation.PRINT);
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             String name = radioGroup.GetValue().ToString().Substring(1);
             if (name.Equals(value)) {
                 annot.SetAppearanceState(new PdfName(value));
@@ -869,8 +1241,47 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfButtonFormField CreatePushButton(PdfDocument doc, Rectangle rect, String name, String caption
             , PdfFont font, float fontSize) {
+            return CreatePushButton(doc, rect, name, caption, font, fontSize, null);
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfButtonFormField"/>
+        /// as a push button without data, with
+        /// its caption in a custom font.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the radio group in
+        /// </param>
+        /// <param name="rect">the location on the page for the field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="caption">the text to display on the button</param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </param>
+        /// <param name="fontSize">the size of the font</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfButtonFormField"/>
+        /// </returns>
+        public static PdfButtonFormField CreatePushButton(PdfDocument doc, Rectangle rect, String name, String caption
+            , PdfFont font, float fontSize, PdfAConformanceLevel pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             PdfButtonFormField field = new PdfButtonFormField(annot, doc);
+            field.pdfAConformanceLevel = pdfAConformanceLevel;
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             field.SetPushButton(true);
             field.SetFieldName(name);
             field.text = caption;
@@ -961,7 +1372,9 @@ namespace iText.Forms.Fields {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             PdfButtonFormField check = new PdfButtonFormField(annot, doc);
             check.pdfAConformanceLevel = pdfAConformanceLevel;
-            annot.SetFlag(PdfAnnotation.PRINT);
+            if (null != pdfAConformanceLevel) {
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
             check.SetCheckType(checkType);
             check.SetFieldName(name);
             check.Put(PdfName.V, new PdfName(value));
@@ -1019,7 +1432,48 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfChoiceFormField CreateComboBox(PdfDocument doc, Rectangle rect, String name, String value
             , String[][] options) {
-            return CreateChoice(doc, rect, name, value, ProcessOptions(options), PdfChoiceFormField.FF_COMBO);
+            try {
+                return CreateComboBox(doc, rect, name, value, options, PdfFontFactory.CreateFont(), null);
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">combobox</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the combobox in
+        /// </param>
+        /// <param name="rect">the location on the page for the combobox</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="options">
+        /// a two-dimensional array of Strings which will be converted
+        /// to a PdfArray.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// as a combobox
+        /// </returns>
+        public static PdfChoiceFormField CreateComboBox(PdfDocument doc, Rectangle rect, String name, String value
+            , String[][] options, PdfFont font, PdfAConformanceLevel pdfAConformanceLevel) {
+            return CreateChoice(doc, rect, name, value, ProcessOptions(options), PdfChoiceFormField.FF_COMBO, font, pdfAConformanceLevel
+                );
         }
 
         /// <summary>
@@ -1044,7 +1498,45 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfChoiceFormField CreateComboBox(PdfDocument doc, Rectangle rect, String name, String value
             , String[] options) {
-            return CreateChoice(doc, rect, name, value, ProcessOptions(options), PdfChoiceFormField.FF_COMBO);
+            try {
+                return CreateComboBox(doc, rect, name, value, options, PdfFontFactory.CreateFont(), null);
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">combobox</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the combobox in
+        /// </param>
+        /// <param name="rect">the location on the page for the combobox</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// as a combobox
+        /// </returns>
+        public static PdfChoiceFormField CreateComboBox(PdfDocument doc, Rectangle rect, String name, String value
+            , String[] options, PdfFont font, PdfAConformanceLevel pdfAConformanceLevel) {
+            return CreateChoice(doc, rect, name, value, ProcessOptions(options), PdfChoiceFormField.FF_COMBO, font, pdfAConformanceLevel
+                );
         }
 
         /// <summary>
@@ -1072,7 +1564,47 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfChoiceFormField CreateList(PdfDocument doc, Rectangle rect, String name, String value, String
             [][] options) {
-            return CreateChoice(doc, rect, name, value, ProcessOptions(options), 0);
+            try {
+                return CreateList(doc, rect, name, value, options, PdfFontFactory.CreateFont(), null);
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">list field</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the choice field in
+        /// </param>
+        /// <param name="rect">the location on the page for the choice field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="options">
+        /// a two-dimensional array of Strings which will be converted
+        /// to a PdfArray.
+        /// </param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// as a list field
+        /// </returns>
+        public static PdfChoiceFormField CreateList(PdfDocument doc, Rectangle rect, String name, String value, String
+            [][] options, PdfFont font, PdfAConformanceLevel pdfAConformanceLevel) {
+            return CreateChoice(doc, rect, name, value, ProcessOptions(options), 0, font, pdfAConformanceLevel);
         }
 
         /// <summary>
@@ -1097,7 +1629,44 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfChoiceFormField CreateList(PdfDocument doc, Rectangle rect, String name, String value, String
             [] options) {
-            return CreateChoice(doc, rect, name, value, ProcessOptions(options), 0);
+            try {
+                return CreateList(doc, rect, name, value, options, PdfFontFactory.CreateFont(), null);
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfChoiceFormField">list field</see>
+        /// with custom
+        /// behavior and layout, on a specified location.
+        /// </summary>
+        /// <param name="doc">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the list field in
+        /// </param>
+        /// <param name="rect">the location on the page for the list field</param>
+        /// <param name="name">the name of the form field</param>
+        /// <param name="value">the initial value</param>
+        /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
+        /// <param name="pdfAConformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the document.
+        /// <c/>
+        /// null if it's no PDF/A document
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfChoiceFormField"/>
+        /// as a list field
+        /// </returns>
+        public static PdfChoiceFormField CreateList(PdfDocument doc, Rectangle rect, String name, String value, String
+            [] options, PdfFont font, PdfAConformanceLevel pdfAConformanceLevel) {
+            return CreateChoice(doc, rect, name, value, ProcessOptions(options), 0, font, pdfAConformanceLevel);
         }
 
         /// <summary>
@@ -1813,6 +2382,8 @@ namespace iText.Forms.Fields {
         /// <remarks>
         /// Basic setter for the <code>font</code> property. Regenerates the field
         /// appearance after setting the new value.
+        /// Note that the font will be added to the document so ensure that the font is embedded
+        /// if it's a pdf/a document.
         /// </remarks>
         /// <param name="font">The new font to be set</param>
         /// <returns>The edited PdfFormField</returns>
@@ -2127,14 +2698,13 @@ namespace iText.Forms.Fields {
                     }
                     else {
                         if (!GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                            PdfNumber topIndex = ((PdfChoiceFormField)this).GetTopIndex();
-                            PdfArray options = (PdfArray)GetOptions().Clone();
-                            if (topIndex != null) {
-                                PdfObject @object = options.Get(topIndex.IntValue());
-                                options.Remove(topIndex.IntValue());
-                                options.Add(0, @object);
+                            PdfNumber topIndex = this.GetPdfObject().GetAsNumber(PdfName.TI);
+                            PdfArray options = GetOptions();
+                            if (null != options) {
+                                PdfArray visibleOptions = null != topIndex ? new PdfArray(options.SubList(topIndex.IntValue(), options.Size
+                                    () - 1)) : (PdfArray)options.Clone();
+                                value = OptionsArrayToString(visibleOptions);
                             }
-                            value = OptionsArrayToString(options);
                         }
                         DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
                     }
@@ -2202,7 +2772,8 @@ namespace iText.Forms.Fields {
                                     PdfObject kid = kids.Get(i);
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
-                                    PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
+                                    PdfDictionary buttonValues = (PdfDictionary)field.GetPdfObject().GetAsDictionary(PdfName.AP).Get(PdfName.N
+                                        );
                                     String state;
                                     if (buttonValues.Get(new PdfName(value)) != null) {
                                         state = value;
