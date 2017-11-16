@@ -360,7 +360,7 @@ namespace iText.IO.Font {
                 fontNames.SetCidFontName(cidName[0][3]);
             }
             fontNames.SetFontWeight(os_2.usWeightClass);
-            fontNames.SetFontWidth(FontWidths.FromOpenTypeFontWidth(os_2.usWidthClass));
+            fontNames.SetFontStretch(FontStretches.FromOpenTypeWidthClass(os_2.usWidthClass));
             fontNames.SetMacStyle(head.macStyle);
             fontNames.SetAllowEmbedding(os_2.fsType != 2);
             return fontNames;

@@ -25,7 +25,7 @@ namespace iText.IO.Font.Constants {
             BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.ZAPFDINGBATS);
         }
 
-        public static bool Contains(String fontName) {
+        public static bool IsStandardFont(String fontName) {
             return BUILTIN_FONTS.Contains(fontName);
         }
 

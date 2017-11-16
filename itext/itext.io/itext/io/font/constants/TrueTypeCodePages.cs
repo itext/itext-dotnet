@@ -6,7 +6,7 @@ namespace iText.IO.Font.Constants {
         private TrueTypeCodePages() {
         }
 
-        private static readonly String[] codePages = new String[] { "1252 Latin 1", "1250 Latin 2: Eastern Europe"
+        private static readonly String[] CODE_PAGES = new String[] { "1252 Latin 1", "1250 Latin 2: Eastern Europe"
             , "1251 Cyrillic", "1253 Greek", "1254 Turkish", "1255 Hebrew", "1256 Arabic", "1257 Windows Baltic", 
             "1258 Vietnamese", null, null, null, null, null, null, null, "874 Thai", "932 JIS/Japan", "936 Chinese: Simplified chars--PRC and Singapore"
             , "949 Korean Wansung", "950 Chinese: Traditional chars--Taiwan and Hong Kong", "1361 Korean Johab", null
@@ -26,7 +26,7 @@ namespace iText.IO.Font.Constants {
         /// <returns>code bage description.</returns>
         public static String Get(int bit) {
             System.Diagnostics.Debug.Assert(bit >= 0 && bit < 64);
-            return codePages[bit];
+            return CODE_PAGES[bit];
         }
     }
 }

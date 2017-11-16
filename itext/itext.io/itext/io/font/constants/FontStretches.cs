@@ -1,8 +1,8 @@
 using System;
 
 namespace iText.IO.Font.Constants {
-    public sealed class FontWidths {
-        private FontWidths() {
+    public sealed class FontStretches {
+        private FontStretches() {
         }
 
         private const int FWIDTH_ULTRA_CONDENSED = 1;
@@ -41,78 +41,19 @@ namespace iText.IO.Font.Constants {
 
         public const String ULTRA_EXPANDED = "ultra-expanded";
 
-        /// <summary>Convert from Type 1 font width notation</summary>
-        /// <param name="fontWidth">Type 1 font width.</param>
-        /// <returns>
-        /// one of the
-        /// <see cref="FontWidths"/>
-        /// constants.
-        /// </returns>
-        public static String FromType1FontWidth(String fontWidth) {
-            fontWidth = fontWidth.ToLowerInvariant();
-            String fontWidthValue = NORMAL;
-            switch (fontWidth) {
-                case "ultracondensed": {
-                    fontWidthValue = ULTRA_CONDENSED;
-                    break;
-                }
-
-                case "extracondensed": {
-                    fontWidthValue = EXTRA_CONDENSED;
-                    break;
-                }
-
-                case "condensed": {
-                    fontWidthValue = CONDENSED;
-                    break;
-                }
-
-                case "semicondensed": {
-                    fontWidthValue = SEMI_CONDENSED;
-                    break;
-                }
-
-                case "normal": {
-                    fontWidthValue = NORMAL;
-                    break;
-                }
-
-                case "semiexpanded": {
-                    fontWidthValue = SEMI_CONDENSED;
-                    break;
-                }
-
-                case "expanded": {
-                    fontWidthValue = EXPANDED;
-                    break;
-                }
-
-                case "extraexpanded": {
-                    fontWidthValue = EXTRA_CONDENSED;
-                    break;
-                }
-
-                case "ultraexpanded": {
-                    fontWidthValue = ULTRA_CONDENSED;
-                    break;
-                }
-            }
-            return fontWidthValue;
-        }
-
-        /// <summary>Convert from Open Type font width notation.</summary>
+        /// <summary>Convert from Open Type font width class notation.</summary>
         /// <remarks>
-        /// Convert from Open Type font width notation.
+        /// Convert from Open Type font width class notation.
         /// <br/>
         /// https://www.microsoft.com/typography/otspec/os2.htm#wdc
         /// </remarks>
         /// <param name="fontWidth">Open Type font width.</param>
         /// <returns>
         /// one of the
-        /// <see cref="FontWidths"/>
+        /// <see cref="FontStretches"/>
         /// constants.
         /// </returns>
-        public static String FromOpenTypeFontWidth(int fontWidth) {
+        public static String FromOpenTypeWidthClass(int fontWidth) {
             String fontWidthValue = NORMAL;
             switch (fontWidth) {
                 case FWIDTH_ULTRA_CONDENSED: {

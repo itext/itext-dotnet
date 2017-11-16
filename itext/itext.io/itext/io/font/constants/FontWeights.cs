@@ -90,7 +90,7 @@ namespace iText.IO.Font.Constants {
 
                 case "fat":
                 case "extrablack": {
-                    fontWeight = 1000;
+                    fontWeight = BLACK;
                     break;
                 }
             }

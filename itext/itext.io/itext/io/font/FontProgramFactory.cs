@@ -168,7 +168,7 @@ namespace iText.IO.Font {
         private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
-            bool isBuiltinFonts14 = StandardFonts.Contains(name);
+            bool isBuiltinFonts14 = StandardFonts.IsStandardFont(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
             FontCacheKey fontKey = null;
@@ -401,18 +401,18 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="FontConstants"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.UNDEFINED"/>
         /// </param>
         /// <param name="cached">whether to try to get the font program from cache</param>
         /// <returns>
@@ -431,18 +431,18 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="FontConstants"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.UNDEFINED"/>
         /// </param>
         /// <returns>
         /// created

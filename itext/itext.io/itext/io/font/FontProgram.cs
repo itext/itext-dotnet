@@ -215,11 +215,11 @@ namespace iText.IO.Font {
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontWidths"/>
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
         /// .
         /// </param>
         protected internal virtual void SetFontWidth(String fontWidth) {
-            fontNames.SetFontWidth(fontWidth);
+            fontNames.SetFontStretch(fontWidth);
         }
 
         protected internal virtual void SetFixedPitch(bool isFixedPitch) {
@@ -248,7 +248,7 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void CheckFilePath(String path) {
-            if (path != null && !StandardFonts.Contains(path) && !FileUtil.FileExists(path)) {
+            if (path != null && !StandardFonts.IsStandardFont(path) && !FileUtil.FileExists(path)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }

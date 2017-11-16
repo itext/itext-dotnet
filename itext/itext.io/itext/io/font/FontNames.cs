@@ -63,7 +63,7 @@ namespace iText.IO.Font {
 
         private int weight = FontWeights.NORMAL;
 
-        private String width = FontWidths.NORMAL;
+        private String fontStretch = FontStretches.NORMAL;
 
         private int macStyle;
 
@@ -125,18 +125,24 @@ namespace iText.IO.Font {
             this.weight = weight;
         }
 
-        public virtual String GetFontWidth() {
-            return width;
+        /// <summary>Gets font stretch in css notation (font-stretch property).</summary>
+        /// <returns>
+        /// One of
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
+        /// values.
+        /// </returns>
+        public virtual String GetFontStretch() {
+            return fontStretch;
         }
 
-        /// <summary>Sets font width in css notation (font-stretch property).</summary>
-        /// <param name="width">
+        /// <summary>Sets font stretch in css notation (font-stretch property).</summary>
+        /// <param name="fontStretch">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontWidths"/>
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
         /// .
         /// </param>
-        public virtual void SetFontWidth(String width) {
-            this.width = width;
+        public virtual void SetFontStretch(String fontStretch) {
+            this.fontStretch = fontStretch;
         }
 
         public virtual bool AllowEmbedding() {
