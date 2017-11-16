@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
     public class FontNames {
@@ -59,24 +60,6 @@ namespace iText.IO.Font {
         protected internal const int CONDENSED_FLAG = 32;
 
         protected internal const int EXTENDED_FLAG = 64;
-
-        protected internal const int FW_THIN = 100;
-
-        protected internal const int FW_EXTRALIGHT = 200;
-
-        protected internal const int FW_LIGHT = 300;
-
-        protected internal const int FW_NORMAL = 400;
-
-        protected internal const int FW_MEDIUM = 500;
-
-        protected internal const int FW_SEMIBOLD = 600;
-
-        protected internal const int FW_BOLD = 700;
-
-        protected internal const int FW_EXTRABOLD = 800;
-
-        protected internal const int FW_BLACK = 900;
 
         protected internal const int FWIDTH_ULTRA_CONDENSED = 1;
 
@@ -110,7 +93,7 @@ namespace iText.IO.Font {
 
         private String cidFontName;
 
-        private int weight = FW_NORMAL;
+        private int weight = FontWeights.NORMAL;
 
         private int width = FWIDTH_NORMAL;
 
@@ -126,15 +109,6 @@ namespace iText.IO.Font {
         // Bit 4: Shadow (if set to 1)
         // Bit 5: Condensed (if set to 1)
         // Bit 6: Extended (if set to 1)
-        // Font weight Thin
-        // Font weight Extra-light (Ultra-light)
-        // Font weight Light
-        // Font weight Normal
-        // Font weight Medium
-        // Font weight Semi-bold
-        // Font weight Bold
-        // Font weight Extra-bold (Ultra-bold)
-        // Font weight Black (Heavy)
         // Font width Ultra-condensed, 50%
         // Font width Extra-condensed, 62.5%
         // Font width Condensed, 75%
