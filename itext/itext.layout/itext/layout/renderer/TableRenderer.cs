@@ -514,16 +514,6 @@ namespace iText.Layout.Renderer {
                                         continue;
                                     }
                                     else {
-                                        int reusedRows = 0;
-                                        if (null != res.GetSplitRenderer()) {
-                                            reusedRows = ((iText.Layout.Renderer.TableRenderer)res.GetSplitRenderer()).rows.Count;
-                                        }
-                                        for (int i = 0; i < numberOfColumns; i++) {
-                                            if (null != rows[row + reusedRows][i]) {
-                                                rows[row + reusedRows][i] = (CellRenderer)((Cell)(rows[row + reusedRows][i].GetModelElement())).CreateRendererSubTree
-                                                    ();
-                                            }
-                                        }
                                         if (null != headerRenderer) {
                                             bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
                                         }
