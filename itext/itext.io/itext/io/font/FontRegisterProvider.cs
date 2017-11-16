@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -118,49 +119,51 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void RegisterStandardFonts() {
-            fontNames.Put(FontConstants.COURIER.ToLowerInvariant(), FontConstants.COURIER);
-            fontNames.Put(FontConstants.COURIER_BOLD.ToLowerInvariant(), FontConstants.COURIER_BOLD);
-            fontNames.Put(FontConstants.COURIER_OBLIQUE.ToLowerInvariant(), FontConstants.COURIER_OBLIQUE);
-            fontNames.Put(FontConstants.COURIER_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.COURIER_BOLDOBLIQUE);
-            fontNames.Put(FontConstants.HELVETICA.ToLowerInvariant(), FontConstants.HELVETICA);
-            fontNames.Put(FontConstants.HELVETICA_BOLD.ToLowerInvariant(), FontConstants.HELVETICA_BOLD);
-            fontNames.Put(FontConstants.HELVETICA_OBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_OBLIQUE);
-            fontNames.Put(FontConstants.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_BOLDOBLIQUE);
-            fontNames.Put(FontConstants.SYMBOL.ToLowerInvariant(), FontConstants.SYMBOL);
-            fontNames.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), FontConstants.TIMES_ROMAN);
-            fontNames.Put(FontConstants.TIMES_BOLD.ToLowerInvariant(), FontConstants.TIMES_BOLD);
-            fontNames.Put(FontConstants.TIMES_ITALIC.ToLowerInvariant(), FontConstants.TIMES_ITALIC);
-            fontNames.Put(FontConstants.TIMES_BOLDITALIC.ToLowerInvariant(), FontConstants.TIMES_BOLDITALIC);
-            fontNames.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), FontConstants.ZAPFDINGBATS);
+            fontNames.Put(StandardFontNames.COURIER.ToLowerInvariant(), StandardFontNames.COURIER);
+            fontNames.Put(StandardFontNames.COURIER_BOLD.ToLowerInvariant(), StandardFontNames.COURIER_BOLD);
+            fontNames.Put(StandardFontNames.COURIER_OBLIQUE.ToLowerInvariant(), StandardFontNames.COURIER_OBLIQUE);
+            fontNames.Put(StandardFontNames.COURIER_BOLDOBLIQUE.ToLowerInvariant(), StandardFontNames.COURIER_BOLDOBLIQUE
+                );
+            fontNames.Put(StandardFontNames.HELVETICA.ToLowerInvariant(), StandardFontNames.HELVETICA);
+            fontNames.Put(StandardFontNames.HELVETICA_BOLD.ToLowerInvariant(), StandardFontNames.HELVETICA_BOLD);
+            fontNames.Put(StandardFontNames.HELVETICA_OBLIQUE.ToLowerInvariant(), StandardFontNames.HELVETICA_OBLIQUE);
+            fontNames.Put(StandardFontNames.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), StandardFontNames.HELVETICA_BOLDOBLIQUE
+                );
+            fontNames.Put(StandardFontNames.SYMBOL.ToLowerInvariant(), StandardFontNames.SYMBOL);
+            fontNames.Put(StandardFontNames.TIMES_ROMAN.ToLowerInvariant(), StandardFontNames.TIMES_ROMAN);
+            fontNames.Put(StandardFontNames.TIMES_BOLD.ToLowerInvariant(), StandardFontNames.TIMES_BOLD);
+            fontNames.Put(StandardFontNames.TIMES_ITALIC.ToLowerInvariant(), StandardFontNames.TIMES_ITALIC);
+            fontNames.Put(StandardFontNames.TIMES_BOLDITALIC.ToLowerInvariant(), StandardFontNames.TIMES_BOLDITALIC);
+            fontNames.Put(StandardFontNames.ZAPFDINGBATS.ToLowerInvariant(), StandardFontNames.ZAPFDINGBATS);
         }
 
         protected internal virtual void RegisterStandardFontFamilies() {
             IList<String> family;
             family = new List<String>();
-            family.Add(FontConstants.COURIER);
-            family.Add(FontConstants.COURIER_BOLD);
-            family.Add(FontConstants.COURIER_OBLIQUE);
-            family.Add(FontConstants.COURIER_BOLDOBLIQUE);
-            fontFamilies.Put(FontConstants.COURIER.ToLowerInvariant(), family);
+            family.Add(StandardFontNames.COURIER);
+            family.Add(StandardFontNames.COURIER_BOLD);
+            family.Add(StandardFontNames.COURIER_OBLIQUE);
+            family.Add(StandardFontNames.COURIER_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFontNames.COURIER.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.HELVETICA);
-            family.Add(FontConstants.HELVETICA_BOLD);
-            family.Add(FontConstants.HELVETICA_OBLIQUE);
-            family.Add(FontConstants.HELVETICA_BOLDOBLIQUE);
-            fontFamilies.Put(FontConstants.HELVETICA.ToLowerInvariant(), family);
+            family.Add(StandardFontNames.HELVETICA);
+            family.Add(StandardFontNames.HELVETICA_BOLD);
+            family.Add(StandardFontNames.HELVETICA_OBLIQUE);
+            family.Add(StandardFontNames.HELVETICA_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFontNames.HELVETICA.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.SYMBOL);
-            fontFamilies.Put(FontConstants.SYMBOL.ToLowerInvariant(), family);
+            family.Add(StandardFontNames.SYMBOL);
+            fontFamilies.Put(StandardFontNames.SYMBOL.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.TIMES_ROMAN);
-            family.Add(FontConstants.TIMES_BOLD);
-            family.Add(FontConstants.TIMES_ITALIC);
-            family.Add(FontConstants.TIMES_BOLDITALIC);
-            fontFamilies.Put(FontConstants.TIMES.ToLowerInvariant(), family);
-            fontFamilies.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), family);
+            family.Add(StandardFontNames.TIMES_ROMAN);
+            family.Add(StandardFontNames.TIMES_BOLD);
+            family.Add(StandardFontNames.TIMES_ITALIC);
+            family.Add(StandardFontNames.TIMES_BOLDITALIC);
+            fontFamilies.Put(StandardFontNames.TIMES.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontNames.TIMES_ROMAN.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.ZAPFDINGBATS);
-            fontFamilies.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), family);
+            family.Add(StandardFontNames.ZAPFDINGBATS);
+            fontFamilies.Put(StandardFontNames.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
         /// <exception cref="System.IO.IOException"/>

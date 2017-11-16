@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -79,7 +79,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER_BOLD), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER_BOLD), 14);
             canvas.MoveText(100, 600);
             canvas.ShowText("Page 1");
             canvas.MoveText(0, -30);
@@ -91,7 +91,7 @@ namespace iText.Kernel.Pdf {
             page1.Flush();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER_BOLD), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER_BOLD), 14);
             canvas.MoveText(100, 600);
             canvas.ShowText("Page 2");
             canvas.EndText();
@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER_BOLD), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER_BOLD), 14);
             canvas.MoveText(100, 600);
             canvas.ShowText("Click here to go to itextpdf site.");
             canvas.EndText();
@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER_BOLD), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER_BOLD), 14);
             canvas.MoveText(100, 600);
             canvas.ShowText("Click here to go to itextpdf site.");
             canvas.MoveText(0, -50);
@@ -210,10 +210,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("This is a text").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(236, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("This is an edited text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("This is a text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(236, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("This is an edited text").EndText().RestoreState();
             PdfCaretAnnotation caret = new PdfCaretAnnotation(new Rectangle(36, 745, 350, 20));
             caret.SetSymbol(new PdfString("P"));
             PdfPopupAnnotation popup = new PdfPopupAnnotation(new Rectangle(36, 445, 100, 100));
@@ -237,7 +237,7 @@ namespace iText.Kernel.Pdf {
         public virtual void AddFreeTextAnnotation01() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "freeTextAnnotation01.pdf"));
             PdfPage page = document.AddNewPage();
-            new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24).MoveText
+            new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24).MoveText
                 (100, 600).ShowText("Annotated text").EndText().Release();
             PdfFreeTextAnnotation textannot = new PdfFreeTextAnnotation(new Rectangle(300, 700, 150, 20), new PdfString
                 ("FreeText annotation"));
@@ -347,8 +347,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument inputDoc = new PdfDocument(new PdfWriter(baos));
             PdfPage page1 = inputDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("This is a text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("This is a text").EndText().RestoreState();
             inputDoc.Close();
             PdfDocument finalDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(fileName
                 ), new StampingProperties().UseAppendMode());
@@ -478,8 +478,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Underline!").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Underline!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
             PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateUnderline(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
@@ -506,8 +506,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Highlight!").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Highlight!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
             PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateHighLight(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
@@ -534,8 +534,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Squiggly!").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Squiggly!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
             PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateSquiggly(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
@@ -562,8 +562,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Strikeout!").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Strikeout!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
             PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateStrikeout(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
@@ -589,7 +589,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page1);
-            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
+            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
                 .HELVETICA), 16).ShowText("This is Printer Mark annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
@@ -615,7 +615,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page);
-            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
+            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
                 .HELVETICA), 16).ShowText("This is Trap Network annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
@@ -801,8 +801,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             FileStream fos = new FileStream(destinationFolder + "sample.wav", FileMode.Create);
             FileStream fis = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
@@ -835,8 +835,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
                 , null, null);
@@ -860,8 +860,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, new FileStream(sourceFolder + "sample.wav", 
                 FileMode.Open, FileAccess.Read), null, "sample.wav", null, null);
@@ -885,8 +885,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
+                .HELVETICA), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
             MemoryStream baos = new MemoryStream();

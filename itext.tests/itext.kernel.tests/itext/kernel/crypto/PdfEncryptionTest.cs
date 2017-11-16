@@ -44,7 +44,7 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -855,7 +855,7 @@ namespace iText.Kernel.Crypto {
         internal static void WriteTextBytesOnPageContent(PdfPage page, String text) {
             page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
                  + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
-            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
         }
 
         /// <exception cref="System.IO.IOException"/>

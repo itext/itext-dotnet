@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -263,7 +264,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA);
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello World").EndText
                 ().RestoreState();
@@ -286,7 +287,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA_OBLIQUE);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_OBLIQUE);
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -311,7 +312,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLDOBLIQUE);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLDOBLIQUE);
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -336,7 +337,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.COURIER_BOLD);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER_BOLD);
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

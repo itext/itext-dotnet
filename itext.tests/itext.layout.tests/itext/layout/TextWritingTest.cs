@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -73,7 +73,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
                 Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(ColorConstants.WHITE).SetBackgroundColor
@@ -153,7 +153,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            document.SetProperty(Property.FIRST_LINE_INDENT, 25f);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
                  + "independent of application software, hardware, and operating systems.[2] Each PDF file encapsulates a complete "
                  + "description of a fixed-layout flat document, including the text, fonts, graphics, and other information needed to "
@@ -189,7 +189,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
             p.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
                  + "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.\n"
@@ -212,7 +212,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
             p.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
                  + "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.\n"

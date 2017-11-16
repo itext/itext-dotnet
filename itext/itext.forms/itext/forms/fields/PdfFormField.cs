@@ -47,6 +47,7 @@ using System.Text;
 using Common.Logging;
 using iText.IO.Codec;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -2519,7 +2520,7 @@ namespace iText.Forms.Fields {
                 return this;
             }
             try {
-                font = PdfFontFactory.CreateFont(FontConstants.ZAPFDINGBATS);
+                font = PdfFontFactory.CreateFont(StandardFontNames.ZAPFDINGBATS);
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(e);

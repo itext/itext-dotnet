@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -77,7 +77,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
             for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
                 if (i % 10 == 0) {
@@ -118,7 +118,7 @@ namespace iText.Layout {
             Paragraph twoColumnParagraph = new Paragraph();
             twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph));
             iText.Layout.Element.Text textElement = new iText.Layout.Element.Text(text.ToString());
-            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
             document.Add(twoColumnParagraph);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;

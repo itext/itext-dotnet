@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -68,7 +69,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>
         /// Creates a new instance of default font, namely
-        /// <see cref="iText.IO.Font.FontConstants.HELVETICA"/>
+        /// <see cref="iText.IO.Font.Constants.StandardFontNames.HELVETICA"/>
         /// standard font
         /// with
         /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
@@ -81,7 +82,7 @@ namespace iText.Kernel.Font {
         /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
         ///     </exception>
         public static PdfFont CreateFont() {
-            return CreateFont(FontConstants.HELVETICA, DEFAULT_ENCODING);
+            return CreateFont(StandardFontNames.HELVETICA, DEFAULT_ENCODING);
         }
 
         /// <summary>

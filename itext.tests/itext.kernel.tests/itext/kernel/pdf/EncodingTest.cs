@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -102,7 +103,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
                 );
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText("A E").EndText().RestoreState
@@ -119,12 +120,12 @@ namespace iText.Kernel.Pdf {
             String fileName = "notdefInStandardFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
                 );
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("A E").EndText().RestoreState
                 ();
-            font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+            font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA, PdfEncodings.WINANSI);
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u0188").EndText().RestoreState
                 ();
             doc.Close();
@@ -175,10 +176,10 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolDefaultFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.SYMBOL);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.SYMBOL);
             FillSymbolDefaultPage(font, doc.AddNewPage());
             //WinAnsi encoding doesn't support special symbols
-            font = PdfFontFactory.CreateFont(FontConstants.SYMBOL, PdfEncodings.WINANSI);
+            font = PdfFontFactory.CreateFont(StandardFontNames.SYMBOL, PdfEncodings.WINANSI);
             FillSymbolDefaultPage(font, doc.AddNewPage());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
@@ -215,21 +216,24 @@ namespace iText.Kernel.Pdf {
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", true);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            String str = "";
+            StringBuilder str = new StringBuilder();
             for (int i = 32; i <= 65; i++) {
-                str += (char)i;
+                str.Append((char)i);
             }
-            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str).EndText();
-            str = "";
+            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str.ToString()).EndText
+                ();
+            str = new StringBuilder();
             for (int i = 65; i <= 190; i++) {
-                str += (char)i;
+                str.Append((char)i);
             }
-            canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText(str).EndText();
-            str = "";
+            canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText(str.ToString()).EndText
+                ();
+            str = new StringBuilder();
             for (int i = 191; i <= 254; i++) {
-                str += (char)i;
+                str.Append((char)i);
             }
-            canvas.BeginText().MoveText(36, 726).SetFontAndSize(font, 36).ShowText(str).EndText().RestoreState();
+            canvas.BeginText().MoveText(36, 726).SetFontAndSize(font, 36).ShowText(str.ToString()).EndText().RestoreState
+                ();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));
@@ -248,21 +252,21 @@ namespace iText.Kernel.Pdf {
             for (int i = 32; i <= 100; i++) {
                 builder.Append((char)i);
             }
-            String str = builder.ToString();
-            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(str).EndText().RestoreState
-                ();
-            str = "";
+            StringBuilder str = new StringBuilder(builder.ToString());
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(str.ToString()).EndText
+                ().RestoreState();
+            str = new StringBuilder();
             for (int i = 101; i <= 190; i++) {
-                str += (char)i;
+                str.Append((char)i);
             }
-            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 746).ShowText(str).EndText().RestoreState
-                ();
-            str = "";
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 746).ShowText(str.ToString()).EndText
+                ().RestoreState();
+            str = new StringBuilder();
             for (int i = 191; i <= 254; i++) {
-                str += (char)i;
+                str.Append((char)i);
             }
-            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 766).ShowText(str).EndText().RestoreState
-                ();
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 766).ShowText(str.ToString()).EndText
+                ().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));

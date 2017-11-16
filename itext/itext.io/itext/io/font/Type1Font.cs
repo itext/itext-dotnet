@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -72,7 +73,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         protected internal static iText.IO.Font.Type1Font CreateStandardFont(String name) {
-            if (FontConstants.BUILTIN_FONTS_14.Contains(name)) {
+            if (StandardFontNames.Contains(name)) {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
             }
             else {

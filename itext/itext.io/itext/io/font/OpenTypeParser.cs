@@ -50,8 +50,10 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     internal class OpenTypeParser : IDisposable {
+        private const int HEAD_LOCA_FORMAT_OFFSET = 51;
+
         /// <summary>The components of table 'head'.</summary>
-        protected internal class HeaderTable {
+        internal class HeaderTable {
             internal int flags;
 
             internal int unitsPerEm;
@@ -68,7 +70,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>The components of table 'hhea'.</summary>
-        protected internal class HorizontalHeader {
+        internal class HorizontalHeader {
             internal short Ascender;
 
             internal short Descender;
@@ -91,7 +93,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>The components of table 'OS/2'.</summary>
-        protected internal class WindowsMetrics {
+        internal class WindowsMetrics {
             internal short xAvgCharWidth;
 
             internal int usWeightClass;
@@ -151,7 +153,7 @@ namespace iText.IO.Font {
             internal int sCapHeight;
         }
 
-        protected internal class PostTable {
+        internal class PostTable {
             /// <summary>The italic angle.</summary>
             /// <remarks>
             /// The italic angle. It is usually extracted from the 'post' table or in it's
@@ -170,7 +172,7 @@ namespace iText.IO.Font {
             internal bool isFixedPitch;
         }
 
-        protected internal class CmapTable {
+        internal class CmapTable {
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -647,7 +649,7 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
-            raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
+            raf.Seek(tableLocation[0] + HEAD_LOCA_FORMAT_OFFSET);
             bool locaShortTable = raf.ReadUnsignedShort() == 0;
             tableLocation = tables.Get("loca");
             if (tableLocation == null) {

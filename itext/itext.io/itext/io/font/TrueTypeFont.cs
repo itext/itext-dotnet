@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 
@@ -341,7 +342,7 @@ namespace iText.IO.Font {
             int count = 0;
             long bit = 1;
             for (int k = 0; k < 64; ++k) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
+                if ((cp & bit) != 0 && TrueTypeCodePages.Get(k) != null) {
                     ++count;
                 }
                 bit <<= 1;
@@ -350,8 +351,8 @@ namespace iText.IO.Font {
             count = 0;
             bit = 1;
             for (int k = 0; k < 64; ++k) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
-                    ret[count++] = FontConstants.CODE_PAGES[k];
+                if ((cp & bit) != 0 && TrueTypeCodePages.Get(k) != null) {
+                    ret[count++] = TrueTypeCodePages.Get(k);
                 }
                 bit <<= 1;
             }

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -80,7 +81,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
-            if (FontConstants.BUILTIN_FONTS_14.Contains(afmPath)) {
+            if (StandardFontNames.Contains(afmPath)) {
                 isBuiltInFont = true;
                 byte[] buf = new byte[1024];
                 Stream resource = null;

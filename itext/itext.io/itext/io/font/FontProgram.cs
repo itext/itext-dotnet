@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 
@@ -289,7 +290,7 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void CheckFilePath(String path) {
-            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path)) {
+            if (path != null && !StandardFontNames.Contains(path) && !FileUtil.FileExists(path)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }

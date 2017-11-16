@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -75,7 +75,8 @@ namespace iText.Layout {
             for (int i = 0; i < 1000; i++) {
                 text.Append("This is a waaaaay tooo long text...");
             }
-            Paragraph p = new Paragraph(text.ToString()).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            Paragraph p = new Paragraph(text.ToString()).SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA
+                ));
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

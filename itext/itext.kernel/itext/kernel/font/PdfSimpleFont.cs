@@ -185,7 +185,7 @@ namespace iText.Kernel.Font {
                 return bytes;
             }
             else {
-                return emptyBytes;
+                return EMPTY_BYTES;
             }
         }
 
@@ -199,7 +199,7 @@ namespace iText.Kernel.Font {
                     bytes[0] = (byte)fontEncoding.ConvertToByte(glyph.GetUnicode());
                 }
                 else {
-                    return emptyBytes;
+                    return EMPTY_BYTES;
                 }
             }
             shortTag[bytes[0] & 0xff] = 1;
@@ -359,13 +359,13 @@ namespace iText.Kernel.Font {
             if (fontEncoding.HasDifferences()) {
                 // trim range of symbols
                 for (int k = firstChar; k <= lastChar; ++k) {
-                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k))) {
+                    if (!FontEncoding.NOTDEF.Equals(fontEncoding.GetDifference(k))) {
                         firstChar = k;
                         break;
                     }
                 }
                 for (int k = lastChar; k >= firstChar; --k) {
-                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k))) {
+                    if (!FontEncoding.NOTDEF.Equals(fontEncoding.GetDifference(k))) {
                         lastChar = k;
                         break;
                     }

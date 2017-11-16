@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Font;
@@ -151,20 +152,20 @@ namespace iText.Layout.Font {
         }
 
         public virtual int AddStandardPdfFonts() {
-            AddFont(FontConstants.COURIER);
-            AddFont(FontConstants.COURIER_BOLD);
-            AddFont(FontConstants.COURIER_BOLDOBLIQUE);
-            AddFont(FontConstants.COURIER_OBLIQUE);
-            AddFont(FontConstants.HELVETICA);
-            AddFont(FontConstants.HELVETICA_BOLD);
-            AddFont(FontConstants.HELVETICA_BOLDOBLIQUE);
-            AddFont(FontConstants.HELVETICA_OBLIQUE);
-            AddFont(FontConstants.SYMBOL);
-            fontSet.AddFont(FontConstants.TIMES_ROMAN, null, "Times");
-            fontSet.AddFont(FontConstants.TIMES_BOLD, null, "Times-Roman Bold");
-            fontSet.AddFont(FontConstants.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
-            fontSet.AddFont(FontConstants.TIMES_ITALIC, null, "Times-Roman Italic");
-            AddFont(FontConstants.ZAPFDINGBATS);
+            AddFont(StandardFontNames.COURIER);
+            AddFont(StandardFontNames.COURIER_BOLD);
+            AddFont(StandardFontNames.COURIER_BOLDOBLIQUE);
+            AddFont(StandardFontNames.COURIER_OBLIQUE);
+            AddFont(StandardFontNames.HELVETICA);
+            AddFont(StandardFontNames.HELVETICA_BOLD);
+            AddFont(StandardFontNames.HELVETICA_BOLDOBLIQUE);
+            AddFont(StandardFontNames.HELVETICA_OBLIQUE);
+            AddFont(StandardFontNames.SYMBOL);
+            fontSet.AddFont(StandardFontNames.TIMES_ROMAN, null, "Times");
+            fontSet.AddFont(StandardFontNames.TIMES_BOLD, null, "Times-Roman Bold");
+            fontSet.AddFont(StandardFontNames.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
+            fontSet.AddFont(StandardFontNames.TIMES_ITALIC, null, "Times-Roman Italic");
+            AddFont(StandardFontNames.ZAPFDINGBATS);
             return 14;
         }
 

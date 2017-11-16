@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -891,7 +892,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
             iText.Layout.Element.Text id = new iText.Layout.Element.Text("text chunk with specific font").SetFont(font
                 ).SetFontSize(8).SetTextRise(6);

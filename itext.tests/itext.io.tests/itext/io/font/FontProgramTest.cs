@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -61,7 +62,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BoldTest() {
-            FontProgram fp = FontProgramFactory.CreateFont(FontConstants.HELVETICA);
+            FontProgram fp = FontProgramFactory.CreateFont(StandardFontNames.HELVETICA);
             fp.SetBold(true);
             NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected");
             fp.SetBold(false);

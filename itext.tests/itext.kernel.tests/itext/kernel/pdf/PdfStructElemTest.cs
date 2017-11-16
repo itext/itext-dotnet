@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
@@ -92,7 +92,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
@@ -123,7 +123,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -153,7 +153,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
@@ -169,7 +169,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
@@ -206,7 +206,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -230,7 +230,7 @@ namespace iText.Kernel.Pdf {
             canvas = new PdfCanvas(page);
             PdfStructElem p = (PdfStructElem)document.GetStructTreeRoot().GetKids()[0].GetKids()[0];
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 490);
             //Inserting span between of 2 existing ones.
             span1 = p.AddKid(1, new PdfStructElem(document, PdfName.Span, page));
@@ -260,7 +260,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 14);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -297,7 +297,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 14);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -324,7 +324,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -461,7 +461,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));

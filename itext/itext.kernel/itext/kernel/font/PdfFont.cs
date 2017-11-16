@@ -54,7 +54,9 @@ namespace iText.Kernel.Font {
     public abstract class PdfFont : PdfObjectWrapper<PdfDictionary> {
         protected internal FontProgram fontProgram;
 
-        protected internal static readonly byte[] emptyBytes = new byte[0];
+        protected internal static readonly byte[] EMPTY_BYTES = new byte[0];
+
+        protected internal static readonly double[] DEFAULT_FONT_MATRIX = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
         protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph>();
 
@@ -177,7 +179,7 @@ namespace iText.Kernel.Font {
         public abstract void WriteText(String text, PdfOutputStream stream);
 
         public virtual double[] GetFontMatrix() {
-            return FontConstants.DefaultFontMatrix;
+            return DEFAULT_FONT_MATRIX;
         }
 
         /// <summary>Returns the width of a certain character of this font in 1000 normalized units.</summary>
