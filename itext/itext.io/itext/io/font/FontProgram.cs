@@ -228,10 +228,10 @@ namespace iText.IO.Font {
 
         protected internal virtual void SetBold(bool isBold) {
             if (isBold) {
-                fontNames.SetMacStyle(fontNames.GetMacStyle() | FontNames.BOLD_FLAG);
+                fontNames.SetMacStyle(fontNames.GetMacStyle() | FontMacStyleFlags.BOLD);
             }
             else {
-                fontNames.SetMacStyle(fontNames.GetMacStyle() & (~FontNames.BOLD_FLAG));
+                fontNames.SetMacStyle(fontNames.GetMacStyle() & (~FontMacStyleFlags.BOLD));
             }
         }
 

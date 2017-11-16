@@ -47,20 +47,6 @@ using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
     public class FontNames {
-        protected internal const int BOLD_FLAG = 1;
-
-        protected internal const int ITALIC_FLAG = 2;
-
-        protected internal const int UNDERLINE_FLAG = 4;
-
-        protected internal const int OUTLINE_FLAG = 8;
-
-        protected internal const int SHADOW_FLAG = 16;
-
-        protected internal const int CONDENSED_FLAG = 32;
-
-        protected internal const int EXTENDED_FLAG = 64;
-
         protected internal IDictionary<int, IList<String[]>> allNames;
 
         private String[][] fullName;
@@ -83,14 +69,6 @@ namespace iText.IO.Font {
 
         private bool allowEmbedding;
 
-        //macStyle bits
-        // Bit 0: Bold (if set to 1);
-        // Bit 1: Italic (if set to 1)
-        // Bit 2: Underline (if set to 1)
-        // Bit 3: Outline (if set to 1)
-        // Bit 4: Shadow (if set to 1)
-        // Bit 5: Condensed (if set to 1)
-        // Bit 6: Extended (if set to 1)
         // name, ID = 4
         // name, ID = 1 or 16
         // name, ID = 2 or 17
@@ -166,31 +144,31 @@ namespace iText.IO.Font {
         }
 
         public virtual bool IsBold() {
-            return (macStyle & BOLD_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.BOLD) != 0;
         }
 
         public virtual bool IsItalic() {
-            return (macStyle & ITALIC_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.ITALIC) != 0;
         }
 
         public virtual bool IsUnderline() {
-            return (macStyle & UNDERLINE_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.UNDERLINE) != 0;
         }
 
         public virtual bool IsOutline() {
-            return (macStyle & OUTLINE_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.OUTLINE) != 0;
         }
 
         public virtual bool IsShadow() {
-            return (macStyle & SHADOW_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.SHADOW) != 0;
         }
 
         public virtual bool IsCondensed() {
-            return (macStyle & CONDENSED_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.CONDENSED) != 0;
         }
 
         public virtual bool IsExtended() {
-            return (macStyle & EXTENDED_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.EXTENDED) != 0;
         }
 
         protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames) {
@@ -233,6 +211,13 @@ namespace iText.IO.Font {
             this.subfamily = subfamily;
         }
 
+        /// <summary>Sets Open Type head.macStyle.</summary>
+        /// <remarks>
+        /// Sets Open Type head.macStyle.
+        /// <br/>
+        /// <see cref="iText.IO.Font.Constants.FontMacStyleFlags"/>
+        /// </remarks>
+        /// <param name="macStyle"/>
         protected internal virtual void SetMacStyle(int macStyle) {
             this.macStyle = macStyle;
         }

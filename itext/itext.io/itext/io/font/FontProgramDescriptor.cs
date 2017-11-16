@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
     /// <summary>Base font descriptor.</summary>
@@ -101,11 +102,11 @@ namespace iText.IO.Font {
         }
 
         public virtual bool IsBold() {
-            return (macStyle & FontNames.BOLD_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.BOLD) != 0;
         }
 
         public virtual bool IsItalic() {
-            return (macStyle & FontNames.ITALIC_FLAG) != 0;
+            return (macStyle & FontMacStyleFlags.ITALIC) != 0;
         }
 
         public virtual String GetFullNameLowerCase() {
