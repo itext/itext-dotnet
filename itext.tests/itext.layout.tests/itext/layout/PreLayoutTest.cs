@@ -77,7 +77,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
+            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
                 if (i % 10 == 0) {
@@ -118,7 +118,7 @@ namespace iText.Layout {
             Paragraph twoColumnParagraph = new Paragraph();
             twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph));
             iText.Layout.Element.Text textElement = new iText.Layout.Element.Text(text.ToString());
-            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
+            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             document.Add(twoColumnParagraph);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;

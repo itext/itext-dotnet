@@ -227,7 +227,7 @@ namespace iText.Layout {
             for (int i = 0; i < 25; i++) {
                 document.Add(new Paragraph("dummy"));
             }
-            document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLD)).SetKeepWithNext
+            document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)).SetKeepWithNext
                 (true));
             List list = new List(ListNumberingType.DECIMAL);
             for (int i = 0; i < 10; i++) {
@@ -251,7 +251,7 @@ namespace iText.Layout {
             for (int i = 0; i < 28; i++) {
                 document.Add(new Paragraph("dummy"));
             }
-            document.Add(new Paragraph("Title").SetFontSize(20).SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLD
+            document.Add(new Paragraph("Title").SetFontSize(20).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD
                 )).SetKeepWithNext(true));
             List list = new List(ListNumberingType.DECIMAL);
             for (int i = 0; i < 10; i++) {
@@ -274,7 +274,7 @@ namespace iText.Layout {
             for (int i = 0; i < 25; i++) {
                 document.Add(new Paragraph("dummy"));
             }
-            document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA_BOLD)).SetKeepWithNext
+            document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)).SetKeepWithNext
                 (true));
             List list = new List(ListNumberingType.DECIMAL);
             for (int i = 0; i < 10; i++) {

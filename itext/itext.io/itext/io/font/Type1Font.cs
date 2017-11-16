@@ -73,7 +73,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         protected internal static iText.IO.Font.Type1Font CreateStandardFont(String name) {
-            if (StandardFontNames.Contains(name)) {
+            if (StandardFonts.Contains(name)) {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
             }
             else {

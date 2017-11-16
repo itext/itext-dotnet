@@ -75,8 +75,7 @@ namespace iText.Layout {
             for (int i = 0; i < 1000; i++) {
                 text.Append("This is a waaaaay tooo long text...");
             }
-            Paragraph p = new Paragraph(text.ToString()).SetFont(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA
-                ));
+            Paragraph p = new Paragraph(text.ToString()).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

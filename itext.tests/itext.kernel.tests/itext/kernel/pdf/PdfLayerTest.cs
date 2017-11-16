@@ -81,8 +81,8 @@ namespace iText.Kernel.Pdf {
                  + "output_layered.pdf"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
             PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
-            canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA
-                ), 18).MoveText(200, 600).ShowText("APPENDED CONTENT").EndText().EndLayer();
+            canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 
+                18).MoveText(200, 600).ShowText("APPENDED CONTENT").EndText().EndLayer();
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
             foreach (PdfLayer layer in allLayers) {
                 if (layer.IsLocked()) {

@@ -2,27 +2,27 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.IO.Font.Constants {
-    public sealed class StandardFontNames {
-        private StandardFontNames() {
+    public sealed class StandardFonts {
+        private StandardFonts() {
         }
 
         private static readonly ICollection<String> BUILTIN_FONTS = new HashSet<String>();
 
-        static StandardFontNames() {
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.COURIER);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.COURIER_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.COURIER_BOLDOBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.COURIER_OBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.HELVETICA);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.HELVETICA_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.HELVETICA_BOLDOBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.HELVETICA_OBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.SYMBOL);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.TIMES_ROMAN);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.TIMES_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.TIMES_BOLDITALIC);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.TIMES_ITALIC);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFontNames.ZAPFDINGBATS);
+        static StandardFonts() {
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLD);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLDOBLIQUE);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_OBLIQUE);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLDOBLIQUE);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_OBLIQUE);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.SYMBOL);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLD);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLDITALIC);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ITALIC);
+            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.ZAPFDINGBATS);
         }
 
         public static bool Contains(String fontName) {

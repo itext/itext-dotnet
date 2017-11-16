@@ -234,8 +234,8 @@ namespace iText.Layout {
             document.Add(new Paragraph("A"));
             document.Add(new Paragraph("B"));
             PdfFormXObject template = new PdfFormXObject(new Rectangle(100, 100));
-            new PdfCanvas(template, pdfDocument).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames
-                .HELVETICA), 12).MoveText(5, template.GetHeight() - 5).ShowText(xobjectText).EndText();
+            new PdfCanvas(template, pdfDocument).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 12).MoveText(5, template.GetHeight() - 5).ShowText(xobjectText).EndText();
             document.Add(new Image(template));
             document.Add(new Paragraph("C"));
             document.Close();
@@ -248,7 +248,7 @@ namespace iText.Layout {
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
             document.SetDefaultPageSize(new PageSize(612, 792));
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             canvas.BeginText().SetFontAndSize(font, 12);
             canvas.ShowText(textArray);
             canvas.EndText();
@@ -272,7 +272,7 @@ namespace iText.Layout {
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
             document.SetDefaultPageSize(new PageSize(612, 792));
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             float x = document.GetDefaultPageSize().GetWidth() / 2;
             float y = document.GetDefaultPageSize().GetHeight() / 2;
             canvas.ConcatMatrix(AffineTransform.GetTranslateInstance(x, y));

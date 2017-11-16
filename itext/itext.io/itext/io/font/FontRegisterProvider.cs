@@ -119,51 +119,49 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void RegisterStandardFonts() {
-            fontNames.Put(StandardFontNames.COURIER.ToLowerInvariant(), StandardFontNames.COURIER);
-            fontNames.Put(StandardFontNames.COURIER_BOLD.ToLowerInvariant(), StandardFontNames.COURIER_BOLD);
-            fontNames.Put(StandardFontNames.COURIER_OBLIQUE.ToLowerInvariant(), StandardFontNames.COURIER_OBLIQUE);
-            fontNames.Put(StandardFontNames.COURIER_BOLDOBLIQUE.ToLowerInvariant(), StandardFontNames.COURIER_BOLDOBLIQUE
-                );
-            fontNames.Put(StandardFontNames.HELVETICA.ToLowerInvariant(), StandardFontNames.HELVETICA);
-            fontNames.Put(StandardFontNames.HELVETICA_BOLD.ToLowerInvariant(), StandardFontNames.HELVETICA_BOLD);
-            fontNames.Put(StandardFontNames.HELVETICA_OBLIQUE.ToLowerInvariant(), StandardFontNames.HELVETICA_OBLIQUE);
-            fontNames.Put(StandardFontNames.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), StandardFontNames.HELVETICA_BOLDOBLIQUE
-                );
-            fontNames.Put(StandardFontNames.SYMBOL.ToLowerInvariant(), StandardFontNames.SYMBOL);
-            fontNames.Put(StandardFontNames.TIMES_ROMAN.ToLowerInvariant(), StandardFontNames.TIMES_ROMAN);
-            fontNames.Put(StandardFontNames.TIMES_BOLD.ToLowerInvariant(), StandardFontNames.TIMES_BOLD);
-            fontNames.Put(StandardFontNames.TIMES_ITALIC.ToLowerInvariant(), StandardFontNames.TIMES_ITALIC);
-            fontNames.Put(StandardFontNames.TIMES_BOLDITALIC.ToLowerInvariant(), StandardFontNames.TIMES_BOLDITALIC);
-            fontNames.Put(StandardFontNames.ZAPFDINGBATS.ToLowerInvariant(), StandardFontNames.ZAPFDINGBATS);
+            fontNames.Put(StandardFonts.COURIER.ToLowerInvariant(), StandardFonts.COURIER);
+            fontNames.Put(StandardFonts.COURIER_BOLD.ToLowerInvariant(), StandardFonts.COURIER_BOLD);
+            fontNames.Put(StandardFonts.COURIER_OBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_OBLIQUE);
+            fontNames.Put(StandardFonts.COURIER_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_BOLDOBLIQUE);
+            fontNames.Put(StandardFonts.HELVETICA.ToLowerInvariant(), StandardFonts.HELVETICA);
+            fontNames.Put(StandardFonts.HELVETICA_BOLD.ToLowerInvariant(), StandardFonts.HELVETICA_BOLD);
+            fontNames.Put(StandardFonts.HELVETICA_OBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_OBLIQUE);
+            fontNames.Put(StandardFonts.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_BOLDOBLIQUE);
+            fontNames.Put(StandardFonts.SYMBOL.ToLowerInvariant(), StandardFonts.SYMBOL);
+            fontNames.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), StandardFonts.TIMES_ROMAN);
+            fontNames.Put(StandardFonts.TIMES_BOLD.ToLowerInvariant(), StandardFonts.TIMES_BOLD);
+            fontNames.Put(StandardFonts.TIMES_ITALIC.ToLowerInvariant(), StandardFonts.TIMES_ITALIC);
+            fontNames.Put(StandardFonts.TIMES_BOLDITALIC.ToLowerInvariant(), StandardFonts.TIMES_BOLDITALIC);
+            fontNames.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), StandardFonts.ZAPFDINGBATS);
         }
 
         protected internal virtual void RegisterStandardFontFamilies() {
             IList<String> family;
             family = new List<String>();
-            family.Add(StandardFontNames.COURIER);
-            family.Add(StandardFontNames.COURIER_BOLD);
-            family.Add(StandardFontNames.COURIER_OBLIQUE);
-            family.Add(StandardFontNames.COURIER_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFontNames.COURIER.ToLowerInvariant(), family);
+            family.Add(StandardFonts.COURIER);
+            family.Add(StandardFonts.COURIER_BOLD);
+            family.Add(StandardFonts.COURIER_OBLIQUE);
+            family.Add(StandardFonts.COURIER_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFonts.COURIER.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(StandardFontNames.HELVETICA);
-            family.Add(StandardFontNames.HELVETICA_BOLD);
-            family.Add(StandardFontNames.HELVETICA_OBLIQUE);
-            family.Add(StandardFontNames.HELVETICA_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFontNames.HELVETICA.ToLowerInvariant(), family);
+            family.Add(StandardFonts.HELVETICA);
+            family.Add(StandardFonts.HELVETICA_BOLD);
+            family.Add(StandardFonts.HELVETICA_OBLIQUE);
+            family.Add(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFonts.HELVETICA.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(StandardFontNames.SYMBOL);
-            fontFamilies.Put(StandardFontNames.SYMBOL.ToLowerInvariant(), family);
+            family.Add(StandardFonts.SYMBOL);
+            fontFamilies.Put(StandardFonts.SYMBOL.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(StandardFontNames.TIMES_ROMAN);
-            family.Add(StandardFontNames.TIMES_BOLD);
-            family.Add(StandardFontNames.TIMES_ITALIC);
-            family.Add(StandardFontNames.TIMES_BOLDITALIC);
-            fontFamilies.Put(StandardFontNames.TIMES.ToLowerInvariant(), family);
-            fontFamilies.Put(StandardFontNames.TIMES_ROMAN.ToLowerInvariant(), family);
+            family.Add(StandardFonts.TIMES_ROMAN);
+            family.Add(StandardFonts.TIMES_BOLD);
+            family.Add(StandardFonts.TIMES_ITALIC);
+            family.Add(StandardFonts.TIMES_BOLDITALIC);
+            fontFamilies.Put(StandardFonts.TIMES.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(StandardFontNames.ZAPFDINGBATS);
-            fontFamilies.Put(StandardFontNames.ZAPFDINGBATS.ToLowerInvariant(), family);
+            family.Add(StandardFonts.ZAPFDINGBATS);
+            fontFamilies.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
         /// <exception cref="System.IO.IOException"/>

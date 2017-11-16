@@ -65,7 +65,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception">any exception will cause the test to fail</exception>
         [NUnit.Framework.Test]
         public virtual void TestStandardFont() {
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
         }

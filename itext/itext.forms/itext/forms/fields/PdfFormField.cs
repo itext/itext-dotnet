@@ -2520,7 +2520,7 @@ namespace iText.Forms.Fields {
                 return this;
             }
             try {
-                font = PdfFontFactory.CreateFont(StandardFontNames.ZAPFDINGBATS);
+                font = PdfFontFactory.CreateFont(StandardFonts.ZAPFDINGBATS);
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(e);

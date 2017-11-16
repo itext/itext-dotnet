@@ -152,20 +152,20 @@ namespace iText.Layout.Font {
         }
 
         public virtual int AddStandardPdfFonts() {
-            AddFont(StandardFontNames.COURIER);
-            AddFont(StandardFontNames.COURIER_BOLD);
-            AddFont(StandardFontNames.COURIER_BOLDOBLIQUE);
-            AddFont(StandardFontNames.COURIER_OBLIQUE);
-            AddFont(StandardFontNames.HELVETICA);
-            AddFont(StandardFontNames.HELVETICA_BOLD);
-            AddFont(StandardFontNames.HELVETICA_BOLDOBLIQUE);
-            AddFont(StandardFontNames.HELVETICA_OBLIQUE);
-            AddFont(StandardFontNames.SYMBOL);
-            fontSet.AddFont(StandardFontNames.TIMES_ROMAN, null, "Times");
-            fontSet.AddFont(StandardFontNames.TIMES_BOLD, null, "Times-Roman Bold");
-            fontSet.AddFont(StandardFontNames.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
-            fontSet.AddFont(StandardFontNames.TIMES_ITALIC, null, "Times-Roman Italic");
-            AddFont(StandardFontNames.ZAPFDINGBATS);
+            AddFont(StandardFonts.COURIER);
+            AddFont(StandardFonts.COURIER_BOLD);
+            AddFont(StandardFonts.COURIER_BOLDOBLIQUE);
+            AddFont(StandardFonts.COURIER_OBLIQUE);
+            AddFont(StandardFonts.HELVETICA);
+            AddFont(StandardFonts.HELVETICA_BOLD);
+            AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            AddFont(StandardFonts.HELVETICA_OBLIQUE);
+            AddFont(StandardFonts.SYMBOL);
+            fontSet.AddFont(StandardFonts.TIMES_ROMAN, null, "Times");
+            fontSet.AddFont(StandardFonts.TIMES_BOLD, null, "Times-Roman Bold");
+            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
+            fontSet.AddFont(StandardFonts.TIMES_ITALIC, null, "Times-Roman Italic");
+            AddFont(StandardFonts.ZAPFDINGBATS);
             return 14;
         }
 

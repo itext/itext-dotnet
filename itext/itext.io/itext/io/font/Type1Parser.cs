@@ -81,7 +81,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
-            if (StandardFontNames.Contains(afmPath)) {
+            if (StandardFonts.Contains(afmPath)) {
                 isBuiltInFont = true;
                 byte[] buf = new byte[1024];
                 Stream resource = null;

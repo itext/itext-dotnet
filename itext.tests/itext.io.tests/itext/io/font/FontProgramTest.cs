@@ -62,7 +62,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BoldTest() {
-            FontProgram fp = FontProgramFactory.CreateFont(StandardFontNames.HELVETICA);
+            FontProgram fp = FontProgramFactory.CreateFont(StandardFonts.HELVETICA);
             fp.SetBold(true);
             NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected");
             fp.SetBold(false);

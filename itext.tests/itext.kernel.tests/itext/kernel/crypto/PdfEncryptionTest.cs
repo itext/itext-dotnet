@@ -855,7 +855,7 @@ namespace iText.Kernel.Crypto {
         internal static void WriteTextBytesOnPageContent(PdfPage page, String text) {
             page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
                  + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
-            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(StandardFontNames.HELVETICA));
+            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
         }
 
         /// <exception cref="System.IO.IOException"/>

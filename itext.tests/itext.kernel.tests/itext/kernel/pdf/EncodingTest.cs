@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
                 );
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText("A E").EndText().RestoreState
@@ -120,12 +120,12 @@ namespace iText.Kernel.Pdf {
             String fileName = "notdefInStandardFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
                 );
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("A E").EndText().RestoreState
                 ();
-            font = PdfFontFactory.CreateFont(StandardFontNames.HELVETICA, PdfEncodings.WINANSI);
+            font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA, PdfEncodings.WINANSI);
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u0188").EndText().RestoreState
                 ();
             doc.Close();
@@ -176,10 +176,10 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolDefaultFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(StandardFontNames.SYMBOL);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.SYMBOL);
             FillSymbolDefaultPage(font, doc.AddNewPage());
             //WinAnsi encoding doesn't support special symbols
-            font = PdfFontFactory.CreateFont(StandardFontNames.SYMBOL, PdfEncodings.WINANSI);
+            font = PdfFontFactory.CreateFont(StandardFonts.SYMBOL, PdfEncodings.WINANSI);
             FillSymbolDefaultPage(font, doc.AddNewPage());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"

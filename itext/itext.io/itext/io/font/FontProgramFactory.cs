@@ -67,7 +67,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont() {
-            return CreateFont(StandardFontNames.HELVETICA);
+            return CreateFont(StandardFonts.HELVETICA);
         }
 
         /// <summary>Creates a new font program.</summary>
@@ -168,7 +168,7 @@ namespace iText.IO.Font {
         private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
-            bool isBuiltinFonts14 = StandardFontNames.Contains(name);
+            bool isBuiltinFonts14 = StandardFonts.Contains(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
             FontCacheKey fontKey = null;

@@ -216,7 +216,7 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.MAGENTA);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN), 30);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN), 30);
             canvas.SetTextMatrix(25, 500);
             canvas.ShowText("This file has bookmarks encoded with utf-8");
             canvas.EndText();
@@ -254,7 +254,7 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.MAGENTA);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN), 30);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN), 30);
             canvas.SetTextMatrix(25, 500);
             String text = "This page has pageLabel prefix " + "PREFIX-";
             canvas.ShowText(text);
@@ -280,7 +280,7 @@ namespace iText.Kernel.Pdf {
                 .UTF8));
             canvas.BeginText();
             canvas.MoveText(36, 788);
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.TIMES_ROMAN), 12);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN), 12);
             canvas.OpenTag(tagPointer.GetTagReference());
             canvas.ShowText("These piece of text has an actual text property. Can be viewed via properties of span in the tag tree."
                 );

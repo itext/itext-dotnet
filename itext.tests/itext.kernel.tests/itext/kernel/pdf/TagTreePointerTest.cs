@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetPageForTagging(page1);
             PdfCanvas canvas = new PdfCanvas(page1);
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.P).AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
@@ -87,8 +87,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             tagPointer.SetPageForTagging(page2);
             canvas = new PdfCanvas(page2);
-            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA), 24).SetTextMatrix
-                (1, 0, 0, 1, 32, 512);
+            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24).SetTextMatrix(1, 
+                0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.P).AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             tagPointer.MoveToParent().AddTag(PdfName.Span);
@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf {
             tagPointer.SetPageForTagging(page);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, new PdfString("random attributes"));
@@ -248,7 +248,7 @@ namespace iText.Kernel.Pdf {
             TagTreePointer tagPointer = new TagTreePointer(document).SetPageForTagging(page);
             tagPointer.AddTag(PdfName.Span);
             PdfCanvas canvas = new PdfCanvas(page);
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.OpenTag(tagPointer.GetTagReference().AddProperty(PdfName.E, new PdfString("Big Mister"))).ShowText(
@@ -370,7 +370,7 @@ namespace iText.Kernel.Pdf {
             Object pWaitingTagObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
             canvas.BeginText();
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
@@ -391,8 +391,8 @@ namespace iText.Kernel.Pdf {
             tagPointer.SetPageForTagging(page2);
             canvas = new PdfCanvas(page2);
             tagPointer.AddTag(PdfName.P);
-            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFontNames.HELVETICA), 24).SetTextMatrix
-                (1, 0, 0, 1, 32, 512);
+            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24).SetTextMatrix(1, 
+                0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             tagPointer.MoveToParent().AddTag(PdfName.Span);
@@ -438,7 +438,7 @@ namespace iText.Kernel.Pdf {
             tagPointer.SetPageForTagging(page);
             PdfCanvas canvas = new PdfCanvas(page);
             tagPointer.AddTag(PdfName.P);
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
@@ -466,7 +466,7 @@ namespace iText.Kernel.Pdf {
             WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
             Object pWaitingTagObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
-            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFontNames.COURIER);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();

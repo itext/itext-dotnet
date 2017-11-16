@@ -248,7 +248,7 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void CheckFilePath(String path) {
-            if (path != null && !StandardFontNames.Contains(path) && !FileUtil.FileExists(path)) {
+            if (path != null && !StandardFonts.Contains(path) && !FileUtil.FileExists(path)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }

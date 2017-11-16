@@ -58,22 +58,21 @@ namespace iText.Kernel.Pdf.Annot.DA {
             , String>();
 
         static AnnotationDefaultAppearance() {
-            stdAnnotFontNames.Put(StandardAnnotationFont.CourierBoldOblique, "/" + StandardFontNames.COURIER_BOLDOBLIQUE
+            stdAnnotFontNames.Put(StandardAnnotationFont.CourierBoldOblique, "/" + StandardFonts.COURIER_BOLDOBLIQUE);
+            stdAnnotFontNames.Put(StandardAnnotationFont.CourierBold, "/" + StandardFonts.COURIER_BOLD);
+            stdAnnotFontNames.Put(StandardAnnotationFont.CourierOblique, "/" + StandardFonts.COURIER_OBLIQUE);
+            stdAnnotFontNames.Put(StandardAnnotationFont.Courier, "/" + StandardFonts.COURIER);
+            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaBoldOblique, "/" + StandardFonts.HELVETICA_BOLDOBLIQUE
                 );
-            stdAnnotFontNames.Put(StandardAnnotationFont.CourierBold, "/" + StandardFontNames.COURIER_BOLD);
-            stdAnnotFontNames.Put(StandardAnnotationFont.CourierOblique, "/" + StandardFontNames.COURIER_OBLIQUE);
-            stdAnnotFontNames.Put(StandardAnnotationFont.Courier, "/" + StandardFontNames.COURIER);
-            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaBoldOblique, "/" + StandardFontNames.HELVETICA_BOLDOBLIQUE
-                );
-            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaBold, "/" + StandardFontNames.HELVETICA_BOLD);
-            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaOblique, "/" + StandardFontNames.COURIER_OBLIQUE);
-            stdAnnotFontNames.Put(StandardAnnotationFont.Helvetica, "/" + StandardFontNames.HELVETICA);
-            stdAnnotFontNames.Put(StandardAnnotationFont.Symbol, "/" + StandardFontNames.SYMBOL);
-            stdAnnotFontNames.Put(StandardAnnotationFont.TimesBoldItalic, "/" + StandardFontNames.TIMES_BOLDITALIC);
-            stdAnnotFontNames.Put(StandardAnnotationFont.TimesBold, "/" + StandardFontNames.TIMES_BOLD);
-            stdAnnotFontNames.Put(StandardAnnotationFont.TimesItalic, "/" + StandardFontNames.TIMES_ITALIC);
-            stdAnnotFontNames.Put(StandardAnnotationFont.TimesRoman, "/" + StandardFontNames.TIMES_ROMAN);
-            stdAnnotFontNames.Put(StandardAnnotationFont.ZapfDingbats, "/" + StandardFontNames.ZAPFDINGBATS);
+            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaBold, "/" + StandardFonts.HELVETICA_BOLD);
+            stdAnnotFontNames.Put(StandardAnnotationFont.HelveticaOblique, "/" + StandardFonts.COURIER_OBLIQUE);
+            stdAnnotFontNames.Put(StandardAnnotationFont.Helvetica, "/" + StandardFonts.HELVETICA);
+            stdAnnotFontNames.Put(StandardAnnotationFont.Symbol, "/" + StandardFonts.SYMBOL);
+            stdAnnotFontNames.Put(StandardAnnotationFont.TimesBoldItalic, "/" + StandardFonts.TIMES_BOLDITALIC);
+            stdAnnotFontNames.Put(StandardAnnotationFont.TimesBold, "/" + StandardFonts.TIMES_BOLD);
+            stdAnnotFontNames.Put(StandardAnnotationFont.TimesItalic, "/" + StandardFonts.TIMES_ITALIC);
+            stdAnnotFontNames.Put(StandardAnnotationFont.TimesRoman, "/" + StandardFonts.TIMES_ROMAN);
+            stdAnnotFontNames.Put(StandardAnnotationFont.ZapfDingbats, "/" + StandardFonts.ZAPFDINGBATS);
             extAnnotFontNames.Put(ExtendedAnnotationFont.HYSMyeongJoMedium, "/HySm");
             extAnnotFontNames.Put(ExtendedAnnotationFont.HYGoThicMedium, "/HyGo");
             extAnnotFontNames.Put(ExtendedAnnotationFont.HeiseiKakuGoW5, "/KaGo");
