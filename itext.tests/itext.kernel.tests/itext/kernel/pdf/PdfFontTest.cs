@@ -254,6 +254,60 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CreateTaggedDocumentWithType3Font() {
+            String filename = destinationFolder + "createTaggedDocumentWithType3Font.pdf";
+            String cmpFilename = sourceFolder + "cmp_createTaggedDocumentWithType3Font.pdf";
+            String testString = "A A A A E E E ~ \u00E9";
+            // A A A A E E E ~ é
+            //writing type3 font characters
+            String title = "Type3 font iText 7 Document";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties());
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer).SetTagged();
+            PdfType3Font type3 = PdfFontFactory.CreateType3Font(pdfDoc, "T3Font", "T3Font", false);
+            Type3Glyph a = type3.AddGlyph('A', 600, 0, 0, 600, 700);
+            a.SetLineWidth(100);
+            a.MoveTo(5, 5);
+            a.LineTo(300, 695);
+            a.LineTo(595, 5);
+            a.ClosePathFillStroke();
+            Type3Glyph space = type3.AddGlyph(' ', 600, 0, 0, 600, 700);
+            space.SetLineWidth(10);
+            space.ClosePathFillStroke();
+            Type3Glyph e = type3.AddGlyph('E', 600, 0, 0, 600, 700);
+            e.SetLineWidth(100);
+            e.MoveTo(595, 5);
+            e.LineTo(5, 5);
+            e.LineTo(300, 350);
+            e.LineTo(5, 695);
+            e.LineTo(595, 695);
+            e.Stroke();
+            Type3Glyph tilde = type3.AddGlyph('~', 600, 0, 0, 600, 700);
+            tilde.SetLineWidth(100);
+            tilde.MoveTo(595, 5);
+            tilde.LineTo(5, 5);
+            tilde.Stroke();
+            Type3Glyph symbol233 = type3.AddGlyph('\u00E9', 600, 0, 0, 600, 700);
+            symbol233.SetLineWidth(100);
+            symbol233.MoveTo(540, 5);
+            symbol233.LineTo(5, 340);
+            symbol233.Stroke();
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            for (int i = 0; i < PageCount; i++) {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText(testString).EndText();
+                page.Flush();
+            }
+            pdfDoc.Close();
+            // reading and comparing text
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelvetica() {
             String filename = destinationFolder + "DocumentWithHelvetica.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelvetica.pdf";

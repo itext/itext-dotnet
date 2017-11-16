@@ -42,8 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -172,6 +174,13 @@ namespace iText.Kernel.Font {
             ((Type3Font)fontProgram).SetFontStretch(fontWidth);
         }
 
+        /// <summary>Sets Font descriptor flags.</summary>
+        /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
+        /// <param name="flags">font descriptor flags.</param>
+        public virtual void SetPdfFontFlags(int flags) {
+            ((Type3Font)fontProgram).SetPdfFontFlags(flags);
+        }
+
         public virtual Type3Glyph GetType3Glyph(int unicode) {
             return ((Type3Font)GetFontProgram()).GetType3Glyph(unicode);
         }
@@ -258,31 +267,36 @@ namespace iText.Kernel.Font {
         }
 
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
-            System.Diagnostics.Debug.Assert(fontName != null && fontName.Length > 0);
-            PdfDictionary fontDescriptor = new PdfDictionary();
-            MakeObjectIndirect(fontDescriptor);
-            FontMetrics fontMetrics = fontProgram.GetFontMetrics();
-            FontNames fontNames = fontProgram.GetFontNames();
-            fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
-            fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
-            fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
-            fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
-            fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
-            if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
-                [0].Length >= 4) {
-                fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
-            }
-            //add font stream and flush it immediately
-            AddFontStream(fontDescriptor);
-            int flags = fontProgram.GetPdfFontFlags();
-            if (fontProgram.IsFontSpecific() != fontEncoding.IsFontSpecific()) {
-                flags &= ~(4 | 32);
+            if (fontName != null && fontName.Length > 0) {
+                PdfDictionary fontDescriptor = new PdfDictionary();
+                MakeObjectIndirect(fontDescriptor);
+                FontMetrics fontMetrics = fontProgram.GetFontMetrics();
+                FontNames fontNames = fontProgram.GetFontNames();
+                fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
+                fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
+                fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
+                fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
+                fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
+                if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
+                    [0].Length >= 4) {
+                    fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
+                }
+                int flags = fontProgram.GetPdfFontFlags();
+                flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
                 // reset both flags
-                flags |= fontEncoding.IsFontSpecific() ? 4 : 32;
+                flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
+                // set based on font encoding
+                fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
+                return fontDescriptor;
             }
-            // set based on font encoding
-            fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
-            return fontDescriptor;
+            else {
+                if (GetPdfObject().GetIndirectReference() != null && GetPdfObject().GetIndirectReference().GetDocument().IsTagged
+                    ()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
+                    logger.Warn(iText.IO.LogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
+                }
+            }
+            return null;
         }
 
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
@@ -310,18 +324,7 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
             GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
             GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox()));
-            if (fontProgram.GetFontNames().GetFontName() != null) {
-                System.Diagnostics.Debug.Assert(fontProgram.GetFontNames().GetFontName().Length > 0);
-                PdfDictionary fontDescriptor = !IsBuiltInFont() ? GetFontDescriptor(fontProgram.GetFontNames().GetFontName
-                    ()) : null;
-                if (fontDescriptor != null) {
-                    GetPdfObject().Put(PdfName.FontDescriptor, fontDescriptor);
-                    if (fontDescriptor.GetIndirectReference() != null) {
-                        fontDescriptor.Flush();
-                    }
-                }
-            }
-            base.FlushFontData(null, PdfName.Type3);
+            base.FlushFontData(fontProgram.GetFontNames().GetFontName(), PdfName.Type3);
             base.Flush();
         }
 

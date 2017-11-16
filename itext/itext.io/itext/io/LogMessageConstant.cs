@@ -206,6 +206,8 @@ namespace iText.IO {
 
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
+        public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
+
         public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";

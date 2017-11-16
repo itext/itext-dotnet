@@ -68,12 +68,6 @@ namespace iText.Kernel.Font {
             return flags;
         }
 
-        /// <summary>Sets Font descriptor flags.</summary>
-        /// <param name="flags"></param>
-        public virtual void SetPdfFontFlags(int flags) {
-            this.flags = flags;
-        }
-
         public override bool IsFontSpecific() {
             return false;
         }
@@ -136,6 +130,13 @@ namespace iText.Kernel.Font {
         protected internal override void SetItalicAngle(int italicAngle) {
             //This dummy override allows PdfType3Font to set the PostScript italicAngel.
             base.SetItalicAngle(italicAngle);
+        }
+
+        /// <summary>Sets Font descriptor flags.</summary>
+        /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
+        /// <param name="flags"/>
+        internal virtual void SetPdfFontFlags(int flags) {
+            this.flags = flags;
         }
 
         internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph) {

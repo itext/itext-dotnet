@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
@@ -436,6 +437,7 @@ namespace iText.Kernel.Font {
         /// .
         /// </returns>
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
+            System.Diagnostics.Debug.Assert(fontName != null && fontName.Length > 0);
             FontMetrics fontMetrics = fontProgram.GetFontMetrics();
             FontNames fontNames = fontProgram.GetFontNames();
             PdfDictionary fontDescriptor = new PdfDictionary();
@@ -464,11 +466,9 @@ namespace iText.Kernel.Font {
             //add font stream and flush it immediately
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();
-            if (fontProgram.IsFontSpecific() != fontEncoding.IsFontSpecific()) {
-                flags &= ~(4 | 32);
-                // reset both flags
-                flags |= fontEncoding.IsFontSpecific() ? 4 : 32;
-            }
+            flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+            // reset both flags
+            flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
             // set based on font encoding
             fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
             return fontDescriptor;

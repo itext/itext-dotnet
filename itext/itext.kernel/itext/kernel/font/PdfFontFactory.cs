@@ -477,6 +477,20 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>
+        /// Creates a new instance of
+        /// <see cref="PdfType3Font"/>
+        /// </summary>
+        /// <param name="document">the target document of the new font.</param>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        /// <param name="colorized">indicates whether the font will be colorized</param>
+        /// <returns>created font.</returns>
+        public static PdfType3Font CreateType3Font(PdfDocument document, String fontName, String fontFamily, bool 
+            colorized) {
+            return new PdfType3Font(document, fontName, fontFamily, colorized);
+        }
+
+        /// <summary>
         /// Creates
         /// <see cref="PdfFont"/>
         /// based on registered
