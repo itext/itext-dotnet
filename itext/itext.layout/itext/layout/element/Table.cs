@@ -900,9 +900,6 @@ namespace iText.Layout.Element {
 
         public override void SetRole(PdfName role) {
             this.role = role;
-            if (PdfName.Artifact.Equals(role)) {
-                PropagateArtifactRoleToChildElements();
-            }
         }
 
         public virtual iText.Layout.Element.Table SetExtendBottomRow(bool isExtended) {

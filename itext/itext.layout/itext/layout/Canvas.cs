@@ -182,7 +182,7 @@ namespace iText.Layout {
             }
             rootRenderer = (RootRenderer)nextRelayoutRenderer;
             foreach (IElement element in childElements) {
-                rootRenderer.AddChild(element.CreateRendererSubTree());
+                CreateAndAddRendererSubTree(element);
             }
         }
 

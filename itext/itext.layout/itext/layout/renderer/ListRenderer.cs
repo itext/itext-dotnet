@@ -49,10 +49,12 @@ using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
+using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ListRenderer : BlockRenderer {
@@ -93,12 +95,14 @@ namespace iText.Layout.Renderer {
 
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
+            splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return splitRenderer;
         }
 
         protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
+            overflowRenderer.AddAllProperties(GetOwnProperties());
             overflowRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return overflowRenderer;
         }
@@ -215,7 +219,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? StandardFonts.SYMBOL : StandardFonts.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_208(constantFont, textElement);
+                            textRenderer = new _TextRenderer_211(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -244,8 +248,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_208 : TextRenderer {
-            public _TextRenderer_208(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_211 : TextRenderer {
+            public _TextRenderer_211(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -320,8 +324,8 @@ namespace iText.Layout.Renderer {
                 (LayoutResult.PARTIAL);
             newOverflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
             // ListItemRenderer for not rendered children of firstListItemRenderer
-            newOverflowRenderer.childRenderers.Add(new ListItemRenderer((ListItem)firstListItemRenderer.GetModelElement
-                ()));
+            newOverflowRenderer.childRenderers.Add(((ListItemRenderer)firstListItemRenderer).CreateOverflowRenderer(LayoutResult
+                .PARTIAL));
             newOverflowRenderer.childRenderers.AddAll(splitRenderer.GetChildRenderers().SubList(1, splitRenderer.GetChildRenderers
                 ().Count));
             IList<IRenderer> childrenStillRemainingToRender = new List<IRenderer>(firstListItemRenderer.GetChildRenderers
@@ -413,6 +417,12 @@ namespace iText.Layout.Renderer {
                     childRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(calculatedMargin));
                     IRenderer symbolRenderer = symbolRenderers[listItemNum++];
                     ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
+                    if (symbolRenderer != null) {
+                        LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                        if (taggingHelper != null) {
+                            taggingHelper.SetRoleHint(symbolRenderer, PdfName.Lbl);
+                        }
+                    }
                 }
             }
             return null;

@@ -672,6 +672,39 @@ namespace iText.Kernel.Pdf.Tagutils {
             return PdfVersion.PDF_2_0.CompareTo(tagStructureTargetVersion) <= 0;
         }
 
+        internal virtual void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
+            if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
+                GetPdfObject() == GetRootTag().GetPdfObject()) {
+                return;
+            }
+            IList<IStructureNode> kids = parent.GetKids();
+            bool readyToBeFlushed = true;
+            foreach (IStructureNode kid in kids) {
+                if (kid is PdfMcr) {
+                    PdfDictionary kidPage = ((PdfMcr)kid).GetPageObject();
+                    if (!kidPage.IsFlushed() && (currentPage == null || !kidPage.Equals(currentPage.GetPdfObject()))) {
+                        readyToBeFlushed = false;
+                        break;
+                    }
+                }
+                else {
+                    if (kid is PdfStructElem) {
+                        // If kid is structElem and was already flushed then in kids list there will be null for it instead of
+                        // PdfStructElement. And therefore if we get into this if-clause it means that some StructElem wasn't flushed.
+                        readyToBeFlushed = false;
+                        break;
+                    }
+                }
+            }
+            if (readyToBeFlushed) {
+                IStructureNode parentsParent = parent.GetParent();
+                parent.Flush();
+                if (parentsParent is PdfStructElem) {
+                    FlushParentIfBelongsToPage((PdfStructElem)parentsParent, currentPage);
+                }
+            }
+        }
+
         private bool IsRoleAllowedToBeRoot(PdfName role) {
             if (TargetTagStructureVersionIs2()) {
                 return PdfName.Document.Equals(role);
@@ -770,40 +803,6 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         // it is StructTreeRoot
         // should never happen as we always should have only one root tag and we don't remove it
-        private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
-            if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
-                GetPdfObject() == GetRootTag().GetPdfObject()) {
-                return;
-            }
-            IList<IStructureNode> kids = parent.GetKids();
-            bool allKidsBelongToPage = true;
-            foreach (IStructureNode kid in kids) {
-                if (kid is PdfMcr) {
-                    PdfDictionary kidPage = ((PdfMcr)kid).GetPageObject();
-                    if (!kidPage.IsFlushed() && !kidPage.Equals(currentPage.GetPdfObject())) {
-                        allKidsBelongToPage = false;
-                        break;
-                    }
-                }
-                else {
-                    if (kid is PdfStructElem) {
-                        // If kid is structElem and was already flushed then in kids list there will be null for it instead of
-                        // PdfStructElement. And therefore if we get into this if-clause it means that some StructElem wasn't flushed.
-                        allKidsBelongToPage = false;
-                        break;
-                    }
-                }
-            }
-            if (allKidsBelongToPage) {
-                IStructureNode parentsParent = parent.GetParent();
-                parent.Flush();
-                if (parentsParent is PdfStructElem) {
-                    FlushParentIfBelongsToPage((PdfStructElem)parentsParent, currentPage);
-                }
-            }
-            return;
-        }
-
         private String ComposeExceptionBasedOnNamespacePresence(String role, PdfNamespace @namespace, String withoutNsEx
             , String withNsEx) {
             if (@namespace == null) {

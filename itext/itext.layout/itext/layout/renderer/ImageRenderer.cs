@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
@@ -55,6 +54,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer, ILeafElementRenderer {
@@ -312,25 +312,22 @@ namespace iText.Layout.Renderer {
             if (fixedXPosition == null) {
                 fixedXPosition = occupiedArea.GetBBox().GetX();
             }
-            PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled();
-            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
-            bool isArtifact = isTagged && !modelElementIsAccessible;
+            LayoutTaggingHelper taggingHelper = null;
+            bool isArtifact = false;
             TagTreePointer tagPointer = null;
             if (isTagged) {
-                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                if (modelElementIsAccessible) {
-                    IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                    PdfName role = accessibleElement.GetRole();
-                    if (role != null && !PdfName.Artifact.Equals(role)) {
-                        tagPointer.AddTag(accessibleElement);
-                        tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
-                            ));
-                    }
-                    else {
-                        modelElementIsAccessible = false;
-                        if (PdfName.Artifact.Equals(role)) {
-                            isArtifact = true;
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isArtifact = true;
+                }
+                else {
+                    isArtifact = taggingHelper.IsArtifact(this);
+                    if (!isArtifact) {
+                        tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                        if (taggingHelper.CreateTag(this, tagPointer)) {
+                            tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                                ));
                         }
                     }
                 }
@@ -373,8 +370,9 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            if (modelElementIsAccessible) {
-                tagPointer.MoveToParent();
+            if (isTagged && !isArtifact) {
+                taggingHelper.FinishTaggingHint(this);
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
         }
 

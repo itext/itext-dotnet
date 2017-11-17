@@ -113,7 +113,16 @@ namespace iText.Layout.Renderer {
                 if (toTag) {
                     tagPointer = canvas.GetPdfDocument().GetTagStructureContext().GetAutoTaggingPointer();
                     tagPointer.SetPageForTagging(canvas.GetPage());
-                    tagPointer.SetContentStreamForTagging(canvas.GetPdfCanvas().GetContentStream());
+                    bool pageStream = false;
+                    for (int i = canvas.GetPage().GetContentStreamCount() - 1; i >= 0; --i) {
+                        if (canvas.GetPage().GetContentStream(i).Equals(canvas.GetPdfCanvas().GetContentStream())) {
+                            pageStream = true;
+                            break;
+                        }
+                    }
+                    if (!pageStream) {
+                        tagPointer.SetContentStreamForTagging(canvas.GetPdfCanvas().GetContentStream());
+                    }
                 }
                 resultRenderer.Draw(new DrawContext(canvas.GetPdfDocument(), canvas.GetPdfCanvas(), toTag));
                 if (toTag) {

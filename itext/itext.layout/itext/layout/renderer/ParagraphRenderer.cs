@@ -380,6 +380,7 @@ namespace iText.Layout.Renderer {
                 else {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                         ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
+                    this.isLastRendererForModelElement = false;
                     overflowRenderer = CreateOverflowRenderer(parent);
                     overflowRenderer.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight - occupiedArea.GetBBox()
                         .GetHeight()));
@@ -520,13 +521,14 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
             overflowRenderer.parent = parent;
             FixOverflowRenderer(overflowRenderer);
+            overflowRenderer.AddAllProperties(GetOwnProperties());
             return overflowRenderer;
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer(IRenderer parent) {
             iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
             splitRenderer.parent = parent;
-            splitRenderer.properties = new Dictionary<int, Object>(properties);
+            splitRenderer.AddAllProperties(GetOwnProperties());
             return splitRenderer;
         }
 

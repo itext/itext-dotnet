@@ -1,0 +1,685 @@
+using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Layout.Renderer;
+
+namespace iText.Layout.Tagging {
+    public class LayoutTaggingHelper {
+        private TagStructureContext context;
+
+        private PdfDocument document;
+
+        private bool immediateFlush;
+
+        private IDictionary<TaggingHintKey, IList<TaggingHintKey>> kidsHints;
+
+        private IDictionary<TaggingHintKey, TaggingHintKey> parentHints;
+
+        private IDictionary<IRenderer, TagTreePointer> autoTaggingPointerSavedPosition;
+
+        private IDictionary<PdfName, IList<ITaggingRule>> taggingRules;
+
+        private IDictionary<PdfObject, TaggingDummyElement> existingTagsDummies;
+
+        private readonly int RETVAL_NO_PARENT = -1;
+
+        private readonly int RETVAL_PARENT_AND_KID_FINISHED = -2;
+
+        public LayoutTaggingHelper(PdfDocument document, bool immediateFlush) {
+            this.document = document;
+            this.context = document.GetTagStructureContext();
+            this.immediateFlush = immediateFlush;
+            this.kidsHints = new LinkedDictionary<TaggingHintKey, IList<TaggingHintKey>>();
+            this.parentHints = new LinkedDictionary<TaggingHintKey, TaggingHintKey>();
+            this.autoTaggingPointerSavedPosition = new Dictionary<IRenderer, TagTreePointer>();
+            this.taggingRules = new Dictionary<PdfName, IList<ITaggingRule>>();
+            RegisterRules(context.GetTagStructureTargetVersion());
+            existingTagsDummies = new LinkedDictionary<PdfObject, TaggingDummyElement>();
+        }
+
+        public static void AddTreeHints(iText.Layout.Tagging.LayoutTaggingHelper taggingHelper, IRenderer rootRenderer
+            ) {
+            IList<IRenderer> childRenderers = rootRenderer.GetChildRenderers();
+            if (childRenderers == null) {
+                return;
+            }
+            taggingHelper.AddKidsHint(rootRenderer, childRenderers);
+            foreach (IRenderer childRenderer in childRenderers) {
+                AddTreeHints(taggingHelper, childRenderer);
+            }
+        }
+
+        public static TaggingHintKey GetHintKey(IPropertyContainer container) {
+            return container.GetProperty<TaggingHintKey>(Property.TAGGING_HINT_KEY);
+        }
+
+        public static TaggingHintKey GetOrCreateHintKey(IPropertyContainer container) {
+            return GetOrCreateHintKey(container, true);
+        }
+
+        public virtual void AddKidsHint<_T0>(TagTreePointer parentPointer, IEnumerable<_T0> newKids)
+            where _T0 : IPropertyContainer {
+            PdfDictionary pointerStructElem = context.GetPointerStructElem(parentPointer).GetPdfObject();
+            TaggingDummyElement dummy = existingTagsDummies.Get(pointerStructElem);
+            if (dummy == null) {
+                dummy = new TaggingDummyElement(parentPointer.GetRole());
+                existingTagsDummies.Put(pointerStructElem, dummy);
+            }
+            context.GetWaitingTagsManager().AssignWaitingState(parentPointer, GetOrCreateHintKey(dummy));
+            AddKidsHint(dummy, newKids);
+        }
+
+        public virtual void AddKidsHint<_T0>(IPropertyContainer parent, IEnumerable<_T0> newKids)
+            where _T0 : IPropertyContainer {
+            AddKidsHint(parent, newKids, -1);
+        }
+
+        public virtual void AddKidsHint<_T0>(IPropertyContainer parent, IEnumerable<_T0> newKids, int insertIndex)
+            where _T0 : IPropertyContainer {
+            if (parent is AreaBreakRenderer) {
+                return;
+            }
+            TaggingHintKey parentKey = GetOrCreateHintKey(parent);
+            IList<TaggingHintKey> newKidsKeys = new List<TaggingHintKey>();
+            foreach (IPropertyContainer kid in newKids) {
+                if (kid is AreaBreakRenderer) {
+                    return;
+                }
+                newKidsKeys.Add(GetOrCreateHintKey(kid));
+            }
+            AddKidsHint(parentKey, newKidsKeys, insertIndex);
+        }
+
+        public virtual void AddKidsHint(TaggingHintKey parentKey, ICollection<TaggingHintKey> newKidsKeys) {
+            AddKidsHint(parentKey, newKidsKeys, -1);
+        }
+
+        public virtual void AddKidsHint(TaggingHintKey parentKey, ICollection<TaggingHintKey> newKidsKeys, int insertIndex
+            ) {
+            AddKidsHint(parentKey, newKidsKeys, insertIndex, false);
+        }
+
+        public virtual void SetRoleHint(IPropertyContainer hintOwner, PdfName role) {
+            // TODO
+            // It's unclear whether a role of already created tag should be changed
+            // in this case. Also concerning rules, they won't be called for the new role
+            // if this overriding role is set after some rule applying event. Already applied
+            // rules won't be cancelled either.
+            // Restricting this call on whether the finished state is set doesn't really
+            // solve anything.
+            // TODO probably this also should affect whether the hint is considered non-accessible
+            GetOrCreateHintKey(hintOwner).SetOverriddenRole(role);
+        }
+
+        public virtual bool IsArtifact(IPropertyContainer hintOwner) {
+            TaggingHintKey key = GetHintKey(hintOwner);
+            if (key != null) {
+                return key.IsArtifact();
+            }
+            else {
+                if (hintOwner is IRenderer) {
+                    return ((IRenderer)hintOwner).GetModelElement() is IAccessibleElement && PdfName.Artifact.Equals(((IAccessibleElement
+                        )((IRenderer)hintOwner).GetModelElement()).GetRole());
+                }
+                else {
+                    if (hintOwner is IAccessibleElement) {
+                        return PdfName.Artifact.Equals(((IAccessibleElement)hintOwner).GetRole());
+                    }
+                }
+            }
+            return false;
+        }
+
+        public virtual void MarkArtifactHint(IPropertyContainer hintOwner) {
+            TaggingHintKey hintKey = GetOrCreateHintKey(hintOwner);
+            MarkArtifactHint(hintKey);
+        }
+
+        public virtual void MarkArtifactHint(TaggingHintKey hintKey) {
+            hintKey.SetArtifact();
+            hintKey.SetFinished();
+            TagTreePointer existingArtifactTag = new TagTreePointer(document);
+            if (context.GetWaitingTagsManager().TryMovePointerToWaitingTag(existingArtifactTag, hintKey)) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.ALREADY_TAGGED_HINT_MARKED_ARTIFACT);
+                context.GetWaitingTagsManager().RemoveWaitingState(hintKey);
+                if (immediateFlush) {
+                    existingArtifactTag.FlushParentsIfAllKidsFlushed();
+                }
+            }
+            IList<TaggingHintKey> kidsHint = GetKidsHint(hintKey);
+            foreach (TaggingHintKey kidKey in kidsHint) {
+                MarkArtifactHint(kidKey);
+            }
+            RemoveParentHint(hintKey);
+        }
+
+        public virtual TagTreePointer UseAutoTaggingPointerAndRememberItsPosition(IRenderer renderer) {
+            TagTreePointer autoTaggingPointer = context.GetAutoTaggingPointer();
+            TagTreePointer position = new TagTreePointer(autoTaggingPointer);
+            autoTaggingPointerSavedPosition.Put(renderer, position);
+            return autoTaggingPointer;
+        }
+
+        public virtual void RestoreAutoTaggingPointerPosition(IRenderer renderer) {
+            TagTreePointer autoTaggingPointer = context.GetAutoTaggingPointer();
+            TagTreePointer position = autoTaggingPointerSavedPosition.JRemove(renderer);
+            if (position != null) {
+                autoTaggingPointer.MoveToPointer(position);
+            }
+        }
+
+        public virtual IList<TaggingHintKey> GetKidsHint(TaggingHintKey parent) {
+            IList<TaggingHintKey> kidsHint = kidsHints.Get(parent);
+            if (kidsHint == null) {
+                return JavaCollectionsUtil.EmptyList<TaggingHintKey>();
+            }
+            return JavaCollectionsUtil.UnmodifiableList<TaggingHintKey>(kidsHint);
+        }
+
+        public virtual IList<TaggingHintKey> GetAccessibleKidsHint(TaggingHintKey parent) {
+            IList<TaggingHintKey> kidsHint = kidsHints.Get(parent);
+            if (kidsHint == null) {
+                return JavaCollectionsUtil.EmptyList<TaggingHintKey>();
+            }
+            IList<TaggingHintKey> accessibleKids = new List<TaggingHintKey>();
+            foreach (TaggingHintKey kid in kidsHint) {
+                if (IsNonAccessibleHint(kid)) {
+                    accessibleKids.AddAll(GetAccessibleKidsHint(kid));
+                }
+                else {
+                    accessibleKids.Add(kid);
+                }
+            }
+            return accessibleKids;
+        }
+
+        public virtual TaggingHintKey GetParentHint(IPropertyContainer hintOwner) {
+            TaggingHintKey hintKey = GetHintKey(hintOwner);
+            if (hintKey == null) {
+                return null;
+            }
+            return GetParentHint(hintKey);
+        }
+
+        public virtual TaggingHintKey GetParentHint(TaggingHintKey hintKey) {
+            return parentHints.Get(hintKey);
+        }
+
+        public virtual TaggingHintKey GetAccessibleParentHint(TaggingHintKey hintKey) {
+            do {
+                hintKey = GetParentHint(hintKey);
+            }
+            while (hintKey != null && IsNonAccessibleHint(hintKey));
+            return hintKey;
+        }
+
+        public virtual void ReleaseFinishedHints() {
+            ICollection<TaggingHintKey> allHints = new HashSet<TaggingHintKey>();
+            foreach (KeyValuePair<TaggingHintKey, TaggingHintKey> entry in parentHints) {
+                allHints.Add(entry.Key);
+                allHints.Add(entry.Value);
+            }
+            foreach (TaggingHintKey hint in allHints) {
+                if (!hint.IsFinished() || IsNonAccessibleHint(hint) || hint.GetAccessibleElement() is TaggingDummyElement) {
+                    continue;
+                }
+                FinishDummyKids(GetKidsHint(hint));
+            }
+            foreach (TaggingHintKey hint in allHints) {
+                if (hint.IsFinished()) {
+                    ReleaseHint(hint, true);
+                }
+            }
+        }
+
+        public virtual void ReleaseAllHints() {
+            foreach (TaggingDummyElement dummy in existingTagsDummies.Values) {
+                FinishTaggingHint(dummy);
+                FinishDummyKids(GetKidsHint(GetHintKey(dummy)));
+            }
+            existingTagsDummies.Clear();
+            ReleaseFinishedHints();
+            ICollection<TaggingHintKey> hangingHints = new HashSet<TaggingHintKey>();
+            foreach (KeyValuePair<TaggingHintKey, TaggingHintKey> entry in parentHints) {
+                hangingHints.Add(entry.Key);
+                hangingHints.Add(entry.Value);
+            }
+            foreach (TaggingHintKey hint in hangingHints) {
+                // TODO in some situations we need to remove tagging hints of renderers that are thrown away for reasons like:
+                // - fixed height clipping
+                // - forced placement
+                // - some other cases?
+                //            if (!hint.isFinished()) {
+                //                Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
+                //                logger.warn(LogMessageConstant.TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE);
+                //            }
+                ReleaseHint(hint, false);
+            }
+            System.Diagnostics.Debug.Assert(parentHints.IsEmpty());
+            System.Diagnostics.Debug.Assert(kidsHints.IsEmpty());
+        }
+
+        public virtual bool CreateTag(IRenderer renderer, TagTreePointer tagPointer) {
+            TaggingHintKey hintKey = GetHintKey(renderer);
+            bool noHint = hintKey == null;
+            if (noHint) {
+                hintKey = GetOrCreateHintKey(renderer, false);
+            }
+            bool created = CreateTag(hintKey, tagPointer);
+            if (noHint) {
+                hintKey.SetFinished();
+                context.GetWaitingTagsManager().RemoveWaitingState(hintKey);
+            }
+            return created;
+        }
+
+        public virtual bool CreateTag(TaggingHintKey hintKey, TagTreePointer tagPointer) {
+            if (hintKey.IsArtifact()) {
+                return false;
+            }
+            bool created = CreateSingleTag(hintKey, tagPointer);
+            if (created) {
+                IList<TaggingHintKey> kidsHint = GetAccessibleKidsHint(hintKey);
+                foreach (TaggingHintKey hint in kidsHint) {
+                    if (hint.GetAccessibleElement() is TaggingDummyElement) {
+                        CreateTag(hint, new TagTreePointer(document));
+                    }
+                }
+            }
+            return created;
+        }
+
+        public virtual void FinishTaggingHint(IPropertyContainer hintOwner) {
+            TaggingHintKey rendererKey = GetHintKey(hintOwner);
+            if (rendererKey == null || rendererKey.IsFinished()) {
+                // artifact is always finished
+                return;
+            }
+            if (rendererKey.IsElementBasedFinishingOnly() && !(hintOwner is IElement)) {
+                // avoid auto finishing of hints created based on IElements
+                return;
+            }
+            if (!IsNonAccessibleHint(rendererKey)) {
+                IAccessibleElement modelElement = rendererKey.GetAccessibleElement();
+                PdfName role = modelElement.GetRole();
+                if (rendererKey.GetOverriddenRole() != null) {
+                    role = rendererKey.GetOverriddenRole();
+                }
+                IList<ITaggingRule> rules = taggingRules.Get(role);
+                bool ruleResult = true;
+                if (rules != null) {
+                    foreach (ITaggingRule rule in rules) {
+                        ruleResult = ruleResult && rule.OnTagFinish(this, rendererKey);
+                    }
+                }
+                if (!ruleResult) {
+                    return;
+                }
+            }
+            rendererKey.SetFinished();
+        }
+
+        public virtual int ReplaceKidHint(TaggingHintKey kidHintKey, ICollection<TaggingHintKey> newKidsHintKeys) {
+            TaggingHintKey parentKey = GetParentHint(kidHintKey);
+            if (parentKey == null) {
+                return -1;
+            }
+            if (kidHintKey.IsFinished()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.CANNOT_REPLACE_FINISHED_HINT);
+                // If kidHintKey is finished you won't be able to add it anywhere after replacing is ended.
+                // If kidHintKey might be finished, use moveKidHint instead.
+                // replaceKidHint should be used when parent might be finished.
+                return -1;
+            }
+            int kidIndex = RemoveParentHint(kidHintKey);
+            IList<TaggingHintKey> kidsToBeAdded = new List<TaggingHintKey>();
+            foreach (TaggingHintKey newKidKey in newKidsHintKeys) {
+                int i = RemoveParentHint(newKidKey);
+                if (i == RETVAL_PARENT_AND_KID_FINISHED || i == RETVAL_NO_PARENT && newKidKey.IsFinished()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                    logger.Error(iText.IO.LogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
+                    continue;
+                }
+                kidsToBeAdded.Add(newKidKey);
+            }
+            AddKidsHint(parentKey, kidsToBeAdded, kidIndex, true);
+            return kidIndex;
+        }
+
+        public virtual int MoveKidHint(TaggingHintKey hintKeyOfKidToMove, TaggingHintKey newParent) {
+            return MoveKidHint(hintKeyOfKidToMove, newParent, -1);
+        }
+
+        public virtual int MoveKidHint(TaggingHintKey hintKeyOfKidToMove, TaggingHintKey newParent, int insertIndex
+            ) {
+            if (newParent.IsFinished()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.CANNOT_MOVE_HINT_TO_FINISHED_PARENT);
+                return -1;
+            }
+            int removeRes = RemoveParentHint(hintKeyOfKidToMove);
+            if (removeRes == RETVAL_PARENT_AND_KID_FINISHED || removeRes == RETVAL_NO_PARENT && hintKeyOfKidToMove.IsFinished
+                ()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
+                return -1;
+            }
+            AddKidsHint(newParent, JavaCollectionsUtil.SingletonList<TaggingHintKey>(hintKeyOfKidToMove), insertIndex, 
+                true);
+            return removeRes;
+        }
+
+        public virtual PdfDocument GetPdfDocument() {
+            return document;
+        }
+
+        private static TaggingHintKey GetOrCreateHintKey(IPropertyContainer hintOwner, bool setProperty) {
+            TaggingHintKey hintKey = hintOwner.GetProperty<TaggingHintKey>(Property.TAGGING_HINT_KEY);
+            if (hintKey == null) {
+                IAccessibleElement elem = null;
+                if (hintOwner is IAccessibleElement) {
+                    elem = (IAccessibleElement)hintOwner;
+                }
+                else {
+                    if (hintOwner is IRenderer && ((IRenderer)hintOwner).GetModelElement() is IAccessibleElement) {
+                        elem = (IAccessibleElement)((IRenderer)hintOwner).GetModelElement();
+                    }
+                }
+                hintKey = new TaggingHintKey(elem, hintOwner is IElement);
+                if (elem != null && PdfName.Artifact.Equals(elem.GetRole())) {
+                    hintKey.SetArtifact();
+                    hintKey.SetFinished();
+                }
+                if (setProperty) {
+                    if (elem is ILargeElement && !((ILargeElement)elem).IsComplete()) {
+                        ((ILargeElement)elem).SetProperty(Property.TAGGING_HINT_KEY, hintKey);
+                    }
+                    else {
+                        hintOwner.SetProperty(Property.TAGGING_HINT_KEY, hintKey);
+                    }
+                }
+            }
+            return hintKey;
+        }
+
+        private void AddKidsHint(TaggingHintKey parentKey, ICollection<TaggingHintKey> newKidsKeys, int insertIndex
+            , bool skipFinishedChecks) {
+            if (newKidsKeys.IsEmpty()) {
+                return;
+            }
+            if (parentKey.IsArtifact()) {
+                foreach (TaggingHintKey kid in newKidsKeys) {
+                    MarkArtifactHint(kid);
+                }
+                return;
+            }
+            if (!skipFinishedChecks && parentKey.IsFinished()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.CANNOT_ADD_HINTS_TO_FINISHED_PARENT);
+                return;
+            }
+            IList<TaggingHintKey> kidsHint = kidsHints.Get(parentKey);
+            if (kidsHint == null) {
+                kidsHint = new List<TaggingHintKey>();
+            }
+            TaggingHintKey parentTagHint = IsNonAccessibleHint(parentKey) ? GetAccessibleParentHint(parentKey) : parentKey;
+            bool parentTagAlreadyCreated = parentTagHint != null && IsTagAlreadyExistsForHint(parentTagHint);
+            foreach (TaggingHintKey kidKey in newKidsKeys) {
+                if (kidKey.IsArtifact()) {
+                    continue;
+                }
+                TaggingHintKey prevParent = GetParentHint(kidKey);
+                if (prevParent != null) {
+                    // TODO seems to be a legit use case to re-add hints to just ensure that hints are added
+                    //                Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
+                    //                logger.error(LogMessageConstant.CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT);
+                    continue;
+                }
+                if (!skipFinishedChecks && kidKey.IsFinished()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                    logger.Error(iText.IO.LogMessageConstant.CANNOT_ADD_FINISHED_HINT_AS_A_NEW_KID_HINT);
+                    continue;
+                }
+                if (insertIndex > -1) {
+                    kidsHint.Add(insertIndex++, kidKey);
+                }
+                else {
+                    kidsHint.Add(kidKey);
+                }
+                parentHints.Put(kidKey, parentKey);
+                if (parentTagAlreadyCreated) {
+                    if (kidKey.GetAccessibleElement() is TaggingDummyElement) {
+                        CreateTag(kidKey, new TagTreePointer(document));
+                    }
+                    if (IsNonAccessibleHint(kidKey)) {
+                        foreach (TaggingHintKey nestedKid in GetAccessibleKidsHint(kidKey)) {
+                            if (nestedKid.GetAccessibleElement() is TaggingDummyElement) {
+                                CreateTag(nestedKid, new TagTreePointer(document));
+                            }
+                            MoveKidTagIfCreated(parentTagHint, nestedKid);
+                        }
+                    }
+                    else {
+                        MoveKidTagIfCreated(parentTagHint, kidKey);
+                    }
+                }
+            }
+            if (!kidsHint.IsEmpty()) {
+                kidsHints.Put(parentKey, kidsHint);
+            }
+        }
+
+        private bool CreateSingleTag(TaggingHintKey hintKey, TagTreePointer tagPointer) {
+            if (hintKey.IsFinished()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
+                logger.Error(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT);
+                return false;
+            }
+            if (IsNonAccessibleHint(hintKey)) {
+                // try move pointer to the nearest accessible parent in case any direct content will be
+                // tagged with this tagPointer
+                TaggingHintKey parentTagHint = GetAccessibleParentHint(hintKey);
+                context.GetWaitingTagsManager().TryMovePointerToWaitingTag(tagPointer, parentTagHint);
+                return false;
+            }
+            WaitingTagsManager waitingTagsManager = context.GetWaitingTagsManager();
+            if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, hintKey)) {
+                IAccessibleElement modelElement = hintKey.GetAccessibleElement();
+                TaggingHintKey parentHint = GetAccessibleParentHint(hintKey);
+                int ind = -1;
+                if (parentHint != null) {
+                    // if parent tag hasn't been created yet - it's ok, kid tags will be moved on it's creation
+                    if (waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, parentHint)) {
+                        IList<TaggingHintKey> siblingsHint = GetAccessibleKidsHint(parentHint);
+                        int i = siblingsHint.IndexOf(hintKey);
+                        ind = GetNearestNextSiblingTagIndex(waitingTagsManager, tagPointer, siblingsHint, i);
+                    }
+                }
+                tagPointer.AddTag(ind, modelElement);
+                if (hintKey.GetOverriddenRole() != null) {
+                    tagPointer.SetRole(hintKey.GetOverriddenRole());
+                }
+                waitingTagsManager.AssignWaitingState(tagPointer, hintKey);
+                IList<TaggingHintKey> kidsHint = GetAccessibleKidsHint(hintKey);
+                foreach (TaggingHintKey kidKey in kidsHint) {
+                    MoveKidTagIfCreated(hintKey, kidKey);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private int RemoveParentHint(TaggingHintKey hintKey) {
+            TaggingHintKey parentHint = parentHints.Get(hintKey);
+            if (parentHint == null) {
+                return RETVAL_NO_PARENT;
+            }
+            TaggingHintKey accessibleParentHint = GetAccessibleParentHint(hintKey);
+            if (hintKey.IsFinished() && parentHint.IsFinished() && (accessibleParentHint == null || accessibleParentHint
+                .IsFinished())) {
+                return RETVAL_PARENT_AND_KID_FINISHED;
+            }
+            return RemoveParentHint(hintKey, parentHint);
+        }
+
+        private int RemoveParentHint(TaggingHintKey hintKey, TaggingHintKey parentHint) {
+            parentHints.JRemove(hintKey);
+            IList<TaggingHintKey> kidsHint = kidsHints.Get(parentHint);
+            int i;
+            int size = kidsHint.Count;
+            for (i = 0; i < size; ++i) {
+                if (kidsHint[i] == hintKey) {
+                    kidsHint.JRemoveAt(i);
+                    break;
+                }
+            }
+            System.Diagnostics.Debug.Assert(i < size);
+            if (kidsHint.IsEmpty()) {
+                kidsHints.JRemove(parentHint);
+            }
+            return i;
+        }
+
+        private void FinishDummyKids(IList<TaggingHintKey> taggingHintKeys) {
+            foreach (TaggingHintKey hintKey in taggingHintKeys) {
+                bool isDummy = hintKey.GetAccessibleElement() is TaggingDummyElement;
+                if (isDummy) {
+                    FinishTaggingHint((IPropertyContainer)hintKey.GetAccessibleElement());
+                }
+                if (IsNonAccessibleHint(hintKey) || isDummy) {
+                    FinishDummyKids(GetKidsHint(hintKey));
+                }
+            }
+        }
+
+        private void MoveKidTagIfCreated(TaggingHintKey parentKey, TaggingHintKey kidKey) {
+            // both arguments shall be accessible, non-accessible are not handled inside this method
+            TagTreePointer kidPointer = new TagTreePointer(document);
+            WaitingTagsManager waitingTagsManager = context.GetWaitingTagsManager();
+            if (!waitingTagsManager.TryMovePointerToWaitingTag(kidPointer, kidKey)) {
+                return;
+            }
+            TagTreePointer parentPointer = new TagTreePointer(document);
+            if (!waitingTagsManager.TryMovePointerToWaitingTag(parentPointer, parentKey)) {
+                return;
+            }
+            int kidIndInParentKidsHint = GetAccessibleKidsHint(parentKey).IndexOf(kidKey);
+            int ind = GetNearestNextSiblingTagIndex(waitingTagsManager, parentPointer, GetAccessibleKidsHint(parentKey
+                ), kidIndInParentKidsHint);
+            parentPointer.SetNextNewKidIndex(ind);
+            kidPointer.Relocate(parentPointer);
+        }
+
+        private int GetNearestNextSiblingTagIndex(WaitingTagsManager waitingTagsManager, TagTreePointer parentPointer
+            , IList<TaggingHintKey> siblingsHint, int start) {
+            int ind = -1;
+            TagTreePointer nextSiblingPointer = new TagTreePointer(document);
+            while (++start < siblingsHint.Count) {
+                if (waitingTagsManager.TryMovePointerToWaitingTag(nextSiblingPointer, siblingsHint[start]) && parentPointer
+                    .IsPointingToSameTag(new TagTreePointer(nextSiblingPointer).MoveToParent())) {
+                    ind = nextSiblingPointer.GetIndexInParentKidsList();
+                    break;
+                }
+            }
+            return ind;
+        }
+
+        private static bool IsNonAccessibleHint(TaggingHintKey hintKey) {
+            return hintKey.GetAccessibleElement() == null || hintKey.GetAccessibleElement().GetRole() == null;
+        }
+
+        private bool IsTagAlreadyExistsForHint(TaggingHintKey tagHint) {
+            return context.GetWaitingTagsManager().IsObjectAssociatedWithWaitingTag(tagHint);
+        }
+
+        private void ReleaseHint(TaggingHintKey hint, bool checkContextIsFinished) {
+            TaggingHintKey parentHint = parentHints.Get(hint);
+            IList<TaggingHintKey> kidsHint = kidsHints.Get(hint);
+            if (checkContextIsFinished && parentHint != null) {
+                if (IsSomeParentNotFinished(parentHint)) {
+                    return;
+                }
+            }
+            if (checkContextIsFinished && kidsHint != null) {
+                if (IsSomeKidNotFinished(hint)) {
+                    return;
+                }
+            }
+            if (parentHint != null) {
+                RemoveParentHint(hint, parentHint);
+            }
+            if (kidsHint != null) {
+                foreach (TaggingHintKey kidHint in kidsHint) {
+                    parentHints.JRemove(kidHint);
+                }
+                kidsHints.JRemove(hint);
+            }
+            TagTreePointer tagPointer = new TagTreePointer(document);
+            if (context.GetWaitingTagsManager().TryMovePointerToWaitingTag(tagPointer, hint)) {
+                context.GetWaitingTagsManager().RemoveWaitingState(hint);
+                if (immediateFlush) {
+                    tagPointer.FlushParentsIfAllKidsFlushed();
+                }
+            }
+            else {
+                context.GetWaitingTagsManager().RemoveWaitingState(hint);
+            }
+        }
+
+        private bool IsSomeParentNotFinished(TaggingHintKey parentHint) {
+            TaggingHintKey hintKey = parentHint;
+            while (true) {
+                if (hintKey == null) {
+                    return false;
+                }
+                if (!hintKey.IsFinished()) {
+                    return true;
+                }
+                if (!IsNonAccessibleHint(hintKey)) {
+                    return false;
+                }
+                hintKey = GetParentHint(hintKey);
+            }
+        }
+
+        private bool IsSomeKidNotFinished(TaggingHintKey hint) {
+            foreach (TaggingHintKey kidHint in GetKidsHint(hint)) {
+                if (!kidHint.IsFinished()) {
+                    return true;
+                }
+                if (IsNonAccessibleHint(kidHint) && IsSomeKidNotFinished(kidHint)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void RegisterRules(PdfVersion pdfVersion) {
+            ITaggingRule tableRule = new TableTaggingRule();
+            RegisterSingleRule(PdfName.Table, tableRule);
+            RegisterSingleRule(PdfName.TFoot, tableRule);
+            RegisterSingleRule(PdfName.THead, tableRule);
+            if (pdfVersion.CompareTo(PdfVersion.PDF_1_5) < 0) {
+                RegisterSingleRule(PdfName.Table, new TableTaggingPriorToOneFiveVersionRule());
+                RegisterSingleRule(PdfName.THead, new TableTaggingPriorToOneFiveVersionRule());
+                RegisterSingleRule(PdfName.TFoot, new TableTaggingPriorToOneFiveVersionRule());
+            }
+        }
+
+        private void RegisterSingleRule(PdfName role, ITaggingRule rule) {
+            IList<ITaggingRule> rules = taggingRules.Get(role);
+            if (rules == null) {
+                rules = new List<ITaggingRule>();
+                taggingRules.Put(role, rules);
+            }
+            rules.Add(rule);
+        }
+    }
+}

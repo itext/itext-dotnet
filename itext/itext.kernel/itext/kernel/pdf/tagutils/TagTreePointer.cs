@@ -498,7 +498,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Moves kid of the current tag to the tag at which given
         /// <c>TagTreePointer</c>
         /// points.
-        /// This method doesn't change pointerToNewParent position.
+        /// This method doesn't change neither this instance nor pointerToNewParent position.
         /// </summary>
         /// <param name="kidIndex">zero-based index of the current tag's kid to be relocated.</param>
         /// <param name="pointerToNewParent">
@@ -508,13 +508,29 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </param>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer RelocateKid(int kidIndex, iText.Kernel.Pdf.Tagutils.TagTreePointer
              pointerToNewParent) {
             if (GetDocument() != pointerToNewParent.GetDocument()) {
                 throw new PdfException(PdfException.TagCannotBeMovedToTheAnotherDocumentsTagStructure);
+            }
+            if (GetCurrentStructElem().IsFlushed()) {
+                throw new PdfException(PdfException.CannotRelocateTagWhichParentIsAlreadyFlushed);
+            }
+            if (IsPointingToSameTag(pointerToNewParent)) {
+                if (kidIndex == pointerToNewParent.nextNewKidIndex) {
+                    return this;
+                }
+                else {
+                    if (kidIndex < pointerToNewParent.nextNewKidIndex) {
+                        pointerToNewParent.SetNextNewKidIndex(pointerToNewParent.nextNewKidIndex - 1);
+                    }
+                }
+            }
+            if (GetCurrentStructElem().GetKids()[kidIndex] == null) {
+                throw new PdfException(PdfException.CannotRelocateTagWhichIsAlreadyFlushed);
             }
             IStructureNode removedKid = GetCurrentStructElem().RemoveKid(kidIndex);
             if (removedKid is PdfStructElem) {
@@ -527,6 +543,39 @@ namespace iText.Kernel.Pdf.Tagutils {
                     pointerToNewParent.AddNewKid(mcrKid);
                 }
             }
+            return this;
+        }
+
+        /// <summary>
+        /// Moves current tag to the tag at which given
+        /// <c>TagTreePointer</c>
+        /// points.
+        /// This method doesn't change either this instance or pointerToNewParent position.
+        /// </summary>
+        /// <param name="pointerToNewParent">
+        /// the
+        /// <c>TagTreePointer</c>
+        /// which is positioned at the tag
+        /// which will become current tag new parent.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="TagTreePointer"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer Relocate(iText.Kernel.Pdf.Tagutils.TagTreePointer 
+            pointerToNewParent) {
+            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject()) {
+                throw new PdfException(PdfException.CannotRelocateRootTag);
+            }
+            if (GetCurrentStructElem().IsFlushed()) {
+                throw new PdfException(PdfException.CannotRelocateTagWhichIsAlreadyFlushed);
+            }
+            int i = GetIndexInParentKidsList();
+            if (i < 0) {
+                throw new PdfException(PdfException.CannotRelocateTagWhichParentIsAlreadyFlushed);
+            }
+            new iText.Kernel.Pdf.Tagutils.TagTreePointer(this).MoveToParent().RelocateKid(i, pointerToNewParent);
             return this;
         }
 
@@ -569,7 +618,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </summary>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToRoot() {
@@ -579,12 +628,12 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <summary>
         /// Moves this
-        /// <c>TagTreePointer</c>
+        /// <see cref="TagTreePointer"/>
         /// instance to the parent of the current tag.
         /// </summary>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToParent() {
@@ -611,7 +660,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <param name="kidIndex">zero-based index of the current tag kid to which pointer will be moved.</param>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int kidIndex) {
@@ -641,7 +690,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </param>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(PdfName role) {
@@ -661,7 +710,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <param name="role">role of the current tag kid to which pointer will be moved.</param>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, PdfName role) {
@@ -682,15 +731,15 @@ namespace iText.Kernel.Pdf.Tagutils {
             throw new PdfException(PdfException.NoKidWithSuchRole);
         }
 
-        /// <summary>Gets current element kids roles.</summary>
+        /// <summary>Gets current tag kids roles.</summary>
         /// <remarks>
-        /// Gets current element kids roles.
+        /// Gets current tag kids roles.
         /// If certain kid is already flushed, at its position there will be a
         /// <see langword="null"/>
         /// .
         /// If kid is content item, at its position there will be "MCR" (Marked Content Reference).
         /// </remarks>
-        /// <returns>current element kids roles</returns>
+        /// <returns>current tag kids roles</returns>
         public virtual IList<PdfName> GetKidsRoles() {
             IList<PdfName> roles = new List<PdfName>();
             IList<IStructureNode> kids = GetCurrentStructElem().GetKids();
@@ -726,7 +775,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </remarks>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer FlushTag() {
@@ -741,6 +790,33 @@ namespace iText.Kernel.Pdf.Tagutils {
             else {
                 SetCurrentStructElem(tagStructureContext.GetRootTag());
             }
+            return this;
+        }
+
+        /// <summary>
+        /// For current tag and all of it's parents consequentially checks if the following constraints apply,
+        /// and flushes the tag if they do or stops if they don't:
+        /// <ul>
+        /// <li>tag is not already flushed;</li>
+        /// <li>tag is not in waiting state (see
+        /// <see cref="WaitingTagsManager"/>
+        /// );</li>
+        /// <li>tag is not the root tag;</li>
+        /// <li>tag has no kids or all of the kids are either flushed themselves or
+        /// (if they are a marked content reference) belong to the flushed page.</li>
+        /// </ul>
+        /// It makes sense to use this method in conjunction with
+        /// <see cref="TagStructureContext.FlushPageTags(iText.Kernel.Pdf.PdfPage)"/>
+        /// for the tags which have just lost their waiting state and might be not flushed only because they had one.
+        /// This helps to eliminate hanging (not flushed) tags when they don't have waiting state anymore.
+        /// </summary>
+        /// <returns>
+        /// this
+        /// <see cref="TagTreePointer"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer FlushParentsIfAllKidsFlushed() {
+            GetContext().FlushParentIfBelongsToPage(GetCurrentStructElem(), null);
             return this;
         }
 
@@ -760,12 +836,82 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <param name="role">new role to be set.</param>
         /// <returns>
         /// this
-        /// <see cref="TagStructureContext"/>
+        /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetRole(PdfName role) {
             GetCurrentStructElem().SetRole(role);
             return this;
+        }
+
+        /// <summary>Defines index of the current tag in the parent's kids list.</summary>
+        /// <returns>
+        /// returns index of the current tag in the parent's kids list, or -1
+        /// if either current tag is a root tag, parent is flushed or it wasn't possible to define index.
+        /// </returns>
+        public virtual int GetIndexInParentKidsList() {
+            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject()) {
+                return -1;
+            }
+            PdfStructElem parent = (PdfStructElem)GetCurrentStructElem().GetParent();
+            if (parent.IsFlushed()) {
+                return -1;
+            }
+            PdfObject k = parent.GetK();
+            if (k == GetCurrentStructElem().GetPdfObject()) {
+                return 0;
+            }
+            if (k.IsArray()) {
+                PdfArray kidsArr = (PdfArray)k;
+                return kidsArr.IndexOf(GetCurrentStructElem().GetPdfObject());
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Moves this
+        /// <see cref="TagTreePointer"/>
+        /// instance to the tag at which given
+        /// <see cref="TagTreePointer"/>
+        /// instance is pointing.
+        /// </summary>
+        /// <param name="tagTreePointer">
+        /// a
+        /// <see cref="TagTreePointer"/>
+        /// that points at the tag which will become the current tag
+        /// of this instance.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="TagTreePointer"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToPointer(iText.Kernel.Pdf.Tagutils.TagTreePointer
+             tagTreePointer) {
+            this.currentStructElem = tagTreePointer.currentStructElem;
+            return this;
+        }
+
+        /// <summary>
+        /// Checks if this
+        /// <see cref="TagTreePointer"/>
+        /// is pointing at the same tag as the giving
+        /// <see cref="TagTreePointer"/>
+        /// .
+        /// </summary>
+        /// <param name="otherPointer">
+        /// a
+        /// <see cref="TagTreePointer"/>
+        /// which is checked against this instance on whether they point
+        /// at the same tag.
+        /// </param>
+        /// <returns>
+        /// true if both
+        /// <see cref="TagTreePointer"/>
+        /// instances point at the same tag, false otherwise.
+        /// </returns>
+        public virtual bool IsPointingToSameTag(iText.Kernel.Pdf.Tagutils.TagTreePointer otherPointer) {
+            return GetCurrentStructElem().GetPdfObject().Equals(otherPointer.GetCurrentStructElem().GetPdfObject());
         }
 
         internal virtual int CreateNextMcidForStructElem(PdfStructElem elem, int index) {

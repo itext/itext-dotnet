@@ -73,7 +73,7 @@ namespace iText.Layout {
         public virtual void PreLayoutTest01() {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
@@ -144,7 +144,7 @@ namespace iText.Layout {
         public virtual void ColumnDocumentRendererRelayoutTest() {
             String outFileName = destinationFolder + "columnDocumentRendererRelayoutTest.pdf";
             String cmpFileName = sourceFolder + "cmp_columnDocumentRendererRelayoutTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDoc, PageSize.Default, false);
             Rectangle column1 = new Rectangle(40, 40, 200, 720);
             Rectangle column2 = new Rectangle(300, 40, 200, 720);

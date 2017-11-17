@@ -42,7 +42,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// it's associated object will change to the one passed as the argument and the old one will not longer be
         /// an associated object.
         /// </summary>
-        /// <param name="pointer">
+        /// <param name="pointerToTag">
         /// a
         /// <see cref="TagTreePointer"/>
         /// pointing at a tag which is desired to be marked as waiting.
@@ -53,11 +53,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// the previous associated object with the tag if it has already had waiting state,
         /// or null if it was not waiting tag.
         /// </returns>
-        public virtual Object AssignWaitingState(TagTreePointer pointer, Object associatedObj) {
+        public virtual Object AssignWaitingState(TagTreePointer pointerToTag, Object associatedObj) {
             if (associatedObj == null) {
                 throw new ArgumentException("Passed associated object can not be null.");
             }
-            return SaveAssociatedObjectForWaitingTag(associatedObj, pointer.GetCurrentStructElem());
+            return SaveAssociatedObjectForWaitingTag(associatedObj, pointerToTag.GetCurrentStructElem());
         }
 
         /// <summary>
