@@ -102,11 +102,14 @@ namespace iText.Kernel {
                 version = new iText.Kernel.Version();
                 lock (version) {
                     try {
-                        String licenseeInfoMethodName = "GetLicenseeInfo";
+                        String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
                         Type klass = GetLicenseKeyClass();
                         if (klass != null) {
-                            MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
-                            String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
+                            Type[] cArg = new Type[] { typeof(String) };
+                            MethodInfo m = klass.GetMethod(licenseeInfoMethodName, cArg);
+                            String coreVersion = release;
+                            Object[] args = new Object[] { coreVersion };
+                            String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), args);
                             if (info[3] != null && info[3].Trim().Length > 0) {
                                 version.key = info[3];
                             }
