@@ -801,6 +801,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ID = CreateDirectName("ID");
 
+        public static readonly iText.Kernel.Pdf.PdfName IDS = CreateDirectName("IDS");
+
         public static readonly iText.Kernel.Pdf.PdfName Identity = CreateDirectName("Identity");
 
         public static readonly iText.Kernel.Pdf.PdfName IdentityH = CreateDirectName("Identity-H");
@@ -1306,6 +1308,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Rendition = CreateDirectName("Rendition");
 
+        public static readonly iText.Kernel.Pdf.PdfName Renditions = CreateDirectName("Renditions");
+
         public static readonly iText.Kernel.Pdf.PdfName Repeat = CreateDirectName("Repeat");
 
         public static readonly iText.Kernel.Pdf.PdfName ResetForm = CreateDirectName("ResetForm");
@@ -1529,6 +1533,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName TD = CreateDirectName("TD");
 
+        public static readonly iText.Kernel.Pdf.PdfName Templates = CreateDirectName("Templates");
+
         public static readonly iText.Kernel.Pdf.PdfName Text = CreateDirectName("Text");
 
         public static readonly iText.Kernel.Pdf.PdfName TextAlign = CreateDirectName("TextAlign");
@@ -1645,6 +1651,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName URI = CreateDirectName("URI");
 
         public static readonly iText.Kernel.Pdf.PdfName URL = CreateDirectName("URL");
+
+        public static readonly iText.Kernel.Pdf.PdfName URLS = CreateDirectName("URLS");
 
         public static readonly iText.Kernel.Pdf.PdfName Usage = CreateDirectName("Usage");
 
