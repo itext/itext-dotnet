@@ -96,7 +96,6 @@ namespace iText.Kernel.Font {
         /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
-            EnsureObjectIsAddedToDocument(fontDictionary);
             subset = true;
             embedded = true;
             fontProgram = new Type3Font(false);
@@ -291,11 +290,8 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
             GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox()));
             String fontName = fontProgram.GetFontNames().GetFontName();
-            if (fontName != null && fontName.Length > 0) {
-                GetPdfObject().Put(PdfName.BaseFont, new PdfName(fontName));
-            }
             base.FlushFontData(fontName, PdfName.Type3);
-            //TODO improve
+            //BaseFont is not listed as key in Type 3 font specification.
             GetPdfObject().Remove(PdfName.BaseFont);
             base.Flush();
         }
@@ -304,13 +300,13 @@ namespace iText.Kernel.Font {
             if (fontName != null && fontName.Length > 0) {
                 PdfDictionary fontDescriptor = new PdfDictionary();
                 MakeObjectIndirect(fontDescriptor);
-                FontMetrics fontMetrics = fontProgram.GetFontMetrics();
-                FontNames fontNames = fontProgram.GetFontNames();
                 fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
-                fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
+                FontMetrics fontMetrics = fontProgram.GetFontMetrics();
                 fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
                 fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
+                FontNames fontNames = fontProgram.GetFontNames();
                 fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
+                fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
                 if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
                     [0].Length >= 4) {
                     fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));

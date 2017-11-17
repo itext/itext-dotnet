@@ -1241,7 +1241,7 @@ namespace iText.Kernel.Utils {
                 }
                 if (key.Equals(PdfName.BaseFont) || key.Equals(PdfName.FontName)) {
                     PdfObject cmpObj = cmpDict.Get(key);
-                    if (cmpObj.IsName() && cmpObj.ToString().IndexOf('+') > 0) {
+                    if (cmpObj != null && cmpObj.IsName() && cmpObj.ToString().IndexOf('+') > 0) {
                         PdfObject outObj = outDict.Get(key);
                         if (!outObj.IsName() || outObj.ToString().IndexOf('+') == -1) {
                             if (compareResult != null && currentPath != null) {

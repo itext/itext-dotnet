@@ -296,7 +296,8 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText(testString).EndText();
+                canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText(testString).EndText().
+                    RestoreState();
                 page.Flush();
             }
             pdfDoc.Close();
@@ -642,7 +643,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(4));
+            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
             Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
             newGlyph.SetLineWidth(100);
             newGlyph.MoveTo(540, 5);
@@ -650,8 +651,8 @@ namespace iText.Kernel.Pdf {
             newGlyph.Stroke();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("AAAAAA EEEE ~ \u00E9 \u00F6"
-                ).EndText();
+            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("A A A A A A E E E E ~ \u00E9 \u00F6"
+                ).EndText().RestoreState();
             // é ö
             page.Flush();
             pdfDoc.Close();
@@ -674,7 +675,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument inputPdfDoc = new PdfDocument(reader);
             PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
             outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(4);
+            PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(5);
             PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
                 (outputPdfDoc));
             Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
