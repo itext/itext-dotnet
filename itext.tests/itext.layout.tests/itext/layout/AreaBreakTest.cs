@@ -99,6 +99,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "pageBreak3.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak3.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.SetRenderer(new ColumnDocumentRenderer(document, new Rectangle[] { new Rectangle(30, 30, 200, 600
                 ), new Rectangle(300, 30, 200, 600) }));
@@ -212,6 +213,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "areaBreakInsideDiv03.pdf";
             String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak()).Add(new Paragraph("World"));
             div.SetNextRenderer(new AreaBreakTest.DivRendererWithAreas(div));

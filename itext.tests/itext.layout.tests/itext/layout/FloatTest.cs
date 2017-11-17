@@ -289,7 +289,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
             String outFile = destinationFolder + "inlineFloatingImageToNextPage.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
@@ -421,11 +421,12 @@ namespace iText.Layout {
         public virtual void FloatsOnCanvas() {
             String cmpFileName = sourceFolder + "cmp_floatsOnCanvas.pdf";
             String outFile = destinationFolder + "floatsOnCanvas.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile)).SetTagged();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas pdfCanvas = new PdfCanvas(page);
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins(36
                 , 36, 36, 36, false));
+            canvas.EnableAutoTagging(page);
             Div div = new Div().SetBackgroundColor(ColorConstants.RED);
             Div fDiv = new Div().SetBackgroundColor(ColorConstants.BLUE).SetWidth(200).SetHeight(200);
             fDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -458,7 +459,7 @@ namespace iText.Layout {
         public virtual void FloatFixedHeightContentNotFit() {
             String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
             String outFile = destinationFolder + "floatFixedHeightContentNotFit.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div.")).Add(new Paragraph(text));
             div.SetHeight(200).SetWidth(100);
@@ -511,7 +512,7 @@ namespace iText.Layout {
         public virtual void ClearanceApplyingPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit02.pdf";
             String outFile = destinationFolder + "clearanceApplyingPageSplit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -535,7 +536,7 @@ namespace iText.Layout {
         public virtual void ClearanceApplyingPageSplit03() {
             String cmpFileName = sourceFolder + "cmp_clearanceApplyingPageSplit03.pdf";
             String outFile = destinationFolder + "clearanceApplyingPageSplit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));

@@ -188,7 +188,7 @@ namespace iText.Layout {
         public virtual void AddListOnShortPage2() {
             String outFileName = destinationFolder + "addListOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document doc = new Document(pdfDoc, new PageSize(500, 130));
             List list = new List(ListNumberingType.DECIMAL);
             ListItem item = new ListItem();
@@ -293,7 +293,7 @@ namespace iText.Layout {
         public virtual void ListEmptyItemTest01() {
             String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listEmptyItemTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             list.Add(new ListItem()).Add(new ListItem()).Add(new ListItem()).Add("123").Add((ListItem)new ListItem().Add
