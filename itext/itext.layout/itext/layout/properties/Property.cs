@@ -278,6 +278,10 @@ namespace iText.Layout.Properties {
 
         public const int TAB_STOPS = 69;
 
+        public const int TAGGING_HELPER = 108;
+
+        public const int TAGGING_HINT_KEY = 109;
+
         public const int TEXT_ALIGNMENT = 70;
 
         /// <summary>
@@ -313,7 +317,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 98;
+        private const int MAX_INHERITED_PROPERTY_ID = 108;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -346,6 +350,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TAGGING_HELPER] = true;
         }
 
         /// <summary>

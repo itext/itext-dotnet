@@ -148,6 +148,12 @@ namespace iText.Kernel {
 
         public const String CannotRecogniseDocumentFontWithEncoding = "Cannot recognise document font {0} with {1} encoding";
 
+        public const String CannotRelocateRootTag = "Cannot relocate root tag.";
+
+        public const String CannotRelocateTagWhichIsAlreadyFlushed = "Cannot relocate tag which is already flushed.";
+
+        public const String CannotRelocateTagWhichParentIsAlreadyFlushed = "Cannot relocate tag which parent is already flushed.";
+
         public const String CannotRemoveDocumentRootTag = "Cannot remove document root tag.";
 
         public const String CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed = "Cannot remove marked content reference, because its page has been already flushed.";
