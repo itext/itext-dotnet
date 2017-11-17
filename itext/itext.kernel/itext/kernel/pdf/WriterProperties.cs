@@ -61,6 +61,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool addXmpMetadata;
 
+        protected internal bool pdfUA;
+
         protected internal PdfVersion pdfVersion;
 
         protected internal EncryptionProperties encryptionProperties;
@@ -74,6 +76,7 @@ namespace iText.Kernel.Pdf {
         public WriterProperties() {
             smartMode = false;
             debugMode = false;
+            pdfUA = false;
             compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
             isFullCompression = null;
             encryptionProperties = new EncryptionProperties();
@@ -239,7 +242,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
         /// <param name="permissions">the user permissions for each of the certificates</param>
-        /// <param name="encryptionType">
+        /// <param name="encryptionAlgorithm">
         /// the type of encryption. It can be one of
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
         /// ,
@@ -313,6 +316,22 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties UseDebugMode() {
             this.debugMode = true;
+            return this;
+        }
+
+        /// <summary>This method marks the document as PDF/UA and sets related flags is XMPMetaData.</summary>
+        /// <remarks>
+        /// This method marks the document as PDF/UA and sets related flags is XMPMetaData.
+        /// NOTE: iText does not validate PDF/UA, which means we don't check if created PDF meets all PDF/UA requirements.
+        /// Don't use this method if you are not familiar with PDF/UA specification in order to avoid creation of non-conformant PDF/UA file.
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetPdfUA() {
+            this.pdfUA = true;
             return this;
         }
 
