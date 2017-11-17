@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -49,7 +50,7 @@ using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Contains information relating to painting current path.</summary>
-    public class PathRenderInfo : IEventData {
+    public class PathRenderInfo : AbstractRenderInfo {
         /// <summary>End the path object without filling or stroking it.</summary>
         /// <remarks>
         /// End the path object without filling or stroking it. This operator shall be a path-painting no-op,
@@ -77,10 +78,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private int clippingRule;
 
-        private CanvasGraphicsState gs;
+        /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
+        ///     </summary>
+        private IList<CanvasTag> canvasTagHierarchy;
 
-        private bool graphicsStateIsPreserved;
-
+        /// <param name="gs">The graphics state.</param>
         /// <param name="path">The path to be rendered.</param>
         /// <param name="operation">
         /// One of the possible combinations of
@@ -105,13 +107,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
-        /// <param name="gs">The graphics state.</param>
-        public PathRenderInfo(Path path, int operation, int rule, bool isClip, int clipRule, CanvasGraphicsState gs
-            ) {
+        public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
+            , int rule, bool isClip, int clipRule)
+            : base(gs) {
+            this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List<CanvasTag>(canvasTagHierarchy
+                ));
             this.path = path;
             this.operation = operation;
             this.rule = rule;
-            this.gs = gs;
             this.isClip = isClip;
             this.clippingRule = clipRule;
         }
@@ -126,12 +129,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// With this constructor path is considered as not modifying clipping path.
         /// <p>
         /// See
-        /// <see cref="PathRenderInfo(iText.Kernel.Geom.Path, int, int, bool, int, iText.Kernel.Pdf.Canvas.CanvasGraphicsState)
+        /// <see cref="PathRenderInfo(System.Collections.Generic.Stack{E}, iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Geom.Path, int, int, bool, int)
         ///     "/>
         /// </summary>
-        public PathRenderInfo(Path path, int operation, CanvasGraphicsState gs)
-            : this(path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule
-                .NONZERO_WINDING, gs) {
+        public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
+            )
+            : this(canvasTagHierarchy, gs, path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule
+                .NONZERO_WINDING) {
         }
 
         /// <returns>
@@ -185,86 +189,96 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>Current transformation matrix.</returns>
         public virtual Matrix GetCtm() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetCtm();
         }
 
         public virtual float GetLineWidth() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetLineWidth();
         }
 
         public virtual int GetLineCapStyle() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetLineCapStyle();
         }
 
         public virtual int GetLineJoinStyle() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetLineJoinStyle();
         }
 
         public virtual float GetMiterLimit() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetMiterLimit();
         }
 
         public virtual PdfArray GetLineDashPattern() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetDashPattern();
         }
 
         public virtual Color GetStrokeColor() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetStrokeColor();
         }
 
         public virtual Color GetFillColor() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetFillColor();
         }
 
-        public virtual bool IsGraphicsStatePreserved() {
-            return graphicsStateIsPreserved;
+        /// <summary>Gets hierarchy of the canvas tags that wraps given text.</summary>
+        /// <returns>list of the wrapping canvas tags. The first tag is the innermost (nearest to the text).</returns>
+        public virtual IList<CanvasTag> GetCanvasTagHierarchy() {
+            return canvasTagHierarchy;
         }
 
-        public virtual void PreserveGraphicsState() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+        /// <returns>the marked content associated with the TextRenderInfo instance.</returns>
+        public virtual int GetMcid() {
+            foreach (CanvasTag tag in canvasTagHierarchy) {
+                if (tag.HasMcid()) {
+                    return tag.GetMcid();
+                }
             }
-            this.graphicsStateIsPreserved = true;
-            gs = new CanvasGraphicsState(gs);
+            return -1;
         }
 
-        public virtual void ReleaseGraphicsState() {
-            if (!graphicsStateIsPreserved) {
-                gs = null;
+        /// <summary>
+        /// Checks if the text belongs to a marked content sequence
+        /// with a given mcid.
+        /// </summary>
+        /// <param name="mcid">a marked content id</param>
+        /// <returns>true if the text is marked with this id</returns>
+        public virtual bool HasMcid(int mcid) {
+            return HasMcid(mcid, false);
+        }
+
+        /// <summary>
+        /// Checks if the text belongs to a marked content sequence
+        /// with a given mcid.
+        /// </summary>
+        /// <param name="mcid">a marked content id</param>
+        /// <param name="checkTheTopmostLevelOnly">indicates whether to check the topmost level of marked content stack only
+        ///     </param>
+        /// <returns>true if the text is marked with this id</returns>
+        public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly) {
+            if (checkTheTopmostLevelOnly) {
+                if (canvasTagHierarchy != null) {
+                    int infoMcid = GetMcid();
+                    return infoMcid != -1 && infoMcid == mcid;
+                }
             }
+            else {
+                foreach (CanvasTag tag in canvasTagHierarchy) {
+                    if (tag.HasMcid()) {
+                        if (tag.GetMcid() == mcid) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
