@@ -84,12 +84,19 @@ namespace iText.Kernel.Pdf {
                     ICollection<String> keys = new HashSet<String>();
                     keys.AddAll(items.Keys);
                     foreach (String key in keys) {
-                        PdfArray arr = GetNameArray(items.Get(key));
-                        if (arr != null) {
-                            items.Put(key, arr);
+                        if (treeType.Equals(PdfName.Dests)) {
+                            PdfArray arr = GetDestArray(items.Get(key));
+                            if (arr != null) {
+                                items.Put(key, arr);
+                            }
+                            else {
+                                items.JRemove(key);
+                            }
                         }
                         else {
-                            items.JRemove(key);
+                            if (items.Get(key) == null) {
+                                items.JRemove(key);
+                            }
                         }
                     }
                 }
@@ -99,7 +106,7 @@ namespace iText.Kernel.Pdf {
                 if (destinations != null) {
                     ICollection<PdfName> keys = destinations.KeySet();
                     foreach (PdfName key in keys) {
-                        PdfArray array = GetNameArray(destinations.Get(key));
+                        PdfArray array = GetDestArray(destinations.Get(key));
                         if (array == null) {
                             continue;
                         }
@@ -242,7 +249,7 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
-        private PdfArray GetNameArray(PdfObject obj) {
+        private PdfArray GetDestArray(PdfObject obj) {
             if (obj == null) {
                 return null;
             }
