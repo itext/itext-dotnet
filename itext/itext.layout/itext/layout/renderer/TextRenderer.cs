@@ -51,7 +51,6 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -62,6 +61,7 @@ using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Splitting;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -543,31 +543,22 @@ namespace iText.Layout.Renderer {
                 return;
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
-            PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled();
-            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
-            bool isArtifact = isTagged && !modelElementIsAccessible;
+            LayoutTaggingHelper taggingHelper = null;
+            bool isArtifact = false;
             TagTreePointer tagPointer = null;
-            WaitingTagsManager waitingTagsManager = null;
-            IAccessibleElement accessibleElement = null;
             if (isTagged) {
-                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                if (modelElementIsAccessible) {
-                    accessibleElement = (IAccessibleElement)GetModelElement();
-                    PdfName role = accessibleElement.GetRole();
-                    if (role != null && !PdfName.Artifact.Equals(role)) {
-                        waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-                        if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
-                            tagPointer.AddTag(accessibleElement);
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isArtifact = true;
+                }
+                else {
+                    isArtifact = taggingHelper.IsArtifact(this);
+                    if (!isArtifact) {
+                        tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                        if (taggingHelper.CreateTag(this, tagPointer)) {
                             tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
                                 ));
-                            waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
-                        }
-                    }
-                    else {
-                        modelElementIsAccessible = false;
-                        if (PdfName.Artifact.Equals(role)) {
-                            isArtifact = true;
                         }
                     }
                 }
@@ -677,7 +668,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_711();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_700();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -734,16 +725,16 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), true);
             ApplyBorderBox(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);
-            if (modelElementIsAccessible) {
-                tagPointer.MoveToParent();
+            if (isTagged && !isArtifact) {
                 if (isLastRendererForModelElement) {
-                    waitingTagsManager.RemoveWaitingState(accessibleElement);
+                    taggingHelper.FinishTaggingHint(this);
                 }
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
         }
 
-        private sealed class _IGlyphLineFilter_711 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_711() {
+        private sealed class _IGlyphLineFilter_700 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_700() {
             }
 
             public bool Accept(Glyph glyph) {

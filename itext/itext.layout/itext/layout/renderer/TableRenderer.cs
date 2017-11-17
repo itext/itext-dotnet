@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -55,6 +54,7 @@ using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -420,6 +420,12 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
+                    // create hint for cell if not yet created
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    if (taggingHelper != null) {
+                        taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(cell));
+                        LayoutTaggingHelper.AddTreeHints(taggingHelper, cell);
+                    }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         , wasHeightClipped || wasParentsHeightClipped));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
@@ -496,6 +502,10 @@ namespace iText.Layout.Renderer {
                                         ));
                                     bordersHandler.SetStartRow(savedStartRow);
                                     if (LayoutResult.FULL == res.GetStatus()) {
+                                        if (taggingHelper != null) {
+                                            // marking as artifact to get rid of all tagging hints from this renderer
+                                            taggingHelper.MarkArtifactHint(footerRenderer);
+                                        }
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
                                         layoutBox.IncreaseHeight(footerHeight).MoveDown(footerHeight);
@@ -566,6 +576,11 @@ namespace iText.Layout.Renderer {
                     }
                     bool skip = false;
                     if (null != footerRenderer && tableModel.IsComplete() && tableModel.IsSkipLastFooter() && !split) {
+                        LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                        if (taggingHelper != null) {
+                            // marking as artifact to get rid of all tagging hints from this renderer
+                            taggingHelper.MarkArtifactHint(footerRenderer);
+                        }
                         footerRenderer = null;
                         if (tableModel.IsEmpty()) {
                             this.DeleteOwnProperty(Property.BORDER_TOP);
@@ -608,6 +623,12 @@ namespace iText.Layout.Renderer {
                 if (!split) {
                     childRenderers.AddAll(currChildRenderers);
                     currChildRenderers.Clear();
+                }
+                if (split && footerRenderer != null) {
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    if (taggingHelper != null) {
+                        taggingHelper.MarkArtifactHint(footerRenderer);
+                    }
                 }
                 if (split) {
                     if (marginsCollapsingEnabled) {
@@ -685,11 +706,13 @@ namespace iText.Layout.Renderer {
                                     overflowCell.DeleteProperty(Property.MAX_HEIGHT);
                                     overflowRows.SetCell(0, col, null);
                                     overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
-                                    currentRow[col].isLastRendererForModelElement = false;
                                     childRenderers.Add(currentRow[col]);
                                     CellRenderer originalCell = currentRow[col];
                                     currentRow[col] = null;
                                     rows[targetOverflowRowIndex[col]][col] = originalCell;
+                                    originalCell.isLastRendererForModelElement = false;
+                                    overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                                        ));
                                 }
                                 else {
                                     childRenderers.Add(currentRow[col]);
@@ -706,12 +729,14 @@ namespace iText.Layout.Renderer {
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
                                         CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
                                             );
-                                        rows[i][col].isLastRendererForModelElement = false;
                                         overflowRows.SetCell(i - row, col, null);
                                         overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
                                         CellRenderer originalCell = rows[i][col];
                                         rows[i][col] = null;
                                         rows[targetOverflowRowIndex[col]][col] = originalCell;
+                                        originalCell.isLastRendererForModelElement = false;
+                                        overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                                            ));
                                     }
                                 }
                                 overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
@@ -910,6 +935,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             // we should process incomplete table's footer only dureing splitting
             if (!tableModel.IsComplete() && null != footerRenderer) {
+                LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper != null) {
+                    // marking as artifact to get rid of all tagging hints from this renderer
+                    taggingHelper.MarkArtifactHint(footerRenderer);
+                }
                 footerRenderer = null;
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
@@ -922,136 +952,43 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
-            PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool ignoreTag = false;
-            PdfName role = null;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            LayoutTaggingHelper taggingHelper = null;
             if (isTagged) {
-                role = ((IAccessibleElement)GetModelElement()).GetRole();
-                bool isHeaderOrFooter = PdfName.THead.Equals(role) || PdfName.TFoot.Equals(role);
-                bool ignoreHeaderFooterTag = document.GetTagStructureContext().GetTagStructureTargetVersion().CompareTo(PdfVersion
-                    .PDF_1_5) < 0;
-                ignoreTag = isHeaderOrFooter && ignoreHeaderFooterTag;
-            }
-            if (role != null && !role.Equals(PdfName.Artifact) && !ignoreTag) {
-                WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-                IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
-                    tagPointer.AddTag(accessibleElement);
-                    tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
-                        ));
-                    waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isTagged = false;
                 }
-                BeginTranformationIfApplied(drawContext.GetCanvas());
-                base.Draw(drawContext);
-                EndTranformationIfApplied(drawContext.GetCanvas());
-                tagPointer.MoveToParent();
-                bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
-                if (toRemoveConnectionsWithTag) {
-                    waitingTagsManager.RemoveWaitingState(accessibleElement);
+                else {
+                    TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                    if (taggingHelper.CreateTag(this, tagPointer)) {
+                        tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                            ));
+                    }
                 }
             }
-            else {
-                BeginTranformationIfApplied(drawContext.GetCanvas());
-                base.Draw(drawContext);
-                EndTranformationIfApplied(drawContext.GetCanvas());
+            BeginTranformationIfApplied(drawContext.GetCanvas());
+            base.Draw(drawContext);
+            EndTranformationIfApplied(drawContext.GetCanvas());
+            if (isTagged) {
+                if (isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete()) {
+                    taggingHelper.FinishTaggingHint(this);
+                }
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
         }
 
         /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
-            Table modelElement = (Table)GetModelElement();
             if (headerRenderer != null) {
-                bool firstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer && !modelElement.IsSkipFirstHeader
-                    ();
-                bool notToTagHeader = drawContext.IsTaggingEnabled() && !firstHeader;
-                if (notToTagHeader) {
-                    drawContext.SetTaggingEnabled(false);
-                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-                }
                 headerRenderer.Draw(drawContext);
-                if (notToTagHeader) {
-                    drawContext.GetCanvas().CloseTag();
-                    drawContext.SetTaggingEnabled(true);
-                }
-            }
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement && !childRenderers
-                .IsEmpty();
-            TagTreePointer tagPointer = null;
-            bool shouldHaveFooterOrHeaderTag = modelElement.GetHeader() != null || modelElement.GetFooter() != null;
-            if (isTagged) {
-                PdfName role = modelElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    bool ignoreHeaderFooterTag = drawContext.GetDocument().GetTagStructureContext().GetTagStructureTargetVersion
-                        ().CompareTo(PdfVersion.PDF_1_5) < 0;
-                    shouldHaveFooterOrHeaderTag = shouldHaveFooterOrHeaderTag && !ignoreHeaderFooterTag && (!modelElement.IsSkipFirstHeader
-                        () || !modelElement.IsSkipLastFooter());
-                    if (shouldHaveFooterOrHeaderTag) {
-                        if (tagPointer.GetKidsRoles().Contains(PdfName.TBody)) {
-                            tagPointer.MoveToKid(PdfName.TBody);
-                        }
-                        else {
-                            tagPointer.AddTag(PdfName.TBody);
-                        }
-                    }
-                }
-                else {
-                    isTagged = false;
-                }
             }
             foreach (IRenderer child in childRenderers) {
-                if (isTagged) {
-                    int adjustByHeaderRowsNum = 0;
-                    if (modelElement.GetHeader() != null && !modelElement.IsSkipFirstHeader() && !shouldHaveFooterOrHeaderTag) {
-                        adjustByHeaderRowsNum = modelElement.GetHeader().GetNumberOfRows();
-                    }
-                    int cellRow = ((Cell)child.GetModelElement()).GetRow() + adjustByHeaderRowsNum;
-                    int cellRowKidIndex = -1;
-                    int foundRowsNum = 0;
-                    IList<PdfName> kidsRoles = tagPointer.GetKidsRoles();
-                    for (int i = 0; i < kidsRoles.Count; ++i) {
-                        PdfName kidRole = kidsRoles[i];
-                        if (kidRole == null || PdfName.TR.Equals(kidRole)) {
-                            ++foundRowsNum;
-                        }
-                        if (foundRowsNum - 1 == cellRow) {
-                            cellRowKidIndex = i;
-                            break;
-                        }
-                    }
-                    if (cellRowKidIndex > -1) {
-                        tagPointer.MoveToKid(cellRowKidIndex);
-                    }
-                    else {
-                        tagPointer.AddTag(PdfName.TR);
-                    }
-                }
                 child.Draw(drawContext);
-                if (isTagged) {
-                    tagPointer.MoveToParent();
-                }
-            }
-            if (isTagged) {
-                if (shouldHaveFooterOrHeaderTag) {
-                    tagPointer.MoveToParent();
-                }
             }
             DrawBorders(drawContext);
             if (footerRenderer != null) {
-                bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !modelElement.IsSkipLastFooter
-                    ();
-                bool notToTagFooter = drawContext.IsTaggingEnabled() && !lastFooter;
-                if (notToTagFooter) {
-                    drawContext.SetTaggingEnabled(false);
-                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-                }
                 footerRenderer.Draw(drawContext);
-                if (notToTagFooter) {
-                    drawContext.GetCanvas().CloseTag();
-                    drawContext.SetTaggingEnabled(true);
-                }
             }
         }
 
@@ -1307,6 +1244,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+            // TODO contetn should be marked regardless element is accessible or not
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
@@ -1562,6 +1500,16 @@ namespace iText.Layout.Renderer {
             int outerBorder = footer ? 2 : 0;
             iText.Layout.Renderer.TableRenderer renderer = (iText.Layout.Renderer.TableRenderer)footerOrHeader.CreateRendererSubTree
                 ().SetParent(this);
+            bool firstHeader = !footer && rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(renderer));
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+                if (!footer && !firstHeader) {
+                    // whether footer is not the last and requires marking as artifact is defined later during table renderer layout
+                    taggingHelper.MarkArtifactHint(renderer);
+                }
+            }
             Border[] borders = renderer.GetBorders();
             if (table.IsEmpty()) {
                 renderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(borders[innerBorder], tableBorders[innerBorder

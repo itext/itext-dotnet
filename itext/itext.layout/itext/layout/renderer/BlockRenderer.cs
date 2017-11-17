@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -55,6 +54,7 @@ using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public abstract class BlockRenderer : AbstractRenderer {
@@ -363,6 +363,7 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                         }
                         else {
+                            this.isLastRendererForModelElement = false;
                             overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
                             overflowRenderer_1.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight));
                             if (HasProperty(Property.HEIGHT)) {
@@ -452,7 +453,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
             splitRenderer.isLastRendererForModelElement = false;
-            splitRenderer.properties = new Dictionary<int, Object>(properties);
+            splitRenderer.AddAllProperties(GetOwnProperties());
             return splitRenderer;
         }
 
@@ -460,7 +461,7 @@ namespace iText.Layout.Renderer {
             AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
-            overflowRenderer.properties = new Dictionary<int, Object>(properties);
+            overflowRenderer.AddAllProperties(GetOwnProperties());
             return overflowRenderer;
         }
 
@@ -471,27 +472,20 @@ namespace iText.Layout.Renderer {
                     "Drawing won't be performed."));
                 return;
             }
-            PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            TagTreePointer tagPointer = null;
-            WaitingTagsManager waitingTagsManager = null;
-            IAccessibleElement accessibleElement = null;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            LayoutTaggingHelper taggingHelper = null;
             if (isTagged) {
-                accessibleElement = (IAccessibleElement)GetModelElement();
-                PdfName role = accessibleElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                    waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-                    if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
-                        tagPointer.AddTag(accessibleElement);
-                        waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isTagged = false;
+                }
+                else {
+                    TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                    if (taggingHelper.CreateTag(this, tagPointer)) {
                         tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetListAttributes(this, tagPointer
                             )).AddAttributes(0, AccessibleAttributesApplier.GetTableAttributes(this, tagPointer)).AddAttributes(0, 
                             AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer));
                     }
-                }
-                else {
-                    isTagged = false;
                 }
             }
             BeginTranformationIfApplied(drawContext.GetCanvas());
@@ -532,12 +526,9 @@ namespace iText.Layout.Renderer {
             }
             if (isTagged) {
                 if (isLastRendererForModelElement) {
-                    waitingTagsManager.RemoveWaitingState(accessibleElement);
+                    taggingHelper.FinishTaggingHint(this);
                 }
-                if (IsPossibleBadTagging(tagPointer.GetRole())) {
-                    tagPointer.SetRole(PdfName.Div);
-                }
-                tagPointer.MoveToParent();
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
             flushed = true;
             EndTranformationIfApplied(drawContext.GetCanvas());
@@ -755,19 +746,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return difference;
-        }
-
-        /// <summary>Catch tricky cases when element order and thus tagging order is not followed accordingly.</summary>
-        /// <remarks>
-        /// Catch tricky cases when element order and thus tagging order is not followed accordingly.
-        /// The examples are a floating or absolutely positioned list item element which might end up
-        /// having parent other than list.
-        /// To produce correct tagged structure in such cases, we change the role to something else.
-        /// </remarks>
-        internal virtual bool IsPossibleBadTagging(PdfName role) {
-            return !PdfName.Artifact.Equals(role) && !PdfName.Div.Equals(role) && !PdfName.P.Equals(role) && !PdfName.
-                Link.Equals(role) && (IsFixedLayout() || IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this
-                ));
         }
 
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, UnitValue

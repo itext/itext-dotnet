@@ -51,6 +51,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class DocumentRenderer : RootRenderer {
@@ -84,6 +85,10 @@ namespace iText.Layout.Renderer {
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             FlushWaitingDrawingElements();
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                taggingHelper.ReleaseFinishedHints();
+            }
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
             if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {

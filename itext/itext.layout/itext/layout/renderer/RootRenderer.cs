@@ -49,6 +49,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public abstract class RootRenderer : AbstractRenderer {
@@ -73,6 +74,10 @@ namespace iText.Layout.Renderer {
         private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
         public override void AddChild(IRenderer renderer) {
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+            }
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
             // so we use this generic mechanism of determining which renderers have been just added.
             int numberOfChildRenderers = childRenderers.Count;
@@ -317,6 +322,10 @@ namespace iText.Layout.Renderer {
                 Flush();
             }
             FlushWaitingDrawingElements();
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                taggingHelper.ReleaseAllHints();
+            }
         }
 
         /// <summary><inheritDoc/></summary>
