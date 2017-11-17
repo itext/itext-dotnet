@@ -16,9 +16,16 @@
     <copyright>Copyright (c) 1998-2017 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf asian font-asian</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.6">
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
-	<file src="bin\Release\itext.font_asian.dll" target="lib\net40" />
-	<file src="bin\Release\itext.font_asian.xml" target="lib\net40" />
+	<file src="bin\Release\net40\itext.font_asian.dll" target="lib\net40" />
+	<file src="bin\Release\net40\itext.font_asian.xml" target="lib\net40" />
+	<file src="bin\Release\netstandard1.6\itext.font_asian.dll" target="lib\netstandard1.6" />
+	<file src="bin\Release\netstandard1.6\itext.font_asian.xml" target="lib\netstandard1.6" />
   </files>
 </package>
