@@ -60,14 +60,14 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    public class AutoTaggingTest : ExtendedITextTest {
+    public class LayoutTaggingTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/AutoTaggingTest/";
+             + "/test/itext/layout/LayoutTaggingTest/";
 
         public const String imageName = "Desert.jpg";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/AutoTaggingTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/LayoutTaggingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
