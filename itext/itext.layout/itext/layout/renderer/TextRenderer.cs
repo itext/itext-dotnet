@@ -750,7 +750,7 @@ namespace iText.Layout.Renderer {
             float bottomBBoxY = backgroundArea.GetY();
             float leftBBoxX = backgroundArea.GetX();
             if (background != null) {
-                bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+                bool isTagged = drawContext.IsTaggingEnabled();
                 PdfCanvas canvas = drawContext.GetCanvas();
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());

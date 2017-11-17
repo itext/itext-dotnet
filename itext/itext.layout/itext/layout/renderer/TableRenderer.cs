@@ -1243,8 +1243,7 @@ namespace iText.Layout.Renderer {
                     heights.Add(0f);
                 }
             }
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            // TODO contetn should be marked regardless element is accessible or not
+            bool isTagged = drawContext.IsTaggingEnabled();
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }

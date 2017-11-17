@@ -54,7 +54,6 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -466,7 +465,7 @@ namespace iText.Layout.Renderer {
             BackgroundImage backgroundImage = this.GetProperty<BackgroundImage>(Property.BACKGROUND_IMAGE);
             if (background != null || backgroundImage != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
-                bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+                bool isTagged = drawContext.IsTaggingEnabled();
                 if (isTagged) {
                     drawContext.GetCanvas().OpenTag(new CanvasArtifact());
                 }
@@ -786,7 +785,7 @@ namespace iText.Layout.Renderer {
                 float y1 = bBox.GetY();
                 float x2 = bBox.GetX() + bBox.GetWidth();
                 float y2 = bBox.GetY() + bBox.GetHeight();
-                bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+                bool isTagged = drawContext.IsTaggingEnabled();
                 PdfCanvas canvas = drawContext.GetCanvas();
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
