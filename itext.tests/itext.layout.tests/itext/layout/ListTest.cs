@@ -185,6 +185,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT, Count = 6)]
         public virtual void AddListOnShortPage2() {
             String outFileName = destinationFolder + "addListOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";

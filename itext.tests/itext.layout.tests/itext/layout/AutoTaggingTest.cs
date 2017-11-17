@@ -489,6 +489,7 @@ namespace iText.Layout {
             List list = new List(ListNumberingType.DECIMAL);
             // explicitly overriding ListNumbering attribute
             list.GetAccessibilityProperties().AddAttributes(attributesSquare);
+            // TODO not working
             list.Add("item 1");
             list.Add("item 2");
             list.Add("item 3");
@@ -832,7 +833,6 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1463")]
         public virtual void TableWithCaption01() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tableWithCaption01.pdf");
             PdfDocument pdf = new PdfDocument(writer);
@@ -887,6 +887,40 @@ namespace iText.Layout {
             document.Add(new List().Add(li));
             document.Close();
             CompareResult("floatListItemTest.pdf", "cmp_floatListItemTest.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void CreateTaggedVersionOneDotFourTest01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "createTaggedVersionOneDotFourTest01.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_4)));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
+            Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
+            cell.SetRole(PdfName.TH);
+            table.AddHeaderCell(cell);
+            for (int i = 0; i < 3; ++i) {
+                cell = new Cell().Add(new Paragraph("header " + i));
+                cell.SetRole(PdfName.TH);
+                table.AddHeaderCell(cell);
+            }
+            for (int i = 0; i < 3; ++i) {
+                table.AddFooterCell("footer " + i);
+            }
+            cell = new Cell(1, 3).Add(new Paragraph("full-width paragraph"));
+            table.AddCell(cell);
+            for (int i = 0; i < 20; ++i) {
+                table.AddCell(CreateParagraph2());
+            }
+            table.AddCell(new Paragraph("little text"));
+            document.Add(table);
+            document.Close();
+            CompareResult("createTaggedVersionOneDotFourTest01.pdf", "cmp_createTaggedVersionOneDotFourTest01.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
