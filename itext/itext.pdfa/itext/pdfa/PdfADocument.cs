@@ -278,8 +278,10 @@ namespace iText.Pdfa {
         protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
             if (this.IsTagged()) {
                 try {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
-                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                    if (xmpMeta.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART) != null) {
+                        XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
+                        XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                    }
                 }
                 catch (XMPException exc) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
