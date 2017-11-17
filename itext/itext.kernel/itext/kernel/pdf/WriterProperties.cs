@@ -61,7 +61,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool addXmpMetadata;
 
-        protected internal bool pdfUA;
+        protected internal bool addUAXmpMetadata;
 
         protected internal PdfVersion pdfVersion;
 
@@ -76,7 +76,7 @@ namespace iText.Kernel.Pdf {
         public WriterProperties() {
             smartMode = false;
             debugMode = false;
-            pdfUA = false;
+            addUAXmpMetadata = false;
             compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
             isFullCompression = null;
             encryptionProperties = new EncryptionProperties();
@@ -137,7 +137,11 @@ namespace iText.Kernel.Pdf {
         /// See
         /// <see cref="CompressionConstants"/>
         /// </remarks>
-        /// <param name="compressionLevel"/>
+        /// <param name="compressionLevel">
+        /// 
+        /// <see cref="CompressionConstants"/>
+        /// value.
+        /// </param>
         /// <returns>
         /// this
         /// <c>WriterProperties</c>
@@ -322,6 +326,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method marks the document as PDF/UA and sets related flags is XMPMetaData.</summary>
         /// <remarks>
         /// This method marks the document as PDF/UA and sets related flags is XMPMetaData.
+        /// This method calls
+        /// <see cref="AddXmpMetadata()"/>
+        /// implicitly.
         /// NOTE: iText does not validate PDF/UA, which means we don't check if created PDF meets all PDF/UA requirements.
         /// Don't use this method if you are not familiar with PDF/UA specification in order to avoid creation of non-conformant PDF/UA file.
         /// </remarks>
@@ -330,9 +337,9 @@ namespace iText.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties SetPdfUA() {
-            this.pdfUA = true;
-            return this;
+        public virtual iText.Kernel.Pdf.WriterProperties AddUAXmpMetadata() {
+            this.addUAXmpMetadata = true;
+            return AddXmpMetadata();
         }
 
         internal virtual bool IsStandardEncryptionUsed() {
