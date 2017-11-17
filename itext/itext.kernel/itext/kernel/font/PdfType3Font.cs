@@ -111,8 +111,11 @@ namespace iText.Kernel.Font {
             else {
                 fontProgram.GetFontMetrics().SetBbox(0, 0, 0, 0);
             }
-            PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
-            int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
+            int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
+            int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), 255);
+            for (int i = firstChar; i <= lastChar; i++) {
+                shortTag[i] = 1;
+            }
             int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, 0);
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
@@ -152,9 +155,9 @@ namespace iText.Kernel.Font {
             ((Type3Font)fontProgram).SetFontWeight(fontWeight);
         }
 
-        /// <summary>Sets the PostScript italic angel.</summary>
+        /// <summary>Sets the PostScript italic angle.</summary>
         /// <remarks>
-        /// Sets the PostScript italic angel.
+        /// Sets the PostScript italic angle.
         /// <br/>
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
@@ -375,6 +378,14 @@ namespace iText.Kernel.Font {
             if (fontFamily != null) {
                 SetFontFamily(fontFamily.GetValue());
             }
+        }
+
+        private int NormalizeFirstLastChar(PdfNumber firstLast, int defaultValue) {
+            if (firstLast == null) {
+                return defaultValue;
+            }
+            int result = firstLast.IntValue();
+            return result < 0 || result > 255 ? defaultValue : result;
         }
     }
 }
