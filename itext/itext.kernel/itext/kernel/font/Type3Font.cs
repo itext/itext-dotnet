@@ -54,7 +54,11 @@ namespace iText.Kernel.Font {
 
         private int flags = 0;
 
-        public Type3Font(bool colorized) {
+        /// <summary>Creates a Type 3 font programm.</summary>
+        /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
+        ///     </param>
+        [System.ObsoleteAttribute(@"Type 3 font should contain font name and font family in case tagged PDF.")]
+        internal Type3Font(bool colorized) {
             this.colorized = colorized;
             this.fontNames = new FontNames();
             GetFontMetrics().SetBbox(0, 0, 0, 0);
