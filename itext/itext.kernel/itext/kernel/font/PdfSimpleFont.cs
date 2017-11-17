@@ -319,7 +319,7 @@ namespace iText.Kernel.Font {
 
         protected internal virtual void FlushFontData(String fontName, PdfName subtype) {
             GetPdfObject().Put(PdfName.Subtype, subtype);
-            if (fontName != null) {
+            if (fontName != null && fontName.Length > 0) {
                 GetPdfObject().Put(PdfName.BaseFont, new PdfName(fontName));
             }
             int firstChar;

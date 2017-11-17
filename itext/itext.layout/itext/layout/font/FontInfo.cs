@@ -99,12 +99,12 @@ namespace iText.Layout.Font {
             this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
+        public static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
             return new iText.Layout.Font.FontInfo(fontInfo.fontName, fontInfo.fontData, fontInfo.encoding, fontInfo.descriptor
                 , alias);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
+        public static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
             return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, alias);
         }

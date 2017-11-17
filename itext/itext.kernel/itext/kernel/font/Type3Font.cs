@@ -47,6 +47,14 @@ using iText.IO.Font;
 using iText.IO.Font.Otf;
 
 namespace iText.Kernel.Font {
+    /// <summary>FontProgram class for Type 3 font.</summary>
+    /// <remarks>
+    /// FontProgram class for Type 3 font. Contains map of
+    /// <Link>Type3Glyph</Link>
+    /// .
+    /// Type3Glyphs belong to a particular pdf document.
+    /// Note, an instance of Type3Font can not be reused for multiple pdf documents.
+    /// </remarks>
     public class Type3Font : FontProgram {
         private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
 
@@ -54,10 +62,9 @@ namespace iText.Kernel.Font {
 
         private int flags = 0;
 
-        /// <summary>Creates a Type 3 font programm.</summary>
+        /// <summary>Creates a Type 3 font program.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
         ///     </param>
-        [System.ObsoleteAttribute(@"Type 3 font should contain font name and font family in case tagged PDF.")]
         internal Type3Font(bool colorized) {
             this.colorized = colorized;
             this.fontNames = new FontNames();
@@ -84,21 +91,26 @@ namespace iText.Kernel.Font {
             return 0;
         }
 
-        public virtual int GetGlyphsCount() {
+        public virtual int GetNumberOfGlyphs() {
             return type3Glyphs.Count;
         }
 
         /// <summary>Sets the PostScript name of the font.</summary>
+        /// <remarks>
+        /// Sets the PostScript name of the font.
+        /// <br />
+        /// If full name is null, it will be set as well.
+        /// </remarks>
         /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
         protected internal override void SetFontName(String fontName) {
-            //This dummy override allows PdfType3Font to set font name.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontName(fontName);
         }
 
         /// <summary>Sets a preferred font family name.</summary>
         /// <param name="fontFamily">a preferred font family name.</param>
         protected internal override void SetFontFamily(String fontFamily) {
-            //This dummy override allows PdfType3Font to set font family.
+            //This dummy override allows PdfType3Font to set font family because of different modules.
             base.SetFontFamily(fontFamily);
         }
 
@@ -109,7 +121,7 @@ namespace iText.Kernel.Font {
         /// .
         /// </param>
         protected internal override void SetFontWeight(int fontWeight) {
-            //This dummy override allows PdfType3Font to set font weight.
+            //This dummy override allows PdfType3Font to set font weight because of different modules.
             base.SetFontWeight(fontWeight);
         }
 
@@ -120,7 +132,7 @@ namespace iText.Kernel.Font {
         /// .
         /// </param>
         protected internal override void SetFontStretch(String fontWidth) {
-            //This dummy override allows PdfType3Font to set font stretch.
+            //This dummy override allows PdfType3Font to set font stretch because of different modules.
             base.SetFontStretch(fontWidth);
         }
 
@@ -132,13 +144,17 @@ namespace iText.Kernel.Font {
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal override void SetItalicAngle(int italicAngle) {
-            //This dummy override allows PdfType3Font to set the PostScript italicAngel.
+            //This dummy override allows PdfType3Font to set the PostScript italicAngel because of different modules.
             base.SetItalicAngle(italicAngle);
         }
 
         /// <summary>Sets Font descriptor flags.</summary>
         /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
-        /// <param name="flags"/>
+        /// <param name="flags">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
+        /// .
+        /// </param>
         internal virtual void SetPdfFontFlags(int flags) {
             this.flags = flags;
         }

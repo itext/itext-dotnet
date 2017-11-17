@@ -72,8 +72,9 @@ namespace iText.Kernel.Font {
             : base(fontDictionary) {
             newFont = false;
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            //if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
-            bool fillStandardEncoding = !fontDictionary.ContainsKey(PdfName.FontDescriptor);
+            // if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
+            // unused variable.
+            // boolean fillStandardEncoding = !fontDictionary.containsKey(PdfName.FontDescriptor);
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUni);
             if (fontProgram is IDocFontProgram) {

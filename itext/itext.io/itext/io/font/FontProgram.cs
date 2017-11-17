@@ -259,9 +259,17 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Sets the PostScript name of the font.</summary>
+        /// <remarks>
+        /// Sets the PostScript name of the font.
+        /// <br />
+        /// If full name is null, it will be set as well.
+        /// </remarks>
         /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
         protected internal virtual void SetFontName(String fontName) {
             fontNames.SetFontName(fontName);
+            if (fontNames.GetFullName() == null) {
+                fontNames.SetFullName(fontName);
+            }
         }
 
         protected internal virtual void CheckFilePath(String path) {

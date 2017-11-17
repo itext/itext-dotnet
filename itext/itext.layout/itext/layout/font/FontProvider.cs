@@ -92,9 +92,9 @@ namespace iText.Layout.Font {
     public class FontProvider {
         private readonly FontSet fontSet;
 
-        private readonly IDictionary<FontInfo, PdfFont> pdfFonts;
-
         private readonly FontSelectorCache fontSelectorCache;
+
+        protected internal readonly IDictionary<FontInfo, PdfFont> pdfFonts;
 
         /// <summary>Creates a new instance of FontProvider</summary>
         /// <param name="fontSet">predefined set of fonts, could be null.</param>
