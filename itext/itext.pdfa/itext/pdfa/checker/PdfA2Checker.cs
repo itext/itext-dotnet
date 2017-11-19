@@ -576,7 +576,7 @@ namespace iText.Pdfa.Checker {
                 if (filter.Equals(PdfName.Crypt)) {
                     PdfDictionary decodeParams = stream.GetAsDictionary(PdfName.DecodeParms);
                     if (decodeParams != null) {
-                        PdfString cryptFilterName = decodeParams.GetAsString(PdfName.Name);
+                        PdfName cryptFilterName = decodeParams.GetAsName(PdfName.Name);
                         if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity)) {
                             throw new PdfAConformanceException(PdfAConformanceException.NOT_IDENTITY_CRYPT_FILTER_IS_NOT_PERMITTED);
                         }
@@ -594,7 +594,7 @@ namespace iText.Pdfa.Checker {
                             PdfArray decodeParams = stream.GetAsArray(PdfName.DecodeParms);
                             if (decodeParams != null && i < decodeParams.Size()) {
                                 PdfDictionary decodeParam = decodeParams.GetAsDictionary(i);
-                                PdfString cryptFilterName = decodeParam.GetAsString(PdfName.Name);
+                                PdfName cryptFilterName = decodeParam.GetAsName(PdfName.Name);
                                 if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity)) {
                                     throw new PdfAConformanceException(PdfAConformanceException.NOT_IDENTITY_CRYPT_FILTER_IS_NOT_PERMITTED);
                                 }
