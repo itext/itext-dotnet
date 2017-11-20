@@ -943,9 +943,9 @@ namespace iText.Forms.Fields {
             field.Put(PdfName.Opt, options);
             field.SetFieldFlags(flags);
             field.SetFieldName(name);
-            field.GetPdfObject().Put(PdfName.V, new PdfString(value));
+            field.GetPdfObject().Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
             if ((flags & PdfChoiceFormField.FF_COMBO) == 0) {
-                value = field.OptionsArrayToString(options);
+                value = iText.Forms.Fields.PdfFormField.OptionsArrayToString(options);
             }
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
             field.DrawMultiLineTextAppearance(rect, font, fontSize, value, xObject);
@@ -3205,8 +3205,8 @@ namespace iText.Forms.Fields {
         protected internal static PdfArray ProcessOptions(String[][] options) {
             PdfArray array = new PdfArray();
             foreach (String[] option in options) {
-                PdfArray subArray = new PdfArray(new PdfString(option[0]));
-                subArray.Add(new PdfString(option[1]));
+                PdfArray subArray = new PdfArray(new PdfString(option[0], PdfEncodings.UNICODE_BIG));
+                subArray.Add(new PdfString(option[1], PdfEncodings.UNICODE_BIG));
                 array.Add(subArray);
             }
             return array;
@@ -3215,7 +3215,7 @@ namespace iText.Forms.Fields {
         protected internal static PdfArray ProcessOptions(String[] options) {
             PdfArray array = new PdfArray();
             foreach (String option in options) {
-                array.Add(new PdfString(option));
+                array.Add(new PdfString(option, PdfEncodings.UNICODE_BIG));
             }
             return array;
         }
@@ -3904,23 +3904,24 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private String OptionsArrayToString(PdfArray options) {
-            String value = "";
+        private static String OptionsArrayToString(PdfArray options) {
+            StringBuilder stringBuilder = new StringBuilder();
             foreach (PdfObject obj in options) {
                 if (obj.IsString()) {
-                    value += ((PdfString)obj).ToUnicodeString() + '\n';
+                    stringBuilder.Append(((PdfString)obj).ToUnicodeString()).Append('\n');
                 }
                 else {
                     if (obj.IsArray()) {
                         PdfObject element = ((PdfArray)obj).Get(1);
                         if (element.IsString()) {
-                            value += ((PdfString)element).ToUnicodeString() + '\n';
+                            stringBuilder.Append(((PdfString)element).ToUnicodeString()).Append('\n');
                         }
                     }
                 }
             }
-            value = value.JSubstring(0, value.Length - 1);
-            return value;
+            stringBuilder.DeleteCharAt(stringBuilder.Length - 1);
+            // last '\n'
+            return stringBuilder.ToString();
         }
 
         private static double DegreeToRadians(double angle) {
