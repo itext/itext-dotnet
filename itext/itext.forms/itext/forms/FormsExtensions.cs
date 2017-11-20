@@ -134,5 +134,10 @@ namespace iText.Forms {
             return type.GetTypeInfo().Assembly;
 #endif
         }
+
+        public static void DeleteCharAt(this StringBuilder builder, int index)
+        {
+            builder.Remove(index, 1);
+        }
     }
 }
