@@ -488,7 +488,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            BeginTranformationIfApplied(drawContext.GetCanvas());
+            BeginTransformationIfApplied(drawContext.GetCanvas());
             ApplyDestinationsAndAnnotation(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
@@ -531,7 +531,7 @@ namespace iText.Layout.Renderer {
                 taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
             flushed = true;
-            EndTranformationIfApplied(drawContext.GetCanvas());
+            EndTransformationIfApplied(drawContext.GetCanvas());
         }
 
         public override Rectangle GetOccupiedAreaBBox() {

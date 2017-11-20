@@ -2155,14 +2155,14 @@ namespace iText.Layout.Renderer {
             return transform;
         }
 
-        protected internal virtual void BeginTranformationIfApplied(PdfCanvas canvas) {
+        protected internal virtual void BeginTransformationIfApplied(PdfCanvas canvas) {
             if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 AffineTransform transform = CreateTransformationInsideOccupiedArea();
                 canvas.SaveState().ConcatMatrix(transform);
             }
         }
 
-        protected internal virtual void EndTranformationIfApplied(PdfCanvas canvas) {
+        protected internal virtual void EndTransformationIfApplied(PdfCanvas canvas) {
             if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
             }

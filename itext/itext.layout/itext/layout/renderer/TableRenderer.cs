@@ -967,9 +967,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            BeginTranformationIfApplied(drawContext.GetCanvas());
+            BeginTransformationIfApplied(drawContext.GetCanvas());
             base.Draw(drawContext);
-            EndTranformationIfApplied(drawContext.GetCanvas());
+            EndTransformationIfApplied(drawContext.GetCanvas());
             if (isTagged) {
                 if (isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete()) {
                     taggingHelper.FinishTaggingHint(this);

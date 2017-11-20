@@ -332,7 +332,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            BeginTranformationIfApplied(drawContext.GetCanvas());
+            BeginTransformationIfApplied(drawContext.GetCanvas());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
                 fixedXPosition += rotatedDeltaX;
@@ -358,7 +358,7 @@ namespace iText.Layout.Renderer {
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
             EndElementOpacityApplying(drawContext);
-            EndTranformationIfApplied(drawContext.GetCanvas());
+            EndTransformationIfApplied(drawContext.GetCanvas());
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
