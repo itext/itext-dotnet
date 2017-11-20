@@ -133,49 +133,6 @@ namespace iText.Pdfa {
             CheckIsoConformance(obj, key, null);
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
-        public override void CheckShowTextIsoConformance(CanvasGraphicsState gState, PdfResources resources) {
-            bool fill = false;
-            bool stroke = false;
-            switch (gState.GetTextRenderingMode()) {
-                case PdfCanvasConstants.TextRenderingMode.STROKE:
-                case PdfCanvasConstants.TextRenderingMode.STROKE_CLIP: {
-                    stroke = true;
-                    break;
-                }
-
-                case PdfCanvasConstants.TextRenderingMode.FILL:
-                case PdfCanvasConstants.TextRenderingMode.FILL_CLIP: {
-                    fill = true;
-                    break;
-                }
-
-                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE:
-                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE_CLIP: {
-                    stroke = true;
-                    fill = true;
-                    break;
-                }
-            }
-            IsoKey drawMode = IsoKey.DRAWMODE_FILL;
-            if (fill && stroke) {
-                drawMode = IsoKey.DRAWMODE_FILL_STROKE;
-            }
-            else {
-                if (fill) {
-                    drawMode = IsoKey.DRAWMODE_FILL;
-                }
-                else {
-                    if (stroke) {
-                        drawMode = IsoKey.DRAWMODE_STROKE;
-                    }
-                }
-            }
-            if (fill || stroke) {
-                CheckIsoConformance(gState, drawMode, resources);
-            }
-        }
-
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources) {
             CanvasGraphicsState gState;
             PdfDictionary currentColorSpaces = null;
@@ -209,19 +166,6 @@ namespace iText.Pdfa {
                     break;
                 }
 
-                case IsoKey.GRAPHIC_STATE_ONLY: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
-                case IsoKey.DRAWMODE_FILL: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
                 case IsoKey.FILL_COLOR: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
@@ -233,24 +177,9 @@ namespace iText.Pdfa {
                     break;
                 }
 
-                case IsoKey.DRAWMODE_STROKE: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
                 case IsoKey.STROKE_COLOR: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    break;
-                }
-
-                case IsoKey.DRAWMODE_FILL_STROKE: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    checker.CheckExtGState(gState);
                     break;
                 }
 
