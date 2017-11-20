@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Layout.Renderer {
@@ -45,77 +45,77 @@ namespace iText.Layout.Renderer {
 
         internal static int Illustration = 4;
 
-        internal static ICollection<PdfName> groupingRoles = new HashSet<PdfName>();
+        internal static ICollection<String> groupingRoles = new HashSet<String>();
 
-        internal static ICollection<PdfName> blockLevelRoles = new HashSet<PdfName>();
+        internal static ICollection<String> blockLevelRoles = new HashSet<String>();
 
-        internal static ICollection<PdfName> inlineLevelRoles = new HashSet<PdfName>();
+        internal static ICollection<String> inlineLevelRoles = new HashSet<String>();
 
-        internal static ICollection<PdfName> illustrationRoles = new HashSet<PdfName>();
+        internal static ICollection<String> illustrationRoles = new HashSet<String>();
 
         static AccessibleTypes() {
             // Some tag roles are not in any of the sets that define types. Some - because we don't want to write any accessibility
             // properties for them, some - because they are ambiguous for different pdf versions or don't have any possible
             // properties to set at the moment.
-            //        PdfName.Document
-            //        PdfName.DocumentFragment
-            //        PdfName.Artifact
-            //        PdfName.THead
-            //        PdfName.TBody
-            //        PdfName.TFoot
-            groupingRoles.Add(PdfName.Part);
-            groupingRoles.Add(PdfName.Art);
-            groupingRoles.Add(PdfName.Sect);
-            groupingRoles.Add(PdfName.Div);
-            groupingRoles.Add(PdfName.BlockQuote);
-            groupingRoles.Add(PdfName.Caption);
-            groupingRoles.Add(PdfName.TOC);
-            groupingRoles.Add(PdfName.TOCI);
-            groupingRoles.Add(PdfName.Index);
-            groupingRoles.Add(PdfName.NonStruct);
-            groupingRoles.Add(PdfName.Private);
-            groupingRoles.Add(PdfName.Aside);
-            blockLevelRoles.Add(PdfName.P);
-            blockLevelRoles.Add(PdfName.H);
-            blockLevelRoles.Add(PdfName.H1);
-            blockLevelRoles.Add(PdfName.H2);
-            blockLevelRoles.Add(PdfName.H3);
-            blockLevelRoles.Add(PdfName.H4);
-            blockLevelRoles.Add(PdfName.H5);
-            blockLevelRoles.Add(PdfName.H6);
+            //        StandardStructureTypes.Document
+            //        StandardStructureTypes.DocumentFragment
+            //        StandardStructureTypes.Artifact
+            //        StandardStructureTypes.THead
+            //        StandardStructureTypes.TBody
+            //        StandardStructureTypes.TFoot
+            groupingRoles.Add(StandardRoles.PART);
+            groupingRoles.Add(StandardRoles.ART);
+            groupingRoles.Add(StandardRoles.SECT);
+            groupingRoles.Add(StandardRoles.DIV);
+            groupingRoles.Add(StandardRoles.BLOCKQUOTE);
+            groupingRoles.Add(StandardRoles.CAPTION);
+            groupingRoles.Add(StandardRoles.TOC);
+            groupingRoles.Add(StandardRoles.TOCI);
+            groupingRoles.Add(StandardRoles.INDEX);
+            groupingRoles.Add(StandardRoles.NONSTRUCT);
+            groupingRoles.Add(StandardRoles.PRIVATE);
+            groupingRoles.Add(StandardRoles.ASIDE);
+            blockLevelRoles.Add(StandardRoles.P);
+            blockLevelRoles.Add(StandardRoles.H);
+            blockLevelRoles.Add(StandardRoles.H1);
+            blockLevelRoles.Add(StandardRoles.H2);
+            blockLevelRoles.Add(StandardRoles.H3);
+            blockLevelRoles.Add(StandardRoles.H4);
+            blockLevelRoles.Add(StandardRoles.H5);
+            blockLevelRoles.Add(StandardRoles.H6);
             // Hn type is handled separately in identifyType method
-            blockLevelRoles.Add(PdfName.L);
-            blockLevelRoles.Add(PdfName.Lbl);
-            blockLevelRoles.Add(PdfName.LI);
-            blockLevelRoles.Add(PdfName.LBody);
-            blockLevelRoles.Add(PdfName.Table);
-            blockLevelRoles.Add(PdfName.TR);
-            blockLevelRoles.Add(PdfName.TH);
-            blockLevelRoles.Add(PdfName.TD);
-            blockLevelRoles.Add(PdfName.Title);
-            blockLevelRoles.Add(PdfName.FENote);
-            blockLevelRoles.Add(PdfName.Sub);
-            blockLevelRoles.Add(PdfName.Caption);
-            inlineLevelRoles.Add(PdfName.Span);
-            inlineLevelRoles.Add(PdfName.Quote);
-            inlineLevelRoles.Add(PdfName.Note);
-            inlineLevelRoles.Add(PdfName.Reference);
-            inlineLevelRoles.Add(PdfName.BibEntry);
-            inlineLevelRoles.Add(PdfName.Code);
-            inlineLevelRoles.Add(PdfName.Link);
-            inlineLevelRoles.Add(PdfName.Annot);
-            inlineLevelRoles.Add(PdfName.Ruby);
-            inlineLevelRoles.Add(PdfName.Warichu);
-            inlineLevelRoles.Add(PdfName.RB);
-            inlineLevelRoles.Add(PdfName.RT);
-            inlineLevelRoles.Add(PdfName.RP);
-            inlineLevelRoles.Add(PdfName.WT);
-            inlineLevelRoles.Add(PdfName.WP);
-            inlineLevelRoles.Add(PdfName.Em);
-            inlineLevelRoles.Add(PdfName.Strong);
-            illustrationRoles.Add(PdfName.Figure);
-            illustrationRoles.Add(PdfName.Formula);
-            illustrationRoles.Add(PdfName.Form);
+            blockLevelRoles.Add(StandardRoles.L);
+            blockLevelRoles.Add(StandardRoles.LBL);
+            blockLevelRoles.Add(StandardRoles.LI);
+            blockLevelRoles.Add(StandardRoles.LBODY);
+            blockLevelRoles.Add(StandardRoles.TABLE);
+            blockLevelRoles.Add(StandardRoles.TR);
+            blockLevelRoles.Add(StandardRoles.TH);
+            blockLevelRoles.Add(StandardRoles.TD);
+            blockLevelRoles.Add(StandardRoles.TITLE);
+            blockLevelRoles.Add(StandardRoles.FENOTE);
+            blockLevelRoles.Add(StandardRoles.SUB);
+            blockLevelRoles.Add(StandardRoles.CAPTION);
+            inlineLevelRoles.Add(StandardRoles.SPAN);
+            inlineLevelRoles.Add(StandardRoles.QUOTE);
+            inlineLevelRoles.Add(StandardRoles.NOTE);
+            inlineLevelRoles.Add(StandardRoles.REFERENCE);
+            inlineLevelRoles.Add(StandardRoles.BIBENTRY);
+            inlineLevelRoles.Add(StandardRoles.CODE);
+            inlineLevelRoles.Add(StandardRoles.LINK);
+            inlineLevelRoles.Add(StandardRoles.ANNOT);
+            inlineLevelRoles.Add(StandardRoles.RUBY);
+            inlineLevelRoles.Add(StandardRoles.WARICHU);
+            inlineLevelRoles.Add(StandardRoles.RB);
+            inlineLevelRoles.Add(StandardRoles.RT);
+            inlineLevelRoles.Add(StandardRoles.RP);
+            inlineLevelRoles.Add(StandardRoles.WT);
+            inlineLevelRoles.Add(StandardRoles.WP);
+            inlineLevelRoles.Add(StandardRoles.EM);
+            inlineLevelRoles.Add(StandardRoles.STRONG);
+            illustrationRoles.Add(StandardRoles.FIGURE);
+            illustrationRoles.Add(StandardRoles.FORMULA);
+            illustrationRoles.Add(StandardRoles.FORM);
         }
 
         /// <summary>Identifies standard structure role type based only on it's name.</summary>
@@ -142,12 +142,12 @@ namespace iText.Layout.Renderer {
         /// <see cref="AccessibleTypes"/>
         /// class documentation.
         /// </remarks>
-        internal static int IdentifyType(PdfName role) {
+        internal static int IdentifyType(String role) {
             if (groupingRoles.Contains(role)) {
                 return Grouping;
             }
             else {
-                if (blockLevelRoles.Contains(role) || StandardStructureNamespace.IsHnRole(role)) {
+                if (blockLevelRoles.Contains(role) || StandardNamespaces.IsHnRole(role)) {
                     return BlockLevel;
                 }
                 else {

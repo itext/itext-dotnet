@@ -50,6 +50,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -192,8 +193,8 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
             tagPointer.SetPageForTagging(page);
-            tagPointer.AddTag(PdfName.Div);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.DIV);
+            tagPointer.AddTag(StandardRoles.SPAN);
             //  2001: A Space Odyssey (Космическая одиссея)
             tagPointer.GetContext().GetPointerStructElem(tagPointer).SetAlt(new PdfString("2001: A Space Odyssey (\u041A\u043E\u0441\u043C\u0438\u0447\u0435\u0441\u043A\u0430\u044F "
                  + "\u043E\u0434\u0438\u0441\u0441\u0435\u044F)", PdfEncodings.UTF8));
@@ -274,8 +275,8 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
             tagPointer.SetPageForTagging(page);
-            tagPointer.AddTag(PdfName.Div);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.DIV);
+            tagPointer.AddTag(StandardRoles.SPAN);
             tagPointer.GetContext().GetPointerStructElem(tagPointer).SetActualText(new PdfString("actual", PdfEncodings
                 .UTF8));
             canvas.BeginText();

@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 
 namespace iText.Layout.Tagging {
@@ -12,8 +13,8 @@ namespace iText.Layout.Tagging {
             IList<TaggingHintKey> tableCellTagsUnindexed = new List<TaggingHintKey>();
             IList<TaggingHintKey> nonCellKids = new List<TaggingHintKey>();
             foreach (TaggingHintKey kidKey in kidKeys) {
-                if (PdfName.TD.Equals(kidKey.GetAccessibleElement().GetRole()) || PdfName.TH.Equals(kidKey.GetAccessibleElement
-                    ().GetRole())) {
+                if (StandardRoles.TD.Equals(kidKey.GetAccessibleElement().GetAccessibilityProperties().GetRole()) || StandardRoles
+                    .TH.Equals(kidKey.GetAccessibleElement().GetAccessibilityProperties().GetRole())) {
                     if (kidKey.GetAccessibleElement() is Cell) {
                         Cell cell = (Cell)kidKey.GetAccessibleElement();
                         int rowInd = cell.GetRow();
@@ -40,29 +41,29 @@ namespace iText.Layout.Tagging {
                     () != null && !modelElement.IsSkipLastFooter();
             }
             TaggingDummyElement tbodyTag = null;
-            tbodyTag = new TaggingDummyElement(createTBody ? PdfName.TBody : null);
+            tbodyTag = new TaggingDummyElement(createTBody ? StandardRoles.TBODY : null);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                PdfName kidRole = nonCellKid.GetAccessibleElement().GetRole();
-                if (!PdfName.THead.Equals(kidRole) && !PdfName.TFoot.Equals(kidRole)) {
+                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (!StandardRoles.THEAD.Equals(kidRole) && !StandardRoles.TFOOT.Equals(kidRole)) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                PdfName kidRole = nonCellKid.GetAccessibleElement().GetRole();
-                if (PdfName.THead.Equals(kidRole)) {
+                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (StandardRoles.THEAD.Equals(kidRole)) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
             taggingHelper.AddKidsHint(tableHintKey, JavaCollectionsUtil.SingletonList<TaggingHintKey>(LayoutTaggingHelper
                 .GetOrCreateHintKey(tbodyTag)), -1);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                PdfName kidRole = nonCellKid.GetAccessibleElement().GetRole();
-                if (PdfName.TFoot.Equals(kidRole)) {
+                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (StandardRoles.TFOOT.Equals(kidRole)) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
             foreach (SortedDictionary<int, TaggingHintKey> rowTags in tableTags.Values) {
-                TaggingDummyElement row = new TaggingDummyElement(PdfName.TR);
+                TaggingDummyElement row = new TaggingDummyElement(StandardRoles.TR);
                 TaggingHintKey rowTagHint = LayoutTaggingHelper.GetOrCreateHintKey(row);
                 foreach (TaggingHintKey cellTagHint in rowTags.Values) {
                     taggingHelper.MoveKidHint(cellTagHint, rowTagHint);

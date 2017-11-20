@@ -342,7 +342,7 @@ namespace iText.Kernel.Pdf {
             span1.AddRef(span2);
             span1.SetPhoneticAlphabet(PdfName.ipa);
             span1.SetPhoneme(new PdfString("Heeeelllloooooo"));
-            @namespace.AddNamespaceRoleMapping(PdfName.Span, PdfName.Span);
+            @namespace.AddNamespaceRoleMapping(StandardRoles.SPAN, StandardRoles.SPAN);
             document.GetStructTreeRoot().AddNamespace(@namespace);
             page.Flush();
             document.Close();

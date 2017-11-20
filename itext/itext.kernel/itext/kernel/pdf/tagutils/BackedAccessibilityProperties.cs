@@ -49,13 +49,20 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
-    internal class BackedAccessibleProperties : AccessibilityProperties {
+    internal class BackedAccessibilityProperties : AccessibilityProperties {
         private TagTreePointer pointerToBackingElem;
 
-        internal BackedAccessibleProperties(TagTreePointer pointerToBackingElem) {
-            // TODO introduce IAccessibleProperties interface before iText 7.1 released
-            // TODO move getRole/setRole from IAccessibleElement to it?
+        internal BackedAccessibilityProperties(TagTreePointer pointerToBackingElem) {
             this.pointerToBackingElem = new TagTreePointer(pointerToBackingElem);
+        }
+
+        public override String GetRole() {
+            return GetBackingElem().GetRole().GetValue();
+        }
+
+        public override AccessibilityProperties SetRole(String role) {
+            GetBackingElem().SetRole(PdfStructTreeRoot.ConvertRoleToPdfName(role));
+            return this;
         }
 
         public override String GetLanguage() {
@@ -94,17 +101,18 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        public override AccessibilityProperties AddAttributes(PdfDictionary attributes) {
+        public override AccessibilityProperties AddAttributes(PdfStructureAttributes attributes) {
             return AddAttributes(-1, attributes);
         }
 
-        public override AccessibilityProperties AddAttributes(int index, PdfDictionary attributes) {
+        public override AccessibilityProperties AddAttributes(int index, PdfStructureAttributes attributes) {
             if (attributes == null) {
                 return this;
             }
             PdfObject attributesObject = GetBackingElem().GetAttributes(false);
-            PdfObject combinedAttributes = CombineAttributesList(attributesObject, index, JavaCollectionsUtil.SingletonList
-                (attributes), GetBackingElem().GetPdfObject().GetAsNumber(PdfName.R));
+            PdfObject combinedAttributes = AccessibilityPropertiesToStructElem.CombineAttributesList(attributesObject, 
+                index, JavaCollectionsUtil.SingletonList(attributes), GetBackingElem().GetPdfObject().GetAsNumber(PdfName
+                .R));
             GetBackingElem().SetAttributes(combinedAttributes);
             return this;
         }
@@ -114,19 +122,19 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        public override IList<PdfDictionary> GetAttributesList() {
-            List<PdfDictionary> attributesList = new List<PdfDictionary>();
+        public override IList<PdfStructureAttributes> GetAttributesList() {
+            List<PdfStructureAttributes> attributesList = new List<PdfStructureAttributes>();
             PdfObject elemAttributesObj = GetBackingElem().GetAttributes(false);
             if (elemAttributesObj != null) {
                 if (elemAttributesObj.IsDictionary()) {
-                    attributesList.Add((PdfDictionary)elemAttributesObj);
+                    attributesList.Add(new PdfStructureAttributes((PdfDictionary)elemAttributesObj));
                 }
                 else {
                     if (elemAttributesObj.IsArray()) {
                         PdfArray attributesArray = (PdfArray)elemAttributesObj;
                         foreach (PdfObject attributeObj in attributesArray) {
                             if (attributeObj.IsDictionary()) {
-                                attributesList.Add((PdfDictionary)attributeObj);
+                                attributesList.Add(new PdfStructureAttributes((PdfDictionary)attributeObj));
                             }
                         }
                     }
@@ -144,13 +152,13 @@ namespace iText.Kernel.Pdf.Tagutils {
             return ToUnicodeString(GetBackingElem().GetPhoneme());
         }
 
-        public override AccessibilityProperties SetPhoneticAlphabet(PdfName phoneticAlphabet) {
-            GetBackingElem().SetPhoneticAlphabet(phoneticAlphabet);
+        public override AccessibilityProperties SetPhoneticAlphabet(String phoneticAlphabet) {
+            GetBackingElem().SetPhoneticAlphabet(PdfStructTreeRoot.ConvertRoleToPdfName(phoneticAlphabet));
             return this;
         }
 
-        public override PdfName GetPhoneticAlphabet() {
-            return GetBackingElem().GetPhoneticAlphabet();
+        public override String GetPhoneticAlphabet() {
+            return GetBackingElem().GetPhoneticAlphabet().GetValue();
         }
 
         public override AccessibilityProperties SetNamespace(PdfNamespace @namespace) {
@@ -185,10 +193,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             return pointerToBackingElem.GetCurrentStructElem();
         }
 
-        internal override void SetToStructElem(PdfStructElem elem) {
-        }
-
-        // ignore, because all attributes are directly set to the structElem
         private String ToUnicodeString(PdfString pdfString) {
             return pdfString != null ? pdfString.ToUnicodeString() : null;
         }

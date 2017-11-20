@@ -49,7 +49,7 @@ using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -420,7 +420,7 @@ namespace iText.Layout.Renderer {
                     if (symbolRenderer != null) {
                         LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
                         if (taggingHelper != null) {
-                            taggingHelper.SetRoleHint(symbolRenderer, PdfName.Lbl);
+                            taggingHelper.SetRoleHint(symbolRenderer, StandardRoles.LBL);
                         }
                     }
                 }

@@ -1,28 +1,16 @@
 using System;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Tagging {
     public class TaggingDummyElement : IAccessibleElement, IPropertyContainer {
-        private PdfName role;
-
-        private AccessibilityProperties properties;
+        private DefaultAccessibilityProperties properties;
 
         private Object id;
 
-        public TaggingDummyElement(PdfName role) {
-            this.role = role;
-            this.properties = new AccessibilityProperties();
-        }
-
-        public virtual PdfName GetRole() {
-            return role;
-        }
-
-        public virtual void SetRole(PdfName role) {
-            this.role = role;
+        public TaggingDummyElement(String role) {
+            this.properties = new DefaultAccessibilityProperties(role);
         }
 
         public virtual AccessibilityProperties GetAccessibilityProperties() {

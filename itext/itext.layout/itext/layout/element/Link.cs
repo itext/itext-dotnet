@@ -43,10 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -69,7 +70,6 @@ namespace iText.Layout.Element {
         public Link(String text, PdfLinkAnnotation linkAnnotation)
             : base(text) {
             SetProperty(Property.LINK_ANNOTATION, linkAnnotation);
-            SetRole(PdfName.Link);
         }
 
         /// <summary>Creates a Link which can execute an action.</summary>
@@ -101,6 +101,13 @@ namespace iText.Layout.Element {
         /// </returns>
         public virtual PdfLinkAnnotation GetLinkAnnotation() {
             return this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
+        }
+
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.LINK);
+            }
+            return tagProperties;
         }
 
         protected internal override IRenderer MakeNewRenderer() {

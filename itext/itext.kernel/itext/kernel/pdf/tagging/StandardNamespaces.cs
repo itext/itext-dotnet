@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
@@ -13,10 +12,10 @@ namespace iText.Kernel.Pdf.Tagging {
     /// belongs to the standard or known domain-specific namespace.
     /// <p>See ISO 32000-2 14.8.6, "Standard structure namespaces"</p>
     /// </remarks>
-    public sealed class StandardStructureNamespace {
-        private static readonly ICollection<PdfName> STD_STRUCT_NAMESPACE_1_7_TYPES;
+    public sealed class StandardNamespaces {
+        private static readonly ICollection<String> STD_STRUCT_NAMESPACE_1_7_TYPES;
 
-        private static readonly ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES;
+        private static readonly ICollection<String> STD_STRUCT_NAMESPACE_2_0_TYPES;
 
         private const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
 
@@ -26,23 +25,27 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>Specifies the name of the standard structure namespace for PDF 2.0</summary>
         public const String PDF_2_0 = "http://iso.org/pdf2/ssn";
 
-        static StandardStructureNamespace() {
+        static StandardNamespaces() {
             // other namespaces
-            STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.Document
-                , PdfName.Part, PdfName.Div, PdfName.P, PdfName.H, PdfName.H1, PdfName.H2, PdfName.H3, PdfName.H4, PdfName
-                .H5, PdfName.H6, PdfName.Lbl, PdfName.Span, PdfName.Link, PdfName.Annot, PdfName.Form, PdfName.Ruby, PdfName
-                .RB, PdfName.RT, PdfName.RP, PdfName.Warichu, PdfName.WT, PdfName.WP, PdfName.L, PdfName.LI, PdfName.LBody
-                , PdfName.Table, PdfName.TR, PdfName.TH, PdfName.TD, PdfName.THead, PdfName.TBody, PdfName.TFoot, PdfName
-                .Caption, PdfName.Figure, PdfName.Formula, PdfName.Sect, PdfName.Art, PdfName.BlockQuote, PdfName.TOC, 
-                PdfName.TOCI, PdfName.Index, PdfName.NonStruct, PdfName.Private, PdfName.Quote, PdfName.Note, PdfName.
-                Reference, PdfName.BibEntry, PdfName.Code));
-            STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.Document
-                , PdfName.DocumentFragment, PdfName.Part, PdfName.Div, PdfName.Aside, PdfName.Title, PdfName.Sub, PdfName
-                .P, PdfName.H, PdfName.Lbl, PdfName.Em, PdfName.Strong, PdfName.Span, PdfName.Link, PdfName.Annot, PdfName
-                .Form, PdfName.Ruby, PdfName.RB, PdfName.RT, PdfName.RP, PdfName.Warichu, PdfName.WT, PdfName.WP, PdfName
-                .FENote, PdfName.L, PdfName.LI, PdfName.LBody, PdfName.Table, PdfName.TR, PdfName.TH, PdfName.TD, PdfName
-                .THead, PdfName.TBody, PdfName.TFoot, PdfName.Caption, PdfName.Figure, PdfName.Formula, PdfName.Artifact
-                ));
+            STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<String>(iText.IO.Util.JavaUtil.ArraysAsList(StandardRoles.DOCUMENT
+                , StandardRoles.PART, StandardRoles.DIV, StandardRoles.P, StandardRoles.H, StandardRoles.H1, StandardRoles
+                .H2, StandardRoles.H3, StandardRoles.H4, StandardRoles.H5, StandardRoles.H6, StandardRoles.LBL, StandardRoles
+                .SPAN, StandardRoles.LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles.RUBY, StandardRoles.
+                RB, StandardRoles.RT, StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, StandardRoles.WP, StandardRoles
+                .L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles.TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles
+                .TD, StandardRoles.THEAD, StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles
+                .FIGURE, StandardRoles.FORMULA, StandardRoles.SECT, StandardRoles.ART, StandardRoles.BLOCKQUOTE, StandardRoles
+                .TOC, StandardRoles.TOCI, StandardRoles.INDEX, StandardRoles.NONSTRUCT, StandardRoles.PRIVATE, StandardRoles
+                .QUOTE, StandardRoles.NOTE, StandardRoles.REFERENCE, StandardRoles.BIBENTRY, StandardRoles.CODE));
+            STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<String>(iText.IO.Util.JavaUtil.ArraysAsList(StandardRoles.DOCUMENT
+                , StandardRoles.DOCUMENTFRAGMENT, StandardRoles.PART, StandardRoles.DIV, StandardRoles.ASIDE, StandardRoles
+                .TITLE, StandardRoles.SUB, StandardRoles.P, StandardRoles.H, StandardRoles.LBL, StandardRoles.EM, StandardRoles
+                .STRONG, StandardRoles.SPAN, StandardRoles.LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles
+                .RUBY, StandardRoles.RB, StandardRoles.RT, StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, 
+                StandardRoles.WP, StandardRoles.FENOTE, StandardRoles.L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles
+                .TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles.TD, StandardRoles.THEAD, StandardRoles.TBODY
+                , StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles.FIGURE, StandardRoles.FORMULA, StandardRoles
+                .ARTIFACT));
         }
 
         // Hn, this type is handled in roleBelongsToStandardNamespace method
@@ -50,7 +53,9 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <remarks>
         /// Gets the name of the default standard structure namespace. When a namespace is not
         /// explicitly specified for a given structure element or attribute, it shall be assumed to be within this
-        /// default standard structure namespace.
+        /// default standard structure namespace. According to ISO 32000-2 default namespace is
+        /// <see cref="PDF_1_7"/>
+        /// .
         /// </remarks>
         /// <returns>the name of the default standard structure namespace.</returns>
         public static String GetDefault() {
@@ -84,7 +89,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// false if the given role doesn't belong to the standard roles of the given standard structure namespace or
         /// if the given namespace name is not standard; true otherwise.
         /// </returns>
-        public static bool RoleBelongsToStandardNamespace(PdfName role, String standardNamespaceName) {
+        public static bool RoleBelongsToStandardNamespace(String role, String standardNamespaceName) {
             if (PDF_1_7.Equals(standardNamespaceName)) {
                 return STD_STRUCT_NAMESPACE_1_7_TYPES.Contains(role);
             }
@@ -96,24 +101,22 @@ namespace iText.Kernel.Pdf.Tagging {
             return false;
         }
 
-        /// <summary>
-        /// Checks if the given
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// matches the Hn role pattern. To match this pattern, the given role
+        /// <summary>Checks if the given role matches the Hn role pattern.</summary>
+        /// <remarks>
+        /// Checks if the given role matches the Hn role pattern. To match this pattern, the given role
         /// shall always consist of the uppercase letter "H" and one or more digits, representing an unsigned integer
-        /// greater than or equal to 1, without leading zeroes or any other prefix or postfix
-        /// </summary>
+        /// greater than or equal to 1, without leading zeroes or any other prefix or postfix.
+        /// </remarks>
         /// <param name="role">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// that specifies a role to be checked against Hn role pattern.
         /// </param>
         /// <returns>true if the role matches, false otherwise.</returns>
-        public static bool IsHnRole(PdfName role) {
-            String roleStrVal = role.GetValue();
-            if (roleStrVal.StartsWith("H") && roleStrVal.Length > 1 && roleStrVal[1] != '0') {
+        public static bool IsHnRole(String role) {
+            if (role.StartsWith("H") && role.Length > 1 && role[1] != '0') {
                 try {
-                    return System.Convert.ToInt32(roleStrVal.JSubstring(1, roleStrVal.Length)) > 0;
+                    return System.Convert.ToInt32(role.JSubstring(1, role.Length)) > 0;
                 }
                 catch (Exception) {
                 }

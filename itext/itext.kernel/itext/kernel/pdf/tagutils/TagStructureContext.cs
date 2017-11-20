@@ -64,14 +64,14 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// .
     /// </summary>
     public class TagStructureContext {
-        private static readonly ICollection<PdfName> allowedRootTagRoles = new HashSet<PdfName>();
+        private static readonly ICollection<String> allowedRootTagRoles = new HashSet<String>();
 
         static TagStructureContext() {
-            allowedRootTagRoles.Add(PdfName.Document);
-            allowedRootTagRoles.Add(PdfName.Part);
-            allowedRootTagRoles.Add(PdfName.Art);
-            allowedRootTagRoles.Add(PdfName.Sect);
-            allowedRootTagRoles.Add(PdfName.Div);
+            allowedRootTagRoles.Add(StandardRoles.DOCUMENT);
+            allowedRootTagRoles.Add(StandardRoles.PART);
+            allowedRootTagRoles.Add(StandardRoles.ART);
+            allowedRootTagRoles.Add(StandardRoles.SECT);
+            allowedRootTagRoles.Add(StandardRoles.DIV);
         }
 
         private PdfDocument document;
@@ -166,17 +166,18 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
-        /// All document auto tagging logic uses
+        /// All tagging logic performed by iText automatically (along with addition of content, annotations etc)
+        /// uses
         /// <see cref="TagTreePointer"/>
-        /// returned by this method to manipulate tag structure.
+        /// returned by this method to manipulate the tag structure.
         /// Typically it points at the root tag. This pointer also could be used to tweak auto tagging process
-        /// (e.g. move this pointer to the Sect tag, which would result in placing all automatically tagged content
-        /// under Sect tag).
+        /// (e.g. move this pointer to the Section tag, which would result in placing all automatically tagged content
+        /// under Section tag).
         /// </summary>
         /// <returns>
         /// the
         /// <c>TagTreePointer</c>
-        /// which is used for all auto tagging of the document.
+        /// which is used for all automatic tagging of the document.
         /// </returns>
         public virtual TagTreePointer GetAutoTaggingPointer() {
             if (autoTaggingPointer == null) {
@@ -211,7 +212,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <p>
         /// By default, this value is defined based on the PDF document version and the existing tag structure inside
         /// a document. For the new empty PDF 2.0 documents this namespace is set to
-        /// <see cref="iText.Kernel.Pdf.Tagging.StandardStructureNamespace.PDF_2_0"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardNamespaces.PDF_2_0"/>
         /// .
         /// </p>
         /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
@@ -306,7 +307,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="IRoleMappingResolver"/>
         /// instance, with the giving role as current.
         /// </returns>
-        public virtual IRoleMappingResolver GetRoleMappingResolver(PdfName role) {
+        public virtual IRoleMappingResolver GetRoleMappingResolver(String role) {
             return GetRoleMappingResolver(role, null);
         }
 
@@ -328,7 +329,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// as current.
         /// </returns>
-        public virtual IRoleMappingResolver GetRoleMappingResolver(PdfName role, PdfNamespace @namespace) {
+        public virtual IRoleMappingResolver GetRoleMappingResolver(String role, PdfNamespace @namespace) {
             if (TargetTagStructureVersionIs2()) {
                 return new RoleMappingResolverPdf2(role, @namespace, GetDocument());
             }
@@ -352,7 +353,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// true, if the given role in the given namespace is either mapped to the standard structure role or doesn't
         /// have to; otherwise false.
         /// </returns>
-        public virtual bool CheckIfRoleShallBeMappedToStandardRole(PdfName role, PdfNamespace @namespace) {
+        public virtual bool CheckIfRoleShallBeMappedToStandardRole(String role, PdfNamespace @namespace) {
             return ResolveMappingToStandardOrDomainSpecificRole(role, @namespace) != null;
         }
 
@@ -382,7 +383,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// to this state, this method returns null, which means that the given role
         /// in the specified namespace is not mapped to the standard role in the standard namespace.
         /// </returns>
-        public virtual IRoleMappingResolver ResolveMappingToStandardOrDomainSpecificRole(PdfName role, PdfNamespace
+        public virtual IRoleMappingResolver ResolveMappingToStandardOrDomainSpecificRole(String role, PdfNamespace
              @namespace) {
             IRoleMappingResolver mappingResolver = GetRoleMappingResolver(role, @namespace);
             mappingResolver.ResolveNextMapping();
@@ -477,13 +478,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (pageMcrs != null) {
                 // We create a copy here, because pageMcrs is backed by the internal collection which is changed when mcrs are removed.
                 IList<PdfMcr> mcrsList = new List<PdfMcr>(pageMcrs);
-                RemoveStructureElements(mcrsList);
-            }
-            return this;
-        }
-
-        private iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveStructureElements(IList<PdfMcr> mcrsList) {
-            if (mcrsList != null) {
                 foreach (PdfMcr mcr in mcrsList) {
                     RemovePageTagFromParent(mcr, mcr.GetParent());
                 }
@@ -496,8 +490,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Flushes the tags which are considered to belong to the given page.
         /// The logic that defines if the given tag (structure element) belongs to the page is the following:
         /// if all the marked content references (dictionary or number references), that are the
-        /// descenders of the given structure element, belong to the current page - the tag is considered
-        /// to belong to the page. If tag has descenders from several pages - it is flushed, if all other pages except the
+        /// descendants of the given structure element, belong to the current page - the tag is considered
+        /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
         /// <br /><br />
         /// If some of the page's tags have waiting state (see
@@ -542,7 +536,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             IRoleMappingResolver mapping = null;
             if (rootKids.Count > 0) {
                 PdfStructElem firstKid = (PdfStructElem)rootKids[0];
-                mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid.GetNamespace());
+                mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole().GetValue(), firstKid.GetNamespace
+                    ());
             }
             if (rootKids.Count == 1 && mapping != null && mapping.CurrentRoleIsStandard() && IsRoleAllowedToBeRoot(mapping
                 .GetRole())) {
@@ -645,17 +640,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        internal virtual void ThrowExceptionIfRoleIsInvalid(IAccessibleElement element, PdfNamespace pointerCurrentNamespace
+        internal virtual void ThrowExceptionIfRoleIsInvalid(AccessibilityProperties properties, PdfNamespace pointerCurrentNamespace
             ) {
-            AccessibilityProperties properties = element.GetAccessibilityProperties();
-            PdfNamespace @namespace = properties != null ? properties.GetNamespace() : null;
+            PdfNamespace @namespace = properties.GetNamespace();
             if (@namespace == null) {
                 @namespace = pointerCurrentNamespace;
             }
-            ThrowExceptionIfRoleIsInvalid(element.GetRole(), @namespace);
+            ThrowExceptionIfRoleIsInvalid(properties.GetRole(), @namespace);
         }
 
-        internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role, PdfNamespace @namespace) {
+        internal virtual void ThrowExceptionIfRoleIsInvalid(String role, PdfNamespace @namespace) {
             if (!CheckIfRoleShallBeMappedToStandardRole(role, @namespace)) {
                 String exMessage = ComposeInvalidRoleException(role, @namespace);
                 if (forbidUnknownRoles) {
@@ -705,9 +699,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private bool IsRoleAllowedToBeRoot(PdfName role) {
+        private bool IsRoleAllowedToBeRoot(String role) {
             if (TargetTagStructureVersionIs2()) {
-                return PdfName.Document.Equals(role);
+                return StandardRoles.DOCUMENT.Equals(role);
             }
             else {
                 return allowedRootTagRoles.Contains(role);
@@ -718,8 +712,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             IList<IStructureNode> rootKids = document.GetStructTreeRoot().GetKids();
             if (rootKids.Count > 0) {
                 PdfStructElem firstKid = (PdfStructElem)rootKids[0];
-                IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid
-                    .GetNamespace());
+                IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole().GetValue
+                    (), firstKid.GetNamespace());
                 if (resolvedMapping == null || !resolvedMapping.CurrentRoleIsStandard()) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     String nsStr;
@@ -727,28 +721,28 @@ namespace iText.Kernel.Pdf.Tagutils {
                         nsStr = firstKid.GetNamespace().GetNamespaceName();
                     }
                     else {
-                        nsStr = StandardStructureNamespace.GetDefault();
+                        nsStr = StandardNamespaces.GetDefault();
                     }
                     logger.Warn(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
                         .GetRole().GetValue(), nsStr));
                 }
-                if (resolvedMapping == null || !StandardStructureNamespace.PDF_1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
+                if (resolvedMapping == null || !StandardNamespaces.PDF_1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
                     ())) {
-                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.PDF_2_0);
+                    documentDefaultNamespace = FetchNamespace(StandardNamespaces.PDF_2_0);
                 }
             }
             else {
-                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.PDF_2_0);
+                documentDefaultNamespace = FetchNamespace(StandardNamespaces.PDF_2_0);
             }
         }
 
-        private String ComposeInvalidRoleException(PdfName role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role.ToString(), @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
+        private String ComposeInvalidRoleException(String role, PdfNamespace @namespace) {
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
                 , PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole);
         }
 
-        private String ComposeTooMuchTransitiveMappingsException(PdfName role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role.ToString(), @namespace, iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
+        private String ComposeTooMuchTransitiveMappingsException(String role, PdfNamespace @namespace) {
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
                 , iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS);
         }
 

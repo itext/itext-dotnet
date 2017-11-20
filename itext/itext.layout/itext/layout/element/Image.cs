@@ -45,22 +45,21 @@ using System;
 using Common.Logging;
 using iText.IO.Image;
 using iText.Kernel;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Element {
     /// <summary>A layout element that represents an image for inclusion in the document model.</summary>
     public class Image : AbstractElement<iText.Layout.Element.Image>, ILeafElement, IAccessibleElement {
         protected internal PdfXObject xObject;
 
-        protected internal PdfName role = PdfName.Figure;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
         /// Creates an
@@ -715,17 +714,9 @@ namespace iText.Layout.Element {
                 () * (float)this.GetProperty<float?>(Property.VERTICAL_SCALING);
         }
 
-        public virtual PdfName GetRole() {
-            return role;
-        }
-
-        public virtual void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public virtual AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.FIGURE);
             }
             return tagProperties;
         }

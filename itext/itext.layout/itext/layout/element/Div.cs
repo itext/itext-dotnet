@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -54,12 +54,11 @@ namespace iText.Layout.Element {
     /// which will have some shared layout properties. Like all
     /// <see cref="BlockElement{T}"/>
     /// types, it will try to take up as much horizontal space as possible.
+    /// <p>
     /// The concept is very similar to that of the div tag in HTML.
     /// </summary>
     public class Div : BlockElement<Div> {
-        protected internal PdfName role = PdfName.Div;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>Adds any block element to the div's contents.</summary>
         /// <param name="element">
@@ -94,17 +93,9 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.DIV);
             }
             return tagProperties;
         }

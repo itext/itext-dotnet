@@ -71,6 +71,8 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// method.
     /// </summary>
     public class TagTreePointer {
+        private const String MCR_MARKER = "MCR";
+
         private TagStructureContext tagStructureContext;
 
         private PdfStructElem currentStructElem;
@@ -93,7 +95,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// The
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// for the new tags, which don't explicitly define namespace by the means of
-        /// <see cref="AccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
+        /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         /// , is set to the value returned by
         /// <see cref="TagStructureContext.GetDocumentDefaultNamespace()"/>
         /// on
@@ -240,7 +242,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// instance
         /// if this tag doesn't explicitly define namespace by the means of
-        /// <see cref="AccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
+        /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         /// .
         /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
         /// <p>It's highly recommended to acquire
@@ -254,7 +256,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// to be set for the new tags created. If set to null - new tags will have
         /// a namespace set only if it is defined in the corresponding
-        /// <see cref="IAccessibleElement"/>
+        /// <see cref="AccessibilityProperties"/>
         /// .
         /// </param>
         /// <returns>
@@ -298,7 +300,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(PdfName role) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(String role) {
             AddTag(-1, role);
             return this;
         }
@@ -313,7 +315,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
-        /// <see cref="AddTag(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="AddTag(System.String)"/>
         /// .
         /// </remarks>
         /// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.</param>
@@ -323,7 +325,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, PdfName role) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, String role) {
             tagStructureContext.ThrowExceptionIfRoleIsInvalid(role, currentNamespace);
             SetNextNewKidIndex(index);
             SetCurrentStructElem(AddNewKid(role));
@@ -334,19 +336,21 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <remarks>
         /// Adds a new tag to the tag structure.
         /// This method call moves this
-        /// <c>TagTreePointer</c>
+        /// <see cref="TagTreePointer"/>
         /// to the added kid.
         /// <br />
-        /// New tag will have a role and attributes defined by the given IAccessibleElement.
+        /// New tag will have a role and attributes defined by the given
+        /// <see cref="AccessibilityProperties"/>
+        /// .
         /// </remarks>
-        /// <param name="element">accessible element which represents a new tag.</param>
+        /// <param name="properties">accessibility properties which define a new tag role and other properties.</param>
         /// <returns>
         /// this
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement element) {
-            AddTag(-1, element);
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(AccessibilityProperties properties) {
+            AddTag(-1, properties);
             return this;
         }
 
@@ -357,24 +361,27 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// to the added kid.
         /// <br />
-        /// New tag will have a role and attributes defined by the given IAccessibleElement.
+        /// New tag will have a role and attributes defined by the given
+        /// <see cref="AccessibilityProperties"/>
+        /// .
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
-        /// <see cref="AddTag(IAccessibleElement)"/>
+        /// <see cref="AddTag(AccessibilityProperties)"/>
         /// .
         /// </remarks>
         /// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.</param>
-        /// <param name="element">accessible element which represents a new tag.</param>
+        /// <param name="properties">accessibility properties which define a new tag role and other properties.</param>
         /// <returns>
         /// this
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element) {
-            tagStructureContext.ThrowExceptionIfRoleIsInvalid(element, currentNamespace);
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, AccessibilityProperties properties
+            ) {
+            tagStructureContext.ThrowExceptionIfRoleIsInvalid(properties, currentNamespace);
             SetNextNewKidIndex(index);
-            SetCurrentStructElem(AddNewKid(element));
+            SetCurrentStructElem(AddNewKid(properties));
             return this;
         }
 
@@ -418,7 +425,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// all tags added after will be added with the default behaviour.
         /// <br /><br />
         /// This method could be used with any overload of
-        /// <see cref="AddTag(iText.Kernel.Pdf.PdfName)"/>
+        /// <see cref="AddTag(System.String)"/>
         /// method,
         /// with
         /// <see cref="RelocateKid(int, TagTreePointer)"/>
@@ -681,51 +688,59 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <summary>
         /// Moves this
-        /// <c>TagTreePointer</c>
-        /// instance to the kid of the current tag.
+        /// <see cref="TagTreePointer"/>
+        /// instance to the first descendant of the current tag which has the given role.
+        /// If there are no direct kids of the tag with such role, further descendants are checked in BFS order.
         /// </summary>
         /// <param name="role">
-        /// role of the current tag kid to which pointer will be moved.
-        /// If there is several kids with this role, pointer will be moved to the first kid with such role.
+        /// role of the current tag descendant to which pointer will be moved.
+        /// If there are several descendants with this role, pointer will be moved
+        /// to the first kid with such role in BFS order.
         /// </param>
         /// <returns>
         /// this
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(PdfName role) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(String role) {
             MoveToKid(0, role);
             return this;
         }
 
         /// <summary>
         /// Moves this
-        /// <c>TagTreePointer</c>
-        /// instance to the kid of the current tag.
+        /// <see cref="TagTreePointer"/>
+        /// instance to the first descendant of the current tag which has the given role.
+        /// If there are no direct kids of the tag with such role, further descendants are checked in BFS order.
         /// </summary>
         /// <param name="n">
-        /// if there is several kids with the given role, pointer will be moved to the kid
-        /// which has zero-based index n if you count only the kids with given role.
+        /// if there are several descendants with the given role, pointer will be moved to the descendant
+        /// which has zero-based index <em>n</em> if you count only the descendants with the given role in BFS order.
         /// </param>
-        /// <param name="role">role of the current tag kid to which pointer will be moved.</param>
+        /// <param name="role">role of the current tag descendant to which pointer will be moved.</param>
         /// <returns>
         /// this
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, PdfName role) {
-            if (PdfName.MCR.Equals(role)) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, String role) {
+            if (MCR_MARKER.Equals(role)) {
+                // MCR literal could be returned in a list of kid names (see #getKidsRoles())
                 throw new PdfException(PdfException.CannotMoveToMarkedContentReference);
             }
-            IList<IStructureNode> kids = GetCurrentStructElem().GetKids();
+            IList<IStructureNode> descendants = new List<IStructureNode>(GetCurrentStructElem().GetKids());
             int k = 0;
-            for (int i = 0; i < kids.Count; ++i) {
-                if (kids[i] == null) {
+            for (int i = 0; i < descendants.Count; ++i) {
+                if (descendants[i] == null || descendants[i] is PdfMcr) {
                     continue;
                 }
-                if (kids[i].GetRole().Equals(role) && !(kids[i] is PdfMcr) && k++ == n) {
-                    MoveToKid(i);
+                String descendantRole = descendants[i].GetRole().GetValue();
+                if (descendantRole.Equals(role) && k++ == n) {
+                    SetCurrentStructElem((PdfStructElem)descendants[i]);
                     return this;
+                }
+                else {
+                    descendants.AddAll(descendants[i].GetKids());
                 }
             }
             throw new PdfException(PdfException.NoKidWithSuchRole);
@@ -737,11 +752,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// If certain kid is already flushed, at its position there will be a
         /// <see langword="null"/>
         /// .
-        /// If kid is content item, at its position there will be "MCR" (Marked Content Reference).
+        /// If kid is a content item, at it's position there will be "MCR" string literal (stands for Marked Content Reference).
         /// </remarks>
         /// <returns>current tag kids roles</returns>
-        public virtual IList<PdfName> GetKidsRoles() {
-            IList<PdfName> roles = new List<PdfName>();
+        public virtual IList<String> GetKidsRoles() {
+            IList<String> roles = new List<String>();
             IList<IStructureNode> kids = GetCurrentStructElem().GetKids();
             foreach (IStructureNode kid in kids) {
                 if (kid == null) {
@@ -749,24 +764,24 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 else {
                     if (kid is PdfStructElem) {
-                        roles.Add(kid.GetRole());
+                        roles.Add(kid.GetRole().GetValue());
                     }
                     else {
-                        roles.Add(PdfName.MCR);
+                        roles.Add(MCR_MARKER);
                     }
                 }
             }
             return roles;
         }
 
-        /// <summary>Flushes current tag and all it's descenders.</summary>
+        /// <summary>Flushes current tag and all it's descendants.</summary>
         /// <remarks>
-        /// Flushes current tag and all it's descenders.
+        /// Flushes current tag and all it's descendants.
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
         /// <p>
-        /// If some of the descender tags of the current tag have waiting state (see
+        /// If some of the descendant tags of the current tag have waiting state (see
         /// <see cref="WaitingTagsManager"/>
         /// ),
         /// then these tags are considered as not yet finished ones, and they won't be flushed immediately,
@@ -823,13 +838,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Gets accessibility properties of the current tag.</summary>
         /// <returns>accessibility properties of the current tag.</returns>
         public virtual AccessibilityProperties GetProperties() {
-            return new BackedAccessibleProperties(this);
+            return new BackedAccessibilityProperties(this);
         }
 
         /// <summary>Gets current tag role.</summary>
         /// <returns>current tag role.</returns>
-        public virtual PdfName GetRole() {
-            return GetCurrentStructElem().GetRole();
+        public virtual String GetRole() {
+            return GetCurrentStructElem().GetRole().GetValue();
         }
 
         /// <summary>Sets new role to the current tag.</summary>
@@ -839,8 +854,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetRole(PdfName role) {
-            GetCurrentStructElem().SetRole(role);
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetRole(String role) {
+            GetCurrentStructElem().SetRole(PdfStructTreeRoot.ConvertRoleToPdfName(role));
             return this;
         }
 
@@ -955,17 +970,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             return nextPos;
         }
 
-        private PdfStructElem AddNewKid(PdfName role) {
-            PdfStructElem kid = new PdfStructElem(GetDocument(), role);
+        private PdfStructElem AddNewKid(String role) {
+            PdfStructElem kid = new PdfStructElem(GetDocument(), PdfStructTreeRoot.ConvertRoleToPdfName(role));
             ProcessKidNamespace(kid);
             return AddNewKid(kid);
         }
 
-        private PdfStructElem AddNewKid(IAccessibleElement element) {
-            PdfStructElem kid = new PdfStructElem(GetDocument(), element.GetRole());
-            if (element.GetAccessibilityProperties() != null) {
-                element.GetAccessibilityProperties().SetToStructElem(kid);
-            }
+        private PdfStructElem AddNewKid(AccessibilityProperties properties) {
+            PdfStructElem kid = new PdfStructElem(GetDocument(), PdfStructTreeRoot.ConvertRoleToPdfName(properties.GetRole
+                ()));
+            AccessibilityPropertiesToStructElem.Apply(properties, kid);
             ProcessKidNamespace(kid);
             return AddNewKid(kid);
         }

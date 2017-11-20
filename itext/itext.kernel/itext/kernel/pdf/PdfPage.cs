@@ -573,8 +573,8 @@ namespace iText.Kernel.Pdf {
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
         /// to the page is the following: if all the marked content references (dictionary or number references), that are the
-        /// descenders of the given structure element, belong to the current page - the tag is considered
-        /// to belong to the page. If tag has descenders from several pages - it is flushed, if all other pages except the
+        /// descendants of the given structure element, belong to the current page - the tag is considered
+        /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
         /// </remarks>
         public override void Flush() {
@@ -1089,8 +1089,8 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 TagTreePointer tagPointer = GetDocument().GetTagStructureContext().RemoveAnnotationTag(annotation);
                 if (tagPointer != null) {
-                    bool standardAnnotTagRole = tagPointer.GetRole().Equals(PdfName.Annot) || tagPointer.GetRole().Equals(PdfName
-                        .Form);
+                    bool standardAnnotTagRole = tagPointer.GetRole().Equals(StandardRoles.ANNOT) || tagPointer.GetRole().Equals
+                        (StandardRoles.FORM);
                     if (tagPointer.GetKidsRoles().Count == 0 && standardAnnotTagRole) {
                         tagPointer.RemoveTag();
                     }

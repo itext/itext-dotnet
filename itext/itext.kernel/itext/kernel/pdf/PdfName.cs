@@ -1055,6 +1055,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName NS = CreateDirectName("NS");
 
+        public static readonly iText.Kernel.Pdf.PdfName NSO = CreateDirectName("NSO");
+
         public static readonly iText.Kernel.Pdf.PdfName NumCopies = CreateDirectName("NumCopies");
 
         public static readonly iText.Kernel.Pdf.PdfName Nums = CreateDirectName("Nums");

@@ -79,7 +79,7 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page1);
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.P).AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.P).AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
             tagPointer.MoveToParent().MoveToParent();
@@ -89,9 +89,9 @@ namespace iText.Kernel.Pdf {
             canvas = new PdfCanvas(page2);
             canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24).SetTextMatrix(1, 
                 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.P).AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.P).AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
-            tagPointer.MoveToParent().AddTag(PdfName.Span);
+            tagPointer.MoveToParent().AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
             canvas.EndText().Release();
             page1.Flush();
@@ -115,10 +115,9 @@ namespace iText.Kernel.Pdf {
             canvas.BeginText();
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            PdfDictionary attributes = new PdfDictionary();
-            attributes.Put(PdfName.O, new PdfString("random attributes"));
-            attributes.Put(new PdfName("hello"), new PdfString("world"));
-            tagPointer.AddTag(PdfName.P).AddTag(PdfName.Span).GetProperties().SetActualText("Actual text for span is: Hello World"
+            PdfStructureAttributes attributes = new PdfStructureAttributes("random attributes");
+            attributes.AddTextAttribute("hello", "world");
+            tagPointer.AddTag(StandardRoles.P).AddTag(StandardRoles.SPAN).GetProperties().SetActualText("Actual text for span is: Hello World"
                 ).SetLanguage("en-GB").AddAttributes(attributes);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
@@ -136,26 +135,26 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.MoveToKid(PdfName.Table).MoveToKid(2, PdfName.TR);
+            tagPointer.MoveToKid(StandardRoles.TABLE).MoveToKid(2, StandardRoles.TR);
             TagTreePointer tagPointerCopy = new TagTreePointer(tagPointer);
             tagPointer.RemoveTag();
             // tagPointerCopy now points at removed tag
             String exceptionMessage = null;
             try {
-                tagPointerCopy.AddTag(PdfName.Span);
+                tagPointerCopy.AddTag(StandardRoles.SPAN);
             }
             catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
             NUnit.Framework.Assert.AreEqual(PdfException.TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot
                 , exceptionMessage);
-            tagPointerCopy.MoveToRoot().MoveToKid(PdfName.Table);
-            tagPointerCopy.MoveToKid(PdfName.TR);
+            tagPointerCopy.MoveToRoot().MoveToKid(StandardRoles.TABLE);
+            tagPointerCopy.MoveToKid(StandardRoles.TR);
             TagTreePointer tagPointerCopyCopy = new TagTreePointer(tagPointerCopy);
             tagPointerCopy.FlushTag();
             // tagPointerCopyCopy now points at flushed tag
             try {
-                tagPointerCopyCopy.AddTag(PdfName.Span);
+                tagPointerCopyCopy.AddTag(StandardRoles.SPAN);
             }
             catch (PdfException e) {
                 exceptionMessage = e.Message;
@@ -180,9 +179,10 @@ namespace iText.Kernel.Pdf {
                 .NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.MoveToKid(PdfName.Table).MoveToKid(2, PdfName.TR);
+            tagPointer.MoveToKid(StandardRoles.TABLE).MoveToKid(2, StandardRoles.TR);
             tagPointer.RemoveTag();
-            tagPointer.MoveToKid(PdfName.TR).MoveToKid(PdfName.TD).MoveToKid(PdfName.P).MoveToKid(PdfName.Span);
+            tagPointer.MoveToKid(StandardRoles.TR).MoveToKid(StandardRoles.TD).MoveToKid(StandardRoles.P).MoveToKid(StandardRoles
+                .SPAN);
             tagPointer.RemoveTag().RemoveTag();
             document.Close();
             CompareResult("tagTreePointerTest04.pdf", "cmp_tagTreePointerTest04.pdf", "diff04_");
@@ -196,13 +196,13 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer1 = new TagTreePointer(document);
-            tagPointer1.MoveToKid(PdfName.Table).MoveToKid(2, PdfName.TR);
+            tagPointer1.MoveToKid(2, StandardRoles.TR);
             TagTreePointer tagPointer2 = new TagTreePointer(document);
-            tagPointer2.MoveToKid(PdfName.Table).MoveToKid(0, PdfName.TR);
+            tagPointer2.MoveToKid(0, StandardRoles.TR);
             tagPointer1.RelocateKid(0, tagPointer2);
-            tagPointer1.MoveToParent().MoveToKid(5, PdfName.TR).MoveToKid(2, PdfName.TD).MoveToKid(PdfName.P).MoveToKid
-                (PdfName.Span);
-            tagPointer2.MoveToKid(PdfName.TD).MoveToKid(PdfName.P).MoveToKid(PdfName.Span);
+            tagPointer1 = new TagTreePointer(document).MoveToKid(5, StandardRoles.TR).MoveToKid(2, StandardRoles.TD).MoveToKid
+                (StandardRoles.P).MoveToKid(StandardRoles.SPAN);
+            tagPointer2.MoveToKid(StandardRoles.TD).MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN);
             tagPointer2.SetNextNewKidIndex(3);
             tagPointer1.RelocateKid(4, tagPointer2);
             document.Close();
@@ -217,20 +217,20 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetRole(PdfName.Part);
-            NUnit.Framework.Assert.AreEqual(tagPointer.GetRole().GetValue(), "Part");
-            tagPointer.MoveToKid(PdfName.Table).GetProperties().SetLanguage("en-US");
-            tagPointer.MoveToKid(PdfName.TR).MoveToKid(PdfName.TD).MoveToKid(PdfName.P);
+            tagPointer.SetRole(StandardRoles.PART);
+            NUnit.Framework.Assert.AreEqual(tagPointer.GetRole(), "Part");
+            tagPointer.MoveToKid(StandardRoles.TABLE).GetProperties().SetLanguage("en-US");
+            tagPointer.MoveToKid(StandardRoles.P);
             String actualText1 = "Some looong latin text";
             tagPointer.GetProperties().SetActualText(actualText1);
             WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
             //        assertNull(waitingTagsManager.getAssociatedObject(tagPointer));
             Object associatedObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, associatedObj);
-            tagPointer.MoveToRoot().MoveToKid(PdfName.Table).MoveToKid(1, PdfName.TR).GetProperties().SetActualText("More latin text"
-                );
+            tagPointer.MoveToRoot().MoveToKid(StandardRoles.TABLE).MoveToKid(1, StandardRoles.TR).GetProperties().SetActualText
+                ("More latin text");
             waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, associatedObj);
-            tagPointer.SetRole(PdfName.Div);
+            tagPointer.SetRole(StandardRoles.DIV);
             tagPointer.GetProperties().SetLanguage("en-Us");
             NUnit.Framework.Assert.AreEqual(tagPointer.GetProperties().GetActualText(), actualText1);
             document.Close();
@@ -246,7 +246,7 @@ namespace iText.Kernel.Pdf {
             document.SetTagged();
             PdfPage page = document.AddNewPage();
             TagTreePointer tagPointer = new TagTreePointer(document).SetPageForTagging(page);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             PdfCanvas canvas = new PdfCanvas(page);
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
@@ -257,6 +257,22 @@ namespace iText.Kernel.Pdf {
             canvas.EndText();
             document.Close();
             CompareResult("tagTreePointerTest07.pdf", "cmp_tagTreePointerTest07.pdf", "diff07_");
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TagTreePointerTest08() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest08.pdf").SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = pointer.MoveToKid(StandardRoles.DIV).GetProperties();
+            String language = properties.GetLanguage();
+            NUnit.Framework.Assert.AreEqual("en-Us", language);
+            properties.SetLanguage("EN-GB");
+            pointer.MoveToRoot().MoveToKid(2, StandardRoles.P).GetProperties().SetRole(StandardRoles.H6);
+            document.Close();
+            CompareResult("tagTreePointerTest08.pdf", "cmp_tagTreePointerTest08.pdf", "diff08_");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -270,8 +286,8 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.MoveToKid(PdfName.Table).MoveToKid(2, PdfName.TR).FlushTag();
-            tagPointer.MoveToKid(3, PdfName.TR).MoveToKid(PdfName.TD).FlushTag();
+            tagPointer.MoveToKid(StandardRoles.TABLE).MoveToKid(2, StandardRoles.TR).FlushTag();
+            tagPointer.MoveToKid(3, StandardRoles.TR).MoveToKid(StandardRoles.TD).FlushTag();
             tagPointer.MoveToParent().FlushTag();
             String exceptionMessage = null;
             try {
@@ -337,7 +353,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.MoveToKid(PdfName.Table).MoveToKid(2, PdfName.TR).FlushTag();
+            tagPointer.MoveToKid(StandardRoles.TABLE).MoveToKid(2, StandardRoles.TR).FlushTag();
             // intended redundant call to flush page tags separately from page. Page tags are flushed when the page is flushed.
             document.GetTagStructureContext().FlushPageTags(document.GetPage(1));
             document.GetPage(1).Flush();
@@ -364,15 +380,15 @@ namespace iText.Kernel.Pdf {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetPageForTagging(page1);
             PdfCanvas canvas = new PdfCanvas(page1);
-            tagPointer.AddTag(PdfName.Div);
-            tagPointer.AddTag(PdfName.P);
+            tagPointer.AddTag(StandardRoles.DIV);
+            tagPointer.AddTag(StandardRoles.P);
             WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
             Object pWaitingTagObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
             canvas.BeginText();
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
             tagPointer.MoveToParent().MoveToParent();
@@ -381,7 +397,7 @@ namespace iText.Kernel.Pdf {
             // When tag is flushed, tagPointer begins to point to tag's parent. If parent is also flushed - to the root.
             tagPointer.FlushTag();
             waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, pWaitingTagObj);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("again").CloseTag();
             waitingTagsManager.RemoveWaitingState(pWaitingTagObj);
@@ -390,12 +406,12 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             tagPointer.SetPageForTagging(page2);
             canvas = new PdfCanvas(page2);
-            tagPointer.AddTag(PdfName.P);
+            tagPointer.AddTag(StandardRoles.P);
             canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24).SetTextMatrix(1, 
                 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
-            tagPointer.MoveToParent().AddTag(PdfName.Span);
+            tagPointer.MoveToParent().AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
             canvas.EndText().Release();
             page1.Flush();
@@ -437,10 +453,10 @@ namespace iText.Kernel.Pdf {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetPageForTagging(page);
             PdfCanvas canvas = new PdfCanvas(page);
-            tagPointer.AddTag(PdfName.P);
+            tagPointer.AddTag(StandardRoles.P);
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag()
                 .EndText();
@@ -462,13 +478,13 @@ namespace iText.Kernel.Pdf {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetPageForTagging(page);
             PdfCanvas canvas = new PdfCanvas(page);
-            tagPointer.AddTag(PdfName.P);
+            tagPointer.AddTag(StandardRoles.P);
             WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
             Object pWaitingTagObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
             PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag()
                 .EndText();
@@ -478,7 +494,7 @@ namespace iText.Kernel.Pdf {
             canvas = new PdfCanvas(newPage);
             tagPointer.SetPageForTagging(newPage);
             waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, pWaitingTagObj);
-            tagPointer.AddTag(PdfName.Span);
+            tagPointer.AddTag(StandardRoles.SPAN);
             canvas.OpenTag(tagPointer.GetTagReference()).BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 
                 0, 0, 1, 32, 512).ShowText("Hello.").EndText().CloseTag();
             document.Close();
@@ -512,20 +528,20 @@ namespace iText.Kernel.Pdf {
             TagTreePointer pointer = new TagTreePointer(document);
             AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
             // 2 attributes
-            PdfDictionary testAttrDict = new PdfDictionary();
-            testAttrDict.Put(PdfName.N, new PdfNumber(4));
-            properties.AddAttributes(testAttrDict);
-            testAttrDict = new PdfDictionary();
-            testAttrDict.Put(PdfName.N, new PdfNumber(0));
-            properties.AddAttributes(0, testAttrDict);
-            testAttrDict = new PdfDictionary();
-            testAttrDict.Put(PdfName.N, new PdfNumber(5));
-            properties.AddAttributes(4, testAttrDict);
-            testAttrDict = new PdfDictionary();
-            testAttrDict.Put(PdfName.N, new PdfNumber(2));
-            properties.AddAttributes(2, testAttrDict);
+            PdfStructureAttributes testAttr = new PdfStructureAttributes("test");
+            testAttr.AddIntAttribute("N", 4);
+            properties.AddAttributes(testAttr);
+            testAttr = new PdfStructureAttributes("test");
+            testAttr.AddIntAttribute("N", 0);
+            properties.AddAttributes(0, testAttr);
+            testAttr = new PdfStructureAttributes("test");
+            testAttr.AddIntAttribute("N", 5);
+            properties.AddAttributes(4, testAttr);
+            testAttr = new PdfStructureAttributes("test");
+            testAttr.AddIntAttribute("N", 2);
+            properties.AddAttributes(2, testAttr);
             try {
-                properties.AddAttributes(10, testAttrDict);
+                properties.AddAttributes(10, testAttr);
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -546,17 +562,18 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest02.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
-            PdfDictionary testAttrDict = new PdfDictionary();
+            PdfStructureAttributes testAttrDict = new PdfStructureAttributes("test");
             pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
             // 1 attribute array
             pointer.MoveToRoot();
             pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
             // 3 attributes
             pointer.MoveToRoot();
-            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(testAttrDict
-                );
+            pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
+                (testAttrDict);
             // 1 attribute dictionary
-            pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(testAttrDict);
+            pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(testAttrDict
+                );
             // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest02.pdf", "cmp_accessibleAttributesInsertionTest02.pdf", "diffAttributes02_"
@@ -574,16 +591,17 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(0, testAttrDict);
+            pointer.MoveToKid(1).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(0, testAttrDict);
+            pointer.MoveToKid(2).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
             pointer.MoveToRoot();
-            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(0, testAttrDict
-                );
+            pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
+                (0, new PdfStructureAttributes(testAttrDict));
             // 1 attribute dictionary
-            pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(0, testAttrDict);
+            pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(0, new PdfStructureAttributes
+                (testAttrDict));
             // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest03.pdf", "cmp_accessibleAttributesInsertionTest03.pdf", "diffAttributes03_"
@@ -601,14 +619,14 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(1, testAttrDict);
+            pointer.MoveToKid(1).GetProperties().AddAttributes(1, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(3, testAttrDict);
+            pointer.MoveToKid(2).GetProperties().AddAttributes(3, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
             pointer.MoveToRoot();
-            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(1, testAttrDict
-                );
+            pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
+                (1, new PdfStructureAttributes(testAttrDict));
             // 1 attribute dictionary
             document.Close();
             CompareResult("accessibleAttributesInsertionTest04.pdf", "cmp_accessibleAttributesInsertionTest04.pdf", "diffAttributes04_"
@@ -627,7 +645,7 @@ namespace iText.Kernel.Pdf {
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
             try {
-                pointer.MoveToKid(1).GetProperties().AddAttributes(5, testAttrDict);
+                pointer.MoveToKid(1).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 1 attribute array
                 NUnit.Framework.Assert.Fail();
             }
@@ -636,7 +654,7 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
-                pointer.MoveToKid(2).GetProperties().AddAttributes(5, testAttrDict);
+                pointer.MoveToKid(2).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 3 attributes
                 NUnit.Framework.Assert.Fail();
             }
@@ -645,8 +663,8 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
-                pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(5, testAttrDict
-                    );
+                pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
+                    (5, new PdfStructureAttributes(testAttrDict));
                 // 1 attribute dictionary
                 NUnit.Framework.Assert.Fail();
             }
@@ -654,7 +672,8 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             try {
-                pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(5, testAttrDict);
+                pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(5, new PdfStructureAttributes
+                    (testAttrDict));
                 // no attributes
                 NUnit.Framework.Assert.Fail();
             }

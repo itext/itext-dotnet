@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Font;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -110,8 +110,9 @@ namespace iText.Layout.Renderer {
                     else {
                         TaggingHintKey hintKey = LayoutTaggingHelper.GetHintKey(this);
                         TaggingHintKey parentHint = taggingHelper.GetAccessibleParentHint(hintKey);
-                        if (parentHint != null && !(PdfName.LI.Equals(parentHint.GetAccessibleElement().GetRole()))) {
-                            TaggingDummyElement listItemIntermediate = new TaggingDummyElement(PdfName.LI);
+                        if (parentHint != null && !(StandardRoles.LI.Equals(parentHint.GetAccessibleElement().GetAccessibilityProperties
+                            ().GetRole()))) {
+                            TaggingDummyElement listItemIntermediate = new TaggingDummyElement(StandardRoles.LI);
                             IList<TaggingHintKey> intermediateKid = JavaCollectionsUtil.SingletonList<TaggingHintKey>(LayoutTaggingHelper
                                 .GetOrCreateHintKey(listItemIntermediate));
                             taggingHelper.ReplaceKidHint(hintKey, intermediateKid);
@@ -245,7 +246,7 @@ namespace iText.Layout.Renderer {
                     else {
                         if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
                             Paragraph p = new Paragraph();
-                            p.SetRole(null);
+                            p.GetAccessibilityProperties().SetRole(null);
                             IRenderer paragraphRenderer = p.SetMargin(0).CreateRendererSubTree();
                             float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                             if (symbolIndent != null) {
@@ -259,7 +260,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (!symbolAddedInside) {
                         Paragraph p = new Paragraph();
-                        p.SetRole(null);
+                        p.GetAccessibilityProperties().SetRole(null);
                         IRenderer paragraphRenderer = p.SetMargin(0).CreateRendererSubTree();
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                         if (symbolIndent != null) {

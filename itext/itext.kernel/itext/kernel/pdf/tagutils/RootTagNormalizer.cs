@@ -36,8 +36,9 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void CreateNewRootTag() {
             IRoleMappingResolver mapping;
             PdfNamespace docDefaultNs = context.GetDocumentDefaultNamespace();
-            mapping = context.ResolveMappingToStandardOrDomainSpecificRole(PdfName.Document, docDefaultNs);
-            if (mapping == null || mapping.CurrentRoleIsStandard() && !PdfName.Document.Equals(mapping.GetRole())) {
+            mapping = context.ResolveMappingToStandardOrDomainSpecificRole(StandardRoles.DOCUMENT, docDefaultNs);
+            if (mapping == null || mapping.CurrentRoleIsStandard() && !StandardRoles.DOCUMENT.Equals(mapping.GetRole()
+                )) {
                 LogCreatedRootTagHasMappingIssue(docDefaultNs, mapping);
             }
             rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
@@ -49,12 +50,14 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private void EnsureExistingRootTagIsDocument() {
             IRoleMappingResolver mapping;
-            mapping = context.GetRoleMappingResolver(rootTagElement.GetRole(), rootTagElement.GetNamespace());
-            bool isDocBeforeResolving = mapping.CurrentRoleIsStandard() && PdfName.Document.Equals(mapping.GetRole());
-            mapping = context.ResolveMappingToStandardOrDomainSpecificRole(rootTagElement.GetRole(), rootTagElement.GetNamespace
+            mapping = context.GetRoleMappingResolver(rootTagElement.GetRole().GetValue(), rootTagElement.GetNamespace(
+                ));
+            bool isDocBeforeResolving = mapping.CurrentRoleIsStandard() && StandardRoles.DOCUMENT.Equals(mapping.GetRole
                 ());
-            bool isDocAfterResolving = mapping != null && mapping.CurrentRoleIsStandard() && PdfName.Document.Equals(mapping
-                .GetRole());
+            mapping = context.ResolveMappingToStandardOrDomainSpecificRole(rootTagElement.GetRole().GetValue(), rootTagElement
+                .GetNamespace());
+            bool isDocAfterResolving = mapping != null && mapping.CurrentRoleIsStandard() && StandardRoles.DOCUMENT.Equals
+                (mapping.GetRole());
             if (isDocBeforeResolving && !isDocAfterResolving) {
                 LogCreatedRootTagHasMappingIssue(rootTagElement.GetNamespace(), mapping);
             }
@@ -87,8 +90,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (kidIsDocument && kid.GetNamespace() != null && context.TargetTagStructureVersionIs2()) {
                     // we flatten only tags of document role in standard structure namespace
                     String kidNamespaceName = kid.GetNamespace().GetNamespaceName();
-                    kidIsDocument = StandardStructureNamespace.PDF_1_7.Equals(kidNamespaceName) || StandardStructureNamespace.
-                        PDF_2_0.Equals(kidNamespaceName);
+                    kidIsDocument = StandardNamespaces.PDF_1_7.Equals(kidNamespaceName) || StandardNamespaces.PDF_2_0.Equals(kidNamespaceName
+                        );
                 }
                 if (isBeforeOriginalRoot) {
                     rootTagElement.AddKid(originalRootKidsIndex, kid);
@@ -106,7 +109,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole, PdfNamespace wrapTagNs) {
             int kidsNum = parent.GetKids().Count;
             TagTreePointer tagPointer = new TagTreePointer(parent, document);
-            tagPointer.AddTag(0, wrapTagRole);
+            tagPointer.AddTag(0, wrapTagRole.GetValue());
             if (context.TargetTagStructureVersionIs2()) {
                 tagPointer.GetProperties().SetNamespace(wrapTagNs);
             }
@@ -131,7 +134,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             String mappingRole = " to ";
             if (mapping != null) {
                 mappingRole += "\"" + mapping.GetRole() + "\"";
-                if (mapping.GetNamespace() != null && !StandardStructureNamespace.PDF_1_7.Equals(mapping.GetNamespace().GetNamespaceName
+                if (mapping.GetNamespace() != null && !StandardNamespaces.PDF_1_7.Equals(mapping.GetNamespace().GetNamespaceName
                     ())) {
                     mappingRole += " in \"" + mapping.GetNamespace().GetNamespaceName() + "\" namespace";
                 }

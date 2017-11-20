@@ -1,3 +1,4 @@
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
@@ -7,13 +8,13 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfDictionary roleMap;
 
-        internal RoleMappingResolver(PdfName currRole, PdfDocument document) {
-            this.currRole = currRole;
+        internal RoleMappingResolver(String role, PdfDocument document) {
+            this.currRole = PdfStructTreeRoot.ConvertRoleToPdfName(role);
             this.roleMap = document.GetStructTreeRoot().GetRoleMap();
         }
 
-        public virtual PdfName GetRole() {
-            return currRole;
+        public virtual String GetRole() {
+            return currRole.GetValue();
         }
 
         public virtual PdfNamespace GetNamespace() {
@@ -21,8 +22,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual bool CurrentRoleIsStandard() {
-            return StandardStructureNamespace.RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.PDF_1_7
-                );
+            return StandardNamespaces.RoleBelongsToStandardNamespace(currRole.GetValue(), StandardNamespaces.PDF_1_7);
         }
 
         public virtual bool CurrentRoleShallBeMappedToStandard() {

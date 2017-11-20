@@ -1,5 +1,6 @@
 using System;
 using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -176,12 +177,12 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="thisNsRole">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// identifying structure element type in this namespace.
         /// </param>
         /// <param name="defaultNsRole">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// identifying a structure element type in the default standard structure namespace.
         /// </param>
         /// <returns>
@@ -189,9 +190,10 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="PdfNamespace"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(PdfName thisNsRole, PdfName defaultNsRole
+        public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(String thisNsRole, String defaultNsRole
             ) {
-            PdfObject prevVal = GetNamespaceRoleMap(true).Put(thisNsRole, defaultNsRole);
+            PdfObject prevVal = GetNamespaceRoleMap(true).Put(PdfStructTreeRoot.ConvertRoleToPdfName(thisNsRole), PdfStructTreeRoot
+                .ConvertRoleToPdfName(defaultNsRole));
             LogOverwritingOfMappingIfNeeded(thisNsRole, prevVal);
             SetModified();
             return this;
@@ -205,12 +207,12 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="thisNsRole">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// identifying structure element type in this namespace.
         /// </param>
         /// <param name="targetNsRole">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// identifying a structure element type in the target namespace.
         /// </param>
         /// <param name="targetNs">
@@ -223,12 +225,13 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="PdfNamespace"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(PdfName thisNsRole, PdfName targetNsRole
+        public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(String thisNsRole, String targetNsRole
             , iText.Kernel.Pdf.Tagging.PdfNamespace targetNs) {
             PdfArray targetMapping = new PdfArray();
-            targetMapping.Add(targetNsRole);
+            targetMapping.Add(PdfStructTreeRoot.ConvertRoleToPdfName(targetNsRole));
             targetMapping.Add(targetNs.GetPdfObject());
-            PdfObject prevVal = GetNamespaceRoleMap(true).Put(thisNsRole, targetMapping);
+            PdfObject prevVal = GetNamespaceRoleMap(true).Put(PdfStructTreeRoot.ConvertRoleToPdfName(thisNsRole), targetMapping
+                );
             LogOverwritingOfMappingIfNeeded(thisNsRole, prevVal);
             SetModified();
             return this;
@@ -253,15 +256,15 @@ namespace iText.Kernel.Pdf.Tagging {
             return roleMapNs;
         }
 
-        private void LogOverwritingOfMappingIfNeeded(PdfName thisNsRole, PdfObject prevVal) {
+        private void LogOverwritingOfMappingIfNeeded(String thisNsRole, PdfObject prevVal) {
             if (prevVal != null) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
                 String nsNameStr = GetNamespaceName();
                 if (nsNameStr == null) {
                     nsNameStr = "this";
                 }
-                logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole, nsNameStr
-                    ));
+                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole
+                    , nsNameStr));
             }
         }
     }

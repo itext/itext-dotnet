@@ -41,40 +41,28 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
 
-namespace iText.Kernel.Pdf.Tagutils {
-    /// <summary>A layout element which can have a <em>role</em>.</summary>
-    /// <remarks>
-    /// A layout element which can have a <em>role</em>. The name of the role will be
-    /// used to tag the element if it is added to a Tagged PDF document. It can also
-    /// have
-    /// <see cref="AccessibilityProperties"/>
-    /// , metadata for the tag dictionary.
-    /// </remarks>
+namespace iText.Layout.Tagging {
+    /// <summary>
+    /// A layout element which has
+    /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>
+    /// .
+    /// They define element's <em>role</em> (
+    /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties.GetRole()"/>
+    /// ) - the name
+    /// that will be used to tag the element if it is added to a Tagged PDF document.
+    /// They can also define other metadata for the tag.
+    /// </summary>
     public interface IAccessibleElement {
-        /// <summary>Gets the element's role.</summary>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// containing the name of the role
-        /// </returns>
-        PdfName GetRole();
-
-        /// <summary>Sets the element's role.</summary>
-        /// <param name="role">
-        /// the new role which the
-        /// <see cref="IAccessibleElement"/>
-        /// should take
-        /// </param>
-        void SetRole(PdfName role);
-
         /// <summary>
         /// Gets the
-        /// <see cref="AccessibilityProperties">accessibility properties</see>
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>
+        /// . See also
+        /// <see cref="IAccessibleElement"/>
         /// .
         /// </summary>
-        /// <returns>a properties wrapper object specific to a tagged element in Tagged PDF</returns>
+        /// <returns>an interface that allows to specify properties of a tagged element in Tagged PDF.</returns>
         AccessibilityProperties GetAccessibilityProperties();
     }
 }

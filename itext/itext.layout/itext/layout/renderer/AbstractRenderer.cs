@@ -729,7 +729,7 @@ namespace iText.Layout.Renderer {
                     abstractChild.ApplyRelativePositioningTranslation(false);
                 }
                 Div outlines = new Div();
-                outlines.SetRole(null);
+                outlines.GetAccessibilityProperties().SetRole(null);
                 if (transformProp != null) {
                     outlines.SetProperty(Property.TRANSFORM, transformProp);
                 }
@@ -739,6 +739,7 @@ namespace iText.Layout.Renderer {
                     offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
                 }
                 DivRenderer div = new DivRenderer(outlines);
+                div.SetParent(abstractChild.GetParent());
                 Rectangle divOccupiedArea = abstractChild.ApplyMargins(abstractChild.occupiedArea.Clone().GetBBox(), false
                     ).MoveLeft(offset).MoveDown(offset);
                 divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 

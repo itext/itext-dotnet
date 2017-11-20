@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Element {
     /// <summary>
@@ -540,9 +540,5 @@ namespace iText.Layout.Element {
         }
 
         public abstract AccessibilityProperties GetAccessibilityProperties();
-
-        public abstract PdfName GetRole();
-
-        public abstract void SetRole(PdfName arg1);
     }
 }

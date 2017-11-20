@@ -52,6 +52,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 
@@ -1060,7 +1061,7 @@ namespace iText.Forms {
             if (tagged) {
                 tagPointer = page.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 //TODO attributes?
-                tagPointer.AddTag(PdfName.Form);
+                tagPointer.AddTag(StandardRoles.FORM);
             }
             page.AddAnnotation(annot);
             if (tagged) {

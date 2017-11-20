@@ -1,5 +1,4 @@
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Tagutils;
+using System;
 
 namespace iText.Layout.Tagging {
     public sealed class TaggingHintKey {
@@ -9,7 +8,7 @@ namespace iText.Layout.Tagging {
 
         private bool isFinished;
 
-        private PdfName overriddenRole;
+        private String overriddenRole;
 
         private bool elementBasedFinishingOnly;
 
@@ -38,12 +37,12 @@ namespace iText.Layout.Tagging {
             this.isArtifact = true;
         }
 
-        internal void SetOverriddenRole(PdfName overriddenRole) {
-            this.overriddenRole = overriddenRole;
+        internal String GetOverriddenRole() {
+            return overriddenRole;
         }
 
-        internal PdfName GetOverriddenRole() {
-            return overriddenRole;
+        internal void SetOverriddenRole(String overriddenRole) {
+            this.overriddenRole = overriddenRole;
         }
 
         internal bool IsElementBasedFinishingOnly() {

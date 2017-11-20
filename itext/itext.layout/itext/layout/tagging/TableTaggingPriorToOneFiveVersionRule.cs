@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 
 namespace iText.Layout.Tagging {
@@ -8,15 +10,16 @@ namespace iText.Layout.Tagging {
 
         public virtual bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey taggingHintKey) {
             if (taggingHintKey.GetAccessibleElement() != null) {
-                PdfName role = taggingHintKey.GetAccessibleElement().GetRole();
-                if (PdfName.THead.Equals(role) || PdfName.TFoot.Equals(role)) {
+                String role = taggingHintKey.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (StandardRoles.THEAD.Equals(role) || StandardRoles.TFOOT.Equals(role)) {
                     finishForbidden.Add(taggingHintKey);
                     return false;
                 }
             }
             foreach (TaggingHintKey hint in taggingHelper.GetAccessibleKidsHint(taggingHintKey)) {
-                PdfName role = hint.GetAccessibleElement().GetRole();
-                if (PdfName.TBody.Equals(role) || PdfName.THead.Equals(role) || PdfName.TFoot.Equals(role)) {
+                String role = hint.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (StandardRoles.TBODY.Equals(role) || StandardRoles.THEAD.Equals(role) || StandardRoles.TFOOT.Equals(role
+                    )) {
                     // THead and TFoot are not finished thanks to this rule logic, TBody not finished because it's dummy and Table itself not finished
                     RemoveTagUnavailableInPriorToOneDotFivePdf(hint, taggingHelper);
                 }

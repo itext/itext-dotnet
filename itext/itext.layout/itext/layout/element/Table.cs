@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -66,9 +66,7 @@ namespace iText.Layout.Element {
     /// to the canvas, in order to reclaim memory that is locked up.
     /// </summary>
     public class Table : BlockElement<iText.Layout.Element.Table>, ILargeElement {
-        protected internal PdfName role = PdfName.Table;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         private IList<Cell[]> rows;
 
@@ -311,30 +309,6 @@ namespace iText.Layout.Element {
         /// <seealso cref="SetFixedLayout()"/>
         public Table(int numColumns)
             : this(numColumns, false) {
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
-            UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
-            for (int i = 0; i < normalized.Length; i++) {
-                if (pointColumnWidths[i] >= 0) {
-                    normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
-                }
-            }
-            return normalized;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
-            UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
-            for (int i = 0; i < unitColumnWidths.Length; i++) {
-                normalized[i] = unitColumnWidths[i] != null && unitColumnWidths[i].GetValue() >= 0 ? new UnitValue(unitColumnWidths
-                    [i]) : null;
-            }
-            return normalized;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
-            UnitValue[] normalized = new UnitValue[numberOfColumns];
-            return normalized;
         }
 
         /// <summary>Set fixed layout.</summary>
@@ -757,10 +731,6 @@ namespace iText.Layout.Element {
             return rendererRoot;
         }
 
-        protected internal override IRenderer MakeNewRenderer() {
-            return new TableRenderer(this);
-        }
-
         /// <summary>Gets a table renderer for this element.</summary>
         /// <remarks>
         /// Gets a table renderer for this element. Note that this method can be called more than once.
@@ -894,14 +864,6 @@ namespace iText.Layout.Element {
             return horizontalBorder;
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public virtual iText.Layout.Element.Table SetExtendBottomRow(bool isExtended) {
             SetProperty(Property.FILL_AVAILABLE_AREA, isExtended);
             return this;
@@ -914,9 +876,37 @@ namespace iText.Layout.Element {
 
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.TABLE);
             }
             return tagProperties;
+        }
+
+        protected internal override IRenderer MakeNewRenderer() {
+            return new TableRenderer(this);
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
+            UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
+            for (int i = 0; i < normalized.Length; i++) {
+                if (pointColumnWidths[i] >= 0) {
+                    normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
+                }
+            }
+            return normalized;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
+            UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
+            for (int i = 0; i < unitColumnWidths.Length; i++) {
+                normalized[i] = unitColumnWidths[i] != null && unitColumnWidths[i].GetValue() >= 0 ? new UnitValue(unitColumnWidths
+                    [i]) : null;
+            }
+            return normalized;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
+            UnitValue[] normalized = new UnitValue[numberOfColumns];
+            return normalized;
         }
 
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
@@ -975,7 +965,7 @@ namespace iText.Layout.Element {
                 if (width != null) {
                     header.SetWidth(width);
                 }
-                header.SetRole(PdfName.THead);
+                header.GetAccessibilityProperties().SetRole(StandardRoles.THEAD);
             }
         }
 
@@ -986,7 +976,7 @@ namespace iText.Layout.Element {
                 if (width != null) {
                     footer.SetWidth(width);
                 }
-                footer.SetRole(PdfName.TFoot);
+                footer.GetAccessibilityProperties().SetRole(StandardRoles.TFOOT);
             }
         }
 

@@ -53,6 +53,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -122,9 +123,8 @@ namespace iText.Layout {
             div.Add(new Paragraph("text before"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(200);
-            PdfDictionary imgAttributes = new PdfDictionary();
-            imgAttributes.Put(PdfName.O, PdfName.Layout);
-            imgAttributes.Put(PdfName.Placement, PdfName.Block);
+            PdfStructureAttributes imgAttributes = new PdfStructureAttributes("Layout");
+            imgAttributes.AddEnumAttribute("Placement", "Block");
             image.GetAccessibilityProperties().AddAttributes(imgAttributes);
             div.Add(image);
             div.Add(new Paragraph("text after"));
@@ -216,11 +216,11 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
                 (100)).SetFixedLayout();
             Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
-            cell.SetRole(PdfName.TH);
+            cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
             table.AddHeaderCell(cell);
             for (int i = 0; i < 3; ++i) {
                 cell = new Cell().Add(new Paragraph("header " + i));
-                cell.SetRole(PdfName.TH);
+                cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
                 table.AddHeaderCell(cell);
             }
             for (int i = 0; i < 3; ++i) {
@@ -434,9 +434,8 @@ namespace iText.Layout {
             PdfDictionary attributesSquare = new PdfDictionary();
             attributesSquare.Put(PdfName.O, PdfName.List);
             attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
-            PdfDictionary attributesCircle = new PdfDictionary();
-            attributesCircle.Put(PdfName.O, PdfName.List);
-            attributesCircle.Put(PdfName.ListNumbering, PdfName.Circle);
+            PdfStructureAttributes attributesCircle = new PdfStructureAttributes("List");
+            attributesCircle.AddEnumAttribute("ListNumbering", "Circle");
             String discSymbol = "\u2022";
             String squareSymbol = "\u25AA";
             String circleSymbol = "\u25E6";
@@ -446,11 +445,11 @@ namespace iText.Layout {
             ListItem listItem = new ListItem("item 2");
  {
                 List subList = new List().SetListSymbol(discSymbol).SetMarginLeft(30);
-                subList.GetAccessibilityProperties().AddAttributes(attributesDisc);
+                subList.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributesDisc));
                 ListItem subListItem = new ListItem("sub item 1");
  {
                     List subSubList = new List().SetListSymbol(squareSymbol).SetMarginLeft(30);
-                    subSubList.GetAccessibilityProperties().AddAttributes(attributesSquare);
+                    subSubList.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributesSquare));
                     subSubList.Add("sub sub item 1");
                     subSubList.Add("sub sub item 2");
                     subSubList.Add("sub sub item 3");
@@ -489,8 +488,7 @@ namespace iText.Layout {
             attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
             List list = new List(ListNumberingType.DECIMAL);
             // explicitly overriding ListNumbering attribute
-            list.GetAccessibilityProperties().AddAttributes(attributesSquare);
-            // TODO not working
+            list.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributesSquare));
             list.Add("item 1");
             list.Add("item 2");
             list.Add("item 3");
@@ -573,7 +571,7 @@ namespace iText.Layout {
             for (int i = 0; i < 25; ++i) {
                 table.AddCell(i.ToString());
             }
-            table.SetRole(PdfName.Artifact);
+            table.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
             document.Add(table);
             document.Close();
             CompareResult("artifactTest02.pdf", "cmp_artifactTest02.pdf");
@@ -807,22 +805,22 @@ namespace iText.Layout {
             doc.Add(new Paragraph("Set Image role to null and add to div with role \"Figure\""));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(200);
-            img.SetRole(null);
+            img.GetAccessibilityProperties().SetRole(null);
             Div div = new Div();
-            div.SetRole(PdfName.Figure);
+            div.GetAccessibilityProperties().SetRole(StandardRoles.FIGURE);
             div.Add(img);
             Paragraph caption = new Paragraph("Caption");
-            caption.SetRole(PdfName.Caption);
+            caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
             div.Add(caption);
             doc.Add(div);
             doc.Add(new Paragraph("Set Text role to null and add to Paragraph").SetMarginTop(20));
             div = new Div();
-            div.SetRole(PdfName.Code);
+            div.GetAccessibilityProperties().SetRole(StandardRoles.CODE);
             iText.Layout.Element.Text txt = new iText.Layout.Element.Text("// Prints Hello world!");
-            txt.SetRole(null);
+            txt.GetAccessibilityProperties().SetRole(null);
             div.Add(new Paragraph(txt).SetMarginBottom(0));
             txt = new iText.Layout.Element.Text("System.out.println(\"Hello world!\");");
-            txt.SetRole(null);
+            txt.GetAccessibilityProperties().SetRole(null);
             div.Add(new Paragraph(txt).SetMarginTop(0));
             doc.Add(div);
             doc.Close();
@@ -903,11 +901,11 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
                 (100)).SetFixedLayout();
             Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
-            cell.SetRole(PdfName.TH);
+            cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
             table.AddHeaderCell(cell);
             for (int i = 0; i < 3; ++i) {
                 cell = new Cell().Add(new Paragraph("header " + i));
-                cell.SetRole(PdfName.TH);
+                cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
                 table.AddHeaderCell(cell);
             }
             for (int i = 0; i < 3; ++i) {
@@ -958,14 +956,14 @@ namespace iText.Layout {
             }
             if (useCaption) {
                 Div div = new Div();
-                div.SetRole(PdfName.Table);
+                div.GetAccessibilityProperties().SetRole(StandardRoles.TABLE);
                 Paragraph p = new Paragraph("Caption");
-                p.SetRole(null);
+                p.GetAccessibilityProperties().SetRole(null);
                 p.SetTextAlignment(TextAlignment.CENTER).SetBold();
                 Div caption = new Div().Add(p);
-                caption.SetRole(PdfName.Caption);
+                caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
                 div.Add(caption);
-                table.SetRole(null);
+                table.GetAccessibilityProperties().SetRole(null);
                 div.Add(table);
                 return div;
             }

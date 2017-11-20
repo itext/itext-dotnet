@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -82,9 +82,7 @@ namespace iText.Layout.Element {
 
         private int colspan;
 
-        protected internal PdfName role = PdfName.TD;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>Creates a cell which takes a custom amount of cell spaces in the table.</summary>
         /// <param name="rowspan">the number of rows this cell must occupy. Negative numbers will make the argument default to 1.
@@ -229,17 +227,9 @@ namespace iText.Layout.Element {
                 );
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.TD);
             }
             return tagProperties;
         }

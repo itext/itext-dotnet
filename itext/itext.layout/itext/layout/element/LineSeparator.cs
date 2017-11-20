@@ -41,8 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -56,9 +56,7 @@ namespace iText.Layout.Element {
     /// This might be thought of as an HTML's <hr> element alternative.
     /// </summary>
     public class LineSeparator : BlockElement<iText.Layout.Element.LineSeparator> {
-        protected internal PdfName role = PdfName.Artifact;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
         /// Creates a custom line separator with line style defined by custom
@@ -70,23 +68,15 @@ namespace iText.Layout.Element {
             SetProperty(Property.LINE_DRAWER, lineDrawer);
         }
 
-        protected internal override IRenderer MakeNewRenderer() {
-            return new LineSeparatorRenderer(this);
-        }
-
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.ARTIFACT);
             }
             return tagProperties;
+        }
+
+        protected internal override IRenderer MakeNewRenderer() {
+            return new LineSeparatorRenderer(this);
         }
     }
 }

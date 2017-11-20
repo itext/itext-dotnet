@@ -47,6 +47,7 @@ using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Properties;
@@ -359,7 +360,7 @@ namespace iText.Layout {
                 p.SetMultipliedLeading(1);
             }
             div.Add(p.SetMargins(0, 0, 0, 0));
-            div.SetRole(PdfName.Artifact);
+            div.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
             this.Add(div);
             return (T)(Object)this;
         }

@@ -44,6 +44,7 @@ using System;
 using iText.Forms.Fields;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -189,7 +190,7 @@ namespace iText.Forms {
             PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 650, 40, 20), "push"
                 , "Capcha");
             TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
-            tagPointer.MoveToKid(PdfName.Div);
+            tagPointer.MoveToKid(StandardRoles.DIV);
             acroForm.AddField(pushButton);
             pdfDoc.Close();
             CompareOutput(outFileName, cmpFileName);

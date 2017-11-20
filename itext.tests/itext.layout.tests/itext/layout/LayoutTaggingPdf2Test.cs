@@ -36,9 +36,9 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph h9 = new Paragraph("Header level 9");
-            h9.SetRole(new PdfName("H9"));
+            h9.GetAccessibilityProperties().SetRole("H9");
             Paragraph h11 = new Paragraph("Hello World from iText7");
-            h11.SetRole(new PdfName("H11"));
+            h11.GetAccessibilityProperties().SetRole("H11");
             document.Add(h9);
             AddSimpleContentToDoc(document, h11);
             document.Close();
@@ -57,7 +57,7 @@ namespace iText.Layout {
             pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(null);
             Document document = new Document(pdfDocument);
             Paragraph h1 = new Paragraph("Header level 1");
-            h1.SetRole(PdfName.H1);
+            h1.GetAccessibilityProperties().SetRole(StandardRoles.H1);
             Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
             document.Add(h1);
             AddSimpleContentToDoc(document, helloWorldPara);
@@ -75,11 +75,11 @@ namespace iText.Layout {
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            PdfNamespace @namespace = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_1_7);
+            PdfNamespace @namespace = tagsContext.FetchNamespace(StandardNamespaces.PDF_1_7);
             tagsContext.SetDocumentDefaultNamespace(@namespace);
             Document document = new Document(pdfDocument);
             Paragraph h1 = new Paragraph("Header level 1");
-            h1.SetRole(PdfName.H1);
+            h1.GetAccessibilityProperties().SetRole(StandardRoles.H1);
             Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
             document.Add(h1);
             AddSimpleContentToDoc(document, helloWorldPara);
@@ -97,19 +97,19 @@ namespace iText.Layout {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            PdfNamespace stdNamespace2 = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_2_0);
+            PdfNamespace stdNamespace2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
             PdfNamespace xhtmlNs = new PdfNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace html4Ns = new PdfNamespace("http://www.w3.org/TR/html4");
-            PdfName h9 = new PdfName("H9");
-            PdfName h11 = new PdfName("H11");
+            String h9 = "H9";
+            String h11 = "H11";
             // deliberately mapping to H9 tag
             xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.h1, h9, stdNamespace2);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P, stdNamespace2);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, PdfName.Figure, stdNamespace2);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, PdfName.L, stdNamespace2);
-            xhtmlNs.AddNamespaceRoleMapping(PdfName.Span, LayoutTaggingPdf2Test.HtmlRoles.span, xhtmlNs);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, PdfName.Span, stdNamespace2);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, PdfName.P, stdNamespace2);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P, stdNamespace2);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, StandardRoles.FIGURE, stdNamespace2);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, StandardRoles.L, stdNamespace2);
+            xhtmlNs.AddNamespaceRoleMapping(StandardRoles.SPAN, LayoutTaggingPdf2Test.HtmlRoles.span, xhtmlNs);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, StandardRoles.SPAN, stdNamespace2);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, StandardRoles.P, stdNamespace2);
             html4Ns.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, LayoutTaggingPdf2Test.HtmlRoles.center
                 , xhtmlNs);
             // test some tricky mapping cases
@@ -133,23 +133,23 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             PdfNamespace xhtmlNs = new PdfNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace html4Ns = new PdfNamespace("http://www.w3.org/TR/html4");
-            PdfName h9 = new PdfName("H9");
-            PdfName h1 = PdfName.H1;
+            String h9 = "H9";
+            String h1 = StandardRoles.H1;
             // deliberately mapping to H9 tag
             xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.h1, h9);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, PdfName.Figure);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, PdfName.L);
-            xhtmlNs.AddNamespaceRoleMapping(PdfName.Span, LayoutTaggingPdf2Test.HtmlRoles.span, xhtmlNs);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, PdfName.Span);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, PdfName.Center);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, StandardRoles.FIGURE);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, StandardRoles.L);
+            xhtmlNs.AddNamespaceRoleMapping(StandardRoles.SPAN, LayoutTaggingPdf2Test.HtmlRoles.span, xhtmlNs);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, StandardRoles.SPAN);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, "Center");
             html4Ns.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, LayoutTaggingPdf2Test.HtmlRoles.center
                 , xhtmlNs);
             // test some tricky mapping cases
             pdfDocument.GetStructTreeRoot().AddRoleMapping(h9, h1);
             pdfDocument.GetStructTreeRoot().AddRoleMapping(h1, h1);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(PdfName.Center, PdfName.P);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(PdfName.I, PdfName.Span);
+            pdfDocument.GetStructTreeRoot().AddRoleMapping("Center", StandardRoles.P);
+            pdfDocument.GetStructTreeRoot().AddRoleMapping("I", StandardRoles.SPAN);
             pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(null);
             pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetNamespaceForNewTags(xhtmlNs);
             Document document = new Document(pdfDocument);
@@ -169,44 +169,45 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             tagsContext.SetDocumentDefaultNamespace(null);
-            PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_1_7);
+            PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardNamespaces.PDF_1_7);
             Document document = new Document(pdfDocument);
             Paragraph hPara = new Paragraph("This is header.");
-            hPara.SetRole(PdfName.H);
+            hPara.GetAccessibilityProperties().SetRole(StandardRoles.H);
             hPara.GetAccessibilityProperties().SetNamespace(explicitDefaultNs);
             document.Add(hPara);
             PdfNamespace xhtmlNs = new PdfNamespace("http://www.w3.org/1999/xhtml");
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, PdfName.Figure, explicitDefaultNs);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, PdfName.L);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.img, StandardRoles.FIGURE, explicitDefaultNs
+                );
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, StandardRoles.L);
             iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(sourceFolder + imageName)).SetWidth(100
                 );
-            img.SetRole(LayoutTaggingPdf2Test.HtmlRoles.img);
+            img.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.img);
             img.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             document.Add(img);
             List list = new List().SetListSymbol("-> ");
-            list.SetRole(LayoutTaggingPdf2Test.HtmlRoles.ul);
+            list.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.ul);
             list.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             list.Add("list item").Add("list item").Add("list item").Add("list item").Add("list item");
             document.Add(list);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, PdfName.Center, explicitDefaultNs);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.Note, explicitDefaultNs);
-            explicitDefaultNs.AddNamespaceRoleMapping(PdfName.Center, PdfName.P, explicitDefaultNs);
-            explicitDefaultNs.AddNamespaceRoleMapping(PdfName.Note, PdfName.Note);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, PdfName.Note);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(PdfName.Note, PdfName.P);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, "Center", explicitDefaultNs);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, "Note", explicitDefaultNs);
+            explicitDefaultNs.AddNamespaceRoleMapping("Center", StandardRoles.P, explicitDefaultNs);
+            explicitDefaultNs.AddNamespaceRoleMapping("Note", "Note");
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, "Note");
+            pdfDocument.GetStructTreeRoot().AddRoleMapping("Note", StandardRoles.P);
             Paragraph centerPara = new Paragraph("centered text");
-            centerPara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.center);
+            centerPara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.center);
             centerPara.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             Text simpleSpan = new Text("simple p with simple span");
-            simpleSpan.SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
+            simpleSpan.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
             simpleSpan.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             Paragraph simplePara = new Paragraph(simpleSpan);
-            simplePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+            simplePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
             simplePara.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             document.Add(centerPara).Add(simplePara);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(PdfName.I, PdfName.Span);
+            pdfDocument.GetStructTreeRoot().AddRoleMapping("I", StandardRoles.SPAN);
             Text iSpan = new Text("cursive span");
-            iSpan.SetRole(PdfName.I);
+            iSpan.GetAccessibilityProperties().SetRole("I");
             document.Add(new Paragraph(iSpan));
             document.Close();
             CompareResult("docWithExplicitAndImplicitDefaultNsAtTheSameTime");
@@ -224,16 +225,16 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
                 tagsContext.SetDocumentDefaultNamespace(null);
-                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_1_7);
+                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardNamespaces.PDF_1_7);
                 Document document = new Document(pdfDocument);
-                pdfDocument.GetStructTreeRoot().AddRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P);
+                pdfDocument.GetStructTreeRoot().AddRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
-                customRolePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+                customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 customRolePara.GetAccessibilityProperties().SetNamespace(explicitDefaultNs);
                 document.Add(customRolePara);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p", "http://iso.org/pdf/ssn")));
 ;
         }
 
@@ -250,15 +251,15 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
                 tagsContext.SetDocumentDefaultNamespace(null);
-                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_1_7);
+                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardNamespaces.PDF_1_7);
                 Document document = new Document(pdfDocument);
-                explicitDefaultNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P);
+                explicitDefaultNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
-                customRolePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+                customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 document.Add(customRolePara);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "/p")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "p")));
 ;
         }
 
@@ -275,11 +276,11 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
-                customRolePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+                customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 document.Add(customRolePara);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p", "http://iso.org/pdf2/ssn")));
 ;
         }
 
@@ -296,11 +297,11 @@ namespace iText.Layout {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsCntxt = pdfDocument.GetTagStructureContext();
-            PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardStructureNamespace.PDF_2_0);
-            stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P);
+            PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
+            stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P);
             Document document = new Document(pdfDocument);
             Paragraph customRolePara = new Paragraph("Hello world text.");
-            customRolePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+            customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
             document.Add(customRolePara);
             document.Close();
             CompareResult("docWithInvalidMapping04");
@@ -318,20 +319,20 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
                 // deliberately creating namespace via constructor instead of using TagStructureContext#fetchNamespace
-                PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace.PDF_2_0);
-                stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, PdfName.P, stdNs2);
+                PdfNamespace stdNs2 = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P, stdNs2);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
-                customRolePara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+                customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 customRolePara.GetAccessibilityProperties().SetNamespace(stdNs2);
                 document.Add(customRolePara);
                 Paragraph customRolePara2 = new Paragraph("Hello world text.");
-                customRolePara2.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+                customRolePara2.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 // not explicitly setting namespace that we've manually created. This will lead to the situation, when
                 // /Namespaces entry in StructTreeRoot would have two different namespace dictionaries with the same name.
                 document.Add(customRolePara2);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/p", "http://iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p", "http://iso.org/pdf2/ssn")));
 ;
         }
 
@@ -347,17 +348,17 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
-            PdfNamespace pointerNs = tagCntxt.FetchNamespace(StandardStructureNamespace.PDF_2_0);
-            pointerNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, PdfName.Span, pointerNs);
+            PdfNamespace pointerNs = tagCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
+            pointerNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, StandardRoles.SPAN, pointerNs);
             // deliberately creating namespace via constructor instead of using TagStructureContext#fetchNamespace
-            PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace.PDF_2_0);
-            stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, PdfName.Em, stdNs2);
+            PdfNamespace stdNs2 = new PdfNamespace(StandardNamespaces.PDF_2_0);
+            stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.span, StandardRoles.EM, stdNs2);
             Text customRolePText1 = new Text("Hello world text 1.");
-            customRolePText1.SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
+            customRolePText1.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
             customRolePText1.GetAccessibilityProperties().SetNamespace(stdNs2);
             document.Add(new Paragraph(customRolePText1));
             Text customRolePText2 = new Text("Hello world text 2.");
-            customRolePText2.SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
+            customRolePText2.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
             // not explicitly setting namespace that we've manually created. This will lead to the situation, when
             // /Namespaces entry in StructTreeRoot would have two different namespace dictionaries with the same name.
             document.Add(new Paragraph(customRolePText2));
@@ -378,24 +379,22 @@ namespace iText.Layout {
                     new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
-                PdfNamespace stdNs2 = pdfDocument.GetTagStructureContext().FetchNamespace(StandardStructureNamespace.PDF_2_0
-                    );
+                PdfNamespace stdNs2 = pdfDocument.GetTagStructureContext().FetchNamespace(StandardNamespaces.PDF_2_0);
                 int numOfTransitiveMappings = 120;
-                PdfName prevRole = LayoutTaggingPdf2Test.HtmlRoles.span;
+                String prevRole = LayoutTaggingPdf2Test.HtmlRoles.span;
                 for (int i = 0; i < numOfTransitiveMappings; ++i) {
-                    String nextRoleName = "span" + i;
-                    PdfName nextRole = new PdfName(nextRoleName);
+                    String nextRole = "span" + i;
                     stdNs2.AddNamespaceRoleMapping(prevRole, nextRole, stdNs2);
                     prevRole = nextRole;
                 }
-                stdNs2.AddNamespaceRoleMapping(prevRole, PdfName.Span, stdNs2);
+                stdNs2.AddNamespaceRoleMapping(prevRole, StandardRoles.SPAN, stdNs2);
                 Text customRolePText1 = new Text("Hello world text.");
-                customRolePText1.SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
+                customRolePText1.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.span);
                 customRolePText1.GetAccessibilityProperties().SetNamespace(stdNs2);
                 document.Add(new Paragraph(customRolePText1));
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "/span", "http://iso.org/pdf2/ssn")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "span", "http://iso.org/pdf2/ssn")));
 ;
         }
 
@@ -412,11 +411,11 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
                 Paragraph h9Para = new Paragraph("Header level 9");
-                h9Para.SetRole(new PdfName("H9"));
+                h9Para.GetAccessibilityProperties().SetRole("H9");
                 document.Add(h9Para);
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "/H9")));
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "H9")));
 ;
         }
 
@@ -432,8 +431,8 @@ namespace iText.Layout {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_2_0);
-            ssn2.AddNamespaceRoleMapping(PdfName.Document, PdfName.Book, ssn2);
+            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
+            ssn2.AddNamespaceRoleMapping(StandardRoles.DOCUMENT, "Book", ssn2);
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("hello world; root tag mapping"));
             document.Close();
@@ -451,9 +450,9 @@ namespace iText.Layout {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardStructureNamespace.PDF_2_0);
-            ssn2.AddNamespaceRoleMapping(PdfName.Document, PdfName.Book, ssn2);
-            ssn2.AddNamespaceRoleMapping(PdfName.Book, PdfName.Part, ssn2);
+            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
+            ssn2.AddNamespaceRoleMapping(StandardRoles.DOCUMENT, "Book", ssn2);
+            ssn2.AddNamespaceRoleMapping("Book", StandardRoles.PART, ssn2);
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("hello world; root tag mapping"));
             document.Close();
@@ -534,10 +533,11 @@ namespace iText.Layout {
                 (destinationFolder + "stampTest05.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
             PdfNamespace xhtmlNs = tagCntxt.FetchNamespace("http://www.w3.org/1999/xhtml");
-            PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardStructureNamespace.PDF_2_0);
-            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, PdfName.L, ssn2);
+            PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
+            xhtmlNs.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.ul, StandardRoles.L, ssn2);
             TagTreePointer pointer = new TagTreePointer(pdfDocument);
-            pointer.MoveToKid(PdfName.Table).MoveToKid(PdfName.TR).MoveToKid(1, PdfName.TD).MoveToKid(PdfName.L);
+            pointer.MoveToKid(StandardRoles.TABLE).MoveToKid(StandardRoles.TR).MoveToKid(1, StandardRoles.TD).MoveToKid
+                (StandardRoles.L);
             pointer.SetRole(LayoutTaggingPdf2Test.HtmlRoles.ul).GetProperties().SetNamespace(xhtmlNs);
             pdfDocument.Close();
             CompareResult("stampTest05");
@@ -576,17 +576,17 @@ namespace iText.Layout {
         }
 
         private class HtmlRoles {
-            internal static PdfName h1 = new PdfName("h1");
+            internal static String h1 = "h1";
 
-            internal static PdfName p = new PdfName("p");
+            internal static String p = "p";
 
-            internal static PdfName img = new PdfName("img");
+            internal static String img = "img";
 
-            internal static PdfName ul = new PdfName("ul");
+            internal static String ul = "ul";
 
-            internal static PdfName center = new PdfName("center");
+            internal static String center = "center";
 
-            internal static PdfName span = new PdfName("span");
+            internal static String span = "span";
         }
 
         /// <exception cref="System.UriFormatException"/>
@@ -615,33 +615,33 @@ namespace iText.Layout {
 
         /// <exception cref="System.UriFormatException"/>
         private void AddContentToDocInCustomNs(PdfDocument pdfDocument, PdfNamespace defaultNamespace, PdfNamespace
-             xhtmlNs, PdfNamespace html4Ns, PdfName hnRole, Document document) {
+             xhtmlNs, PdfNamespace html4Ns, String hnRole, Document document) {
             Paragraph h1P = new Paragraph("Header level 1");
-            h1P.SetRole(LayoutTaggingPdf2Test.HtmlRoles.h1);
+            h1P.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.h1);
             Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
-            helloWorldPara.SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
+            helloWorldPara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100);
-            img.SetRole(LayoutTaggingPdf2Test.HtmlRoles.img);
+            img.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.img);
             document.Add(h1P);
             document.Add(helloWorldPara);
             document.Add(img);
             pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetNamespaceForNewTags(defaultNamespace);
             List list = new List().SetListSymbol("-> ");
-            list.SetRole(LayoutTaggingPdf2Test.HtmlRoles.ul);
+            list.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.ul);
             list.GetAccessibilityProperties().SetNamespace(xhtmlNs);
             list.Add("list item").Add("list item").Add("list item").Add("list item").Add(new ListItem("list item"));
             document.Add(list);
             Paragraph center = new Paragraph("centered text").SetTextAlignment(TextAlignment.CENTER);
-            center.SetRole(LayoutTaggingPdf2Test.HtmlRoles.center);
+            center.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.center);
             center.GetAccessibilityProperties().SetNamespace(html4Ns);
             document.Add(center);
             Paragraph h11Para = new Paragraph("Heading level 11");
-            h11Para.SetRole(hnRole);
+            h11Para.GetAccessibilityProperties().SetRole(hnRole);
             document.Add(h11Para);
             if (defaultNamespace == null) {
                 Text i = new Text("italic text");
-                i.SetRole(PdfName.I);
+                i.GetAccessibilityProperties().SetRole("I");
                 Paragraph pi = new Paragraph(i.SetItalic());
                 document.Add(pi);
             }

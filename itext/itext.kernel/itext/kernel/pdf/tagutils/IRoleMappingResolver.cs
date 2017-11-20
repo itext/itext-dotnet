@@ -1,4 +1,4 @@
-using iText.Kernel.Pdf;
+using System;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
@@ -19,10 +19,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </remarks>
         /// <returns>
         /// the
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// <see cref="System.String"/>
         /// which identifies current role of the resolver.
         /// </returns>
-        PdfName GetRole();
+        String GetRole();
 
         /// <summary>Defines the namespace of the current role.</summary>
         /// <returns>

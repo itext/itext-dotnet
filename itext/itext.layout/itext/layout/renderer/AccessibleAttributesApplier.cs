@@ -60,23 +60,13 @@ namespace iText.Layout.Renderer {
     /// based on the layout element properties and renderer layout results.
     /// </summary>
     public class AccessibleAttributesApplier {
-        public static PdfDictionary GetLayoutAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
-            IRoleMappingResolver resolvedMapping = null;
-            // TODO remove this null pointer check in iText 7.1
-            if (taggingPointer != null) {
-                resolvedMapping = ResolveMappingToStandard(taggingPointer);
-                if (resolvedMapping == null) {
-                    return null;
-                }
+        public static PdfStructureAttributes GetLayoutAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null) {
+                return null;
             }
-            PdfName role;
-            if (resolvedMapping != null) {
-                role = resolvedMapping.GetRole();
-            }
-            else {
-                // TODO remove this else-clause in iText 7.1
-                role = ((IAccessibleElement)renderer.GetModelElement()).GetRole();
-            }
+            String role = resolvedMapping.GetRole();
             int tagType = AccessibleTypes.IdentifyType(role);
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Layout);
@@ -91,23 +81,20 @@ namespace iText.Layout.Renderer {
             if (tagType == AccessibleTypes.Illustration) {
                 ApplyIllustrationLayoutAttributes(renderer, attributes);
             }
-            return attributes.Size() > 1 ? attributes : null;
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
-        public static PdfDictionary GetListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
+        public static PdfStructureAttributes GetListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
             IRoleMappingResolver resolvedMapping = null;
-            // TODO remove this null pointer check in iText 7.1
-            if (taggingPointer != null) {
-                resolvedMapping = ResolveMappingToStandard(taggingPointer);
-                if (resolvedMapping == null || !PdfName.L.Equals(resolvedMapping.GetRole())) {
-                    return null;
-                }
+            resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null || !StandardRoles.L.Equals(resolvedMapping.GetRole())) {
+                return null;
             }
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.List);
             Object listSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
-            // TODO simplify in iText 7.1
-            bool tagStructurePdf2 = resolvedMapping != null && IsTagStructurePdf2(resolvedMapping.GetNamespace());
+            bool tagStructurePdf2 = IsTagStructurePdf2(resolvedMapping.GetNamespace());
             if (listSymbol is ListNumberingType) {
                 ListNumberingType numberingType = (ListNumberingType)listSymbol;
                 attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType, tagStructurePdf2));
@@ -122,17 +109,15 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return attributes.Size() > 1 ? attributes : null;
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
-        public static PdfDictionary GetTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
-            // TODO remove this null pointer check in iText 7.1
-            if (taggingPointer != null) {
-                IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
-                if (resolvedMapping == null || !PdfName.TD.Equals(resolvedMapping.GetRole()) && !PdfName.TH.Equals(resolvedMapping
-                    .GetRole())) {
-                    return null;
-                }
+        public static PdfStructureAttributes GetTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null || !StandardRoles.TD.Equals(resolvedMapping.GetRole()) && !StandardRoles.TH.Equals
+                (resolvedMapping.GetRole())) {
+                return null;
             }
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Table);
@@ -145,7 +130,7 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.ColSpan, new PdfNumber(cell.GetColspan()));
                 }
             }
-            return attributes.Size() > 1 ? attributes : null;
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
         private static void ApplyCommonLayoutAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
@@ -166,8 +151,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void ApplyBlockLevelLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDictionary
-             attributes) {
+        private static void ApplyBlockLevelLayoutAttributes(String role, AbstractRenderer renderer, PdfDictionary 
+            attributes) {
             UnitValue[] margins = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.MARGIN_TOP), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_BOTTOM), renderer.GetPropertyAsUnitValue(Property.MARGIN_LEFT), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_RIGHT) };
@@ -222,7 +207,7 @@ namespace iText.Layout.Renderer {
                 attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
             }
             TextAlignment? textAlignment = renderer.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT);
-            if (textAlignment != null && (!role.Equals(PdfName.TH) && !role.Equals(PdfName.TD))) {
+            if (textAlignment != null && (!role.Equals(StandardRoles.TH) && !role.Equals(StandardRoles.TD))) {
                 //for table cells there is an InlineAlign attribute (see below)
                 attributes.Put(PdfName.TextAlign, TransformTextAlignmentValueToName(textAlignment));
             }
@@ -231,7 +216,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
-            if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD) || role.Equals(PdfName.Table)) {
+            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
                 UnitValue width = renderer.GetProperty<UnitValue>(Property.WIDTH);
                 if (width != null && width.IsPointValue()) {
                     attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
@@ -241,7 +226,7 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.Height, new PdfNumber(height.GetValue()));
                 }
             }
-            if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD)) {
+            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD)) {
                 HorizontalAlignment? horizontalAlignment = renderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                     );
                 if (horizontalAlignment != null) {
@@ -445,7 +430,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static bool IsTagStructurePdf2(PdfNamespace @namespace) {
-            return @namespace != null && StandardStructureNamespace.PDF_2_0.Equals(@namespace.GetNamespaceName());
+            return @namespace != null && StandardNamespaces.PDF_2_0.Equals(@namespace.GetNamespaceName());
         }
 
         private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment) {

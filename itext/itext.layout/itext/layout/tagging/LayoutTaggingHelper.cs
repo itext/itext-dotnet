@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
@@ -22,7 +24,7 @@ namespace iText.Layout.Tagging {
 
         private IDictionary<IRenderer, TagTreePointer> autoTaggingPointerSavedPosition;
 
-        private IDictionary<PdfName, IList<ITaggingRule>> taggingRules;
+        private IDictionary<String, IList<ITaggingRule>> taggingRules;
 
         private IDictionary<PdfObject, TaggingDummyElement> existingTagsDummies;
 
@@ -37,7 +39,7 @@ namespace iText.Layout.Tagging {
             this.kidsHints = new LinkedDictionary<TaggingHintKey, IList<TaggingHintKey>>();
             this.parentHints = new LinkedDictionary<TaggingHintKey, TaggingHintKey>();
             this.autoTaggingPointerSavedPosition = new Dictionary<IRenderer, TagTreePointer>();
-            this.taggingRules = new Dictionary<PdfName, IList<ITaggingRule>>();
+            this.taggingRules = new Dictionary<String, IList<ITaggingRule>>();
             RegisterRules(context.GetTagStructureTargetVersion());
             existingTagsDummies = new LinkedDictionary<PdfObject, TaggingDummyElement>();
         }
@@ -104,7 +106,7 @@ namespace iText.Layout.Tagging {
             AddKidsHint(parentKey, newKidsKeys, insertIndex, false);
         }
 
-        public virtual void SetRoleHint(IPropertyContainer hintOwner, PdfName role) {
+        public virtual void SetRoleHint(IPropertyContainer hintOwner, String role) {
             // TODO
             // It's unclear whether a role of already created tag should be changed
             // in this case. Also concerning rules, they won't be called for the new role
@@ -122,14 +124,17 @@ namespace iText.Layout.Tagging {
                 return key.IsArtifact();
             }
             else {
-                if (hintOwner is IRenderer) {
-                    return ((IRenderer)hintOwner).GetModelElement() is IAccessibleElement && PdfName.Artifact.Equals(((IAccessibleElement
-                        )((IRenderer)hintOwner).GetModelElement()).GetRole());
+                IAccessibleElement aElem = null;
+                if (hintOwner is IRenderer && ((IRenderer)hintOwner).GetModelElement() is IAccessibleElement) {
+                    aElem = (IAccessibleElement)((IRenderer)hintOwner).GetModelElement();
                 }
                 else {
                     if (hintOwner is IAccessibleElement) {
-                        return PdfName.Artifact.Equals(((IAccessibleElement)hintOwner).GetRole());
+                        aElem = (IAccessibleElement)hintOwner;
                     }
+                }
+                if (aElem != null) {
+                    return StandardRoles.ARTIFACT.Equals(aElem.GetAccessibilityProperties().GetRole());
                 }
             }
             return false;
@@ -307,7 +312,7 @@ namespace iText.Layout.Tagging {
             }
             if (!IsNonAccessibleHint(rendererKey)) {
                 IAccessibleElement modelElement = rendererKey.GetAccessibleElement();
-                PdfName role = modelElement.GetRole();
+                String role = modelElement.GetAccessibilityProperties().GetRole();
                 if (rendererKey.GetOverriddenRole() != null) {
                     role = rendererKey.GetOverriddenRole();
                 }
@@ -393,7 +398,7 @@ namespace iText.Layout.Tagging {
                     }
                 }
                 hintKey = new TaggingHintKey(elem, hintOwner is IElement);
-                if (elem != null && PdfName.Artifact.Equals(elem.GetRole())) {
+                if (elem != null && StandardRoles.ARTIFACT.Equals(elem.GetAccessibilityProperties().GetRole())) {
                     hintKey.SetArtifact();
                     hintKey.SetFinished();
                 }
@@ -502,7 +507,7 @@ namespace iText.Layout.Tagging {
                         ind = GetNearestNextSiblingTagIndex(waitingTagsManager, tagPointer, siblingsHint, i);
                     }
                 }
-                tagPointer.AddTag(ind, modelElement);
+                tagPointer.AddTag(ind, modelElement.GetAccessibilityProperties());
                 if (hintKey.GetOverriddenRole() != null) {
                     tagPointer.SetRole(hintKey.GetOverriddenRole());
                 }
@@ -592,7 +597,8 @@ namespace iText.Layout.Tagging {
         }
 
         private static bool IsNonAccessibleHint(TaggingHintKey hintKey) {
-            return hintKey.GetAccessibleElement() == null || hintKey.GetAccessibleElement().GetRole() == null;
+            return hintKey.GetAccessibleElement() == null || hintKey.GetAccessibleElement().GetAccessibilityProperties
+                ().GetRole() == null;
         }
 
         private bool IsTagAlreadyExistsForHint(TaggingHintKey tagHint) {
@@ -663,17 +669,18 @@ namespace iText.Layout.Tagging {
 
         private void RegisterRules(PdfVersion pdfVersion) {
             ITaggingRule tableRule = new TableTaggingRule();
-            RegisterSingleRule(PdfName.Table, tableRule);
-            RegisterSingleRule(PdfName.TFoot, tableRule);
-            RegisterSingleRule(PdfName.THead, tableRule);
+            RegisterSingleRule(StandardRoles.TABLE, tableRule);
+            RegisterSingleRule(StandardRoles.TFOOT, tableRule);
+            RegisterSingleRule(StandardRoles.THEAD, tableRule);
             if (pdfVersion.CompareTo(PdfVersion.PDF_1_5) < 0) {
-                RegisterSingleRule(PdfName.Table, new TableTaggingPriorToOneFiveVersionRule());
-                RegisterSingleRule(PdfName.THead, new TableTaggingPriorToOneFiveVersionRule());
-                RegisterSingleRule(PdfName.TFoot, new TableTaggingPriorToOneFiveVersionRule());
+                TableTaggingPriorToOneFiveVersionRule priorToOneFiveRule = new TableTaggingPriorToOneFiveVersionRule();
+                RegisterSingleRule(StandardRoles.TABLE, priorToOneFiveRule);
+                RegisterSingleRule(StandardRoles.THEAD, priorToOneFiveRule);
+                RegisterSingleRule(StandardRoles.TFOOT, priorToOneFiveRule);
             }
         }
 
-        private void RegisterSingleRule(PdfName role, ITaggingRule rule) {
+        private void RegisterSingleRule(String role, ITaggingRule rule) {
             IList<ITaggingRule> rules = taggingRules.Get(role);
             if (rules == null) {
                 rules = new List<ITaggingRule>();

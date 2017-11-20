@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
@@ -54,6 +55,8 @@ namespace iText.Kernel.Pdf.Tagging {
         private PdfDocument document;
 
         private ParentTreeHandler parentTreeHandler;
+
+        private static IDictionary<String, PdfName> staticRoleNames = new ConcurrentDictionary<String, PdfName>();
 
         public PdfStructTreeRoot(PdfDocument document)
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(document), document) {
@@ -73,6 +76,20 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         // TODO may be remove?
+        public static PdfName ConvertRoleToPdfName(String role) {
+            PdfName name = PdfName.staticNames.Get(role);
+            if (name != null) {
+                return name;
+            }
+            name = staticRoleNames.Get(role);
+            if (name != null) {
+                return name;
+            }
+            name = new PdfName(role);
+            staticRoleNames.Put(role, name);
+            return name;
+        }
+
         public virtual PdfStructElem AddKid(PdfStructElem structElem) {
             return AddKid(-1, structElem);
         }
@@ -128,9 +145,9 @@ namespace iText.Kernel.Pdf.Tagging {
             return k;
         }
 
-        public virtual void AddRoleMapping(PdfName fromRole, PdfName toRole) {
+        public virtual void AddRoleMapping(String fromRole, String toRole) {
             PdfDictionary roleMap = GetRoleMap();
-            PdfObject prevVal = roleMap.Put(fromRole, toRole);
+            PdfObject prevVal = roleMap.Put(ConvertRoleToPdfName(fromRole), ConvertRoleToPdfName(toRole));
             if (prevVal != null && prevVal is PdfName) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
                 logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
