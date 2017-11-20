@@ -224,7 +224,7 @@ namespace iText.Kernel.Pdf {
             String actualText1 = "Some looong latin text";
             tagPointer.GetProperties().SetActualText(actualText1);
             WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-            NUnit.Framework.Assert.IsNull(waitingTagsManager.GetAssociatedObject(tagPointer));
+            //        assertNull(waitingTagsManager.getAssociatedObject(tagPointer));
             Object associatedObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, associatedObj);
             tagPointer.MoveToRoot().MoveToKid(PdfName.Table).MoveToKid(1, PdfName.TR).GetProperties().SetActualText("More latin text"
