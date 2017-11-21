@@ -383,18 +383,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        [Obsolete]
-        protected internal static void WriteKeyInfo(PdfWriter writer) {
-            String platform = " for .NET";
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            String k = version.GetKey();
-            if (k == null) {
-                k = "iText";
-            }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
-        }
-
         private void AppendNewRefToFreeList(PdfIndirectReference reference) {
             reference.SetOffset(0);
             if (freeReferencesLinkedList.IsEmpty<int, PdfIndirectReference>()) {
