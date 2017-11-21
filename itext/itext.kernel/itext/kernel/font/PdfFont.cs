@@ -166,9 +166,7 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// containing the glyphs encoded by the passed string
         /// </returns>
-        public virtual GlyphLine DecodeIntoGlyphLine(PdfString content) {
-            throw new InvalidOperationException("decodeIntoGlyphLine(PdfString content) must be overridden");
-        }
+        public abstract GlyphLine DecodeIntoGlyphLine(PdfString content);
 
         public abstract float GetContentWidth(PdfString content);
 
