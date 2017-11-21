@@ -87,8 +87,6 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
             : this() {
-            CheckFilePath(metricsPath);
-            CheckFilePath(binaryPath);
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
             Process();
         }

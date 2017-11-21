@@ -79,7 +79,6 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path) {
-            CheckFilePath(path);
             fontParser = new OpenTypeParser(path);
             fontParser.LoadTables(true);
             InitializeFontProperties();
@@ -94,7 +93,6 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(String ttcPath, int ttcIndex) {
-            CheckFilePath(ttcPath);
             fontParser = new OpenTypeParser(ttcPath, ttcIndex);
             fontParser.LoadTables(true);
             InitializeFontProperties();

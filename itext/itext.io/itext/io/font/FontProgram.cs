@@ -288,6 +288,7 @@ namespace iText.IO.Font {
             fontNames.SetFontName(psFontName);
         }
 
+        [Obsolete]
         protected internal virtual void CheckFilePath(String path) {
             if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
