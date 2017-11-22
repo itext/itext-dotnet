@@ -45,17 +45,16 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontProgramTest {
+        private const String notExistingFont = "some-font.ttf";
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
-            String font = "some-font.ttf";
-            try {
-                FontProgramFactory.CreateFont(font);
+            NUnit.Framework.Assert.That(() =>  {
+                FontProgramFactory.CreateFont(notExistingFont);
             }
-            catch (iText.IO.IOException ex) {
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.FontFile1NotFound, font), ex
-                    .Message);
-            }
+            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format("{0} not found as file or resource", notExistingFont)));
+;
         }
 
         /// <exception cref="System.IO.IOException"/>
