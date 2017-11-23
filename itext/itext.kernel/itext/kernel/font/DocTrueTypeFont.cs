@@ -70,7 +70,8 @@ namespace iText.Kernel.Font {
             subtype = fontDictionary.GetAsName(PdfName.Subtype);
         }
 
-        internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding) {
+        internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
+             toUnicode) {
             iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             FillFontDescriptor(fontProgram, fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
@@ -85,6 +86,11 @@ namespace iText.Kernel.Font {
                 //FontEncoding.codeToUnicode table has higher priority
                 if (glyph.HasValidUnicode() && fontEncoding.ConvertToByte(glyph.GetUnicode()) == i) {
                     fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
+                }
+                else {
+                    if (toUnicode != null) {
+                        glyph.SetChars(toUnicode.Lookup(i));
+                    }
                 }
                 if (widths[i] > 0) {
                     glyphsWithWidths++;
