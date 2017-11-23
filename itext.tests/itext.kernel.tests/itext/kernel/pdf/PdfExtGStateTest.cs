@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
@@ -73,7 +73,7 @@ namespace iText.Kernel.Pdf {
             PdfExtGState egs = new PdfExtGState();
             egs.GetPdfObject().Put(PdfName.LW, new PdfNumber(5));
             PdfArray font = new PdfArray();
-            PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             document.AddFont(pdfFont);
             font.Add(pdfFont.GetPdfObject());
             font.Add(new PdfNumber(24));

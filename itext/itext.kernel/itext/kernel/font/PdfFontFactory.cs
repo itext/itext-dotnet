@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -68,7 +69,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>
         /// Creates a new instance of default font, namely
-        /// <see cref="iText.IO.Font.FontConstants.HELVETICA"/>
+        /// <see cref="iText.IO.Font.Constants.StandardFonts.HELVETICA"/>
         /// standard font
         /// with
         /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
@@ -81,7 +82,7 @@ namespace iText.Kernel.Font {
         /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
         ///     </exception>
         public static PdfFont CreateFont() {
-            return CreateFont(FontConstants.HELVETICA, DEFAULT_ENCODING);
+            return CreateFont(StandardFonts.HELVETICA, DEFAULT_ENCODING);
         }
 
         /// <summary>
@@ -307,8 +308,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram, String encoding, bool embedded) {
             if (fontProgram == null) {
                 return null;
@@ -364,8 +363,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -387,8 +384,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown and will be removed in 7.1.
-        ///     </exception>
         public static PdfFont CreateFont(FontProgram fontProgram) {
             return CreateFont(fontProgram, DEFAULT_ENCODING);
         }
@@ -404,7 +399,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -421,7 +416,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, bool embedded) {
             return CreateFont(fontProgram, null, embedded);
         }
@@ -442,7 +437,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -464,7 +459,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
+        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
@@ -477,10 +472,22 @@ namespace iText.Kernel.Font {
         /// <param name="document">the target document of the new font</param>
         /// <param name="colorized">indicates whether the font will be colorized</param>
         /// <returns>created font</returns>
-        /// <exception cref="System.IO.IOException">actually this exception is never thrown. This will be removed in 7.1.
-        ///     </exception>
         public static PdfType3Font CreateType3Font(PdfDocument document, bool colorized) {
             return new PdfType3Font(document, colorized);
+        }
+
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="PdfType3Font"/>
+        /// </summary>
+        /// <param name="document">the target document of the new font.</param>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        /// <param name="colorized">indicates whether the font will be colorized</param>
+        /// <returns>created font.</returns>
+        public static PdfType3Font CreateType3Font(PdfDocument document, String fontName, String fontFamily, bool 
+            colorized) {
+            return new PdfType3Font(document, fontName, fontFamily, colorized);
         }
 
         /// <summary>
@@ -520,7 +527,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, bool cached) {
-            return CreateRegisteredFont(fontName, encoding, embedded, FontConstants.UNDEFINED, cached);
+            return CreateRegisteredFont(fontName, encoding, embedded, FontStyles.UNDEFINED, cached);
         }
 
         /// <summary>
@@ -539,7 +546,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded) {
-            return CreateRegisteredFont(fontName, encoding, embedded, FontConstants.UNDEFINED);
+            return CreateRegisteredFont(fontName, encoding, embedded, FontStyles.UNDEFINED);
         }
 
         /// <summary>
@@ -577,7 +584,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding) {
-            return CreateRegisteredFont(fontName, encoding, false, FontConstants.UNDEFINED);
+            return CreateRegisteredFont(fontName, encoding, false, FontStyles.UNDEFINED);
         }
 
         /// <summary>
@@ -596,7 +603,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName) {
-            return CreateRegisteredFont(fontName, null, false, FontConstants.UNDEFINED);
+            return CreateRegisteredFont(fontName, null, false, FontStyles.UNDEFINED);
         }
 
         /// <summary>Register a font by giving explicitly the font family and name.</summary>
@@ -663,9 +670,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>Checks if the provided dictionary is a valid font dictionary of the provided font type.</summary>
         /// <returns><code>true</code> if the passed dictionary is a valid dictionary, <code>false</code> otherwise</returns>
-        [System.ObsoleteAttribute(@"this method will become private in 7.1. Do not use this method")]
-        protected internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException
-            ) {
+        private static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {
                 if (isException) {

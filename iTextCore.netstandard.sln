@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.io.netstandard", "itext\itext.io\itext.io.netstandard.csproj", "{4C4C74D4-00E2-43A4-9D7A-54352096DE32}"
 EndProject

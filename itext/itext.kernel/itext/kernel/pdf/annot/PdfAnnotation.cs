@@ -42,11 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Pdf.Annot {
@@ -429,46 +430,6 @@ namespace iText.Kernel.Pdf.Annot {
             return annotation;
         }
 
-        /// <summary>
-        /// Factory method that creates the type specific
-        /// <see cref="PdfAnnotation"/>
-        /// from the given
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// that represents annotation object. This method is useful for property reading in reading mode or
-        /// modifying in stamping mode.
-        /// </summary>
-        /// <param name="pdfObject">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// that represents annotation in the document.
-        /// </param>
-        /// <param name="parent">
-        /// parent annotation of the
-        /// <see cref="PdfPopupAnnotation"/>
-        /// to be created. This parameter is
-        /// only needed if passed
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// represents a pop-up annotation in the document.
-        /// </param>
-        /// <returns>
-        /// created
-        /// <see cref="PdfAnnotation"/>
-        /// .
-        /// </returns>
-        [System.ObsoleteAttribute(@"This method will be removed in iText 7.1. Please, simply use MakeAnnotation(iText.Kernel.Pdf.PdfObject) ."
-            )]
-        public static iText.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject, iText.Kernel.Pdf.Annot.PdfAnnotation
-             parent) {
-            iText.Kernel.Pdf.Annot.PdfAnnotation annotation = MakeAnnotation(pdfObject);
-            if (annotation is PdfPopupAnnotation) {
-                PdfPopupAnnotation popup = (PdfPopupAnnotation)annotation;
-                if (parent != null) {
-                    popup.SetParent(parent);
-                }
-            }
-            return annotation;
-        }
-
         protected internal PdfAnnotation(Rectangle rect)
             : this(new PdfDictionary()) {
             Put(PdfName.Rect, new PdfArray(rect));
@@ -493,19 +454,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="layer">the layer this annotation belongs to</param>
         public virtual void SetLayer(IPdfOCG layer) {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action) {
-            return Put(PdfName.A, action.GetPdfObject());
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action) {
-            PdfAction.SetAdditionalAction(this, key, action);
-            return this;
         }
 
         /// <summary>
@@ -1221,6 +1169,24 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Sets the characteristics of the annotation’s border.</summary>
         /// <param name="border">
         /// an
+        /// <see cref="iText.Kernel.Pdf.PdfAnnotationBorder"/>
+        /// specifying the characteristics of the annotation’s border.
+        /// See
+        /// <see cref="GetBorder()"/>
+        /// for more detailes.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfAnnotationBorder border) {
+            return Put(PdfName.Border, border.GetPdfObject());
+        }
+
+        /// <summary>Sets the characteristics of the annotation’s border.</summary>
+        /// <param name="border">
+        /// an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// specifying the characteristics of the annotation’s border.
         /// See
@@ -1357,64 +1323,6 @@ namespace iText.Kernel.Pdf.Annot {
             return Put(PdfName.StructParent, new PdfNumber(structParentIndex));
         }
 
-        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
-            )]
-        public virtual bool GetOpen() {
-            PdfBoolean open = GetPdfObject().GetAsBoolean(PdfName.Open);
-            return open != null && open.GetValue();
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfTextAnnotation , PdfPopupAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
-            return Put(PdfName.Open, PdfBoolean.ValueOf(open));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfArray GetQuadPoints() {
-            return GetPdfObject().GetAsArray(PdfName.QuadPoints);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfTextMarkupAnnotation , PdfRedactAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
-            return Put(PdfName.QuadPoints, quadPoints);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
-            return Put(PdfName.BS, borderStyle);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style) {
-            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
-        }
-
-        /// <param name="dashPattern">
-        /// a dash array defining a pattern of dashes and gaps that
-        /// shall be used in drawing a dashed border.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfAnnotation"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1 Setter for the annotation's preset dashed border style. This property has affect only if STYLE_DASHED style was used for the annotation border style (see SetBorderStyle(iText.Kernel.Pdf.PdfName) . See ISO-320001 8.4.3.6, ""Line Dash Pattern"" for the format in which dash pattern shall be specified."
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for:PdfLinkAnnotation , PdfFreeTextAnnotation , PdfLineAnnotation , PdfSquareAnnotation ,PdfCircleAnnotation , PdfPolyGeomAnnotation , PdfInkAnnotation , PdfWidgetAnnotation will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetBorderStyle() {
-            return GetPdfObject().GetAsDictionary(PdfName.BS);
-        }
-
         /// <summary>Sets annotation title.</summary>
         /// <remarks>Sets annotation title. This property affects not all annotation types.</remarks>
         /// <param name="title">
@@ -1446,31 +1354,6 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsString(PdfName.T);
         }
 
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
-            ) {
-            return Put(PdfName.MK, characteristics);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAppearanceCharacteristics() {
-            return GetPdfObject().GetAsDictionary(PdfName.MK);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfLinkAnnotation , PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAction() {
-            return GetPdfObject().GetAsDictionary(PdfName.A);
-        }
-
-        [System.ObsoleteAttribute(@"Supported only for PdfScreenAnnotation , PdfWidgetAnnotation , will be removed in 7.1"
-            )]
-        public virtual PdfDictionary GetAdditionalAction() {
-            return GetPdfObject().GetAsDictionary(PdfName.AA);
-        }
-
         /// <summary>The annotation rectangle, defining the location of the annotation on the page in default user space units.
         ///     </summary>
         /// <param name="array">
@@ -1500,6 +1383,115 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsArray(PdfName.Rect);
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. A language identifier overriding the document’s language identifier to
+        /// specify the natural language for all text in the annotation except where overridden by
+        /// other explicit language specifications
+        /// </remarks>
+        /// <returns>the lang entry</returns>
+        public virtual String GetLang() {
+            PdfString lang = GetPdfObject().GetAsString(PdfName.Lang);
+            return lang != null ? lang.ToUnicodeString() : null;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. A language identifier overriding the document’s language identifier to
+        /// specify the natural language for all text in the annotation except where overridden by
+        /// other explicit language specifications
+        /// </remarks>
+        /// <param name="lang">language identifier</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetLang(String lang) {
+            return Put(PdfName.Lang, new PdfString(lang, PdfEncodings.UNICODE_BIG));
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. The blend mode that shall be used when painting the annotation onto the page</remarks>
+        /// <returns>the blend mode</returns>
+        public virtual PdfName GetBlendMode() {
+            return GetPdfObject().GetAsName(PdfName.BM);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. The blend mode that shall be used when painting the annotation onto the page</remarks>
+        /// <param name="blendMode">blend mode</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBlendMode(PdfName blendMode) {
+            return Put(PdfName.BM, blendMode);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for all nonstroking
+        /// operations on all visible elements of the annotation in its closed state (including its
+        /// background and border) but not the popup window that appears when the annotation is
+        /// opened.
+        /// </remarks>
+        /// <returns>opacity value for nonstroking operations. Returns 1.0 (default value) if entry is not present</returns>
+        public virtual float GetNonStrokingOpacity() {
+            PdfNumber nonStrokingOpacity = GetPdfObject().GetAsNumber(PdfName.ca);
+            return nonStrokingOpacity != null ? nonStrokingOpacity.FloatValue() : 1;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for all nonstroking
+        /// operations on all visible elements of the annotation in its closed state (including its
+        /// background and border) but not the popup window that appears when the annotation is
+        /// opened.
+        /// </remarks>
+        /// <param name="nonStrokingOpacity">opacity for nonstroking operations</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetNonStrokingOpacity(float nonStrokingOpacity) {
+            return Put(PdfName.ca, new PdfNumber(nonStrokingOpacity));
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for stroking all visible
+        /// elements of the annotation in its closed state, including its background and border, but
+        /// not the popup window that appears when the annotation is opened.
+        /// </remarks>
+        /// <returns>opacity for stroking operations, including background and border</returns>
+        public virtual float GetStrokingOpacity() {
+            PdfNumber strokingOpacity = GetPdfObject().GetAsNumber(PdfName.CA);
+            return strokingOpacity != null ? strokingOpacity.FloatValue() : 1;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for stroking all visible
+        /// elements of the annotation in its closed state, including its background and border, but
+        /// not the popup window that appears when the annotation is opened.
+        /// </remarks>
+        /// <param name="strokingOpacity">opacity for stroking operations, including background and border</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetStrokingOpacity(float strokingOpacity) {
+            return Put(PdfName.CA, new PdfNumber(strokingOpacity));
+        }
+
         /// <summary>
         /// Inserts the value into into the underlying
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -1520,6 +1512,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
@@ -1539,6 +1532,48 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation Remove(PdfName key) {
             GetPdfObject().Remove(key);
             return this;
+        }
+
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF annotation and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF annotation and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the annotation dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            afArray.Add(fs.GetPdfObject());
+        }
+
+        /// <summary>Returns files associated with PDF annotation.</summary>
+        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
+        /// <returns>associated files array.</returns>
+        public virtual PdfArray GetAssociatedFiles(bool create) {
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null && create) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            return afArray;
         }
 
         /// <summary>

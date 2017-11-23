@@ -68,7 +68,7 @@ namespace iText.Layout.Minmaxwidth {
         /// <param name="maxWidthHeight">the height of rotated element, that have min-width as its rotated width</param>
         public RotationMinMaxWidth(double minWidth, double maxWidth, double minWidthOrigin, double maxWidthOrigin, 
             double minWidthHeight, double maxWidthHeight)
-            : base(0, MinMaxWidthUtils.GetMax(), (float)minWidth, (float)maxWidth) {
+            : base((float)minWidth, (float)maxWidth, 0) {
             this.maxWidthOrigin = maxWidthOrigin;
             this.minWidthOrigin = minWidthOrigin;
             this.minWidthHeight = minWidthHeight;
@@ -268,7 +268,7 @@ namespace iText.Layout.Minmaxwidth {
                 double maxWidth;
                 if (cos == 0) {
                     minWidth = area * sin / availableWidth;
-                    maxWidth = MinMaxWidthUtils.GetMax();
+                    maxWidth = MinMaxWidthUtils.GetInfWidth();
                 }
                 else {
                     if (sin == 0) {

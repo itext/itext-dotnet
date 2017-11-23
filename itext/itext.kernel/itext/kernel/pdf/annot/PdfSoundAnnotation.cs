@@ -41,30 +41,44 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfSoundAnnotation : PdfMarkupAnnotation {
+        /// <summary>Creates a new Sound annotation.</summary>
+        /// <remarks>
+        /// Creates a new Sound annotation.
+        /// There is a problem playing *.wav files via internal player in Acrobat.
+        /// The first byte of the audio stream data should be deleted, then wav file will be played correctly.
+        /// Otherwise it will be broken. Other supporting file types don't have such problem.
+        /// Sound annotations are deprecated in PDF 2.0.
+        /// </remarks>
+        /// <param name="rect"/>
+        /// <param name="sound"/>
         public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
             : base(rect) {
-            /*
-            There is a problem playing *.wav files via internal player in Acrobat.
-            The first byte of the audio stream data should be deleted, then wav file will be played correctly.
-            Otherwise it will be broken. Other supporting file types don't have such problem.
-            */
             Put(PdfName.Sound, sound);
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfSoundAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfSoundAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>Creates a sound annotation.</summary>
+        /// <remarks>Creates a sound annotation. Sound annotations are deprecated in PDF 2.0.</remarks>
+        /// <param name="document"/>
+        /// <param name="rect"/>
+        /// <param name="soundStream"/>
+        /// <param name="sampleRate"/>
+        /// <param name="encoding"/>
+        /// <param name="channels"/>
+        /// <param name="sampleSizeInBits"/>
         /// <exception cref="System.IO.IOException"/>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
@@ -97,7 +111,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation, or null if icon name is not specified.
         /// </returns>
-        public override PdfName GetIconName() {
+        public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
@@ -118,7 +132,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfSoundAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+        public virtual iText.Kernel.Pdf.Annot.PdfSoundAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfSoundAnnotation)Put(PdfName.Name, name);
         }
     }

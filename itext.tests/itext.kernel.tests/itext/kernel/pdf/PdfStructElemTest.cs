@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Font;
-using iText.Kernel;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -78,7 +77,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
@@ -93,7 +92,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
@@ -124,7 +123,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -154,7 +153,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
@@ -170,7 +169,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = document.AddNewPage();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page2));
@@ -189,7 +188,7 @@ namespace iText.Kernel.Pdf {
             document = new PdfDocument(new PdfReader(destinationFolder + "structElemTest03.pdf"));
             NUnit.Framework.Assert.AreEqual(2, (int)document.GetNextStructParentIndex());
             PdfPage page = document.GetPage(1);
-            NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex().Value);
+            NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex());
             NUnit.Framework.Assert.AreEqual(2, page.GetNextMcid());
             document.Close();
         }
@@ -207,7 +206,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -231,7 +230,7 @@ namespace iText.Kernel.Pdf {
             canvas = new PdfCanvas(page);
             PdfStructElem p = (PdfStructElem)document.GetStructTreeRoot().GetKids()[0].GetKids()[0];
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 490);
             //Inserting span between of 2 existing ones.
             span1 = p.AddKid(1, new PdfStructElem(document, PdfName.Span, page));
@@ -261,7 +260,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 14);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -274,7 +273,7 @@ namespace iText.Kernel.Pdf {
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));
             linkAnnotation.SetColor(new float[] { 0, 0, 1 }).SetBorder(new PdfArray(new float[] { 0, 0, 1 }));
             page.AddAnnotation(-1, linkAnnotation, false);
-            link.AddKid(new PdfObjRef(linkAnnotation, link));
+            link.AddKid(new PdfObjRef(linkAnnotation, link, document.GetNextStructParentIndex()));
             canvas.CloseTag();
             PdfStructElem span2 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
             canvas.OpenTag(new CanvasTag(span2.AddKid(new PdfMcrNumber(page, span2))));
@@ -298,7 +297,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 14);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 14);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
@@ -311,6 +310,43 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             document.Close();
             CompareResult("structElemTest06.pdf", "cmp_structElemTest06.pdf", "diff_structElem_06_");
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 5)]
+        public virtual void StructElemTest07() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest07.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
+            canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
+            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
+            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
+            canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(page, span1))));
+            canvas.ShowText("Hello ");
+            canvas.CloseTag();
+            PdfStructElem span2 = paragraph.AddKid(new PdfStructElem(document, new PdfName("Chunk"), page));
+            canvas.OpenTag(new CanvasTag(span2.AddKid(new PdfMcrNumber(page, span2))));
+            canvas.ShowText("World");
+            canvas.CloseTag();
+            canvas.EndText();
+            canvas.Release();
+            PdfNamespace @namespace = new PdfNamespace("http://www.w3.org/1999/xhtml");
+            span1.SetNamespace(@namespace);
+            span1.AddRef(span2);
+            span1.SetPhoneticAlphabet(PdfName.ipa);
+            span1.SetPhoneme(new PdfString("Heeeelllloooooo"));
+            @namespace.AddNamespaceRoleMapping(StandardRoles.SPAN, StandardRoles.SPAN);
+            document.GetStructTreeRoot().AddNamespace(@namespace);
+            page.Flush();
+            document.Close();
+            CompareResult("structElemTest07.pdf", "cmp_structElemTest07.pdf", "diff_structElem_07_");
         }
 
         /// <exception cref="System.Exception"/>
@@ -425,7 +461,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
             canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
             PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page1));
@@ -489,6 +525,24 @@ namespace iText.Kernel.Pdf {
             CompareResult("structTreeCopyingTest10.pdf", "cmp_structTreeCopyingTest10.pdf", "diff_copying_10_");
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST)]
+        public virtual void StructTreeCopyingTest11() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), new PdfWriter
+                (destinationFolder + "structTreeCopyingTest11.pdf"));
+            PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox_mapping_mod.pdf"));
+            document1.InitializeOutlines();
+            document1.CopyPagesTo(1, 1, document, 2);
+            PdfDocument document2 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
+            document2.InitializeOutlines();
+            document2.CopyPagesTo(1, 1, document, 4);
+            document.Close();
+            document1.Close();
+            document2.Close();
+            CompareResult("structTreeCopyingTest11.pdf", "cmp_structTreeCopyingTest11.pdf", "diff_copying_11_");
+        }
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR, Count = 72)]
@@ -500,10 +554,9 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         public virtual void CorruptedTagStructureTest02() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "directStructElem01.pdf"));
-            NUnit.Framework.Assert.IsFalse(document.IsTagged());
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
             document.Close();
         }
 
@@ -511,20 +564,14 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CorruptedTagStructureTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "directStructElem02.pdf");
-            PdfWriter writer = new PdfWriter(new ByteBufferOutputStream());
+            MemoryStream baos = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(reader, writer);
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
-            bool isThrown = false;
-            try {
-                document.Close();
-            }
-            catch (PdfException ex) {
-                NUnit.Framework.Assert.AreEqual(ex.Message, PdfException.TagStructureFlushingFailedItMightBeCorrupted);
-                isThrown = true;
-            }
-            if (!isThrown) {
-                NUnit.Framework.Assert.Fail("Exception is expected.");
-            }
+            document.Close();
+            document = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
+            document.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -532,21 +579,15 @@ namespace iText.Kernel.Pdf {
         public virtual void CorruptedTagStructureTest04() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "directStructElem03.pdf"));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
-            bool isThrown = false;
-            try {
-                PdfDocument docToCopyTo = new PdfDocument(new PdfWriter(new MemoryStream()));
-                docToCopyTo.SetTagged();
-                document.CopyPagesTo(1, 1, docToCopyTo);
-            }
-            catch (PdfException ex) {
-                NUnit.Framework.Assert.AreEqual(ex.Message, PdfException.TagStructureCopyingFailedItMightBeCorruptedInOneOfTheDocuments
-                    );
-                isThrown = true;
-            }
+            MemoryStream baos = new MemoryStream();
+            PdfDocument docToCopyTo = new PdfDocument(new PdfWriter(baos));
+            docToCopyTo.SetTagged();
+            document.CopyPagesTo(1, 1, docToCopyTo);
             document.Close();
-            if (!isThrown) {
-                NUnit.Framework.Assert.Fail("Exception is expected.");
-            }
+            docToCopyTo.Close();
+            document = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            NUnit.Framework.Assert.IsTrue(document.IsTagged());
+            document.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>

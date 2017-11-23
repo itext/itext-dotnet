@@ -107,12 +107,6 @@ namespace iText.Layout.Hyphenation {
             Reset();
         }
 
-        /// <summary>rewind iterator</summary>
-        [System.ObsoleteAttribute(@"will be removed in 7.1. Use reset() instead")]
-        public virtual void Rewind() {
-            Reset();
-        }
-
         /// <summary>Resets the Iterator to its initial state.</summary>
         public virtual void Reset() {
             ns.Clear();

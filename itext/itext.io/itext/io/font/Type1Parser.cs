@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -80,12 +81,12 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
-            if (FontConstants.BUILTIN_FONTS_14.Contains(afmPath)) {
+            if (StandardFonts.IsStandardFont(afmPath)) {
                 isBuiltInFont = true;
                 byte[] buf = new byte[1024];
                 Stream resource = null;
                 try {
-                    String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
+                    String resourcePath = FontResources.AFMS + afmPath + ".afm";
                     resource = ResourceUtil.GetResourceStream(resourcePath);
                     if (resource == null) {
                         throw new iText.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath);

@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary xobjets = resources.GetResource(PdfName.XObject);
                 PdfObject obj = xobjets.Get(new PdfName(objectid));
                 if (obj == null) {
-                    throw new ArgumentNullException("Reference " + objectid + " not found - Available keys are " + xobjets.KeySet
-                        ());
+                    throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjets.KeySet(
+                        ));
                 }
                 PdfImageXObject img = new PdfImageXObject((PdfStream)(obj.IsIndirectReference() ? ((PdfIndirectReference)obj
                     ).GetRefersTo() : obj));

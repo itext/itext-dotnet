@@ -87,6 +87,28 @@ namespace iText.Signatures {
             return GetPdfObject().GetAsName(PdfName.SubFilter);
         }
 
+        /// <summary>
+        /// The type of PDF object that the wrapped dictionary describes; if present, shall be
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
+        /// for a signature
+        /// dictionary or
+        /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
+        /// for a timestamp signature dictionary. Shall be not null if it's value
+        /// is
+        /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
+        /// . The default value is:
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that identifies type of the wrapped dictionary, returns null if it is not explicitly specified.
+        /// </returns>
+        public virtual PdfName GetType() {
+            return GetPdfObject().GetAsName(PdfName.Type);
+        }
+
         /// <summary>Sets the /ByteRange.</summary>
         /// <param name="range">an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length
         ///     </param>

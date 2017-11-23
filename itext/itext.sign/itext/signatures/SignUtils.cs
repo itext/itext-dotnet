@@ -69,7 +69,7 @@ using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace iText.Signatures {
-    internal static class SignUtils {
+    internal sealed class SignUtils {
         internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
 
         internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
@@ -91,10 +91,12 @@ namespace iText.Signatures {
         }
 
         /// <summary>
-        /// Parses a CRL from an InputStream.
+        /// Parses a CRL from an input Stream.
         /// </summary>
-        /// <param name="input">The InputStream holding the unparsed CRL.</param>
-        /// <returns>the parsed CRL object</returns>
+        /// <param name="input">The input Stream holding the unparsed CRL.</param>
+        /// <returns>The parsed CRL object.</returns>
+        /// <exception cref="CertificateException"/>
+        /// <exception cref="CrlException"/>
         internal static X509Crl ParseCrlFromStream(Stream input) {
             return new X509CrlParser().ReadCrl(input);
         }

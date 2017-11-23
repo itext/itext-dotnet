@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -148,17 +148,17 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                 ), 16).ShowText("Hello Helvetica!").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLDOBLIQUE
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLDOBLIQUE
                 ), 16).ShowText("Hello Helvetica Bold Oblique!").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER
+            canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER
                 ), 16).ShowText("Hello Courier!").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(36, 600).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.TIMES_ITALIC
+            canvas.SaveState().BeginText().MoveText(36, 600).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_ITALIC
                 ), 16).ShowText("Hello Times Italic!").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(36, 550).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.SYMBOL
+            canvas.SaveState().BeginText().MoveText(36, 550).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.SYMBOL
                 ), 16).ShowText("Hello Ellada!").EndText().RestoreState();
-            canvas.SaveState().BeginText().MoveText(36, 500).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.ZAPFDINGBATS
+            canvas.SaveState().BeginText().MoveText(36, 500).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.ZAPFDINGBATS
                 ), 16).ShowText("Hello ZapfDingbats!").EndText().RestoreState();
             canvas.Release();
             pdfDoc.Close();
@@ -272,7 +272,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -307,7 +307,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -342,7 +342,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -377,7 +377,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER
+                canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER
                     ), 16).ShowText("Page " + (i + 1)).EndText();
                 canvas.Rectangle(100, 100, 100, 100).Fill();
                 canvas.Release();
@@ -413,7 +413,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -449,7 +449,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -485,7 +485,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -521,7 +521,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
@@ -555,7 +555,7 @@ namespace iText.Kernel.Pdf {
             canvas.Rectangle(100, 600, 100, 100);
             canvas.Fill();
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
             canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
             canvas.ShowText("Hello World!");
             canvas.EndText();
@@ -597,7 +597,7 @@ namespace iText.Kernel.Pdf {
                 canvas.Rectangle(100, 600, 100, 100);
                 canvas.Fill();
                 canvas.BeginText();
-                canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+                canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
                 canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
@@ -643,7 +643,7 @@ namespace iText.Kernel.Pdf {
             canvas.Rectangle(100, 600, 100, 100);
             canvas.Fill();
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
             canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
             canvas.ShowText("Hello World!!!");
             canvas.EndText();
@@ -690,7 +690,7 @@ namespace iText.Kernel.Pdf {
                 canvas.Rectangle(100, 600, 100, 100);
                 canvas.Fill();
                 canvas.BeginText();
-                canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+                canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
                 canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
@@ -734,7 +734,7 @@ namespace iText.Kernel.Pdf {
                 canvas.Rectangle(100, 600, 100, 100);
                 canvas.Fill();
                 canvas.BeginText();
-                canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+                canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
                 canvas.ShowText(MessageFormatUtil.Format("Page_{0}", i + 1));
                 canvas.EndText();
@@ -786,7 +786,7 @@ namespace iText.Kernel.Pdf {
             canvas.Rectangle(100, 600, 100, 100);
             canvas.Fill();
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
             canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
             canvas.ShowText("Hello World!");
             canvas.EndText();
@@ -864,11 +864,11 @@ namespace iText.Kernel.Pdf {
             tmpMap.Put(new PdfName("Tag"), new PdfNumber(2));
             PdfDictionary tag2 = new PdfDictionary(tmpMap);
             tmpMap = new Dictionary<PdfName, PdfObject>();
-            tmpMap.Put(new PdfName("Tag"), ((PdfNumber)new PdfNumber(3).MakeIndirect(document)));
+            tmpMap.Put(new PdfName("Tag"), new PdfNumber(3).MakeIndirect(document));
             PdfDictionary tag3 = new PdfDictionary(tmpMap);
             canvas.BeginMarkedContent(new PdfName("Tag1")).EndMarkedContent().BeginMarkedContent(new PdfName("Tag2"), 
-                tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"), (PdfDictionary)((PdfDictionary)tag3.MakeIndirect
-                (document))).EndMarkedContent();
+                tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"), (PdfDictionary)tag3.MakeIndirect(document
+                )).EndMarkedContent();
             canvas.Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "markedContentTest2.pdf"
@@ -1270,7 +1270,7 @@ namespace iText.Kernel.Pdf {
         //
         //        PdfCanvas canvas = new PdfCanvas(page);
         //        String kernableText = "AVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAVAV";
-        //        PdfFont font = PdfFont.createFont(document, FontConstants.HELVETICA);
+        //        PdfFont font = PdfFont.createFont(document, StandardFonts.HELVETICA);
         //        canvas.beginText().moveText(50, 600).setFontAndSize(font, 12).showText("Kerning:-" + kernableText).endText();
         //        canvas.beginText().moveText(50, 650).setFontAndSize(font, 12).showTextKerned("Kerning:+" + kernableText).endText();
         //
@@ -1369,6 +1369,21 @@ namespace iText.Kernel.Pdf {
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
             canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 30, 100, true);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineImagesTest03() {
+            String filename = "inlineImages03.pdf";
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "bulb.gif"), 36, 600, 100, true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

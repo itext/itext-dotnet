@@ -47,6 +47,7 @@ using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Collection;
+using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf.Filespec {
     public class PdfFileSpec : PdfObjectWrapper<PdfObject> {
@@ -54,15 +55,39 @@ namespace iText.Kernel.Pdf.Filespec {
             : base(pdfObject) {
         }
 
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec WrapFileSpecObject(PdfObject fileSpecObject) {
+            if (fileSpecObject != null) {
+                if (fileSpecObject.IsString()) {
+                    return new PdfStringFS((PdfString)fileSpecObject);
+                }
+                else {
+                    if (fileSpecObject.IsDictionary()) {
+                        return new PdfDictionaryFS((PdfDictionary)fileSpecObject);
+                    }
+                }
+            }
+            return null;
+        }
+
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
-            , bool isUnicodeFileName) {
+            , PdfName afRelationshipValue) {
             PdfDictionary dict = new PdfDictionary();
             dict.Put(PdfName.Type, PdfName.Filespec);
             dict.Put(PdfName.F, new PdfString(filePath));
-            dict.Put(PdfName.UF, new PdfString(filePath, isUnicodeFileName ? PdfEncodings.UNICODE_BIG : PdfEncodings.PDF_DOC_ENCODING
-                ));
+            dict.Put(PdfName.UF, new PdfString(filePath, PdfEncodings.UNICODE_BIG));
+            if (afRelationshipValue != null) {
+                dict.Put(PdfName.AFRelationship, afRelationshipValue);
+            }
+            else {
+                dict.Put(PdfName.AFRelationship, PdfName.Unspecified);
+            }
             return (iText.Kernel.Pdf.Filespec.PdfFileSpec)new iText.Kernel.Pdf.Filespec.PdfFileSpec(dict).MakeIndirect
                 (doc);
+        }
+
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
+            ) {
+            return CreateExternalFileSpec(doc, filePath, null);
         }
 
         /// <summary>Embed a file to a PdfDocument.</summary>
@@ -74,12 +99,11 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
         /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
-        /// <param name="isUnicodeFileName"/>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
-            , bool isUnicodeFileName) {
-            PdfStream stream = ((PdfStream)new PdfStream(fileStore).MakeIndirect(doc));
+            ) {
+            PdfStream stream = (PdfStream)new PdfStream(fileStore).MakeIndirect(doc);
             PdfDictionary @params = new PdfDictionary();
             if (fileParameter != null) {
                 @params.MergeDifferent(fileParameter);
@@ -89,53 +113,168 @@ namespace iText.Kernel.Pdf.Filespec {
             }
             if (fileStore != null) {
                 @params.Put(PdfName.Size, new PdfNumber(stream.GetBytes().Length));
-                stream.Put(PdfName.Params, @params);
             }
-            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue, isUnicodeFileName
+            stream.Put(PdfName.Params, @params);
+            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
+            , String description, String fileDisplay, PdfDictionary fileParameter, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, fileStore, description, fileDisplay, null, fileParameter, afRelationshipValue
                 );
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
+            , String fileDisplay, PdfDictionary fileParameter, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, fileStore, null, fileDisplay, null, fileParameter, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
+            , String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, fileStore, null, fileDisplay, null, null, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
+            , String description, String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, fileStore, description, fileDisplay, null, null, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc"/>
+        /// <param name="filePath"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="mimeType"/>
+        /// <param name="fileParameter"/>
+        /// <param name="afRelationshipValue"/>
+        /// <exception cref="System.IO.IOException"/>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
+            , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
+            ) {
+            PdfStream stream = new PdfStream(doc, iText.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
+            PdfDictionary @params = new PdfDictionary();
+            if (fileParameter != null) {
+                @params.MergeDifferent(fileParameter);
+            }
+            if (!@params.ContainsKey(PdfName.ModDate)) {
+                @params.Put(PdfName.ModDate, new PdfDate().GetPdfObject());
+            }
+            stream.Put(PdfName.Params, @params);
+            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="filePath"/>
         /// <param name="description"/>
         /// <param name="fileDisplay"/>
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
-        /// <param name="isUnicodeFileName"/>
         /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
-            , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
-            ) {
-            PdfStream stream = new PdfStream(doc, iText.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
-            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue, isUnicodeFileName
+            , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, mimeType, null, afRelationshipValue
                 );
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc"/>
+        /// <param name="filePath"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="afRelationshipValue"/>
+        /// <exception cref="System.IO.IOException"/>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
+            , String description, String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, null, null, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc"/>
+        /// <param name="filePath"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="afRelationshipValue"/>
+        /// <exception cref="System.IO.IOException"/>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
+            , String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, filePath, null, fileDisplay, null, null, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc"/>
+        /// <param name="is"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="mimeType"/>
+        /// <param name="fileParameter"/>
+        /// <param name="afRelationshipValue"/>
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
+             description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
+            ) {
+            PdfStream stream = new PdfStream(doc, @is);
+            PdfDictionary @params = new PdfDictionary();
+            if (fileParameter != null) {
+                @params.MergeDifferent(fileParameter);
+            }
+            if (!@params.ContainsKey(PdfName.ModDate)) {
+                @params.Put(PdfName.ModDate, new PdfDate().GetPdfObject());
+            }
+            stream.Put(PdfName.Params, @params);
+            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="is"/>
         /// <param name="description"/>
         /// <param name="fileDisplay"/>
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
-        /// <param name="isUnicodeFileName"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
-             description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
-            ) {
-            PdfStream stream = new PdfStream(doc, @is);
-            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue, isUnicodeFileName
-                );
+             description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, @is, description, fileDisplay, mimeType, null, afRelationshipValue);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
         /// <param name="doc"/>
         /// <param name="stream"/>
         /// <param name="description"/>
         /// <param name="fileDisplay"/>
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
-        /// <param name="isUnicodeFileName"/>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
-            , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
-            ) {
+            , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             PdfDictionary dict = new PdfDictionary();
             stream.Put(PdfName.Type, PdfName.EmbeddedFile);
             if (afRelationshipValue != null) {
@@ -155,14 +294,23 @@ namespace iText.Kernel.Pdf.Filespec {
             }
             dict.Put(PdfName.Type, PdfName.Filespec);
             dict.Put(PdfName.F, new PdfString(fileDisplay));
-            dict.Put(PdfName.UF, new PdfString(fileDisplay, isUnicodeFileName ? PdfEncodings.UNICODE_BIG : PdfEncodings
-                .PDF_DOC_ENCODING));
+            dict.Put(PdfName.UF, new PdfString(fileDisplay, PdfEncodings.UNICODE_BIG));
             PdfDictionary ef = new PdfDictionary();
             ef.Put(PdfName.F, stream);
             ef.Put(PdfName.UF, stream);
             dict.Put(PdfName.EF, ef);
             return (iText.Kernel.Pdf.Filespec.PdfFileSpec)new iText.Kernel.Pdf.Filespec.PdfFileSpec(dict).MakeIndirect
                 (doc);
+        }
+
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc"/>
+        /// <param name="stream"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="afRelationshipValue"/>
+        private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
+            , String description, String fileDisplay, PdfName afRelationshipValue) {
+            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, null, afRelationshipValue);
         }
 
         public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec SetFileIdentifier(PdfArray fileIdentifier) {
@@ -185,8 +333,29 @@ namespace iText.Kernel.Pdf.Filespec {
             return Put(PdfName.CI, item.GetPdfObject());
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Sets a stream object defining the thumbnail image for the file specification.</remarks>
+        /// <param name="thumbnailImage">image used as a thumbnail</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFileSpec"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec SetThumbnailImage(PdfImageXObject thumbnailImage) {
+            return Put(PdfName.Thumb, thumbnailImage.GetPdfObject());
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Gets a stream object defining the thumbnail image for the file specification.</remarks>
+        /// <returns>image used as a thumbnail, or <code>null</code> if it is not set</returns>
+        public virtual PdfImageXObject GetThumbnailImage() {
+            PdfStream thumbnailStream = ((PdfDictionary)GetPdfObject()).GetAsStream(PdfName.Thumb);
+            return thumbnailStream != null ? new PdfImageXObject(thumbnailStream) : null;
+        }
+
         public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec Put(PdfName key, PdfObject value) {
             ((PdfDictionary)GetPdfObject()).Put(key, value);
+            SetModified();
             return this;
         }
 

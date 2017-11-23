@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Common.Logging;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -58,7 +58,7 @@ namespace iText.Signatures {
     /// </summary>
     public class OCSPVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.OCSPVerifier
+        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier
             ));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
@@ -274,29 +274,6 @@ namespace iText.Signatures {
             }
             //check if lifetime of certificate is ok
             responderCert.CheckValidity();
-        }
-
-        /// <summary>Verifies if the response is valid.</summary>
-        /// <remarks>
-        /// Verifies if the response is valid.
-        /// If it doesn't verify against the issuer certificate and response's certificates, it may verify
-        /// using a trusted anchor or cert.
-        /// NOTE. Use
-        /// <c>isValidResponse()</c>
-        /// instead.
-        /// </remarks>
-        /// <param name="ocspResp">the response object</param>
-        /// <param name="issuerCert">the issuer certificate</param>
-        /// <returns>true if the response can be trusted</returns>
-        [Obsolete]
-        public virtual bool VerifyResponse(BasicOcspResp ocspResp, X509Certificate issuerCert) {
-            try {
-                IsValidResponse(ocspResp, issuerCert);
-                return true;
-            }
-            catch (Exception) {
-                return false;
-            }
         }
 
         /// <summary>Checks if an OCSP response is genuine</summary>

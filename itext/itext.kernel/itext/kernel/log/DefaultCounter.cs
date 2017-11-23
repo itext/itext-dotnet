@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Codec;
-using iText.IO.Log;
 
 namespace iText.Kernel.Log {
-    /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
-    public class DefaultCounter : Counter {
+    /// <summary>Default implementation of the ICounter interface that essentially doesn't do anything.</summary>
+    public class DefaultCounter : ICounter {
         private volatile int count = 0;
 
         private int level = 0;
@@ -56,7 +56,7 @@ namespace iText.Kernel.Log {
 
         private int repeat_level = 10000;
 
-        private ILogger logger;
+        private ILog logger;
 
         private static byte[] message_1 = System.Convert.FromBase64String("DQoNCllvdSBhcmUgdXNpbmcgaVRleHQgdW5kZXIgdGhlIEFHUEwuDQoNCklmIHR"
              + "oaXMgaXMgeW91ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG" + "93biBzb3VyY2UgY29kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4NClBsZWFzZSBsZ"
@@ -75,10 +75,6 @@ namespace iText.Kernel.Log {
              + "HRTaGFycA0KYW5kIHdlJ2xsIGV4cGxhaW4gaG93IHRvIHJlbW92ZSB0aGlzIG1lc3" + "NhZ2UgZnJvbSB5b3VyIGVycm9yIGxvZ3MuDQoNCklmIHRoaXMgd2Fzbid0IHlvdXI"
              + "gaW50ZW50aW9uLCBwbGVhc2UgY29udGFjdCB1cyBieSBmaWxsaW5nIG91dCB0aGlz" + "IGZvcm06IGh0dHA6Ly9pdGV4dHBkZi5jb20vc2FsZXMgb3IgYnkgY29udGFjdGluZ"
              + "yBvdXIgc2FsZXMgZGVwYXJ0bWVudC4=");
-
-        public virtual Counter GetCounter(Type cls) {
-            return this;
-        }
 
         public virtual void OnDocumentRead(long size) {
             PlusOne();
@@ -103,7 +99,7 @@ namespace iText.Kernel.Log {
                         repeat_level = repeat[2];
                     }
                     if (logger == null) {
-                        logger = LoggerFactory.GetLogger(this.GetType());
+                        logger = LogManager.GetLogger(this.GetType());
                     }
                     logger.Info(message);
                 }

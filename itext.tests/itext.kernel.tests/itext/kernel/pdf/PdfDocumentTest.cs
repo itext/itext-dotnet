@@ -45,7 +45,14 @@ using System.IO;
 using System.Text;
 using iText.IO.Image;
 using iText.IO.Source;
+using iText.Kernel.Colors;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -139,7 +146,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             unusedDictionary.MakeIndirect(pdfDocument);
@@ -160,10 +167,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
                  + filenameOut));
@@ -183,7 +190,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             unusedDictionary.MakeIndirect(pdfDocument);
@@ -204,10 +211,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
                  + filenameOut));
@@ -227,12 +234,12 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
-            PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
+            PdfArray unusedArray = (PdfArray)new PdfArray().MakeIndirect(pdfDocument);
             unusedArray.Add(new PdfNumber(42));
             PdfStream stream = new PdfStream(new byte[] { 1, 2, 34, 45 }, 0);
             unusedArray.Add(stream);
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
-            ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
+            unusedDictionary.MakeIndirect(pdfDocument).Flush();
             pdfDocument.SetFlushUnusedObjects(true);
             pdfDocument.Close();
             PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filenameIn));
@@ -260,7 +267,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT)]
+        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
         public virtual void TestFreeReference() {
             PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
                 (false));
@@ -328,6 +335,57 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("SomeStringValueInArray", field.GetAsArray(new PdfName("TestArray")).GetAsString
                 (0).ToUnicodeString());
             pdfDocument.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AddAssociatedFilesTest01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "add_associated_files01.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDocument.SetTagged();
+            pdfDocument.AddAssociatedFile("af_1", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 1".
+                GetBytes(), "af_1.txt", PdfName.Data));
+            pdfDocument.AddNewPage();
+            pdfDocument.GetFirstPage().AddAssociatedFile("af_2", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 2"
+                .GetBytes(), "af_2.txt", PdfName.Data));
+            PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
+            root.AddAssociatedFile("af_3", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 3".GetBytes
+                (), "af_3.txt", PdfName.Data));
+            PdfFileSpec af5 = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 5".GetBytes(), "af_5", 
+                "af_5.txt", PdfName.Data);
+            PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
+            textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
+            textannot.AddAssociatedFile(af5);
+            pdfDocument.GetFirstPage().AddAnnotation(textannot);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add_associated_files01.pdf"
+                , sourceFolder + "cmp_add_associated_files01.pdf", "d:/", "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AddAssociatedFilesTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "add_associated_files02.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDocument.SetTagged();
+            PdfCanvas pageCanvas = new PdfCanvas(pdfDocument.AddNewPage());
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "berlin2013.jpg"
+                ));
+            imageXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 1".GetBytes
+                (), "af_1.txt", PdfName.Data));
+            pageCanvas.AddXObject(imageXObject, 40, 400);
+            PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(200, 200));
+            PdfCanvas formCanvas = new PdfCanvas(formXObject, pdfDocument);
+            formCanvas.SaveState().Circle(100, 100, 50).SetColor(ColorConstants.BLACK, true).Fill().RestoreState();
+            formCanvas.Release();
+            formXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 2".GetBytes
+                (), "af_2.txt", PdfName.Data));
+            pageCanvas.AddXObject(formXObject, 40, 100);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add_associated_files02.pdf"
+                , sourceFolder + "cmp_add_associated_files02.pdf", "d:/", "diff_"));
         }
     }
 }

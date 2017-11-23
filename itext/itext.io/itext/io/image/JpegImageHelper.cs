@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using iText.IO.Colors;
-using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
@@ -297,7 +297,7 @@ namespace iText.IO.Image {
                                 dx = (unitsx == 2 ? (int)(dx * 2.54f + 0.5f) : dx);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiX() != 0 && image.GetDpiX() != dx) {
-                                    ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
+                                    ILog logger = LogManager.GetLogger(typeof(JpegImageHelper));
                                     logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
                                 }
                                 else {
@@ -308,7 +308,7 @@ namespace iText.IO.Image {
                                 dy = (unitsy == 2 ? (int)(dy * 2.54f + 0.5f) : dy);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiY() != 0 && image.GetDpiY() != dy) {
-                                    ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
+                                    ILog logger = LogManager.GetLogger(typeof(JpegImageHelper));
                                     logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
                                 }
                                 else {

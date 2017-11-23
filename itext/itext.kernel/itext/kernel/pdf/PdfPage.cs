@@ -44,13 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
@@ -87,8 +88,8 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal PdfPage(PdfDocument pdfDocument, PageSize pageSize)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
-            PdfStream contentStream = ((PdfStream)new PdfStream().MakeIndirect(pdfDocument));
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
+            PdfStream contentStream = (PdfStream)new PdfStream().MakeIndirect(pdfDocument);
             GetPdfObject().Put(PdfName.Contents, contentStream);
             GetPdfObject().Put(PdfName.Type, PdfName.Page);
             GetPdfObject().Put(PdfName.MediaBox, new PdfArray(pageSize));
@@ -386,13 +387,19 @@ namespace iText.Kernel.Pdf {
         /// <c>byte[]</c>
         /// of XMP Metadata to set.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(byte[] xmpMetadata) {
-            PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
+            PdfStream xmp = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             xmp.GetOutputStream().Write(xmpMetadata);
             xmp.Put(PdfName.Type, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.XML);
             Put(PdfName.Metadata, xmp);
+            return this;
         }
 
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
@@ -406,10 +413,15 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.XMP.Options.SerializeOptions"/>
         /// used while serialization.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
-            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
+            return SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
@@ -419,12 +431,17 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.XMP.XMPMeta"/>
         /// object to set.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
         /// <exception cref="System.IO.IOException">in case of writing error.</exception>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
-            SetXmpMetadata(xmpMeta, serializeOptions);
+            return SetXmpMetadata(xmpMeta, serializeOptions);
         }
 
         /// <summary>Gets the XMP Metadata object.</summary>
@@ -433,7 +450,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfStream"/>
         /// object, that represent XMP Metadata.
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public virtual PdfStream GetXmpMetadata() {
             return GetPdfObject().GetAsStream(PdfName.Metadata);
         }
@@ -496,7 +512,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().GetCatalog().GetPdfObject().
                     ContainsKey(PdfName.AcroForm)) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                     logger.Warn(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
                     toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
                 }
@@ -522,7 +538,7 @@ namespace iText.Kernel.Pdf {
             xObject.GetPdfObject().MergeDifferent(dictionary);
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
-                PdfObject copyResource = ((PdfDictionary)GetResources().GetPdfObject().CopyTo(toDocument, true));
+                PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true);
                 xObject.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             return xObject;
@@ -557,8 +573,8 @@ namespace iText.Kernel.Pdf {
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
         /// to the page is the following: if all the marked content references (dictionary or number references), that are the
-        /// descenders of the given structure element, belong to the current page - the tag is considered
-        /// to belong to the page. If tag has descenders from several pages - it is flushed, if all other pages except the
+        /// descendants of the given structure element, belong to the current page - the tag is considered
+        /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
         /// </remarks>
         public override void Flush() {
@@ -761,7 +777,7 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage SetArtBox(Rectangle rectangle) {
             if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null) {
                 GetPdfObject().Remove(PdfName.TrimBox);
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                 logger.Warn(iText.IO.LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
             }
             Put(PdfName.ArtBox, new PdfArray(rectangle));
@@ -800,7 +816,7 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle) {
             if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null) {
                 GetPdfObject().Remove(PdfName.ArtBox);
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                 logger.Warn(iText.IO.LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
             }
             Put(PdfName.TrimBox, new PdfArray(rectangle));
@@ -877,18 +893,12 @@ namespace iText.Kernel.Pdf {
             return mcid++;
         }
 
-        /// <summary>
-        /// Gets
-        /// <see cref="int?"/>
-        /// key of the page’s entry in the structural parent tree.
-        /// </summary>
+        /// <summary>Gets the key of the page’s entry in the structural parent tree.</summary>
         /// <returns>
-        /// 
-        /// <see cref="int?"/>
-        /// key of the page’s entry in the structural parent tree.
+        /// the key of the page’s entry in the structural parent tree.
         /// If page has no entry in the structural parent tree, returned value is -1.
         /// </returns>
-        public virtual int? GetStructParentIndex() {
+        public virtual int GetStructParentIndex() {
             return GetPdfObject().GetAsNumber(PdfName.StructParents) != null ? GetPdfObject().GetAsNumber(PdfName.StructParents
                 ).IntValue() : -1;
         }
@@ -1007,7 +1017,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <br />
+        /// the added annotation will be autotagged. <br/>
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )
@@ -1079,8 +1089,8 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 TagTreePointer tagPointer = GetDocument().GetTagStructureContext().RemoveAnnotationTag(annotation);
                 if (tagPointer != null) {
-                    bool standardAnnotTagRole = tagPointer.GetRole().Equals(PdfName.Annot) || tagPointer.GetRole().Equals(PdfName
-                        .Form);
+                    bool standardAnnotTagRole = tagPointer.GetRole().Equals(StandardRoles.ANNOT) || tagPointer.GetRole().Equals
+                        (StandardRoles.FORM);
                     if (tagPointer.GetKidsRoles().Count == 0 && standardAnnotTagRole) {
                         tagPointer.RemoveTag();
                     }
@@ -1125,42 +1135,6 @@ namespace iText.Kernel.Pdf {
             return ignorePageRotationForContent;
         }
 
-        /// <summary>This method adds or replaces a page label.</summary>
-        /// <param name="numberingStyle">
-        /// The numbering style that shall be used for the numeric portion of each page label.
-        /// May be NULL
-        /// </param>
-        /// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfPage"/>
-        /// instance.
-        /// </returns>
-        [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String) overload instead. Will be removed in 7.1.")]
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix) {
-            return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, 1);
-        }
-
-        /// <summary>This method adds or replaces a page label.</summary>
-        /// <param name="numberingStyle">
-        /// The numbering style that shall be used for the numeric portion of each page label.
-        /// May be NULL
-        /// </param>
-        /// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL</param>
-        /// <param name="firstPage">
-        /// The value of the numeric portion for the first page label in the range. Must be greater or
-        /// equal 1.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfPage"/>
-        /// instance.
-        /// </returns>
-        [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String, int) overload instead. Will be removed in 7.1.")]
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix, int firstPage) {
-            return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, firstPage);
-        }
-
         /// <summary>
         /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
         /// opposite direction.
@@ -1190,8 +1164,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
-             labelPrefix) {
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyle? numberingStyle, String labelPrefix
+            ) {
             return SetPageLabel(numberingStyle, labelPrefix, 1);
         }
 
@@ -1210,35 +1184,35 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
-             labelPrefix, int firstPage) {
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyle? numberingStyle, String labelPrefix
+            , int firstPage) {
             if (firstPage < 1) {
                 throw new PdfException(PdfException.InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1);
             }
             PdfDictionary pageLabel = new PdfDictionary();
             if (numberingStyle != null) {
                 switch (numberingStyle) {
-                    case PageLabelNumberingStyleConstants.DECIMAL_ARABIC_NUMERALS: {
+                    case PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS: {
                         pageLabel.Put(PdfName.S, PdfName.D);
                         break;
                     }
 
-                    case PageLabelNumberingStyleConstants.UPPERCASE_ROMAN_NUMERALS: {
+                    case PageLabelNumberingStyle.UPPERCASE_ROMAN_NUMERALS: {
                         pageLabel.Put(PdfName.S, PdfName.R);
                         break;
                     }
 
-                    case PageLabelNumberingStyleConstants.LOWERCASE_ROMAN_NUMERALS: {
+                    case PageLabelNumberingStyle.LOWERCASE_ROMAN_NUMERALS: {
                         pageLabel.Put(PdfName.S, PdfName.r);
                         break;
                     }
 
-                    case PageLabelNumberingStyleConstants.UPPERCASE_LETTERS: {
+                    case PageLabelNumberingStyle.UPPERCASE_LETTERS: {
                         pageLabel.Put(PdfName.S, PdfName.A);
                         break;
                     }
 
-                    case PageLabelNumberingStyleConstants.LOWERCASE_LETTERS: {
+                    case PageLabelNumberingStyle.LOWERCASE_LETTERS: {
                         pageLabel.Put(PdfName.S, PdfName.a);
                         break;
                     }
@@ -1269,6 +1243,11 @@ namespace iText.Kernel.Pdf {
         /// (column order), and
         /// <see cref="PdfName.S"/>
         /// (structure order).
+        /// Beginning with PDF 2.0, the possible values also include
+        /// <see cref="PdfName.A"/>
+        /// (annotations array order) and
+        /// <see cref="PdfName.W"/>
+        /// (widget order).
         /// See ISO 32000 12.5, "Annotations" for details.
         /// </remarks>
         /// <param name="tabOrder">
@@ -1296,6 +1275,11 @@ namespace iText.Kernel.Pdf {
         /// (column order), and
         /// <see cref="PdfName.S"/>
         /// (structure order).
+        /// Beginning with PDF 2.0, the possible values also include
+        /// <see cref="PdfName.A"/>
+        /// (annotations array order) and
+        /// <see cref="PdfName.W"/>
+        /// (widget order).
         /// See ISO 32000 12.5, "Annotations" for details.
         /// </remarks>
         /// <returns>
@@ -1305,6 +1289,62 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfName GetTabOrder() {
             return GetPdfObject().GetAsName(PdfName.Tabs);
+        }
+
+        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
+        /// <remarks>
+        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
+        /// its pages in miniature form
+        /// </remarks>
+        /// <param name="thumb">the thumbnail image</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetThumbnailImage(PdfImageXObject thumb) {
+            return Put(PdfName.Thumb, thumb.GetPdfObject());
+        }
+
+        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
+        /// <remarks>
+        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
+        /// its pages in miniature form
+        /// </remarks>
+        /// <returns>the thumbnail image, or <code>null</code> if it is not present</returns>
+        public virtual PdfImageXObject GetThumbnailImage() {
+            PdfStream thumbStream = GetPdfObject().GetAsStream(PdfName.Thumb);
+            return thumbStream != null ? new PdfImageXObject(thumbStream) : null;
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfOutputIntent"/>
+        /// that shall specify the colour characteristics of output devices
+        /// on which the page might be rendered.
+        /// </summary>
+        /// <param name="outputIntent">
+        /// 
+        /// <see cref="PdfOutputIntent"/>
+        /// to add.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object
+        /// </returns>
+        /// <seealso cref="PdfOutputIntent"/>
+        public virtual iText.Kernel.Pdf.PdfPage AddOutputIntent(PdfOutputIntent outputIntent) {
+            if (outputIntent == null) {
+                return this;
+            }
+            PdfArray outputIntents = GetPdfObject().GetAsArray(PdfName.OutputIntents);
+            if (outputIntents == null) {
+                outputIntents = new PdfArray();
+                Put(PdfName.OutputIntents, outputIntents);
+            }
+            outputIntents.Add(outputIntent.GetPdfObject());
+            return this;
         }
 
         /// <summary>
@@ -1366,6 +1406,74 @@ namespace iText.Kernel.Pdf {
             pageRotationInverseMatrixWritten = true;
         }
 
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF page and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF page and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the page dictionary.
+        /// If description is provided, it also will add file description to catalog Names tree.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="description">the file description</param>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
+            if (null != description) {
+                GetDocument().GetCatalog().AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+            }
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            afArray.Add(fs.GetPdfObject());
+        }
+
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF page and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF page and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the page dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(PdfFileSpec fs) {
+            AddAssociatedFile(null, fs);
+        }
+
+        /// <summary>Returns files associated with PDF page.</summary>
+        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
+        /// <returns>associated files array.</returns>
+        public virtual PdfArray GetAssociatedFiles(bool create) {
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null && create) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            return afArray;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
@@ -1409,7 +1517,7 @@ namespace iText.Kernel.Pdf {
                     array = null;
                 }
             }
-            PdfStream contentStream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
+            PdfStream contentStream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             if (array != null) {
                 if (before) {
                     array.Add(0, contentStream);

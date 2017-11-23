@@ -38,7 +38,7 @@ using iText.Kernel.XMP.Properties;
 namespace iText.Kernel.XMP.Impl
 {
 	/// <since>11.08.2006</since>
-	public class XMPUtilsImpl : XMPConst
+	public sealed class XMPUtilsImpl : XMPConst
 	{
 		private const int UCK_NORMAL = 0;
 
@@ -77,7 +77,7 @@ namespace iText.Kernel.XMP.Impl
 		/// </param>
 		/// <param name="quotes">
 		/// The characters to be used as quotes around array items that
-		/// contain a separator. Defaults to '&quot;';
+		/// contain a separator. Defaults to '&quot;'
 		/// </param>
 		/// <param name="allowCommas">Option flag to control the catenation.</param>
 		/// <returns>Returns the string containing the catenated array items.</returns>

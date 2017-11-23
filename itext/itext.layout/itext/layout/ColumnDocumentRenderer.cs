@@ -119,8 +119,8 @@ namespace iText.Layout {
             if (nextAreaNumber % columns.Length == 0) {
                 base.UpdateCurrentArea(overflowResult);
             }
-            return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone()
-                ));
+            return (currentArea = new RootLayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone
+                ()));
         }
     }
 }

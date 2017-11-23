@@ -50,21 +50,43 @@ namespace iText.IO {
 
         public const String ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE = "An attempt is made to free already flushed indirect object reference. Indirect reference wasn't freed.";
 
+        public const String ALREADY_TAGGED_HINT_MARKED_ARTIFACT = "A layout tagging hint for which an actual tag was already created in tags structure is marked as artifact. Existing tag will be left in the tags tree.";
+
+        public const String ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP = "For associated files their associated file specification dictionaries shall include the AFRelationship key.";
+
+        public const String ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT = "Attempt to create a tag for a hint which is already marked as finished, tag will not be created.";
+
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
 
         public const String CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER = "Calculate hashcode for modified PdfNumber.";
 
-        public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
+        public const String CANNOT_ADD_FINISHED_HINT_AS_A_NEW_KID_HINT = "Layout tagging hints addition failed: cannot add a hint that is already marked as finished. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveKidHint method for moving already finished kid hint from not yet finished parent hint.";
 
-        public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during color creation. Note that opacity can be achieved in some places by using 'setOpacity' method or 'TransparentColor' class";
+        public const String CANNOT_ADD_HINTS_TO_FINISHED_PARENT = "Layout tagging hints addition failed: cannot add new kid hints to a parent which hint is already marked as finished. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#replaceKidHint method for replacing not yet finished kid hint of a finished parent hint.";
+
+        public const String CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT = "Layout tagging hints addition failed: cannot add a kid hint to a new parent if it is already added to another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method instead.";
+
+        public const String CANNOT_MOVE_FINISHED_HINT = "Layout tagging hints modification failed: cannot move kid hint for which both itself and it's parent are already marked as finished.";
+
+        public const String CANNOT_MOVE_HINT_TO_FINISHED_PARENT = "Layout tagging hints modification failed: cannot move kid hint to a parent that is already marked as finished.";
+
+        public const String CANNOT_REPLACE_FINISHED_HINT = "Layout tagging hints modification failed: cannot replace a kid hint that is already marked as finished.";
+
+        public const String CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS = "Cannot resolve \"{0}\" role in {1} namespace mapping to standard role, because of the too much transitive mappings.";
+
+        public const String CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS = "Cannot resolve \"{0}\" role mapping to standard role, because of the too much transitive mappings.";
+
+        public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
-        public const String COLOR_NOT_FOUND = "Color \"{0}\" not found.";
+        public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during color creation. Note that opacity can be achieved in some places by using 'setOpacity' method or 'TransparentColor' class";
 
         public const String COLOR_NOT_PARSED = "Color \"{0}\" was not parsed. It has invalid value. Defaulting to black color.";
 
         public const String COULD_NOT_FIND_GLYPH_WITH_CODE = "Could not find glyph with the following code: {0}";
+
+        public const String CREATED_ROOT_TAG_HAS_MAPPING = "Created root tag has role mapping: \"/Document\" role{0} is mapped{1}. Resulting tag structure might have invalid root tag.";
 
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
@@ -82,11 +104,17 @@ namespace iText.IO {
 
         public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
 
+        public const String ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY = "Encryption dictionary entries P and EncryptMetadata have value that does not correspond to encrypted values in Perms key.";
+
         public const String EXCEPTION_WHILE_CREATING_DEFAULT_FONT = "Exception while creating default font (Helvetica, WinAnsi)";
 
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
-        public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object (e.g. this reference might be a free reference). Null object will be written instead.";
+        public const String EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD = "Existing tag structure of the document has a root of \"{0}\" role in \"{1}\" namespace that is not mapped to the standard role.";
+
+        public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
+
+        public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object. Null object will be written instead.";
 
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
@@ -99,6 +127,8 @@ namespace iText.IO {
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
 
         public const String GRAPHICS_STATE_WAS_DELETED = "Graphics state is always deleted after event dispatching. If you want to preserve it in renderer info, use preserveGraphicsState method after receiving renderer info.";
+
+        public const String IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT = "If Path key is set, Vertices key shall not be present. Remove Vertices key before setting Path";
 
         public const String IMAGE_HAS_AMBIGUOUS_SCALE = "The image cannot be auto scaled and scaled by a certain parameter simultaneously";
 
@@ -126,6 +156,10 @@ namespace iText.IO {
 
         public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";
 
+        public const String MAPPING_IN_NAMESPACE_OVERWRITTEN = "Existing mapping for {0} in {1} namespace was overwritten.";
+
+        public const String MAPPING_IN_STRUCT_ROOT_OVERWRITTEN = "Existing mapping for {0} in structure tree root role map was {1} and it was overwritten with {2}.";
+
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
@@ -146,6 +180,8 @@ namespace iText.IO {
 
         public const String OPENTYPE_GDEF_TABLE_ERROR = "OpenType GDEF table error: {0}";
 
+        public const String PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED = "Path key is present. Vertices will be ignored";
+
         public const String PDF_OBJECT_FLUSHING_NOT_PERFORMED = "PdfObject flushing is not performed: PdfDocument is opened in append mode and the object is not marked as modified ( see PdfObject#setModified() ).";
 
         public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
@@ -160,25 +196,37 @@ namespace iText.IO {
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
 
-        public const String REGISTERING_DIRECTORY = "Registering directory";
-
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
 
         public const String RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT = "The renderer was not able to process keep with next property properly";
 
+        public const String ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST = "Role mapping \"{0}\" from source document is not copied. Destination document already has \"{1}\" mapping.";
+
+        public const String ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID = "Role mapping for \"{0}\" from source document is not copied. Mapping to namespace is in an invalid form (should be [PdfName, PdfDictionary]).";
+
         public const String ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER = "Rotation was not correctly processed for {0}";
+
+        public const String SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT = "Some fields in target dictionary are not set or incorrect. Null will be returned.";
 
         public const String SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY = "Source document has AcroForm dictionary. The pages you are going to copy may have FormFields, but they will not be copied, because you have not used any IPdfPageExtraCopier";
 
         public const String START_MARKER_MISSING_IN_PFB_FILE = "Start marker is missing in the pfb file";
 
+        public const String STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION = "Structure destinations shall specify structure element ID in remote go-to actions. Structure element has been replaced with its ID in the structure destination";
+
         public const String SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100 = "Sum of table columns is greater than 100%.";
 
         public const String TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH = "Table width is more than expected due to min width of cell(s).";
 
+        public const String TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE = "Tagging hint wasn't finished before closing.";
+
         public const String TAG_STRUCTURE_CONTEXT_WILL_BE_REINITIALIZED_ON_SERIALIZATION = "Tag structure context is not null and will be reinitialized in the copy of document. The copy may lose some data";
 
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
+
+        public const String TYPE3_FONT_CANNOT_BE_ADDED = "Type 3 font cannot be added to FontSet. Custom FontProvider class may be created for this purpose.";
+
+        public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
 
         public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
 
@@ -188,7 +236,11 @@ namespace iText.IO {
 
         public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
+        public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
+
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
+
+        public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the current {3} version.";
 
         public const String WRITER_ENCRYPTION_IS_IGNORED_APPEND = "Writer encryption will be ignored, because append mode is used. Document will preserve the original encryption (or will stay unencrypted)";
 

@@ -128,7 +128,7 @@ namespace iText.Layout.Borders {
 
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
-            return Border._3D_GROOVE;
+            return _3D_GROOVE;
         }
 
         /// <summary><inheritDoc/></summary>

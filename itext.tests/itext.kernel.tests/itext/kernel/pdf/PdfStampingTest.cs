@@ -497,7 +497,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(filename2));
             int newPageCount = 10;
             for (int i = pageCount; i > newPageCount; i--) {
-                NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
+                pdfDoc2.RemovePage(i);
             }
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(filename2);
@@ -539,7 +539,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(filename2));
             for (int i = pageCount; i > 1; i--) {
-                NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
+                pdfDoc2.RemovePage(i);
             }
             pdfDoc2.RemovePage(1);
             for (int i = 1; i <= pageCount; i++) {
@@ -578,7 +578,7 @@ namespace iText.Kernel.Pdf {
             String filename2 = destinationFolder + "stamping14.pdf";
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(filename2));
             for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--) {
-                NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
+                pdfDoc2.RemovePage(i);
             }
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(filename2);

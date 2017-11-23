@@ -82,7 +82,7 @@ namespace iText.IO.Font {
         /// A Map containing the glyphs used in the text after being converted
         /// to glyph number by the CMap
         /// </summary>
-        internal IDictionary<int, int[]> GlyphsUsed;
+        internal ICollection<int> GlyphsUsed;
 
         /// <summary>The GlyphsUsed keys as an list</summary>
         internal IList<int> glyphsInList;
@@ -91,19 +91,19 @@ namespace iText.IO.Font {
         internal ICollection<int> FDArrayUsed = new HashSet<int>();
 
         /// <summary>A Maps array for keeping the subroutines used in each FontDict</summary>
-        internal GenericArray<Dictionary<int, int[]>> hSubrsUsed;
+        internal GenericArray<ICollection<int>> hSubrsUsed;
 
         /// <summary>The SubroutinesUsed Maps as lists</summary>
         internal GenericArray<IList<int>> lSubrsUsed;
 
         /// <summary>A Map for keeping the Global subroutines used in the font</summary>
-        internal IDictionary<int, int[]> hGSubrsUsed = new Dictionary<int, int[]>();
+        internal ICollection<int> hGSubrsUsed = new HashSet<int>();
 
         /// <summary>The Global SubroutinesUsed Maps as lists</summary>
         internal IList<int> lGSubrsUsed = new List<int>();
 
         /// <summary>A Map for keeping the subroutines used in a non-cid font</summary>
-        internal IDictionary<int, int[]> hSubrsUsedNonCID = new Dictionary<int, int[]>();
+        internal ICollection<int> hSubrsUsedNonCID = new HashSet<int>();
 
         /// <summary>The SubroutinesUsed Map as list</summary>
         internal IList<int> lSubrsUsedNonCID = new List<int>();
@@ -133,12 +133,12 @@ namespace iText.IO.Font {
         /// <summary>C'tor for CFFFontSubset</summary>
         /// <param name="cff">- The font file</param>
         /// <param name="GlyphsUsed">- a Map that contains the glyph used in the subset</param>
-        public CFFFontSubset(byte[] cff, IDictionary<int, int[]> GlyphsUsed)
+        public CFFFontSubset(byte[] cff, ICollection<int> GlyphsUsed)
             : base(cff) {
             // Use CFFFont c'tor in order to parse the font file.
             this.GlyphsUsed = GlyphsUsed;
             //Put the glyphs into a list
-            glyphsInList = new List<int>(GlyphsUsed.Keys);
+            glyphsInList = new List<int>(GlyphsUsed);
             for (int i = 0; i < fonts.Length; ++i) {
                 // Read the number of glyphs in the font
                 Seek(fonts[i].charstringsOffset);
@@ -399,7 +399,7 @@ namespace iText.IO.Font {
             if (fonts[Font].isCID) {
                 // Init the Map-array and the list-array to hold the subrs used
                 // in each private dict.
-                hSubrsUsed = new GenericArray<Dictionary<int, int[]>>(fonts[Font].fdprivateOffsets.Length);
+                hSubrsUsed = new GenericArray<ICollection<int>>(fonts[Font].fdprivateOffsets.Length);
                 lSubrsUsed = new GenericArray<IList<int>>(fonts[Font].fdprivateOffsets.Length);
                 // A [][] which will store the byte array for each new FD Array lsubs index
                 NewLSubrsIndex = new byte[fonts[Font].fdprivateOffsets.Length][];
@@ -413,7 +413,7 @@ namespace iText.IO.Font {
                 for (int j = 0; j < FDInList.Count; j++) {
                     // The FDArray index,  Map, List to work on
                     int FD = (int)FDInList[j];
-                    hSubrsUsed.Set(FD, new Dictionary<int, int[]>());
+                    hSubrsUsed.Set(FD, new HashSet<int>());
                     lSubrsUsed.Set(FD, new List<int>());
                     //Reads the private dicts looking for the subr operator and
                     // store both the offset for the index and its offset array
@@ -494,8 +494,8 @@ namespace iText.IO.Font {
         /// <param name="SubrsOffsets">the offset array of the subr index</param>
         /// <param name="hSubr">Map of the subrs used</param>
         /// <param name="lSubr">list of the subrs used</param>
-        protected internal virtual void BuildSubrUsed(int Font, int FD, int SubrOffset, int[] SubrsOffsets, IDictionary
-            <int, int[]> hSubr, IList<int> lSubr) {
+        protected internal virtual void BuildSubrUsed(int Font, int FD, int SubrOffset, int[] SubrsOffsets, ICollection
+            <int> hSubr, IList<int> lSubr) {
             // Calc the Bias for the subr index
             int LBias = CalcBias(SubrOffset, Font);
             // For each glyph used find its GID, start & end pos
@@ -590,8 +590,8 @@ namespace iText.IO.Font {
         /// <param name="LBias">the bias of the Local Subrs</param>
         /// <param name="hSubr">the Map for the lSubrs</param>
         /// <param name="lSubr">the list for the lSubrs</param>
-        protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias, IDictionary<int, int[]
-            > hSubr, IList<int> lSubr, int[] LSubrsOffsets) {
+        protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias, ICollection<int> hSubr
+            , IList<int> lSubr, int[] LSubrsOffsets) {
             // Clear the stack for the subrs
             EmptyStack();
             NumOfHints = 0;
@@ -618,8 +618,8 @@ namespace iText.IO.Font {
                                 // Calc the index of the Subrs
                                 int Subr = (int)((int?)TopElement) + LBias;
                                 // If the subr isn't in the Map -> Put in
-                                if (!hSubr.ContainsKey(Subr)) {
-                                    hSubr.Put(Subr, null);
+                                if (!hSubr.Contains(Subr)) {
+                                    hSubr.Add(Subr);
                                     lSubr.Add(Subr);
                                 }
                                 CalcHints(LSubrsOffsets[Subr], LSubrsOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
@@ -635,8 +635,8 @@ namespace iText.IO.Font {
                                 // Calc the index of the Subrs
                                 int Subr = (int)((int?)TopElement) + GBias;
                                 // If the subr isn't in the Map -> Put in
-                                if (!hGSubrsUsed.ContainsKey(Subr)) {
-                                    hGSubrsUsed.Put(Subr, null);
+                                if (!hGSubrsUsed.Contains(Subr)) {
+                                    hGSubrsUsed.Add(Subr);
                                     lGSubrsUsed.Add(Subr);
                                 }
                                 CalcHints(gsubrOffsets[Subr], gsubrOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
@@ -866,6 +866,7 @@ namespace iText.IO.Font {
                         // a call to a Lsubr
                         // a call to a Gsubr
                         if (NumOfArgs > 0) {
+                            System.Diagnostics.Debug.Assert(TopElement is int?);
                             int Subr = (int)((int?)TopElement) + LBias;
                             CalcHints(LSubrsOffsets[Subr], LSubrsOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
                             Seek(pos);
@@ -876,6 +877,7 @@ namespace iText.IO.Font {
                     case "callgsubr": {
                         // A call to "stem"
                         if (NumOfArgs > 0) {
+                            System.Diagnostics.Debug.Assert(TopElement is int?);
                             int Subr = (int)((int?)TopElement) + GBias;
                             CalcHints(gsubrOffsets[Subr], gsubrOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
                             Seek(pos);
@@ -920,7 +922,7 @@ namespace iText.IO.Font {
         /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
         /// <returns>the new index subset version</returns>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual byte[] BuildNewIndex(int[] Offsets, IDictionary<int, int[]> Used, byte OperatorForUnusedEntries
+        protected internal virtual byte[] BuildNewIndex(int[] Offsets, ICollection<int> Used, byte OperatorForUnusedEntries
             ) {
             int unusedCount = 0;
             int Offset = 0;
@@ -930,7 +932,7 @@ namespace iText.IO.Font {
                 NewOffsets[i] = Offset;
                 // If the object in the offset is also present in the used
                 // Map then increment the offset var by its size
-                if (Used.ContainsKey(i)) {
+                if (Used.Contains(i)) {
                     Offset += Offsets[i + 1] - Offsets[i];
                 }
                 else {

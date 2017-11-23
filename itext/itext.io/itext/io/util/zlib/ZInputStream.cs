@@ -38,7 +38,7 @@ using System.Diagnostics;
 using System.IO;
 
 namespace System.util.zlib {
-	public class ZInputStream
+	internal class ZInputStream
 		: Stream
 	{
 		private const int BufferSize = 512;

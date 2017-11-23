@@ -45,7 +45,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     /// <summary>
@@ -100,12 +99,12 @@ namespace iText.Layout.Font {
             this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
+        public static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
             return new iText.Layout.Font.FontInfo(fontInfo.fontName, fontInfo.fontData, fontInfo.encoding, fontInfo.descriptor
                 , alias);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
+        public static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
             return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, alias);
         }
@@ -132,13 +131,6 @@ namespace iText.Layout.Font {
                  : null;
         }
 
-        /// <param name="fontProvider">fontprovider to get the PdfFont associated with this instance</param>
-        /// <returns>the PdfFont associated with this instance</returns>
-        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) instead.")]
-        public PdfFont GetPdfFont(FontProvider fontProvider) {
-            return fontProvider.GetPdfFont(this);
-        }
-
         public FontProgramDescriptor GetDescriptor() {
             return descriptor;
         }
@@ -163,20 +155,6 @@ namespace iText.Layout.Font {
         /// <c>byte[]</c>
         /// .
         /// </summary>
-        /// <returns>the bytes of the font program</returns>
-        [System.ObsoleteAttribute(@"use GetFontData() instead.")]
-        public byte[] GetFontProgram() {
-            return fontData;
-        }
-
-        /// <summary>
-        /// Gets font data, if
-        /// <see cref="FontInfo"/>
-        /// was created with
-        /// <c>byte[]</c>
-        /// .
-        /// </summary>
-        /// <returns>the font data</returns>
         public byte[] GetFontData() {
             return fontData;
         }

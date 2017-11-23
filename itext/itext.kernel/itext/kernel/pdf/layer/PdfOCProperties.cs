@@ -67,7 +67,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
         public PdfOCProperties(PdfDocument document)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(document)) {
         }
 
         /// <summary>
@@ -289,8 +289,7 @@ namespace iText.Kernel.Pdf.Layer {
             IDictionary<PdfIndirectReference, PdfLayer> layerMap = new SortedDictionary<PdfIndirectReference, PdfLayer
                 >();
             for (int ind = 0; ind < ocgs.Size(); ind++) {
-                PdfLayer currentLayer = new PdfLayer(((PdfDictionary)ocgs.GetAsDictionary(ind).MakeIndirect(GetDocument())
-                    ));
+                PdfLayer currentLayer = new PdfLayer((PdfDictionary)ocgs.GetAsDictionary(ind).MakeIndirect(GetDocument()));
                 // We will set onPanel to true later for the objects present in /D->/Order entry.
                 currentLayer.onPanel = false;
                 layerMap.Put(currentLayer.GetIndirectReference(), currentLayer);

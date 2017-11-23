@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {
@@ -121,47 +121,6 @@ namespace iText.Kernel.Pdf {
             SetValue(--value);
         }
 
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <param name="allowDuplicating">
-        /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-        /// </param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iText.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
-        }
-
         public override String ToString() {
             if (content != null) {
                 return iText.IO.Util.JavaUtil.GetStringForBytes(content);
@@ -184,7 +143,7 @@ namespace iText.Kernel.Pdf {
         public override int GetHashCode() {
             if (changed) {
                 //if the instance was modified, hashCode also will be changed, it may cause inconsistency.
-                ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
+                ILog logger = LogManager.GetLogger(typeof(PdfReader));
                 logger.Warn(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
                 changed = false;
             }

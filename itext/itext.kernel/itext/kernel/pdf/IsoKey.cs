@@ -45,12 +45,8 @@ namespace iText.Kernel.Pdf {
     /// <summary>Type of object to conform.</summary>
     public enum IsoKey {
         CANVAS_STACK,
-        DRAWMODE_FILL,
-        DRAWMODE_FILL_STROKE,
-        DRAWMODE_STROKE,
         FILL_COLOR,
         EXTENDED_GRAPHICS_STATE,
-        GRAPHIC_STATE_ONLY,
         INLINE_IMAGE,
         PAGE,
         PDF_OBJECT,

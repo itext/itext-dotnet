@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
     /// <summary>
@@ -58,10 +57,6 @@ namespace iText.Layout.Layout {
 
         /// <summary>The area's bounding box</summary>
         protected internal Rectangle bBox;
-
-        /// <summary>Indicates whether the area already has some placed content or not.</summary>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
-        protected internal bool emptyArea = true;
 
         /// <summary>
         /// Creates the area for content
@@ -100,23 +95,9 @@ namespace iText.Layout.Layout {
             this.bBox = bbox;
         }
 
-        /// <summary>Indicates whether the area already has some placed content or not.</summary>
-        /// <returns>whether the area is empty or not</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
-        public virtual bool IsEmptyArea() {
-            return emptyArea;
-        }
-
-        /// <summary>Defines whether the area already has some placed content or not.</summary>
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
-        public virtual void SetEmptyArea(bool emptyArea) {
-            this.emptyArea = emptyArea;
-        }
-
         /// <summary><inheritDoc/></summary>
         public virtual iText.Layout.Layout.LayoutArea Clone() {
             iText.Layout.Layout.LayoutArea area = new iText.Layout.Layout.LayoutArea(pageNumber, bBox.Clone());
-            area.SetEmptyArea(emptyArea);
             return area;
         }
 
@@ -126,13 +107,13 @@ namespace iText.Layout.Layout {
                 return false;
             }
             iText.Layout.Layout.LayoutArea that = (iText.Layout.Layout.LayoutArea)obj;
-            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer.EPS);
+            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox);
         }
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             HashCode hashCode = new HashCode();
-            hashCode.Append(pageNumber).Append(bBox.GetHashCode()).Append(emptyArea);
+            hashCode.Append(pageNumber).Append(bBox.GetHashCode());
             return hashCode.GetHashCode();
         }
 

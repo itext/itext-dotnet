@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
-using iText.Kernel.Pdf;
+using Common.Logging;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -66,9 +66,7 @@ namespace iText.Layout.Element {
     /// to the canvas, in order to reclaim memory that is locked up.
     /// </summary>
     public class Table : BlockElement<iText.Layout.Element.Table>, ILargeElement {
-        protected internal PdfName role = PdfName.Table;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         private IList<Cell[]> rows;
 
@@ -130,7 +128,7 @@ namespace iText.Layout.Element {
             // Start number of the row "window" (range) that this table currently contain.
             // For large tables we might contain only a few rows, not all of them, other ones might have been flushed.
             if (columnWidths == null) {
-                throw new ArgumentNullException("The widths array in table constructor can not be null.");
+                throw new ArgumentException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");
@@ -172,14 +170,10 @@ namespace iText.Layout.Element {
         /// <seealso cref="SetFixedLayout()"/>
         public Table(UnitValue[] columnWidths, bool largeTable) {
             if (columnWidths == null) {
-                throw new ArgumentNullException("The widths array in table constructor can not be null.");
+                throw new ArgumentException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");
-            }
-            //TODO remove in 7.1. It shall work as html tables.
-            if (largeTable && HasOnlyPercents(columnWidths)) {
-                UseAllAvailableWidth();
             }
             this.columnWidths = NormalizeColumnWidths(columnWidths);
             InitializeLargeTable(largeTable);
@@ -247,11 +241,15 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with specified number of columns. Each column will get equal percent width,
-        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns.
+        /// The final column widths depend on selected table layout.
         /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
+        /// <br />
+        /// Since 7.1 table will have undefined column widths, that will be determined during layout.
+        /// In oder to set equal percent width as column width, use
+        /// <see cref="iText.Layout.Properties.UnitValue.CreatePercentArray(int)"/>
         /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
@@ -272,18 +270,10 @@ namespace iText.Layout.Element {
         /// </param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
-        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use another constructor to get predictable result."
-            )]
         public Table(int numColumns, bool largeTable) {
             if (numColumns <= 0) {
                 throw new ArgumentException("The number of columns in Table constructor must be greater than zero");
             }
-            this.columnWidths = new UnitValue[numColumns];
-            for (int k = 0; k < numColumns; ++k) {
-                this.columnWidths[k] = UnitValue.CreatePercentValue((float)100 / numColumns);
-            }
-            //TODO remove in 7.1. It shall work as html tables.
-            UseAllAvailableWidth();
             this.columnWidths = NormalizeColumnWidths(numColumns);
             InitializeLargeTable(largeTable);
             InitializeRows();
@@ -292,11 +282,15 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with specified number of columns. Each column will get equal percent width,
-        /// the final column widths depend on selected table layout. 100% table width set implicitly for backward compatibility.
+        /// with specified number of columns.
+        /// The final column widths depend on selected table layout.
         /// <br />
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
+        /// <br/>
+        /// Since 7.1 table will have undefined column widths, that will be determined during layout.
+        /// In oder to set equal percent width as column width, use
+        /// <see cref="iText.Layout.Properties.UnitValue.CreatePercentArray(int)"/>
         /// <br />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
@@ -313,46 +307,8 @@ namespace iText.Layout.Element {
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
-        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use another constructor to get predictable result."
-            )]
         public Table(int numColumns)
             : this(numColumns, false) {
-        }
-
-        private static bool HasOnlyPercents(UnitValue[] columnWidths) {
-            foreach (UnitValue col in columnWidths) {
-                if (col == null || col.IsPointValue() || col.GetValue() < 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
-            UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
-            for (int i = 0; i < normalized.Length; i++) {
-                if (pointColumnWidths[i] >= 0) {
-                    normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
-                }
-            }
-            return normalized;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
-            UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
-            for (int i = 0; i < unitColumnWidths.Length; i++) {
-                normalized[i] = unitColumnWidths[i] != null && unitColumnWidths[i].GetValue() >= 0 ? new UnitValue(unitColumnWidths
-                    [i]) : null;
-            }
-            return normalized;
-        }
-
-        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
-            UnitValue[] normalized = new UnitValue[numberOfColumns];
-            for (int i = 0; i < numberOfColumns; i++) {
-                normalized[i] = UnitValue.CreatePercentValue((float)100 / numberOfColumns);
-            }
-            return normalized;
         }
 
         /// <summary>Set fixed layout.</summary>
@@ -775,10 +731,6 @@ namespace iText.Layout.Element {
             return rendererRoot;
         }
 
-        protected internal override IRenderer MakeNewRenderer() {
-            return new TableRenderer(this);
-        }
-
         /// <summary>Gets a table renderer for this element.</summary>
         /// <remarks>
         /// Gets a table renderer for this element. Note that this method can be called more than once.
@@ -795,7 +747,7 @@ namespace iText.Layout.Element {
                     return renderer;
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Table));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Element.Table));
                     logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
                 }
             }
@@ -912,17 +864,6 @@ namespace iText.Layout.Element {
             return horizontalBorder;
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-            if (PdfName.Artifact.Equals(role)) {
-                PropagateArtifactRoleToChildElements();
-            }
-        }
-
         public virtual iText.Layout.Element.Table SetExtendBottomRow(bool isExtended) {
             SetProperty(Property.FILL_AVAILABLE_AREA, isExtended);
             return this;
@@ -935,13 +876,37 @@ namespace iText.Layout.Element {
 
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.TABLE);
             }
             return tagProperties;
         }
 
-        [System.ObsoleteAttribute(@"This method does nothing after implementation table column width algorithms.")]
-        protected internal virtual void CalculateWidths() {
+        protected internal override IRenderer MakeNewRenderer() {
+            return new TableRenderer(this);
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
+            UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
+            for (int i = 0; i < normalized.Length; i++) {
+                if (pointColumnWidths[i] >= 0) {
+                    normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
+                }
+            }
+            return normalized;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
+            UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
+            for (int i = 0; i < unitColumnWidths.Length; i++) {
+                normalized[i] = unitColumnWidths[i] != null && unitColumnWidths[i].GetValue() >= 0 ? new UnitValue(unitColumnWidths
+                    [i]) : null;
+            }
+            return normalized;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns) {
+            UnitValue[] normalized = new UnitValue[numberOfColumns];
+            return normalized;
         }
 
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
@@ -1000,7 +965,7 @@ namespace iText.Layout.Element {
                 if (width != null) {
                     header.SetWidth(width);
                 }
-                header.SetRole(PdfName.THead);
+                header.GetAccessibilityProperties().SetRole(StandardRoles.THEAD);
             }
         }
 
@@ -1011,7 +976,7 @@ namespace iText.Layout.Element {
                 if (width != null) {
                     footer.SetWidth(width);
                 }
-                footer.SetRole(PdfName.TFoot);
+                footer.GetAccessibilityProperties().SetRole(StandardRoles.TFOOT);
             }
         }
 

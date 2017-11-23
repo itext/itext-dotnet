@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -62,10 +61,11 @@ namespace iText.Kernel.Pdf.Annot {
             SetQuadPoints(new PdfArray(quadPoints));
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfTextMarkupAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfTextMarkupAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -224,7 +224,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
         /// </returns>
-        public override PdfArray GetQuadPoints() {
+        public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfTextMarkupAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+        public virtual iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation SetQuadPoints(PdfArray quadPoints) {
             return (iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation)Put(PdfName.QuadPoints, quadPoints);
         }
     }

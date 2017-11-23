@@ -47,13 +47,13 @@ using iText.IO.Util;
 namespace iText.Kernel.Log {
     /// <summary>
     /// A
-    /// <see cref="Counter"/>
+    /// <see cref="ICounter"/>
     /// implementation that outputs information about read and written documents to
     /// <see cref="System.Console.Out"/>
     /// </summary>
-    public class SystemOutCounter : Counter {
+    public class SystemOutCounter : ICounter {
         /// <summary>
-        /// The name of the class for which the Counter was created
+        /// The name of the class for which the ICounter was created
         /// (or iText if no name is available)
         /// </summary>
         protected internal String name;
@@ -68,10 +68,6 @@ namespace iText.Kernel.Log {
 
         public SystemOutCounter(Type cls)
             : this(cls.FullName) {
-        }
-
-        public virtual Counter GetCounter(Type cls) {
-            return new iText.Kernel.Log.SystemOutCounter(cls);
         }
 
         public virtual void OnDocumentRead(long size) {

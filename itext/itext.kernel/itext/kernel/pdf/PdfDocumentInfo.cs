@@ -46,29 +46,27 @@ using System.Collections.Generic;
 using iText.IO.Font;
 
 namespace iText.Kernel.Pdf {
-    public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary> {
-        /// <summary>Create a PdfDocumentInfo based on the passed PdfDictionary and linked to the passed PdfDocument.</summary>
-        /// <param name="pdfObject">PdfDictionary containing PdfDocumentInfo</param>
-        /// <param name="pdfDocument">PdfDocument the PdfDocumentInfo corresponds to.</param>
-        public PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument)
-            : base(pdfObject == null ? new PdfDictionary() : pdfObject) {
-            if (pdfDocument.GetWriter() != null) {
-                this.GetPdfObject().MakeIndirect(pdfDocument);
-            }
-            SetForbidRelease();
-        }
+    public class PdfDocumentInfo {
+        internal static readonly PdfName[] PDF20_DEPRECATED_KEYS = new PdfName[] { PdfName.Title, PdfName.Author, 
+            PdfName.Subject, PdfName.Keywords, PdfName.Creator, PdfName.Producer, PdfName.Trapped };
 
-        public PdfDocumentInfo(PdfDictionary pdfObject)
-            : this(pdfObject, null) {
+        private PdfDictionary infoDictionary;
+
+        /// <summary>Create a PdfDocumentInfo based on the passed PdfDictionary.</summary>
+        /// <param name="pdfObject">PdfDictionary containing PdfDocumentInfo</param>
+        internal PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument) {
+            infoDictionary = pdfObject;
+            if (pdfDocument.GetWriter() != null) {
+                infoDictionary.MakeIndirect(pdfDocument);
+            }
         }
 
         /// <summary>Create a default, empty PdfDocumentInfo and link it to the passed PdfDocument</summary>
-        /// <param name="pdfDocument"/>
-        public PdfDocumentInfo(PdfDocument pdfDocument)
+        /// <param name="pdfDocument">document the info will belong to</param>
+        internal PdfDocumentInfo(PdfDocument pdfDocument)
             : this(new PdfDictionary(), pdfDocument) {
         }
 
-        //Samuel: Wouldn't this raise a nullpointer exception?
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTitle(String title) {
             return Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
         }
@@ -87,6 +85,10 @@ namespace iText.Kernel.Pdf {
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator) {
             return Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
+        }
+
+        public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTrapped(PdfName trapped) {
+            return Put(PdfName.Trapped, trapped);
         }
 
         public virtual String GetTitle() {
@@ -113,6 +115,10 @@ namespace iText.Kernel.Pdf {
             return GetStringValue(PdfName.Producer);
         }
 
+        public virtual PdfName GetTrapped() {
+            return infoDictionary.GetAsName(PdfName.Trapped);
+        }
+
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddCreationDate() {
             return Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
         }
@@ -134,31 +140,31 @@ namespace iText.Kernel.Pdf {
         public virtual void SetMoreInfo(String key, String value) {
             PdfName keyName = new PdfName(key);
             if (value == null) {
-                GetPdfObject().Remove(keyName);
-                SetModified();
+                infoDictionary.Remove(keyName);
+                infoDictionary.SetModified();
             }
             else {
                 Put(keyName, new PdfString(value, PdfEncodings.UNICODE_BIG));
             }
         }
 
-        public override void Flush() {
-            GetPdfObject().Flush(false);
+        public virtual String GetMoreInfo(String key) {
+            return GetStringValue(new PdfName(key));
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return true;
+        internal virtual PdfDictionary GetPdfObject() {
+            return infoDictionary;
+        }
+
+        internal virtual iText.Kernel.Pdf.PdfDocumentInfo Put(PdfName key, PdfObject value) {
+            GetPdfObject().Put(key, value);
+            GetPdfObject().SetModified();
+            return this;
         }
 
         private String GetStringValue(PdfName name) {
-            PdfString pdfString = GetPdfObject().GetAsString(name);
+            PdfString pdfString = infoDictionary.GetAsString(name);
             return pdfString != null ? pdfString.ToUnicodeString() : null;
-        }
-
-        private iText.Kernel.Pdf.PdfDocumentInfo Put(PdfName key, PdfObject value) {
-            GetPdfObject().Put(key, value);
-            SetModified();
-            return this;
         }
     }
 }

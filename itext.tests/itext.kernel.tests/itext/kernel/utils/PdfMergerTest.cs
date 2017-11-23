@@ -157,6 +157,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, Count = 2)]
         public virtual void MergeDocumentTest04() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";

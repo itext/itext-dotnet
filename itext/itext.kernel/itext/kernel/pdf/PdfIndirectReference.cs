@@ -294,7 +294,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Sets special states of current object.</summary>
         /// <param name="state">special flag of current object</param>
         protected internal override PdfObject SetState(short state) {
-            return (iText.Kernel.Pdf.PdfIndirectReference)base.SetState(state);
+            return base.SetState(state);
         }
 
         internal virtual void SetObjStreamNumber(int objectStreamNumber) {

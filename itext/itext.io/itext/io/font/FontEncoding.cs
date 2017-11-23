@@ -50,6 +50,9 @@ namespace iText.IO.Font {
 
         public const String FONT_SPECIFIC = "FontSpecific";
 
+        /// <summary>A not defined character in a custom PDF encoding.</summary>
+        public const String NOTDEF = ".notdef";
+
         /// <summary>Base font encoding.</summary>
         protected internal String baseEncoding;
 
@@ -287,7 +290,7 @@ namespace iText.IO.Font {
             }
             for (int k = 0; k < 256; k++) {
                 if (differences[k] == null) {
-                    differences[k] = FontConstants.notdef;
+                    differences[k] = NOTDEF;
                 }
             }
         }
@@ -309,7 +312,7 @@ namespace iText.IO.Font {
                 char uni = encoded[ch];
                 String name = AdobeGlyphList.UnicodeToName(uni);
                 if (name == null) {
-                    name = FontConstants.notdef;
+                    name = NOTDEF;
                 }
                 else {
                     unicodeToCode.Put(uni, ch);
@@ -328,7 +331,7 @@ namespace iText.IO.Font {
                 int uni = encoded[ch];
                 String name = AdobeGlyphList.UnicodeToName(uni);
                 if (name == null) {
-                    name = FontConstants.notdef;
+                    name = NOTDEF;
                 }
                 else {
                     unicodeToCode.Put(uni, ch);

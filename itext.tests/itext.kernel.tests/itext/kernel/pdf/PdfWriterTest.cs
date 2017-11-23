@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes1() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes1.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes2() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes2.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             helloWorld.Flush();
             PdfPage page = pdfDoc.AddNewPage();
@@ -112,7 +112,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes3() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes3.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
@@ -127,7 +127,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes4() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes4.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
@@ -184,7 +184,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
-            catalog2.Put(new PdfName("aDirect"), ((PdfArray)aDirect.CopyTo(pdfDoc2)));
+            catalog2.Put(new PdfName("aDirect"), aDirect.CopyTo(pdfDoc2));
             pdfDoc1.Close();
             pdfDoc2.Close();
             PdfReader reader = new PdfReader(destinationFolder + "copyObject1_2.pdf");
@@ -218,18 +218,18 @@ namespace iText.Kernel.Pdf {
             page1.Flush();
             PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
             PdfName aDirectName = new PdfName("aDirect");
-            PdfArray aDirect = ((PdfArray)new PdfArray().MakeIndirect(pdfDoc1));
+            PdfArray aDirect = (PdfArray)new PdfArray().MakeIndirect(pdfDoc1);
             List<PdfObject> tmpArray = new List<PdfObject>(2);
             tmpArray.Add(new PdfNumber(1));
-            tmpArray.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1)));
+            tmpArray.Add(new PdfNumber(2).MakeIndirect(pdfDoc1));
             aDirect.Add(new PdfArray(tmpArray));
             aDirect.Add(new PdfBoolean(true));
             SortedDictionary<PdfName, PdfObject> tmpMap = new SortedDictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("one"), new PdfNumber(1));
-            tmpMap.Put(new PdfName("two"), ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1)));
+            tmpMap.Put(new PdfName("two"), new PdfNumber(2).MakeIndirect(pdfDoc1));
             aDirect.Add(new PdfDictionary(tmpMap));
             aDirect.Add(new PdfName("name"));
-            aDirect.Add(((PdfNull)new PdfNull().MakeIndirect(pdfDoc1)));
+            aDirect.Add(new PdfNull().MakeIndirect(pdfDoc1));
             aDirect.Add(new PdfNumber(100));
             aDirect.Add(new PdfString("string"));
             catalog1.Put(aDirectName, aDirect);
@@ -240,7 +240,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
-            catalog2.Put(aDirectName, ((PdfArray)aDirect.CopyTo(pdfDoc2)));
+            catalog2.Put(aDirectName, aDirect.CopyTo(pdfDoc2));
             pdfDoc1R.Close();
             pdfDoc2.Close();
             PdfReader reader = new PdfReader(destinationFolder + "copyObject2_2.pdf");
@@ -271,12 +271,12 @@ namespace iText.Kernel.Pdf {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 page1.Flush();
                 PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
-                PdfArray arr1 = ((PdfArray)new PdfArray().MakeIndirect(pdfDoc1));
-                PdfArray arr2 = ((PdfArray)new PdfArray().MakeIndirect(pdfDoc1));
+                PdfArray arr1 = (PdfArray)new PdfArray().MakeIndirect(pdfDoc1);
+                PdfArray arr2 = (PdfArray)new PdfArray().MakeIndirect(pdfDoc1);
                 arr1.Add(arr2);
-                PdfDictionary dic1 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1));
+                PdfDictionary dic1 = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1);
                 arr2.Add(dic1);
-                PdfDictionary dic2 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1));
+                PdfDictionary dic2 = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1);
                 dic1.Put(new PdfName("dic2"), dic2);
                 PdfName arr1Name = new PdfName("arr1");
                 dic2.Put(arr1Name, arr1);
@@ -288,7 +288,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.Flush();
                 PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
-                catalog2.Put(arr1Name, ((PdfArray)arr1.CopyTo(pdfDoc2)));
+                catalog2.Put(arr1Name, arr1.CopyTo(pdfDoc2));
                 pdfDoc1R.Close();
                 pdfDoc2.Close();
             }
@@ -314,7 +314,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
-            PdfStream stream1 = ((PdfStream)new PdfStream().MakeIndirect(pdfDoc1));
+            PdfStream stream1 = (PdfStream)new PdfStream().MakeIndirect(pdfDoc1);
             List<PdfObject> tmpArray = new List<PdfObject>(3);
             tmpArray.Add(new PdfNumber(1));
             tmpArray.Add(new PdfNumber(2));
@@ -328,7 +328,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
-            catalog2.Put(new PdfName("stream"), ((PdfStream)stream1.CopyTo(pdfDoc2)));
+            catalog2.Put(new PdfName("stream"), stream1.CopyTo(pdfDoc2));
             pdfDoc1R.Close();
             pdfDoc2.Close();
             PdfReader reader = new PdfReader(destinationFolder + "copyObject4_2.pdf");
@@ -379,7 +379,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CopyObject6() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_1.pdf"));
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
@@ -388,11 +388,9 @@ namespace iText.Kernel.Pdf {
             helloWorld = (PdfDictionary)pdfDoc.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorld"));
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_2.pdf"));
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy1"), ((PdfDictionary)helloWorld.CopyTo(pdfDoc1)));
-            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy2"), ((PdfDictionary)helloWorld.CopyTo(pdfDoc1, true))
-                );
-            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy3"), ((PdfDictionary)helloWorld.CopyTo(pdfDoc1, false)
-                ));
+            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy1"), helloWorld.CopyTo(pdfDoc1));
+            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy2"), helloWorld.CopyTo(pdfDoc1, true));
+            page1.GetPdfObject().Put(new PdfName("HelloWorldCopy3"), helloWorld.CopyTo(pdfDoc1, false));
             page1.Flush();
             pdfDoc.Close();
             pdfDoc1.Close();
@@ -424,11 +422,11 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
-                PdfObject indirectDict = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1));
+                PdfObject indirectDict = new PdfDictionary().MakeIndirect(pdfDoc1);
                 page1.GetPdfObject().Put(new PdfName("HelloWorldDirect"), directDict);
                 page1.GetPdfObject().Put(new PdfName("HelloWorldIndirect"), indirectDict);
                 PdfPage page2 = pdfDoc2.AddNewPage();
-                page2.GetPdfObject().Put(new PdfName("HelloWorldDirect"), ((PdfDictionary)directDict.CopyTo(pdfDoc2)));
+                page2.GetPdfObject().Put(new PdfName("HelloWorldDirect"), directDict.CopyTo(pdfDoc2));
                 page2.GetPdfObject().Put(new PdfName("HelloWorldIndirect"), indirectDict.CopyTo(pdfDoc2));
             }
             catch (PdfException ex) {
@@ -451,7 +449,7 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfPage page1 = pdfDoc.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
-                PdfObject indirectDict = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+                PdfObject indirectDict = new PdfDictionary().MakeIndirect(pdfDoc);
                 page1.GetPdfObject().Put(new PdfName("HelloWorldDirect"), directDict);
                 page1.GetPdfObject().Put(new PdfName("HelloWorldIndirect"), indirectDict);
                 indirectDict.CopyTo(null);
@@ -499,16 +497,16 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + "directInIndirectChain.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfArray level1 = new PdfArray();
-            level1.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(pdfDoc)));
+            level1.Add(new PdfNumber(1).MakeIndirect(pdfDoc));
             PdfDictionary level2 = new PdfDictionary();
             level1.Add(level2);
             PdfArray level3 = new PdfArray();
             level2.Put(new PdfName("level3"), level3);
-            level2.Put(new PdfName("num"), ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc)));
-            level3.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(pdfDoc)));
-            level3.Add(((PdfNumber)new PdfNumber(3).MakeIndirect(pdfDoc)));
+            level2.Put(new PdfName("num"), new PdfNumber(2).MakeIndirect(pdfDoc));
+            level3.Add(new PdfNumber(3).MakeIndirect(pdfDoc));
+            level3.Add(new PdfNumber(3).MakeIndirect(pdfDoc));
             PdfDictionary level4 = new PdfDictionary();
-            level4.Put(new PdfName("num"), ((PdfNumber)new PdfNumber(4).MakeIndirect(pdfDoc)));
+            level4.Put(new PdfName("num"), new PdfNumber(4).MakeIndirect(pdfDoc));
             level3.Add(level4);
             PdfPage page1 = pdfDoc.AddNewPage();
             page1.GetPdfObject().Put(new PdfName("test"), level1);

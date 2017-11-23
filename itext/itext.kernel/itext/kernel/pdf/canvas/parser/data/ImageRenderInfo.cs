@@ -41,13 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Represents image data from a PDF</summary>
-    public class ImageRenderInfo : IEventData {
+    public class ImageRenderInfo : AbstractRenderInfo {
         /// <summary>The coordinate transformation matrix that was in effect when the image was rendered</summary>
         private Matrix ctm;
 
@@ -59,15 +62,27 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <summary>defines if the encountered image was inline</summary>
         private bool isInline;
 
+        private PdfName resourceName;
+
+        /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
+        ///     </summary>
+        private IList<CanvasTag> canvasTagHierarchy;
+
         /// <summary>Create an ImageRenderInfo</summary>
         /// <param name="ctm">the coordinate transformation matrix at the time the image is rendered</param>
-        /// <param name="stream">image stream object</param>
+        /// <param name="imageStream">image stream object</param>
+        /// <param name="resourceName"/>
         /// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
         ///     </param>
         /// <param name="isInline">defines if the encountered image was inline</param>
-        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary, bool isInline) {
+        public ImageRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Matrix ctm, PdfStream 
+            imageStream, PdfName resourceName, PdfDictionary colorSpaceDictionary, bool isInline)
+            : base(gs) {
+            this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List<CanvasTag>(canvasTagHierarchy
+                ));
+            this.resourceName = resourceName;
             this.ctm = ctm;
-            this.image = new PdfImageXObject(stream);
+            this.image = new PdfImageXObject(imageStream);
             this.colorSpaceDictionary = colorSpaceDictionary;
             this.isInline = isInline;
         }
@@ -95,6 +110,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return image;
         }
 
+        public virtual PdfName GetImageResourceName() {
+            return resourceName;
+        }
+
         /// <returns>a vector in User space representing the start point of the image</returns>
         public virtual Vector GetStartPoint() {
             return new Vector(0, 0, 1).Cross(ctm);
@@ -120,6 +139,59 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>the color space dictionary from resources which are associated with the image</returns>
         public virtual PdfDictionary GetColorSpaceDictionary() {
             return colorSpaceDictionary;
+        }
+
+        /// <summary>Gets hierarchy of the canvas tags that wraps given text.</summary>
+        /// <returns>list of the wrapping canvas tags. The first tag is the innermost (nearest to the text).</returns>
+        public virtual IList<CanvasTag> GetCanvasTagHierarchy() {
+            return canvasTagHierarchy;
+        }
+
+        /// <returns>the marked content associated with the TextRenderInfo instance.</returns>
+        public virtual int GetMcid() {
+            foreach (CanvasTag tag in canvasTagHierarchy) {
+                if (tag.HasMcid()) {
+                    return tag.GetMcid();
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Checks if the text belongs to a marked content sequence
+        /// with a given mcid.
+        /// </summary>
+        /// <param name="mcid">a marked content id</param>
+        /// <returns>true if the text is marked with this id</returns>
+        public virtual bool HasMcid(int mcid) {
+            return HasMcid(mcid, false);
+        }
+
+        /// <summary>
+        /// Checks if the text belongs to a marked content sequence
+        /// with a given mcid.
+        /// </summary>
+        /// <param name="mcid">a marked content id</param>
+        /// <param name="checkTheTopmostLevelOnly">indicates whether to check the topmost level of marked content stack only
+        ///     </param>
+        /// <returns>true if the text is marked with this id</returns>
+        public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly) {
+            if (checkTheTopmostLevelOnly) {
+                if (canvasTagHierarchy != null) {
+                    int infoMcid = GetMcid();
+                    return infoMcid != -1 && infoMcid == mcid;
+                }
+            }
+            else {
+                foreach (CanvasTag tag in canvasTagHierarchy) {
+                    if (tag.HasMcid()) {
+                        if (tag.GetMcid() == mcid) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

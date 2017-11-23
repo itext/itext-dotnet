@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -97,17 +97,6 @@ namespace iText.Kernel.Pdf {
             // For internal usage only
             //forewarned is forearmed
             this.properties = properties;
-            EncryptionProperties encryptProps = properties.encryptionProperties;
-            if (properties.IsStandardEncryptionUsed()) {
-                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
-                    , encryptProps.encryptionAlgorithm, PdfEncryption.GenerateNewDocumentId());
-            }
-            else {
-                if (properties.IsPublicKeyEncryptionUsed()) {
-                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
-                        .encryptionAlgorithm);
-                }
-            }
             if (properties.debugMode) {
             }
         }
@@ -193,6 +182,20 @@ namespace iText.Kernel.Pdf {
             return objectStream;
         }
 
+        protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
+            EncryptionProperties encryptProps = properties.encryptionProperties;
+            if (properties.IsStandardEncryptionUsed()) {
+                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
+                    , encryptProps.encryptionAlgorithm, PdfEncryption.GenerateNewDocumentId(), version);
+            }
+            else {
+                if (properties.IsPublicKeyEncryptionUsed()) {
+                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
+                        .encryptionAlgorithm, version);
+                }
+            }
+        }
+
         /// <summary>Flushes the object.</summary>
         /// <remarks>Flushes the object. Override this method if you want to define custom behaviour for object flushing.
         ///     </remarks>
@@ -209,8 +212,7 @@ namespace iText.Kernel.Pdf {
                 indirectReference.SetOffset(GetCurrentPos());
                 WriteToBody(pdfObject);
             }
-            ((PdfIndirectReference)indirectReference.SetState(PdfObject.FLUSHED)).ClearState(PdfObject.MUST_BE_FLUSHED
-                );
+            indirectReference.SetState(PdfObject.FLUSHED).ClearState(PdfObject.MUST_BE_FLUSHED);
             switch (pdfObject.GetObjectType()) {
                 case PdfObject.BOOLEAN:
                 case PdfObject.NAME:
@@ -252,7 +254,7 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
+                ILog logger = LogManager.GetLogger(typeof(PdfReader));
                 logger.Warn(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
                 obj = PdfNull.PDF_NULL;
             }
@@ -311,7 +313,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
-        protected internal virtual void FlushWaitingObjects() {
+        /// <param name="forbiddenToFlush">
+        /// 
+        /// <see>Set<PdfIndirectReference></see>
+        /// of references that are forbidden to be flushed automatically.
+        /// </param>
+        protected internal virtual void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
             PdfXrefTable xref = document.GetXref();
             bool needFlush = true;
             while (needFlush) {
@@ -319,7 +326,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 1; i < xref.Size(); i++) {
                     PdfIndirectReference indirectReference = xref.Get(i);
                     if (indirectReference != null && !indirectReference.IsFree() && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
-                        )) {
+                        ) && !forbiddenToFlush.Contains(indirectReference)) {
                         PdfObject obj = indirectReference.GetRefersTo(false);
                         if (obj != null) {
                             obj.Flush();
@@ -336,11 +343,18 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
-        protected internal virtual void FlushModifiedWaitingObjects() {
+        /// <param name="forbiddenToFlush">
+        /// 
+        /// <see>Set<PdfIndirectReference></see>
+        /// of references that are forbidden to be flushed automatically.
+        /// </param>
+        protected internal virtual void FlushModifiedWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush
+            ) {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {
                 PdfIndirectReference indirectReference = xref.Get(i);
-                if (null != indirectReference && !indirectReference.IsFree()) {
+                if (null != indirectReference && !indirectReference.IsFree() && !forbiddenToFlush.Contains(indirectReference
+                    )) {
                     bool isModified = indirectReference.CheckState(PdfObject.MODIFIED);
                     if (isModified) {
                         PdfObject obj = indirectReference.GetRefersTo(false);
@@ -356,28 +370,6 @@ namespace iText.Kernel.Pdf {
                 objectStream.Flush();
                 objectStream = null;
             }
-        }
-
-        /// <summary>Calculates hash code for the indirect reference taking into account the document it belongs to.</summary>
-        /// <param name="indRef">object to be hashed.</param>
-        /// <returns>calculated hash code.</returns>
-        [Obsolete]
-        protected internal static int CalculateIndRefKey(PdfIndirectReference indRef) {
-            int result = indRef.GetHashCode();
-            result = 31 * result + indRef.GetDocument().GetHashCode();
-            return result;
-        }
-
-        /// <summary>Calculates hash code for object to be copied.</summary>
-        /// <remarks>
-        /// Calculates hash code for object to be copied.
-        /// The hash code and the copied object is the stored in @{link copiedObjects} hash map to avoid duplications.
-        /// </remarks>
-        /// <param name="obj">object to be copied.</param>
-        /// <returns>calculated hash code.</returns>
-        [System.ObsoleteAttribute(@"Functionality will be removed.")]
-        protected internal virtual int GetCopyObjectKey(PdfObject obj) {
-            return CalculateIndRefKey(obj.GetIndirectReference());
         }
 
         /// <summary>Flush all copied objects.</summary>

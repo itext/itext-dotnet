@@ -193,7 +193,7 @@ namespace iText.Layout {
             String fileName = "anchorTabStopsTest02.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
-            Document doc = InitDocument(outFileName);
+            Document doc = InitDocument(outFileName, true);
             float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 2;
             float[] positions1 = new float[] { tabInterval };
             TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.ANCHOR };
@@ -331,7 +331,15 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
+            return InitDocument(outFileName, false);
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        private Document InitDocument(String outFileName, bool tagged) {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            if (tagged) {
+                pdfDoc.SetTagged();
+            }
             pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());
             return new Document(pdfDoc);
         }
@@ -365,7 +373,9 @@ namespace iText.Layout {
             foreach (String line in iText.IO.Util.StringUtil.Split(text, "\n")) {
                 foreach (String chunk in iText.IO.Util.StringUtil.Split(line, "\t")) {
                     foreach (String piece in iText.IO.Util.StringUtil.Split(chunk, "#")) {
-                        p.Add(piece);
+                        if (!String.IsNullOrEmpty(piece)) {
+                            p.Add(piece);
+                        }
                     }
                     p.Add(new Tab());
                 }

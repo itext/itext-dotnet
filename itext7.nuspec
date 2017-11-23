@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>$version$</version>
+    <version>7.1.0-SNAPSHOT</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -17,12 +17,18 @@
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
     <dependencies>
+      <group targetFramework="net40">
+        <dependency id="Common.Logging" version="3.4.1" />
+        <dependency id="Portable.BouncyCastle" version="1.8.1.3" />
+      </group>
       <group targetFramework="netstandard1.6">
+        <dependency id="Common.Logging" version="3.4.1" />
+        <dependency id="Portable.BouncyCastle" version="1.8.1.3" />
         <dependency id="NETStandard.Library" version="1.6.1" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />
-		<dependency id="Microsoft.Extensions.DependencyModel" version="1.1.0" />
+        <dependency id="Microsoft.Extensions.DependencyModel" version="1.1.0" />
         <dependency id="System.Text.Encoding.CodePages" version="4.3.0" />
         <dependency id="System.Collections.NonGeneric" version="4.3.0" />
         <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
@@ -34,35 +40,35 @@
     </dependencies>
   </metadata>
   <files>
-	<file src="itext\itext.io\bin\Release\net40\itext.io.dll" target="lib\net40" />
-	<file src="itext\itext.io\bin\Release\net40\itext.io.xml" target="lib\net40" />
-	<file src="itext\itext.kernel\bin\Release\net40\itext.kernel.dll" target="lib\net40" />
-	<file src="itext\itext.kernel\bin\Release\net40\itext.kernel.xml" target="lib\net40" />
-	<file src="itext\itext.layout\bin\Release\net40\itext.layout.dll" target="lib\net40" />
-	<file src="itext\itext.layout\bin\Release\net40\itext.layout.xml" target="lib\net40" />
-	<file src="itext\itext.pdfa\bin\Release\net40\itext.pdfa.dll" target="lib\net40" />
-	<file src="itext\itext.pdfa\bin\Release\net40\itext.pdfa.xml" target="lib\net40" />
-	<file src="itext\itext.forms\bin\Release\net40\itext.forms.dll" target="lib\net40" />
-	<file src="itext\itext.forms\bin\Release\net40\itext.forms.xml" target="lib\net40" />
-	<file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.dll" target="lib\net40" />
-	<file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.xml" target="lib\net40" />
-	<file src="itext\itext.sign\bin\Release\net40\itext.sign.dll" target="lib\net40" />
-	<file src="itext\itext.sign\bin\Release\net40\itext.sign.xml" target="lib\net40" />
-	<file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.layout\bin\Release\netstandard1.6\itext.layout.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.layout\bin\Release\netstandard1.6\itext.layout.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.pdfa\bin\Release\netstandard1.6\itext.pdfa.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.pdfa\bin\Release\netstandard1.6\itext.pdfa.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.forms\bin\Release\netstandard1.6\itext.forms.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.forms\bin\Release\netstandard1.6\itext.forms.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.barcodes\bin\Release\netstandard1.6\itext.barcodes.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.barcodes\bin\Release\netstandard1.6\itext.barcodes.xml" target="lib\netstandard1.6" />
-	<file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.dll" target="lib\netstandard1.6" />
-	<file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.xml" target="lib\netstandard1.6" />
-	<file src="gnu-agpl-v3.0.md" target="" />
-	<file src="LICENSE.md" target="" />
+    <file src="itext\itext.io\bin\Release\net40\itext.io.dll" target="lib\net40" />
+    <file src="itext\itext.io\bin\Release\net40\itext.io.xml" target="lib\net40" />
+    <file src="itext\itext.kernel\bin\Release\net40\itext.kernel.dll" target="lib\net40" />
+    <file src="itext\itext.kernel\bin\Release\net40\itext.kernel.xml" target="lib\net40" />
+    <file src="itext\itext.layout\bin\Release\net40\itext.layout.dll" target="lib\net40" />
+    <file src="itext\itext.layout\bin\Release\net40\itext.layout.xml" target="lib\net40" />
+    <file src="itext\itext.pdfa\bin\Release\net40\itext.pdfa.dll" target="lib\net40" />
+    <file src="itext\itext.pdfa\bin\Release\net40\itext.pdfa.xml" target="lib\net40" />
+    <file src="itext\itext.forms\bin\Release\net40\itext.forms.dll" target="lib\net40" />
+    <file src="itext\itext.forms\bin\Release\net40\itext.forms.xml" target="lib\net40" />
+    <file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.dll" target="lib\net40" />
+    <file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.xml" target="lib\net40" />
+    <file src="itext\itext.sign\bin\Release\net40\itext.sign.dll" target="lib\net40" />
+    <file src="itext\itext.sign\bin\Release\net40\itext.sign.xml" target="lib\net40" />
+    <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.layout\bin\Release\netstandard1.6\itext.layout.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.layout\bin\Release\netstandard1.6\itext.layout.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.pdfa\bin\Release\netstandard1.6\itext.pdfa.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.pdfa\bin\Release\netstandard1.6\itext.pdfa.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.forms\bin\Release\netstandard1.6\itext.forms.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.forms\bin\Release\netstandard1.6\itext.forms.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.barcodes\bin\Release\netstandard1.6\itext.barcodes.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.barcodes\bin\Release\netstandard1.6\itext.barcodes.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.xml" target="lib\netstandard1.6" />
+    <file src="gnu-agpl-v3.0.md" target="" />
+    <file src="LICENSE.md" target="" />
   </files>
 </package>

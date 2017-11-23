@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Reflection;
+using Common.Logging;
 using Versions.Attributes;
-using iText.IO.Log;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
@@ -75,7 +75,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private static String release = "7.0.6-SNAPSHOT";
+        private static String release = "7.1.0-SNAPSHOT";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -102,11 +102,14 @@ namespace iText.Kernel {
                 version = new iText.Kernel.Version();
                 lock (version) {
                     try {
-                        String licenseeInfoMethodName = "GetLicenseeInfo";
+                        String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
                         Type klass = GetLicenseKeyClass();
                         if (klass != null) {
-                            MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
-                            String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
+                            Type[] cArg = new Type[] { typeof(String) };
+                            MethodInfo m = klass.GetMethod(licenseeInfoMethodName, cArg);
+                            String coreVersion = release;
+                            Object[] args = new Object[] { coreVersion };
+                            String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), args);
                             if (info[3] != null && info[3].Trim().Length > 0) {
                                 version.key = info[3];
                             }
@@ -252,7 +255,7 @@ namespace iText.Kernel {
                 }
 
                 if (fileLoadExceptionMessage != null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
+                    ILog logger = LogManager.GetLogger(typeof(Version));
                     try {
                         type = System.Type.GetType(licenseKeyClassPartialName);
                     } catch {

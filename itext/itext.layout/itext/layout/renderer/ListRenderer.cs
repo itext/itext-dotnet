@@ -43,15 +43,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Font;
+using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ListRenderer : BlockRenderer {
@@ -92,23 +95,25 @@ namespace iText.Layout.Renderer {
 
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
+            splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return splitRenderer;
         }
 
         protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
+            overflowRenderer.AddAllProperties(GetOwnProperties());
             overflowRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return overflowRenderer;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                , AbstractRenderer.INF))));
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))));
             if (errorResult != null) {
-                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
             }
-            return base.GetMinMaxWidth(availableWidth);
+            return base.GetMinMaxWidth();
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
@@ -213,8 +218,8 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_1 || numberingType == ListNumberingType.ZAPF_DINGBATS_2 || numberingType
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
-                                .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_202(constantFont, textElement);
+                                .GREEK_UPPER) ? StandardFonts.SYMBOL : StandardFonts.ZAPFDINGBATS;
+                            textRenderer = new _TextRenderer_211(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -243,8 +248,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_202 : TextRenderer {
-            public _TextRenderer_202(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_211 : TextRenderer {
+            public _TextRenderer_211(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -319,8 +324,8 @@ namespace iText.Layout.Renderer {
                 (LayoutResult.PARTIAL);
             newOverflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
             // ListItemRenderer for not rendered children of firstListItemRenderer
-            newOverflowRenderer.childRenderers.Add(new ListItemRenderer((ListItem)firstListItemRenderer.GetModelElement
-                ()));
+            newOverflowRenderer.childRenderers.Add(((ListItemRenderer)firstListItemRenderer).CreateOverflowRenderer(LayoutResult
+                .PARTIAL));
             newOverflowRenderer.childRenderers.AddAll(splitRenderer.GetChildRenderers().SubList(1, splitRenderer.GetChildRenderers
                 ().Count));
             IList<IRenderer> childrenStillRemainingToRender = new List<IRenderer>(firstListItemRenderer.GetChildRenderers
@@ -332,7 +337,7 @@ namespace iText.Layout.Renderer {
                 newOverflowRenderer.GetChildRenderers()[0].GetChildRenderers().AddAll(childrenStillRemainingToRender);
                 splitRenderer.GetChildRenderers()[0].GetChildRenderers().RemoveAll(childrenStillRemainingToRender);
                 newOverflowRenderer.GetChildRenderers()[0].SetProperty(Property.MARGIN_LEFT, splitRenderer.GetChildRenderers
-                    ()[0].GetProperty<float?>(Property.MARGIN_LEFT));
+                    ()[0].GetProperty<UnitValue>(Property.MARGIN_LEFT));
             }
             else {
                 newOverflowRenderer.childRenderers.JRemoveAt(0);
@@ -398,14 +403,26 @@ namespace iText.Layout.Renderer {
                 foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.SetParent(this);
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
+                    UnitValue marginLeftUV = childRenderer.GetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0f));
+                    if (!marginLeftUV.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .MARGIN_LEFT));
+                    }
+                    float calculatedMargin = marginLeftUV.GetValue();
                     if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, this, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
                         .DEFAULT) {
                         calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
-                    childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
+                    childRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(calculatedMargin));
                     IRenderer symbolRenderer = symbolRenderers[listItemNum++];
                     ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
+                    if (symbolRenderer != null) {
+                        LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                        if (taggingHelper != null) {
+                            taggingHelper.SetRoleHint(symbolRenderer, StandardRoles.LBL);
+                        }
+                    }
                 }
             }
             return null;

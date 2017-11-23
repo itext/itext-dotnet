@@ -43,96 +43,28 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Tagging {
-    /// <summary>
-    /// To be able to be wrapped with this
-    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
-    /// the
-    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-    /// must be indirect.
-    /// </summary>
-    public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
-        public static int Unknown = 0;
-
-        public static int Grouping = 1;
-
-        public static int BlockLevel = 2;
-
-        public static int InlineLevel = 3;
-
-        public static int Illustration = 4;
-
-        public static ICollection<PdfName> groupingRoles = new HashSet<PdfName>();
-
-        public static ICollection<PdfName> blockLevelRoles = new HashSet<PdfName>();
-
-        public static ICollection<PdfName> inlineLevelRoles = new HashSet<PdfName>();
-
-        public static ICollection<PdfName> illustrationRoles = new HashSet<PdfName>();
-
-        static PdfStructElem() {
-            groupingRoles.Add(PdfName.Document);
-            groupingRoles.Add(PdfName.Part);
-            groupingRoles.Add(PdfName.Art);
-            groupingRoles.Add(PdfName.Sect);
-            groupingRoles.Add(PdfName.Div);
-            groupingRoles.Add(PdfName.BlockQuote);
-            groupingRoles.Add(PdfName.Caption);
-            groupingRoles.Add(PdfName.Caption);
-            groupingRoles.Add(PdfName.TOC);
-            groupingRoles.Add(PdfName.TOCI);
-            groupingRoles.Add(PdfName.Index);
-            groupingRoles.Add(PdfName.NonStruct);
-            groupingRoles.Add(PdfName.Private);
-            blockLevelRoles.Add(PdfName.P);
-            blockLevelRoles.Add(PdfName.H);
-            blockLevelRoles.Add(PdfName.H1);
-            blockLevelRoles.Add(PdfName.H2);
-            blockLevelRoles.Add(PdfName.H3);
-            blockLevelRoles.Add(PdfName.H4);
-            blockLevelRoles.Add(PdfName.H5);
-            blockLevelRoles.Add(PdfName.H6);
-            blockLevelRoles.Add(PdfName.L);
-            blockLevelRoles.Add(PdfName.Lbl);
-            blockLevelRoles.Add(PdfName.LI);
-            blockLevelRoles.Add(PdfName.LBody);
-            blockLevelRoles.Add(PdfName.Table);
-            blockLevelRoles.Add(PdfName.TR);
-            blockLevelRoles.Add(PdfName.TH);
-            blockLevelRoles.Add(PdfName.TD);
-            blockLevelRoles.Add(PdfName.THead);
-            blockLevelRoles.Add(PdfName.TBody);
-            blockLevelRoles.Add(PdfName.TFoot);
-            inlineLevelRoles.Add(PdfName.Span);
-            inlineLevelRoles.Add(PdfName.Quote);
-            inlineLevelRoles.Add(PdfName.Note);
-            inlineLevelRoles.Add(PdfName.Reference);
-            inlineLevelRoles.Add(PdfName.BibEntry);
-            inlineLevelRoles.Add(PdfName.Code);
-            inlineLevelRoles.Add(PdfName.Link);
-            inlineLevelRoles.Add(PdfName.Annot);
-            inlineLevelRoles.Add(PdfName.Ruby);
-            inlineLevelRoles.Add(PdfName.Warichu);
-            inlineLevelRoles.Add(PdfName.RB);
-            inlineLevelRoles.Add(PdfName.RT);
-            inlineLevelRoles.Add(PdfName.RP);
-            inlineLevelRoles.Add(PdfName.WT);
-            inlineLevelRoles.Add(PdfName.WP);
-            illustrationRoles.Add(PdfName.Figure);
-            illustrationRoles.Add(PdfName.Formula);
-            illustrationRoles.Add(PdfName.Form);
-        }
-
-        protected internal int type = Unknown;
-
-        /// <param name="pdfObject">must be an indirect object.</param>
+    /// <summary>A wrapper for structure element dictionaries (ISO-32000 14.7.2 "Structure Hierarchy").</summary>
+    /// <remarks>
+    /// A wrapper for structure element dictionaries (ISO-32000 14.7.2 "Structure Hierarchy").
+    /// <p>
+    /// The logical structure of a document shall be described by a hierarchy of objects called
+    /// the structure hierarchy or structure tree. At the root of the hierarchy shall be a dictionary object
+    /// called the structure tree root (see
+    /// <see cref="PdfStructTreeRoot"/>
+    /// ). Immediate children of the structure tree root
+    /// are structure elements. Structure elements are other structure elements or content items.
+    /// </remarks>
+    public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IStructureNode {
         public PdfStructElem(PdfDictionary pdfObject)
             : base(pdfObject) {
-            EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
         }
 
@@ -150,7 +82,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public PdfStructElem(PdfDocument document, PdfName role)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(document)) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructElem);
             GetPdfObject().Put(PdfName.S, role);
         }
@@ -240,12 +172,12 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfMcr AddKid(int index, PdfMcr kid) {
-            GetDocument().GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(kid);
+            GetDocEnsureIndirectForKids().GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(kid);
             AddKidObject(GetPdfObject(), index, kid.GetPdfObject());
             return kid;
         }
 
-        public virtual IPdfStructElem RemoveKid(int index) {
+        public virtual IStructureNode RemoveKid(int index) {
             PdfObject k = GetK();
             if (k == null || !k.IsArray() && index != 0) {
                 throw new IndexOutOfRangeException();
@@ -262,17 +194,21 @@ namespace iText.Kernel.Pdf.Tagging {
                 GetPdfObject().Remove(PdfName.K);
             }
             SetModified();
-            IPdfStructElem removedKid = ConvertPdfObjectToIPdfStructElem(k);
-            if (removedKid is PdfMcr) {
-                GetDocument().GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
+            IStructureNode removedKid = ConvertPdfObjectToIPdfStructElem(k);
+            PdfDocument doc = GetDocument();
+            if (removedKid is PdfMcr && doc != null) {
+                doc.GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
             }
             return removedKid;
         }
 
-        public virtual int RemoveKid(IPdfStructElem kid) {
+        public virtual int RemoveKid(IStructureNode kid) {
             if (kid is PdfMcr) {
                 PdfMcr mcr = (PdfMcr)kid;
-                GetDocument().GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr(mcr);
+                PdfDocument doc = GetDocument();
+                if (doc != null) {
+                    doc.GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr(mcr);
+                }
                 return RemoveKidObject(mcr.GetPdfObject());
             }
             else {
@@ -283,19 +219,31 @@ namespace iText.Kernel.Pdf.Tagging {
             return -1;
         }
 
-        /// <returns>parent of the current structure element. If parent is already flushed it returns null.</returns>
-        public virtual IPdfStructElem GetParent() {
+        /// <returns>parent of the current structure element. Returns null if parent isn't set or if either current element or parent are invalid.
+        ///     </returns>
+        public virtual IStructureNode GetParent() {
             PdfDictionary parent = GetPdfObject().GetAsDictionary(PdfName.P);
-            if (parent == null || parent.IsFlushed()) {
+            if (parent == null) {
                 return null;
+            }
+            if (parent.IsFlushed()) {
+                PdfDocument pdfDoc = GetDocument();
+                if (pdfDoc == null) {
+                    return null;
+                }
+                PdfStructTreeRoot structTreeRoot = pdfDoc.GetStructTreeRoot();
+                return structTreeRoot.GetPdfObject() == parent ? (IStructureNode)structTreeRoot : new iText.Kernel.Pdf.Tagging.PdfStructElem
+                    (parent);
             }
             if (IsStructElem(parent)) {
                 return new iText.Kernel.Pdf.Tagging.PdfStructElem(parent);
             }
             else {
-                PdfName type = parent.GetAsName(PdfName.Type);
-                if (PdfName.StructTreeRoot.Equals(type)) {
-                    return GetDocument().GetStructTreeRoot();
+                PdfDocument pdfDoc = GetDocument();
+                bool parentIsRoot = pdfDoc != null && PdfName.StructTreeRoot.Equals(parent.GetAsName(PdfName.Type));
+                parentIsRoot = parentIsRoot || pdfDoc != null && pdfDoc.GetStructTreeRoot().GetPdfObject() == parent;
+                if (parentIsRoot) {
+                    return pdfDoc.GetStructTreeRoot();
                 }
                 else {
                     return null;
@@ -311,9 +259,9 @@ namespace iText.Kernel.Pdf.Tagging {
         /// in the list on it's place.
         /// </remarks>
         /// <returns>list of the direct kids of structure element.</returns>
-        public virtual IList<IPdfStructElem> GetKids() {
+        public virtual IList<IStructureNode> GetKids() {
             PdfObject k = GetK();
-            IList<IPdfStructElem> kids = new List<IPdfStructElem>();
+            IList<IStructureNode> kids = new List<IStructureNode>();
             if (k != null) {
                 if (k.IsArray()) {
                     PdfArray a = (PdfArray)k;
@@ -332,32 +280,253 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetPdfObject().Get(PdfName.K);
         }
 
-        public static int IdentifyType(PdfDocument doc, PdfName role) {
-            PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
-            if (roleMap.ContainsKey(role)) {
-                role = roleMap.GetAsName(role);
-            }
-            if (groupingRoles.Contains(role)) {
-                return Grouping;
+        /// <summary>
+        /// A
+        /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
+        /// identifies the structure element or elements to which the item of content, contained
+        /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see>List&lt;  PdfStructElem  &gt;</see>
+        /// containing zero, one or more structure elements.
+        /// </returns>
+        public virtual IList<iText.Kernel.Pdf.Tagging.PdfStructElem> GetRefsList() {
+            PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
+            if (refsArray == null) {
+                return JavaCollectionsUtil.EmptyList<iText.Kernel.Pdf.Tagging.PdfStructElem>();
             }
             else {
-                if (blockLevelRoles.Contains(role)) {
-                    return BlockLevel;
+                IList<iText.Kernel.Pdf.Tagging.PdfStructElem> refs = new List<iText.Kernel.Pdf.Tagging.PdfStructElem>(refsArray
+                    .Size());
+                for (int i = 0; i < refsArray.Size(); ++i) {
+                    refs.Add(new iText.Kernel.Pdf.Tagging.PdfStructElem(refsArray.GetAsDictionary(i)));
                 }
-                else {
-                    if (inlineLevelRoles.Contains(role)) {
-                        return InlineLevel;
-                    }
-                    else {
-                        if (illustrationRoles.Contains(role)) {
-                            return Illustration;
-                        }
-                        else {
-                            return Unknown;
-                        }
-                    }
-                }
+                return refs;
             }
+        }
+
+        /// <summary>
+        /// A
+        /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
+        /// identifies the structure element to which the item of content, contained
+        /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="ref">
+        /// a
+        /// <see cref="PdfStructElem"/>
+        /// to which the item of content, contained within this structure element, refers.
+        /// </param>
+        public virtual void AddRef(iText.Kernel.Pdf.Tagging.PdfStructElem @ref) {
+            if (!@ref.GetPdfObject().IsIndirect()) {
+                throw new PdfException(PdfException.RefArrayItemsInStructureElementDictionaryShallBeIndirectObjects);
+            }
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Ref, PdfName.StructElem
+                );
+            PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
+            if (refsArray == null) {
+                refsArray = new PdfArray();
+                Put(PdfName.Ref, refsArray);
+            }
+            refsArray.Add(@ref.GetPdfObject());
+            SetModified();
+        }
+
+        /// <summary>A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").</summary>
+        /// <remarks>
+        /// A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces"). If not present, the
+        /// element shall be considered to be in the default standard structure namespace.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="PdfNamespace"/>
+        /// this element belongs to.
+        /// </returns>
+        public virtual PdfNamespace GetNamespace() {
+            PdfDictionary nsDict = GetPdfObject().GetAsDictionary(PdfName.NS);
+            return nsDict != null ? new PdfNamespace(nsDict) : null;
+        }
+
+        /// <summary>A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").</summary>
+        /// <remarks>
+        /// A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </remarks>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="PdfNamespace"/>
+        /// this element belongs to, or null if element is desired to be considered
+        /// in the default standard structure namespace.
+        /// </param>
+        public virtual void SetNamespace(PdfNamespace @namespace) {
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.NS, PdfName.StructElem
+                );
+            if (@namespace != null) {
+                Put(PdfName.NS, @namespace.GetPdfObject());
+            }
+            else {
+                GetPdfObject().Remove(PdfName.NS);
+                SetModified();
+            }
+        }
+
+        /// <summary>Attribute for a structure element that may be used as pronunciation hint.</summary>
+        /// <remarks>
+        /// Attribute for a structure element that may be used as pronunciation hint. It is an exact replacement for content
+        /// enclosed by the structure element and its children.
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </remarks>
+        /// <param name="elementPhoneme">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// which defines an exact replacement for content enclosed by the structure
+        /// element and its children. This value is to be interpreted based on the PhoneticAlphabet attribute in effect.
+        /// </param>
+        public virtual void SetPhoneme(PdfString elementPhoneme) {
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Phoneme, PdfName
+                .StructElem);
+            Put(PdfName.Phoneme, elementPhoneme);
+        }
+
+        /// <summary>Attribute for a structure element that may be used as pronunciation hint.</summary>
+        /// <remarks>
+        /// Attribute for a structure element that may be used as pronunciation hint. It is an exact replacement for content
+        /// enclosed by the structure element and its children.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// which defines an exact replacement for content enclosed by the structure
+        /// element and its children. This value is to be interpreted based on the PhoneticAlphabet attribute in effect.
+        /// </returns>
+        public virtual PdfString GetPhoneme() {
+            return GetPdfObject().GetAsString(PdfName.Phoneme);
+        }
+
+        /// <summary>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
+        /// Applies to the structure element and its children, except where overridden by a child structure element.
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="phoneticAlphabet">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which defines phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute. Possible values are:
+        /// <ul>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
+        /// for the International Phonetic Alphabet by the International Phonetic Association;</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.x_sampa"/>
+        /// for Extended Speech Assessment Methods Phonetic Alphabet (X-SAMPA);</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_pinyin"/>
+        /// for Pinyin Latin romanization (Mandarin);</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_wadegile"/>
+        /// for Wade-Giles romanization (Mandarin).</li>
+        /// </ul>
+        /// Other values may be used.
+        /// </param>
+        public virtual void SetPhoneticAlphabet(PdfName phoneticAlphabet) {
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PhoneticAlphabet
+                , PdfName.StructElem);
+            Put(PdfName.PhoneticAlphabet, phoneticAlphabet);
+        }
+
+        /// <summary>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
+        /// Applies to the structure element and its children, except where overridden by a child structure element.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which defines phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// , or null if not defined,
+        /// default value
+        /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
+        /// . See
+        /// <see cref="SetPhoneticAlphabet(iText.Kernel.Pdf.PdfName)"/>
+        /// for other possible values.
+        /// </returns>
+        public virtual PdfName GetPhoneticAlphabet() {
+            return GetPdfObject().GetAsName(PdfName.PhoneticAlphabet);
+        }
+
+        /// <summary>
+        /// <p>
+        /// Adds file associated with structure element and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with structure element and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the structure element dictionary.
+        /// If description is provided, it also will add file description to catalog Names tree.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="description">the file description</param>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructElem));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
+            if (null != description) {
+                GetDocument().GetCatalog().GetNameTree(PdfName.EmbeddedFiles).AddEntry(description, fs.GetPdfObject());
+            }
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            afArray.Add(fs.GetPdfObject());
+        }
+
+        /// <summary>
+        /// <p>
+        /// Adds file associated with structure element and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with structure element and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the structure element dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(PdfFileSpec fs) {
+            AddAssociatedFile(null, fs);
+        }
+
+        /// <summary>Returns files associated with structure element.</summary>
+        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
+        /// <returns>associated files array.</returns>
+        public virtual PdfArray GetAssociatedFiles(bool create) {
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null && create) {
+                afArray = new PdfArray();
+                Put(PdfName.AF, afArray);
+            }
+            return afArray;
         }
 
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject value) {
@@ -368,20 +537,15 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public override void Flush() {
             PdfDictionary pageDict = GetPdfObject().GetAsDictionary(PdfName.Pg);
-            if (pageDict == null || pageDict.GetIndirectReference() == null) {
-                // TODO DEVSIX-1583: identify removed pages more reliably
+            if (pageDict == null || pageDict.GetIndirectReference() != null && pageDict.GetIndirectReference().IsFree(
+                )) {
                 GetPdfObject().Remove(PdfName.Pg);
             }
-            GetDocument().CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
-            base.Flush();
-        }
-
-        protected internal virtual int GetStructElementType() {
-            if (type == Unknown) {
-                PdfName role = GetPdfObject().GetAsName(PdfName.S);
-                type = IdentifyType(GetDocument(), role);
+            PdfDocument doc = GetDocument();
+            if (doc != null) {
+                doc.CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
             }
-            return type;
+            base.Flush();
         }
 
         internal static void AddKidObject(PdfDictionary parent, int index, PdfObject kid) {
@@ -414,6 +578,10 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             parent.SetModified();
             if (kid is PdfDictionary && IsStructElem((PdfDictionary)kid)) {
+                if (!parent.IsIndirect()) {
+                    throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                        );
+                }
                 ((PdfDictionary)kid).Put(PdfName.P, parent);
                 kid.SetModified();
             }
@@ -424,10 +592,26 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         protected internal virtual PdfDocument GetDocument() {
-            return GetPdfObject().GetIndirectReference().GetDocument();
+            PdfDictionary structDict = GetPdfObject();
+            PdfIndirectReference indRef = structDict.GetIndirectReference();
+            if (indRef == null && structDict.GetAsDictionary(PdfName.P) != null) {
+                // If parent is direct - it's definitely an invalid structure tree.
+                // MustBeIndirect state won't be met during reading, and all newly created struct elements shall have ind ref.
+                indRef = structDict.GetAsDictionary(PdfName.P).GetIndirectReference();
+            }
+            return indRef != null ? indRef.GetDocument() : null;
         }
 
-        private void AddKidObjectToStructElemList(PdfObject k, IList<IPdfStructElem> list) {
+        private PdfDocument GetDocEnsureIndirectForKids() {
+            PdfDocument doc = GetDocument();
+            if (doc == null) {
+                throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                    );
+            }
+            return doc;
+        }
+
+        private void AddKidObjectToStructElemList(PdfObject k, IList<IStructureNode> list) {
             if (k.IsFlushed()) {
                 list.Add(null);
                 return;
@@ -435,8 +619,8 @@ namespace iText.Kernel.Pdf.Tagging {
             list.Add(ConvertPdfObjectToIPdfStructElem(k));
         }
 
-        private IPdfStructElem ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
-            IPdfStructElem elem = null;
+        private IStructureNode ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
+            IStructureNode elem = null;
             switch (obj.GetObjectType()) {
                 case PdfObject.DICTIONARY: {
                     PdfDictionary d = (PdfDictionary)obj;
@@ -477,9 +661,6 @@ namespace iText.Kernel.Pdf.Tagging {
             if (k.IsArray()) {
                 PdfArray kidsArray = (PdfArray)k;
                 removedIndex = RemoveObjectFromArray(kidsArray, kid);
-                if (kidsArray.IsEmpty()) {
-                    GetPdfObject().Remove(PdfName.K);
-                }
             }
             if (!k.IsArray() || k.IsArray() && ((PdfArray)k).IsEmpty()) {
                 GetPdfObject().Remove(PdfName.K);

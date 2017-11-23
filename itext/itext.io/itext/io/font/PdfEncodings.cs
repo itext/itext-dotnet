@@ -93,6 +93,8 @@ namespace iText.IO.Font {
         /// </remarks>
         public const String PDF_DOC_ENCODING = "PDF";
 
+        public const String UTF8 = "UTF-8";
+
         private const String EMPTY_STRING = "";
 
         private static readonly char[] winansiByteToChar = new char[] { (char)0, (char)1, (char)2, (char)3, (char)

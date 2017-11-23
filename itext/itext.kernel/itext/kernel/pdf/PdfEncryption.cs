@@ -82,22 +82,53 @@ namespace iText.Kernel.Pdf {
         /// Creates the encryption. The userPassword and the
         /// ownerPassword can be null or have zero length. In this case the ownerPassword
         /// is replaced by a random string. The open permissions for the document can be
-        /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-        /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
+        /// .
         /// The permissions can be combined by ORing them.
         /// </remarks>
         /// <param name="userPassword">the user password. Can be null or empty</param>
         /// <param name="ownerPassword">the owner password. Can be null or empty</param>
         /// <param name="permissions">the user permissions</param>
         /// <param name="encryptionType">
-        /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
+        /// .
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed to output the metadata in cleartext
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException">if the document is already open</exception>
+        /// <param name="version">
+        /// the
+        /// <see cref="PdfVersion"/>
+        /// of the target document for encryption
+        /// </param>
         public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType, byte[]
-             documentId)
+             documentId, PdfVersion version)
             : base(new PdfDictionary()) {
             this.documentId = documentId;
+            if (version != null && version.CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                permissions = FixAccessibilityPermissionPdf20(permissions);
+            }
             int revision = SetCryptoMode(encryptionType);
             switch (revision) {
                 case STANDARD_ENCRYPTION_40: {
@@ -126,7 +157,7 @@ namespace iText.Kernel.Pdf {
 
                 case AES_256: {
                     StandardHandlerUsingAes256 handlerAes256 = new StandardHandlerUsingAes256(this.GetPdfObject(), userPassword
-                        , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly);
+                        , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, version);
                     this.permissions = handlerAes256.GetPermissions();
                     securityHandler = handlerAes256;
                     break;
@@ -139,18 +170,47 @@ namespace iText.Kernel.Pdf {
         /// Creates the certificate encryption. An array of one or more public certificates
         /// must be provided together with an array of the same size for the permissions for each certificate.
         /// The open permissions for the document can be
-        /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-        /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
+        /// .
         /// The permissions can be combined by ORing them.
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
         /// <param name="permissions">the user permissions for each of the certificates</param>
-        /// <param name="encryptionType">the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
-        ///     </param>
-        /// <exception cref="iText.Kernel.PdfException">if the document is already open</exception>
-        public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
+        /// <param name="encryptionType">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
+        /// .
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed to output the metadata in cleartext
+        /// </param>
+        public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType, PdfVersion version)
             : base(new PdfDictionary()) {
+            if (version != null && version.CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                for (int i = 0; i < permissions.Length; i++) {
+                    permissions[i] = FixAccessibilityPermissionPdf20(permissions[i]);
+                }
+            }
             int revision = SetCryptoMode(encryptionType);
             switch (revision) {
                 case STANDARD_ENCRYPTION_40: {
@@ -544,7 +604,8 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
 
-                case 5: {
+                case 5:
+                case 6: {
                     cryptoMode = EncryptionConstants.ENCRYPTION_AES_256;
                     PdfBoolean em5 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
                     if (em5 != null && !em5.GetValue()) {
@@ -630,6 +691,16 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return SetCryptoMode(cryptoMode, length);
+        }
+
+        private int FixAccessibilityPermissionPdf20(int permissions) {
+            // This bit was previously used to determine whether
+            // content could be extracted for the purposes of accessibility,
+            // however, that restriction has been deprecated in PDF 2.0. PDF
+            // readers shall ignore this bit and PDF writers shall always set this
+            // bit to 1 to ensure compatibility with PDF readers following
+            // earlier specifications.
+            return permissions | EncryptionConstants.ALLOW_SCREENREADERS;
         }
     }
 }

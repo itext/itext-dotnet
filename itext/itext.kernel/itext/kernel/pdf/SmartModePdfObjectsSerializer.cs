@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
+using iText.IO.Source;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -83,7 +84,7 @@ namespace iText.Kernel.Pdf {
             IDictionary<PdfIndirectReference, byte[]> serializedCache = indRef.GetDocument().serializedObjectsCache;
             byte[] content = serializedCache.Get(indRef);
             if (content == null) {
-                ByteBufferOutputStream bb = new ByteBufferOutputStream();
+                ByteBuffer bb = new ByteBuffer();
                 int level = 100;
                 SerObject(obj, bb, level, serializedCache);
                 content = bb.ToByteArray();
@@ -91,8 +92,8 @@ namespace iText.Kernel.Pdf {
             return new SerializedObjectContent(content);
         }
 
-        private void SerObject(PdfObject obj, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-            , byte[]> serializedCache) {
+        private void SerObject(PdfObject obj, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
+            serializedCache) {
             if (level <= 0) {
                 return;
             }
@@ -101,7 +102,7 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             PdfIndirectReference reference = null;
-            ByteBufferOutputStream savedBb = null;
+            ByteBuffer savedBb = null;
             if (obj.IsIndirectReference()) {
                 reference = (PdfIndirectReference)obj;
                 byte[] cached = serializedCache.Get(reference);
@@ -111,7 +112,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     savedBb = bb;
-                    bb = new ByteBufferOutputStream();
+                    bb = new ByteBuffer();
                     obj = reference.GetRefersTo();
                 }
             }
@@ -149,12 +150,12 @@ namespace iText.Kernel.Pdf {
             // PdfNull case is also here
             if (savedBb != null) {
                 serializedCache.Put(reference, bb.ToByteArray());
-                savedBb.Append(bb);
+                savedBb.Append(bb.GetInternalBuffer());
             }
         }
 
-        private void SerDic(PdfDictionary dic, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-            , byte[]> serializedCache) {
+        private void SerDic(PdfDictionary dic, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]>
+             serializedCache) {
             bb.Append("$D");
             if (level <= 0) {
                 return;
@@ -169,8 +170,8 @@ namespace iText.Kernel.Pdf {
             bb.Append("$\\D");
         }
 
-        private void SerArray(PdfArray array, ByteBufferOutputStream bb, int level, IDictionary<PdfIndirectReference
-            , byte[]> serializedCache) {
+        private void SerArray(PdfArray array, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
+            serializedCache) {
             bb.Append("$A");
             if (level <= 0) {
                 return;

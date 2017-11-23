@@ -48,7 +48,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Data;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>This class represents a single character and its bounding box</summary>
-    public class CharacterRenderInfo : LocationTextExtractionStrategy.TextChunk {
+    public class CharacterRenderInfo : TextChunk {
         private Rectangle boundingBox;
 
         /// <summary>
@@ -121,10 +121,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return boundingBox;
         }
 
-        private static LocationTextExtractionStrategy.ITextChunkLocation GetLocation(TextRenderInfo tri) {
+        private static ITextChunkLocation GetLocation(TextRenderInfo tri) {
             LineSegment baseline = tri.GetBaseline();
-            return new LocationTextExtractionStrategy.TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint
-                (), tri.GetSingleSpaceWidth());
+            return new TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint(), tri.GetSingleSpaceWidth
+                ());
         }
 
         internal class StringConversionInfo {

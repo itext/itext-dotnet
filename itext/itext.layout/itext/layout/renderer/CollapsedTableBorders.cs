@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -82,7 +82,7 @@ namespace iText.Layout.Renderer {
                             if (rowspansToDeduct[col] > 0) {
                                 int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
                                 if (rowspan < 1) {
-                                    ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                                    ILog logger = LogManager.GetLogger(typeof(TableRenderer));
                                     logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
                                     rowspan = 1;
                                 }
@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
                             // delete current row
                             rows.JRemoveAt(row - rowspansToDeduct[0]);
                             SetFinishRow(finishRow - 1);
-                            ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                            ILog logger = LogManager.GetLogger(typeof(TableRenderer));
                             logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                         }
                         else {
@@ -483,8 +483,8 @@ namespace iText.Layout.Renderer {
                 Border curBorder = borders[j];
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
                         x1 = x2;
                     }
                 }
@@ -509,7 +509,7 @@ namespace iText.Layout.Renderer {
                         x2 += GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1].GetWidth() / 2;
                     }
                 }
-                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
             }
             return this;
         }
@@ -528,7 +528,7 @@ namespace iText.Layout.Renderer {
                 Border curBorder = borders[startRow - largeTableIndexOffset + j];
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
                         y1 = y2;
                     }
                 }
@@ -545,7 +545,7 @@ namespace iText.Layout.Renderer {
             }
             Border lastBorder = borders[startRow - largeTableIndexOffset + j - 1];
             if (lastBorder != null) {
-                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
             }
             return this;
         }
@@ -587,7 +587,7 @@ namespace iText.Layout.Renderer {
         // region occupation
         protected internal override TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox, bool reverse) {
             if (null != layoutBox) {
-                layoutBox.ApplyMargins<Rectangle>(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, reverse);
+                layoutBox.ApplyMargins(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, reverse);
             }
             return this;
         }
@@ -640,7 +640,7 @@ namespace iText.Layout.Renderer {
 
         protected internal override TableBorders ApplyCellIndents(Rectangle box, float topIndent, float rightIndent
             , float bottomIndent, float leftIndent, bool reverse) {
-            box.ApplyMargins<Rectangle>(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
+            box.ApplyMargins(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
             return this;
         }
 

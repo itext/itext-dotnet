@@ -59,11 +59,6 @@ namespace iText.Kernel.Pdf.Navigation {
             return ((PdfArray)GetPdfObject()).Get(0);
         }
 
-        [System.ObsoleteAttribute(@"do not use this method. Will be removed in 7.1")]
-        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
-            return this;
-        }
-
         public static iText.Kernel.Pdf.Navigation.PdfExplicitDestination CreateXYZ(PdfPage page, float left, float
              top, float zoom) {
             return Create(page, PdfName.XYZ, left, float.NaN, float.NaN, top, zoom);

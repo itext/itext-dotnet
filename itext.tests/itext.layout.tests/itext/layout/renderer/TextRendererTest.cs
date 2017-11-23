@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -55,7 +56,7 @@ namespace iText.Layout.Renderer {
     public class TextRendererTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NextRendererTest() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteBufferOutputStream()));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             pdfDoc.AddNewPage();
             Document doc = new Document(pdfDoc);
             RootRenderer documentRenderer = doc.GetRenderer();
@@ -94,7 +95,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
         public virtual void SetFontAsText() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteBufferOutputStream()));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             pdfDoc.AddNewPage();
             Document doc = new Document(pdfDoc);
             Text txt = new Text("text");

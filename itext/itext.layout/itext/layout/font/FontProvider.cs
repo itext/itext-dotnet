@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Font;
@@ -91,9 +92,9 @@ namespace iText.Layout.Font {
     public class FontProvider {
         private readonly FontSet fontSet;
 
-        private readonly IDictionary<FontInfo, PdfFont> pdfFonts;
-
         private readonly FontSelectorCache fontSelectorCache;
+
+        protected internal readonly IDictionary<FontInfo, PdfFont> pdfFonts;
 
         /// <summary>Creates a new instance of FontProvider</summary>
         /// <param name="fontSet">predefined set of fonts, could be null.</param>
@@ -151,20 +152,20 @@ namespace iText.Layout.Font {
         }
 
         public virtual int AddStandardPdfFonts() {
-            AddFont(FontConstants.COURIER);
-            AddFont(FontConstants.COURIER_BOLD);
-            AddFont(FontConstants.COURIER_BOLDOBLIQUE);
-            AddFont(FontConstants.COURIER_OBLIQUE);
-            AddFont(FontConstants.HELVETICA);
-            AddFont(FontConstants.HELVETICA_BOLD);
-            AddFont(FontConstants.HELVETICA_BOLDOBLIQUE);
-            AddFont(FontConstants.HELVETICA_OBLIQUE);
-            AddFont(FontConstants.SYMBOL);
-            AddFont(FontConstants.TIMES_ROMAN);
-            AddFont(FontConstants.TIMES_BOLD);
-            AddFont(FontConstants.TIMES_BOLDITALIC);
-            AddFont(FontConstants.TIMES_ITALIC);
-            AddFont(FontConstants.ZAPFDINGBATS);
+            AddFont(StandardFonts.COURIER);
+            AddFont(StandardFonts.COURIER_BOLD);
+            AddFont(StandardFonts.COURIER_BOLDOBLIQUE);
+            AddFont(StandardFonts.COURIER_OBLIQUE);
+            AddFont(StandardFonts.HELVETICA);
+            AddFont(StandardFonts.HELVETICA_BOLD);
+            AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            AddFont(StandardFonts.HELVETICA_OBLIQUE);
+            AddFont(StandardFonts.SYMBOL);
+            fontSet.AddFont(StandardFonts.TIMES_ROMAN, null, "Times");
+            fontSet.AddFont(StandardFonts.TIMES_BOLD, null, "Times-Roman Bold");
+            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
+            fontSet.AddFont(StandardFonts.TIMES_ITALIC, null, "Times-Roman Italic");
+            AddFont(StandardFonts.ZAPFDINGBATS);
             return 14;
         }
 

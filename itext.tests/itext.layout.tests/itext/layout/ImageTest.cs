@@ -251,7 +251,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc, new PageSize(500, 300));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            image.SetWidthPercent(100);
+            image.SetWidth(UnitValue.CreatePercentValue(100));
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -527,13 +527,12 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(8);
-            table.SetWidthPercent(100);
+            Table table = new Table(UnitValue.CreatePercentArray(8)).UseAllAvailableWidth();
             for (int k = 0; k < rowCount; k++) {
                 for (int j = 0; j < 7; j++) {
                     table.AddCell("Hello");
                 }
-                Cell c = new Cell().Add(img.SetWidthPercent(50));
+                Cell c = new Cell().Add(img.SetWidth(UnitValue.CreatePercentValue(50)));
                 table.AddCell(c);
             }
             document.Add(table);
@@ -549,7 +548,7 @@ namespace iText.Layout {
         /// <remarks>
         /// If an image is flushed automatically on draw, we will later check it for circular references
         /// as it is an XObject. This is a test for
-        /// <see cref="System.ArgumentNullException"/>
+        /// <see cref="System.NullReferenceException"/>
         /// that was caused by getting
         /// a value from flushed image.
         /// </remarks>
@@ -565,8 +564,7 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 ));
             img.SetAutoScale(true);
-            Table table = new Table(4);
-            table.SetWidthPercent(100);
+            Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
             for (int k = 0; k < 5; k++) {
                 table.AddCell("Hello World from iText7");
                 List list = new List().SetListSymbol("-> ");
@@ -575,7 +573,7 @@ namespace iText.Layout {
                 table.AddCell(cell);
                 Cell c = new Cell().Add(img);
                 table.AddCell(c);
-                Table innerTable = new Table(3);
+                Table innerTable = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
                 int j = 0;
                 while (j < 9) {
                     innerTable.AddCell("Hi");
@@ -667,17 +665,20 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell(c);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Add(new AreaBreak());
             table.SetMinHeight(150);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -694,18 +695,21 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
             table.AddCell("First cell");
             table.AddCell(c);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Add(new AreaBreak());
             table.SetMinHeight(150);
             document.Add(table);
-            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Is my occupied area right?"
+                ));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

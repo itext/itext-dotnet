@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Logging;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
@@ -98,7 +98,7 @@ namespace iText.Layout.Renderer {
             maxBlockAscent = -1e20f;
             maxBlockDescent = 1e20f;
             int childPos = 0;
-            MinMaxWidth minMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
+            MinMaxWidth minMaxWidth = new MinMaxWidth();
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
             UpdateChildrenParent();
             ResolveChildrenFonts();
@@ -192,12 +192,10 @@ namespace iText.Layout.Renderer {
                     float maxChildWidth = 0;
                     if (childResult is MinMaxWidthLayoutResult) {
                         if (!childWidthWasReplaced) {
-                            minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
-                                );
+                            minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
                         }
                         // TODO if percents width was used, max width might be huge
-                        maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
-                            );
+                        maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMaxWidth();
                         widthHandler.UpdateMinChildWidth(minChildWidth + AbstractRenderer.EPS);
                         widthHandler.UpdateMaxChildWidth(maxChildWidth + AbstractRenderer.EPS);
                     }
@@ -248,7 +246,7 @@ namespace iText.Layout.Renderer {
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
                 if (!childWidthWasReplaced) {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
                         float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                         if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != layoutContext.GetArea().GetBBox().GetWidth()) {
                             childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
@@ -256,7 +254,7 @@ namespace iText.Layout.Renderer {
                         else {
                             if (bbox.GetWidth() == layoutContext.GetArea().GetBBox().GetWidth() && childBlockMinMaxWidth.GetMinWidth()
                                  > layoutContext.GetArea().GetBBox().GetWidth()) {
-                                LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
+                                LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
                                     );
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
@@ -298,11 +296,9 @@ namespace iText.Layout.Renderer {
                 float maxChildWidth_1 = 0;
                 if (childResult is MinMaxWidthLayoutResult) {
                     if (!childWidthWasReplaced) {
-                        minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth
-                            ();
+                        minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
                     }
-                    maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth
-                        ();
+                    maxChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMaxWidth();
                 }
                 else {
                     if (childBlockMinMaxWidth != null) {
@@ -430,7 +426,7 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().Count == 0) {
-                                    LoggerFactory.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
+                                    LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
                                         );
                                 }
                                 else {
@@ -598,8 +594,18 @@ namespace iText.Layout.Renderer {
                             float currentWidth;
                             if (child is TextRenderer) {
                                 currentWidth = ((TextRenderer)child).CalculateLineWidth();
-                                float[] margins = ((TextRenderer)child).GetMargins();
-                                currentWidth += margins[1] + margins[3];
+                                UnitValue[] margins = ((TextRenderer)child).GetMargins();
+                                if (!margins[1].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .MARGIN_RIGHT));
+                                }
+                                if (!margins[3].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .MARGIN_LEFT));
+                                }
+                                currentWidth += margins[1].GetValue() + margins[3].GetValue();
                                 ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             }
                             else {
@@ -843,10 +849,10 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
-                new Rectangle(availableWidth, AbstractRenderer.INF)))));
-            return result.GetNotNullMinMaxWidth(availableWidth);
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))));
+            return result.GetMinMaxWidth();
         }
 
         internal virtual float GetTopLeadingIndent(Leading leading) {
@@ -857,15 +863,20 @@ namespace iText.Layout.Renderer {
                 }
 
                 case Leading.MULTIPLIED: {
-                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
+                    if (!fontSize.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .FONT_SIZE));
+                    }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
                     // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
                     // between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent)
-                         != 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
+                         != 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent
-                        ) != 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                        ) != 0 && !ContainsImage() ? -fontSize.GetValue() * 0.2f : maxTextDescent;
                     return Math.Max(textAscent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, maxBlockAscent) 
                         - maxAscent;
                 }
@@ -884,13 +895,20 @@ namespace iText.Layout.Renderer {
                 }
 
                 case Leading.MULTIPLIED: {
-                    float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE, 0f);
+                    UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
+                    if (!fontSize.IsPointValue()) {
+                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                            .FONT_SIZE));
+                    }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
                     // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
                     // between the two possible scenarios in HTML.
-                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize * 0.8f : maxTextAscent;
-                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize * 0.2f : maxTextDescent;
+                    float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f
+                         : maxTextAscent;
+                    float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize.GetValue() *
+                         0.2f : maxTextDescent;
                     return Math.Max(-textDescent + ((textAscent - textDescent) * (leading.GetValue() - 1)) / 2, -maxBlockDescent
                         ) + maxDescent;
                 }

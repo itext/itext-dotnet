@@ -56,20 +56,13 @@ namespace iText.Layout.Layout {
         public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
-            minMaxWidth = new MinMaxWidth(0, 0);
+            minMaxWidth = new MinMaxWidth();
         }
 
         public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             , IRenderer cause)
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public virtual MinMaxWidth GetNotNullMinMaxWidth(float availableWidth) {
-            if (minMaxWidth == null) {
-                minMaxWidth = new MinMaxWidth(0, availableWidth);
-            }
-            return GetMinMaxWidth();
+            minMaxWidth = new MinMaxWidth();
         }
 
         public virtual MinMaxWidth GetMinMaxWidth() {

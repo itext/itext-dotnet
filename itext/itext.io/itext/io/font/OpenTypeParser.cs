@@ -45,13 +45,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
     internal class OpenTypeParser : IDisposable {
+        private const int HEAD_LOCA_FORMAT_OFFSET = 51;
+
         /// <summary>The components of table 'head'.</summary>
-        protected internal class HeaderTable {
+        internal class HeaderTable {
             internal int flags;
 
             internal int unitsPerEm;
@@ -68,7 +71,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>The components of table 'hhea'.</summary>
-        protected internal class HorizontalHeader {
+        internal class HorizontalHeader {
             internal short Ascender;
 
             internal short Descender;
@@ -91,7 +94,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>The components of table 'OS/2'.</summary>
-        protected internal class WindowsMetrics {
+        internal class WindowsMetrics {
             internal short xAvgCharWidth;
 
             internal int usWeightClass;
@@ -151,7 +154,7 @@ namespace iText.IO.Font {
             internal int sCapHeight;
         }
 
-        protected internal class PostTable {
+        internal class PostTable {
             /// <summary>The italic angle.</summary>
             /// <remarks>
             /// The italic angle. It is usually extracted from the 'post' table or in it's
@@ -170,7 +173,7 @@ namespace iText.IO.Font {
             internal bool isFixedPitch;
         }
 
-        protected internal class CmapTable {
+        internal class CmapTable {
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -278,11 +281,10 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         public OpenTypeParser(String name) {
-            String baseName = FontProgram.GetBaseName(name);
-            String ttcName = GetTTCName(baseName);
+            String ttcName = GetTTCName(name);
             this.fileName = ttcName;
-            if (ttcName.Length < baseName.Length) {
-                ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcName.Length + 1));
+            if (ttcName.Length < name.Length) {
+                ttcIndex = System.Convert.ToInt32(name.Substring(ttcName.Length + 1));
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
             InitializeSfntTables();
@@ -357,8 +359,8 @@ namespace iText.IO.Font {
             if (cidName != null) {
                 fontNames.SetCidFontName(cidName[0][3]);
             }
-            fontNames.SetWeight(os_2.usWeightClass);
-            fontNames.SetWidth(os_2.usWidthClass);
+            fontNames.SetFontWeight(os_2.usWeightClass);
+            fontNames.SetFontStretch(FontStretches.FromOpenTypeWidthClass(os_2.usWidthClass));
             fontNames.SetMacStyle(head.macStyle);
             fontNames.SetAllowEmbedding(os_2.fsType != 2);
             return fontNames;
@@ -512,13 +514,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Reads the font data.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        [Obsolete]
-        protected internal virtual void Process() {
-            LoadTables(true);
-        }
-
         /// <summary>Gets the name from a composed TTC file name.</summary>
         /// <remarks>
         /// Gets the name from a composed TTC file name.
@@ -579,7 +574,7 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hmtx");
                 }
             }
-            glyphWidthsByIndex = new int[Math.Max(ReadMaxGlyphId(), numberOfHMetrics)];
+            glyphWidthsByIndex = new int[ReadNumGlyphs()];
             raf.Seek(table_location[0]);
             for (int k = 0; k < numberOfHMetrics; ++k) {
                 glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
@@ -655,7 +650,7 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
-            raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
+            raf.Seek(tableLocation[0] + HEAD_LOCA_FORMAT_OFFSET);
             bool locaShortTable = raf.ReadUnsignedShort() == 0;
             tableLocation = tables.Get("loca");
             if (tableLocation == null) {
@@ -702,7 +697,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual int ReadMaxGlyphId() {
+        protected internal virtual int ReadNumGlyphs() {
             int[] table_location = tables.Get("maxp");
             if (table_location == null) {
                 return 65536;

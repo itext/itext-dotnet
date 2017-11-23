@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -53,8 +54,7 @@ namespace iText.IO.Font {
     /// without having to enter a path as parameter.
     /// </summary>
     internal class FontRegisterProvider {
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.FontRegisterProvider
-            ));
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.FontRegisterProvider));
 
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
         private readonly IDictionary<String, String> fontNames = new Dictionary<String, String>();
@@ -98,17 +98,17 @@ namespace iText.IO.Font {
             if (family != null) {
                 lock (family) {
                     // some bugs were fixed here by Daniel Marczisovszky
-                    int s = style == FontConstants.UNDEFINED ? FontConstants.NORMAL : style;
+                    int s = style == FontStyles.UNDEFINED ? FontStyles.NORMAL : style;
                     foreach (String f in family) {
                         String lcf = f.ToLowerInvariant();
-                        int fs = FontConstants.NORMAL;
+                        int fs = FontStyles.NORMAL;
                         if (lcf.Contains("bold")) {
-                            fs |= FontConstants.BOLD;
+                            fs |= FontStyles.BOLD;
                         }
                         if (lcf.Contains("italic") || lcf.Contains("oblique")) {
-                            fs |= FontConstants.ITALIC;
+                            fs |= FontStyles.ITALIC;
                         }
-                        if ((s & FontConstants.BOLDITALIC) == fs) {
+                        if ((s & FontStyles.BOLDITALIC) == fs) {
                             fontName = f;
                             break;
                         }
@@ -119,49 +119,49 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void RegisterStandardFonts() {
-            fontNames.Put(FontConstants.COURIER.ToLowerInvariant(), FontConstants.COURIER);
-            fontNames.Put(FontConstants.COURIER_BOLD.ToLowerInvariant(), FontConstants.COURIER_BOLD);
-            fontNames.Put(FontConstants.COURIER_OBLIQUE.ToLowerInvariant(), FontConstants.COURIER_OBLIQUE);
-            fontNames.Put(FontConstants.COURIER_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.COURIER_BOLDOBLIQUE);
-            fontNames.Put(FontConstants.HELVETICA.ToLowerInvariant(), FontConstants.HELVETICA);
-            fontNames.Put(FontConstants.HELVETICA_BOLD.ToLowerInvariant(), FontConstants.HELVETICA_BOLD);
-            fontNames.Put(FontConstants.HELVETICA_OBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_OBLIQUE);
-            fontNames.Put(FontConstants.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_BOLDOBLIQUE);
-            fontNames.Put(FontConstants.SYMBOL.ToLowerInvariant(), FontConstants.SYMBOL);
-            fontNames.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), FontConstants.TIMES_ROMAN);
-            fontNames.Put(FontConstants.TIMES_BOLD.ToLowerInvariant(), FontConstants.TIMES_BOLD);
-            fontNames.Put(FontConstants.TIMES_ITALIC.ToLowerInvariant(), FontConstants.TIMES_ITALIC);
-            fontNames.Put(FontConstants.TIMES_BOLDITALIC.ToLowerInvariant(), FontConstants.TIMES_BOLDITALIC);
-            fontNames.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), FontConstants.ZAPFDINGBATS);
+            fontNames.Put(StandardFonts.COURIER.ToLowerInvariant(), StandardFonts.COURIER);
+            fontNames.Put(StandardFonts.COURIER_BOLD.ToLowerInvariant(), StandardFonts.COURIER_BOLD);
+            fontNames.Put(StandardFonts.COURIER_OBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_OBLIQUE);
+            fontNames.Put(StandardFonts.COURIER_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_BOLDOBLIQUE);
+            fontNames.Put(StandardFonts.HELVETICA.ToLowerInvariant(), StandardFonts.HELVETICA);
+            fontNames.Put(StandardFonts.HELVETICA_BOLD.ToLowerInvariant(), StandardFonts.HELVETICA_BOLD);
+            fontNames.Put(StandardFonts.HELVETICA_OBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_OBLIQUE);
+            fontNames.Put(StandardFonts.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_BOLDOBLIQUE);
+            fontNames.Put(StandardFonts.SYMBOL.ToLowerInvariant(), StandardFonts.SYMBOL);
+            fontNames.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), StandardFonts.TIMES_ROMAN);
+            fontNames.Put(StandardFonts.TIMES_BOLD.ToLowerInvariant(), StandardFonts.TIMES_BOLD);
+            fontNames.Put(StandardFonts.TIMES_ITALIC.ToLowerInvariant(), StandardFonts.TIMES_ITALIC);
+            fontNames.Put(StandardFonts.TIMES_BOLDITALIC.ToLowerInvariant(), StandardFonts.TIMES_BOLDITALIC);
+            fontNames.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), StandardFonts.ZAPFDINGBATS);
         }
 
         protected internal virtual void RegisterStandardFontFamilies() {
             IList<String> family;
             family = new List<String>();
-            family.Add(FontConstants.COURIER);
-            family.Add(FontConstants.COURIER_BOLD);
-            family.Add(FontConstants.COURIER_OBLIQUE);
-            family.Add(FontConstants.COURIER_BOLDOBLIQUE);
-            fontFamilies.Put(FontConstants.COURIER.ToLowerInvariant(), family);
+            family.Add(StandardFonts.COURIER);
+            family.Add(StandardFonts.COURIER_BOLD);
+            family.Add(StandardFonts.COURIER_OBLIQUE);
+            family.Add(StandardFonts.COURIER_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFonts.COURIER.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.HELVETICA);
-            family.Add(FontConstants.HELVETICA_BOLD);
-            family.Add(FontConstants.HELVETICA_OBLIQUE);
-            family.Add(FontConstants.HELVETICA_BOLDOBLIQUE);
-            fontFamilies.Put(FontConstants.HELVETICA.ToLowerInvariant(), family);
+            family.Add(StandardFonts.HELVETICA);
+            family.Add(StandardFonts.HELVETICA_BOLD);
+            family.Add(StandardFonts.HELVETICA_OBLIQUE);
+            family.Add(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            fontFamilies.Put(StandardFonts.HELVETICA.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.SYMBOL);
-            fontFamilies.Put(FontConstants.SYMBOL.ToLowerInvariant(), family);
+            family.Add(StandardFonts.SYMBOL);
+            fontFamilies.Put(StandardFonts.SYMBOL.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.TIMES_ROMAN);
-            family.Add(FontConstants.TIMES_BOLD);
-            family.Add(FontConstants.TIMES_ITALIC);
-            family.Add(FontConstants.TIMES_BOLDITALIC);
-            fontFamilies.Put(FontConstants.TIMES.ToLowerInvariant(), family);
-            fontFamilies.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), family);
+            family.Add(StandardFonts.TIMES_ROMAN);
+            family.Add(StandardFonts.TIMES_BOLD);
+            family.Add(StandardFonts.TIMES_ITALIC);
+            family.Add(StandardFonts.TIMES_BOLDITALIC);
+            fontFamilies.Put(StandardFonts.TIMES.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), family);
             family = new List<String>();
-            family.Add(FontConstants.ZAPFDINGBATS);
-            fontFamilies.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), family);
+            family.Add(StandardFonts.ZAPFDINGBATS);
+            fontFamilies.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
         /// <exception cref="System.IO.IOException"/>

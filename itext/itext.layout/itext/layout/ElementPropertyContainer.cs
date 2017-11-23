@@ -101,91 +101,13 @@ namespace iText.Layout {
                 case Property.PADDING_RIGHT:
                 case Property.PADDING_BOTTOM:
                 case Property.PADDING_LEFT: {
-                    return (T1)(Object)0f;
+                    return (T1)(Object)UnitValue.CreatePointValue(0f);
                 }
 
                 default: {
                     return (T1)(Object)null;
                 }
             }
-        }
-
-        /// <summary>Gets the width property of the Element.</summary>
-        /// <returns>the width of the element, with a value and a measurement unit.</returns>
-        /// <seealso cref="iText.Layout.Properties.UnitValue"/>
-        public virtual UnitValue GetWidth() {
-            return (UnitValue)this.GetProperty<UnitValue>(Property.WIDTH);
-        }
-
-        /// <summary>Sets the width property of the Element, measured in points.</summary>
-        /// <param name="width">a value measured in points.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidth(float width) {
-            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
-            return (T)(Object)this;
-        }
-
-        /// <summary>Sets the width property of the Element, measured in percentage.</summary>
-        /// <param name="widthPercent">a value measured in percentage.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidthPercent(float widthPercent) {
-            SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
-            return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// Sets the width property of the Element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
-        /// </summary>
-        /// <param name="width">
-        /// a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// object
-        /// </param>
-        /// <returns>this Element.</returns>
-        public virtual T SetWidth(UnitValue width) {
-            SetProperty(Property.WIDTH, width);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Gets the height property of the Element.</summary>
-        /// <returns>the height of the element, as a floating point value. Null if the property is not present</returns>
-        public virtual float? GetHeight() {
-            return this.GetProperty<UnitValue>(Property.HEIGHT).GetValue();
-        }
-
-        /// <summary>Sets the height property of the Element as a point-value.</summary>
-        /// <param name="height">a floating point value for the new height</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeight(float height) {
-            UnitValue heightAsUV = UnitValue.CreatePointValue(height);
-            SetProperty(Property.HEIGHT, heightAsUV);
-            return (T)(Object)this;
-        }
-
-        /// <summary>Sets the height property of the Element, measured in percentage.</summary>
-        /// <param name="heightPercent">a value measured in percentage.</param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeightPercent(float heightPercent) {
-            SetProperty(Property.HEIGHT, UnitValue.CreatePercentValue(heightPercent));
-            return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// Sets the width property of the Element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
-        /// </summary>
-        /// <param name="height">
-        /// a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// object
-        /// </param>
-        /// <returns>this Element.</returns>
-        public virtual T SetHeight(UnitValue height) {
-            SetProperty(Property.HEIGHT, height);
-            return (T)(Object)this;
         }
 
         /// <summary>Sets values for a relative repositioning of the Element.</summary>
@@ -229,12 +151,12 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, float width) {
-            SetFixedPosition(x, y, UnitValue.CreatePointValue(width));
+        public virtual T SetFixedPosition(float left, float bottom, float width) {
+            SetFixedPosition(left, bottom, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
 
@@ -249,17 +171,17 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">
         /// a
         /// <see cref="iText.Layout.Properties.UnitValue"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, UnitValue width) {
+        public virtual T SetFixedPosition(float left, float bottom, UnitValue width) {
             SetProperty(Property.POSITION, LayoutPosition.FIXED);
-            SetProperty(Property.X, x);
-            SetProperty(Property.Y, y);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.BOTTOM, bottom);
             SetProperty(Property.WIDTH, width);
             return (T)(Object)this;
         }
@@ -276,12 +198,12 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, float width) {
-            SetFixedPosition(x, y, width);
+        public virtual T SetFixedPosition(int pageNumber, float left, float bottom, float width) {
+            SetFixedPosition(left, bottom, width);
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
@@ -298,12 +220,12 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
-        /// <param name="x">horizontal position of the bottom-left corner on the page</param>
-        /// <param name="y">vertical position of the bottom-left corner on the page</param>
+        /// <param name="left">horizontal position of the bottom-left corner on the page</param>
+        /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width) {
-            SetFixedPosition(x, y, width);
+        public virtual T SetFixedPosition(int pageNumber, float left, float bottom, UnitValue width) {
+            SetFixedPosition(left, bottom, width);
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
@@ -373,11 +295,12 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the font size of this Element.</summary>
+        /// <summary>Sets the font size of this Element, measured in points.</summary>
         /// <param name="fontSize">a floating point value</param>
         /// <returns>this Element.</returns>
         public virtual T SetFontSize(float fontSize) {
-            SetProperty(Property.FONT_SIZE, fontSize);
+            UnitValue fontSizeAsUV = UnitValue.CreatePointValue(fontSize);
+            SetProperty(Property.FONT_SIZE, fontSizeAsUV);
             return (T)(Object)this;
         }
 
@@ -636,18 +559,6 @@ namespace iText.Layout {
         public virtual T SetBold() {
             SetProperty(Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// This attribute specifies the base direction of directionally neutral text
-        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
-        /// in an element's content and attribute values.
-        /// </summary>
-        /// <param name="baseDirection">base direction</param>
-        /// <returns>this element</returns>
-        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>Switch on the simulation of italic style for a font.</summary>

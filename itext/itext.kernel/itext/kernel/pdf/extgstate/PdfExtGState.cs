@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Extgstate {
@@ -170,18 +169,6 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>0 - butt cap, 1 - round cap, 2 - projecting square cap.</returns>
         public virtual int? GetLineCapStyle() {
             return GetPdfObject().GetAsInt(PdfName.LC);
-        }
-
-        /// <summary>
-        /// Sets line gap style value,
-        /// <c>LC</c>
-        /// key.
-        /// </summary>
-        /// <param name="lineCapStyle">0 - butt cap, 1 - round cap, 2 - projecting square cap.</param>
-        /// <returns>object itself.</returns>
-        [System.ObsoleteAttribute(@"Use SetLineCapStyle(int) instead.")]
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int lineCapStyle) {
-            return Put(PdfName.LC, new PdfNumber(lineCapStyle));
         }
 
         /// <summary>
@@ -766,32 +753,6 @@ namespace iText.Kernel.Pdf.Extgstate {
         }
 
         /// <summary>
-        /// Gets
-        /// <c>HTP</c>
-        /// key.
-        /// </summary>
-        [Obsolete]
-        public virtual PdfObject GetHTP() {
-            return GetPdfObject().Get(PdfName.HTP);
-        }
-
-        /// <summary>
-        /// Sets
-        /// <c>HTP</c>
-        /// key.
-        /// </summary>
-        /// <param name="htp">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// .
-        /// </param>
-        /// <returns>object itself.</returns>
-        [Obsolete]
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHTP(PdfObject htp) {
-            return Put(PdfName.HTP, htp);
-        }
-
-        /// <summary>
         /// Gets the flatness tolerance value,
         /// <c>FL</c>
         /// key.
@@ -897,7 +858,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// . array is deprecated in PDF 2.0.
         /// </returns>
         public virtual PdfObject GetBlendMode() {
             return GetPdfObject().Get(PdfName.BM);
@@ -915,7 +876,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// ; array is deprecated in PDF 2.0.
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetBlendMode(PdfObject blendMode) {
@@ -1101,6 +1062,72 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.TK, PdfBoolean.ValueOf(textKnockoutFlag));
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. This graphics state parameter controls whether black point
+        /// compensation is performed while doing CIE-based colour conversions.
+        /// </remarks>
+        /// <param name="useBlackPointCompensation"><code>true</code> to enable, <code>false</code> to disable</param>
+        /// <returns>object itself</returns>
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetUseBlackPointCompensation(bool useBlackPointCompensation
+            ) {
+            return Put(PdfName.UseBlackPtComp, useBlackPointCompensation ? PdfName.ON : PdfName.OFF);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Checks whether the black point compensation is performed while doing CIE-based colour conversions.
+        ///     </remarks>
+        /// <returns>
+        /// <code>true</code> if black point compensation is used, <code>false</code> if it is not used, or
+        /// <code>null</code> is the value is set to Default, or not set at all
+        /// </returns>
+        public virtual bool? IsBlackPointCompensationUsed() {
+            PdfName useBlackPointCompensation = GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
+            if (PdfName.ON.Equals(useBlackPointCompensation)) {
+                return true;
+            }
+            else {
+                if (PdfName.OFF.Equals(useBlackPointCompensation)) {
+                    return false;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Sets halftone origin</remarks>
+        /// <param name="x">X location of the halftone origin in the current coordinate system</param>
+        /// <param name="y">Y location of the halftone origin in the current coordinate system</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfExtGState"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHalftoneOrigin(float x, float y) {
+            PdfArray hto = new PdfArray();
+            hto.Add(new PdfNumber(x));
+            hto.Add(new PdfNumber(y));
+            return Put(PdfName.HTO, hto);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Gets halftone origin</remarks>
+        /// <returns>
+        /// an array of two values specifying X and Y values of the halftone origin in the current coordinate system,
+        /// respectively, or <code>null</code> if halftone origin is not specified
+        /// </returns>
+        public virtual float[] GetHalftoneOrigin() {
+            PdfArray hto = GetPdfObject().GetAsArray(PdfName.HTO);
+            if (hto != null && hto.Size() == 2 && hto.Get(0).IsNumber() && hto.Get(1).IsNumber()) {
+                return new float[] { hto.GetAsNumber(0).FloatValue(), hto.GetAsNumber(1).FloatValue() };
+            }
+            else {
+                return null;
+            }
+        }
+
         /// <summary>Puts the value into Graphics state parameter dictionary and associates it with the specified key.
         ///     </summary>
         /// <remarks>
@@ -1112,6 +1139,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 

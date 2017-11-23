@@ -61,6 +61,14 @@ namespace iText.Kernel.Crypto {
             cbc.Init(forEncryption, kp);
         }
 
+        public AESCipherCBCnoPad(bool forEncryption, byte[] key, byte[] initVector) {
+            IBlockCipher aes = new AesFastEngine();
+            cbc = new CbcBlockCipher(aes);
+            KeyParameter kp = new KeyParameter(key);
+            ParametersWithIV piv = new ParametersWithIV(kp, initVector);
+            cbc.Init(forEncryption, piv);
+        }
+
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
             if ((inpLen % cbc.GetBlockSize()) != 0) {
                 throw new ArgumentException("Not multiple of block: " + inpLen);

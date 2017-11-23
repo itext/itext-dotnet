@@ -43,10 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -60,9 +61,6 @@ namespace iText.Layout.Element {
     /// HTML anchor tag.
     /// </summary>
     public class Link : Text {
-        [Obsolete]
-        protected internal PdfLinkAnnotation linkAnnotation;
-
         /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
         /// <param name="text">the textual contents of the link</param>
         /// <param name="linkAnnotation">
@@ -72,7 +70,6 @@ namespace iText.Layout.Element {
         public Link(String text, PdfLinkAnnotation linkAnnotation)
             : base(text) {
             SetProperty(Property.LINK_ANNOTATION, linkAnnotation);
-            SetRole(PdfName.Link);
         }
 
         /// <summary>Creates a Link which can execute an action.</summary>
@@ -82,8 +79,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// </param>
         public Link(String text, PdfAction action)
-            : this(text, (PdfLinkAnnotation)((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction
-                (action)).SetFlags(PdfAnnotation.PRINT)) {
+            : this(text, (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action).SetFlags
+                (PdfAnnotation.PRINT)) {
         }
 
         /// <summary>Creates a Link to another location in the document.</summary>
@@ -104,6 +101,13 @@ namespace iText.Layout.Element {
         /// </returns>
         public virtual PdfLinkAnnotation GetLinkAnnotation() {
             return this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
+        }
+
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.LINK);
+            }
+            return tagProperties;
         }
 
         protected internal override IRenderer MakeNewRenderer() {

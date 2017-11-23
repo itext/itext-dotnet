@@ -134,7 +134,7 @@ namespace iText.Pdfa {
                 doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheInteractiveFormDictionaryShallNotContainTheXfaKey));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY));
 ;
         }
 

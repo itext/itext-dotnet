@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -55,7 +56,7 @@ namespace iText.IO.Font {
         static AdobeGlyphList() {
             Stream resource = null;
             try {
-                resource = ResourceUtil.GetResourceStream(FontConstants.RESOURCE_PATH + "AdobeGlyphList.txt");
+                resource = ResourceUtil.GetResourceStream(FontResources.ADOBE_GLYPH_LIST);
                 if (resource == null) {
                     String msg = "AdobeGlyphList.txt not found as resource. (It must exist as resource in the package com.itextpdf.text.pdf.fonts)";
                     throw new Exception(msg);

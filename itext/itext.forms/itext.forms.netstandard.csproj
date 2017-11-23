@@ -29,6 +29,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\itext.layout\itext.layout.netstandard.csproj" />

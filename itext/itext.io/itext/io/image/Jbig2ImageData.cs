@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Codec;
-using iText.IO.Log;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
@@ -91,7 +91,7 @@ namespace iText.IO.Image {
         }
 
         public override bool CanImageBeInline() {
-            ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
+            ILog logger = LogManager.GetLogger(typeof(ImageData));
             logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }

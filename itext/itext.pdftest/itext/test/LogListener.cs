@@ -42,28 +42,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Linq;
-using iText.IO.Log;
+using System.Collections.Generic;
+using Common.Logging;
+using Common.Logging.Simple;
 using iText.Test.Attributes;
-using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
-using log4net.Layout;
-using log4net.Repository;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
 namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
-        private MemoryAppender appender;
+        private CapturingLoggerFactoryAdapter adapter;
 
         static LogListener() {
-            ITextMemoryAppender memoryAppender = new ITextMemoryAppender();
-            memoryAppender.Layout = new PatternLayout("%message");
-            ILoggerRepository repo = LogManager.GetRepository(typeof(LogListener).GetAssembly());
-            BasicConfigurator.Configure(repo, memoryAppender);
+            LogManager.Adapter = new ITextMemoryAddapter();
         }
 
         public override void BeforeTest(ITest testDetails) {
@@ -99,9 +91,9 @@ namespace iText.Test {
         }
 
         private int Contains(String loggingStatement) {
-            LoggingEvent[] eventList = appender.GetEvents();
+            IList<CapturingLoggerEvent> eventList = adapter.LoggerEvents;
             int index = 0;
-            for (int i = 0; i < eventList.Length; i++) {
+            for (int i = 0; i < eventList.Count; i++) {
                 if (LogListenerHelper.EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement)) {
                     index++;
                 }
@@ -110,16 +102,12 @@ namespace iText.Test {
         }
 
         private void Init() {
-            ILoggerFactory iLog = new Log4NetLoggerFactory();
-            LoggerFactory.BindFactory(iLog);
-            //LogManager.GetRepository() calls Assembly.GetCallingAssembly() so it will always be current (this) assembly
-            IAppender[] iAppenders = LogManager.GetRepository(typeof(LogListener).GetAssembly()).GetAppenders();
-            appender = iAppenders[0] as MemoryAppender;
-            appender.Clear();
+            adapter = LogManager.Adapter as CapturingLoggerFactoryAdapter;
+            adapter.Clear();
         }
 
         private int GetSize() {
-            return appender.GetEvents().Length;
+            return adapter.LoggerEvents.Count;
         }
     }
 }

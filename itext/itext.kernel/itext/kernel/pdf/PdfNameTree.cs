@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
@@ -84,12 +84,19 @@ namespace iText.Kernel.Pdf {
                     ICollection<String> keys = new HashSet<String>();
                     keys.AddAll(items.Keys);
                     foreach (String key in keys) {
-                        PdfArray arr = GetNameArray(items.Get(key));
-                        if (arr != null) {
-                            items.Put(key, arr);
+                        if (treeType.Equals(PdfName.Dests)) {
+                            PdfArray arr = GetDestArray(items.Get(key));
+                            if (arr != null) {
+                                items.Put(key, arr);
+                            }
+                            else {
+                                items.JRemove(key);
+                            }
                         }
                         else {
-                            items.JRemove(key);
+                            if (items.Get(key) == null) {
+                                items.JRemove(key);
+                            }
                         }
                     }
                 }
@@ -99,7 +106,7 @@ namespace iText.Kernel.Pdf {
                 if (destinations != null) {
                     ICollection<PdfName> keys = destinations.KeySet();
                     foreach (PdfName key in keys) {
-                        PdfArray array = GetNameArray(destinations.Get(key));
+                        PdfArray array = GetDestArray(destinations.Get(key));
                         if (array == null) {
                             continue;
                         }
@@ -121,7 +128,7 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, key
                         ));
                 }
@@ -186,7 +193,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 0; i < tt; ++i) {
                     int offset = i * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
-                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
+                    PdfDictionary dic = (PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument());
                     PdfArray arr = new PdfArray();
                     arr.Add(new PdfString(names[i * skip], null));
                     arr.Add(new PdfString(names[Math.Min((i + 1) * skip, names.Length) - 1], null));
@@ -242,7 +249,7 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
-        private PdfArray GetNameArray(PdfObject obj) {
+        private PdfArray GetDestArray(PdfObject obj) {
             if (obj == null) {
                 return null;
             }

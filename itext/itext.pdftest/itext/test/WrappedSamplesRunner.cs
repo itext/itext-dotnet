@@ -107,12 +107,12 @@ namespace iText.Test {
             System.Console.Out.WriteLine("Test complete.");
 
         }
-
+        
         /// <summary>Compares two PDF files using iText's CompareTool.</summary>
-        /// <param name="outPath">path to the working folder where comparison results and temp files will be created</param>
-        /// <param name="dest">the PDF that resulted from the test</param>
-        /// <param name="cmp">the reference PDF</param>
-        /// <exception cref="System.Exception"/>
+        /// <param name="outPath">The path to the working folder where comparison results and temp files will be created</param>
+        /// <param name="dest">The PDF that resulted from the test</param>
+        /// <param name="cmp">The reference PDF</param>
+        /// <exception cref="System.Exception">If there is a problem opening the compare files</exception>
         protected internal abstract void ComparePdf(String outPath, String dest, String cmp);
 
         /// <summary>Gets the path to the resulting PDF from the sample class;</summary>
@@ -138,9 +138,8 @@ namespace iText.Test {
         /// Returns a string value that is stored as a static variable
         /// inside an example class.
         /// </summary>
-        /// <param name="c">The example class</param>
-        /// <param name="name">The name of the variable</param>
-        /// <returns>The value of the variable</returns>
+        /// <param name="name">the name of the variable</param>
+        /// <returns>the value of the variable</returns>
         protected internal static String GetStringField(Type c, String name) {
             try {
                 FieldInfo field = c.GetField(name);

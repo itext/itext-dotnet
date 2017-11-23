@@ -141,6 +141,18 @@ namespace iText.Layout.Renderer {
         /// <returns>by default, this object</returns>
         IRenderer SetParent(IRenderer parent);
 
+        /// <summary>
+        /// Gets the parent
+        /// <see cref="IRenderer"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// direct parent
+        /// <see cref="IRenderer">renderer</see>
+        /// of this instance
+        /// </returns>
+        IRenderer GetParent();
+
         /// <summary>Gets the model element associated with this renderer.</summary>
         /// <returns>
         /// the model element, as a

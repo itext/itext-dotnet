@@ -66,7 +66,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         public virtual ICollection<IPdfTextLocation> GetResultantLocations() {
             // align characters in "logical" order
-            JavaCollectionsUtil.Sort(parseResult);
+            JavaCollectionsUtil.Sort(parseResult, new TextChunkLocationBasedComparator(new DefaultTextChunkLocationComparator()));
             // process parse results
             IList<IPdfTextLocation> retval = new List<IPdfTextLocation>();
             CharacterRenderInfo.StringConversionInfo txt = CharacterRenderInfo.MapString(parseResult);

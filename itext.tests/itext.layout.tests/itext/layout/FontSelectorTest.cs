@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -128,6 +129,52 @@ namespace iText.Layout {
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomFontWeight() {
+            String outFileName = destinationFolder + "customFontWeight.pdf";
+            String cmpFileName = sourceFolder + "cmp_customFontWeight.pdf";
+            FontProvider sel = new FontProvider();
+            sel.GetFontSet().AddFont(StandardFonts.HELVETICA);
+            sel.GetFontSet().AddFont(StandardFonts.HELVETICA_BOLD);
+            sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
+            sel.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "Times-Roman Bold");
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            Div div = new Div().SetFont(StandardFonts.TIMES_ROMAN);
+            Paragraph paragraph = new Paragraph("Times Roman Bold text");
+            paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
+            div.Add(paragraph);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomFontWeight2() {
+            String outFileName = destinationFolder + "customFontWeight2.pdf";
+            String cmpFileName = sourceFolder + "cmp_customFontWeight2.pdf";
+            FontProvider sel = new FontProvider();
+            sel.GetFontSet().AddFont(StandardFonts.HELVETICA);
+            sel.GetFontSet().AddFont(StandardFonts.HELVETICA_BOLD);
+            sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
+            //sel.getFontSet().addFont(FontConstants.TIMES_BOLD);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            Div div = new Div().SetFont(StandardFonts.TIMES_ROMAN);
+            Paragraph paragraph = new Paragraph("Times Roman Bold text");
+            paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
+            div.Add(paragraph);
+            doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

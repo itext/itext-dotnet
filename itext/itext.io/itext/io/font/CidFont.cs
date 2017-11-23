@@ -92,7 +92,7 @@ namespace iText.IO.Font {
         }
 
         private void InitializeCidFontNameAndStyle(String fontName) {
-            String nameBase = GetBaseName(fontName);
+            String nameBase = TrimFontStyle(fontName);
             if (nameBase.Length < fontName.Length) {
                 fontNames.SetFontName(fontName);
                 fontNames.SetStyle(fontName.Substring(nameBase.Length));

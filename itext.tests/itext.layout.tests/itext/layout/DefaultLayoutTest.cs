@@ -70,6 +70,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
             String cmpFileName = sourceFolder + "cmp_multipleAdditionsOfSameModelElementTest1.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Hello. I am a paragraph. I want you to process me correctly");
             document.Add(p).Add(p).Add(new AreaBreak(PageSize.Default)).Add(p);
@@ -155,7 +156,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";

@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -54,8 +54,8 @@ namespace iText.Signatures {
     /// <author>Paulo Soarees</author>
     public class OcspClientBouncyCastle : IOcspClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle
-            ));
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle)
+            );
 
         private readonly OCSPVerifier verifier;
 

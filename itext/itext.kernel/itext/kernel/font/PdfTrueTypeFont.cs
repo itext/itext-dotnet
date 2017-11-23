@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -87,12 +87,12 @@ namespace iText.Kernel.Font {
 
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {
-                Glyph glyph = ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 //TODO TrueType what if font is specific?
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
-                    Glyph notdef = ((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0);
+                    Glyph notdef = GetFontProgram().GetGlyphByCode(0);
                     if (notdef != null) {
-                        glyph = new Glyph(((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0), unicode);
+                        glyph = new Glyph(GetFontProgram().GetGlyphByCode(0), unicode);
                         notdefGlyphs.Put(unicode, glyph);
                     }
                 }
@@ -101,17 +101,13 @@ namespace iText.Kernel.Font {
             return null;
         }
 
-        public override bool ContainsGlyph(String text, int from) {
-            return ContainsGlyph((int)text[from]);
-        }
-
         public override bool ContainsGlyph(int unicode) {
             if (fontEncoding.IsFontSpecific()) {
                 return fontProgram.GetGlyphByCode(unicode) != null;
             }
             else {
-                return fontEncoding.CanEncode(unicode) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
-                    (unicode)) != null;
+                return fontEncoding.CanEncode(unicode) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode
+                    )) != null;
             }
         }
 
@@ -178,7 +174,7 @@ namespace iText.Kernel.Font {
                             fontStream.Put(PdfName.Subtype, new PdfName("Type1C"));
                         }
                         catch (PdfException e) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
                             logger.Error(e.Message);
                             fontStream = null;
                         }
@@ -208,7 +204,7 @@ namespace iText.Kernel.Font {
                             fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                         }
                         catch (PdfException e) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
                             logger.Error(e.Message);
                             fontStream = null;
                         }

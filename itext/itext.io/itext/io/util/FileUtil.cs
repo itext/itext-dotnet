@@ -115,26 +115,6 @@ namespace iText.IO.Util {
             return null;
         }
 
-        [Obsolete]
-        public static String[] ListFilesInDirectoryByFilter(String path, bool recursive, FileFilter filter) {
-            if (!String.IsNullOrEmpty(path)) {
-                DirectoryInfo dir = new DirectoryInfo(path);
-                if (dir.Exists) {
-                    FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-                    // Guarantee invariant order in all environments
-                    files = files.OrderBy(file => file.Name).ToArray();
-                    var list = new LinkedList<String>();
-                    for (int i = 0; i < files.Length; i++) {
-                        if (filter.Accept(files[i].Name)) {
-                            list.AddLast(files[i].FullName);
-                        }
-                    }
-                    return list.ToArray();
-                }
-            }
-            return null;
-        }
-
         /// <exception cref="System.ArgumentException"/>
         public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
             return new StreamWriter(output, EncodingUtil.GetEncoding(encoding));
@@ -171,17 +151,6 @@ namespace iText.IO.Util {
 
         public interface IFileFilter {
             bool Accept(FileInfo pathname);
-        }
-
-        [Obsolete]
-        public class FileFilter : IFileFilter {
-            public virtual bool Accept(String pathname) {
-                return true;
-            }
-
-            public bool Accept(FileInfo pathname) {
-                return Accept(pathname.Name);
-            }
         }
 
         public static String GetParentDirectory(String path) {

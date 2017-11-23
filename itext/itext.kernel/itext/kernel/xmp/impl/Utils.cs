@@ -34,7 +34,7 @@ using iText.Kernel.XMP;
 namespace iText.Kernel.XMP.Impl {
     /// <summary>Utility functions for the XMPToolkit implementation.</summary>
     /// <since>06.06.2006</since>
-    public class Utils : XMPConst {
+    public sealed class Utils : XMPConst {
         /// <summary>segments of a UUID</summary>
         public const int UUID_SEGMENT_COUNT = 4;
 

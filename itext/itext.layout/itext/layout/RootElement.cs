@@ -43,14 +43,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Splitting;
+using iText.Layout.Tagging;
 
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
@@ -63,9 +66,6 @@ namespace iText.Layout {
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        [System.ObsoleteAttribute(@"This field just hides the same field from ElementPropertyContainer{T}")]
-        protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
-
         protected internal PdfFont defaultFont;
 
         protected internal FontProvider defaultFontProvider;
@@ -74,6 +74,8 @@ namespace iText.Layout {
 
         protected internal RootRenderer rootRenderer;
 
+        private LayoutTaggingHelper defaultLayoutTaggingHelper;
+
         /// <summary>Adds an element to the root.</summary>
         /// <remarks>Adds an element to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
@@ -81,7 +83,7 @@ namespace iText.Layout {
         /// <seealso cref="iText.Layout.Element.BlockElement{T}"/>
         public virtual T Add(IBlockElement element) {
             childElements.Add(element);
-            EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
+            CreateAndAddRendererSubTree(element);
             if (immediateFlush) {
                 childElements.JRemoveAt(childElements.Count - 1);
             }
@@ -95,7 +97,7 @@ namespace iText.Layout {
         /// <seealso cref="iText.Layout.Element.Image"/>
         public virtual T Add(Image image) {
             childElements.Add(image);
-            EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
+            CreateAndAddRendererSubTree(image);
             if (immediateFlush) {
                 childElements.JRemoveAt(childElements.Count - 1);
             }
@@ -176,7 +178,11 @@ namespace iText.Layout {
                     }
 
                     case Property.FONT_SIZE: {
-                        return (T1)(Object)12;
+                        return (T1)(Object)UnitValue.CreatePointValue(12);
+                    }
+
+                    case Property.TAGGING_HELPER: {
+                        return (T1)(Object)InitTaggingHelperIfNeeded();
                     }
 
                     case Property.TEXT_RENDERING_MODE: {
@@ -354,12 +360,27 @@ namespace iText.Layout {
                 p.SetMultipliedLeading(1);
             }
             div.Add(p.SetMargins(0, 0, 0, 0));
-            div.SetRole(PdfName.Artifact);
+            div.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
             this.Add(div);
             return (T)(Object)this;
         }
 
         protected internal abstract RootRenderer EnsureRootRendererNotNull();
+
+        protected internal virtual void CreateAndAddRendererSubTree(IElement element) {
+            IRenderer rendererSubTreeRoot = element.CreateRendererSubTree();
+            LayoutTaggingHelper taggingHelper = InitTaggingHelperIfNeeded();
+            if (taggingHelper != null) {
+                taggingHelper.AddKidsHint(pdfDocument.GetTagStructureContext().GetAutoTaggingPointer(), JavaCollectionsUtil
+                    .SingletonList<IRenderer>(rendererSubTreeRoot));
+            }
+            EnsureRootRendererNotNull().AddChild(rendererSubTreeRoot);
+        }
+
+        private LayoutTaggingHelper InitTaggingHelperIfNeeded() {
+            return defaultLayoutTaggingHelper == null && pdfDocument.IsTagged() ? defaultLayoutTaggingHelper = new LayoutTaggingHelper
+                (pdfDocument, immediateFlush) : defaultLayoutTaggingHelper;
+        }
 
         public abstract void Close();
 

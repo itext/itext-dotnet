@@ -45,7 +45,7 @@ using System;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
-    public class ByteUtils {
+    public sealed class ByteUtils {
         internal static bool HighPrecision = false;
 
         private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100

@@ -61,6 +61,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool addXmpMetadata;
 
+        protected internal bool addUAXmpMetadata;
+
         protected internal PdfVersion pdfVersion;
 
         protected internal EncryptionProperties encryptionProperties;
@@ -74,6 +76,7 @@ namespace iText.Kernel.Pdf {
         public WriterProperties() {
             smartMode = false;
             debugMode = false;
+            addUAXmpMetadata = false;
             compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
             isFullCompression = null;
             encryptionProperties = new EncryptionProperties();
@@ -116,6 +119,7 @@ namespace iText.Kernel.Pdf {
         /// If true, default XMPMetadata based on
         /// <see cref="PdfDocumentInfo"/>
         /// will be added.
+        /// For PDF 2.0 documents, metadata will be added in any case.
         /// </summary>
         /// <returns>
         /// this
@@ -133,7 +137,11 @@ namespace iText.Kernel.Pdf {
         /// See
         /// <see cref="CompressionConstants"/>
         /// </remarks>
-        /// <param name="compressionLevel"/>
+        /// <param name="compressionLevel">
+        /// 
+        /// <see cref="CompressionConstants"/>
+        /// value.
+        /// </param>
         /// <returns>
         /// this
         /// <c>WriterProperties</c>
@@ -165,21 +173,41 @@ namespace iText.Kernel.Pdf {
         /// Sets the encryption options for the document. The userPassword and the
         /// ownerPassword can be null or have zero length. In this case the ownerPassword
         /// is replaced by a random string. The open permissions for the document can be
-        /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-        /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
+        /// .
         /// The permissions can be combined by ORing them.
         /// <p>
-        /// See
-        /// <see cref="EncryptionConstants"/>
-        /// .
         /// </remarks>
         /// <param name="userPassword">the user password. Can be null or empty</param>
         /// <param name="ownerPassword">the owner password. Can be null or empty</param>
         /// <param name="permissions">the user permissions</param>
         /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
-        /// ENCRYPTION_AES128 or ENCRYPTION_AES256
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
+        /// .
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed to output the metadata in cleartext
         /// </param>
         /// <returns>
         /// this
@@ -197,20 +225,40 @@ namespace iText.Kernel.Pdf {
         /// Sets the certificate encryption options for the document. An array of one or more public certificates
         /// must be provided together with an array of the same size for the permissions for each certificate.
         /// The open permissions for the document can be
-        /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-        /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
-        /// The permissions can be combined by ORing them.
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
-        /// <p>
-        /// See
-        /// <see cref="EncryptionConstants"/>
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
         /// .
+        /// The permissions can be combined by ORing them.
+        /// <p>
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
         /// <param name="permissions">the user permissions for each of the certificates</param>
         /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
-        /// ENCRYPTION_AES128 or ENCRYPTION_AES256.
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
+        /// .
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed to output the metadata in cleartext
         /// </param>
         /// <returns>
         /// this
@@ -273,6 +321,25 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.WriterProperties UseDebugMode() {
             this.debugMode = true;
             return this;
+        }
+
+        /// <summary>This method marks the document as PDF/UA and sets related flags is XMPMetaData.</summary>
+        /// <remarks>
+        /// This method marks the document as PDF/UA and sets related flags is XMPMetaData.
+        /// This method calls
+        /// <see cref="AddXmpMetadata()"/>
+        /// implicitly.
+        /// NOTE: iText does not validate PDF/UA, which means we don't check if created PDF meets all PDF/UA requirements.
+        /// Don't use this method if you are not familiar with PDF/UA specification in order to avoid creation of non-conformant PDF/UA file.
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties AddUAXmpMetadata() {
+            this.addUAXmpMetadata = true;
+            return AddXmpMetadata();
         }
 
         internal virtual bool IsStandardEncryptionUsed() {

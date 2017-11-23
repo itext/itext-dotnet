@@ -43,10 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
@@ -55,6 +54,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer, ILeafElementRenderer {
@@ -150,8 +150,10 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            fixedXPosition = this.GetPropertyAsFloat(Property.X);
-            fixedYPosition = this.GetPropertyAsFloat(Property.Y);
+            if (IsFixedLayout()) {
+                fixedXPosition = this.GetPropertyAsFloat(Property.LEFT);
+                fixedYPosition = this.GetPropertyAsFloat(Property.BOTTOM);
+            }
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
             float? verticalScaling = this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
             AffineTransform t = new AffineTransform();
@@ -246,10 +248,20 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
-            float leftMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
-            float topMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_TOP);
-            if (leftMargin != 0 || topMargin != 0) {
-                TranslateImage(leftMargin, topMargin, t);
+            UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+            if (!leftMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
+            if (!topMargin.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_TOP));
+            }
+            if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
+                TranslateImage(leftMargin.GetValue(), topMargin.GetValue(), t);
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -258,7 +270,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout((float)angle);
             }
             float unscaledWidth = occupiedArea.GetBBox().GetWidth() / scaleCoef;
-            MinMaxWidth minMaxWidth = new MinMaxWidth(0, area.GetBBox().GetWidth(), unscaledWidth, unscaledWidth);
+            MinMaxWidth minMaxWidth = new MinMaxWidth(unscaledWidth, unscaledWidth, 0);
             UnitValue rendererWidth = this.GetProperty<UnitValue>(Property.WIDTH);
             if (rendererWidth != null && rendererWidth.IsPercentValue()) {
                 minMaxWidth.SetChildrenMinWidth(0);
@@ -283,7 +295,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;
@@ -300,31 +312,27 @@ namespace iText.Layout.Renderer {
             if (fixedXPosition == null) {
                 fixedXPosition = occupiedArea.GetBBox().GetX();
             }
-            PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled();
-            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
-            bool isArtifact = isTagged && !modelElementIsAccessible;
+            LayoutTaggingHelper taggingHelper = null;
+            bool isArtifact = false;
             TagTreePointer tagPointer = null;
             if (isTagged) {
-                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                if (modelElementIsAccessible) {
-                    IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                    PdfName role = accessibleElement.GetRole();
-                    if (role != null && !PdfName.Artifact.Equals(role)) {
-                        tagPointer.AddTag(accessibleElement);
-                        PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(accessibleElement.GetRole
-                            (), this, tagPointer);
-                        ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
-                    }
-                    else {
-                        modelElementIsAccessible = false;
-                        if (PdfName.Artifact.Equals(role)) {
-                            isArtifact = true;
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isArtifact = true;
+                }
+                else {
+                    isArtifact = taggingHelper.IsArtifact(this);
+                    if (!isArtifact) {
+                        tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                        if (taggingHelper.CreateTag(this, tagPointer)) {
+                            tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                                ));
                         }
                     }
                 }
             }
-            BeginTranformationIfApplied(drawContext.GetCanvas());
+            BeginTransformationIfApplied(drawContext.GetCanvas());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
                 fixedXPosition += rotatedDeltaX;
@@ -350,7 +358,7 @@ namespace iText.Layout.Renderer {
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
             EndElementOpacityApplying(drawContext);
-            EndTranformationIfApplied(drawContext.GetCanvas());
+            EndTransformationIfApplied(drawContext.GetCanvas());
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
@@ -362,8 +370,9 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            if (modelElementIsAccessible) {
-                tagPointer.MoveToParent();
+            if (isTagged && !isArtifact) {
+                taggingHelper.FinishTaggingHint(this);
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
         }
 
@@ -383,7 +392,7 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
-        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
             return rect;
         }
 
@@ -401,9 +410,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
-                AbstractRenderer.INF))))).GetMinMaxWidth();
+        protected internal override MinMaxWidth GetMinMaxWidth() {
+            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
+                .GetInfWidth(), AbstractRenderer.INF))))).GetMinMaxWidth();
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {

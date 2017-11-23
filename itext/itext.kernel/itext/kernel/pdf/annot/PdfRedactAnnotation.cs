@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -53,10 +52,11 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfRedactAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfRedactAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// that specifies the default appearance, or null if default appereance is not specified.
         /// </returns>
-        public override PdfString GetDefaultAppearance() {
+        public virtual PdfString GetDefaultAppearance() {
             return GetPdfObject().GetAsString(PdfName.DA);
         }
 
@@ -89,13 +89,13 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfMarkupAnnotation"/>
         /// instance.+
         /// </returns>
-        public override PdfMarkupAnnotation SetDefaultAppearance(PdfString appearanceString) {
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetDefaultAppearance(PdfString appearanceString) {
             return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.DA, appearanceString);
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetDefaultAppearance(AnnotationDefaultAppearance
              da) {
-            return ((iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetDefaultAppearance(da.ToPdfString()));
+            return SetDefaultAppearance(da.ToPdfString());
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers specifying the coordinates of n quadrilaterals.
         /// </returns>
-        public override PdfArray GetQuadPoints() {
+        public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
@@ -152,7 +152,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfRedactAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetQuadPoints(PdfArray quadPoints) {
             return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.QuadPoints, quadPoints);
         }
 
@@ -170,7 +170,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
-        public override Color GetInteriorColor() {
+        public virtual Color GetInteriorColor() {
             return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
@@ -193,7 +193,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfRedactAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.IC, interiorColor);
         }
 
@@ -207,8 +207,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfRedactAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
-            return ((iText.Kernel.Pdf.Annot.PdfRedactAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetInteriorColor(float[] interiorColor) {
+            return SetInteriorColor(new PdfArray(interiorColor));
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
         ///     </returns>
-        public override int GetJustification() {
+        public virtual int GetJustification() {
             PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
             return q == null ? 0 : q.IntValue();
         }
@@ -240,7 +240,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfRedactAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetJustification(int justification) {
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetJustification(int justification) {
             return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Q, new PdfNumber(justification));
         }
     }

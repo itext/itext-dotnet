@@ -49,19 +49,20 @@ namespace iText.Kernel.Pdf {
     /// </summary>
     public class EncryptionConstants {
         /// <summary>Type of encryption.</summary>
+        /// <remarks>Type of encryption. RC4 encryption algorithm will be used with the key length of 40 bits.</remarks>
         public const int STANDARD_ENCRYPTION_40 = 0;
 
         /// <summary>Type of encryption.</summary>
+        /// <remarks>Type of encryption. RC4 encryption algorithm will be used with the key length of 128 bits.</remarks>
         public const int STANDARD_ENCRYPTION_128 = 1;
 
         /// <summary>Type of encryption.</summary>
+        /// <remarks>Type of encryption. AES encryption algorithm will be used with the key length of 128 bits.</remarks>
         public const int ENCRYPTION_AES_128 = 2;
 
         /// <summary>Type of encryption.</summary>
+        /// <remarks>Type of encryption. AES encryption algorithm will be used with the key length of 256 bits.</remarks>
         public const int ENCRYPTION_AES_256 = 3;
-
-        /// <summary>Mask to separate the encryption type from the encryption mode.</summary>
-        internal const int ENCRYPTION_MASK = 7;
 
         /// <summary>Add this to the mode to keep the metadata in clear text.</summary>
         public const int DO_NOT_ENCRYPT_METADATA = 8;
@@ -92,5 +93,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>The operation permitted when the document is opened with the user password.</summary>
         public const int ALLOW_DEGRADED_PRINTING = 4;
+
+        /// <summary>Mask to separate the encryption type from the encryption mode.</summary>
+        internal const int ENCRYPTION_MASK = 7;
     }
 }

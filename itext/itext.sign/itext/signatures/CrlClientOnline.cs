@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iText.IO.Log;
 
 namespace iText.Signatures {
     /// <summary>
@@ -56,7 +56,7 @@ namespace iText.Signatures {
     /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.CrlClientOnline));
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline));
 
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();
@@ -117,7 +117,7 @@ namespace iText.Signatures {
                         url = CertificateUtil.GetCRLURL(checkCert);
                     }
                     if (url == null) {
-                        throw new ArgumentNullException();
+                        throw new ArgumentException("Passed url can not be null.");
                     }
                     urllist.Add(new Uri(url));
                     LOGGER.Info("Found CRL url: " + url);

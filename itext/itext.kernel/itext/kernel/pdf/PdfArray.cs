@@ -228,12 +228,6 @@ namespace iText.Kernel.Pdf {
             return new PdfArrayDirectIterator(list);
         }
 
-        /// <summary>Returns an iterator over an array of PdfObject elements.</summary>
-        [System.ObsoleteAttribute(@"Use GetEnumerator() instead.")]
-        public virtual IEnumerator<PdfObject> DirectIterator() {
-            return new PdfArrayDirectIterator(list);
-        }
-
         public virtual void Add(PdfObject pdfObject) {
             list.Add(pdfObject);
         }
@@ -347,47 +341,6 @@ namespace iText.Kernel.Pdf {
 
         public override byte GetObjectType() {
             return ARRAY;
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfArray)base.MakeIndirect(document);
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iText.Kernel.Pdf.PdfArray)base.MakeIndirect(document, reference);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfArray)base.CopyTo(document, true);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <param name="allowDuplicating">
-        /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-        /// </param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iText.Kernel.Pdf.PdfArray)base.CopyTo(document, allowDuplicating);
         }
 
         public override String ToString() {
@@ -594,6 +547,24 @@ namespace iText.Kernel.Pdf {
             catch (Exception e) {
                 throw new PdfException(PdfException.CannotConvertPdfArrayToIntArray, e, this);
             }
+        }
+
+        /// <summary>Returns this array as an array of booleans.</summary>
+        /// <remarks>Returns this array as an array of booleans. Will throw a PdfException when it encounters an issue.
+        ///     </remarks>
+        /// <returns>this array as an array of booleans</returns>
+        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a boolean</exception>
+        public virtual bool[] ToBooleanArray() {
+            bool[] rslt = new bool[Size()];
+            PdfBoolean tmp;
+            for (int k = 0; k < rslt.Length; ++k) {
+                tmp = GetAsBoolean(k);
+                if (tmp == null) {
+                    throw new PdfException(PdfException.CannotConvertPdfArrayToBooleanArray, this);
+                }
+                rslt[k] = tmp.GetValue();
+            }
+            return rslt;
         }
 
         protected internal override PdfObject NewInstance() {

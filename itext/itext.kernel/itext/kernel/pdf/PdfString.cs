@@ -146,20 +146,6 @@ namespace iText.Kernel.Pdf {
             return encoding;
         }
 
-        /// <summary>Sets the encoding of this string.</summary>
-        /// <remarks>
-        /// Sets the encoding of this string.
-        /// NOTE. Byte content will be removed.
-        /// </remarks>
-        [System.ObsoleteAttribute(@"Create a new instance with PdfString(System.String, System.String) instead.")]
-        public virtual void SetEncoding(String encoding) {
-            if (value == null) {
-                GenerateValue();
-            }
-            this.content = null;
-            this.encoding = encoding;
-        }
-
         /// <summary>
         /// Returns the Unicode
         /// <c>String</c>
@@ -179,7 +165,12 @@ namespace iText.Kernel.Pdf {
                 return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
             }
             else {
-                return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
+                if (b.Length >= 3 && b[0] == (byte)0xEF && b[1] == (byte)0xBB && b[2] == (byte)0xBF) {
+                    return PdfEncodings.ConvertToString(b, PdfEncodings.UTF8);
+                }
+                else {
+                    return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
+                }
             }
         }
 
@@ -196,47 +187,6 @@ namespace iText.Kernel.Pdf {
             else {
                 return PdfEncodings.ConvertToBytes(value, encoding);
             }
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfString)base.MakeIndirect(document);
-        }
-
-        /// <summary>Marks object to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iText.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfString)base.CopyTo(document, true);
-        }
-
-        /// <summary>Copies object to a specified document.</summary>
-        /// <remarks>
-        /// Copies object to a specified document.
-        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
-        /// </remarks>
-        /// <param name="document">document to copy object to.</param>
-        /// <param name="allowDuplicating">
-        /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-        /// </param>
-        /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iText.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
         }
 
         public override bool Equals(Object o) {
@@ -315,25 +265,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Decrypt content of an encrypted
-        /// <c>PdfString</c>
-        /// .
-        /// </summary>
-        [System.ObsoleteAttribute(@"use DecodeContent() or GetValue() methods, they will decrypt bytes if they are encrypted. Will be removed in iText 7.1"
-            )]
-        protected internal virtual iText.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
-            if (decrypt != null) {
-                System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value");
-                byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
-                content = null;
-                decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-                value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null);
-                decryption = null;
-            }
-            return this;
-        }
-
-        /// <summary>
         /// Encrypt content of
         /// <c>value</c>
         /// and set as content.
@@ -407,6 +338,7 @@ namespace iText.Kernel.Pdf {
             decryption = @string.decryption;
             decryptInfoNum = @string.decryptInfoNum;
             decryptInfoGen = @string.decryptInfoGen;
+            encoding = @string.encoding;
         }
     }
 }

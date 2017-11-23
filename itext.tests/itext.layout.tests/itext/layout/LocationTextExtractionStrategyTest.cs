@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -176,7 +176,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             canvas.BeginText();
-            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 12);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 12);
             canvas.MoveText(45, pdfDocument.GetDefaultPageSize().GetHeight() - 45);
             PdfTextArray ta = new PdfTextArray();
             ta.Add(new PdfString(str1));
@@ -202,7 +202,7 @@ namespace iText.Layout {
             AffineTransform tx = new AffineTransform();
             tx.Translate(0, template.GetHeight());
             tx.Rotate((float)(-90 / 180f * Math.PI));
-            canvas.ConcatMatrix(tx).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 12)
+            canvas.ConcatMatrix(tx).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 12)
                 .MoveText(0, template.GetWidth() - 12).ShowText(xobjectText).EndText();
             document.Add(new Image(template).SetRotationAngle(Math.PI / 2)).Add(new Paragraph("C"));
             document.Close();

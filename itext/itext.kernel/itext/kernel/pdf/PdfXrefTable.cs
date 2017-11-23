@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -80,7 +80,7 @@ namespace iText.Kernel.Pdf {
             }
             xref = new PdfIndirectReference[capacity];
             freeReferencesLinkedList = new SortedDictionary<int, PdfIndirectReference>();
-            Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState(PdfObject.FREE)));
+            Add((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState(PdfObject.FREE));
         }
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
@@ -137,8 +137,8 @@ namespace iText.Kernel.Pdf {
                     if (pdfDocument.properties.appendMode) {
                         continue;
                     }
-                    xref[next] = ((PdfIndirectReference)((PdfIndirectReference)new PdfIndirectReference(pdfDocument, next, 0).
-                        SetState(PdfObject.FREE)).SetState(PdfObject.MODIFIED));
+                    xref[next] = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, next, 0).SetState(PdfObject.FREE)
+                        .SetState(PdfObject.MODIFIED);
                 }
                 else {
                     if (xref[next].GetGenNumber() == MAX_GENERATION && xref[next].GetOffset() == 0) {
@@ -161,7 +161,7 @@ namespace iText.Kernel.Pdf {
         internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
             Add(reference);
-            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
+            return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
         /// <summary>Creates next available indirect reference.</summary>
@@ -169,7 +169,7 @@ namespace iText.Kernel.Pdf {
         protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
             Add(reference);
-            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
+            return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
@@ -177,21 +177,17 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             if (reference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
                 logger.Error(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
                 return;
             }
             if (reference.CheckState(PdfObject.FLUSHED)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
                 logger.Error(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
                 return;
             }
-            ((PdfIndirectReference)reference.SetState(PdfObject.FREE)).SetState(PdfObject.MODIFIED);
+            reference.SetState(PdfObject.FREE).SetState(PdfObject.MODIFIED);
             AppendNewRefToFreeList(reference);
-            if (reference.refersTo != null) {
-                reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
-                reference.refersTo = null;
-            }
             if (reference.GetGenNumber() < MAX_GENERATION) {
                 reference.genNr++;
             }
@@ -256,7 +252,7 @@ namespace iText.Kernel.Pdf {
             }
             long startxref = writer.GetCurrentPos();
             if (writer.IsFullCompression()) {
-                PdfStream xrefStream = ((PdfStream)new PdfStream().MakeIndirect(document));
+                PdfStream xrefStream = (PdfStream)new PdfStream().MakeIndirect(document);
                 xrefStream.MakeIndirect(document);
                 xrefStream.Put(PdfName.Type, PdfName.XRef);
                 xrefStream.Put(PdfName.ID, fileId);
@@ -385,18 +381,6 @@ namespace iText.Kernel.Pdf {
             foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
                 writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
             }
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        [Obsolete]
-        protected internal static void WriteKeyInfo(PdfWriter writer) {
-            String platform = " for .NET";
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            String k = version.GetKey();
-            if (k == null) {
-                k = "iText";
-            }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
         }
 
         private void AppendNewRefToFreeList(PdfIndirectReference reference) {
