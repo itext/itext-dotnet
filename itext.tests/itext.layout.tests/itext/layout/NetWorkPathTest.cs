@@ -10,6 +10,7 @@ using iText.Layout.Element;
 namespace iText.Layout
 {
     // This test is present only in c#
+    // Also this test in only for windows OS 
     class NetWorkPathTest
     {
         [NUnit.Framework.Test]
