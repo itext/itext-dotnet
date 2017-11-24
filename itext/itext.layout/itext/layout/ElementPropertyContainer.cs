@@ -395,7 +395,7 @@ namespace iText.Layout {
         /// <summary>Defines a custom spacing distance between all characters of a textual element.</summary>
         /// <remarks>
         /// Defines a custom spacing distance between all characters of a textual element.
-        /// The character-spacing parameter is added to the glyph???s horizontal or vertical displacement (depending on the writing mode).
+        /// The character-spacing parameter is added to the glyph's horizontal or vertical displacement (depending on the writing mode).
         /// </remarks>
         /// <param name="charSpacing">a floating point value</param>
         /// <returns>this Element.</returns>
