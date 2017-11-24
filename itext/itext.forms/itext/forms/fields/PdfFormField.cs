@@ -3606,23 +3606,23 @@ namespace iText.Forms.Fields {
         }
 
         private static String OptionsArrayToString(PdfArray options) {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuffer = new StringBuilder();
             foreach (PdfObject obj in options) {
                 if (obj.IsString()) {
-                    stringBuilder.Append(((PdfString)obj).ToUnicodeString()).Append('\n');
+                    stringBuffer.Append(((PdfString)obj).ToUnicodeString()).Append('\n');
                 }
                 else {
                     if (obj.IsArray()) {
                         PdfObject element = ((PdfArray)obj).Get(1);
                         if (element.IsString()) {
-                            stringBuilder.Append(((PdfString)element).ToUnicodeString()).Append('\n');
+                            stringBuffer.Append(((PdfString)element).ToUnicodeString()).Append('\n');
                         }
                     }
                 }
             }
-            stringBuilder.DeleteCharAt(stringBuilder.Length - 1);
+            stringBuffer.DeleteCharAt(stringBuffer.Length - 1);
             // last '\n'
-            return stringBuilder.ToString();
+            return stringBuffer.ToString();
         }
 
         private static double DegreeToRadians(double angle) {
