@@ -51,7 +51,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
-            NUnit.Framework.Assert.That(() =>  {
+            NUnit.Framework.Assert.That(() =>  {E
                 FontProgramFactory.CreateFont(notExistingFont);
             }
             , NUnit.Framework.Throws.TypeOf<System.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format("{0} not found as file or resource", notExistingFont)));
