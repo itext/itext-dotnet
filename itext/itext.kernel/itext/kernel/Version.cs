@@ -295,7 +295,7 @@ namespace iText.Kernel {
         /// <exception cref="Java.Lang.InstantiationException"/>
         /// <exception cref="System.Reflection.TargetInvocationException"/>
         private static String[] GetLicenseeInfoFromLicenseKey(String validatorKey) {
-            String licenseeInfoMethodName = "getLicenseeInfoForVersion";
+            String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
             Type klass = GetLicenseKeyClass();
             if (klass != null) {
                 Type[] cArg = new Type[] { typeof(String) };
