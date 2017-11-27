@@ -2111,8 +2111,11 @@ namespace iText.Kernel.Pdf {
             }
             foreach (PdfOutline outline in oldParent.GetAllChildren()) {
                 if (outlinesToCopy.Contains(outline)) {
-                    PdfObject destObjToCopy = outline.GetDestination().GetPdfObject();
-                    PdfDestination copiedDest = GetCatalog().CopyDestination(destObjToCopy, page2page, toDocument);
+                    PdfDestination copiedDest = null;
+                    if (null != outline.GetDestination()) {
+                        PdfObject destObjToCopy = outline.GetDestination().GetPdfObject();
+                        copiedDest = GetCatalog().CopyDestination(destObjToCopy, page2page, toDocument);
+                    }
                     PdfOutline child = newParent.AddOutline(outline.GetTitle());
                     if (copiedDest != null) {
                         child.AddDestination(copiedDest);
