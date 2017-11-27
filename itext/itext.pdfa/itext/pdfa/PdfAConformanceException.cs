@@ -250,9 +250,6 @@ namespace iText.Pdfa {
 
         public const String THE_VALUE_OF_THE_METH_ENTRY_IN_COLR_BOX_SHALL_BE_1_2_OR_3 = "The value of the meth entry in colr box shall be 1, 2 or 3";
 
-        public const String TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHALL_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
-             = "TintTransform and alternateSpace of separation arrays in the colorants of deviceN shall be consistent with same attributes of deviceN";
-
         public const String TINT_TRANSFORM_AND_ALTERNATE_SPACE_SHALL_BE_THE_SAME_FOR_THE_ALL_SEPARATION_CS_WITH_THE_SAME_NAME
              = "TintTransform and alternateSpace shall be the same for the all separation cs with the same name";
 

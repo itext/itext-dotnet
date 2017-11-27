@@ -849,7 +849,8 @@ namespace iText.Pdfa.Checker {
             ) {
             if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.Get
                 (3))) {
-                throw new PdfAConformanceException(PdfAConformanceException.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHALL_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
+                ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
+                logger.Warn(PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
                     );
             }
             CheckSeparationCS(separation);

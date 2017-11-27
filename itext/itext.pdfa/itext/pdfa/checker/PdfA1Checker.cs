@@ -308,7 +308,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_SUBTYPE2_KEY_WITH_A_VALUE_OF_PS
                     );
             }
-            if (form.ContainsKey(PdfName.SMask)) {
+            if (form.ContainsKey(PdfName.SMask) && !PdfName.None.Equals(form.GetAsName(PdfName.SMask))) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_XOBJECTS);
             }
             if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
