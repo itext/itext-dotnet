@@ -18,8 +18,13 @@ namespace iText.Layout
         {
             var fullImagePath = @"\\someVeryRandomWords\SomeVeryRandomName.img";
             string startOfMsg = null;
+#if !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+#else
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+#endif
             try
             {
                 Image drawing = new Image(ImageDataFactory.Create(fullImagePath));
