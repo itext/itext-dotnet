@@ -58,8 +58,7 @@ namespace iText.IO.Font {
             try {
                 resource = ResourceUtil.GetResourceStream(FontResources.ADOBE_GLYPH_LIST);
                 if (resource == null) {
-                    String msg = "AdobeGlyphList.txt not found as resource. (It must exist as resource in the package com.itextpdf.text.pdf.fonts)";
-                    throw new Exception(msg);
+                    throw new Exception(FontResources.ADOBE_GLYPH_LIST + " not found as resource.");
                 }
                 byte[] buf = new byte[1024];
                 MemoryStream stream = new MemoryStream();
