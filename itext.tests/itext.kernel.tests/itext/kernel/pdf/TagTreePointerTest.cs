@@ -425,6 +425,43 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
+        public virtual void TagStructureFlushingTest06() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest06.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfPage page1 = document.AddNewPage();
+            TagTreePointer tagPointer = new TagTreePointer(document);
+            tagPointer.SetPageForTagging(page1);
+            PdfCanvas canvas = new PdfCanvas(page1);
+            tagPointer.AddTag(StandardRoles.DIV);
+            tagPointer.AddTag(StandardRoles.P);
+            canvas.BeginText();
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+            canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
+            tagPointer.AddTag(StandardRoles.SPAN);
+            WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
+            Object associatedObj = new Object();
+            waitingTagsManager.AssignWaitingState(tagPointer, associatedObj);
+            canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
+            canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
+            canvas.EndText().Release();
+            page1.Flush();
+            tagPointer.RelocateKid(0, new TagTreePointer(document).MoveToKid(StandardRoles.DIV).SetNextNewKidIndex(0).
+                AddTag(StandardRoles.P));
+            tagPointer.RemoveTag();
+            waitingTagsManager.RemoveWaitingState(associatedObj);
+            document.GetTagStructureContext().FlushPageTags(page1);
+            document.GetStructTreeRoot().CreateParentTreeEntryForPage(page1);
+            document.Close();
+            CompareResult("tagStructureFlushingTest06.pdf", "cmp_tagStructureFlushingTest06.pdf", "diffFlushing06_");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest01.pdf");

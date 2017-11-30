@@ -539,7 +539,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (GetCurrentStructElem().GetKids()[kidIndex] == null) {
                 throw new PdfException(PdfException.CannotRelocateTagWhichIsAlreadyFlushed);
             }
-            IStructureNode removedKid = GetCurrentStructElem().RemoveKid(kidIndex);
+            IStructureNode removedKid = GetCurrentStructElem().RemoveKid(kidIndex, true);
             if (removedKid is PdfStructElem) {
                 pointerToNewParent.AddNewKid((PdfStructElem)removedKid);
             }

@@ -150,6 +150,8 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
         public virtual void RemovePageWithOutlinesTest() {
@@ -160,8 +162,16 @@ namespace iText.Kernel.Pdf {
             // TODO this causes log message errors! it's because of destinations pointing to removed page (freed reference, replaced by PdfNull)
             pdfDoc.RemovePage(102);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            CompareTool compareTool = new CompareTool();
+            String diffContent = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            String diffTags = compareTool.CompareTagStructures(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                );
+            if (diffContent != null || diffTags != null) {
+                diffContent = diffContent != null ? diffContent : "";
+                diffTags = diffTags != null ? diffTags : "";
+                NUnit.Framework.Assert.Fail(diffContent + diffTags);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>

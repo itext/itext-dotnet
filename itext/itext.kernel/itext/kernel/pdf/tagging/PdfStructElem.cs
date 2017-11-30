@@ -178,6 +178,10 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual IStructureNode RemoveKid(int index) {
+            return RemoveKid(index, false);
+        }
+
+        public virtual IStructureNode RemoveKid(int index, bool prepareForReAdding) {
             PdfObject k = GetK();
             if (k == null || !k.IsArray() && index != 0) {
                 throw new IndexOutOfRangeException();
@@ -196,7 +200,7 @@ namespace iText.Kernel.Pdf.Tagging {
             SetModified();
             IStructureNode removedKid = ConvertPdfObjectToIPdfStructElem(k);
             PdfDocument doc = GetDocument();
-            if (removedKid is PdfMcr && doc != null) {
+            if (removedKid is PdfMcr && doc != null && !prepareForReAdding) {
                 doc.GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
             }
             return removedKid;

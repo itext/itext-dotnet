@@ -1543,7 +1543,7 @@ namespace iText.Kernel.Pdf {
                 if (!GetDocument().isClosing) {
                     GetDocument().GetTagStructureContext().FlushPageTags(this);
                 }
-                GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
+                GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
             }
             catch (Exception ex) {
                 throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);

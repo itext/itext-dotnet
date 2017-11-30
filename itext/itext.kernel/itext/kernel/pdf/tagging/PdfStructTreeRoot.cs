@@ -316,6 +316,10 @@ namespace iText.Kernel.Pdf.Tagging {
             GetParentTreeHandler().CreateParentTreeEntryForPage(page);
         }
 
+        public virtual void SavePageStructParentIndexIfNeeded(PdfPage page) {
+            GetParentTreeHandler().SavePageStructParentIndexIfNeeded(page);
+        }
+
         /// <summary>Gets an unmodifiable collection of marked content references on page.</summary>
         /// <remarks>
         /// Gets an unmodifiable collection of marked content references on page.
@@ -358,7 +362,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <paramref name="destDocument"/>
         /// .
         /// NOTE: Works only for
-        /// <c>PdfStructTreeRoot</c>
+        /// <see cref="PdfStructTreeRoot"/>
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
         /// </summary>
@@ -373,7 +377,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <paramref name="destDocument"/>
         /// and insert it in a specified position in the document.
         /// NOTE: Works only for
-        /// <c>PdfStructTreeRoot</c>
+        /// <see cref="PdfStructTreeRoot"/>
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
         /// </summary>
