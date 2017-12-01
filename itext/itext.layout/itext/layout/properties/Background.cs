@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 
 namespace iText.Layout.Properties {
@@ -57,9 +56,6 @@ namespace iText.Layout.Properties {
     /// location of the edges of the background coloring.
     /// </summary>
     public class Background {
-        [Obsolete]
-        protected internal Color color;
-
         protected internal TransparentColor transparentColor;
 
         protected internal float extraLeft;
@@ -120,7 +116,6 @@ namespace iText.Layout.Properties {
         /// <param name="extraBottom">extra coloring at the bottom</param>
         public Background(Color color, float opacity, float extraLeft, float extraTop, float extraRight, float extraBottom
             ) {
-            this.color = color;
             this.transparentColor = new TransparentColor(color, opacity);
             this.extraLeft = extraLeft;
             this.extraRight = extraRight;

@@ -52,9 +52,6 @@ namespace iText.IO {
 
         public const String BadEndiannessTag0x4949Or0x4d4d = "Bad endianness tag: 0x4949 or 0x4d4d.";
 
-        [Obsolete]
-        public const String BadEndiannessTagNot0x4949Or0x4d4d = "Bad endianness tag not 0x4949 or 0x4d4d.";
-
         public const String BadMagicNumberShouldBe42 = "Bad magic number. Should be 42.";
 
         public const String BitsPerComponentMustBe1_2_4or8 = "Bits per component must be 1, 2, 4 or 8.";
@@ -103,9 +100,6 @@ namespace iText.IO {
 
         public const String DirectoryNumberIsTooLarge = "Directory number is too large.";
 
-        [Obsolete]
-        public const String DirectoryNumberTooLarge = "directory.number.too.large";
-
         public const String EolCodeWordEncounteredInBlackRun = "EOL code word encountered in Black run.";
 
         public const String EolCodeWordEncounteredInWhiteRun = "EOL code word encountered in White run.";
@@ -130,13 +124,7 @@ namespace iText.IO {
 
         public const String FirstScanlineMustBe1dEncoded = "First scanline must be 1D encoded.";
 
-        [Obsolete]
-        public const String Font1IsNotRecognized = "Font {0} is not recognized";
-
         public const String FontFile1NotFound = "Font file {0} not found.";
-
-        [Obsolete]
-        public const String FontIsNotRecognized = "Font is not recognized";
 
         public const String GifImageException = "GIF image exception.";
 
@@ -148,17 +136,11 @@ namespace iText.IO {
 
         public const String IllegalValueForPredictorInTiffFile = "Illegal value for predictor in TIFF file.";
 
-        [Obsolete]
-        public const String ImageCanNotBeAnImageMask = "Image can not be an image mask.";
-
         public const String ImageFormatCannotBeRecognized = "Image format cannot be recognized.";
 
         public const String ImageIsNotMaskYouMustCallImageDataMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
         public const String ImageMaskCannotContainAnotherImageMask = "Image mask cannot contain another image mask.";
-
-        [Obsolete]
-        public const String ImageMaskIsNotAMaskDidYouDoMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
         public const String IncompletePalette = "Incomplete palette.";
 
@@ -178,13 +160,7 @@ namespace iText.IO {
 
         public const String InvalidWoffFile = "Invalid WOFF font file.";
 
-        [Obsolete]
-        public const String InvalidMagicValueForBmpFile = "Invalid magic value for bmp file. Must be 'BM'";
-
         public const String InvalidMagicValueForBmpFileMustBeBM = "Invalid magic value for bmp file. Must be 'BM'";
-
-        [Obsolete]
-        public const String InvalidTTCFile = "{0} is not a valid TTC file.";
 
         public const String InvalidTtcFile = "{0} is not a valid TTC file.";
 
@@ -196,9 +172,6 @@ namespace iText.IO {
 
         public const String JpegImageException = "JPEG image exception.";
 
-        [Obsolete]
-        public const String MissingTagSForOjpegCompression = "Missing tag(s) for OJPEG compression";
-
         public const String MissingTagsForOjpegCompression = "Missing tag(s) for OJPEG compression";
 
         public const String NValueIsNotSupported = "N value {1} is not supported.";
@@ -206,10 +179,6 @@ namespace iText.IO {
         public const String NotAtTrueTypeFile = "{0} is not a true type file";
 
         public const String PageNumberMustBeGtEq1 = "Page number must be >= 1.";
-
-        [System.ObsoleteAttribute(@"because naming clash with iText.IO.Font.PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
-            )]
-        public const String PdfEncodings = "Pdf encodings.";
 
         public const String PdfHeaderNotFound = "PDF header not found.";
 
@@ -219,27 +188,15 @@ namespace iText.IO {
 
         public const String PlanarImagesAreNotSupported = "Planar images are not supported.";
 
-        [Obsolete]
-        public const String PngFilterUnknown = "PNG filter unknown.";
-
         public const String PngImageException = "PNG image exception.";
 
         public const String PrematureEofWhileReadingJpeg = "Premature EOF while reading JPEG.";
 
-        [Obsolete]
-        public const String PrematureEofWhileReadingJpg = "Premature EOF while reading JPEG.";
-
         public const String ScanlineMustBeginWithEolCodeWord = "Scanline must begin with EOL code word.";
-
-        [Obsolete]
-        public const String TTCIndexDoesNotExistInFile = "TTC index doesn't exist in ttc file.";
 
         public const String TableDoesNotExist = "Table {0} does not exist.";
 
         public const String TableDoesNotExistsIn = "Table {0} does not exist in {1}";
-
-        [Obsolete]
-        public const String TheCmap1WasNotFound = "The CMap {0} was not found";
 
         public const String ThisImageCanNotBeAnImageMask = "This image can not be an image mask.";
 
@@ -272,9 +229,6 @@ namespace iText.IO {
         public const String UnsupportedBoxSizeEqEq0 = "Unsupported box size == 0.";
 
         public const String UnsupportedEncodingException = "Unsupported encoding exception.";
-
-        [Obsolete]
-        public const String WrongNumberOfComponentsInIccProfile = "ICC profile contains {0} components the image data contains {1} components.";
 
         public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit samples are not supported for horizontal differencing predictor.";
 

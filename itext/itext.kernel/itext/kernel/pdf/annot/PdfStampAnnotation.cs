@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -51,10 +50,11 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfStampAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfStampAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation, or null if icon name is not specified.
         /// </returns>
-        public override PdfName GetIconName() {
+        public virtual PdfName GetIconName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfStampAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetIconName(PdfName name) {
+        public virtual iText.Kernel.Pdf.Annot.PdfStampAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
         }
     }

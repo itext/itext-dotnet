@@ -71,7 +71,9 @@ namespace iText.IO.Util {
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {
-                isp = new FileStream(Uri.UnescapeDataString(url.AbsolutePath), FileMode.Open, FileAccess.Read);
+                // do not replace first argument with Uri.UnescapeDataString(url.AbsolutePath) instead of url.LocalPath
+                // it breaks the recognition of network paths
+                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);     
             } else {
 #if !NETSTANDARD1_6
                 WebRequest req = WebRequest.Create(url);

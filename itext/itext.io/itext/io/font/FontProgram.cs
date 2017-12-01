@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     public abstract class FontProgram {
@@ -157,7 +157,7 @@ namespace iText.IO.Font {
         /// <summary>Gets the name without the modifiers Bold, Italic or BoldItalic.</summary>
         /// <param name="name">the full name of the font</param>
         /// <returns>the name without the modifiers Bold, Italic or BoldItalic</returns>
-        protected internal static String GetBaseName(String name) {
+        internal static String TrimFontStyle(String name) {
             if (name == null) {
                 return null;
             }
@@ -195,6 +195,13 @@ namespace iText.IO.Font {
             fontMetrics.SetXHeight(xHeight);
         }
 
+        /// <summary>Sets the PostScript italic angel.</summary>
+        /// <remarks>
+        /// Sets the PostScript italic angel.
+        /// <br/>
+        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
+        /// </remarks>
+        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal virtual void SetItalicAngle(int italicAngle) {
             fontMetrics.SetItalicAngle(italicAngle);
         }
@@ -207,60 +214,24 @@ namespace iText.IO.Font {
             fontMetrics.SetStemH(stemH);
         }
 
+        /// <summary>Sets font weight.</summary>
+        /// <param name="fontWeight">
+        /// integer form 100 to 900. See
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
+        /// .
+        /// </param>
         protected internal virtual void SetFontWeight(int fontWeight) {
             fontNames.SetFontWeight(fontWeight);
         }
 
-        protected internal virtual void SetFontWidth(String fontWidth) {
-            fontWidth = fontWidth.ToLowerInvariant();
-            int fontWidthValue = FontNames.FWIDTH_NORMAL;
-            switch (fontWidth) {
-                case "ultracondensed": {
-                    fontWidthValue = FontNames.FWIDTH_ULTRA_CONDENSED;
-                    break;
-                }
-
-                case "extracondensed": {
-                    fontWidthValue = FontNames.FWIDTH_EXTRA_CONDENSED;
-                    break;
-                }
-
-                case "condensed": {
-                    fontWidthValue = FontNames.FWIDTH_CONDENSED;
-                    break;
-                }
-
-                case "semicondensed": {
-                    fontWidthValue = FontNames.FWIDTH_SEMI_CONDENSED;
-                    break;
-                }
-
-                case "normal": {
-                    fontWidthValue = FontNames.FWIDTH_NORMAL;
-                    break;
-                }
-
-                case "semiexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_SEMI_EXPANDED;
-                    break;
-                }
-
-                case "expanded": {
-                    fontWidthValue = FontNames.FWIDTH_EXPANDED;
-                    break;
-                }
-
-                case "extraexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_EXTRA_EXPANDED;
-                    break;
-                }
-
-                case "ultraexpanded": {
-                    fontWidthValue = FontNames.FWIDTH_ULTRA_EXPANDED;
-                    break;
-                }
-            }
-            fontNames.SetFontWidth(fontWidthValue);
+        /// <summary>Sets font width in css notation (font-stretch property)</summary>
+        /// <param name="fontWidth">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
+        /// .
+        /// </param>
+        protected internal virtual void SetFontStretch(String fontWidth) {
+            fontNames.SetFontStretch(fontWidth);
         }
 
         protected internal virtual void SetFixedPitch(bool isFixedPitch) {
@@ -269,10 +240,10 @@ namespace iText.IO.Font {
 
         protected internal virtual void SetBold(bool isBold) {
             if (isBold) {
-                fontNames.SetMacStyle(fontNames.GetMacStyle() | FontNames.BOLD_FLAG);
+                fontNames.SetMacStyle(fontNames.GetMacStyle() | FontMacStyleFlags.BOLD);
             }
             else {
-                fontNames.SetMacStyle(fontNames.GetMacStyle() & (~FontNames.BOLD_FLAG));
+                fontNames.SetMacStyle(fontNames.GetMacStyle() & (~FontMacStyleFlags.BOLD));
             }
         }
 
@@ -280,17 +251,23 @@ namespace iText.IO.Font {
             fontMetrics.SetBbox(bbox[0], bbox[1], bbox[2], bbox[3]);
         }
 
+        /// <summary>Sets a preferred font family name.</summary>
+        /// <param name="fontFamily">a preferred font family name.</param>
         protected internal virtual void SetFontFamily(String fontFamily) {
             fontNames.SetFamilyName(fontFamily);
         }
 
-        protected internal virtual void SetFontName(String psFontName) {
-            fontNames.SetFontName(psFontName);
-        }
-
-        protected internal virtual void CheckFilePath(String path) {
-            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path)) {
-                throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
+        /// <summary>Sets the PostScript name of the font.</summary>
+        /// <remarks>
+        /// Sets the PostScript name of the font.
+        /// <br />
+        /// If full name is null, it will be set as well.
+        /// </remarks>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        protected internal virtual void SetFontName(String fontName) {
+            fontNames.SetFontName(fontName);
+            if (fontNames.GetFullName() == null) {
+                fontNames.SetFullName(fontName);
             }
         }
 

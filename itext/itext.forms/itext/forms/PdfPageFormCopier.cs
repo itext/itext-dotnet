@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.Forms.Fields;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -70,7 +70,7 @@ namespace iText.Forms {
 
         internal PdfDocument documentTo;
 
-        internal ILogger logger = LoggerFactory.GetLogger(typeof(PdfPageFormCopier));
+        internal ILog logger = LogManager.GetLogger(typeof(PdfPageFormCopier));
 
         public virtual void Copy(PdfPage fromPage, PdfPage toPage) {
             if (documentFrom != fromPage.GetDocument()) {

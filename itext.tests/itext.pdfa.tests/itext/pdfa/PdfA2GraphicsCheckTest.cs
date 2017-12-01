@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -50,6 +51,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Function;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -92,7 +94,7 @@ namespace iText.Pdfa {
                 canvas.Fill();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ColorSpace1ShallHave2Components));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.COLOR_SPACE_0_SHALL_HAVE_1_COMPONENTS, PdfName.DefaultCMYK.GetValue(), 4)));
 ;
         }
 
@@ -141,7 +143,7 @@ namespace iText.Pdfa {
                 canvas.Fill();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT));
 ;
         }
 
@@ -173,7 +175,7 @@ namespace iText.Pdfa {
                 doc.Close();
                 CompareResult(outPdf, cmpPdf);
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT));
 ;
         }
 
@@ -199,7 +201,7 @@ namespace iText.Pdfa {
                 canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT));
 ;
         }
 
@@ -227,7 +229,7 @@ namespace iText.Pdfa {
                 doc.Close();
                 CompareResult(outPdf, cmpPdf);
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT));
 ;
         }
 
@@ -257,7 +259,7 @@ namespace iText.Pdfa {
                 doc.Close();
                 CompareResult(outPdf, cmpPdf);
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT));
 ;
         }
 
@@ -273,11 +275,11 @@ namespace iText.Pdfa {
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
-                canvas.SetExtGState(new PdfExtGState().SetHTP(new PdfName("Test")));
+                canvas.SetExtGState(new PdfExtGState().Put(PdfName.HTP, new PdfName("Test")));
                 canvas.Rectangle(30, 30, 100, 100).Fill();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheHTPKey));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_HTP_KEY));
 ;
         }
 
@@ -300,7 +302,7 @@ namespace iText.Pdfa {
                 canvas.Rectangle(30, 30, 100, 100).Fill();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.HalftonesShallNotContainHalftonename));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.HALFTONES_SHALL_NOT_CONTAIN_HALFTONENAME));
 ;
         }
 
@@ -320,7 +322,7 @@ namespace iText.Pdfa {
                 canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/p0_01.j2k"), 300, 300, false);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyJpxBaselineSetOfFeaturesShallBeUsed));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ONLY_JPX_BASELINE_SET_OF_FEATURES_SHALL_BE_USED));
 ;
         }
 
@@ -340,7 +342,7 @@ namespace iText.Pdfa {
                 canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file5.jp2"), 300, 300, false);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EXACTLY_ONE_COLOUR_SPACE_SPECIFICATION_SHALL_HAVE_THE_VALUE_0X01_IN_THE_APPROX_FIELD));
 ;
         }
 
@@ -360,7 +362,7 @@ namespace iText.Pdfa {
                 canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file7.jp2"), 300, 300, false);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EXACTLY_ONE_COLOUR_SPACE_SPECIFICATION_SHALL_HAVE_THE_VALUE_0X01_IN_THE_APPROX_FIELD));
 ;
         }
 
@@ -424,7 +426,7 @@ namespace iText.Pdfa {
                 canvas.RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.IfTheDocumentDoesNotContainAPdfAOutputIntentTransparencyIsForbidden));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.IF_THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_TRANSPARENCY_IS_FORBIDDEN));
 ;
         }
 
@@ -478,8 +480,84 @@ namespace iText.Pdfa {
                 canvas.RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyStandardBlendModesShallBeusedForTheValueOfTheBMKeyOnAnExtendedGraphicStateDictionary));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_AN_EXTENDED_GRAPHIC_STATE_DICTIONARY));
 ;
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest01() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a stream
+            byte[] samples = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 };
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray size = new PdfArray(new float[] { 2 });
+            PdfNumber bitsPerSample = new PdfNumber(8);
+            PdfFunction.Type0 type0 = new PdfFunction.Type0(domain, range, size, bitsPerSample, samples);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction0", alternateSpace
+                , type0);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest02() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
+            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
+            PdfNumber n = new PdfNumber(1);
+            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction2", alternateSpace
+                , type2);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+        }
+
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest03() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            PdfArray domain = new PdfArray(new float[] { 0, 1 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
+            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
+            PdfNumber n = new PdfNumber(1);
+            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            PdfCanvas canvas = new PdfCanvas(page);
+            String separationName = "separationTest";
+            canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);
+            PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colorantsDict = new PdfDictionary();
+            colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
+                type2).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colorantsDict);
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList<String>(separationName
+                ), alternateSpace, type2, attributes), new float[] { 0.5f });
+            canvas.SetColor(deviceN, true);
+            doc.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>

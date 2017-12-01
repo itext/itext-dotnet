@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -82,9 +82,7 @@ namespace iText.Layout.Element {
 
         private int colspan;
 
-        protected internal PdfName role = PdfName.TD;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>Creates a cell which takes a custom amount of cell spaces in the table.</summary>
         /// <param name="rowspan">the number of rows this cell must occupy. Negative numbers will make the argument default to 1.
@@ -118,7 +116,7 @@ namespace iText.Layout.Element {
                     cellRenderer = (CellRenderer)renderer;
                 }
                 else {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(Table));
+                    ILog logger = LogManager.GetLogger(typeof(Table));
                     logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
                 }
             }
@@ -188,20 +186,6 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        /// <summary>Directly adds a String of text to this cell.</summary>
-        /// <remarks>
-        /// Directly adds a String of text to this cell. The content is wrapped in a
-        /// layout element.
-        /// </remarks>
-        /// <param name="content">
-        /// a
-        /// <see cref="System.String"/>
-        /// </param>
-        /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add(String content) {
-            return Add(new Paragraph(content));
-        }
-
         /// <summary>Clones a cell with its position, properties, and optionally its contents.</summary>
         /// <param name="includeContent">whether or not to also include the contents of the cell.</param>
         /// <returns>a clone of this Element</returns>
@@ -229,7 +213,7 @@ namespace iText.Layout.Element {
                 case Property.PADDING_LEFT:
                 case Property.PADDING_RIGHT:
                 case Property.PADDING_TOP: {
-                    return (T1)(Object)2f;
+                    return (T1)(Object)UnitValue.CreatePointValue(2f);
                 }
 
                 default: {
@@ -243,20 +227,9 @@ namespace iText.Layout.Element {
                 );
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-            if (PdfName.Artifact.Equals(role)) {
-                PropagateArtifactRoleToChildElements();
-            }
-        }
-
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.TD);
             }
             return tagProperties;
         }

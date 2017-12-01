@@ -182,7 +182,7 @@ namespace iText.Layout {
             }
             rootRenderer = (RootRenderer)nextRelayoutRenderer;
             foreach (IElement element in childElements) {
-                rootRenderer.AddChild(element.CreateRendererSubTree());
+                CreateAndAddRendererSubTree(element);
             }
         }
 
@@ -208,7 +208,9 @@ namespace iText.Layout {
         /// that no more elements will be added and it is time to finish processing all the elements.
         /// </summary>
         public override void Close() {
-            rootRenderer.Close();
+            if (rootRenderer != null) {
+                rootRenderer.Close();
+            }
         }
 
         protected internal override RootRenderer EnsureRootRendererNotNull() {

@@ -272,7 +272,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void ProcessPageContent(PdfPage page) {
             InitClippingPath(page);
             ParserGraphicsState gs = GetGraphicsState();
-            EventOccurred(new ClippingPathInfo(gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
+            EventOccurred(new ClippingPathInfo(gs, gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
             ProcessContent(page.GetContentBytes(), page.GetResources());
         }
 
@@ -408,14 +408,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// In case it isn't applicable pass any <CODE>byte</CODE> value.
         /// </param>
         protected internal virtual void PaintPath(int operation, int rule) {
-            PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, GetGraphicsState
-                ());
+            ParserGraphicsState gs = GetGraphicsState();
+            PathRenderInfo renderInfo = new PathRenderInfo(this.markedContentStack, gs, currentPath, operation, rule, 
+                isClip, clippingRule);
             EventOccurred(renderInfo, EventType.RENDER_PATH);
             if (isClip) {
                 isClip = false;
-                ParserGraphicsState gs = GetGraphicsState();
                 gs.Clip(currentPath, clippingRule);
-                EventOccurred(new ClippingPathInfo(gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
+                EventOccurred(new ClippingPathInfo(gs, gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
             }
             currentPath = new Path();
         }
@@ -501,13 +501,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             if (supportedEvents == null || supportedEvents.Contains(type)) {
                 eventListener.EventOccurred(data, type);
             }
-            if (data is TextRenderInfo) {
-                ((TextRenderInfo)data).ReleaseGraphicsState();
-            }
-            else {
-                if (data is PathRenderInfo) {
-                    ((PathRenderInfo)data).ReleaseGraphicsState();
-                }
+            if (data is AbstractRenderInfo) {
+                ((AbstractRenderInfo)data).ReleaseGraphicsState();
             }
         }
 
@@ -521,21 +516,22 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Displays an XObject using the registered handler for this XObject's subtype</summary>
-        /// <param name="xobjectName">the name of the XObject to retrieve from the resource dictionary</param>
-        private void DisplayXObject(PdfName xobjectName) {
-            PdfStream xobjectStream = GetXObjectStream(xobjectName);
+        /// <param name="resourceName">the name of the XObject to retrieve from the resource dictionary</param>
+        private void DisplayXObject(PdfName resourceName) {
+            PdfStream xobjectStream = GetXObjectStream(resourceName);
             PdfName subType = xobjectStream.GetAsName(PdfName.Subtype);
             IXObjectDoHandler handler = xobjectDoHandlers.Get(subType);
             if (handler == null) {
                 handler = xobjectDoHandlers.Get(PdfName.Default);
             }
-            handler.HandleXObject(this, xobjectStream);
+            handler.HandleXObject(this, this.markedContentStack, xobjectStream, resourceName);
         }
 
-        private void DisplayImage(PdfStream imageStream, bool isInline) {
+        private void DisplayImage(Stack<CanvasTag> canvasTagHierarchy, PdfStream imageStream, PdfName resourceName
+            , bool isInline) {
             PdfDictionary colorSpaceDic = GetResources().GetResource(PdfName.ColorSpace);
-            ImageRenderInfo renderInfo = new ImageRenderInfo(GetGraphicsState().GetCtm(), imageStream, colorSpaceDic, 
-                isInline);
+            ImageRenderInfo renderInfo = new ImageRenderInfo(canvasTagHierarchy, GetGraphicsState(), GetGraphicsState(
+                ).GetCtm(), imageStream, resourceName, colorSpaceDic, isInline);
             EventOccurred(renderInfo, EventType.RENDER_IMAGE);
         }
 
@@ -983,7 +979,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.gsStack.Pop();
                 ParserGraphicsState gs = processor.GetGraphicsState();
-                processor.EventOccurred(new ClippingPathInfo(gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED
+                processor.EventOccurred(new ClippingPathInfo(gs, gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED
                     );
             }
         }
@@ -1160,8 +1156,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class DoOperator : IContentOperator {
             /// <summary><inheritDoc/></summary>
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
-                PdfName xobjectName = (PdfName)operands[0];
-                processor.DisplayXObject(xobjectName);
+                PdfName resourceName = (PdfName)operands[0];
+                processor.DisplayXObject(resourceName);
             }
         }
 
@@ -1176,7 +1172,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             /// <summary><inheritDoc/></summary>
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfStream imageStream = (PdfStream)operands[0];
-                processor.DisplayImage(imageStream, true);
+                processor.DisplayImage(processor.markedContentStack, imageStream, null, true);
             }
         }
 
@@ -1232,8 +1228,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>An XObject subtype handler for FORM</summary>
         private class FormXObjectDoHandler : IXObjectDoHandler {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream stream) {
-                PdfDictionary resourcesDic = stream.GetAsDictionary(PdfName.Resources);
+            public virtual void HandleXObject(PdfCanvasProcessor processor, Stack<CanvasTag> canvasTagHierarchy, PdfStream
+                 xObjectStream, PdfName xObjectName) {
+                PdfDictionary resourcesDic = xObjectStream.GetAsDictionary(PdfName.Resources);
                 PdfResources resources;
                 if (resourcesDic == null) {
                     resources = processor.GetResources();
@@ -1245,8 +1242,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 // this is probably not necessary (if we fail on this, probably the entire content stream processing
                 // operation should be rejected
                 byte[] contentBytes;
-                contentBytes = stream.GetBytes();
-                PdfArray matrix = stream.GetAsArray(PdfName.Matrix);
+                contentBytes = xObjectStream.GetBytes();
+                PdfArray matrix = xObjectStream.GetAsArray(PdfName.Matrix);
                 new PdfCanvasProcessor.PushGraphicsStateOperator().Invoke(processor, null, null);
                 if (matrix != null) {
                     float a = matrix.GetAsNumber(0).FloatValue();
@@ -1265,14 +1262,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>An XObject subtype handler for IMAGE</summary>
         private class ImageXObjectDoHandler : IXObjectDoHandler {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream) {
-                processor.DisplayImage(xobjectStream, false);
+            public virtual void HandleXObject(PdfCanvasProcessor processor, Stack<CanvasTag> canvasTagHierarchy, PdfStream
+                 xObjectStream, PdfName resourceName) {
+                processor.DisplayImage(canvasTagHierarchy, xObjectStream, resourceName, false);
             }
         }
 
         /// <summary>An XObject subtype handler that does nothing</summary>
         private class IgnoreXObjectDoHandler : IXObjectDoHandler {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream) {
+            public virtual void HandleXObject(PdfCanvasProcessor processor, Stack<CanvasTag> canvasTagHierarchy, PdfStream
+                 xObjectStream, PdfName xObjectName) {
             }
             // ignore XObject subtype
         }

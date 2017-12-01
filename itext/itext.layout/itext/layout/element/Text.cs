@@ -42,10 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Element {
     /// <summary>
@@ -59,9 +60,7 @@ namespace iText.Layout.Element {
     public class Text : AbstractElement<iText.Layout.Element.Text>, ILeafElement, IAccessibleElement {
         protected internal String text;
 
-        protected internal PdfName role = PdfName.Span;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>Constructs a Text with its role initialized.</summary>
         /// <param name="text">
@@ -140,17 +139,9 @@ namespace iText.Layout.Element {
             return (iText.Layout.Element.Text)(Object)this;
         }
 
-        public virtual PdfName GetRole() {
-            return role;
-        }
-
-        public virtual void SetRole(PdfName role) {
-            this.role = role;
-        }
-
         public virtual AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.SPAN);
             }
             return tagProperties;
         }

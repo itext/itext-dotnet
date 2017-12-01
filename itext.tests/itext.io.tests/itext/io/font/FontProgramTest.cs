@@ -41,27 +41,27 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontProgramTest {
+        private const String notExistingFont = "some-font.ttf";
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
-            String font = "some-font.ttf";
-            try {
-                FontProgramFactory.CreateFont(font);
+            NUnit.Framework.Assert.That(() =>  {
+                FontProgramFactory.CreateFont(notExistingFont);
             }
-            catch (iText.IO.IOException ex) {
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.FontFile1NotFound, font), ex
-                    .Message);
-            }
+            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException._1NotFoundAsFileOrResource, notExistingFont)));
+;
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BoldTest() {
-            FontProgram fp = FontProgramFactory.CreateFont(FontConstants.HELVETICA);
+            FontProgram fp = FontProgramFactory.CreateFont(StandardFonts.HELVETICA);
             fp.SetBold(true);
             NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected");
             fp.SetBold(false);

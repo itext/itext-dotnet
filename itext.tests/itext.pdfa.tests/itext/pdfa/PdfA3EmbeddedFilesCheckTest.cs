@@ -45,6 +45,7 @@ using System.IO;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -84,8 +85,8 @@ namespace iText.Pdfa {
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
-            pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", PdfName.ApplicationXml, null, PdfName.
-                Source);
+            pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
+                , "foo.xml", PdfName.ApplicationXml, null, PdfName.Source));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -111,7 +112,8 @@ namespace iText.Pdfa {
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
-            pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, PdfName.Unspecified);
+            pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
+                , "foo.xml", null, PdfName.Unspecified));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -134,8 +136,8 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
             byte[] somePdf = new byte[25];
-            pdfDocument.AddFileAttachment("some pdf file", somePdf, "foo.pdf", PdfName.ApplicationPdf, null, PdfName.Data
-                );
+            pdfDocument.AddAssociatedFile("some pdf file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, somePdf, "some pdf file"
+                , "foo.pdf", PdfName.ApplicationPdf, null, PdfName.Data));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -161,7 +163,8 @@ namespace iText.Pdfa {
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
-            pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, null);
+            pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
+                , "foo.xml", PdfName.Unspecified));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }

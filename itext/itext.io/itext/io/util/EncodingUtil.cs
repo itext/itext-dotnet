@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 
 using System;
 using System.Text;
+using iText.IO.Font;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -76,6 +77,9 @@ namespace iText.IO.Util {
         }
 
         public static String ConvertToString(byte[] bytes, String encoding) {
+            if (encoding.Equals(PdfEncodings.UTF8) &&
+                bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+                return IanaEncodings.GetEncodingEncoding(encoding).GetString(bytes, 3, bytes.Length - 3);
             String nameU = encoding.ToUpperInvariant();
             Encoding enc = null;
             if (nameU.Equals("UNICODEBIGUNMARKED"))

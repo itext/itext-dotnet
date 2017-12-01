@@ -43,15 +43,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 
@@ -112,7 +113,7 @@ namespace iText.Forms {
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
 
-        internal ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.PdfAcroForm));
+        internal ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
             , PdfName.Pattern };
@@ -331,6 +332,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
+        /// NeedAppearances has been deprecated in PDF 2.0.
         /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
@@ -342,12 +344,20 @@ namespace iText.Forms {
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
-            return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
+            if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
+                .DEPRECATED_NEED_APPEARANCES_IN_ACROFORM)) {
+                GetPdfObject().Remove(PdfName.NeedAppearances);
+                return this;
+            }
+            else {
+                return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
+            }
         }
 
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>NeedAppearances</code> boolean property on the AcroForm.
+        /// NeedAppearances has been deprecated in PDF 2.0.
         /// <br />
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
@@ -1051,7 +1061,7 @@ namespace iText.Forms {
             if (tagged) {
                 tagPointer = page.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 //TODO attributes?
-                tagPointer.AddTag(PdfName.Form);
+                tagPointer.AddTag(StandardRoles.FORM);
             }
             page.AddAnnotation(annot);
             if (tagged) {

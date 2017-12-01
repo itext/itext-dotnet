@@ -119,6 +119,23 @@ namespace iText.Layout.Properties {
             return resultArray;
         }
 
+        /// <summary>Creates an array of UnitValue PERCENT objects with equal values.</summary>
+        /// <param name="size">of the resulted array.</param>
+        /// <returns>
+        /// a array of equal
+        /// <see cref="PERCENT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// .
+        /// </returns>
+        public static iText.Layout.Properties.UnitValue[] CreatePercentArray(int size) {
+            iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[size];
+            for (int i = 0; i < size; i++) {
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePercentValue(100f / size);
+            }
+            return resultArray;
+        }
+
         /// <summary>Creates an array of UnitValue POINT objects with specified values.</summary>
         /// <param name="values">the values to be stored.</param>
         /// <returns>

@@ -257,9 +257,9 @@ namespace iText.Forms.Fields {
             return GetFieldFlag(FF_EDIT);
         }
 
-        /// <summary>If true, the field???s option items shall be sorted alphabetically.</summary>
+        /// <summary>If true, the field's option items shall be sorted alphabetically.</summary>
         /// <remarks>
-        /// If true, the field???s option items shall be sorted alphabetically.
+        /// If true, the field's option items shall be sorted alphabetically.
         /// This flag is intended for use by writers, not by readers.
         /// </remarks>
         /// <param name="sort">whether or not to sort the items</param>
@@ -271,9 +271,9 @@ namespace iText.Forms.Fields {
             return (iText.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_SORT, sort);
         }
 
-        /// <summary>If true, the field???s option items shall be sorted alphabetically.</summary>
+        /// <summary>If true, the field's option items shall be sorted alphabetically.</summary>
         /// <remarks>
-        /// If true, the field???s option items shall be sorted alphabetically.
+        /// If true, the field's option items shall be sorted alphabetically.
         /// This flag is intended for use by writers, not by readers.
         /// </remarks>
         /// <returns>whether or not the items are currently sorted</returns>
@@ -282,7 +282,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// If true, more than one of the field???s option items may be selected
+        /// If true, more than one of the field's option items may be selected
         /// simultaneously; if false, at most one item shall be selected.
         /// </summary>
         /// <param name="multiSelect">whether or not to allow multiple selection</param>
@@ -294,7 +294,7 @@ namespace iText.Forms.Fields {
             return (iText.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT, multiSelect);
         }
 
-        /// <summary>If true, more than one of the field???s option items may be selected simultaneously; if false, at most one item shall be selected.
+        /// <summary>If true, more than one of the field's option items may be selected simultaneously; if false, at most one item shall be selected.
         ///     </summary>
         /// <returns>whether or not multiple selection is currently allowed</returns>
         public virtual bool IsMultiSelect() {

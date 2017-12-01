@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Layout.Element;
 
@@ -76,7 +76,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.LinkRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.LinkRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;

@@ -74,7 +74,7 @@ namespace iText.IO.Font.Woff2 {
             // metadata for a TTC font entry
         }
 
-        private class WOFF2Header {
+        private class Woff2Header {
             public int flavor;
 
             public int header_version;
@@ -100,7 +100,7 @@ namespace iText.IO.Font.Woff2 {
         /// Accumulates data we may need to reconstruct a single font. One per font
         /// created for a TTC.
         /// </remarks>
-        private class WOFF2FontInfo {
+        private class Woff2FontInfo {
             public short num_glyphs;
 
             public short index_format;
@@ -115,7 +115,7 @@ namespace iText.IO.Font.Woff2 {
         private class RebuildMetadata {
             internal int header_checksum;
 
-            internal Woff2Dec.WOFF2FontInfo[] font_infos;
+            internal Woff2Dec.Woff2FontInfo[] font_infos;
 
             internal IDictionary<Woff2Dec.TableChecksumInfo, int?> checksums = new Dictionary<Woff2Dec.TableChecksumInfo
                 , int?>();
@@ -463,7 +463,7 @@ namespace iText.IO.Font.Woff2 {
 
         // Reconstruct entire glyf table based on transformed original
         private static Woff2Dec.Checksums ReconstructGlyf(byte[] data, int data_offset, Woff2Common.Table glyf_table
-            , int glyph_checksum, Woff2Common.Table loca_table, int loca_checksum, Woff2Dec.WOFF2FontInfo info, Woff2Out
+            , int glyph_checksum, Woff2Common.Table loca_table, int loca_checksum, Woff2Dec.Woff2FontInfo info, Woff2Out
              @out) {
             int kNumSubStreams = 7;
             Buffer file = new Buffer(data, data_offset, glyf_table.transform_length);
@@ -851,7 +851,7 @@ namespace iText.IO.Font.Woff2 {
 
         //TODO do we realy need long here?
         // First table goes after all the headers, table directory, etc
-        private static long ComputeOffsetToFirstTable(Woff2Dec.WOFF2Header hdr) {
+        private static long ComputeOffsetToFirstTable(Woff2Dec.Woff2Header hdr) {
             long offset = Woff2Common.kSfntHeaderSize + Woff2Common.kSfntEntrySize * hdr.num_tables;
             if (hdr.header_version != 0) {
                 offset = Woff2Common.CollectionHeaderSize(hdr.header_version, hdr.ttc_fonts.Length) + Woff2Common.kSfntHeaderSize
@@ -863,7 +863,7 @@ namespace iText.IO.Font.Woff2 {
             return offset;
         }
 
-        private static List<Woff2Common.Table> Tables(Woff2Dec.WOFF2Header hdr, int font_index) {
+        private static List<Woff2Common.Table> Tables(Woff2Dec.Woff2Header hdr, int font_index) {
             List<Woff2Common.Table> tables = new List<Woff2Common.Table>();
             if (hdr.header_version != 0) {
                 foreach (short index in hdr.ttc_fonts[font_index].table_indices) {
@@ -879,10 +879,10 @@ namespace iText.IO.Font.Woff2 {
         }
 
         private static void ReconstructFont(byte[] transformed_buf, int transformed_buf_offset, int transformed_buf_size
-            , Woff2Dec.RebuildMetadata metadata, Woff2Dec.WOFF2Header hdr, int font_index, Woff2Out @out) {
+            , Woff2Dec.RebuildMetadata metadata, Woff2Dec.Woff2Header hdr, int font_index, Woff2Out @out) {
             int dest_offset = @out.Size();
             byte[] table_entry = new byte[12];
-            Woff2Dec.WOFF2FontInfo info = metadata.font_infos[font_index];
+            Woff2Dec.Woff2FontInfo info = metadata.font_infos[font_index];
             List<Woff2Common.Table> tables = Tables(hdr, font_index);
             // 'glyf' without 'loca' doesn't make sense
             if ((FindTable(tables, TableTags.kGlyfTableTag) != null) != (FindTable(tables, TableTags.kLocaTableTag) !=
@@ -985,7 +985,7 @@ namespace iText.IO.Font.Woff2 {
             }
         }
 
-        private static void ReadWOFF2Header(byte[] data, int length, Woff2Dec.WOFF2Header hdr) {
+        private static void ReadWoff2Header(byte[] data, int length, Woff2Dec.Woff2Header hdr) {
             Buffer file = new Buffer(data, 0, length);
             int signature;
             signature = file.ReadInt();
@@ -1122,7 +1122,7 @@ namespace iText.IO.Font.Woff2 {
         }
 
         // Write everything before the actual table data
-        private static void WriteHeaders(byte[] data, int length, Woff2Dec.RebuildMetadata metadata, Woff2Dec.WOFF2Header
+        private static void WriteHeaders(byte[] data, int length, Woff2Dec.RebuildMetadata metadata, Woff2Dec.Woff2Header
              hdr, Woff2Out @out) {
             long firstTableOffset = ComputeOffsetToFirstTable(hdr);
             System.Diagnostics.Debug.Assert(firstTableOffset <= int.MaxValue);
@@ -1174,7 +1174,7 @@ namespace iText.IO.Font.Woff2 {
                 }
                 // ULONG ulDsigOffset
                 // write Offset Tables and store the location of each in TTC Header
-                metadata.font_infos = new Woff2Dec.WOFF2FontInfo[hdr.ttc_fonts.Length];
+                metadata.font_infos = new Woff2Dec.Woff2FontInfo[hdr.ttc_fonts.Length];
                 for (int i = 0; i < hdr.ttc_fonts.Length; ++i) {
                     Woff2Dec.TtcFont ttc_font = hdr.ttc_fonts[i];
                     // write Offset Table location into TTC Header
@@ -1182,7 +1182,7 @@ namespace iText.IO.Font.Woff2 {
                     // write the actual offset table so our header doesn't lie
                     ttc_font.dst_offset = offset;
                     offset = StoreOffsetTable(result, offset, ttc_font.flavor, ttc_font.table_indices.Length);
-                    metadata.font_infos[i] = new Woff2Dec.WOFF2FontInfo();
+                    metadata.font_infos[i] = new Woff2Dec.Woff2FontInfo();
                     foreach (short table_index in ttc_font.table_indices) {
                         int tag = hdr.tables[table_index].tag;
                         metadata.font_infos[i].table_entry_by_tag.Put(tag, offset);
@@ -1193,9 +1193,9 @@ namespace iText.IO.Font.Woff2 {
                 }
             }
             else {
-                metadata.font_infos = new Woff2Dec.WOFF2FontInfo[1];
+                metadata.font_infos = new Woff2Dec.Woff2FontInfo[1];
                 offset = StoreOffsetTable(result, offset, hdr.flavor, hdr.num_tables);
-                metadata.font_infos[0] = new Woff2Dec.WOFF2FontInfo();
+                metadata.font_infos[0] = new Woff2Dec.Woff2FontInfo();
                 for (int i = 0; i < hdr.num_tables; ++i) {
                     metadata.font_infos[0].table_entry_by_tag.Put(sorted_tables[i].tag, offset);
                     offset = StoreTableEntry(result, offset, sorted_tables[i].tag);
@@ -1206,27 +1206,19 @@ namespace iText.IO.Font.Woff2 {
         }
 
         // Compute the size of the final uncompressed font, or throws exception on error.
-        public static int ComputeWOFF2FinalSize(byte[] data, int length) {
+        public static int ComputeWoff2FinalSize(byte[] data, int length) {
             Buffer file = new Buffer(data, 0, length);
             file.Skip(16);
             return file.ReadInt();
         }
 
-        [Obsolete]
-        public static void ConvertWOFF2ToTTF(byte[] result, int result_length, byte[] data, int length) {
-            // Decompresses the font into the target buffer. The result_length should
-            // be the same as determined by ComputeFinalSize().
-            Woff2MemoryOut @out = new Woff2MemoryOut(result, result_length);
-            ConvertWOFF2ToTTF(data, length, @out);
-        }
-
         // Decompresses the font into out. Returns true on success.
         // Works even if WOFF2Header totalSfntSize is wrong.
         // Please prefer this API.
-        public static void ConvertWOFF2ToTTF(byte[] data, int length, Woff2Out @out) {
+        public static void ConvertWoff2ToTtf(byte[] data, int length, Woff2Out @out) {
             Woff2Dec.RebuildMetadata metadata = new Woff2Dec.RebuildMetadata();
-            Woff2Dec.WOFF2Header hdr = new Woff2Dec.WOFF2Header();
-            ReadWOFF2Header(data, length, hdr);
+            Woff2Dec.Woff2Header hdr = new Woff2Dec.Woff2Header();
+            ReadWoff2Header(data, length, hdr);
             WriteHeaders(data, length, metadata, hdr, @out);
             float compression_ratio = (float)hdr.uncompressed_size / length;
             if (compression_ratio > kMaxPlausibleCompressionRatio) {

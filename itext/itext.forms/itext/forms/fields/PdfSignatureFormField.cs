@@ -78,15 +78,15 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Gets the
-        /// <see cref="iText.Forms.PdfSigFieldLockDictionary"/>
+        /// <see cref="iText.Forms.PdfSigFieldLock"/>
         /// , which contains fields that
         /// must be locked if the document is signed.
         /// </summary>
         /// <returns>a dictionary containing locked fields.</returns>
-        /// <seealso cref="iText.Forms.PdfSigFieldLockDictionary"/>
-        public virtual PdfSigFieldLockDictionary GetSigFieldLockDictionary() {
+        /// <seealso cref="iText.Forms.PdfSigFieldLock"/>
+        public virtual PdfSigFieldLock GetSigFieldLockDictionary() {
             PdfDictionary sigLockDict = (PdfDictionary)GetPdfObject().Get(PdfName.Lock);
-            return sigLockDict == null ? null : new PdfSigFieldLockDictionary(sigLockDict);
+            return sigLockDict == null ? null : new PdfSigFieldLock(sigLockDict);
         }
     }
 }

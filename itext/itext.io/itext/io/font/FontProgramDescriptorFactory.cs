@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Woff2;
 
 namespace iText.IO.Font {
@@ -51,9 +52,9 @@ namespace iText.IO.Font {
             if (fontName == null || fontName.Length == 0) {
                 return null;
             }
-            String baseName = FontProgram.GetBaseName(fontName);
+            String baseName = FontProgram.TrimFontStyle(fontName);
             //yes, we trying to find built-in standard font with original name, not baseName.
-            bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(fontName);
+            bool isBuiltinFonts14 = StandardFonts.IsStandardFont(fontName);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgramDescriptor fontDescriptor = null;
             if (FETCH_CACHED_FIRST) {

@@ -35,7 +35,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace System.util.zlib {
 
-    public sealed class JZlib{
+    internal sealed class JZlib{
         private const String _version="1.0.7";
         public static String version()
 		{

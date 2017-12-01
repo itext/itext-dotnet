@@ -153,7 +153,7 @@ namespace iText.IO.Source
 		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(Uri url) {
 #if !NETSTANDARD1_6
-            WebRequest wr = WebRequest.Create(Uri.UnescapeDataString(url.AbsoluteUri));
+            WebRequest wr = WebRequest.Create(url.LocalPath);
             wr.Credentials = CredentialCache.DefaultCredentials;
             Stream isp = wr.GetResponse().GetResponseStream();
 #else
@@ -272,7 +272,7 @@ namespace iText.IO.Source
 			Stream stream = ResourceUtil.GetResourceStream(filename);
 			if (stream == null)
 			{
-				throw new IOException(MessageFormatUtil.Format(IOException._1NotFoundAsFileOrResource
+				throw new System.IO.IOException(MessageFormatUtil.Format(IOException._1NotFoundAsFileOrResource
 					, filename));
 			}
 			return CreateByReadingToMemory(stream);
@@ -302,7 +302,7 @@ namespace iText.IO.Source
 				{
 					stream.Dispose();
 				}
-				catch (IOException)
+				catch (System.IO.IOException)
 				{
 				}
 			}

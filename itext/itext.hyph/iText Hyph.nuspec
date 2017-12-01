@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7.hyph</id>
-    <version>$version$</version>
+    <version>7.1.0</version>
     <title>iText 7 Hyph</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>

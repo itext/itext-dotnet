@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
@@ -161,7 +161,7 @@ namespace iText.IO.Font.Cmap {
                         byteMappings.Put((mark[0] << 8) + mark[1], dest);
                     }
                     else {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
+                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
                         logger.Warn(iText.IO.LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                     }
                 }

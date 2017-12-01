@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
@@ -54,9 +53,6 @@ namespace iText.Layout.Properties {
     /// <see cref="Property.UNDERLINE"/>
     /// </remarks>
     public class Underline {
-        [Obsolete]
-        protected internal Color color;
-
         protected internal TransparentColor transparentColor;
 
         protected internal float thickness;
@@ -130,7 +126,6 @@ namespace iText.Layout.Properties {
         /// </param>
         public Underline(Color color, float opacity, float thickness, float thicknessMul, float yPosition, float yPositionMul
             , int lineCapStyle) {
-            this.color = color;
             this.transparentColor = new TransparentColor(color, opacity);
             this.thickness = thickness;
             this.thicknessMul = thicknessMul;

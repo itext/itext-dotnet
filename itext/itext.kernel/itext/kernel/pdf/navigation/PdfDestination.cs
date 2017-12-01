@@ -53,10 +53,6 @@ namespace iText.Kernel.Pdf.Navigation {
 
         public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names);
 
-        [System.ObsoleteAttribute(@"do not use this method. Will be removed in 7.1")]
-        public abstract iText.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
-            > names);
-
         public static iText.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject) {
             if (pdfObject.GetObjectType() == PdfObject.STRING) {
                 return new PdfStringDestination((PdfString)pdfObject);
@@ -67,7 +63,22 @@ namespace iText.Kernel.Pdf.Navigation {
                 }
                 else {
                     if (pdfObject.GetObjectType() == PdfObject.ARRAY) {
-                        return new PdfExplicitDestination((PdfArray)pdfObject);
+                        PdfArray destArray = (PdfArray)pdfObject;
+                        if (destArray.Size() == 0) {
+                            throw new ArgumentException();
+                        }
+                        else {
+                            PdfObject firstObj = destArray.Get(0);
+                            // In case of explicit destination this is a page dictionary or page number
+                            if (firstObj.IsNumber() || firstObj.IsDictionary() && PdfName.Page.Equals(((PdfDictionary)firstObj).GetAsName
+                                (PdfName.Type))) {
+                                return new PdfExplicitDestination(destArray);
+                            }
+                            else {
+                                // In case of structure destination this is a struct element dictionary or a string ID. Type is not required for structure elements
+                                return new PdfStructureDestination(destArray);
+                            }
+                        }
                     }
                     else {
                         throw new NotSupportedException();

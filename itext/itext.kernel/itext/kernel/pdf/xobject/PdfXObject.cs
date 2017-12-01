@@ -42,22 +42,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Pdf.Xobject {
     /// <summary>An abstract wrapper for supported types of XObject.</summary>
     /// <seealso cref="PdfFormXObject"/>
     /// <seealso cref="PdfImageXObject"/>
-    public class PdfXObject : PdfObjectWrapper<PdfStream> {
-        [Obsolete]
-        public PdfXObject()
-            : this(new PdfStream()) {
-        }
-
-        [Obsolete]
-        public PdfXObject(PdfStream pdfObject)
+    public abstract class PdfXObject : PdfObjectWrapper<PdfStream> {
+        protected internal PdfXObject(PdfStream pdfObject)
             : base(pdfObject) {
         }
 
@@ -117,6 +113,47 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <returns>float value.</returns>
         public virtual float GetHeight() {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// <p>
+        /// Adds file associated with PDF XObject and identifies the relationship between them.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Adds file associated with PDF XObject and identifies the relationship between them.
+        /// </p>
+        /// <p>
+        /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
+        /// The method adds file to array value of the AF key in the XObject dictionary.
+        /// </p>
+        /// <p>
+        /// For associated files their associated file specification dictionaries shall include the AFRelationship key
+        /// </p>
+        /// </remarks>
+        /// <param name="fs">file specification dictionary of associated file</param>
+        public virtual void AddAssociatedFile(PdfFileSpec fs) {
+            if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
+                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+            }
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null) {
+                afArray = new PdfArray();
+                GetPdfObject().Put(PdfName.AF, afArray);
+            }
+            afArray.Add(fs.GetPdfObject());
+        }
+
+        /// <summary>Returns files associated with XObject.</summary>
+        /// <returns>associated files array.</returns>
+        public virtual PdfArray GetAssociatedFiles(bool create) {
+            PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
+            if (afArray == null && create) {
+                afArray = new PdfArray();
+                GetPdfObject().Put(PdfName.AF, afArray);
+            }
+            return afArray;
         }
 
         /// <summary><inheritDoc/></summary>

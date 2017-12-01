@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -77,21 +76,10 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Creates a
-        /// <see cref="PdfLineAnnotation"/>
-        /// instance from the given
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents annotation object. This method is useful for property reading in reading mode or
-        /// modifying in stamping mode.
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         /// </summary>
-        /// <param name="pdfDictionary">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents existing annotation in the document.
-        /// </param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfLineAnnotation(PdfDictionary pdfDictionary)
+        protected internal PdfLineAnnotation(PdfDictionary pdfDictionary)
             : base(pdfDictionary) {
         }
 
@@ -108,9 +96,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// An array of four numbers, [x1 y1 x2 y2], specifying the starting and ending coordinates of the line
         /// in default user space. If the
         /// <see cref="iText.Kernel.Pdf.PdfName.LL"/>
-        /// (see
-        /// <see cref="GetLeaderLine()"/>
-        /// ) entry is present, this value represents
+        /// entry is present, this value represents
         /// the endpoints of the leader lines rather than the endpoints of the line itself.
         /// </remarks>
         /// <returns>An array of four numbers specifying the starting and ending coordinates of the line in default user space.
@@ -137,7 +123,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -158,7 +144,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -191,9 +177,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle()
-                , style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -214,9 +199,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
         /// <summary>An array of two names specifying the line ending styles that is used in drawing the line.</summary>
@@ -315,7 +299,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
-        public override Color GetInteriorColor() {
+        public virtual Color GetInteriorColor() {
             return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
@@ -338,7 +322,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.IC, interiorColor);
         }
 
@@ -352,54 +336,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
-            return ((iText.Kernel.Pdf.Annot.PdfLineAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
-        }
-
-        /// <summary>
-        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself.
-        /// </summary>
-        /// <remarks>
-        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
-        /// when traversing the line from its starting point to its ending point (as specified by
-        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
-        /// (see
-        /// <see cref="GetLine()"/>
-        /// );
-        /// a negative value indicates the opposite direction.
-        /// </remarks>
-        /// <returns>a float specifying the length of leader lines in default user space.</returns>
-        [System.ObsoleteAttribute(@"use GetLeaderLineLength() instead.")]
-        public virtual float GetLeaderLine() {
-            PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
-            return n == null ? 0 : n.FloatValue();
-        }
-
-        /// <summary>
-        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself.
-        /// </summary>
-        /// <remarks>
-        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
-        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
-        /// when traversing the line from its starting point to its ending point (as specified by
-        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
-        /// (see
-        /// <see cref="GetLine()"/>
-        /// );
-        /// a negative value indicates the opposite direction.
-        /// </remarks>
-        /// <param name="leaderLine">a float specifying the length of leader lines in default user space.</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfLineAnnotation"/>
-        /// instance.
-        /// </returns>
-        [System.ObsoleteAttribute(@"use SetLeaderLineLength(float) instead.")]
-        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float leaderLine) {
-            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LL, new PdfNumber(leaderLine));
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetInteriorColor(float[] interiorColor) {
+            return SetInteriorColor(new PdfArray(interiorColor));
         }
 
         /// <summary>
@@ -465,9 +403,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets the length of leader line extensions that extend from the line proper 180 degrees from the leader lines.
         /// <b>This value shall not be set unless
         /// <see cref="iText.Kernel.Pdf.PdfName.LL"/>
-        /// (see
-        /// <see cref="SetLeaderLine(float)"/>
-        /// ) is set.</b>
+        /// is set.</b>
         /// </remarks>
         /// <param name="leaderLineExtension">a non-negative float that represents the length of leader line extensions.
         ///     </param>

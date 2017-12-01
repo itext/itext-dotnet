@@ -827,7 +827,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Appends a B??zier curve to the path, starting from the current point.</summary>
+        /// <summary>Appends a Bezier curve to the path, starting from the current point.</summary>
         /// <param name="x2">x coordinate of the second control point.</param>
         /// <param name="y2">y coordinate of the second control point.</param>
         /// <param name="x3">x coordinate of the ending point.</param>
@@ -839,7 +839,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Appends a B??zier curve to the path, starting from the current point.</summary>
+        /// <summary>Appends a Bezier curve to the path, starting from the current point.</summary>
         /// <param name="x1">x coordinate of the first control point.</param>
         /// <param name="y1">y coordinate of the first control point.</param>
         /// <param name="x3">x coordinate of the ending point.</param>
@@ -1630,7 +1630,7 @@ namespace iText.Kernel.Pdf.Canvas {
             bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddXObject(xObject, a, b, c, d, e, f);
                 return xObject;
             }
@@ -1665,7 +1665,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddXObject(xObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
                 return xObject;
             }
@@ -1694,7 +1694,7 @@ namespace iText.Kernel.Pdf.Canvas {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 // TODO add matrix parameters
-                PdfXObject xObject = wmf.CreatePdfForm(document);
+                PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddImage(xObject, width, 0, 0, width, x, y);
                 return xObject;
             }
@@ -1943,8 +1943,9 @@ namespace iText.Kernel.Pdf.Canvas {
             if (tagReference.GetRole() == null) {
                 return this;
             }
-            CanvasTag tag = new CanvasTag(tagReference.GetRole(), tagReference.CreateNextMcid());
-            tag.SetProperties(tagReference.GetProperties());
+            CanvasTag tag = new CanvasTag(tagReference.GetRole());
+            tag.SetProperties(tagReference.GetProperties()).AddProperty(PdfName.MCID, new PdfNumber(tagReference.CreateNextMcid
+                ()));
             return OpenTag(tag);
         }
 
@@ -2033,6 +2034,7 @@ namespace iText.Kernel.Pdf.Canvas {
             ConcatMatrix(a, b, c, d, e, f);
             PdfOutputStream os = contentStream.GetOutputStream();
             os.WriteBytes(BI);
+            byte[] imageBytes = imageXObject.GetPdfObject().GetBytes(false);
             foreach (KeyValuePair<PdfName, PdfObject> entry in imageXObject.GetPdfObject().EntrySet()) {
                 PdfName key = entry.Key;
                 if (!PdfName.Type.Equals(key) && !PdfName.Subtype.Equals(key) && !PdfName.Length.Equals(key)) {
@@ -2040,8 +2042,12 @@ namespace iText.Kernel.Pdf.Canvas {
                     os.Write(entry.Value).WriteNewLine();
                 }
             }
+            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                os.Write(PdfName.Length).WriteSpace();
+                os.Write(new PdfNumber(imageBytes.Length)).WriteNewLine();
+            }
             os.WriteBytes(ID);
-            os.WriteBytes(imageXObject.GetPdfObject().GetBytes(false)).WriteNewLine().WriteBytes(EI).WriteNewLine();
+            os.WriteBytes(imageBytes).WriteNewLine().WriteBytes(EI).WriteNewLine();
             RestoreState();
         }
 

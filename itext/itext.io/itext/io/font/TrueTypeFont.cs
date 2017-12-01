@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
-using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -79,7 +80,6 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path) {
-            CheckFilePath(path);
             fontParser = new OpenTypeParser(path);
             fontParser.LoadTables(true);
             InitializeFontProperties();
@@ -94,7 +94,6 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(String ttcPath, int ttcIndex) {
-            CheckFilePath(ttcPath);
             fontParser = new OpenTypeParser(ttcPath, ttcIndex);
             fontParser.LoadTables(true);
             InitializeFontProperties();
@@ -260,7 +259,7 @@ namespace iText.IO.Font {
             // font metrics group
             fontMetrics.SetUnitsPerEm(head.unitsPerEm);
             fontMetrics.UpdateBbox(head.xMin, head.yMin, head.xMax, head.yMax);
-            fontMetrics.SetMaxGlyphId(fontParser.ReadMaxGlyphId());
+            fontMetrics.SetNumberOfGlyphs(fontParser.ReadNumGlyphs());
             fontMetrics.SetGlyphWidths(fontParser.GetGlyphWidthsByIndex());
             fontMetrics.SetTypoAscender(os_2.sTypoAscender);
             fontMetrics.SetTypoDescender(os_2.sTypoDescender);
@@ -294,14 +293,14 @@ namespace iText.IO.Font {
             fontIdentification.SetPanose(os_2.panose);
             IDictionary<int, int[]> cmap = GetActiveCmap();
             int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
-            int maxGlyphId = fontMetrics.GetMaxGlyphId();
+            int numOfGlyphs = fontMetrics.GetNumberOfGlyphs();
             unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
-            codeToGlyph = new LinkedDictionary<int, Glyph>(maxGlyphId);
+            codeToGlyph = new LinkedDictionary<int, Glyph>(numOfGlyphs);
             avgWidth = 0;
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
-                if (index >= maxGlyphId) {
-                    ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
+                if (index >= numOfGlyphs) {
+                    ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
                     LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName
                         (), index));
                     continue;
@@ -341,7 +340,7 @@ namespace iText.IO.Font {
             int count = 0;
             long bit = 1;
             for (int k = 0; k < 64; ++k) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
+                if ((cp & bit) != 0 && TrueTypeCodePages.Get(k) != null) {
                     ++count;
                 }
                 bit <<= 1;
@@ -350,8 +349,8 @@ namespace iText.IO.Font {
             count = 0;
             bit = 1;
             for (int k = 0; k < 64; ++k) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
-                    ret[count++] = FontConstants.CODE_PAGES[k];
+                if ((cp & bit) != 0 && TrueTypeCodePages.Get(k) != null) {
+                    ret[count++] = TrueTypeCodePages.Get(k);
                 }
                 bit <<= 1;
             }

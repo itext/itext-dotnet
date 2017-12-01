@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -73,11 +73,11 @@ namespace iText.Layout {
         public virtual void PreLayoutTest01() {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
                 if (i % 10 == 0) {
@@ -118,7 +118,7 @@ namespace iText.Layout {
             Paragraph twoColumnParagraph = new Paragraph();
             twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph));
             iText.Layout.Element.Text textElement = new iText.Layout.Element.Text(text.ToString());
-            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             document.Add(twoColumnParagraph);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;
@@ -144,7 +144,7 @@ namespace iText.Layout {
         public virtual void ColumnDocumentRendererRelayoutTest() {
             String outFileName = destinationFolder + "columnDocumentRendererRelayoutTest.pdf";
             String cmpFileName = sourceFolder + "cmp_columnDocumentRendererRelayoutTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDoc, PageSize.Default, false);
             Rectangle column1 = new Rectangle(40, 40, 200, 720);
             Rectangle column2 = new Rectangle(300, 40, 200, 720);

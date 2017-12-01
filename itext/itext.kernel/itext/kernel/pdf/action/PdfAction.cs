@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -146,8 +147,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow) {
-            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
-                ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
+            return CreateGoToR(fileSpec, destination).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
         }
 
         /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
@@ -156,6 +156,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             ) {
+            ValidateRemoteDestination(destination);
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
                 ()).Put(PdfName.D, destination.GetPdfObject());
         }
@@ -208,7 +209,7 @@ namespace iText.Kernel.Pdf.Action {
         /// may have nested target dictionaries specifying additional elements
         /// </param>
         /// <returns>created action</returns>
-        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTargetDictionary
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTarget
              targetDictionary) {
             return CreateGoToE(null, destination, newWindow, targetDictionary);
         }
@@ -227,7 +228,7 @@ namespace iText.Kernel.Pdf.Action {
         /// </param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
-            , bool newWindow, PdfTargetDictionary targetDictionary) {
+            , bool newWindow, PdfTarget targetDictionary) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
                 GoToE).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
             if (fileSpec != null) {
@@ -248,7 +249,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, bool newWindow) {
-            return CreateLaunch(fileSpec, null, newWindow);
+            return CreateLaunch(fileSpec).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
         }
 
         /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
@@ -260,25 +261,6 @@ namespace iText.Kernel.Pdf.Action {
                 Launch);
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
-            }
-            return action;
-        }
-
-        /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
-        /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
-        ///     </param>
-        /// <param name="win">A dictionary containing Windows-specific launch parameters</param>
-        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
-        /// <returns>created action</returns>
-        public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
-            ) {
-            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
-                Launch).Put(PdfName.NewWindow, PdfBoolean.ValueOf(newWindow));
-            if (fileSpec != null) {
-                action.Put(PdfName.F, fileSpec.GetPdfObject());
-            }
-            if (win != null) {
-                action.Put(PdfName.Win, win.GetPdfObject());
             }
             return action;
         }
@@ -336,6 +318,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Sound action (section 12.6.4.8 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
         ///     </param>
         /// <returns>created action</returns>
@@ -344,6 +327,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Sound action (section 12.6.4.8 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
         ///     </param>
         /// <param name="volume">the volume at which to play the sound, in the range -1.0 to 1.0. Default value: 1.0</param>
@@ -370,6 +354,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="annotation">a movie annotation identifying the movie that shall be played</param>
         /// <param name="title">the title of a movie annotation identifying the movie that shall be played</param>
         /// <param name="operation">
@@ -674,11 +659,47 @@ namespace iText.Kernel.Pdf.Action {
                         array.Add(((PdfAnnotation)obj).GetPdfObject());
                     }
                     else {
-                        throw new PdfException("the.array.must.contain.string.or.pdfannotation");
+                        throw new PdfException("The array must contain string or PDFAnnotation");
                     }
                 }
             }
             return array;
+        }
+
+        private static void ValidateRemoteDestination(PdfDestination destination) {
+            if (destination is PdfExplicitDestination) {
+                // No page object can be specified for a destination associated with a remote go-to action because the
+                // destination page is in a different PDF document. In this case, the page parameter specifies an integer
+                // page number within the remote document instead of a page object in the current document.
+                PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
+                if (firstObj.IsDictionary()) {
+                    throw new ArgumentException("Explicit destinations shall specify page number in remote go-to actions instead of page dictionary"
+                        );
+                }
+            }
+            else {
+                if (destination is PdfStructureDestination) {
+                    // No structure element dictionary can be specified for a structure destination associated with a remote
+                    // go-to action because the destination structure element is in a
+                    // different PDF document. In this case, the indirect reference to the structure element dictionary shall be
+                    // replaced by a byte string representing a structure element ID
+                    PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
+                    if (firstObj.IsDictionary()) {
+                        PdfDictionary structElemObj = (PdfDictionary)firstObj;
+                        PdfString id = structElemObj.GetAsString(PdfName.ID);
+                        if (id == null) {
+                            throw new ArgumentException("Structure destinations shall specify structure element ID in remote go-to actions. Structure element that has no ID is specified instead"
+                                );
+                        }
+                        else {
+                            LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION
+                                );
+                            ((PdfArray)destination.GetPdfObject()).Set(0, id);
+                            destination.GetPdfObject().SetModified();
+                        }
+                    }
+                }
+            }
         }
     }
 }

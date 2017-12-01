@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -57,7 +58,6 @@ namespace iText.Layout.Element {
         /// <summary>Creates a ListItem.</summary>
         public ListItem()
             : base() {
-            role = PdfName.LBody;
         }
 
         /// <summary>Creates a list item with text.</summary>
@@ -135,6 +135,13 @@ namespace iText.Layout.Element {
             }
             SetProperty(Property.LIST_SYMBOL, listNumberingType);
             return this;
+        }
+
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.LBODY);
+            }
+            return tagProperties;
         }
 
         protected internal override IRenderer MakeNewRenderer() {

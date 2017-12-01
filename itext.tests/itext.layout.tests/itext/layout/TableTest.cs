@@ -642,6 +642,40 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SimpleTableTest23() {
+            String testName = "tableTest23.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell().Add(new 
+                Paragraph("longer cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell()
+                .Add(new Paragraph("cell 1, 4")));
+            doc.Add(table);
+            table = new Table(2).SetFixedLayout().AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell
+                ().Add(new Paragraph("longer cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 4")));
+            doc.Add(table);
+            table = new Table(2, true).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell().Add(new 
+                Paragraph("longer cell 1, 2")));
+            doc.Add(table);
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4"
+                ))).Flush();
+            table.Complete();
+            table = new Table(2, true).SetFixedLayout().AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new 
+                Cell().Add(new Paragraph("longer cell 1, 2")));
+            doc.Add(table);
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4"
+                ))).Flush();
+            table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BigRowspanTest01() {
             String testName = "bigRowspanTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -773,8 +807,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(2).AddCell(new Cell(2, 1).Add("col 1 row 2")).AddCell(new Cell(2, 1).Add("col 2 row 2"
-                )).AddCell(new Cell(1, 1).Add("col 1 row 3")).AddCell(new Cell(1, 1).Add("col 2 row 3"));
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().AddCell(new Cell(2, 1).Add
+                (new Paragraph("col 1 row 2"))).AddCell(new Cell(2, 1).Add(new Paragraph("col 2 row 2"))).AddCell(new 
+                Cell(1, 1).Add(new Paragraph("col 1 row 3"))).AddCell(new Cell(1, 1).Add(new Paragraph("col 2 row 3"))
+                );
             table.SetBorderTop(new SolidBorder(ColorConstants.GREEN, 50)).SetBorderBottom(new SolidBorder(ColorConstants
                 .ORANGE, 40));
             doc.Add(table);
@@ -792,14 +828,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             for (int i = 0; i < 100; i++) {
                 Cell cell = new Cell();
-                cell.Add("Cell " + i);
+                cell.Add(new Paragraph("Cell " + i));
                 Cell cell2 = new Cell(2, 1);
-                cell2.Add("Cell with Rowspan");
+                cell2.Add(new Paragraph("Cell with Rowspan"));
                 Cell cell3 = new Cell();
-                cell3.Add("Cell " + i + ".2");
+                cell3.Add(new Paragraph("Cell " + i + ".2"));
                 table.AddCell(cell);
                 table.AddCell(cell2);
                 table.AddCell(cell3);
@@ -822,7 +858,7 @@ namespace iText.Layout {
             String textContent1 = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.";
             String textContent2 = "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.";
             String textContent3 = "Themes and styles also help keep your document coordinated. When you click Design and choose a new Theme, the pictures, charts, and SmartArt graphics change to match your new theme. When you apply styles, your headings change to match the new theme.";
-            Table table = new Table(3);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             for (int i = 0; i < 20; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3
                     ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent3
@@ -864,7 +900,7 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             for (int i = 0; i < 20; i++) {
                 table.AddCell(image);
             }
@@ -890,7 +926,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
             Cell cell = new Cell();
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             String result = "";
@@ -939,15 +976,15 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Cell cell;
-            Table outertable = new Table(1);
-            Table innertable = new Table(2);
+            Table outertable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            Table innertable = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             // first row
             // column 1
-            cell = new Cell().Add("Record Ref:");
+            cell = new Cell().Add(new Paragraph("Record Ref:"));
             cell.SetBorder(Border.NO_BORDER);
             innertable.AddCell(cell);
             // column 2
-            cell = new Cell().Add("GN Staff");
+            cell = new Cell().Add(new Paragraph("GN Staff"));
             cell.SetPaddingLeft(2);
             innertable.AddCell(cell);
             // spacing
@@ -957,11 +994,11 @@ namespace iText.Layout {
             innertable.AddCell(cell);
             // second row
             // column 1
-            cell = new Cell().Add("Hospital:");
+            cell = new Cell().Add(new Paragraph("Hospital:"));
             cell.SetBorder(Border.NO_BORDER);
             innertable.AddCell(cell);
             // column 2
-            cell = new Cell().Add("Derby Royal");
+            cell = new Cell().Add(new Paragraph("Derby Royal"));
             cell.SetPaddingLeft(2);
             innertable.AddCell(cell);
             // spacing
@@ -988,7 +1025,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(5);
+            Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")));
             table.AddFooterCell(new Cell(1, 5).Add(new Paragraph("Continue on next page")));
             table.SetSkipFirstHeader(true);
@@ -996,7 +1033,7 @@ namespace iText.Layout {
             for (int i = 0; i < 350; i++) {
                 table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
             }
-            Table t = new Table(1);
+            Table t = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             t.AddCell(new Cell().SetBorder(new SolidBorder(ColorConstants.RED, 1)).SetPaddings(3, 3, 3, 3).Add(table));
             doc.Add(t);
             doc.Close();
@@ -1013,11 +1050,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
-            Table innerTable = new Table(1);
+            Table innerTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 4; i++) {
-                innerTable.AddCell(new Cell().Add("Hello" + i));
+                innerTable.AddCell(new Cell().Add(new Paragraph("Hello" + i)));
             }
-            Table outerTable = new Table(1).AddCell(new Cell().Add(innerTable));
+            Table outerTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add
+                (innerTable));
             outerTable.SetMarginTop(10);
             doc.Add(outerTable);
             doc.Close();
@@ -1036,18 +1074,18 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(300, 98));
             doc.Add(new Paragraph("Table with setKeepTogether(true):"));
-            Table table = new Table(3);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.SetKeepTogether(true);
             Cell cell = new Cell(3, 1);
-            cell.Add("G");
-            cell.Add("R");
-            cell.Add("P");
+            cell.Add(new Paragraph("G"));
+            cell.Add(new Paragraph("R"));
+            cell.Add(new Paragraph("P"));
             table.AddCell(cell);
             table.AddCell("middle row 1");
             cell = new Cell(3, 1);
-            cell.Add("A");
-            cell.Add("B");
-            cell.Add("C");
+            cell.Add(new Paragraph("A"));
+            cell.Add(new Paragraph("B"));
+            cell.Add(new Paragraph("C"));
             table.AddCell(cell);
             table.AddCell("middle row 2");
             table.AddCell("middle row 3");
@@ -1071,13 +1109,15 @@ namespace iText.Layout {
             String text = "Make Gretzky Great Again";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7);
-            Table table = new Table(2).SetBorder(Border.NO_BORDER).SetMarginTop(10).SetMarginBottom(10);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorder(Border.NO_BORDER
+                ).SetMarginTop(10).SetMarginBottom(10);
             Style cellStyle = new Style();
             cellStyle.SetBorderLeft(Border.NO_BORDER).SetBorderRight(Border.NO_BORDER).SetBorderTop(new SolidBorder(ColorConstants
                 .BLUE, 1)).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 1));
             for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add(iText.IO.Util.JavaUtil.IntegerToString(i)).AddStyle(cellStyle));
-                table.AddCell(new Cell().Add(text).AddStyle(cellStyle));
+                table.AddCell(new Cell().Add(new Paragraph(iText.IO.Util.JavaUtil.IntegerToString(i))).AddStyle(cellStyle)
+                    );
+                table.AddCell(new Cell().Add(new Paragraph(text)).AddStyle(cellStyle));
             }
             doc.Add(table);
             doc.Close();
@@ -1103,8 +1143,8 @@ namespace iText.Layout {
             iText.Layout.Element.Image imageR = new iText.Layout.Element.Image(xObject);
             imageR.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
             doc.Add(new Paragraph("Table"));
-            Table table = new Table(1).AddCell(new Cell().Add(imageL)).AddCell(new Cell().Add(imageC)).AddCell(new Cell
-                ().Add(imageR));
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(imageL
+                )).AddCell(new Cell().Add(imageC)).AddCell(new Cell().Add(imageR));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1120,10 +1160,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 20; i++) {
-                table.AddCell(new Cell().Add(i + " Liberté!\nÉgalité!\nFraternité!").SetHeight(100).SetVerticalAlignment(VerticalAlignment
-                    .MIDDLE));
+                table.AddCell(new Cell().Add(new Paragraph(i + " Liberté!\nÉgalité!\nFraternité!")).SetHeight(100).SetVerticalAlignment
+                    (VerticalAlignment.MIDDLE));
             }
             doc.Add(table);
             doc.Close();
@@ -1140,10 +1180,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 20; i++) {
-                table.AddCell(new Cell().Add(i + " Liberté!\nÉgalité!\nFraternité!").SetHeight(100).SetKeepTogether(true).
-                    SetVerticalAlignment(VerticalAlignment.MIDDLE));
+                table.AddCell(new Cell().Add(new Paragraph(i + " Liberté!\nÉgalité!\nFraternité!")).SetHeight(100).SetKeepTogether
+                    (true).SetVerticalAlignment(VerticalAlignment.MIDDLE));
             }
             doc.Add(table);
             doc.Close();
@@ -1164,46 +1204,51 @@ namespace iText.Layout {
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
             doc.Add(new Paragraph("Default layout:"));
-            Table table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN
-                , 1))).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell
-                (new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
-                1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron
-                ).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new 
+                Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(
+                new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1)
+                .Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
+                1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell(
+                ).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell(
+                ).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetHeight(1700);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is shorter than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetHeight(200);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Some cells' heights are set:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetHeight
-                (300)).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(
-                new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetHeight(40)).AddCell
-                (new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
-                1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron
-                ).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)).SetHeight(20));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetHeight(300)).AddCell(new Cell().Add
+                (new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2)
+                .Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetHeight(40)).AddCell
+                (new Cell(2, 1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell
+                (new Cell(2, 1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell
+                (new Cell().Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell
+                (new Cell().Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)).SetHeight
+                (20));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetHeight(1700);
             doc.Add(table);
@@ -1225,68 +1270,75 @@ namespace iText.Layout {
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
             doc.Add(new Paragraph("Default layout:"));
-            Table table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN
-                , 1))).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell
-                (new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
-                1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron
-                ).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new 
+                Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(
+                new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1)
+                .Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
+                1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell(
+                ).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell(
+                ).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's max height is bigger than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetMaxHeight(1300);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's max height is shorter than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetMaxHeight(300);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's min height is bigger than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetMinHeight(1300);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's min height is shorter than needed:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(
-                new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1
-                ).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron)
-                .SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 1).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(new Paragraph(
+                textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 1)));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetMinHeight(300);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Some cells' heights are set:"));
-            table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))
-                ).AddCell(new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetMinHeight
-                (300)).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(
-                new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetMaxHeight(40)).AddCell
-                (new Cell(2, 1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.RED, 5))).AddCell(new Cell(2, 
-                1).Add(textByron).SetBorder(new SolidBorder(ColorConstants.GRAY, 7))).AddCell(new Cell().Add(textByron
-                ).SetBorder(new SolidBorder(ColorConstants.BLUE, 12))).AddCell(new Cell().Add(textByron).SetBorder(new 
-                SolidBorder(ColorConstants.CYAN, 1)).SetMaxHeight(20));
+            table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(1, 2).Add(new Paragraph
+                (textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetMinHeight(300)).AddCell(new Cell(
+                ).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GREEN, 1))).AddCell(new Cell(
+                1, 2).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetMaxHeight(
+                40)).AddCell(new Cell(2, 1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.RED
+                , 5))).AddCell(new Cell(2, 1).Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.GRAY
+                , 7))).AddCell(new Cell().Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.BLUE, 
+                12))).AddCell(new Cell().Add(new Paragraph(textByron)).SetBorder(new SolidBorder(ColorConstants.CYAN, 
+                1)).SetMaxHeight(20));
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             table.SetHeight(1700);
             doc.Add(table);
@@ -1308,47 +1360,55 @@ namespace iText.Layout {
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
             String textFrance = "Liberte Egalite Fraternite";
             doc.Add(new Paragraph("Default layout:"));
-            Table table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED)).AddCell
-                (new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(textFrance
-                ).SetBackgroundColor(ColorConstants.BLUE));
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new 
+                Paragraph(textFrance)).SetBackgroundColor(ColorConstants.RED)).AddCell(new Cell().Add(new Paragraph(textFrance
+                )).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor
+                (ColorConstants.BLUE));
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed:"));
-            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED)).AddCell(new 
-                Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+            table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.RED)).AddCell(new Cell().Add(new Paragraph(textFrance)
+                ).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor
                 (ColorConstants.BLUE));
             table.SetHeight(600);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed and some cells have HEIGHT property:"));
-            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED)).AddCell(new 
-                Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN).SetHeight(30)).AddCell(new Cell().Add(
-                textFrance).SetBackgroundColor(ColorConstants.BLUE));
+            table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.RED)).AddCell(new Cell().Add(new Paragraph(textFrance)
+                ).SetBackgroundColor(ColorConstants.GREEN).SetHeight(30)).AddCell(new Cell().Add(new Paragraph(textFrance
+                )).SetBackgroundColor(ColorConstants.BLUE));
             table.SetHeight(600);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed and all cells have HEIGHT property:"));
-            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED).SetHeight(25
-                )).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN).SetHeight(75)).AddCell(
-                new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.BLUE).SetHeight(50));
+            table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.RED).SetHeight(25)).AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.GREEN).SetHeight(75)).AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.BLUE).SetHeight(50));
             table.SetHeight(600);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed and some cells have HEIGHT property:"));
-            table = new Table(2).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED).SetHeight(25
-                )).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.BLUE)).AddCell(new Cell().Add(
-                textFrance).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
-                (ColorConstants.RED)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.BLUE).SetHeight
-                (50)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN));
+            table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.RED).SetHeight(25)).AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.BLUE)).AddCell(new Cell().Add(new Paragraph(textFrance
+                )).SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor
+                (ColorConstants.RED)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor(ColorConstants
+                .BLUE).SetHeight(50)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor(ColorConstants
+                .GREEN));
             table.SetHeight(600);
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table's height is bigger than needed, some cells have big rowspan and HEIGHT property:"
                 ));
-            table = new Table(2).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.RED)).AddCell(new 
-                Cell().Add(textFrance).SetBackgroundColor(ColorConstants.BLUE)).AddCell(new Cell(2, 1).Add(textFrance)
-                .SetBackgroundColor(ColorConstants.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants
-                .RED)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(ColorConstants.GREEN).SetHeight(50));
+            table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                (textFrance)).SetBackgroundColor(ColorConstants.RED)).AddCell(new Cell().Add(new Paragraph(textFrance)
+                ).SetBackgroundColor(ColorConstants.BLUE)).AddCell(new Cell(2, 1).Add(new Paragraph(textFrance)).SetBackgroundColor
+                (ColorConstants.GREEN)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor(ColorConstants
+                .RED)).AddCell(new Cell().Add(new Paragraph(textFrance)).SetBackgroundColor(ColorConstants.GREEN).SetHeight
+                (50));
             table.SetHeight(600);
             doc.Add(table);
             doc.Close();
@@ -1369,10 +1429,10 @@ namespace iText.Layout {
                 doc.Add(new Paragraph("Text"));
             }
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10 }));
-            table.AddHeaderCell(new Cell().Add("Header One"));
-            table.AddHeaderCell(new Cell().Add("Header Two"));
-            table.AddCell(new Cell().Add("Hello"));
-            table.AddCell(new Cell().Add("World"));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header One")));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header Two")));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1389,10 +1449,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
-            table.AddFooterCell(new Cell().Add("Footer").SetHeight(650).SetBorderTop(new SolidBorder(ColorConstants.GREEN
-                , 100)));
-            table.AddCell(new Cell().Add("Body").SetHeight(30));
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetHeight(650).SetBorderTop(new SolidBorder(ColorConstants
+                .GREEN, 100)));
+            table.AddCell(new Cell().Add(new Paragraph("Body")).SetHeight(30));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1409,10 +1469,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
-            table.AddFooterCell(new Cell().Add("Footer").SetHeight(380).SetBackgroundColor(ColorConstants.YELLOW));
-            table.AddHeaderCell(new Cell().Add("Header").SetHeight(380).SetBackgroundColor(ColorConstants.BLUE));
-            table.AddCell(new Cell().Add("Body"));
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetHeight(380).SetBackgroundColor(ColorConstants
+                .YELLOW));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetHeight(380).SetBackgroundColor(ColorConstants
+                .BLUE));
+            table.AddCell(new Cell().Add(new Paragraph("Body")));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1430,7 +1492,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc, PageSize.A4, false);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10 }));
             for (int i = 0; i < 40; i++) {
-                table.AddCell(new Cell().Add("" + (i + 1)));
+                table.AddCell(new Cell().Add(new Paragraph("" + (i + 1))));
             }
             doc.Add(table);
             doc.Close();
@@ -1447,9 +1509,9 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1.3f, 1f, 1f, 1f, 1f, 1f, 1f }));
-            table.SetWidthPercent(100f).SetFixedLayout();
+            table.SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             for (int i = 1; i <= 7 * 100; i++) {
-                Cell cell = new Cell().SetKeepTogether(true).SetMinHeight(45).Add("" + i);
+                Cell cell = new Cell().SetKeepTogether(true).SetMinHeight(45).Add(new Paragraph("" + i));
                 table.AddCell(cell);
             }
             document.Add(table);
@@ -1467,22 +1529,24 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            doc.Add(new Table(1).SetBorderTop(new SolidBorder(ColorConstants.ORANGE, 50)).SetBorderBottom(new SolidBorder
-                (ColorConstants.MAGENTA, 100)));
-            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
-                ));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorderTop(new SolidBorder(ColorConstants
+                .ORANGE, 50)).SetBorderBottom(new SolidBorder(ColorConstants.MAGENTA, 100)));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            doc.Add(new Table(1).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new 
-                Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin
-                (0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER
-                )).AddCell(new Cell().Add("Hello")));
-            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
-                ));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().SetPadding(0)
+                .SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border
+                .NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell
+                ().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().Add(new Paragraph("Hello"
+                ))));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
-            doc.Add(new Table(1).SetMinHeight(300).SetBorderRight(new SolidBorder(ColorConstants.ORANGE, 5)).SetBorderTop
-                (new SolidBorder(100)).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 50)));
-            doc.Add(new Table(1).SetBorder(new SolidBorder(ColorConstants.ORANGE, 2)).AddCell("Is my occupied area correct?"
-                ));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetMinHeight(300).SetBorderRight
+                (new SolidBorder(ColorConstants.ORANGE, 5)).SetBorderTop(new SolidBorder(100)).SetBorderBottom(new SolidBorder
+                (ColorConstants.BLUE, 50)));
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -1498,11 +1562,11 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(3);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.AddCell("Liberte");
             table.AddCell("Egalite");
             table.AddCell("Fraternite");
-            table.AddFooterCell(new Cell(1, 2).Add("Liberte Egalite"));
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Liberte Egalite")));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1519,10 +1583,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 100));
             for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add("Cell No." + i));
+                table.AddCell(new Cell().Add(new Paragraph("Cell No." + i)));
             }
             table.SetNextRenderer(new TableTest.CustomRenderer(table, new Table.RowRange(0, 10)));
             doc.Add(table);
@@ -1543,10 +1607,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddHeaderCell("Header 1");
             table.AddHeaderCell("Header 2");
-            table.AddFooterCell(new Cell(1, 2).Add("Footer"));
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Footer")));
             table.SetSkipLastFooter(true);
             for (int i = 0; i < 33; i++) {
                 table.AddCell("text 1");
@@ -1567,11 +1631,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 19; i++) {
-                table.AddCell(new Cell().Add(i + " Liberté!\nÉgalité!\nFraternité!").SetHeight(100));
+                table.AddCell(new Cell().Add(new Paragraph(i + " Liberté!\nÉgalité!\nFraternité!")).SetHeight(100));
             }
-            table.AddFooterCell(new Cell().Add("Footer").SetHeight(116).SetBackgroundColor(ColorConstants.RED));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetHeight(116).SetBackgroundColor(ColorConstants
+                .RED));
             // the next line cause the reuse
             table.SetSkipLastFooter(true);
             doc.Add(table);
@@ -1590,11 +1655,11 @@ namespace iText.Layout {
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             // construct a table
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 2; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(i + " Hello").SetFontSize(18)));
             }
-            table.AddHeaderCell(new Cell().Add(" Header"));
+            table.AddHeaderCell(new Cell().Add(new Paragraph(" Header")));
             table.SetSkipFirstHeader(true);
             // add meaningless text to occupy enough place
             for (int i = 0; i < 29; i++) {
@@ -1617,10 +1682,10 @@ namespace iText.Layout {
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1637,17 +1702,17 @@ namespace iText.Layout {
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             table.AddCell(new Cell().Add(image));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1664,13 +1729,13 @@ namespace iText.Layout {
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell(2, 1).Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1687,16 +1752,16 @@ namespace iText.Layout {
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
-            Table table = new Table(2);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell(2, 1).Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(gretzky)));
             table.AddCell(new Cell().Add(image));
-            table.AddCell(new Cell().Add(gretzky));
-            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
+            table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1717,8 +1782,8 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
             table.SetKeepTogether(true);
             for (int i = 0; i < 40; i++) {
-                table.AddCell(new Cell().Add("Hello"));
-                table.AddCell(new Cell().Add("World"));
+                table.AddCell(new Cell().Add(new Paragraph("Hello")));
+                table.AddCell(new Cell().Add(new Paragraph("World")));
                 table.StartNewRow();
             }
             doc.Add(table);
@@ -1787,7 +1852,7 @@ namespace iText.Layout {
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 1, 1 }));
             table.SetBorder(new SolidBorder(ColorConstants.RED, 100));
             for (int i = 0; i < 3; i++) {
-                table.AddCell(new Cell().Add("Hello"));
+                table.AddCell(new Cell().Add(new Paragraph("Hello")));
             }
             doc.Add(table);
             doc.Close();
@@ -1853,9 +1918,9 @@ namespace iText.Layout {
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             // Initialize document
             Document doc = new Document(pdf);
-            Table table = new Table(1);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             for (int i = 0; i < 100; i++) {
-                table.AddCell(new Cell().Add("Hello " + i).SetBackgroundColor(ColorConstants.RED));
+                table.AddCell(new Cell().Add(new Paragraph("Hello " + i)).SetBackgroundColor(ColorConstants.RED));
             }
             table.SetFixedPosition(150, 300, 200);
             table.SetHeight(300);
@@ -1918,7 +1983,7 @@ namespace iText.Layout {
             }
             Table innerTable = new Table(UnitValue.CreatePointArray(new float[] { 50 }));
             innerTable.AddCell("Small text");
-            innerTable.AddCell(new Cell().Add(text).SetKeepTogether(true));
+            innerTable.AddCell(new Cell().Add(new Paragraph(text)).SetKeepTogether(true));
             Table outerTable = new Table(UnitValue.CreatePercentArray(new float[] { 1 }));
             outerTable.AddCell(new Cell().Add(innerTable));
             doc.Add(outerTable);
@@ -1937,7 +2002,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
-            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add("width:72pt");
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add(new Paragraph("width:72pt"));
             cell.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(72));
             table.AddCell(cell);
             doc.Add(table);
@@ -1956,7 +2021,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
-            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add("width:72pt");
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(216)).Add(new Paragraph("width:72pt"));
             cell.SetMaxWidth(72);
             table.AddCell(cell);
             doc.Add(table);
@@ -1975,7 +2040,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
-            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add("width:72pt");
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add(new Paragraph("width:72pt"));
             cell.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(72));
             table.AddCell(cell);
             doc.Add(table);
@@ -1994,7 +2059,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
-            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add("width:72pt");
+            Cell cell = new Cell().SetWidth(UnitValue.CreatePointValue(50)).Add(new Paragraph("width:72pt"));
             cell.SetMinWidth(72);
             table.AddCell(cell);
             doc.Add(table);
@@ -2013,12 +2078,12 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 2, 1, 1 }));
-            table.SetWidthPercent(80);
+            table.SetWidth(UnitValue.CreatePercentValue(80));
             table.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            table.AddCell(new Cell(1, 3).Add("Cell with colspan 3"));
-            table.AddCell(new Cell(2, 1).Add("Cell with rowspan 2"));
-            table.AddCell(new Cell().Add("row 1; cell 1").SetMinWidth(200));
-            table.AddCell(new Cell().Add("row 1; cell 2").SetMaxWidth(50));
+            table.AddCell(new Cell(1, 3).Add(new Paragraph("Cell with colspan 3")));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph("Cell with rowspan 2")));
+            table.AddCell(new Cell().Add(new Paragraph("row 1; cell 1")).SetMinWidth(200));
+            table.AddCell(new Cell().Add(new Paragraph("row 1; cell 2")).SetMaxWidth(50));
             table.AddCell("row 2; cell 1");
             table.AddCell("row 2; cell 2");
             doc.Add(table);

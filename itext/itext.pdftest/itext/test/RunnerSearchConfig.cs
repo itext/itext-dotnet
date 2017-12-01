@@ -57,6 +57,8 @@ namespace iText.Test {
         /// Tests run only if they have <see cref="WrapToTestAttribute"/> attribute.
         /// </summary>
         /// <param name="fullName">full name of namespace to be checked.</param>
+        /// <returns>this RunnerSearchConfig</returns>
+
         public virtual RunnerSearchConfig AddPackageToRunnerSearchPath(String fullName) {
             searchPackages.Add(fullName);
             return this;
@@ -76,6 +78,7 @@ namespace iText.Test {
         /// Add namespace or class to ignore list. Items from this list won't be checked for wrapped sample classes. 
         /// </summary>
         /// <param name="name">full or partial name of the namespace or class to be omitted by this runner.
+        /// <returns>this RunnerSearchConfig</returns>
         ///                 E.g. "Highlevel.Appendix" or "iText.Highlevel.Appendix.TableProperties".</param>
         /// <returns>this RunnerSearchConfig</returns>
         public virtual RunnerSearchConfig IgnorePackageOrClass(String name) {

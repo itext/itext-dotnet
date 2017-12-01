@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using Common.Logging;
 
 namespace iText.IO.Source {
     /// <summary>
@@ -214,12 +214,12 @@ namespace iText.IO.Source {
                         firstThrownIOExc = ex;
                     }
                     else {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
                         logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                     }
                 }
                 catch (Exception ex) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
                     logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                 }
             }

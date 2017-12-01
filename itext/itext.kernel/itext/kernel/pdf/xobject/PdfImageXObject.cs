@@ -177,8 +177,8 @@ namespace iText.Kernel.Pdf.Xobject {
         /// .
         /// </returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
-            iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject(((PdfStream)
-                GetPdfObject().CopyTo(document)));
+            iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject((PdfStream)GetPdfObject
+                ().CopyTo(document));
             image.width = width;
             image.height = height;
             image.mask = mask;
@@ -351,9 +351,8 @@ namespace iText.Kernel.Pdf.Xobject {
             return this;
         }
 
-        [Obsolete]
-        protected internal static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject
-             imageMask) {
+        private static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject imageMask
+            ) {
             PdfStream stream;
             if (image.GetOriginalType() == ImageType.RAW) {
                 RawImageHelper.UpdateImageAttributes((RawImageData)image, null);

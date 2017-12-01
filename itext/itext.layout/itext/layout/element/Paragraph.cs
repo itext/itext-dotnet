@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -63,9 +63,7 @@ namespace iText.Layout.Element {
     /// .
     /// </remarks>
     public class Paragraph : BlockElement<iText.Layout.Element.Paragraph> {
-        protected internal PdfName role = PdfName.P;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>Creates a Paragraph.</summary>
         public Paragraph() {
@@ -194,7 +192,7 @@ namespace iText.Layout.Element {
 
                 case Property.MARGIN_TOP:
                 case Property.MARGIN_BOTTOM: {
-                    return (T1)(Object)4f;
+                    return (T1)(Object)UnitValue.CreatePointValue(4f);
                 }
 
                 case Property.TAB_DEFAULT: {
@@ -248,6 +246,13 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.P);
+            }
+            return tagProperties;
+        }
+
         protected internal override IRenderer MakeNewRenderer() {
             return new ParagraphRenderer(this);
         }
@@ -261,24 +266,6 @@ namespace iText.Layout.Element {
             foreach (TabStop tabStop in newTabStops) {
                 tabStops.Put(tabStop.GetTabPosition(), tabStop);
             }
-        }
-
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-            if (PdfName.Artifact.Equals(role)) {
-                PropagateArtifactRoleToChildElements();
-            }
-        }
-
-        public override AccessibilityProperties GetAccessibilityProperties() {
-            if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
-            }
-            return tagProperties;
         }
     }
 }

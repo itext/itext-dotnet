@@ -43,8 +43,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Image;
 using iText.Kernel;
+using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -125,9 +129,9 @@ namespace iText.Kernel.Pdf {
             String filename = "1000PagesDocument_reversed.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
                 destinationFolder + filename));
-            for (int i = pdfDoc.GetNumberOfPages() - 1; i > 0; i--) {
-                PdfPage page = pdfDoc.RemovePage(i);
-                pdfDoc.AddPage(page);
+            int n = pdfDoc.GetNumberOfPages();
+            for (int i = n - 1; i > 0; --i) {
+                pdfDoc.MovePage(i, n + 1);
             }
             pdfDoc.Close();
             new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
@@ -158,14 +162,12 @@ namespace iText.Kernel.Pdf {
                 //page.flush();
                 pages[indexes[i] - 1] = page;
             }
-            int xrefSize = document.GetXref().Size();
-            PdfPage testPage = document.RemovePage(1000);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
-            document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() == xrefSize);
+            int testPageXref = document.GetPage(1000).GetPdfObject().GetIndirectReference().GetObjNumber();
+            document.MovePage(1000, 1000);
+            NUnit.Framework.Assert.AreEqual(testPageXref, document.GetPage(1000).GetPdfObject().GetIndirectReference()
+                .GetObjNumber());
             for (int i = 0; i < pages.Length; i++) {
-                NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i]), "Remove page");
-                document.AddPage(i + 1, pages[i]);
+                NUnit.Framework.Assert.IsTrue(document.MovePage(pages[i], i + 1), "Move page");
             }
             document.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount);
@@ -197,10 +199,8 @@ namespace iText.Kernel.Pdf {
                     int j_page = pdfDoc.GetPage(j).GetPdfObject().GetAsNumber(PageNum).IntValue();
                     int i_page = pdfDoc.GetPage(i).GetPdfObject().GetAsNumber(PageNum).IntValue();
                     if (j_page < i_page) {
-                        PdfPage page = pdfDoc.RemovePage(j);
-                        pdfDoc.AddPage(i + 1, page);
-                        page = pdfDoc.RemovePage(i);
-                        pdfDoc.AddPage(j, page);
+                        pdfDoc.MovePage(i, j);
+                        pdfDoc.MovePage(j, i);
                     }
                 }
                 NUnit.Framework.Assert.IsTrue(VerifyIntegrity(pdfDoc.GetCatalog().GetPageTree()) == -1);
@@ -341,6 +341,22 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ReorderInheritedResourcesTest() {
+            //TODO: DEVSIX-1643 Inherited resources aren't copied on page reordering
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "inheritedFontResources.pdf"), new PdfWriter
+                (destinationFolder + "reorderInheritedFontResources.pdf"));
+            pdfDoc.MovePage(1, pdfDoc.GetNumberOfPages() + 1);
+            pdfDoc.RemovePage(1);
+            pdfDoc.Close();
+            String compareResult = new CompareTool().CompareByContent(destinationFolder + "reorderInheritedFontResources.pdf"
+                , sourceFolder + "cmp_reorderInheritedFontResources.pdf", destinationFolder, "diff_reorderInheritedFontResources_"
+                );
+            NUnit.Framework.Assert.IsNull(compareResult);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetPageByDictionary() {
             String filename = sourceFolder + "1000PagesDocument.pdf";
@@ -383,6 +399,21 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(595, pdfDoc.GetPage(1).GetPageSize().GetRight(), eps);
             NUnit.Framework.Assert.AreEqual(842, pdfDoc.GetPage(1).GetPageSize().GetTop(), eps);
             pdfDoc.Close();
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PageThumbnailTest() {
+            String filename = "pageThumbnail.pdf";
+            String imageSrc = "icon.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename).SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION));
+            PdfPage page = pdfDoc.AddNewPage().SetThumbnailImage(new PdfImageXObject(ImageDataFactory.Create(sourceFolder
+                 + imageSrc)));
+            new PdfCanvas(page).SetFillColor(ColorConstants.RED).Rectangle(100, 100, 400, 400).Fill();
+            pdfDoc.Close();
+            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff");
         }
     }
 }

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -55,95 +56,73 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     /// <summary>
-    /// Writes standard structure attributes to the IAccessibleElement based on the layout element properties
-    /// and renderer layout result.
+    /// Generates standard structure attributes for current tag
+    /// based on the layout element properties and renderer layout results.
     /// </summary>
     public class AccessibleAttributesApplier {
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDocument doc) {
-            PdfDictionary layoutAttributes = GetLayoutAttributes(role, renderer, doc.GetTagStructureContext().GetAutoTaggingPointer
-                ());
-            if (layoutAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.Layout);
-                properties.AddAttributes(layoutAttributes);
-            }
-        }
-
-        public static PdfDictionary GetLayoutAttributes(PdfName role, AbstractRenderer renderer, TagTreePointer taggingPointer
+        public static PdfStructureAttributes GetLayoutAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
             ) {
-            // TODO taggingPointer is needed here and in other methods for the future changes which are currently in the separate branch
-            PdfDocument doc = taggingPointer.GetDocument();
-            if (!(renderer.GetModelElement() is IAccessibleElement)) {
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null) {
                 return null;
             }
-            int tagType = PdfStructElem.IdentifyType(doc, role);
+            String role = resolvedMapping.GetRole();
+            int tagType = AccessibleTypes.IdentifyType(role);
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Layout);
-            PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
-            if (roleMap.ContainsKey(role)) {
-                role = roleMap.GetAsName(role);
-            }
             //TODO WritingMode attribute applying when needed
             ApplyCommonLayoutAttributes(renderer, attributes);
-            if (tagType == PdfStructElem.BlockLevel) {
-                ApplyBlockLevelLayoutAttributes(role, renderer, attributes, doc);
+            if (tagType == AccessibleTypes.BlockLevel) {
+                ApplyBlockLevelLayoutAttributes(role, renderer, attributes);
             }
-            if (tagType == PdfStructElem.InlineLevel) {
+            if (tagType == AccessibleTypes.InlineLevel) {
                 ApplyInlineLevelLayoutAttributes(renderer, attributes);
             }
-            if (tagType == PdfStructElem.Illustration) {
+            if (tagType == AccessibleTypes.Illustration) {
                 ApplyIllustrationLayoutAttributes(renderer, attributes);
             }
-            return attributes.Size() > 1 ? attributes : null;
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyListAttributes(AbstractRenderer renderer) {
-            PdfDictionary listAttributes = GetListAttributes(renderer, null);
-            if (listAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.List);
-                properties.AddAttributes(listAttributes);
-            }
-        }
-
-        public static PdfDictionary GetListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
-            if (!(renderer.GetModelElement() is List)) {
+        public static PdfStructureAttributes GetListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
+            IRoleMappingResolver resolvedMapping = null;
+            resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null || !StandardRoles.L.Equals(resolvedMapping.GetRole())) {
                 return null;
             }
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.List);
             Object listSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
+            bool tagStructurePdf2 = IsTagStructurePdf2(resolvedMapping.GetNamespace());
             if (listSymbol is ListNumberingType) {
                 ListNumberingType numberingType = (ListNumberingType)listSymbol;
-                attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType));
+                attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType, tagStructurePdf2));
             }
-            return attributes.Size() > 1 ? attributes : null;
+            else {
+                if (tagStructurePdf2) {
+                    if (listSymbol is IListSymbolFactory) {
+                        attributes.Put(PdfName.ListNumbering, PdfName.Ordered);
+                    }
+                    else {
+                        attributes.Put(PdfName.ListNumbering, PdfName.Unordered);
+                    }
+                }
+            }
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        public static void ApplyTableAttributes(AbstractRenderer renderer) {
-            PdfDictionary tableAttributes = GetTableAttributes(renderer, null);
-            if (tableAttributes != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, PdfName.Table);
-                properties.AddAttributes(tableAttributes);
-            }
-        }
-
-        public static PdfDictionary GetTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
-            if (!(renderer.GetModelElement() is IAccessibleElement)) {
+        public static PdfStructureAttributes GetTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
+            if (resolvedMapping == null || !StandardRoles.TD.Equals(resolvedMapping.GetRole()) && !StandardRoles.TH.Equals
+                (resolvedMapping.GetRole())) {
                 return null;
             }
-            IAccessibleElement accessibleElement = (IAccessibleElement)renderer.GetModelElement();
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Table);
-            if (accessibleElement is Cell) {
-                Cell cell = (Cell)accessibleElement;
+            if (renderer.GetModelElement() is Cell) {
+                Cell cell = (Cell)renderer.GetModelElement();
                 if (cell.GetRowspan() != 1) {
                     attributes.Put(PdfName.RowSpan, new PdfNumber(cell.GetRowspan()));
                 }
@@ -151,7 +130,7 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.ColSpan, new PdfNumber(cell.GetColspan()));
                 }
             }
-            return attributes.Size() > 1 ? attributes : null;
+            return attributes.Size() > 1 ? new PdfStructureAttributes(attributes) : null;
         }
 
         private static void ApplyCommonLayoutAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
@@ -172,35 +151,63 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void ApplyBlockLevelLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDictionary
-             attributes, PdfDocument doc) {
-            float?[] margins = new float?[] { renderer.GetPropertyAsFloat(Property.MARGIN_TOP), renderer.GetPropertyAsFloat
-                (Property.MARGIN_BOTTOM), renderer.GetPropertyAsFloat(Property.MARGIN_LEFT), renderer.GetPropertyAsFloat
+        private static void ApplyBlockLevelLayoutAttributes(String role, AbstractRenderer renderer, PdfDictionary 
+            attributes) {
+            UnitValue[] margins = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.MARGIN_TOP), renderer.GetPropertyAsUnitValue
+                (Property.MARGIN_BOTTOM), renderer.GetPropertyAsUnitValue(Property.MARGIN_LEFT), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_RIGHT) };
             int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             //TODO set depending on writing direction
-            float? spaceBefore = margins[marginsOrder[0]];
-            if (spaceBefore != null && spaceBefore != 0) {
-                attributes.Put(PdfName.SpaceBefore, new PdfNumber((float)spaceBefore));
+            UnitValue spaceBefore = margins[marginsOrder[0]];
+            if (spaceBefore != null) {
+                if (!spaceBefore.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_TOP));
+                }
+                if (0 != spaceBefore.GetValue()) {
+                    attributes.Put(PdfName.SpaceBefore, new PdfNumber(spaceBefore.GetValue()));
+                }
             }
-            float? spaceAfter = margins[marginsOrder[1]];
-            if (spaceAfter != null && spaceAfter != 0) {
-                attributes.Put(PdfName.SpaceAfter, new PdfNumber((float)spaceAfter));
+            UnitValue spaceAfter = margins[marginsOrder[1]];
+            if (spaceAfter != null) {
+                if (!spaceAfter.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_BOTTOM));
+                }
+                if (0 != spaceAfter.GetValue()) {
+                    attributes.Put(PdfName.SpaceAfter, new PdfNumber(spaceAfter.GetValue()));
+                }
             }
-            float? startIndent = margins[marginsOrder[2]];
-            if (startIndent != null && startIndent != 0) {
-                attributes.Put(PdfName.StartIndent, new PdfNumber((float)startIndent));
+            UnitValue startIndent = margins[marginsOrder[2]];
+            if (startIndent != null) {
+                if (!startIndent.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                if (0 != startIndent.GetValue()) {
+                    attributes.Put(PdfName.StartIndent, new PdfNumber(startIndent.GetValue()));
+                }
             }
-            float? endIndent = margins[marginsOrder[3]];
-            if (endIndent != null && endIndent != 0) {
-                attributes.Put(PdfName.EndIndent, new PdfNumber((float)endIndent));
+            UnitValue endIndent = margins[marginsOrder[3]];
+            if (endIndent != null) {
+                if (!endIndent.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_RIGHT));
+                }
+                if (0 != endIndent.GetValue()) {
+                    attributes.Put(PdfName.EndIndent, new PdfNumber(endIndent.GetValue()));
+                }
             }
-            float? firstLineIndent = renderer.GetProperty<float?>(Property.FIRST_LINE_INDENT);
+            float? firstLineIndent = renderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
             if (firstLineIndent != null && firstLineIndent != 0) {
                 attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
             }
             TextAlignment? textAlignment = renderer.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT);
-            if (textAlignment != null && (!role.Equals(PdfName.TH) && !role.Equals(PdfName.TD))) {
+            if (textAlignment != null && (!role.Equals(StandardRoles.TH) && !role.Equals(StandardRoles.TD))) {
                 //for table cells there is an InlineAlign attribute (see below)
                 attributes.Put(PdfName.TextAlign, TransformTextAlignmentValueToName(textAlignment));
             }
@@ -209,17 +216,17 @@ namespace iText.Layout.Renderer {
                 Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
-            if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD) || role.Equals(PdfName.Table)) {
+            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
                 UnitValue width = renderer.GetProperty<UnitValue>(Property.WIDTH);
                 if (width != null && width.IsPointValue()) {
                     attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
                 }
-                float? height = renderer.GetPropertyAsFloat(Property.HEIGHT);
-                if (height != null) {
-                    attributes.Put(PdfName.Height, new PdfNumber((float)height));
+                UnitValue height = renderer.GetProperty<UnitValue>(Property.HEIGHT);
+                if (height != null && height.IsPointValue()) {
+                    attributes.Put(PdfName.Height, new PdfNumber(height.GetValue()));
                 }
             }
-            if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD)) {
+            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD)) {
                 HorizontalAlignment? horizontalAlignment = renderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                     );
                 if (horizontalAlignment != null) {
@@ -240,7 +247,12 @@ namespace iText.Layout.Renderer {
             }
             Object underlines = renderer.GetProperty<Object>(Property.UNDERLINE);
             if (underlines != null) {
-                float? fontSize = renderer.GetPropertyAsFloat(Property.FONT_SIZE);
+                UnitValue fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE);
+                if (!fontSize.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .FONT_SIZE));
+                }
                 Underline underline = null;
                 if (underlines is IList && ((IList)underlines).Count > 0 && ((IList)underlines)[0] is Underline) {
                     // in standard attributes only one text decoration could be described for an element. That's why we take only the first underline from the list.
@@ -252,12 +264,13 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (underline != null) {
-                    attributes.Put(PdfName.TextDecorationType, underline.GetYPosition((float)fontSize) > 0 ? PdfName.LineThrough
+                    attributes.Put(PdfName.TextDecorationType, underline.GetYPosition(fontSize.GetValue()) > 0 ? PdfName.LineThrough
                          : PdfName.Underline);
                     if (underline.GetColor() is DeviceRgb) {
                         attributes.Put(PdfName.TextDecorationColor, new PdfArray(underline.GetColor().GetColorValue()));
                     }
-                    attributes.Put(PdfName.TextDecorationThickness, new PdfNumber(underline.GetThickness((float)fontSize)));
+                    attributes.Put(PdfName.TextDecorationThickness, new PdfNumber(underline.GetThickness(fontSize.GetValue()))
+                        );
                 }
             }
         }
@@ -282,9 +295,31 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyPaddingAttribute(AbstractRenderer renderer, PdfDictionary attributes) {
-            float[] paddings = new float[] { (float)renderer.GetPropertyAsFloat(Property.PADDING_TOP), (float)renderer
-                .GetPropertyAsFloat(Property.PADDING_RIGHT), (float)renderer.GetPropertyAsFloat(Property.PADDING_BOTTOM
-                ), (float)renderer.GetPropertyAsFloat(Property.PADDING_LEFT) };
+            UnitValue[] paddingsUV = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.PADDING_TOP), renderer
+                .GetPropertyAsUnitValue(Property.PADDING_RIGHT), renderer.GetPropertyAsUnitValue(Property.PADDING_BOTTOM
+                ), renderer.GetPropertyAsUnitValue(Property.PADDING_LEFT) };
+            if (!paddingsUV[0].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_TOP));
+            }
+            if (!paddingsUV[1].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_RIGHT));
+            }
+            if (!paddingsUV[2].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_BOTTOM));
+            }
+            if (!paddingsUV[3].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(AccessibleAttributesApplier));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_LEFT));
+            }
+            float[] paddings = new float[] { paddingsUV[0].GetValue(), paddingsUV[1].GetValue(), paddingsUV[2].GetValue
+                (), paddingsUV[3].GetValue() };
             PdfObject padding = null;
             if (paddings[0] == paddings[1] && paddings[0] == paddings[2] && paddings[0] == paddings[3]) {
                 if (paddings[0] != 0) {
@@ -386,6 +421,16 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.BorderThickness, borderWidths);
                 }
             }
+        }
+
+        private static IRoleMappingResolver ResolveMappingToStandard(TagTreePointer taggingPointer) {
+            TagStructureContext tagContext = taggingPointer.GetDocument().GetTagStructureContext();
+            PdfNamespace @namespace = taggingPointer.GetProperties().GetNamespace();
+            return tagContext.ResolveMappingToStandardOrDomainSpecificRole(taggingPointer.GetRole(), @namespace);
+        }
+
+        private static bool IsTagStructurePdf2(PdfNamespace @namespace) {
+            return @namespace != null && StandardNamespaces.PDF_2_0.Equals(@namespace.GetNamespaceName());
         }
 
         private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment) {
@@ -505,7 +550,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType) {
+        private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType, bool isTagStructurePdf2
+            ) {
             switch (numberingType) {
                 case ListNumberingType.DECIMAL:
                 case ListNumberingType.DECIMAL_LEADING_ZERO: {
@@ -531,30 +577,14 @@ namespace iText.Layout.Renderer {
                 }
 
                 default: {
-                    return PdfName.None;
-                }
-            }
-        }
-
-        /// <summary>The same layout element instance can be added several times to the document.</summary>
-        /// <remarks>
-        /// The same layout element instance can be added several times to the document.
-        /// In that case it will already have attributes which belong to the previous positioning on the page, and because of
-        /// that we want to remove those old irrelevant attributes.
-        /// </remarks>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
-        private static void RemoveSameAttributesTypeIfPresent(AccessibilityProperties properties, PdfName attributesType
-            ) {
-            IList<PdfDictionary> attributesList = properties.GetAttributesList();
-            int i;
-            for (i = 0; i < attributesList.Count; i++) {
-                PdfDictionary attr = attributesList[i];
-                if (attributesType.Equals(attr.Get(PdfName.O))) {
+                    if (isTagStructurePdf2) {
+                        return PdfName.Ordered;
+                    }
+                    else {
+                        return PdfName.None;
+                    }
                     break;
                 }
-            }
-            if (i < attributesList.Count) {
-                attributesList.JRemoveAt(i);
             }
         }
     }

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
@@ -159,28 +158,6 @@ namespace iText.Kernel.Pdf {
             return AddResource(image, imageNamesGen);
         }
 
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as image.
-        /// </summary>
-        /// <param name="image">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfStream"/>
-        /// .
-        /// </param>
-        /// <returns>added image resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddImage(PdfStream) instead.")]
-        public virtual PdfName AddImage(PdfObject image) {
-            if (image.GetObjectType() != PdfObject.STREAM) {
-                throw new PdfException(PdfException.CannotAddNonStreamImageToResources1).SetMessageParams(image.GetType().
-                    ToString());
-            }
-            return AddResource(image, imageNamesGen);
-        }
-
         public virtual PdfImageXObject GetImage(PdfName name) {
             PdfStream image = GetResource(PdfName.Image).GetAsStream(name);
             return image != null ? new PdfImageXObject(image) : null;
@@ -213,28 +190,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>added form resources name.</returns>
         public virtual PdfName AddForm(PdfStream form) {
-            return AddResource(form, formNamesGen);
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as form.
-        /// </summary>
-        /// <param name="form">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfStream"/>
-        /// .
-        /// </param>
-        /// <returns>added form resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddForm(PdfStream) instead.")]
-        public virtual PdfName AddForm(PdfObject form) {
-            if (form.GetObjectType() != PdfObject.STREAM) {
-                throw new PdfException(PdfException.CannotAddNonStreamFormToResources1).SetMessageParams(form.GetType().ToString
-                    ());
-            }
             return AddResource(form, formNamesGen);
         }
 
@@ -295,29 +250,6 @@ namespace iText.Kernel.Pdf {
             return AddResource(extGState, egsNamesGen);
         }
 
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as graphics state parameter dictionary.
-        /// </summary>
-        /// <param name="extGState">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfDictionary"/>
-        /// .
-        /// </param>
-        /// <returns>added graphics state parameter dictionary resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddExtGState(PdfDictionary) instead."
-            )]
-        public virtual PdfName AddExtGState(PdfObject extGState) {
-            if (extGState.GetObjectType() != PdfObject.DICTIONARY) {
-                throw new PdfException(PdfException.CannotAddNonDictionaryExtGStateToResources1).SetMessageParams(extGState
-                    .GetType().ToString());
-            }
-            return AddResource(extGState, egsNamesGen);
-        }
-
         public virtual PdfExtGState GetPdfExtGState(PdfName name) {
             PdfDictionary dic = GetResource(PdfName.ExtGState).GetAsDictionary(name);
             return dic != null ? new PdfExtGState(dic) : null;
@@ -335,29 +267,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>added properties list resources name.</returns>
         public virtual PdfName AddProperties(PdfDictionary properties) {
-            return AddResource(properties, propNamesGen);
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as properties list.
-        /// </summary>
-        /// <param name="properties">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfDictionary"/>
-        /// .
-        /// </param>
-        /// <returns>added properties list resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddProperties(PdfDictionary) instead."
-            )]
-        public virtual PdfName AddProperties(PdfObject properties) {
-            if (properties.GetObjectType() != PdfObject.DICTIONARY) {
-                throw new PdfException(PdfException.CannotAddNonDictionaryPropertiesToResources1).SetMessageParams(properties
-                    .GetType().ToString());
-            }
             return AddResource(properties, propNamesGen);
         }
 
@@ -430,31 +339,6 @@ namespace iText.Kernel.Pdf {
             return AddResource(pattern, patternNamesGen);
         }
 
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as pattern.
-        /// </summary>
-        /// <param name="pattern">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfDictionary"/>
-        /// or
-        /// <see cref="PdfStream"/>
-        /// .
-        /// </param>
-        /// <returns>added pattern resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddPattern(PdfDictionary) instead."
-            )]
-        public virtual PdfName AddPattern(PdfObject pattern) {
-            if (pattern is PdfDictionary) {
-                throw new PdfException(PdfException.CannotAddNonDictionaryPatternToResources1).SetMessageParams(pattern.GetType
-                    ().ToString());
-            }
-            return AddResource(pattern, patternNamesGen);
-        }
-
         public virtual PdfPattern GetPattern(PdfName name) {
             PdfObject pattern = GetResourceObject(PdfName.Pattern, name);
             return pattern is PdfDictionary ? PdfPattern.GetPatternInstance((PdfDictionary)pattern) : null;
@@ -490,31 +374,6 @@ namespace iText.Kernel.Pdf {
             return AddResource(shading, shadingNamesGen);
         }
 
-        /// <summary>
-        /// Adds
-        /// <see cref="PdfObject"/>
-        /// to the resources as shading dictionary.
-        /// </summary>
-        /// <param name="shading">
-        /// the
-        /// <see cref="PdfObject"/>
-        /// to add. Should be
-        /// <see cref="PdfDictionary"/>
-        /// or
-        /// <see cref="PdfStream"/>
-        /// .
-        /// </param>
-        /// <returns>added shading dictionary resources name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddShading(PdfDictionary) instead."
-            )]
-        public virtual PdfName AddShading(PdfObject shading) {
-            if (shading is PdfDictionary) {
-                throw new PdfException(PdfException.CannotAddNonDictionaryShadingToResources1).SetMessageParams(shading.GetType
-                    ().ToString());
-            }
-            return AddResource(shading, shadingNamesGen);
-        }
-
         public virtual PdfShading GetShading(PdfName name) {
             PdfObject shading = GetResourceObject(PdfName.Shading, name);
             return shading is PdfDictionary ? PdfShading.MakeShading((PdfDictionary)shading) : null;
@@ -534,28 +393,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void SetModified(bool isModified) {
             this.isModified = isModified;
-        }
-
-        /// <summary>Sets the default color space (see ISO-320001 Paragraph 8.6.5.6).</summary>
-        /// <param name="defaultCsKey">
-        /// the name of Default Color Space. Should be
-        /// <see cref="PdfName.DefaultGray"/>
-        /// ,
-        /// <see cref="PdfName.DefaultRGB"/>
-        /// , or
-        /// <see cref="PdfName.DefaultCMYK"/>
-        /// .
-        /// </param>
-        /// <param name="defaultCsValue">the value of the default color space to be set.</param>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. Use SetDefaultGray(iText.Kernel.Pdf.Colorspace.PdfColorSpace) ,SetDefaultRgb(iText.Kernel.Pdf.Colorspace.PdfColorSpace) or SetDefaultCmyk(iText.Kernel.Pdf.Colorspace.PdfColorSpace) instead."
-            )]
-        public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue) {
-            if (!defaultCsKey.Equals(PdfName.DefaultCMYK) && !defaultCsKey.Equals(PdfName.DefaultGray) && !defaultCsKey
-                .Equals(PdfName.DefaultRGB)) {
-                throw new PdfException(PdfException.UnsupportedDefaultColorSpaceName1).SetMessageParams(defaultCsKey.ToString
-                    ());
-            }
-            AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }
 
         /// <summary>Sets the value of default Gray Color Space (see ISO-320001 Paragraph 8.6.5.6).</summary>
@@ -634,12 +471,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <remarks>
+        /// Gets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <returns>the array of predefined procedure set names.</returns>
         public virtual PdfArray GetProcSet() {
             return GetPdfObject().GetAsArray(PdfName.ProcSet);
         }
 
         /// <summary>Sets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <remarks>
+        /// Sets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="array">the array of predefined procedure set names to be set.</param>
         public virtual void SetProcSet(PdfArray array) {
             GetPdfObject().Put(PdfName.ProcSet, array);

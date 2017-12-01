@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -64,7 +65,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception">any exception will cause the test to fail</exception>
         [NUnit.Framework.Test]
         public virtual void TestStandardFont() {
-            PdfFont font = PdfFontFactory.CreateFont(FontConstants.TIMES_ROMAN);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
         }

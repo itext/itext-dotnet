@@ -68,20 +68,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// objects as text rendering operations are
     /// discovered
     /// </remarks>
-    public class TextRenderInfo : IEventData {
+    public class TextRenderInfo : AbstractRenderInfo {
         private readonly PdfString @string;
 
         private String text = null;
 
         private readonly Matrix textToUserSpaceTransformMatrix;
 
-        private CanvasGraphicsState gs;
+        private readonly Matrix textMatrix;
 
         private float unscaledWidth = float.NaN;
 
         private double[] fontMatrix = null;
-
-        private bool graphicsStateIsPreserved;
 
         /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
         ///     </summary>
@@ -93,10 +91,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="textMatrix">the text matrix at the time of the render operation</param>
         /// <param name="canvasTagHierarchy">the marked content tags sequence, if available</param>
         public TextRenderInfo(PdfString str, CanvasGraphicsState gs, Matrix textMatrix, Stack<CanvasTag> canvasTagHierarchy
-            ) {
+            )
+            : base(gs) {
             this.@string = str;
             this.textToUserSpaceTransformMatrix = textMatrix.Multiply(gs.GetCtm());
-            this.gs = gs;
+            this.textMatrix = textMatrix;
             this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List<CanvasTag>(canvasTagHierarchy
                 ));
             this.fontMatrix = gs.GetFont().GetFontMatrix();
@@ -104,25 +103,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <summary>Used for creating sub-TextRenderInfos for each individual character</summary>
         /// <param name="parent">the parent TextRenderInfo</param>
-        /// <param name="string">the content of a TextRenderInfo</param>
+        /// <param name="str">the content of a TextRenderInfo</param>
         /// <param name="horizontalOffset">the unscaled horizontal offset of the character that this TextRenderInfo represents
         ///     </param>
-        private TextRenderInfo(iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent, PdfString @string, float
-             horizontalOffset) {
-            this.@string = @string;
-            this.textToUserSpaceTransformMatrix = new Matrix(horizontalOffset, 0).Multiply(parent.textToUserSpaceTransformMatrix
-                );
-            this.gs = parent.gs;
+        private TextRenderInfo(iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent, PdfString str, float horizontalOffset
+            )
+            : base(parent.gs) {
+            this.@string = str;
+            Matrix offsetMatrix = new Matrix(horizontalOffset, 0);
+            this.textToUserSpaceTransformMatrix = offsetMatrix.Multiply(parent.textToUserSpaceTransformMatrix);
+            this.textMatrix = offsetMatrix.Multiply(parent.textMatrix);
             this.canvasTagHierarchy = parent.canvasTagHierarchy;
-            this.fontMatrix = gs.GetFont().GetFontMatrix();
+            this.fontMatrix = parent.gs.GetFont().GetFontMatrix();
         }
 
         /// <returns>the text to render</returns>
         public virtual String GetText() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             if (text == null) {
                 GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
                 if (!IsReversedChars()) {
@@ -142,6 +139,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>original PDF string</returns>
         public virtual PdfString GetPdfString() {
             return @string;
+        }
+
+        /// <summary>Gets original Text matrix.</summary>
+        /// <returns>text matrix.</returns>
+        public virtual Matrix GetTextMatrix() {
+            return textMatrix;
         }
 
         /// <summary>
@@ -200,18 +203,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the baseline line segment</returns>
         public virtual LineSegment GetBaseline() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix);
         }
 
         public virtual LineSegment GetUnscaledBaseline() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
         }
 
@@ -224,10 +221,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the ascentline line segment</returns>
         public virtual LineSegment GetAscentLine() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(GetAscentDescent()[0] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
         }
@@ -241,10 +235,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the descentline line segment</returns>
         public virtual LineSegment GetDescentLine() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(GetAscentDescent()[1] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
         }
@@ -252,10 +243,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <summary>Getter for the font</summary>
         /// <returns>the font</returns>
         public virtual PdfFont GetFont() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetFont();
         }
 
@@ -272,10 +260,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>The Rise for the text draw operation, in user space units (Ts value, scaled to user space)</returns>
         public virtual float GetRise() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             if (gs.GetTextRise() == 0) {
                 return 0;
             }
@@ -291,10 +276,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
         /// </returns>
         public virtual IList<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             IList<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> rslt = new List<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                 >(@string.GetValue().Length);
             PdfString[] strings = SplitString(@string);
@@ -333,68 +315,44 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </ul>
         /// </returns>
         public virtual int GetTextRenderMode() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetTextRenderingMode();
         }
 
         /// <returns>the current fill color.</returns>
         public virtual Color GetFillColor() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetFillColor();
         }
 
         /// <returns>the current stroke color.</returns>
         public virtual Color GetStrokeColor() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetStrokeColor();
         }
 
         public virtual float GetFontSize() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetFontSize();
         }
 
         public virtual float GetHorizontalScaling() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetHorizontalScaling();
         }
 
         public virtual float GetCharSpacing() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetCharSpacing();
         }
 
         public virtual float GetWordSpacing() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetWordSpacing();
         }
 
         public virtual float GetLeading() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             return gs.GetLeading();
         }
 
@@ -457,30 +415,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return unscaledWidth;
         }
 
-        public virtual bool IsGraphicsStatePreserved() {
-            return graphicsStateIsPreserved;
-        }
-
-        public virtual void PreserveGraphicsState() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
-            this.graphicsStateIsPreserved = true;
-            gs = new CanvasGraphicsState(gs);
-        }
-
-        public virtual void ReleaseGraphicsState() {
-            if (!graphicsStateIsPreserved) {
-                gs = null;
-            }
-        }
-
         private LineSegment GetUnscaledBaselineWithOffset(float yOffset) {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             // we need to correct the width so we don't have an extra character and word spaces at the end.  The extra character and word spaces
             // are important for tracking relative text coordinate systems, but should not be part of the baseline
             String unicodeStr = @string.ToUnicodeString();
@@ -513,10 +449,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the width of a single space character in text space units</returns>
         private float GetUnscaledFontSpaceWidth() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             char charToUse = ' ';
             if (gs.GetFont().GetWidth(charToUse) == 0) {
                 return gs.GetFont().GetFontProgram().GetAvgWidth() / 1000f;
@@ -530,10 +463,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">the string that needs measuring</param>
         /// <returns>the width of a String in text space units</returns>
         private float GetStringWidth(String @string) {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             float totalWidth = 0;
             for (int i = 0; i < @string.Length; i++) {
                 char c = @string[i];
@@ -548,10 +478,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">the string that needs measuring</param>
         /// <returns>the width of a String in text space units</returns>
         private float GetPdfStringWidth(PdfString @string, bool singleCharString) {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             if (singleCharString) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(@string);
                 return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
@@ -574,10 +501,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">a character to calculate width.</param>
         /// <returns>array of 2 items: first item is a character width, second item is a calculated word spacing.</returns>
         private float[] GetWidthAndWordSpacing(PdfString @string) {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             float[] result = new float[2];
             result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
             result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
@@ -609,10 +533,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">PDF string to be splitted.</param>
         /// <returns>splitted PDF string.</returns>
         private PdfString[] SplitString(PdfString @string) {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             IList<PdfString> strings = new List<PdfString>();
             String stringValue = @string.GetValue();
             for (int i = 0; i < stringValue.Length; i++) {
@@ -628,10 +549,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         private float[] GetAscentDescent() {
-            // check if graphics state was released
-            if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-            }
+            CheckGraphicsState();
             float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender();
             float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender();
             // If descent is positive, we consider it a bug and fix it

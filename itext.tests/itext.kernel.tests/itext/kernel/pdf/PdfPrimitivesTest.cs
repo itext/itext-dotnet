@@ -255,8 +255,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void EqualStrings() {
-            PdfString a = ((PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
-                ()))));
+            PdfString a = (PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ())));
             PdfString b = new PdfString("abcd".GetBytes(Encoding.ASCII));
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
             PdfString c = new PdfString("abcd", "UTF-8");
@@ -266,8 +266,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER)]
         public virtual void EqualNumbers() {
-            PdfNumber num1 = ((PdfNumber)new PdfNumber(1).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
-                ()))));
+            PdfNumber num1 = (PdfNumber)new PdfNumber(1).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ())));
             PdfNumber num2 = new PdfNumber(2);
             NUnit.Framework.Assert.IsFalse(num1.Equals(num2));
             int hashCode = num1.GetHashCode();
@@ -278,16 +278,16 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void EqualNames() {
-            PdfName a = ((PdfName)new PdfName("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
-                ()))));
+            PdfName a = (PdfName)new PdfName("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ())));
             PdfName b = new PdfName("abcd");
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
         }
 
         [NUnit.Framework.Test]
         public virtual void EqualBoolean() {
-            PdfBoolean f = ((PdfBoolean)new PdfBoolean(false).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
-                ()))));
+            PdfBoolean f = (PdfBoolean)new PdfBoolean(false).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ())));
             PdfBoolean t = new PdfBoolean(true);
             NUnit.Framework.Assert.IsFalse(f.Equals(t));
             NUnit.Framework.Assert.IsTrue(f.Equals(PdfBoolean.FALSE));
@@ -296,8 +296,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void EqualNulls() {
-            PdfNull a = ((PdfNull)new PdfNull().MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream()
-                ))));
+            PdfNull a = (PdfNull)new PdfNull().MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())
+                ));
             NUnit.Framework.Assert.IsTrue(a.Equals(PdfNull.PDF_NULL));
         }
 
@@ -309,7 +309,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private PdfArray GeneratePdfArrayWithFloatNumbers(PdfDocument doc, bool indirects) {
-            PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
+            PdfArray array = (PdfArray)new PdfArray().MakeIndirect(doc);
             Random rnd = new Random();
             for (int i = 0; i < DefaultArraySize; i++) {
                 PdfNumber num = new PdfNumber(rnd.NextFloat());
@@ -322,37 +322,37 @@ namespace iText.Kernel.Pdf {
         }
 
         private PdfArray GeneratePdfArrayWithIntNumbers(PdfDocument doc, bool indirects) {
-            PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
+            PdfArray array = (PdfArray)new PdfArray().MakeIndirect(doc);
             Random rnd = new Random();
             for (int i = 0; i < DefaultArraySize; i++) {
-                array.Add(((PdfNumber)new PdfNumber(rnd.Next()).MakeIndirect(indirects ? doc : null)));
+                array.Add(new PdfNumber(rnd.Next()).MakeIndirect(indirects ? doc : null));
             }
             return array;
         }
 
         private PdfArray GeneratePdfArrayWithStrings(PdfDocument doc, bool indirects) {
-            PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
+            PdfArray array = (PdfArray)new PdfArray().MakeIndirect(doc);
             PdfPrimitivesTest.RandomString rnd = new PdfPrimitivesTest.RandomString(16);
             for (int i = 0; i < DefaultArraySize; i++) {
-                array.Add(((PdfString)new PdfString(rnd.NextString()).MakeIndirect(indirects ? doc : null)));
+                array.Add(new PdfString(rnd.NextString()).MakeIndirect(indirects ? doc : null));
             }
             return array;
         }
 
         private PdfArray GeneratePdfArrayWithNames(PdfDocument doc, bool indirects) {
-            PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
+            PdfArray array = (PdfArray)new PdfArray().MakeIndirect(doc);
             PdfPrimitivesTest.RandomString rnd = new PdfPrimitivesTest.RandomString(6);
             for (int i = 0; i < DefaultArraySize; i++) {
-                array.Add(((PdfName)new PdfName(rnd.NextString()).MakeIndirect(indirects ? doc : null)));
+                array.Add(new PdfName(rnd.NextString()).MakeIndirect(indirects ? doc : null));
             }
             return array;
         }
 
         private PdfArray GeneratePdfArrayWithBooleans(PdfDocument doc, bool indirects) {
-            PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
+            PdfArray array = (PdfArray)new PdfArray().MakeIndirect(doc);
             Random rnd = new Random();
             for (int i = 0; i < DefaultArraySize; i++) {
-                array.Add(((PdfBoolean)new PdfBoolean(rnd.NextBoolean()).MakeIndirect(indirects ? doc : null)));
+                array.Add(new PdfBoolean(rnd.NextBoolean()).MakeIndirect(indirects ? doc : null));
             }
             return array;
         }

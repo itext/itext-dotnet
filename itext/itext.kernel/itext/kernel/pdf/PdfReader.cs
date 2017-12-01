@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -561,7 +561,7 @@ namespace iText.Kernel.Pdf {
                 ReadXref();
             }
             catch (Exception ex) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                 logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
@@ -701,14 +701,14 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference reference = table.Get(num);
                     if (reference != null) {
                         if (reference.IsFree()) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
                                 (), tokens.GetGenNr()));
                             return CreatePdfNullInstance(readAsDirect);
                         }
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                                 logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
                                     (), tokens.GetGenNr()));
                                 return CreatePdfNullInstance(readAsDirect);
@@ -720,8 +720,8 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     else {
-                        reference = table.Add(((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                            0).SetState(PdfObject.READING)));
+                        reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                            0).SetState(PdfObject.READING));
                     }
                     return reference;
                 }
@@ -1043,8 +1043,8 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference newReference;
                     switch (type) {
                         case 0: {
-                            newReference = ((PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
-                                (PdfObject.FREE));
+                            newReference = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
+                                (PdfObject.FREE);
                             break;
                         }
 
@@ -1346,7 +1346,7 @@ namespace iText.Kernel.Pdf {
 
             public ReusableRandomAccessSource(ByteBuffer buffer) {
                 if (buffer == null) {
-                    throw new ArgumentNullException();
+                    throw new ArgumentException("Passed byte buffer can not be null.");
                 }
                 this.buffer = buffer;
             }

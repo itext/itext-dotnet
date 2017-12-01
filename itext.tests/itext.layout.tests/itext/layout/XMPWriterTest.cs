@@ -41,7 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
+using iText.IO.Image;
 using iText.IO.Source;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -56,6 +59,15 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/XMPWriterTest/";
+
+        public static readonly String DOG = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/XMPWriterTest/dog.bmp";
+
+        public static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/FreeSans.ttf";
+
+        public static readonly String FOX = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/XMPWriterTest/fox.bmp";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -87,6 +99,65 @@ namespace iText.Layout {
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_" + fileName
                 , true));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void AddUAXMPMetaDataNotTaggedTest() {
+            String fileName = "addUAXMPMetaDataNotTaggedTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties().AddUAXmpMetadata
+                ()));
+            ManipulatePdf(pdf, false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_"
+                 + fileName, true));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AddUAXMPMetaDataTaggedTest() {
+            String fileName = "addUAXMPMetaDataTaggedTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties().AddUAXmpMetadata
+                ()));
+            ManipulatePdf(pdf, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_"
+                 + fileName, true));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DoNotAddUAXMPMetaDataTaggedTest() {
+            String fileName = "doNotAddUAXMPMetaDataTaggedTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties().AddXmpMetadata
+                ()));
+            ManipulatePdf(pdf, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_"
+                 + fileName, true));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void ManipulatePdf(PdfDocument pdfDocument, bool setTagged) {
+            Document document = new Document(pdfDocument);
+            if (setTagged) {
+                pdfDocument.SetTagged();
+            }
+            pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
+            pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
+            info.SetTitle("iText7 PDF/UA test");
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, true);
+            Paragraph p = new Paragraph();
+            p.SetFont(font);
+            p.Add(new Text("The quick brown "));
+            iText.Layout.Element.Image foxImage = new Image(ImageDataFactory.Create(FOX));
+            foxImage.GetAccessibilityProperties().SetAlternateDescription("Fox");
+            p.Add(foxImage);
+            p.Add(" jumps over the lazy ");
+            iText.Layout.Element.Image dogImage = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
+            dogImage.GetAccessibilityProperties().SetAlternateDescription("Dog");
+            p.Add(dogImage);
+            document.Add(p);
+            document.Close();
         }
     }
 }

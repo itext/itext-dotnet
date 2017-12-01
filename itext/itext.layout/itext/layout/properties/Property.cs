@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -216,17 +214,17 @@ namespace iText.Layout.Properties {
 
         public const int MAX_HEIGHT = 84;
 
-        public const int MAX_WIDTH = 107;
+        public const int MAX_WIDTH = 79;
 
         public const int MIN_HEIGHT = 85;
 
-        public const int MIN_WIDTH = 108;
+        public const int MIN_WIDTH = 80;
 
         public const int OPACITY = 92;
 
-        public const int OUTLINE = 109;
+        public const int OUTLINE = 106;
 
-        public const int OUTLINE_OFFSET = 110;
+        public const int OUTLINE_OFFSET = 107;
 
         public const int OVERFLOW = 102;
 
@@ -245,9 +243,6 @@ namespace iText.Layout.Properties {
         public const int PAGE_NUMBER = 51;
 
         public const int POSITION = 52;
-
-        [Obsolete]
-        public const int REVERSED = 53;
 
         public const int RIGHT = 54;
 
@@ -283,6 +278,10 @@ namespace iText.Layout.Properties {
 
         public const int TAB_STOPS = 69;
 
+        public const int TAGGING_HELPER = 108;
+
+        public const int TAGGING_HINT_KEY = 109;
+
         public const int TEXT_ALIGNMENT = 70;
 
         /// <summary>
@@ -296,7 +295,7 @@ namespace iText.Layout.Properties {
 
         public const int TOP = 73;
 
-        public const int TRANSFORM = 106;
+        public const int TRANSFORM = 53;
 
         public const int UNDERLINE = 74;
 
@@ -309,10 +308,6 @@ namespace iText.Layout.Properties {
 
         public const int WORD_SPACING = 78;
 
-        public const int X = 79;
-
-        public const int Y = 80;
-
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
@@ -322,7 +317,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 98;
+        private const int MAX_INHERITED_PROPERTY_ID = 108;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -355,6 +350,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TAGGING_HELPER] = true;
         }
 
         /// <summary>

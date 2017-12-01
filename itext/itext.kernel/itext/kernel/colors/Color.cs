@@ -48,58 +48,6 @@ using iText.Kernel.Pdf.Colorspace;
 namespace iText.Kernel.Colors {
     /// <summary>Represents a color</summary>
     public class Color {
-        /// <summary>Predefined black DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.BLACK instead.")]
-        public static readonly iText.Kernel.Colors.Color BLACK = new DeviceRgb(0, 0, 0);
-
-        /// <summary>Predefined blue  DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.BLUE instead.")]
-        public static readonly iText.Kernel.Colors.Color BLUE = new DeviceRgb(0, 0, 255);
-
-        /// <summary>Predefined cyan DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.CYAN instead.")]
-        public static readonly iText.Kernel.Colors.Color CYAN = new DeviceRgb(0, 255, 255);
-
-        /// <summary>Predefined dark gray DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.DARK_GRAY instead.")]
-        public static readonly iText.Kernel.Colors.Color DARK_GRAY = new DeviceRgb(64, 64, 64);
-
-        /// <summary>Predefined gray DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.GRAY instead.")]
-        public static readonly iText.Kernel.Colors.Color GRAY = new DeviceRgb(128, 128, 128);
-
-        /// <summary>Predefined green DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.GREEN instead.")]
-        public static readonly iText.Kernel.Colors.Color GREEN = new DeviceRgb(0, 255, 0);
-
-        /// <summary>Predefined light gray DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.LIGHT_GRAY instead.")]
-        public static readonly iText.Kernel.Colors.Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
-
-        /// <summary>Predefined magenta DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.MAGENTA instead.")]
-        public static readonly iText.Kernel.Colors.Color MAGENTA = new DeviceRgb(255, 0, 255);
-
-        /// <summary>Predefined orange DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.ORANGE instead.")]
-        public static readonly iText.Kernel.Colors.Color ORANGE = new DeviceRgb(255, 200, 0);
-
-        /// <summary>Predefined pink DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.PINK instead.")]
-        public static readonly iText.Kernel.Colors.Color PINK = new DeviceRgb(255, 175, 175);
-
-        /// <summary>Predefined red DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.RED instead.")]
-        public static readonly iText.Kernel.Colors.Color RED = new DeviceRgb(255, 0, 0);
-
-        /// <summary>Predefined white DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.WHITE instead.")]
-        public static readonly iText.Kernel.Colors.Color WHITE = new DeviceRgb(255, 255, 255);
-
-        /// <summary>Predefined yellow DeviceRgb color</summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1 Use ColorConstants.YELLOW instead.")]
-        public static readonly iText.Kernel.Colors.Color YELLOW = new DeviceRgb(255, 255, 0);
-
         /// <summary>The color space of the color</summary>
         protected internal PdfColorSpace colorSpace;
 

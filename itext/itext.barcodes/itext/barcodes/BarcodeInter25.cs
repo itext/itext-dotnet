@@ -58,7 +58,7 @@ namespace iText.Barcodes {
     /// <pre>
     /// x = 0.8f;
     /// n = 2;
-    /// font = new PdfType1Font(document, new TYPE_1_FONT(FontConstants.HELVETICA, PdfEncodings.WINANSI));
+    /// font = new PdfType1Font(document, new TYPE_1_FONT(StandardFonts.HELVETICA, PdfEncodings.WINANSI));
     /// size = 8;
     /// baseline = size;
     /// barHeight = size * 3;

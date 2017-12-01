@@ -46,8 +46,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Common.Logging;
 using iText.IO.Font;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -121,7 +121,7 @@ namespace iText.Kernel.Utils {
 
         private IList<PdfIndirectReference> cmpPagesRef;
 
-        private int compareByContentErrorsLimit = 1;
+        private int compareByContentErrorsLimit = 1000;
 
         private bool generateCompareByContentXmlReport = false;
 
@@ -1241,7 +1241,7 @@ namespace iText.Kernel.Utils {
                 }
                 if (key.Equals(PdfName.BaseFont) || key.Equals(PdfName.FontName)) {
                     PdfObject cmpObj = cmpDict.Get(key);
-                    if (cmpObj.IsName() && cmpObj.ToString().IndexOf('+') > 0) {
+                    if (cmpObj != null && cmpObj.IsName() && cmpObj.ToString().IndexOf('+') > 0) {
                         PdfObject outObj = outDict.Get(key);
                         if (!outObj.IsName() || outObj.ToString().IndexOf('+') == -1) {
                             if (compareResult != null && currentPath != null) {
@@ -1277,7 +1277,7 @@ namespace iText.Kernel.Utils {
                     PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
                     PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
                     if (outLeftover != null) {
-                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                        LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
                         if (cmpLeftover == null) {
                             if (compareResult != null && currentPath != null) {
@@ -1287,7 +1287,7 @@ namespace iText.Kernel.Utils {
                         }
                     }
                     if (cmpLeftover != null) {
-                        LoggerFactory.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                        LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
                         if (outLeftover == null) {
                             if (compareResult != null && currentPath != null) {

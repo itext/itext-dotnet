@@ -193,11 +193,13 @@ namespace iText.Layout.Font {
                     checkContains = false;
                 }
                 if (checkContains) {
-                    //yes, we will not find contains for each alias.
                     if (descriptor.GetFullNameLowerCase().Contains(fontName)) {
                         score += 3;
                     }
                     if (descriptor.GetFontNameLowerCase().Contains(fontName)) {
+                        score += 3;
+                    }
+                    if (null != fontInfo.GetAlias() && fontInfo.GetAlias().Contains(fontName)) {
                         score += 3;
                     }
                 }

@@ -41,6 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel;
+
 namespace iText.Kernel.Pdf {
     public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary> {
         public enum PdfViewerPreferencesConstants {
@@ -172,6 +175,11 @@ namespace iText.Kernel.Pdf {
         /// This method sets the name of the page boundary representing the area of a page that shall be displayed when
         /// viewing the document on the screen.
         /// </summary>
+        /// <remarks>
+        /// This method sets the name of the page boundary representing the area of a page that shall be displayed when
+        /// viewing the document on the screen.
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="pageBoundary"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
@@ -182,6 +190,11 @@ namespace iText.Kernel.Pdf {
         /// This method sets the name of the page boundary to which the contents of a page shall be clipped when
         /// viewing the document on the screen.
         /// </summary>
+        /// <remarks>
+        /// This method sets the name of the page boundary to which the contents of a page shall be clipped when
+        /// viewing the document on the screen.
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="pageBoundary"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
@@ -192,6 +205,11 @@ namespace iText.Kernel.Pdf {
         /// This method sets the name of the page boundary representing the area of a page that shall be
         /// rendered when printing the document.
         /// </summary>
+        /// <remarks>
+        /// This method sets the name of the page boundary representing the area of a page that shall be
+        /// rendered when printing the document.
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="pageBoundary"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
@@ -202,6 +220,11 @@ namespace iText.Kernel.Pdf {
         /// This method sets the name of the page boundary to which the contents of a page shall be clipped when
         /// printing the document.
         /// </summary>
+        /// <remarks>
+        /// This method sets the name of the page boundary to which the contents of a page shall be clipped when
+        /// printing the document.
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="pageBoundary"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
@@ -289,8 +312,52 @@ namespace iText.Kernel.Pdf {
             return Put(PdfName.NumCopies, new PdfNumber(numCopies));
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. Sets an array of names of Viewer preference settings that
+        /// shall be enforced by PDF processors and that shall not be overridden by
+        /// subsequent selections in the application user interface
+        /// </remarks>
+        /// <param name="enforce">array of names specifying settings to enforce in the PDF processors</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfViewerPreferences"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetEnforce(PdfArray enforce) {
+            for (int i = 0; i < enforce.Size(); i++) {
+                PdfName curEnforce = enforce.GetAsName(i);
+                if (curEnforce == null) {
+                    throw new ArgumentException("Enforce array shall contain PdfName entries");
+                }
+                else {
+                    if (PdfName.PrintScaling.Equals(curEnforce)) {
+                        // This name may appear in the Enforce array only if the corresponding entry in
+                        // the viewer preferences dictionary specifies a valid value other than AppDefault
+                        PdfName curPrintScaling = GetPdfObject().GetAsName(PdfName.PrintScaling);
+                        if (curPrintScaling == null || PdfName.AppDefault.Equals(curPrintScaling)) {
+                            throw new PdfException(PdfException.PrintScalingEnforceEntryInvalid);
+                        }
+                    }
+                }
+            }
+            return Put(PdfName.Enforce, enforce);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. Gets an array of names of Viewer preference settings that
+        /// shall be enforced by PDF processors and that shall not be overridden by
+        /// subsequent selections in the application user interface
+        /// </remarks>
+        /// <returns>array of names specifying settings to enforce in the PDF processors</returns>
+        public virtual PdfArray GetEnforce() {
+            return GetPdfObject().GetAsArray(PdfName.Enforce);
+        }
+
         public virtual iText.Kernel.Pdf.PdfViewerPreferences Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 

@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -64,7 +64,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Contains marked content references for every page.
         /// If new mcrs are added to the tag structure, these new mcrs are also added to this map. So for each adding or
         /// removing mcr, register/unregister calls must be made (this is done automatically if addKid or removeKid methods
-        /// of PdfStructElem are used).
+        /// of PdfStructElement are used).
         /// Keys in this map are page references, values - a map which contains all mcrs that belong to the given page.
         /// This inner map of mcrs is of following structure:
         /// * for McrDictionary and McrNumber values the keys are their MCIDs;
@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfDictionary BuildParentTree() {
-            return ((PdfDictionary)parentTree.BuildTree().MakeIndirect(structTreeRoot.GetDocument()));
+            return (PdfDictionary)parentTree.BuildTree().MakeIndirect(structTreeRoot.GetDocument());
         }
 
         public virtual void RegisterMcr(PdfMcr mcr) {
@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
             PdfDictionary mcrPageObject = mcr.GetPageObject();
             if (mcrPageObject == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
                 logger.Error(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
@@ -251,7 +251,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
             foreach (PdfStructElem mcrParent in mcrParents) {
-                foreach (IPdfStructElem kid in mcrParent.GetKids()) {
+                foreach (IStructureNode kid in mcrParent.GetKids()) {
                     if (kid is PdfMcr) {
                         RegisterMcr((PdfMcr)kid, true);
                     }
@@ -266,9 +266,13 @@ namespace iText.Kernel.Pdf.Tagging {
             int currentMcid = 0;
             foreach (KeyValuePair<int, PdfMcr> entry in mcrs) {
                 PdfMcr mcr = entry.Value;
+                PdfDictionary parentObj = ((PdfStructElem)mcr.GetParent()).GetPdfObject();
+                if (!parentObj.IsIndirect()) {
+                    continue;
+                }
                 if (mcr is PdfObjRef) {
                     int structParent = KeyIntoStructParentIndex((int)entry.Key);
-                    parentTree.AddEntry(structParent, ((PdfStructElem)mcr.GetParent()).GetPdfObject());
+                    parentTree.AddEntry(structParent, parentObj);
                 }
                 else {
                     // if for some reason some mcr where not registered or don't exist, we ensure that the rest
@@ -276,15 +280,15 @@ namespace iText.Kernel.Pdf.Tagging {
                     while (currentMcid++ < mcr.GetMcid()) {
                         parentsOfPageMcrs.Add(PdfNull.PDF_NULL);
                     }
-                    parentsOfPageMcrs.Add(((PdfStructElem)mcr.GetParent()).GetPdfObject());
+                    parentsOfPageMcrs.Add(parentObj);
                 }
             }
             if (parentsOfPageMcrs.Size() > 0) {
                 parentsOfPageMcrs.MakeIndirect(structTreeRoot.GetDocument());
-                int structParents = (int)page.GetStructParentIndex() != -1 ? (int)page.GetStructParentIndex() : (int)page.
-                    GetDocument().GetNextStructParentIndex();
+                int structParents = page.GetStructParentIndex() != -1 ? page.GetStructParentIndex() : page.GetDocument().GetNextStructParentIndex
+                    ();
                 page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
-                parentTree.AddEntry((int?)structParents, parentsOfPageMcrs);
+                parentTree.AddEntry(structParents, parentsOfPageMcrs);
                 structTreeRoot.GetDocument().CheckIsoConformance(parentsOfPageMcrs, IsoKey.TAG_STRUCTURE_ELEMENT);
                 parentsOfPageMcrs.Flush();
             }

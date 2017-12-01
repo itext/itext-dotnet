@@ -69,12 +69,12 @@ namespace iText.Pdfa {
                 fileNames.Put(PdfName.Names, names);
                 names.Add(new PdfString("some/file/path"));
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 names.Add(spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.NameDictionaryShallNotContainTheEmbeddedFilesKey));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY));
 ;
         }
 
@@ -91,12 +91,12 @@ namespace iText.Pdfa {
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 stream.Put(PdfName.F, spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.StreamObjDictShallNotContainForFFilterOrFDecodeParams));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS));
 ;
         }
 
@@ -113,12 +113,12 @@ namespace iText.Pdfa {
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null, true);
+                    , "sample", null, null);
                 stream.Put(new PdfName("fileData"), spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.FileSpecificationDictionaryShallNotContainTheEFKey));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY));
 ;
         }
     }

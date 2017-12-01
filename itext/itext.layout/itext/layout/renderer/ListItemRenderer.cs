@@ -42,14 +42,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Font;
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ListItemRenderer : DivRenderer {
@@ -92,28 +93,36 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;
             }
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            TagTreePointer tagPointer = null;
-            if (isTagged) {
-                tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                IAccessibleElement modelElement = (IAccessibleElement)GetModelElement();
-                PdfName role = modelElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    bool lBodyTagIsCreated = tagPointer.IsElementConnectedToTag(modelElement);
-                    if (!lBodyTagIsCreated) {
-                        tagPointer.AddTag(IsPossibleBadTagging(PdfName.LI) ? PdfName.Div : PdfName.LI);
+            if (drawContext.IsTaggingEnabled()) {
+                LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper != null) {
+                    if (symbolRenderer != null) {
+                        LayoutTaggingHelper.AddTreeHints(taggingHelper, symbolRenderer);
+                    }
+                    if (taggingHelper.IsArtifact(this)) {
+                        taggingHelper.MarkArtifactHint(symbolRenderer);
                     }
                     else {
-                        tagPointer.MoveToTag(modelElement).MoveToParent();
+                        TaggingHintKey hintKey = LayoutTaggingHelper.GetHintKey(this);
+                        TaggingHintKey parentHint = taggingHelper.GetAccessibleParentHint(hintKey);
+                        if (parentHint != null && !(StandardRoles.LI.Equals(parentHint.GetAccessibleElement().GetAccessibilityProperties
+                            ().GetRole()))) {
+                            TaggingDummyElement listItemIntermediate = new TaggingDummyElement(StandardRoles.LI);
+                            IList<TaggingHintKey> intermediateKid = JavaCollectionsUtil.SingletonList<TaggingHintKey>(LayoutTaggingHelper
+                                .GetOrCreateHintKey(listItemIntermediate));
+                            taggingHelper.ReplaceKidHint(hintKey, intermediateKid);
+                            if (symbolRenderer != null) {
+                                taggingHelper.AddKidsHint(listItemIntermediate, JavaCollectionsUtil.SingletonList<IRenderer>(symbolRenderer
+                                    ));
+                            }
+                            taggingHelper.AddKidsHint(listItemIntermediate, JavaCollectionsUtil.SingletonList<IRenderer>(this));
+                        }
                     }
-                }
-                else {
-                    isTagged = false;
                 }
             }
             base.Draw(drawContext);
@@ -127,7 +136,13 @@ namespace iText.Layout.Renderer {
                     float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                     x -= symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent);
                     if (symbolPosition == ListSymbolPosition.OUTSIDE) {
-                        x += (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
+                        UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+                        if (!marginLeftUV.IsPointValue()) {
+                            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                .MARGIN_LEFT));
+                        }
+                        x += marginLeftUV.GetValue();
                     }
                 }
                 ApplyMargins(occupiedArea.GetBBox(), false);
@@ -175,19 +190,10 @@ namespace iText.Layout.Renderer {
                 }
                 symbolRenderer.Move(xPosition, 0);
                 if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
-                    if (isTagged) {
-                        tagPointer.AddTag(0, IsPossibleBadTagging(PdfName.Lbl) ? PdfName.P : PdfName.Lbl);
-                    }
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
                     EndElementOpacityApplying(drawContext);
-                    if (isTagged) {
-                        tagPointer.MoveToParent();
-                    }
                 }
-            }
-            if (isTagged) {
-                tagPointer.MoveToParent();
             }
         }
 
@@ -206,8 +212,7 @@ namespace iText.Layout.Renderer {
                 splitRenderer.symbolRenderer = symbolRenderer;
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
             }
-            // TODO retain all the properties ?
-            splitRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
+            splitRenderer.AddAllProperties(GetOwnProperties());
             return splitRenderer;
         }
 
@@ -220,8 +225,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.symbolRenderer = symbolRenderer;
                 overflowRenderer.symbolAreaWidth = symbolAreaWidth;
             }
-            // TODO retain all the properties ?
-            overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
+            overflowRenderer.AddAllProperties(GetOwnProperties());
             return overflowRenderer;
         }
 
@@ -234,17 +238,19 @@ namespace iText.Layout.Renderer {
                         ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                         if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                         }
                         paragraphRenderer.childRenderers.Add(0, symbolRenderer);
                         symbolAddedInside = true;
                     }
                     else {
                         if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
-                            IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                            Paragraph p = new Paragraph();
+                            p.GetAccessibilityProperties().SetRole(null);
+                            IRenderer paragraphRenderer = p.SetMargin(0).CreateRendererSubTree();
                             float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                             if (symbolIndent != null) {
-                                symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                                symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                             }
                             paragraphRenderer.AddChild(symbolRenderer);
                             paragraphRenderer.AddChild(childRenderers[0]);
@@ -253,10 +259,12 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (!symbolAddedInside) {
-                        IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                        Paragraph p = new Paragraph();
+                        p.GetAccessibilityProperties().SetRole(null);
+                        IRenderer paragraphRenderer = p.SetMargin(0).CreateRendererSubTree();
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                         if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
                         }
                         paragraphRenderer.AddChild(symbolRenderer);
                         childRenderers.Add(0, paragraphRenderer);
@@ -273,11 +281,16 @@ namespace iText.Layout.Renderer {
 
         private float[] CalculateAscenderDescender() {
             PdfFont listItemFont = ResolveFirstPdfFont();
-            float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
+            UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
+                if (!fontSize.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .FONT_SIZE));
+                }
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
-                return new float[] { (float)fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, (float)fontSize
-                     * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
+                return new float[] { fontSize.GetValue() * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize.
+                    GetValue() * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
             }
             return new float[] { 0, 0 };
         }

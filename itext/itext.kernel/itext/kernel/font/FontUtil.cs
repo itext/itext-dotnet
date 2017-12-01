@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
@@ -65,7 +65,7 @@ namespace iText.Kernel.Font {
                     CMapParser.ParseCid("", cMapToUnicode, lb);
                 }
                 catch (Exception) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
+                    ILog logger = LogManager.GetLogger(typeof(CMapToUnicode));
                     logger.Error(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }

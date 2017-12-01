@@ -60,15 +60,6 @@ namespace iText.Kernel.Pdf.Navigation {
             return array != null ? array.Get(0) : null;
         }
 
-        [System.ObsoleteAttribute(@"do not use this method. Will be removed in 7.1")]
-        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
-            PdfArray array = (PdfArray)names.Get(GetPdfObject());
-            if (array != null) {
-                return PdfDestination.MakeDestination(array);
-            }
-            return null;
-        }
-
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }

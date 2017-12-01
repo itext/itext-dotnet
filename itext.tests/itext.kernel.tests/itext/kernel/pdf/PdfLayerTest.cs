@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Layer;
@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf {
                  + "output_layered.pdf"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
             PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
-            canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 
+            canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 
                 18).MoveText(200, 600).ShowText("APPENDED CONTENT").EndText().EndLayer();
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
             foreach (PdfLayer layer in allLayers) {

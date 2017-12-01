@@ -36,24 +36,21 @@
     <DocumentationFile>bin\Release\itext.pdftest.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>$(SolutionDir)\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>$(SolutionDir)\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="log4net">
-      <HintPath>$(SolutionDir)\packages\log4net.2.0.7\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="itext\test\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\itext.io\itext.io.csproj">
-      <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
-      <Name>itext.io</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -65,5 +62,11 @@
   -->
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\itext.io\itext.io.csproj">
+      <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
+      <Name>itext.io</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

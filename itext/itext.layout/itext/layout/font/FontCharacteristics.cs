@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
 
 namespace iText.Layout.Font {
     public sealed class FontCharacteristics {
@@ -66,12 +65,10 @@ namespace iText.Layout.Font {
             this.undefined = other.undefined;
         }
 
-        public iText.Layout.Font.FontCharacteristics SetFontWeight(FontWeight fw) {
-            this.fontWeight = FontCharacteristicsUtils.CalculateFontWeightNumber(fw);
-            Modified();
-            return this;
-        }
-
+        /// <summary>Sets preferred font weight</summary>
+        /// <param name="fw">font weight in css notation.</param>
+        /// <seealso>com.itextpdf.io.font.constants.FontWeights.</seealso>
+        /// <returns>this instance.</returns>
         public iText.Layout.Font.FontCharacteristics SetFontWeight(short fw) {
             if (fw > 0) {
                 this.fontWeight = FontCharacteristicsUtils.NormalizeFontWeight(fw);
@@ -141,12 +138,8 @@ namespace iText.Layout.Font {
             return isMonospace;
         }
 
-        public short GetFontWeightNumber() {
+        public short GetFontWeight() {
             return fontWeight;
-        }
-
-        public FontWeight GetFontWeight() {
-            return FontCharacteristicsUtils.CalculateFontWeight(fontWeight);
         }
 
         public bool IsUndefined() {

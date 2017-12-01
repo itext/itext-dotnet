@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -52,7 +52,7 @@ namespace iText.IO.Font.Cmap {
     public class CMapLocationResource : ICMapLocation {
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfTokenizer GetLocation(String location) {
-            String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
+            String fullName = FontResources.CMAPS + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);
             if (inp == null) {
                 throw new iText.IO.IOException(iText.IO.IOException.Cmap1WasNotFound).SetMessageParams(fullName);

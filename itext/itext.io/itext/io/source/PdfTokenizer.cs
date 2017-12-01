@@ -914,7 +914,7 @@ namespace iText.IO.Source {
 
             public ReusableRandomAccessSource(ByteBuffer buffer) {
                 if (buffer == null) {
-                    throw new ArgumentNullException();
+                    throw new ArgumentException("Passed byte buffer can not be null.");
                 }
                 this.buffer = buffer;
             }

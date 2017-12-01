@@ -44,9 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -135,17 +133,6 @@ namespace iText.Layout.Element {
             return childElements;
         }
 
-        protected internal abstract IRenderer MakeNewRenderer();
-
-        /// <summary>Marks all child elements as artifacts recursively.</summary>
-        protected internal virtual void PropagateArtifactRoleToChildElements() {
-            foreach (IElement child in childElements) {
-                if (child is IAccessibleElement) {
-                    ((IAccessibleElement)child).SetRole(PdfName.Artifact);
-                }
-            }
-        }
-
         /// <summary>Returns <code>true</code> if this list contains no elements.</summary>
         /// <returns><code>true</code> if this list contains no elements</returns>
         public virtual bool IsEmpty() {
@@ -174,6 +161,7 @@ namespace iText.Layout.Element {
         /// Explicitly sets the page number this element should be put on. The location
         /// on the page will be the same as if it were added at the end of the document,
         /// but it will be located on the specified page.
+        /// <p>
         /// This method should be used very carefully in client code.
         /// </remarks>
         /// <param name="pageNumber">the page number of the page this element should be placed on</param>
@@ -182,5 +170,7 @@ namespace iText.Layout.Element {
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
+
+        protected internal abstract IRenderer MakeNewRenderer();
     }
 }

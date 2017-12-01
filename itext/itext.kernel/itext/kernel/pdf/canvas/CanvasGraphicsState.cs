@@ -483,7 +483,7 @@ namespace iText.Kernel.Pdf.Canvas {
             if (ht != null) {
                 halftone = ht;
             }
-            PdfObject local_htp = extGState.GetHTP();
+            PdfObject local_htp = extGState.GetPdfObject().Get(PdfName.HTP);
             if (local_htp != null) {
                 this.htp = local_htp;
             }

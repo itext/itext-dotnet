@@ -49,7 +49,7 @@ namespace iText.Kernel.XMP
 	/// <li> minute - The time zone minute in the range 0..59.
 	/// <li> nanoSecond - The nano seconds within a second. <em>Note:</em> if the XMPDateTime is
 	/// converted into a calendar, the resolution is reduced to milli seconds.
-	/// <li> timeZone - a <code>TimeZone</code>-object.
+	/// <li> timeZoneInfo - a <code>TimeZoneInfo</code>-object.
 	/// </ul>
 	/// DateTime values are occasionally used in cases with only a date or only a time component. A date
 	/// without a time has zeros for all the time fields. A time without a date has zeros for all date
@@ -105,19 +105,11 @@ namespace iText.Kernel.XMP
 		/// </param>
 		void SetNanoSecond(int nanoSecond);
 
-#if !NETSTANDARD1_6
-        /// <returns>Returns the time zone.</returns>
-        TimeZone GetTimeZone();
-
-		/// <param name="tz">a time zone to set</param>
-		void SetTimeZone(TimeZone tz);
-#else
         /// <returns>Returns the time zone.</returns>
 		TimeZoneInfo GetTimeZone();
 
         /// <param name="tz">a time zone to set</param>
         void SetTimeZone(TimeZoneInfo tz);
-#endif
 
         /// <summary>This flag is set either by parsing or by setting year, month or day.</summary>
         /// <returns>Returns true if the XMPDateTime object has a date portion.</returns>

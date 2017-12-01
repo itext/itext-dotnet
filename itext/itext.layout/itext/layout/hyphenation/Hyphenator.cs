@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
@@ -35,7 +35,7 @@ namespace iText.Layout.Hyphenation {
         private static readonly Object staticLock = new Object();
 
         /// <summary>Logging instance.</summary>
-        private static ILogger log = LoggerFactory.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
+        private static ILog log = LogManager.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
 
         private static HyphenationTreeCache hTreeCache;
 
@@ -133,7 +133,7 @@ namespace iText.Layout.Hyphenation {
                 String llKey = HyphenationTreeCache.ConstructLlccKey(lang, null);
                 if (!cache.IsMissing(llKey)) {
                     hTree = GetHyphenationTree2(lang, null, hyphPathNames);
-                    if (hTree != null && log.IsDebugEnabled()) {
+                    if (hTree != null && log.IsDebugEnabled) {
                         log.Debug("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\",country=\"" + country + "\"." 
                             + " Using general language pattern " + "for lang=\"" + lang + "\" instead.");
                     }
@@ -212,7 +212,7 @@ namespace iText.Layout.Hyphenation {
                 return GetHyphenationTree(fis, name);
             }
             catch (System.IO.IOException ioe) {
-                if (log.IsDebugEnabled()) {
+                if (log.IsDebugEnabled) {
                     log.Debug("I/O problem while trying to load " + name + ": " + ioe.Message);
                 }
                 return null;

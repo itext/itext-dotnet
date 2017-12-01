@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -51,10 +50,11 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfCaretAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfCaretAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
         /// of the inner rectangle, respectively.
         /// </returns>
-        public override PdfArray GetRectangleDifferences() {
+        public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
 
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCaretAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCaretAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.RD, rect);
         }
     }

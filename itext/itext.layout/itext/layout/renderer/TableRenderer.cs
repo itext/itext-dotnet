@@ -43,10 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -55,6 +54,7 @@ using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -130,7 +130,7 @@ namespace iText.Layout.Renderer {
                 rows[cell.GetRow() - rowRange.GetStartRow() + cell.GetRowspan() - 1][cell.GetCol()] = (CellRenderer)renderer;
             }
             else {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                 logger.Error("Only CellRenderer could be added");
             }
         }
@@ -140,7 +140,7 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal override Rectangle ApplyPaddings(Rectangle rect, float[] paddings, bool reverse) {
+        protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
             // Do nothing here. Tables don't have padding.
             return rect;
         }
@@ -182,10 +182,10 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             Table tableModel = (Table)GetModelElement();
             if (!tableModel.IsComplete()) {
-                SetProperty(Property.MARGIN_BOTTOM, 0);
+                SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0f));
             }
             if (rowRange.GetStartRow() != 0) {
-                SetProperty(Property.MARGIN_TOP, 0);
+                SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0f));
             }
             // we can invoke #layout() twice (processing KEEP_TOGETHER for instance)
             // so we need to clear the results of previous #layout() invocation
@@ -201,7 +201,7 @@ namespace iText.Layout.Renderer {
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
             bool isAndWasComplete = tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count;
-            bool isFirstOnThePage = 0 == rowRange.GetStartRow() || area.IsEmptyArea();
+            bool isFirstOnThePage = 0 == rowRange.GetStartRow() || IsFirstOnRootArea(true);
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
                     bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete ? rowRange
@@ -218,8 +218,18 @@ namespace iText.Layout.Renderer {
                 CorrectRowRange();
             }
             if (IsOriginalRenderer()) {
-                float[] margins = GetMargins();
-                CalculateColumnWidths(layoutBox.GetWidth() - margins[1] - margins[3]);
+                UnitValue[] margins = GetMargins();
+                if (!margins[1].IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_RIGHT));
+                }
+                if (!margins[3].IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue());
             }
             float tableWidth = GetTableWidth();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -410,6 +420,12 @@ namespace iText.Layout.Renderer {
                         , cellIndents[3], false);
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
+                    // create hint for cell if not yet created
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    if (taggingHelper != null) {
+                        taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(cell));
+                        LayoutTaggingHelper.AddTreeHints(taggingHelper, cell);
+                    }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         , wasHeightClipped || wasParentsHeightClipped));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
@@ -464,10 +480,10 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.rows = rows.SubList(row, rows.Count);
                                     overflowRenderer.SetProperty(Property.IGNORE_HEADER, true);
                                     overflowRenderer.SetProperty(Property.IGNORE_FOOTER, true);
-                                    overflowRenderer.SetProperty(Property.MARGIN_TOP, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_LEFT, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0));
+                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(0));
                                     // we've already applied the top table border on header
                                     if (null != headerRenderer) {
                                         overflowRenderer.SetProperty(Property.BORDER_TOP, Border.NO_BORDER);
@@ -486,6 +502,10 @@ namespace iText.Layout.Renderer {
                                         ));
                                     bordersHandler.SetStartRow(savedStartRow);
                                     if (LayoutResult.FULL == res.GetStatus()) {
+                                        if (taggingHelper != null) {
+                                            // marking as artifact to get rid of all tagging hints from this renderer
+                                            taggingHelper.MarkArtifactHint(footerRenderer);
+                                        }
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
                                         layoutBox.IncreaseHeight(footerHeight).MoveDown(footerHeight);
@@ -504,16 +524,6 @@ namespace iText.Layout.Renderer {
                                         continue;
                                     }
                                     else {
-                                        int reusedRows = 0;
-                                        if (null != res.GetSplitRenderer()) {
-                                            reusedRows = ((iText.Layout.Renderer.TableRenderer)res.GetSplitRenderer()).rows.Count;
-                                        }
-                                        for (int i = 0; i < numberOfColumns; i++) {
-                                            if (null != rows[row + reusedRows][i]) {
-                                                rows[row + reusedRows][i] = (CellRenderer)((Cell)rows[row + reusedRows][i].GetModelElement()).CreateRendererSubTree
-                                                    ();
-                                            }
-                                        }
                                         if (null != headerRenderer) {
                                             bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
                                         }
@@ -566,6 +576,11 @@ namespace iText.Layout.Renderer {
                     }
                     bool skip = false;
                     if (null != footerRenderer && tableModel.IsComplete() && tableModel.IsSkipLastFooter() && !split) {
+                        LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                        if (taggingHelper != null) {
+                            // marking as artifact to get rid of all tagging hints from this renderer
+                            taggingHelper.MarkArtifactHint(footerRenderer);
+                        }
                         footerRenderer = null;
                         if (tableModel.IsEmpty()) {
                             this.DeleteOwnProperty(Property.BORDER_TOP);
@@ -608,6 +623,12 @@ namespace iText.Layout.Renderer {
                 if (!split) {
                     childRenderers.AddAll(currChildRenderers);
                     currChildRenderers.Clear();
+                }
+                if (split && footerRenderer != null) {
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    if (taggingHelper != null) {
+                        taggingHelper.MarkArtifactHint(footerRenderer);
+                    }
                 }
                 if (split) {
                     if (marginsCollapsingEnabled) {
@@ -685,11 +706,13 @@ namespace iText.Layout.Renderer {
                                     overflowCell.DeleteProperty(Property.MAX_HEIGHT);
                                     overflowRows.SetCell(0, col, null);
                                     overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
-                                    currentRow[col].isLastRendererForModelElement = false;
                                     childRenderers.Add(currentRow[col]);
                                     CellRenderer originalCell = currentRow[col];
                                     currentRow[col] = null;
                                     rows[targetOverflowRowIndex[col]][col] = originalCell;
+                                    originalCell.isLastRendererForModelElement = false;
+                                    overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                                        ));
                                 }
                                 else {
                                     childRenderers.Add(currentRow[col]);
@@ -706,12 +729,14 @@ namespace iText.Layout.Renderer {
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
                                         CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
                                             );
-                                        rows[i][col].isLastRendererForModelElement = false;
                                         overflowRows.SetCell(i - row, col, null);
                                         overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
                                         CellRenderer originalCell = rows[i][col];
                                         rows[i][col] = null;
                                         rows[targetOverflowRowIndex[col]][col] = originalCell;
+                                        originalCell.isLastRendererForModelElement = false;
+                                        overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                                            ));
                                     }
                                 }
                                 overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
@@ -762,7 +787,7 @@ namespace iText.Layout.Renderer {
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
-                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
@@ -815,7 +840,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
@@ -910,6 +935,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             // we should process incomplete table's footer only dureing splitting
             if (!tableModel.IsComplete() && null != footerRenderer) {
+                LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper != null) {
+                    // marking as artifact to get rid of all tagging hints from this renderer
+                    taggingHelper.MarkArtifactHint(footerRenderer);
+                }
                 footerRenderer = null;
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
@@ -922,135 +952,43 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
-            PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool ignoreTag = false;
-            PdfName role = null;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            LayoutTaggingHelper taggingHelper = null;
             if (isTagged) {
-                role = ((IAccessibleElement)GetModelElement()).GetRole();
-                bool isHeaderOrFooter = PdfName.THead.Equals(role) || PdfName.TFoot.Equals(role);
-                bool ignoreHeaderFooterTag = document.GetTagStructureContext().GetTagStructureTargetVersion().CompareTo(PdfVersion
-                    .PDF_1_5) < 0;
-                ignoreTag = isHeaderOrFooter && ignoreHeaderFooterTag;
-            }
-            if (role != null && !role.Equals(PdfName.Artifact) && !ignoreTag) {
-                TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
-                tagPointer.AddTag(accessibleElement, true);
-                if (!alreadyCreated) {
-                    PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
-                    ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isTagged = false;
                 }
-                BeginTranformationIfApplied(drawContext.GetCanvas());
-                base.Draw(drawContext);
-                EndTranformationIfApplied(drawContext.GetCanvas());
-                tagPointer.MoveToParent();
-                bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
-                if (toRemoveConnectionsWithTag) {
-                    tagPointer.RemoveElementConnectionToTag(accessibleElement);
+                else {
+                    TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                    if (taggingHelper.CreateTag(this, tagPointer)) {
+                        tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                            ));
+                    }
                 }
             }
-            else {
-                BeginTranformationIfApplied(drawContext.GetCanvas());
-                base.Draw(drawContext);
-                EndTranformationIfApplied(drawContext.GetCanvas());
+            BeginTransformationIfApplied(drawContext.GetCanvas());
+            base.Draw(drawContext);
+            EndTransformationIfApplied(drawContext.GetCanvas());
+            if (isTagged) {
+                if (isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete()) {
+                    taggingHelper.FinishTaggingHint(this);
+                }
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
             }
         }
 
         /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
-            Table modelElement = (Table)GetModelElement();
             if (headerRenderer != null) {
-                bool firstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer && !modelElement.IsSkipFirstHeader
-                    ();
-                bool notToTagHeader = drawContext.IsTaggingEnabled() && !firstHeader;
-                if (notToTagHeader) {
-                    drawContext.SetTaggingEnabled(false);
-                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-                }
                 headerRenderer.Draw(drawContext);
-                if (notToTagHeader) {
-                    drawContext.GetCanvas().CloseTag();
-                    drawContext.SetTaggingEnabled(true);
-                }
-            }
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement && !childRenderers
-                .IsEmpty();
-            TagTreePointer tagPointer = null;
-            bool shouldHaveFooterOrHeaderTag = modelElement.GetHeader() != null || modelElement.GetFooter() != null;
-            if (isTagged) {
-                PdfName role = modelElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    bool ignoreHeaderFooterTag = drawContext.GetDocument().GetTagStructureContext().GetTagStructureTargetVersion
-                        ().CompareTo(PdfVersion.PDF_1_5) < 0;
-                    shouldHaveFooterOrHeaderTag = shouldHaveFooterOrHeaderTag && !ignoreHeaderFooterTag && (!modelElement.IsSkipFirstHeader
-                        () || !modelElement.IsSkipLastFooter());
-                    if (shouldHaveFooterOrHeaderTag) {
-                        if (tagPointer.GetKidsRoles().Contains(PdfName.TBody)) {
-                            tagPointer.MoveToKid(PdfName.TBody);
-                        }
-                        else {
-                            tagPointer.AddTag(PdfName.TBody);
-                        }
-                    }
-                }
-                else {
-                    isTagged = false;
-                }
             }
             foreach (IRenderer child in childRenderers) {
-                if (isTagged) {
-                    int adjustByHeaderRowsNum = 0;
-                    if (modelElement.GetHeader() != null && !modelElement.IsSkipFirstHeader() && !shouldHaveFooterOrHeaderTag) {
-                        adjustByHeaderRowsNum = modelElement.GetHeader().GetNumberOfRows();
-                    }
-                    int cellRow = ((Cell)child.GetModelElement()).GetRow() + adjustByHeaderRowsNum;
-                    int cellRowKidIndex = -1;
-                    int foundRowsNum = 0;
-                    IList<PdfName> kidsRoles = tagPointer.GetKidsRoles();
-                    for (int i = 0; i < kidsRoles.Count; ++i) {
-                        PdfName kidRole = kidsRoles[i];
-                        if (kidRole == null || PdfName.TR.Equals(kidRole)) {
-                            ++foundRowsNum;
-                        }
-                        if (foundRowsNum - 1 == cellRow) {
-                            cellRowKidIndex = i;
-                            break;
-                        }
-                    }
-                    if (cellRowKidIndex > -1) {
-                        tagPointer.MoveToKid(cellRowKidIndex);
-                    }
-                    else {
-                        tagPointer.AddTag(PdfName.TR);
-                    }
-                }
                 child.Draw(drawContext);
-                if (isTagged) {
-                    tagPointer.MoveToParent();
-                }
-            }
-            if (isTagged) {
-                if (shouldHaveFooterOrHeaderTag) {
-                    tagPointer.MoveToParent();
-                }
             }
             DrawBorders(drawContext);
             if (footerRenderer != null) {
-                bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !modelElement.IsSkipLastFooter
-                    ();
-                bool notToTagFooter = drawContext.IsTaggingEnabled() && !lastFooter;
-                if (notToTagFooter) {
-                    drawContext.SetTaggingEnabled(false);
-                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-                }
                 footerRenderer.Draw(drawContext);
-                if (notToTagFooter) {
-                    drawContext.GetCanvas().CloseTag();
-                    drawContext.SetTaggingEnabled(true);
-                }
             }
         }
 
@@ -1058,12 +996,12 @@ namespace iText.Layout.Renderer {
             bool shrinkBackgroundArea = bordersHandler is CollapsedTableBorders && (IsHeaderRenderer() || IsFooterRenderer
                 ());
             if (shrinkBackgroundArea) {
-                occupiedArea.GetBBox().ApplyMargins<Rectangle>(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
                     () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, false);
             }
             base.DrawBackground(drawContext);
             if (shrinkBackgroundArea) {
-                occupiedArea.GetBBox().ApplyMargins<Rectangle>(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
                     () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, true);
             }
             if (null != headerRenderer) {
@@ -1097,11 +1035,6 @@ namespace iText.Layout.Renderer {
             if (footerRenderer != null) {
                 footerRenderer.Move(dxRight, dyUp);
             }
-        }
-
-        [System.ObsoleteAttribute(@"Method will be removed in 7.1.")]
-        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth) {
-            return countedColumnWidth;
         }
 
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row) {
@@ -1182,11 +1115,12 @@ namespace iText.Layout.Renderer {
             return tableWidth;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+        protected internal override MinMaxWidth GetMinMaxWidth() {
             InitializeTableLayoutBorders();
             float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
-            TableWidths tableWidths = new TableWidths(this, availableWidth, true, rightMaxBorder, leftMaxBorder);
+            TableWidths tableWidths = new TableWidths(this, MinMaxWidthUtils.GetInfWidth(), true, rightMaxBorder, leftMaxBorder
+                );
             float[] columns = tableWidths.Layout();
             float minWidth = tableWidths.GetMinWidth();
             CleanTableLayoutBorders();
@@ -1194,9 +1128,21 @@ namespace iText.Layout.Renderer {
             foreach (float column in columns) {
                 maxColTotalWidth += column;
             }
-            float additionalWidth = (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT) + (float)this.GetPropertyAsFloat
-                (Property.MARGIN_LEFT) + rightMaxBorder / 2 + leftMaxBorder / 2;
-            return new MinMaxWidth(additionalWidth, availableWidth, minWidth, maxColTotalWidth);
+            UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
+            if (!marginRightUV.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_RIGHT));
+            }
+            UnitValue marginLefttUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+            if (!marginLefttUV.IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
+                 / 2;
+            return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
         }
 
         protected internal override float? GetLastYLineRecursively() {
@@ -1240,8 +1186,7 @@ namespace iText.Layout.Renderer {
             DrawBorders(drawContext, null != headerRenderer, null != footerRenderer);
         }
 
-        [Obsolete]
-        protected internal virtual void DrawBorders(DrawContext drawContext, bool hasHeader, bool hasFooter) {
+        private void DrawBorders(DrawContext drawContext, bool hasHeader, bool hasFooter) {
             float height = occupiedArea.GetBBox().GetHeight();
             if (null != footerRenderer) {
                 height -= footerRenderer.occupiedArea.GetBBox().GetHeight();
@@ -1262,12 +1207,22 @@ namespace iText.Layout.Renderer {
                 startY -= topBorderMaxWidth / 2;
             }
             if (HasProperty(Property.MARGIN_TOP)) {
-                float? topMargin = this.GetPropertyAsFloat(Property.MARGIN_TOP);
-                startY -= null == topMargin ? 0 : (float)topMargin;
+                UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
+                if (null != topMargin && !topMargin.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                startY -= null == topMargin ? 0 : topMargin.GetValue();
             }
             if (HasProperty(Property.MARGIN_LEFT)) {
-                float? leftMargin = this.GetPropertyAsFloat(Property.MARGIN_LEFT);
-                startX += +(null == leftMargin ? 0 : (float)leftMargin);
+                UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+                if (null != leftMargin && !leftMargin.IsPointValue()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                        .MARGIN_LEFT));
+                }
+                startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
             }
             // process halves of the borders here
             if (childRenderers.Count == 0) {
@@ -1288,7 +1243,7 @@ namespace iText.Layout.Renderer {
                     heights.Add(0f);
                 }
             }
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+            bool isTagged = drawContext.IsTaggingEnabled();
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
@@ -1359,11 +1314,11 @@ namespace iText.Layout.Renderer {
             if (IsPositioned()) {
                 if (IsFixedLayout()) {
                     if (isXPosition) {
-                        float x = (float)this.GetPropertyAsFloat(Property.X);
+                        float x = (float)this.GetPropertyAsFloat(Property.LEFT);
                         layoutBox.SetX(x);
                     }
                     else {
-                        float y = (float)this.GetPropertyAsFloat(Property.Y);
+                        float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                         Move(0, y - occupiedArea.GetBBox().GetY());
                     }
                 }
@@ -1500,9 +1455,9 @@ namespace iText.Layout.Renderer {
                 try {
                     cell.Move(0, -(cumulativeShift - rowspanOffset));
                 }
-                catch (Exception) {
-                    // TODO Remove try-catch when DEVSIX-1001 is resolved. Review exception type when DEVSIX-1592 is resolved.
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                catch (NullReferenceException) {
+                    // TODO Remove try-catch when DEVSIX-1001 is resolved.
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the cell's content might not end up placed correctly."));
                 }
@@ -1544,6 +1499,16 @@ namespace iText.Layout.Renderer {
             int outerBorder = footer ? 2 : 0;
             iText.Layout.Renderer.TableRenderer renderer = (iText.Layout.Renderer.TableRenderer)footerOrHeader.CreateRendererSubTree
                 ().SetParent(this);
+            bool firstHeader = !footer && rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(renderer));
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+                if (!footer && !firstHeader) {
+                    // whether footer is not the last and requires marking as artifact is defined later during table renderer layout
+                    taggingHelper.MarkArtifactHint(renderer);
+                }
+            }
             Border[] borders = renderer.GetBorders();
             if (table.IsEmpty()) {
                 renderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(borders[innerBorder], tableBorders[innerBorder

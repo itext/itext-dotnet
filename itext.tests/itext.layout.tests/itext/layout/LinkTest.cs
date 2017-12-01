@@ -91,13 +91,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new AreaBreak()).Add(new AreaBreak());
-            PdfArray array = new PdfArray();
-            array.Add(doc.GetPdfDocument().GetPage(1).GetPdfObject());
-            array.Add(PdfName.XYZ);
-            array.Add(new PdfNumber(36));
-            array.Add(new PdfNumber(100));
-            array.Add(new PdfNumber(1));
-            PdfDestination dest = PdfDestination.MakeDestination(array);
+            PdfDestination dest = PdfExplicitDestination.CreateXYZ(pdfDoc.GetPage(1), 36, 100, 1);
             PdfAction action = PdfAction.CreateGoTo(dest);
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link));
@@ -227,8 +221,8 @@ namespace iText.Layout {
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             link.SetBorder(new SolidBorder(ColorConstants.BLUE, 20));
-            link.SetProperty(Property.MARGIN_LEFT, 50);
-            link.SetProperty(Property.MARGIN_RIGHT, 50);
+            link.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(50));
+            link.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(50));
             doc.Add(new Paragraph(link).SetBorder(new SolidBorder(10)));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

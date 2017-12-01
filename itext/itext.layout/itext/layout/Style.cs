@@ -54,58 +54,78 @@ namespace iText.Layout {
     /// </remarks>
     public class Style : ElementPropertyContainer<Style> {
         /// <summary>Gets the current left margin width of the element.</summary>
-        /// <returns>the left margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginLeft() {
-            return this.GetProperty<float?>(Property.MARGIN_LEFT);
+        /// <returns>
+        /// the left margin width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetMarginLeft() {
+            return this.GetProperty<UnitValue>(Property.MARGIN_LEFT);
         }
 
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
         public virtual Style SetMarginLeft(float value) {
-            SetProperty(Property.MARGIN_LEFT, value);
+            UnitValue marginUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.MARGIN_LEFT, marginUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
-        /// <returns>the right margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginRight() {
-            return this.GetProperty<float?>(Property.MARGIN_RIGHT);
+        /// <returns>
+        /// the right margin width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetMarginRight() {
+            return this.GetProperty<UnitValue>(Property.MARGIN_RIGHT);
         }
 
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
         public virtual Style SetMarginRight(float value) {
-            SetProperty(Property.MARGIN_RIGHT, value);
+            UnitValue marginUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.MARGIN_RIGHT, marginUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
-        /// <returns>the top margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginTop() {
-            return this.GetProperty<float?>(Property.MARGIN_TOP);
+        /// <returns>
+        /// the top margin width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetMarginTop() {
+            return this.GetProperty<UnitValue>(Property.MARGIN_TOP);
         }
 
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
         public virtual Style SetMarginTop(float value) {
-            SetProperty(Property.MARGIN_TOP, value);
+            UnitValue marginUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.MARGIN_TOP, marginUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
-        /// <returns>the bottom margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginBottom() {
-            return this.GetProperty<float?>(Property.MARGIN_BOTTOM);
+        /// <returns>
+        /// the bottom margin width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetMarginBottom() {
+            return this.GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
         public virtual Style SetMarginBottom(float value) {
-            SetProperty(Property.MARGIN_BOTTOM, value);
+            UnitValue marginUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.MARGIN_BOTTOM, marginUV);
             return (Style)(Object)this;
         }
 
@@ -131,58 +151,78 @@ namespace iText.Layout {
         }
 
         /// <summary>Gets the current left padding width of the element.</summary>
-        /// <returns>the left padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingLeft() {
-            return this.GetProperty<float?>(Property.PADDING_LEFT);
+        /// <returns>
+        /// the left padding width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetPaddingLeft() {
+            return this.GetProperty<UnitValue>(Property.PADDING_LEFT);
         }
 
         /// <summary>Sets the left padding width of the element.</summary>
         /// <param name="value">the new left padding width</param>
         /// <returns>this element</returns>
         public virtual Style SetPaddingLeft(float value) {
-            SetProperty(Property.PADDING_LEFT, value);
+            UnitValue paddingUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.PADDING_LEFT, paddingUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current right padding width of the element.</summary>
-        /// <returns>the right padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingRight() {
-            return this.GetProperty<float?>(Property.PADDING_RIGHT);
+        /// <returns>
+        /// the right padding width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetPaddingRight() {
+            return this.GetProperty<UnitValue>(Property.PADDING_RIGHT);
         }
 
         /// <summary>Sets the right padding width of the element.</summary>
         /// <param name="value">the new right padding width</param>
         /// <returns>this element</returns>
         public virtual Style SetPaddingRight(float value) {
-            SetProperty(Property.PADDING_RIGHT, value);
+            UnitValue paddingUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.PADDING_RIGHT, paddingUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current top padding width of the element.</summary>
-        /// <returns>the top padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingTop() {
-            return this.GetProperty<float?>(Property.PADDING_TOP);
+        /// <returns>
+        /// the top padding width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetPaddingTop() {
+            return this.GetProperty<UnitValue>(Property.PADDING_TOP);
         }
 
         /// <summary>Sets the top padding width of the element.</summary>
         /// <param name="value">the new top padding width</param>
         /// <returns>this element</returns>
         public virtual Style SetPaddingTop(float value) {
-            SetProperty(Property.PADDING_TOP, value);
+            UnitValue paddingUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.PADDING_TOP, paddingUV);
             return (Style)(Object)this;
         }
 
         /// <summary>Gets the current bottom padding width of the element.</summary>
-        /// <returns>the bottom padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingBottom() {
-            return this.GetProperty<float?>(Property.PADDING_BOTTOM);
+        /// <returns>
+        /// the bottom padding width, as a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </returns>
+        public virtual UnitValue GetPaddingBottom() {
+            return this.GetProperty<UnitValue>(Property.PADDING_BOTTOM);
         }
 
         /// <summary>Sets the bottom padding width of the element.</summary>
         /// <param name="value">the new bottom padding width</param>
         /// <returns>this element</returns>
         public virtual Style SetPaddingBottom(float value) {
-            SetProperty(Property.PADDING_BOTTOM, value);
+            UnitValue paddingUV = UnitValue.CreatePointValue(value);
+            SetProperty(Property.PADDING_BOTTOM, paddingUV);
             return (Style)(Object)this;
         }
 
@@ -279,6 +319,166 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         public virtual Style SetRotationAngle(double angle) {
             SetProperty(Property.ROTATION_ANGLE, (float)angle);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Sets the width property of the element, measured in points.</summary>
+        /// <param name="width">a value measured in points.</param>
+        /// <returns>this Element.</returns>
+        public virtual Style SetWidth(float width) {
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
+            return (Style)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the width property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="width">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual Style SetWidth(UnitValue width) {
+            SetProperty(Property.WIDTH, width);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Gets the width property of the element.</summary>
+        /// <returns>the width of the element, with a value and a measurement unit.</returns>
+        /// <seealso cref="iText.Layout.Properties.UnitValue"/>
+        public virtual UnitValue GetWidth() {
+            return (UnitValue)this.GetProperty<UnitValue>(Property.WIDTH);
+        }
+
+        /// <summary>
+        /// Sets the height property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="height">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual Style SetHeight(UnitValue height) {
+            SetProperty(Property.HEIGHT, height);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Sets the height property the element as a point-value.</summary>
+        /// <param name="height">a floating point value for the new height</param>
+        /// <returns>the block element itself.</returns>
+        public virtual Style SetHeight(float height) {
+            UnitValue heightAsUV = UnitValue.CreatePointValue(height);
+            SetProperty(Property.HEIGHT, heightAsUV);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Gets the height property of the element.</summary>
+        /// <returns>the height of the element, as a floating point value. Null if the property is not present</returns>
+        public virtual UnitValue GetHeight() {
+            return (UnitValue)this.GetProperty<UnitValue>(Property.HEIGHT);
+        }
+
+        /// <summary>Sets the max-height of the element as point-unit value.</summary>
+        /// <param name="maxHeight">a floating point value for the new max-height</param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMaxHeight(float maxHeight) {
+            UnitValue maxHeightAsUV = UnitValue.CreatePointValue(maxHeight);
+            SetProperty(Property.MAX_HEIGHT, maxHeightAsUV);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the max-height property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="maxHeight">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMaxHeight(UnitValue maxHeight) {
+            SetProperty(Property.MAX_HEIGHT, maxHeight);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the min-height property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="minHeight">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMinHeight(UnitValue minHeight) {
+            SetProperty(Property.MIN_HEIGHT, minHeight);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Sets the min-height of the element as point-unit value.</summary>
+        /// <param name="minHeight">a floating point value for the new min-height</param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMinHeight(float minHeight) {
+            UnitValue minHeightAsUV = UnitValue.CreatePointValue(minHeight);
+            SetProperty(Property.MIN_HEIGHT, minHeightAsUV);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the max-width property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="maxWidth">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMaxWidth(UnitValue maxWidth) {
+            SetProperty(Property.MAX_WIDTH, maxWidth);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Sets the max-width of the element as point-unit value.</summary>
+        /// <param name="maxWidth">a floating point value for the new max-width</param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMaxWidth(float maxWidth) {
+            SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(maxWidth));
+            return (Style)(Object)this;
+        }
+
+        /// <summary>
+        /// Sets the min-width property of the element with a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// .
+        /// </summary>
+        /// <param name="minWidth">
+        /// a
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
+        /// object
+        /// </param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMinWidth(UnitValue minWidth) {
+            SetProperty(Property.MIN_WIDTH, minWidth);
+            return (Style)(Object)this;
+        }
+
+        /// <summary>Sets the min-width of the element as point-unit value.</summary>
+        /// <param name="minWidth">a floating point value for the new min-width</param>
+        /// <returns>the block element itself</returns>
+        public virtual Style SetMinWidth(float minWidth) {
+            SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(minWidth));
             return (Style)(Object)this;
         }
     }

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Log;
+using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal PdfCatalog(PdfDocument pdfDocument)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
+            : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
         }
 
         /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
@@ -135,7 +135,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            ILogger logger = LoggerFactory.GetLogger(typeof(PdfDocument));
+            ILog logger = LogManager.GetLogger(typeof(PdfDocument));
             logger.Warn("PdfCatalog cannot be flushed manually");
         }
 
@@ -257,11 +257,6 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual PdfString GetLang() {
-            return GetPdfObject().GetAsString(PdfName.Lang);
-        }
-
-        [Obsolete]
-        public virtual PdfString GetLang(PdfName lang) {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
 
@@ -465,7 +460,7 @@ namespace iText.Kernel.Pdf {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
                                     // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
-                                    PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
+                                    PdfArray copiedArray = (PdfArray)srcDestArray.CopyTo(toDocument, false);
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }
                                 break;

@@ -42,8 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -56,6 +58,7 @@ namespace iText.Kernel.Font {
     /// In Type 3 fonts, glyphs are defined by streams of PDF graphics operators.
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.
+    /// <p>
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -63,10 +66,10 @@ namespace iText.Kernel.Font {
     /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </remarks>
-    public class PdfType3Font : PdfSimpleFont<Type3FontProgram> {
-        private double[] fontMatrix = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
+    public class PdfType3Font : PdfSimpleFont<Type3Font> {
+        private double[] fontMatrix = DEFAULT_FONT_MATRIX;
 
-        /// <summary>Creates a Type3 font.</summary>
+        /// <summary>Creates a Type 3 font.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
         ///     </param>
         internal PdfType3Font(PdfDocument document, bool colorized)
@@ -74,18 +77,28 @@ namespace iText.Kernel.Font {
             MakeIndirect(document);
             subset = true;
             embedded = true;
-            fontProgram = new Type3FontProgram(colorized);
+            fontProgram = new Type3Font(colorized);
             fontEncoding = FontEncoding.CreateEmptyFontEncoding();
         }
 
-        /// <summary>Creates a Type3 font based on an existing font dictionary, which must be an indirect object.</summary>
+        /// <summary>Creates a Type 3 font.</summary>
+        /// <param name="document">the target document of the new font.</param>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        /// <param name="colorized">indicates whether the font will be colorized</param>
+        internal PdfType3Font(PdfDocument document, String fontName, String fontFamily, bool colorized)
+            : this(document, colorized) {
+            ((Type3Font)fontProgram).SetFontName(fontName);
+            ((Type3Font)fontProgram).SetFontFamily(fontFamily);
+        }
+
+        /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
         /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
-            EnsureObjectIsAddedToDocument(fontDictionary);
             subset = true;
             embedded = true;
-            fontProgram = new Type3FontProgram(false);
+            fontProgram = new Type3Font(false);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             PdfDictionary charProcsDic = GetPdfObject().GetAsDictionary(PdfName.CharProcs);
@@ -98,8 +111,11 @@ namespace iText.Kernel.Font {
             else {
                 fontProgram.GetFontMetrics().SetBbox(0, 0, 0, 0);
             }
-            PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
-            int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
+            int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
+            int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), 255);
+            for (int i = firstChar; i <= lastChar; i++) {
+                shortTag[i] = 1;
+            }
             int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, 0);
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
@@ -110,14 +126,65 @@ namespace iText.Kernel.Font {
                 int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 if (unicode != -1 && fontEncoding.CanEncode(unicode)) {
                     int code = fontEncoding.ConvertToByte(unicode);
-                    ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic
-                        .GetAsStream(glyphName), GetDocument()));
+                    ((Type3Font)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic.GetAsStream
+                        (glyphName), GetDocument()));
                 }
             }
+            FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
+        }
+
+        /// <summary>Sets the PostScript name of the font.</summary>
+        /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
+        public virtual void SetFontName(String fontName) {
+            ((Type3Font)fontProgram).SetFontName(fontName);
+        }
+
+        /// <summary>Sets a preferred font family name.</summary>
+        /// <param name="fontFamily">a preferred font family name.</param>
+        public virtual void SetFontFamily(String fontFamily) {
+            ((Type3Font)fontProgram).SetFontFamily(fontFamily);
+        }
+
+        /// <summary>Sets font weight.</summary>
+        /// <param name="fontWeight">
+        /// integer form 100 to 900. See
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
+        /// .
+        /// </param>
+        public virtual void SetFontWeight(int fontWeight) {
+            ((Type3Font)fontProgram).SetFontWeight(fontWeight);
+        }
+
+        /// <summary>Sets the PostScript italic angle.</summary>
+        /// <remarks>
+        /// Sets the PostScript italic angle.
+        /// <br/>
+        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
+        /// </remarks>
+        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
+        public virtual void SetItalicAngle(int italicAngle) {
+            ((Type3Font)fontProgram).SetItalicAngle(italicAngle);
+        }
+
+        /// <summary>Sets font width in css notation (font-stretch property)</summary>
+        /// <param name="fontWidth">
+        /// 
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
+        /// .
+        /// </param>
+        public virtual void SetFontStretch(String fontWidth) {
+            ((Type3Font)fontProgram).SetFontStretch(fontWidth);
+        }
+
+        /// <summary>Sets Font descriptor flags.</summary>
+        /// <param name="flags">font descriptor flags.</param>
+        /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
+        public virtual void SetPdfFontFlags(int flags) {
+            ((Type3Font)fontProgram).SetPdfFontFlags(flags);
         }
 
         public virtual Type3Glyph GetType3Glyph(int unicode) {
-            return ((Type3FontProgram)GetFontProgram()).GetType3Glyph(unicode);
+            return ((Type3Font)GetFontProgram()).GetType3Glyph(unicode);
         }
 
         public override bool IsSubset() {
@@ -134,6 +201,12 @@ namespace iText.Kernel.Font {
 
         public virtual void SetFontMatrix(double[] fontMatrix) {
             this.fontMatrix = fontMatrix;
+        }
+
+        /// <summary>Gets count of glyphs in Type 3 font.</summary>
+        /// <returns>number of glyphs.</returns>
+        public virtual int GetNumberOfGlyphs() {
+            return ((Type3Font)GetFontProgram()).GetNumberOfGlyphs();
         }
 
         /// <summary>Defines a glyph.</summary>
@@ -163,11 +236,10 @@ namespace iText.Kernel.Font {
                 return glyph;
             }
             int code = GetFirstEmptyCode();
-            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3FontProgram)GetFontProgram()).IsColorized
-                ());
-            ((Type3FontProgram)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
+            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3Font)GetFontProgram()).IsColorized());
+            ((Type3Font)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
             fontEncoding.AddSymbol((byte)code, c);
-            if (!((Type3FontProgram)GetFontProgram()).IsColorized()) {
+            if (!((Type3Font)GetFontProgram()).IsColorized()) {
                 if (fontProgram.CountOfGlyphs() == 0) {
                     fontProgram.GetFontMetrics().SetBbox(llx, lly, urx, ury);
                 }
@@ -185,7 +257,7 @@ namespace iText.Kernel.Font {
 
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode) || unicode < 33) {
-                Glyph glyph = ((Type3FontProgram)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                     // Handle special layout characters like sfthyphen (00AD).
                     // This glyphs will be skipped while converting to bytes
@@ -197,29 +269,14 @@ namespace iText.Kernel.Font {
             return null;
         }
 
-        public override bool ContainsGlyph(String text, int from) {
-            return ContainsGlyph((int)text[from]);
-        }
-
         public override bool ContainsGlyph(int unicode) {
-            return (fontEncoding.CanEncode(unicode) || unicode < 33) && ((Type3FontProgram)GetFontProgram()).GetGlyph(
-                fontEncoding.GetUnicodeDifference(unicode)) != null;
-        }
-
-        protected internal override PdfDictionary GetFontDescriptor(String fontName) {
-            return null;
-        }
-
-        protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
-        }
-
-        protected internal virtual PdfDocument GetDocument() {
-            return GetPdfObject().GetIndirectReference().GetDocument();
+            return (fontEncoding.CanEncode(unicode) || unicode < 33) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference
+                (unicode)) != null;
         }
 
         public override void Flush() {
             EnsureUnderlyingObjectHasIndirectReference();
-            if (((Type3FontProgram)GetFontProgram()).GetGlyphsCount() < 1) {
+            if (((Type3Font)GetFontProgram()).GetNumberOfGlyphs() < 1) {
                 throw new PdfException("no.glyphs.defined.fo r.type3.font");
             }
             PdfDictionary charProcs = new PdfDictionary();
@@ -235,8 +292,51 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
             GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
             GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox()));
-            base.FlushFontData(null, PdfName.Type3);
+            String fontName = fontProgram.GetFontNames().GetFontName();
+            base.FlushFontData(fontName, PdfName.Type3);
+            //BaseFont is not listed as key in Type 3 font specification.
+            GetPdfObject().Remove(PdfName.BaseFont);
             base.Flush();
+        }
+
+        protected internal override PdfDictionary GetFontDescriptor(String fontName) {
+            if (fontName != null && fontName.Length > 0) {
+                PdfDictionary fontDescriptor = new PdfDictionary();
+                MakeObjectIndirect(fontDescriptor);
+                fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
+                FontMetrics fontMetrics = fontProgram.GetFontMetrics();
+                fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
+                fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
+                FontNames fontNames = fontProgram.GetFontNames();
+                fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
+                fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
+                if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
+                    [0].Length >= 4) {
+                    fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
+                }
+                int flags = fontProgram.GetPdfFontFlags();
+                flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+                // reset both flags
+                flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
+                // set based on font encoding
+                fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
+                return fontDescriptor;
+            }
+            else {
+                if (GetPdfObject().GetIndirectReference() != null && GetPdfObject().GetIndirectReference().GetDocument().IsTagged
+                    ()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
+                    logger.Warn(iText.IO.LogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
+                }
+            }
+            return null;
+        }
+
+        protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
+        }
+
+        protected internal virtual PdfDocument GetDocument() {
+            return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
         /// <summary>
@@ -252,6 +352,40 @@ namespace iText.Kernel.Font {
                 }
             }
             return -1;
+        }
+
+        private void FillFontDescriptor(PdfDictionary fontDesc) {
+            if (fontDesc == null) {
+                return;
+            }
+            PdfNumber v = fontDesc.GetAsNumber(PdfName.ItalicAngle);
+            if (v != null) {
+                SetItalicAngle(v.IntValue());
+            }
+            v = fontDesc.GetAsNumber(PdfName.FontWeight);
+            if (v != null) {
+                SetFontWeight(v.IntValue());
+            }
+            PdfName fontStretch = fontDesc.GetAsName(PdfName.FontStretch);
+            if (fontStretch != null) {
+                SetFontStretch(fontStretch.GetValue());
+            }
+            PdfName fontName = fontDesc.GetAsName(PdfName.FontName);
+            if (fontName != null) {
+                SetFontName(fontName.GetValue());
+            }
+            PdfString fontFamily = fontDesc.GetAsString(PdfName.FontFamily);
+            if (fontFamily != null) {
+                SetFontFamily(fontFamily.GetValue());
+            }
+        }
+
+        private int NormalizeFirstLastChar(PdfNumber firstLast, int defaultValue) {
+            if (firstLast == null) {
+                return defaultValue;
+            }
+            int result = firstLast.IntValue();
+            return result < 0 || result > 255 ? defaultValue : result;
         }
     }
 }

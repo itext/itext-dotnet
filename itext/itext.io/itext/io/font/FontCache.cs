@@ -46,14 +46,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font.Cmap;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontCache {
-        /// <summary>The path to the font resources.</summary>
-        [Obsolete]
-        public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
-
         private static readonly IDictionary<String, IDictionary<String, Object>> allCidFonts = new Dictionary<String
             , IDictionary<String, Object>>();
 
@@ -121,16 +118,11 @@ namespace iText.IO.Font {
         }
 
         public static ICollection<String> GetCompatibleCmaps(String fontName) {
-            String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP);
+            String registry = (String)FontCache.GetAllPredefinedCidFonts().Get(fontName).Get(REGISTRY_PROP);
             return registryNames.Get(registry);
         }
 
         public static IDictionary<String, IDictionary<String, Object>> GetAllPredefinedCidFonts() {
-            return allCidFonts;
-        }
-
-        [System.ObsoleteAttribute(@"Use GetAllPredefinedCidFonts() instead.")]
-        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
             return allCidFonts;
         }
 
@@ -181,7 +173,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry() {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + CJK_REGISTRY_FILENAME);
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + CJK_REGISTRY_FILENAME);
             try {
                 Properties p = new Properties();
                 p.Load(resource);
@@ -206,7 +198,7 @@ namespace iText.IO.Font {
 
         /// <exception cref="System.IO.IOException"/>
         private static IDictionary<String, Object> ReadFontProperties(String name) {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name + ".properties");
+            Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + name + ".properties");
             try {
                 Properties p = new Properties();
                 p.Load(resource);

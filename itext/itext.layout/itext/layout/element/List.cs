@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -64,9 +64,7 @@ namespace iText.Layout.Element {
     public class List : BlockElement<iText.Layout.Element.List> {
         public const String DEFAULT_LIST_SYMBOL = "- ";
 
-        protected internal PdfName role = PdfName.L;
-
-        protected internal AccessibilityProperties tagProperties;
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
         /// Creates a List with the
@@ -221,6 +219,7 @@ namespace iText.Layout.Element {
         /// means that the items will be aligned as follows:
         /// 9.  Item 9
         /// 10. Item 10
+        /// <p>
         /// Whereas
         /// <see cref="iText.Layout.Properties.ListSymbolAlignment.RIGHT"/>
         /// means the items will be aligned as follows:
@@ -296,20 +295,9 @@ namespace iText.Layout.Element {
             SetProperty(Property.LIST_SYMBOL_PRE_TEXT, preSymbolText);
         }
 
-        public override PdfName GetRole() {
-            return role;
-        }
-
-        public override void SetRole(PdfName role) {
-            this.role = role;
-            if (PdfName.Artifact.Equals(role)) {
-                PropagateArtifactRoleToChildElements();
-            }
-        }
-
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new AccessibilityProperties();
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.L);
             }
             return tagProperties;
         }

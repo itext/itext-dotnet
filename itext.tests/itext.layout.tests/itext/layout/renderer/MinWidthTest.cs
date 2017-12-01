@@ -79,7 +79,7 @@ namespace iText.Layout.Renderer {
             Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(ColorConstants.BLACK, 5))).SetBorder(new 
                 SolidBorder(ColorConstants.BLUE, 5));
             MinMaxWidth result = ((AbstractRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             p.SetWidth(ToEffectiveWidth(p, result.GetMinWidth()));
             doc.Add(p);
             doc.Close();
@@ -101,7 +101,7 @@ namespace iText.Layout.Renderer {
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(ColorConstants.GREEN, 5)).SetMargin(6);
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -125,7 +125,7 @@ namespace iText.Layout.Renderer {
                 , 2f)));
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -149,7 +149,7 @@ namespace iText.Layout.Renderer {
             d.Add(p);
             d.Add(new Paragraph(("iText")));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -173,7 +173,7 @@ namespace iText.Layout.Renderer {
             Div dRotated = new Div().SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             d.Add(dRotated.Add(new Paragraph(("iText"))));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -197,7 +197,7 @@ namespace iText.Layout.Renderer {
             Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(ColorConstants.BLUE
                 , 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
@@ -216,13 +216,14 @@ namespace iText.Layout.Renderer {
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject);
             Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
-            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidth(UnitValue.CreatePercentValue
+                (50));
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
-                ))).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                ))).GetMinMaxWidth();
             dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
             doc.Add(d);
             doc.Add(dPercent);
@@ -243,14 +244,14 @@ namespace iText.Layout.Renderer {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject).SetRotationAngle(Math.PI * 3
                  / 8);
             Div d = new Div().Add(img).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f)).SetMarginBottom(10);
-            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50).SetRotationAngle
-                (Math.PI * 3 / 8);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidth(UnitValue.CreatePercentValue
+                (50)).SetRotationAngle(Math.PI * 3 / 8);
             Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(ColorConstants.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
-                (MinMaxWidthUtils.GetMax());
+                ();
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
-                ))).GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                ))).GetMinMaxWidth();
             dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
             doc.Add(d);
             doc.Add(dPercent);
@@ -281,7 +282,7 @@ namespace iText.Layout.Renderer {
                 2)).SetMargin(3).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             curr.Add(p);
             MinMaxWidth result = ((AbstractRenderer)externalDiv.CreateRendererSubTree().SetParent(doc.GetRenderer())).
-                GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+                GetMinMaxWidth();
             externalDiv.SetWidth(ToEffectiveWidth(externalDiv, result.GetMinWidth()));
             doc.Add(externalDiv);
             doc.Close();
@@ -297,12 +298,13 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "simpleTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell cell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(ColorConstants.RED, 60)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(ColorConstants.YELLOW, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(2).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell1.Clone(true)).
-                AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Cell cell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.RED, 60)
+                ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 
+                10)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                ColorConstants.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true
+                )).AddCell(cell2.Clone(true));
             Table minTable = new Table(new float[] { -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop(10
                 ).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true
                 )).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
@@ -325,12 +327,13 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "colspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell bigCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(ColorConstants.RED
-                , 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add("I am cell").SetBorder(new SolidBorder(ColorConstants.YELLOW, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell.Clone(true)).AddCell
-                (bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            Cell bigCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
+                .RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 10
+                )).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                ColorConstants.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true
+                )).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
                 (10).SetBorder(new SolidBorder(ColorConstants.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone
                 (true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
@@ -353,14 +356,17 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "colspanRowspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell colspanCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(ColorConstants
-                .RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell rowspanCell = new Cell(2, 1).Add("I am very very very long cell").SetBorder(new SolidBorder(ColorConstants
-                .GREEN, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add("I am cell").SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBorderBottom
-                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(ColorConstants.BLACK, 20)).AddCell(cell.Clone(true)).
-                AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
+            Cell colspanCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder
+                (ColorConstants.RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(
+                0);
+            Cell rowspanCell = new Cell(2, 1).Add(new Paragraph("I am very very very long cell")).SetBorder(new SolidBorder
+                (ColorConstants.GREEN, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding
+                (0);
+            Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(ColorConstants.BLUE, 10))
+                .SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                ColorConstants.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone
+                (true)).AddCell(colspanCell.Clone(true));
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetMarginTop
                 (10).SetBorder(new SolidBorder(ColorConstants.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone
                 (true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
@@ -383,18 +389,19 @@ namespace iText.Layout.Renderer {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
-            Cell bigCell = new Cell().Add("veryveryveryvery big cell").SetBorder(new SolidBorder(ColorConstants.RED, 40
-                )).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell mediumCell = new Cell().Add("mediumsize cell").SetBorder(new SolidBorder(ColorConstants.GREEN, 30)).SetBorderBottom
+            Cell bigCell = new Cell().Add(new Paragraph("veryveryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
+                .RED, 40)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell mediumCell = new Cell().Add(new Paragraph("mediumsize cell")).SetBorder(new SolidBorder(ColorConstants
+                .GREEN, 30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add(new Paragraph("cell")).SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Cell cell = new Cell().Add("cell").SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBorderBottom(Border
-                .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
-            Table table = new Table(3).SetBorder(new SolidBorder(ColorConstants.BLACK, 20)).AddCell(mediumCell.Clone(true
-                )).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell
-                (cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell
-                (cell.Clone(true)).AddHeaderCell(cell.Clone(true));
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetBorder(new SolidBorder(
+                ColorConstants.BLACK, 20)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
+                .Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone
+                (true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true
+                ));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
-            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(MinMaxWidthUtils.GetMax());
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
             Table minTable = new Table(new float[] { -1, -1, -1 }).SetWidth(UnitValue.CreatePointValue(1)).SetBorder(new 
                 SolidBorder(ColorConstants.BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
                 .Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone

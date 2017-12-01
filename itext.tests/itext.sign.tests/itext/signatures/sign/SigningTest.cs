@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -102,7 +103,7 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
-                , rect, false, false);
+                , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
         }
@@ -118,7 +119,7 @@ namespace iText.Signatures.Sign {
             String dest = destinationFolder + fileName;
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
-                , null, false, false);
+                , null, false, false, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(67, 725, 200, 15))));
         }
@@ -134,7 +135,7 @@ namespace iText.Signatures.Sign {
             String dest = destinationFolder + fileName;
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
-                , null, false, false);
+                , null, false, false, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(67, 725, 200, 15))));
         }
@@ -187,9 +188,91 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
-                , rect, false, true);
+                , rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2Cms() {
+            String file = "simpleDocPdf2.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + "signedCms_" + file;
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1", "TestCity"
+                , rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCms_" + file
+                , destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2Cades() {
+            String file = "simpleDocPdf2.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + "signedCades_" + file;
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
+                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCades_" + 
+                file, destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2CertificationAfterApproval() {
+            NUnit.Framework.Assert.That(() =>  {
+                String srcFile = "approvalSignedDocPdf2.pdf";
+                String file = "signedPdf2CertificationAfterApproval.pdf";
+                String src = sourceFolder + srcFile;
+                String dest = destinationFolder + file;
+                Rectangle rect = new Rectangle(30, 50, 200, 100);
+                String fieldName = "Signature2";
+                Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
+                    , "TestCity", rect, false, true, PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs));
+;
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignedTwicePdf2Test() {
+            String src = sourceFolder + "simpleDocPdf2.pdf";
+            String fileName1 = "signedOnce.pdf";
+            String fileName2 = "updated.pdf";
+            String fileName3 = "signedTwice.pdf";
+            // sign document
+            Rectangle rectangle1 = new Rectangle(36, 100, 200, 100);
+            Sign(src, "Signature1", destinationFolder + fileName1, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "Sign 1", "TestCity", rectangle1, false, true);
+            // update document
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(destinationFolder + fileName1), new PdfWriter(destinationFolder
+                 + fileName2), new StampingProperties().UseAppendMode());
+            pdfDoc.AddNewPage();
+            pdfDoc.Close();
+            // sign document again
+            Rectangle rectangle2 = new Rectangle(236, 100, 200, 100);
+            Sign(destinationFolder + fileName2, "Signature2", destinationFolder + fileName3, chain, pk, DigestAlgorithms
+                .SHA256, PdfSigner.CryptoStandard.CADES, "Sign 2", "TestCity", rectangle2, false, true);
+            IDictionary<int, IList<Rectangle>> map = new Dictionary<int, IList<Rectangle>>();
+            IList<Rectangle> list = new List<Rectangle>();
+            list.Add(rectangle1);
+            list.Add(rectangle2);
+            map.Put(1, list);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + fileName3, sourceFolder
+                 + "cmp_" + fileName3, destinationFolder, "diff_", map));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -243,13 +326,27 @@ namespace iText.Signatures.Sign {
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
+            Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
+                , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+             pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
+             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
+            ) {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode);
+            signer.SetCertificationLevel(certificationLevel);
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
                 ).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 appearance.SetPageRect(rectangleForNewField);
+            }
+            if (fontSize != null) {
+                appearance.SetLayer2FontSize((float)fontSize);
             }
             signer.SetFieldName(name);
             // Creating the signature

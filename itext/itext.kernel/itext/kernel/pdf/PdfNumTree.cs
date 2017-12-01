@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf {
             return items;
         }
 
-        public virtual void AddEntry(int? key, PdfObject value) {
+        public virtual void AddEntry(int key, PdfObject value) {
             items.Put(key, value);
         }
 
@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf {
                 for (int k = 0; k < tt; ++k) {
                     int offset = k * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
-                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
+                    PdfDictionary dic = (PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument());
                     PdfArray arr = new PdfArray();
                     arr.Add(new PdfNumber((int)numbers[k * skip]));
                     arr.Add(new PdfNumber((int)numbers[Math.Min((k + 1) * skip, numbers.Length) - 1]));

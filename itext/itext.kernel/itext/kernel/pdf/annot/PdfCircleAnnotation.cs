@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -52,10 +51,11 @@ namespace iText.Kernel.Pdf.Annot {
             : base(rect) {
         }
 
-        /// <param name="pdfObject">object representing this annotation</param>
-        [System.ObsoleteAttribute(@"Use PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject) instead. Will be made protected in 7.1"
-            )]
-        public PdfCircleAnnotation(PdfDictionary pdfObject)
+        /// <summary>
+        /// see
+        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// </summary>
+        protected internal PdfCircleAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// which is a border style dictionary or null if it is not specified.
         /// </returns>
-        public override PdfDictionary GetBorderStyle() {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return (iText.Kernel.Pdf.Annot.PdfCircleAnnotation)Put(PdfName.BS, borderStyle);
         }
 
@@ -135,9 +135,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         /// <seealso cref="GetBorderStyle()"/>
-        public override PdfAnnotation SetBorderStyle(PdfName style) {
-            return ((iText.Kernel.Pdf.Annot.PdfCircleAnnotation)SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle
-                (), style)));
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetBorderStyle(PdfName style) {
+            return SetBorderStyle(BorderStyleUtil.SetStyle(GetBorderStyle(), style));
         }
 
         /// <summary>Setter for the annotation's preset dashed border style.</summary>
@@ -158,9 +157,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfAnnotation SetDashPattern(PdfArray dashPattern) {
-            return ((iText.Kernel.Pdf.Annot.PdfCircleAnnotation)SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle
-                (), dashPattern)));
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetDashPattern(PdfArray dashPattern) {
+            return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
         }
 
         /// <summary>
@@ -174,7 +172,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// differences in default user space between the left, top, right, and bottom coordinates of Rect and those
         /// of the inner rectangle, respectively.
         /// </returns>
-        public override PdfArray GetRectangleDifferences() {
+        public virtual PdfArray GetRectangleDifferences() {
             return GetPdfObject().GetAsArray(PdfName.RD);
         }
 
@@ -196,7 +194,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetRectangleDifferences(PdfArray rect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetRectangleDifferences(PdfArray rect) {
             return (iText.Kernel.Pdf.Annot.PdfCircleAnnotation)Put(PdfName.RD, rect);
         }
 
@@ -207,7 +205,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// , which is a border effect dictionary (see ISO-320001, Table 167).
         /// </returns>
-        public override PdfDictionary GetBorderEffect() {
+        public virtual PdfDictionary GetBorderEffect() {
             return GetPdfObject().GetAsDictionary(PdfName.BE);
         }
 
@@ -223,7 +221,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetBorderEffect(PdfDictionary borderEffect) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfCircleAnnotation)Put(PdfName.BE, borderEffect);
         }
 
@@ -240,7 +238,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
-        public override Color GetInteriorColor() {
+        public virtual Color GetInteriorColor() {
             return InteriorColorUtil.ParseInteriorColor(GetPdfObject().GetAsArray(PdfName.IC));
         }
 
@@ -263,7 +261,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(PdfArray interiorColor) {
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetInteriorColor(PdfArray interiorColor) {
             return (iText.Kernel.Pdf.Annot.PdfCircleAnnotation)Put(PdfName.IC, interiorColor);
         }
 
@@ -277,8 +275,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfCircleAnnotation"/>
         /// instance.
         /// </returns>
-        public override PdfMarkupAnnotation SetInteriorColor(float[] interiorColor) {
-            return ((iText.Kernel.Pdf.Annot.PdfCircleAnnotation)SetInteriorColor(new PdfArray(interiorColor)));
+        public virtual iText.Kernel.Pdf.Annot.PdfCircleAnnotation SetInteriorColor(float[] interiorColor) {
+            return SetInteriorColor(new PdfArray(interiorColor));
         }
     }
 }

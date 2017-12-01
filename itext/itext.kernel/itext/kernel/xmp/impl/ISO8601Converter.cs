@@ -225,11 +225,7 @@ namespace iText.Kernel.XMP.Impl
 			}
 
             // create a corresponding TZ and set it time zone
-#if !NETSTANDARD1_6
-            binValue.SetTimeZone(TimeZone.CurrentTimeZone);
-#else
             binValue.SetTimeZone(TimeZoneInfo.Local);
-#endif
 
             if (input.HasNext()) {
 				throw new XMPException("Invalid date string, extra chars at end", XMPError.BADVALUE);

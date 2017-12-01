@@ -137,7 +137,7 @@ namespace iText.Signatures {
         private PdfFont layer2Font;
 
         /// <summary>Font size for the font of Layer 2.</summary>
-        private float layer2FontSize = 12;
+        private float layer2FontSize = 0;
 
         /// <summary>
         /// Indicates the field to be signed if it is already presented in the document

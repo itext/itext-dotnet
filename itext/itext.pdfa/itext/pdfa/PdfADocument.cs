@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Log;
+using System.Collections.Generic;
+using Common.Logging;
 using iText.Kernel.Font;
 using iText.Kernel.Log;
 using iText.Kernel.Pdf;
@@ -109,7 +110,7 @@ namespace iText.Pdfa {
             : base(reader, writer, properties) {
             byte[] existingXmpMetadata = GetXmpMetadata();
             if (existingXmpMetadata == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             XMPMeta meta;
@@ -117,12 +118,12 @@ namespace iText.Pdfa {
                 meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
             }
             catch (XMPException) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(meta);
             if (conformanceLevel == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
             }
             SetChecker(conformanceLevel);
@@ -130,50 +131,6 @@ namespace iText.Pdfa {
 
         public override void CheckIsoConformance(Object obj, IsoKey key) {
             CheckIsoConformance(obj, key, null);
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.1.0.")]
-        public override void CheckShowTextIsoConformance(Object obj, PdfResources resources) {
-            CanvasGraphicsState gState = (CanvasGraphicsState)obj;
-            bool fill = false;
-            bool stroke = false;
-            switch (gState.GetTextRenderingMode()) {
-                case PdfCanvasConstants.TextRenderingMode.STROKE:
-                case PdfCanvasConstants.TextRenderingMode.STROKE_CLIP: {
-                    stroke = true;
-                    break;
-                }
-
-                case PdfCanvasConstants.TextRenderingMode.FILL:
-                case PdfCanvasConstants.TextRenderingMode.FILL_CLIP: {
-                    fill = true;
-                    break;
-                }
-
-                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE:
-                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE_CLIP: {
-                    stroke = true;
-                    fill = true;
-                    break;
-                }
-            }
-            IsoKey drawMode = IsoKey.DRAWMODE_FILL;
-            if (fill && stroke) {
-                drawMode = IsoKey.DRAWMODE_FILL_STROKE;
-            }
-            else {
-                if (fill) {
-                    drawMode = IsoKey.DRAWMODE_FILL;
-                }
-                else {
-                    if (stroke) {
-                        drawMode = IsoKey.DRAWMODE_STROKE;
-                    }
-                }
-            }
-            if (fill || stroke) {
-                CheckIsoConformance(gState, drawMode, resources);
-            }
         }
 
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources) {
@@ -209,19 +166,6 @@ namespace iText.Pdfa {
                     break;
                 }
 
-                case IsoKey.GRAPHIC_STATE_ONLY: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
-                case IsoKey.DRAWMODE_FILL: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
                 case IsoKey.FILL_COLOR: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
@@ -233,24 +177,9 @@ namespace iText.Pdfa {
                     break;
                 }
 
-                case IsoKey.DRAWMODE_STROKE: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    checker.CheckExtGState(gState);
-                    break;
-                }
-
                 case IsoKey.STROKE_COLOR: {
                     gState = (CanvasGraphicsState)obj;
                     checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    break;
-                }
-
-                case IsoKey.DRAWMODE_FILL_STROKE: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-                    checker.CheckExtGState(gState);
                     break;
                 }
 
@@ -278,11 +207,13 @@ namespace iText.Pdfa {
         protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
             if (this.IsTagged()) {
                 try {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
-                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                    if (xmpMeta.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART) != null) {
+                        XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
+                        XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                    }
                 }
                 catch (XMPException exc) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
                     logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
                 }
             }
@@ -298,7 +229,7 @@ namespace iText.Pdfa {
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
                 logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
@@ -347,8 +278,8 @@ namespace iText.Pdfa {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
-        protected override Counter GetCounter() {
-            return CounterFactory.GetCounter(typeof(iText.Pdfa.PdfADocument));
+        protected override IList<ICounter> GetCounters() {
+            return CounterManager.GetInstance().GetCounters(typeof(iText.Pdfa.PdfADocument));
         }
 
         private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {

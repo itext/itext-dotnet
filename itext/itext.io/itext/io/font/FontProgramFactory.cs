@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Constants;
 using iText.IO.Font.Woff2;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -66,7 +67,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont() {
-            return CreateFont(FontConstants.HELVETICA);
+            return CreateFont(StandardFonts.HELVETICA);
         }
 
         /// <summary>Creates a new font program.</summary>
@@ -163,13 +164,11 @@ namespace iText.IO.Font {
             return CreateFont(null, fontProgram, cached);
         }
 
-        /// <summary>This method is deprecated and will be made private in 7.1</summary>
         /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Use CreateFont(byte[], bool) or CreateFont(System.String, bool)")]
-        public static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
-            String baseName = FontProgram.GetBaseName(name);
+        private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
+            String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
-            bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
+            bool isBuiltinFonts14 = StandardFonts.IsStandardFont(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
             FontCacheKey fontKey = null;
@@ -279,24 +278,6 @@ namespace iText.IO.Font {
                 }
             }
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
-        }
-
-        /// <summary>This method is deprecated and will be completely removed in 7.1</summary>
-        /// <exception cref="System.IO.IOException"/>
-        [System.ObsoleteAttribute(@"Use CreateType1Font(byte[], byte[]) or CreateType1Font(System.String, System.String) instead"
-            )]
-        public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool cached) {
-            FontProgram fontProgram;
-            FontCacheKey fontKey = null;
-            if (cached) {
-                fontKey = CreateFontCacheKey(name, afm);
-                fontProgram = FontCache.GetFont(fontKey);
-                if (fontProgram != null) {
-                    return fontProgram;
-                }
-            }
-            fontProgram = new Type1Font(name, null, afm, pfb);
-            return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 
         /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
@@ -420,18 +401,18 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="FontConstants"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.UNDEFINED"/>
         /// </param>
         /// <param name="cached">whether to try to get the font program from cache</param>
         /// <returns>
@@ -450,18 +431,18 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="FontConstants"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
         /// .
         /// See
-        /// <see cref="FontConstants.BOLD"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
-        /// <see cref="FontConstants.ITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.ITALIC"/>
         /// ,
-        /// <see cref="FontConstants.NORMAL"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.NORMAL"/>
         /// ,
-        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.BOLDITALIC"/>
         /// ,
-        /// <see cref="FontConstants.UNDEFINED"/>
+        /// <see cref="iText.IO.Font.Constants.FontStyles.UNDEFINED"/>
         /// </param>
         /// <returns>
         /// created
@@ -483,7 +464,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName) {
-            return fontRegisterProvider.GetFont(fontName, FontConstants.UNDEFINED);
+            return fontRegisterProvider.GetFont(fontName, FontStyles.UNDEFINED);
         }
 
         /// <summary>Register a font by giving explicitly the font family and name.</summary>

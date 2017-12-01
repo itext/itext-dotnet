@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
-using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
@@ -56,8 +56,8 @@ namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
     public class LtvVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.LtvVerifier
-            ));
+        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.LtvVerifier)
+            );
 
         /// <summary>Option to specify level of verification; signing certificate only or the entire chain.</summary>
         protected internal LtvVerification.CertificateOption option = LtvVerification.CertificateOption.SIGNING_CERTIFICATE;

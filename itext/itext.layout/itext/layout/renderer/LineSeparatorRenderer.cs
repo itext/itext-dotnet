@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -100,9 +101,17 @@ namespace iText.Layout.Renderer {
         public override void DrawChildren(DrawContext drawContext) {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
+                PdfCanvas canvas = drawContext.GetCanvas();
+                bool isTagged = drawContext.IsTaggingEnabled();
+                if (isTagged) {
+                    canvas.OpenTag(new CanvasArtifact());
+                }
                 Rectangle area = GetOccupiedAreaBBox();
                 ApplyMargins(area, false);
-                lineDrawer.Draw(drawContext.GetCanvas(), area);
+                lineDrawer.Draw(canvas, area);
+                if (isTagged) {
+                    canvas.CloseTag();
+                }
             }
         }
     }

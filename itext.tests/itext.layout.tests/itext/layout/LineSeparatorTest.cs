@@ -74,7 +74,7 @@ namespace iText.Layout {
             line1.SetColor(ColorConstants.RED);
             ILineDrawer line2 = new SolidLine();
             document.Add(new LineSeparator(line1).SetWidth(50).SetMarginBottom(10));
-            document.Add(new LineSeparator(line2).SetWidthPercent(50));
+            document.Add(new LineSeparator(line2).SetWidth(UnitValue.CreatePercentValue(50)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
