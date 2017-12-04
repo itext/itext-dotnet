@@ -64,5 +64,9 @@ namespace iText.IO.Util {
         public static DateTime GetCurrentUtcTime() {
             return DateTime.UtcNow;
         }
+
+        public static DateTime ParseSimpleFormat(String date, String format) {
+            return DateTime.ParseExact(date, format, null);
+        }
     }
 }
