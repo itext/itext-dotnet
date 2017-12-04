@@ -1567,6 +1567,10 @@ namespace iText.Layout.Renderer {
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
+                if (linkAnnotation.GetPage() != null) {
+                    PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
+                    linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
+                }
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(occupiedArea.GetPageNumber());
                 page.AddAnnotation(linkAnnotation);

@@ -228,5 +228,54 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultiLineLinkTest01() {
+            String outFileName = destinationFolder + "multiLineLinkTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_multiLineLinkTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                 + "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " + "laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate "
+                 + "velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "
+                 + "culpa qui officia deserunt mollit anim id est laborum.";
+            Link link = new Link(text, action);
+            doc.Add(new Paragraph(link));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableHeaderLinkTest01() {
+            String outFileName = destinationFolder + "tableHeaderLinkTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableHeaderLinkTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            int numCols = 3;
+            int numRows = 24;
+            Table table = new Table(numCols);
+            for (int x = 0; x < numCols; x++) {
+                Cell headerCell = new Cell();
+                String cellContent = "Header cell\n" + (x + 1);
+                Link link = new Link(cellContent, action);
+                link.SetFontColor(ColorConstants.BLUE);
+                headerCell.Add(new Paragraph().Add(link));
+                table.AddHeaderCell(headerCell);
+            }
+            for (int x = 0; x < numRows; x++) {
+                table.AddCell(new Cell().SetHeight(100f).Add(new Paragraph("Content cell " + (x + 1))));
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
