@@ -517,18 +517,15 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PngImageTest() {
-            String outFileName = destinationFolder + "pngTest.pdf";
-            String cmpFileName = sourceFolder + "cmp_pngTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
-            Document document = new Document(pdf);
-            iText.Layout.Element.Image png = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "test.png"
-                ));
-            png.SetAutoScale(true);
-            document.Add(png);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff_png_"));
+        public virtual void PngImageColorProfileTest() {
+            SimpleImageTest("pngColorProfileTest.pdf", "png-color-profile-test.png");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PngImageIncorrectColorProfileTest() {
+            SimpleImageTest("pngIncorrectColorProfileTest.pdf", "png-incorrect-color-profile-test.png");
         }
 
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
@@ -776,6 +773,23 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void SimpleImageTest(String pdfName, String imageName) {
+            String outFileName = destinationFolder + pdfName;
+            String cmpFileName = sourceFolder + "cmp_" + pdfName;
+            String diff = "diff_" + pdfName + "_";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            iText.Layout.Element.Image png = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
+                ));
+            png.SetAutoScale(true);
+            document.Add(png);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , diff));
         }
     }
 }
