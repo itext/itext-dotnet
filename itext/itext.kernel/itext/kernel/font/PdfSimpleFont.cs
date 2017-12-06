@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Cmap;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
@@ -62,8 +62,16 @@ namespace iText.Kernel.Font {
         /// <summary>The array used with single byte encodings.</summary>
         protected internal byte[] shortTag = new byte[256];
 
+        /// <summary>Currently only exists for the fonts that are parsed from the document.</summary>
+        /// <remarks>
+        /// Currently only exists for the fonts that are parsed from the document.
+        /// In the future, we might provide possibility to add custom mappings after a font has been created from a font file.
+        /// </remarks>
+        protected internal CMapToUnicode toUnicode;
+
         protected internal PdfSimpleFont(PdfDictionary fontDictionary)
             : base(fontDictionary) {
+            toUnicode = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
         }
 
         protected internal PdfSimpleFont()
@@ -234,24 +242,7 @@ namespace iText.Kernel.Font {
         }
 
         public override String Decode(PdfString content) {
-            // TODO refactor using decodeIntoGlyphLine?
-            byte[] contentBytes = content.GetValueBytes();
-            StringBuilder builder = new StringBuilder(contentBytes.Length);
-            foreach (byte b in contentBytes) {
-                int uni = fontEncoding.GetUnicode(b & 0xff);
-                if (uni > -1) {
-                    builder.Append((char)(int)uni);
-                }
-                else {
-                    if (fontEncoding.GetBaseEncoding() == null) {
-                        Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
-                        if (glyph != null && glyph.GetChars() != null) {
-                            builder.Append(glyph.GetChars());
-                        }
-                    }
-                }
-            }
-            return builder.ToString();
+            return DecodeIntoGlyphLine(content).ToString();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -260,14 +251,24 @@ namespace iText.Kernel.Font {
             IList<Glyph> glyphs = new List<Glyph>(contentBytes.Length);
             foreach (byte b in contentBytes) {
                 int code = b & 0xff;
-                int uni = fontEncoding.GetUnicode(code);
                 Glyph glyph = null;
-                if (uni > -1) {
-                    glyph = GetGlyph(uni);
+                if (toUnicode != null && toUnicode.Lookup(code) != null && (glyph = fontProgram.GetGlyphByCode(code)) != null
+                    ) {
+                    if (!iText.IO.Util.JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
+                        // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
+                        glyph = new Glyph(glyph);
+                        glyph.SetChars(toUnicode.Lookup(code));
+                    }
                 }
                 else {
-                    if (fontEncoding.GetBaseEncoding() == null) {
-                        glyph = fontProgram.GetGlyphByCode(code);
+                    int uni = fontEncoding.GetUnicode(code);
+                    if (uni > -1) {
+                        glyph = GetGlyph(uni);
+                    }
+                    else {
+                        if (fontEncoding.GetBaseEncoding() == null) {
+                            glyph = fontProgram.GetGlyphByCode(code);
+                        }
                     }
                 }
                 if (glyph != null) {
@@ -278,21 +279,10 @@ namespace iText.Kernel.Font {
         }
 
         public override float GetContentWidth(PdfString content) {
-            // TODO refactor using decodeIntoGlyphLine?
             float width = 0;
-            byte[] contentBytes = content.GetValueBytes();
-            foreach (byte b in contentBytes) {
-                Glyph glyph = null;
-                int uni = fontEncoding.GetUnicode(b & 0xff);
-                if (uni > -1) {
-                    glyph = GetGlyph(uni);
-                }
-                else {
-                    if (fontEncoding.GetBaseEncoding() == null) {
-                        glyph = fontProgram.GetGlyphByCode(b & 0xff);
-                    }
-                }
-                width += glyph != null ? glyph.GetWidth() : 0;
+            GlyphLine glyphLine = DecodeIntoGlyphLine(content);
+            for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                width += glyphLine.Get(i).GetWidth();
             }
             return width;
         }
