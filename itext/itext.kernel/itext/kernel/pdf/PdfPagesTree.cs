@@ -118,10 +118,15 @@ namespace iText.Kernel.Pdf {
             PdfPage pdfPage = pages[pageNum];
             if (pdfPage == null) {
                 LoadPage(pageNum);
-                pdfPage = new PdfPage(pageRefs[pageNum]);
-                int parentIndex = FindPageParent(pageNum);
-                PdfPages parentPages = parents[parentIndex];
-                pdfPage.parentPages = parentPages;
+                if (pageRefs[pageNum] != null) {
+                    int parentIndex = FindPageParent(pageNum);
+                    pdfPage = new PdfPage(pageRefs[pageNum]);
+                    pdfPage.parentPages = parents[parentIndex];
+                }
+                else {
+                    LogManager.GetLogger(GetType()).Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                        , pageNum + 1));
+                }
                 pages[pageNum] = pdfPage;
             }
             return pdfPage;
@@ -357,7 +362,7 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);
                 if (pageKids != null) {
-                    if (pageKids.GetObjectType() == PdfObject.ARRAY) {
+                    if (pageKids.IsArray()) {
                         findPdfPages = true;
                     }
                     else {
