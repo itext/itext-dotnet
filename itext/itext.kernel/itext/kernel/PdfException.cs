@@ -66,6 +66,8 @@ namespace iText.Kernel {
 
         public const String BadUserPassword = "Bad user password. Password is not provided or wrong password provided. Correct password should be passed to PdfReader constructor with properties. See ReaderProperties#setPassword() method.";
 
+        public const String CannotAddCellToCompletedLargeTable = "The large table was completed. It's prohibited to use it anymore. Created different Table instance instead.";
+
         public const String CannotAddKidToTheFlushedElement = "Cannot add kid to the flushed element.";
 
         public const String CannotAddNonDictionaryExtGStateToResources1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary.";

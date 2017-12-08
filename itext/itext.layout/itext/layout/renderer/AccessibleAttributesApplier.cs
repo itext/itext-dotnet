@@ -217,9 +217,12 @@ namespace iText.Layout.Renderer {
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
             if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
-                UnitValue width = renderer.GetProperty<UnitValue>(Property.WIDTH);
-                if (width != null && width.IsPointValue()) {
-                    attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
+                // For large tables the width can be changed from flush to flush so the Width attribute shouldn't be applied
+                if (renderer is TableRenderer && ((Table)renderer.GetModelElement()).IsComplete()) {
+                    UnitValue width = renderer.GetProperty<UnitValue>(Property.WIDTH);
+                    if (width != null && width.IsPointValue()) {
+                        attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
+                    }
                 }
                 UnitValue height = renderer.GetProperty<UnitValue>(Property.HEIGHT);
                 if (height != null && height.IsPointValue()) {

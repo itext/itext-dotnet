@@ -1253,11 +1253,11 @@ namespace iText.Layout.Renderer {
             SetProperty(Property.MIN_HEIGHT, updatedMinHeight);
         }
 
-        protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
-            return RetrieveUnitValue(basePercentValue, property, false);
+        protected internal virtual float? RetrieveUnitValue(float baseValue, int property) {
+            return RetrieveUnitValue(baseValue, property, false);
         }
 
-        protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property, bool pointOnly) {
+        protected internal virtual float? RetrieveUnitValue(float baseValue, int property, bool pointOnly) {
             UnitValue value = this.GetProperty<UnitValue>(property);
             if (pointOnly && value.GetUnitType() == UnitValue.POINT) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
@@ -1266,7 +1266,7 @@ namespace iText.Layout.Renderer {
             }
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
-                    return value.GetValue() * basePercentValue / 100;
+                    return baseValue * value.GetValue() / 100;
                 }
                 else {
                     System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
