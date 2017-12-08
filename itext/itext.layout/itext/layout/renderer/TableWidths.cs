@@ -580,7 +580,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (!GetTable().IsComplete() && null != GetTable().GetWidth() && GetTable().GetWidth().IsPercentValue()) {
-                        GetTable().SetWidth(tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH));
+                        GetTable().SetWidth((float)tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH));
                     }
                 }
                 fixedTableWidth = true;
