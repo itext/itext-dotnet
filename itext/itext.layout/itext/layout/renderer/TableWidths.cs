@@ -497,7 +497,8 @@ namespace iText.Layout.Renderer {
                 firtsRow = tableRenderer.headerRenderer.rows[0];
             }
             else {
-                if (tableRenderer.rows.Count > 0) {
+                if (tableRenderer.rows.Count > 0 && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count
+                    ) {
                     firtsRow = tableRenderer.rows[0];
                 }
                 else {
@@ -574,6 +575,14 @@ namespace iText.Layout.Renderer {
                 ());
             UnitValue width = tableRenderer.GetProperty<UnitValue>(Property.WIDTH);
             if (fixedTableLayout && width != null && width.GetValue() >= 0) {
+                if (0 != GetTable().GetLastRowBottomBorder().Count) {
+                    width = GetTable().GetWidth();
+                }
+                else {
+                    if (!GetTable().IsComplete() && null != GetTable().GetWidth() && GetTable().GetWidth().IsPercentValue()) {
+                        GetTable().SetWidth(tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH));
+                    }
+                }
                 fixedTableWidth = true;
                 tableWidth = (float)RetrieveTableWidth(width, availableWidth);
                 layoutMinWidth = width.IsPercentValue() ? 0 : tableWidth;

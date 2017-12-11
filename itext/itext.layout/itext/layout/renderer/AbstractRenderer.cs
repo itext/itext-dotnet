@@ -1260,11 +1260,11 @@ namespace iText.Layout.Renderer {
             SetProperty(Property.MIN_HEIGHT, updatedMinHeight);
         }
 
-        protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
+        protected internal virtual float? RetrieveUnitValue(float baseValue, int property) {
             UnitValue value = this.GetProperty<UnitValue>(property);
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
-                    return value.GetValue() * basePercentValue / 100;
+                    return baseValue * value.GetValue() / 100;
                 }
                 else {
                     System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
