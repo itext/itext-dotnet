@@ -531,167 +531,217 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {
             double curv = 0.4477f;
-            UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
-            float radius = 0;
-            if (null != borderRadius) {
-                if (borderRadius.IsPercentValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
-                        ));
-                }
-                else {
-                    radius = borderRadius.GetValue();
+            // outer box
+            float top = outerBorderBox.GetTop();
+            float right = outerBorderBox.GetRight();
+            float bottom = outerBorderBox.GetBottom();
+            float left = outerBorderBox.GetLeft();
+            // radii
+            bool hasNotNullRadius = false;
+            BorderRadius[] borderRadii = GetBorderRadii();
+            float[] verticalRadii = CalculateRadii(borderRadii, outerBorderBox, false);
+            float[] horizontalRadii = CalculateRadii(borderRadii, outerBorderBox, true);
+            for (int i = 0; i < 4; i++) {
+                verticalRadii[i] = Math.Min(verticalRadii[i], outerBorderBox.GetHeight() / 2);
+                horizontalRadii[i] = Math.Min(horizontalRadii[i], outerBorderBox.GetWidth() / 2);
+                if (!hasNotNullRadius && (0 != verticalRadii[i] || 0 != horizontalRadii[i])) {
+                    hasNotNullRadius = true;
                 }
             }
-            if (0 != radius) {
-                float top = outerBorderBox.GetTop();
-                float right = outerBorderBox.GetRight();
-                float bottom = outerBorderBox.GetBottom();
-                float left = outerBorderBox.GetLeft();
-                float verticalRadius = Math.Min(outerBorderBox.GetHeight() / 2, radius);
-                float horizontalRadius = Math.Min(outerBorderBox.GetWidth() / 2, radius);
-                // radius border bbox
-                float x1 = right - horizontalRadius;
-                float y1 = top - verticalRadius;
-                float x2 = right - horizontalRadius;
-                float y2 = bottom + verticalRadius;
-                float x3 = left + horizontalRadius;
-                float y3 = bottom + verticalRadius;
-                float x4 = left + horizontalRadius;
-                float y4 = top - verticalRadius;
+            if (hasNotNullRadius) {
+                // coordinates of corner centers
+                float x1 = left + horizontalRadii[0];
+                float y1 = top - verticalRadii[0];
+                float x2 = right - horizontalRadii[1];
+                float y2 = top - verticalRadii[1];
+                float x3 = right - horizontalRadii[2];
+                float y3 = bottom + verticalRadii[2];
+                float x4 = left + horizontalRadii[3];
+                float y4 = bottom + verticalRadii[3];
                 PdfCanvas canvas = drawContext.GetCanvas();
                 canvas.SaveState();
-                // right top corner
-                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + horizontalRadius * curv, top, right, y1 + verticalRadius
-                     * curv, right, y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
-                canvas.Clip().NewPath();
-                // right bottom corner
-                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - verticalRadius * curv, x2 + horizontalRadius
-                     * curv, bottom, x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
-                canvas.Clip().NewPath();
-                // left bottom corner
-                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - horizontalRadius * curv, bottom, left, y3 - verticalRadius
-                     * curv, left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
-                canvas.Clip().NewPath();
+                // clip border area outside
                 // left top corner
-                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + verticalRadius * curv, x4 - horizontalRadius
-                     * curv, top, x4, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
-                canvas.Clip().NewPath();
+                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                    canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
+                        [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                    canvas.Clip().NewPath();
+                }
+                // right top corner
+                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                    canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
+                        [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                    canvas.Clip().NewPath();
+                }
+                // right bottom corner
+                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                    canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
+                        [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                    canvas.Clip().NewPath();
+                }
+                // left bottom corner
+                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                    canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
+                         verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                    canvas.Clip().NewPath();
+                }
+                // we've clipped border area outside, now let's focus on inner box and clip in inside
                 Border[] borders = GetBorders();
-                float radiusTop = verticalRadius;
-                float radiusRight = horizontalRadius;
-                float radiusBottom = verticalRadius;
-                float radiusLeft = horizontalRadius;
                 float topBorderWidth = 0;
                 float rightBorderWidth = 0;
                 float bottomBorderWidth = 0;
                 float leftBorderWidth = 0;
                 if (borders[0] != null) {
                     topBorderWidth = borders[0].GetWidth();
-                    top = top - borders[0].GetWidth();
+                    top -= borders[0].GetWidth();
+                    if (y2 > top) {
+                        y2 = top;
+                    }
                     if (y1 > top) {
                         y1 = top;
-                        y4 = top;
                     }
-                    radiusTop = Math.Max(0, radiusTop - borders[0].GetWidth());
+                    verticalRadii[0] = Math.Max(0, verticalRadii[0] - borders[0].GetWidth());
+                    verticalRadii[1] = Math.Max(0, verticalRadii[1] - borders[0].GetWidth());
                 }
                 if (borders[1] != null) {
                     rightBorderWidth = borders[1].GetWidth();
-                    right = right - borders[1].GetWidth();
-                    if (x1 > right) {
-                        x1 = right;
+                    right -= borders[1].GetWidth();
+                    if (x2 > right) {
                         x2 = right;
                     }
-                    radiusRight = Math.Max(0, radiusRight - borders[1].GetWidth());
+                    if (x3 > right) {
+                        x3 = right;
+                    }
+                    horizontalRadii[1] = Math.Max(0, horizontalRadii[1] - borders[1].GetWidth());
+                    horizontalRadii[2] = Math.Max(0, horizontalRadii[2] - borders[1].GetWidth());
                 }
                 if (borders[2] != null) {
                     bottomBorderWidth = borders[2].GetWidth();
-                    bottom = bottom + borders[2].GetWidth();
-                    if (x3 < left) {
-                        x3 = left;
-                        x4 = left;
+                    bottom += borders[2].GetWidth();
+                    if (y3 < bottom) {
+                        y3 = top;
                     }
-                    radiusBottom = Math.Max(0, radiusBottom - borders[2].GetWidth());
+                    if (y4 < bottom) {
+                        y4 = bottom;
+                    }
+                    verticalRadii[2] = Math.Max(0, verticalRadii[2] - borders[2].GetWidth());
+                    verticalRadii[3] = Math.Max(0, verticalRadii[3] - borders[2].GetWidth());
                 }
                 if (borders[3] != null) {
                     leftBorderWidth = borders[3].GetWidth();
-                    left = left + borders[3].GetWidth();
-                    radiusLeft = Math.Max(0, radiusLeft - borders[3].GetWidth());
+                    left += borders[3].GetWidth();
+                    if (x4 < left) {
+                        x4 = left;
+                    }
+                    if (x1 < left) {
+                        x1 = left;
+                    }
+                    horizontalRadii[3] = Math.Max(0, horizontalRadii[3] - borders[3].GetWidth());
+                    horizontalRadii[0] = Math.Max(0, horizontalRadii[0] - borders[3].GetWidth());
                 }
-                canvas.MoveTo(x1, top).CurveTo(x1 + Math.Min(radiusTop, radiusRight) * curv, top, right, y1 + Math.Min(radiusTop
-                    , radiusRight) * curv, right, y1).LineTo(right, y2).LineTo(x3, y2).LineTo(x3, top).LineTo(x1, top).LineTo
-                    (x1, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
-                    , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right
-                     + rightBorderWidth, top + topBorderWidth).LineTo(x1, top + topBorderWidth);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(right, y2).CurveTo(right, y2 - Math.Min(radiusRight, radiusBottom) * curv, x2 + Math.Min(radiusRight
-                    , radiusBottom) * curv, bottom, x2, bottom).LineTo(x3, bottom).LineTo(x3, y4).LineTo(right, y4).LineTo
-                    (right, y2).LineTo(right + rightBorderWidth, y2).LineTo(right + rightBorderWidth, top + topBorderWidth
-                    ).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth
-                    ).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, y2);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(x3, bottom).CurveTo(x3 - Math.Min(radiusBottom, radiusLeft) * curv, bottom, left, y3 - Math.
-                    Min(radiusBottom, radiusLeft) * curv, left, y3).LineTo(left, y4).LineTo(x1, y4).LineTo(x1, bottom).LineTo
-                    (x3, bottom).LineTo(x3, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth
-                    ).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
-                    ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x3, bottom - bottomBorderWidth);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(left, y4).CurveTo(left, y4 + Math.Min(radiusLeft, radiusTop) * curv, x4 - Math.Min(radiusLeft
-                    , radiusTop) * curv, top, x4, top).LineTo(x1, top).LineTo(x1, y2).LineTo(left, y2).LineTo(left, y4).LineTo
-                    (left - leftBorderWidth, y4).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right +
-                     rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).
-                    LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, y4);
-                canvas.Clip().NewPath();
+                // clip border area inside
+                // left top corner
+                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                    canvas.MoveTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii[0] * curv, top, x1
+                        , top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo
+                        (left, y4).LineTo(left, y1).LineTo(left - leftBorderWidth, y1).LineTo(left - leftBorderWidth, bottom -
+                         bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
+                        , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                        , y1);
+                    canvas.Clip().NewPath();
+                }
+                // right top corner
+                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                    canvas.MoveTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii[1] * curv, right
+                        , y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo
+                        (x1, top).LineTo(x2, top).LineTo(x2, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
+                        ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom -
+                         bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(x2, top + topBorderWidth
+                        );
+                    canvas.Clip().NewPath();
+                }
+                // right bottom corner
+                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                    canvas.MoveTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii[2] * curv, bottom
+                        , x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo
+                        (right, y2).LineTo(right, y3).LineTo(right + rightBorderWidth, y3).LineTo(right + rightBorderWidth, top
+                         + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, 
+                        bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right 
+                        + rightBorderWidth, y3);
+                    canvas.Clip().NewPath();
+                }
+                // left bottom corner
+                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                    canvas.MoveTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 - verticalRadii[3] * curv
+                        , left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo
+                        (x3, bottom).LineTo(x4, bottom).LineTo(x4, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
+                        , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                        , top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x4, bottom -
+                         bottomBorderWidth);
+                    canvas.Clip().NewPath();
+                }
             }
-            return 0 != radius;
+            return hasNotNullRadius;
         }
 
         protected internal virtual bool ClipBackgroundArea(DrawContext drawContext, Rectangle outerBorderBox) {
             double curv = 0.4477f;
-            UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
-            float radius = 0;
-            if (null != borderRadius) {
-                if (borderRadius.IsPercentValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
-                        ));
-                }
-                else {
-                    radius = borderRadius.GetValue();
+            // outer box
+            float top = outerBorderBox.GetTop();
+            float right = outerBorderBox.GetRight();
+            float bottom = outerBorderBox.GetBottom();
+            float left = outerBorderBox.GetLeft();
+            // radii
+            bool hasNotNullRadius = false;
+            BorderRadius[] borderRadii = GetBorderRadii();
+            float[] verticalRadii = CalculateRadii(borderRadii, outerBorderBox, false);
+            float[] horizontalRadii = CalculateRadii(borderRadii, outerBorderBox, true);
+            for (int i = 0; i < 4; i++) {
+                verticalRadii[i] = Math.Min(verticalRadii[i], outerBorderBox.GetHeight() / 2);
+                horizontalRadii[i] = Math.Min(horizontalRadii[i], outerBorderBox.GetWidth() / 2);
+                if (!hasNotNullRadius && (0 != verticalRadii[i] || 0 != horizontalRadii[i])) {
+                    hasNotNullRadius = true;
                 }
             }
-            if (0 != radius) {
-                float top = outerBorderBox.GetTop();
-                float right = outerBorderBox.GetRight();
-                float bottom = outerBorderBox.GetBottom();
-                float left = outerBorderBox.GetLeft();
-                float verticalRadius = Math.Min(outerBorderBox.GetHeight() / 2, radius);
-                float horizontalRadius = Math.Min(outerBorderBox.GetWidth() / 2, radius);
+            if (hasNotNullRadius) {
                 // radius border bbox
-                float x1 = right - horizontalRadius;
-                float y1 = top - verticalRadius;
-                float x2 = right - horizontalRadius;
-                float y2 = bottom + verticalRadius;
-                float x3 = left + horizontalRadius;
-                float y3 = bottom + verticalRadius;
-                float x4 = left + horizontalRadius;
-                float y4 = top - verticalRadius;
+                float x1 = left + horizontalRadii[0];
+                float y1 = top - verticalRadii[0];
+                float x2 = right - horizontalRadii[1];
+                float y2 = top - verticalRadii[1];
+                float x3 = right - horizontalRadii[2];
+                float y3 = bottom + verticalRadii[2];
+                float x4 = left + horizontalRadii[3];
+                float y4 = bottom + verticalRadii[3];
                 PdfCanvas canvas = drawContext.GetCanvas();
                 canvas.SaveState();
-                canvas.MoveTo(left, top).LineTo(x1, top).CurveTo(x1 + horizontalRadius * curv, top, right, y1 + verticalRadius
-                     * curv, right, y1).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(right, top).LineTo(right, y2).CurveTo(right, y2 - verticalRadius * curv, x2 + horizontalRadius
-                     * curv, bottom, x2, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(right, bottom).LineTo(x3, bottom).CurveTo(x3 - horizontalRadius * curv, bottom, left, y3 - verticalRadius
-                     * curv, left, y3).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
-                canvas.Clip().NewPath();
-                canvas.MoveTo(left, bottom).LineTo(left, y4).CurveTo(left, y4 + verticalRadius * curv, x4 - horizontalRadius
-                     * curv, top, x4, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
-                canvas.Clip().NewPath();
+                // clip backgrouund area outside
+                // left top corner
+                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                    canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
+                        [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                    canvas.Clip().NewPath();
+                }
+                // right top corner
+                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                    canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
+                        [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                    canvas.Clip().NewPath();
+                }
+                // right bottom corner
+                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                    canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
+                        [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                    canvas.Clip().NewPath();
+                }
+                // left bottom corner
+                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                    canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
+                         verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                    canvas.Clip().NewPath();
+                }
             }
-            return 0 != radius;
+            return hasNotNullRadius;
         }
 
         /// <summary>
@@ -793,44 +843,43 @@ namespace iText.Layout.Renderer {
                 }
                 bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins()
                     , false));
-                UnitValue borderRadius = this.GetProperty<UnitValue>(Property.BORDER_RADIUS);
-                float radius = 0;
-                if (null != borderRadius) {
-                    if (borderRadius.IsPercentValue()) {
-                        ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "border-radius"
-                            ));
+                BorderRadius[] borderRadii = GetBorderRadii();
+                float[] verticalRadii = CalculateRadii(borderRadii, occupiedArea.GetBBox(), false);
+                float[] horizontalRadii = CalculateRadii(borderRadii, occupiedArea.GetBBox(), true);
+                if (borders[0] != null) {
+                    if (0 != horizontalRadii[0] || 0 != verticalRadii[0] || 0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                        borders[0].Draw(canvas, x1, y2, x2, y2, horizontalRadii[0], verticalRadii[0], horizontalRadii[1], verticalRadii
+                            [1], Border.Side.TOP, leftWidth, rightWidth);
                     }
                     else {
-                        radius = borderRadius.GetValue();
-                    }
-                }
-                if (0 == radius) {
-                    if (borders[0] != null) {
                         borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
                     }
-                    if (borders[1] != null) {
+                }
+                if (borders[1] != null) {
+                    if (0 != horizontalRadii[1] || 0 != verticalRadii[1] || 0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                        borders[1].Draw(canvas, x2, y2, x2, y1, horizontalRadii[1], verticalRadii[1], horizontalRadii[2], verticalRadii
+                            [2], Border.Side.RIGHT, topWidth, bottomWidth);
+                    }
+                    else {
                         borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
                     }
-                    if (borders[2] != null) {
+                }
+                if (borders[2] != null) {
+                    if (0 != horizontalRadii[2] || 0 != verticalRadii[2] || 0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                        borders[2].Draw(canvas, x2, y1, x1, y1, horizontalRadii[2], verticalRadii[2], horizontalRadii[3], verticalRadii
+                            [3], Border.Side.BOTTOM, rightWidth, leftWidth);
+                    }
+                    else {
                         borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
                     }
-                    if (borders[3] != null) {
-                        borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
-                    }
                 }
-                else {
-                    if (borders[0] != null) {
-                        borders[0].Draw(canvas, x1, y2, x2, y2, radius, Border.Side.TOP, leftWidth, rightWidth);
+                if (borders[3] != null) {
+                    if (0 != horizontalRadii[3] || 0 != verticalRadii[3] || 0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                        borders[3].Draw(canvas, x1, y1, x1, y2, horizontalRadii[3], verticalRadii[3], horizontalRadii[0], verticalRadii
+                            [0], Border.Side.LEFT, bottomWidth, topWidth);
                     }
-                    if (borders[1] != null) {
-                        borders[1].Draw(canvas, x2, y2, x2, y1, radius, Border.Side.RIGHT, topWidth, bottomWidth);
-                    }
-                    if (borders[2] != null) {
-                        borders[2].Draw(canvas, x2, y1, x1, y1, radius, Border.Side.BOTTOM, rightWidth, leftWidth);
-                    }
-                    if (borders[3] != null) {
-                        borders[3].Draw(canvas, x1, y1, x1, y2, radius, Border.Side.LEFT, bottomWidth, topWidth);
+                    else {
+                        borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
                     }
                 }
                 if (isAreaClipped) {
@@ -1123,6 +1172,37 @@ namespace iText.Layout.Renderer {
                 }
             }
             return height != null ? (float?)Math.Max(0, (float)height) : null;
+        }
+
+        /// <summary>Calculates the element corner's border radii.</summary>
+        /// <param name="radii">defines border radii of the element</param>
+        /// <param name="area">defines the area of the element</param>
+        /// <param name="horizontal">defines whether horizontal or vertical radii should be calculated</param>
+        /// <returns>the element corner's border radii.</returns>
+        private float[] CalculateRadii(BorderRadius[] radii, Rectangle area, bool horizontal) {
+            float[] results = new float[4];
+            UnitValue value;
+            for (int i = 0; i < 4; i++) {
+                if (null != radii[i]) {
+                    value = horizontal ? radii[i].GetHorizontalRadius() : radii[i].GetVerticalRadius();
+                    if (value != null) {
+                        if (value.GetUnitType() == UnitValue.PERCENT) {
+                            results[i] = value.GetValue() * (horizontal ? area.GetWidth() : area.GetHeight()) / 100;
+                        }
+                        else {
+                            System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
+                            results[i] = value.GetValue();
+                        }
+                    }
+                    else {
+                        results[i] = 0;
+                    }
+                }
+                else {
+                    results[i] = 0;
+                }
+            }
+            return results;
         }
 
         /// <summary>Updates fixed content box height value for this renderer.</summary>
@@ -1801,6 +1881,18 @@ namespace iText.Layout.Renderer {
             return GetBorders(this);
         }
 
+        /// <summary>Gets border radii of the element in the specified order: top-left, top-right, bottom-right, bottom-left.
+        ///     </summary>
+        /// <returns>
+        /// an array of BorderRadius objects.
+        /// In case when certain border radius isn't set <code>Property.BORDER_RADIUS</code> is used,
+        /// and if <code>Property.BORDER_RADIUS</code> is also not set then <code>null</code> is returned
+        /// on position of this border radius
+        /// </returns>
+        protected internal virtual BorderRadius[] GetBorderRadii() {
+            return GetBorderRadii(this);
+        }
+
         protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders(Border border, int borderNumber
             ) {
             switch (borderNumber) {
@@ -2198,6 +2290,29 @@ namespace iText.Layout.Renderer {
                 borders[3] = border;
             }
             return borders;
+        }
+
+        private static BorderRadius[] GetBorderRadii(IRenderer renderer) {
+            BorderRadius radius = renderer.GetProperty<BorderRadius>(Property.BORDER_RADIUS);
+            BorderRadius topLeftRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_TOP_LEFT_RADIUS);
+            BorderRadius topRightRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_TOP_RIGHT_RADIUS);
+            BorderRadius bottomRightRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_BOTTOM_RIGHT_RADIUS);
+            BorderRadius bottomLeftRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_BOTTOM_LEFT_RADIUS);
+            BorderRadius[] borderRadii = new BorderRadius[] { topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius
+                 };
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP_LEFT_RADIUS)) {
+                borderRadii[0] = radius;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP_RIGHT_RADIUS)) {
+                borderRadii[1] = radius;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM_RIGHT_RADIUS)) {
+                borderRadii[2] = radius;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM_LEFT_RADIUS)) {
+                borderRadii[3] = radius;
+            }
+            return borderRadii;
         }
 
         private static UnitValue[] GetPaddings(IRenderer renderer) {

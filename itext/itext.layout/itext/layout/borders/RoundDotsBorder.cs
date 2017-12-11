@@ -147,8 +147,9 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float outerRadius, Border.Side
-             defaultSide, float borderWidthBefore, float borderWidthAfter) {
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float horizontalRadius1
+            , float verticalRadius1, float horizontalRadius2, float verticalRadius2, Border.Side defaultSide, float
+             borderWidthBefore, float borderWidthAfter) {
             float curv = 0.447f;
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -160,9 +161,10 @@ namespace iText.Layout.Borders {
             float y0 = y1;
             float x3 = x2;
             float y3 = y2;
-            float innerRadiusBefore = Math.Max(0, outerRadius - borderWidthBefore);
-            float innerRadius = Math.Max(0, outerRadius - width);
-            float innerRadiusAfter = Math.Max(0, outerRadius - borderWidthAfter);
+            float innerRadiusBefore;
+            float innerRadiusFirst;
+            float innerRadiusSecond;
+            float innerRadiusAfter;
             float widthHalf = width / 2;
             canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
             transparentColor.ApplyStrokeTransparency(canvas);
@@ -174,10 +176,14 @@ namespace iText.Layout.Borders {
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
             switch (borderSide) {
                 case Border.Side.TOP: {
+                    innerRadiusBefore = Math.Max(0, horizontalRadius1 - borderWidthBefore);
+                    innerRadiusFirst = Math.Max(0, verticalRadius1 - width);
+                    innerRadiusSecond = Math.Max(0, verticalRadius2 - width);
+                    innerRadiusAfter = Math.Max(0, horizontalRadius2 - borderWidthAfter);
                     x0 -= borderWidthBefore / 2;
-                    y0 -= innerRadius;
+                    y0 -= innerRadiusFirst;
                     x3 += borderWidthAfter / 2;
-                    y3 -= innerRadius;
+                    y3 -= innerRadiusSecond;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 - borderWidthBefore, y1 + width), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0 + 10, y0));
                     clipPoint2 = GetIntersectionPoint(new Point(x2 + borderWidthAfter, y2 + width), new Point(x2, y2), new Point
@@ -197,15 +203,19 @@ namespace iText.Layout.Borders {
                     y1 += widthHalf;
                     x2 -= innerRadiusAfter;
                     y2 += widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 + innerRadius * curv, x1 - innerRadiusBefore * curv, y1, x1, y1).LineTo
-                        (x2, y2).CurveTo(x2 + innerRadiusAfter * curv, y2, x3, y3 + innerRadius * curv, x3, y3);
+                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 + innerRadiusFirst * curv, x1 - innerRadiusBefore * curv, y1, x1, y1)
+                        .LineTo(x2, y2).CurveTo(x2 + innerRadiusAfter * curv, y2, x3, y3 + innerRadiusSecond * curv, x3, y3);
                     break;
                 }
 
                 case Border.Side.RIGHT: {
-                    x0 -= innerRadius;
+                    innerRadiusBefore = Math.Max(0, verticalRadius1 - borderWidthBefore);
+                    innerRadiusFirst = Math.Max(0, horizontalRadius1 - width);
+                    innerRadiusSecond = Math.Max(0, horizontalRadius2 - width);
+                    innerRadiusAfter = Math.Max(0, verticalRadius2 - borderWidthAfter);
+                    x0 -= innerRadiusFirst;
                     y0 += borderWidthBefore / 2;
-                    x3 -= innerRadius;
+                    x3 -= innerRadiusSecond;
                     y3 -= borderWidthAfter;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0, y0 - 10));
@@ -227,16 +237,20 @@ namespace iText.Layout.Borders {
                     y1 -= innerRadiusBefore;
                     x2 += widthHalf;
                     y2 += innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 + innerRadius * curv, y0, x1, y1 + innerRadiusBefore * curv, x1, y1).LineTo
-                        (x2, y2).CurveTo(x2, y2 - innerRadiusAfter * curv, x3 + innerRadius * curv, y3, x3, y3);
+                    canvas.MoveTo(x0, y0).CurveTo(x0 + innerRadiusFirst * curv, y0, x1, y1 + innerRadiusBefore * curv, x1, y1)
+                        .LineTo(x2, y2).CurveTo(x2, y2 - innerRadiusAfter * curv, x3 + innerRadiusSecond * curv, y3, x3, y3);
                     break;
                 }
 
                 case Border.Side.BOTTOM: {
+                    innerRadiusBefore = Math.Max(0, horizontalRadius1 - borderWidthBefore);
+                    innerRadiusFirst = Math.Max(0, verticalRadius1 - width);
+                    innerRadiusSecond = Math.Max(0, verticalRadius2 - width);
+                    innerRadiusAfter = Math.Max(0, horizontalRadius2 - borderWidthAfter);
                     x0 += borderWidthBefore / 2;
-                    y0 += innerRadius;
+                    y0 += innerRadiusFirst;
                     x3 -= borderWidthAfter / 2;
-                    y3 += innerRadius;
+                    y3 += innerRadiusSecond;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 + borderWidthBefore, y1 - width), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0 - 10, y0));
                     clipPoint2 = GetIntersectionPoint(new Point(x2 - borderWidthAfter, y2 - width), new Point(x2, y2), new Point
@@ -256,15 +270,19 @@ namespace iText.Layout.Borders {
                     y1 -= widthHalf;
                     x2 += innerRadiusAfter;
                     y2 -= widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 - innerRadius * curv, x1 + innerRadiusBefore * curv, y1, x1, y1).LineTo
-                        (x2, y2).CurveTo(x2 - innerRadiusAfter * curv, y2, x3, y3 - innerRadius * curv, x3, y3);
+                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 - innerRadiusFirst * curv, x1 + innerRadiusBefore * curv, y1, x1, y1)
+                        .LineTo(x2, y2).CurveTo(x2 - innerRadiusAfter * curv, y2, x3, y3 - innerRadiusSecond * curv, x3, y3);
                     break;
                 }
 
                 case Border.Side.LEFT: {
-                    x0 += innerRadius;
+                    innerRadiusBefore = Math.Max(0, verticalRadius1 - borderWidthBefore);
+                    innerRadiusFirst = Math.Max(0, horizontalRadius1 - width);
+                    innerRadiusSecond = Math.Max(0, horizontalRadius2 - width);
+                    innerRadiusAfter = Math.Max(0, verticalRadius2 - borderWidthAfter);
+                    x0 += innerRadiusFirst;
                     y0 -= borderWidthBefore / 2;
-                    x3 += innerRadius;
+                    x3 += innerRadiusSecond;
                     y3 += borderWidthAfter;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0, y0 + 10));
@@ -285,8 +303,8 @@ namespace iText.Layout.Borders {
                     y1 += innerRadiusBefore;
                     x2 -= widthHalf;
                     y2 -= innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 - innerRadius * curv, y0, x1, y1 - innerRadiusBefore * curv, x1, y1).LineTo
-                        (x2, y2).CurveTo(x2, y2 + innerRadiusAfter * curv, x3 - innerRadius * curv, y3, x3, y3);
+                    canvas.MoveTo(x0, y0).CurveTo(x0 - innerRadiusFirst * curv, y0, x1, y1 - innerRadiusBefore * curv, x1, y1)
+                        .LineTo(x2, y2).CurveTo(x2, y2 + innerRadiusAfter * curv, x3 - innerRadiusSecond * curv, y3, x3, y3);
                     break;
                 }
             }

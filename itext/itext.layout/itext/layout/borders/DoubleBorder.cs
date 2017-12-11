@@ -199,12 +199,6 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
-             defaultSide, float borderWidthBefore, float borderWidthAfter) {
-            Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);
-        }
-
-        /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side 
             defaultSide) {
             float thirdOfWidth = width / 3;
