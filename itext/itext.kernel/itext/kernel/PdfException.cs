@@ -164,6 +164,10 @@ namespace iText.Kernel {
 
         public const String CannotSetDataToPdfstreamWhichWasCreatedByInputStream = "Cannot set data to PdfStream which was created by InputStream.";
 
+        public const String CannotSetEncryptedPayloadToDocumentOpenedInReadingMode = "Cannot set encrypted payload to a document opened in read only mode.";
+
+        public const String CannotSetEncryptedPayloadToEncryptedDocument = "Cannot set encrypted payload to an encrypted document.";
+
         public const String CannotSplitDocumentThatIsBeingWritten = "Cannot split document that is being written.";
 
         public const String CannotWriteToPdfStream = "Cannot write to PdfStream.";
@@ -215,6 +219,18 @@ namespace iText.Kernel {
         public const String EndOfContentStreamReachedBeforeEndOfImageData = "End of content stream reached before end of image data.";
 
         public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
+
+        public const String EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary = "Encrypted payload file spec shall have encrypted payload dictionary.";
+
+        public const String EncryptedPayloadFileSpecShallBeIndirect = "Encrypted payload file spec shall be indirect.";
+
+        public const String EncryptedPayloadFileSpecShallHaveEFDictionary = "Encrypted payload file spec shall have 'EF' key. The value of such key shall be a dictionary that contains embedded file stream.";
+
+        public const String EncryptedPayloadFileSpecShallHaveTypeEqualToFilespec = "Encrypted payload file spec shall have 'Type' key. The value of such key shall be 'Filespec'.";
+
+        public const String EncryptedPayloadShallHaveTypeEqualsToEncryptedPayloadIfPresent = "Encrypted payload dictionary shall have field 'Type' equal to 'EncryptedPayload' if present";
+
+        public const String EncryptedPayloadShallHaveSubtype = "Encrypted payload shall have 'Subtype' field specifying crypto filter";
 
         public const String FailedToGetTsaResponseFrom1 = "Failed to get TSA response from {0}.";
 

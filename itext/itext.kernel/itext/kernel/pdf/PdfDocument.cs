@@ -56,6 +56,7 @@ using iText.Kernel.Log;
 using iText.Kernel.Numbering;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
@@ -214,8 +215,7 @@ namespace iText.Kernel.Pdf {
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
-            bool writerHasEncryption = writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed
-                ();
+            bool writerHasEncryption = WriterHasEncryption();
             if (properties.appendMode && writerHasEncryption) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
                 logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
@@ -1432,6 +1432,86 @@ namespace iText.Kernel.Pdf {
             return catalog.GetPdfObject().GetAsArray(PdfName.AF);
         }
 
+        /// <summary>
+        /// Gets the encrypted payload of this document,
+        /// or returns
+        /// <see langword="null"/>
+        /// if this document isn't an unencrypted wrapper document.
+        /// </summary>
+        /// <returns>encrypted payload of this document.</returns>
+        public virtual PdfEncryptedPayloadDocument GetEncryptedPayloadDocument() {
+            if (GetReader() != null && GetReader().IsEncrypted()) {
+                return null;
+            }
+            PdfCollection collection = GetCatalog().GetCollection();
+            if (collection != null && collection.IsViewHidden()) {
+                PdfString documentName = collection.GetInitialDocument();
+                PdfNameTree embeddedFiles = GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
+                String documentNameUnicode = documentName.ToUnicodeString();
+                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentNameUnicode);
+                if (fileSpecObject != null && fileSpecObject.IsDictionary()) {
+                    try {
+                        PdfFileSpec fileSpec = PdfEncryptedPayloadFileSpecFactory.Wrap((PdfDictionary)fileSpecObject);
+                        if (fileSpec != null) {
+                            PdfDictionary embeddedDictionary = ((PdfDictionary)fileSpec.GetPdfObject()).GetAsDictionary(PdfName.EF);
+                            PdfStream stream = embeddedDictionary.GetAsStream(PdfName.UF);
+                            if (stream == null) {
+                                stream = embeddedDictionary.GetAsStream(PdfName.F);
+                            }
+                            if (stream != null) {
+                                return new PdfEncryptedPayloadDocument(stream, fileSpec, documentNameUnicode);
+                            }
+                        }
+                    }
+                    catch (PdfException e) {
+                        LogManager.GetLogger(GetType()).Error(e.Message);
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Sets an encrypted payload, making this document an unencrypted wrapper document.</summary>
+        /// <remarks>
+        /// Sets an encrypted payload, making this document an unencrypted wrapper document.
+        /// The file spec shall include the AFRelationship key with a value of EncryptedPayload,
+        /// and shall include an encrypted payload dictionary.
+        /// </remarks>
+        /// <param name="fs">
+        /// encrypted payload file spec.
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfEncryptedPayloadFileSpecFactory"/>
+        /// can produce one.
+        /// </param>
+        public virtual void SetEncryptedPayload(PdfFileSpec fs) {
+            if (GetWriter() == null) {
+                throw new PdfException(PdfException.CannotSetEncryptedPayloadToDocumentOpenedInReadingMode);
+            }
+            if (WriterHasEncryption()) {
+                throw new PdfException(PdfException.CannotSetEncryptedPayloadToEncryptedDocument);
+            }
+            if (!PdfName.EncryptedPayload.Equals(((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship))) {
+                LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
+                    );
+            }
+            PdfEncryptedPayload encryptedPayload = PdfEncryptedPayload.ExtractFrom(fs);
+            if (encryptedPayload == null) {
+                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
+            }
+            PdfCollection collection = GetCatalog().GetCollection();
+            if (collection != null) {
+                LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED
+                    );
+            }
+            else {
+                collection = new PdfCollection();
+                GetCatalog().SetCollection(collection);
+            }
+            collection.SetView(PdfCollection.HIDDEN);
+            String displayName = PdfEncryptedPayloadFileSpecFactory.GenerateFileDisplay(encryptedPayload);
+            collection.SetInitialDocument(displayName);
+            AddAssociatedFile(displayName, fs);
+        }
+
         /// <summary>This method retrieves the page labels from a document as an array of String objects.</summary>
         /// <returns>
         /// 
@@ -2146,6 +2226,10 @@ namespace iText.Kernel.Pdf {
 
         private long GetDocumentId() {
             return documentId;
+        }
+
+        private bool WriterHasEncryption() {
+            return writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed();
         }
 
         /// <summary>A structure storing documentId, object number and generation number.</summary>
