@@ -111,8 +111,9 @@ namespace iText.Kernel.Pdf.Collection {
             return this;
         }
 
-        public virtual PdfNumber GetView() {
-            return GetPdfObject().GetAsNumber(PdfName.View);
+        //TODO is it ok to break backwards compatibility?
+        public virtual PdfName GetView() {
+            return GetPdfObject().GetAsName(PdfName.View);
         }
 
         /// <summary>Sets the Collection sort dictionary.</summary>

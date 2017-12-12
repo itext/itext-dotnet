@@ -78,6 +78,8 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
+        public const String COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED = "Collection dictionary already exists. It will be modified.";
+
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
         public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during color creation. Note that opacity can be achieved in some places by using 'setOpacity' method or 'TransparentColor' class";
@@ -103,6 +105,9 @@ namespace iText.IO {
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
 
         public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
+
+        public const String ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
+             = "Encrypted payload file spec shall have 'AFRelationship' filed equal to 'EncryptedPayload'";
 
         public const String ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY = "Encryption dictionary entries P and EncryptMetadata have value that does not correspond to encrypted values in Perms key.";
 

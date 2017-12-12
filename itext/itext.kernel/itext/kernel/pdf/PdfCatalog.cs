@@ -284,6 +284,23 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Gets collection dictionary that a conforming reader shall use to enhance the presentation of file attachments
+        /// stored in the PDF document.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Collection.PdfCollection"/>
+        /// wrapper of collection dictionary.
+        /// </returns>
+        public virtual PdfCollection GetCollection() {
+            PdfDictionary collectionDictionary = GetPdfObject().GetAsDictionary(PdfName.Collection);
+            if (collectionDictionary != null) {
+                return new PdfCollection(collectionDictionary);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Sets collection dictionary that a conforming reader shall use to enhance the presentation of file attachments
         /// stored in the PDF document.
         /// </summary>
