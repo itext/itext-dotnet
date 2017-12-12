@@ -842,11 +842,11 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
                 }
-                bool isAreaClipped = ClipBorderArea(drawContext, ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins()
-                    , false));
+                Rectangle borderRect = ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins(), false);
+                bool isAreaClipped = ClipBorderArea(drawContext, borderRect);
                 BorderRadius[] borderRadii = GetBorderRadii();
-                float[] verticalRadii = CalculateRadii(borderRadii, occupiedArea.GetBBox(), false);
-                float[] horizontalRadii = CalculateRadii(borderRadii, occupiedArea.GetBBox(), true);
+                float[] verticalRadii = CalculateRadii(borderRadii, borderRect, false);
+                float[] horizontalRadii = CalculateRadii(borderRadii, borderRect, true);
                 if (borders[0] != null) {
                     if (0 != horizontalRadii[0] || 0 != verticalRadii[0] || 0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
                         borders[0].Draw(canvas, x1, y2, x2, y2, horizontalRadii[0], verticalRadii[0], horizontalRadii[1], verticalRadii
