@@ -200,12 +200,20 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.JUSTIFIED && !result.IsSplitForcedByNewline
                     () || textAlignment == TextAlignment.JUSTIFIED_ALL) {
                     if (processedRenderer != null) {
-                        processedRenderer.Justify(layoutBox.GetWidth() - lineIndent);
+                        //processedRenderer.justify(layoutBox.getWidth() - lineIndent);
+                        //7.0.5 fix: processedRenderer.justify(result.getMinMaxWidth().getAvailableWidth() - lineIndent);
+                        Rectangle floatBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
+                        processedRenderer.Justify(floatBox.GetWidth() - lineIndent);
                     }
                 }
                 else {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        float deltaX = childBBoxWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                        //float deltaX = childBBoxWidth - processedRenderer.getOccupiedArea().getBBox().getWidth();
+                        //7.0.5 fix: float deltaX = result.getMinMaxWidth().getAvailableWidth() - processedRenderer.getOccupiedArea().getBBox().getWidth();
+                        Rectangle floatBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
+                        float deltaX = floatBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
                                 processedRenderer.Move(deltaX, 0);
