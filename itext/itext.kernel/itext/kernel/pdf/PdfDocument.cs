@@ -1439,21 +1439,32 @@ namespace iText.Kernel.Pdf {
         /// if this document isn't an unencrypted wrapper document.
         /// </summary>
         /// <returns>encrypted payload of this document.</returns>
-        public virtual PdfStream GetEncryptedPayloadAsStream() {
+        public virtual PdfEncryptedPayloadDocument GetEncryptedPayloadDocument() {
             if (GetReader() != null && GetReader().IsEncrypted()) {
                 return null;
             }
             PdfCollection collection = GetCatalog().GetCollection();
-            if (collection != null && PdfName.H.Equals(collection.GetView())) {
+            if (collection != null && collection.IsViewHidden()) {
                 PdfString documentName = collection.GetInitialDocument();
                 PdfNameTree embeddedFiles = GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
-                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentName.ToUnicodeString());
+                String documentNameUnicode = documentName.ToUnicodeString();
+                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentNameUnicode);
                 if (fileSpecObject != null && fileSpecObject.IsDictionary()) {
-                    PdfFileSpec fileSpec = PdfEncryptedPayloadFileSpecFactory.Wrap((PdfDictionary)fileSpecObject);
-                    if (fileSpec != null) {
-                        PdfDictionary embeddedDictionary = ((PdfDictionary)fileSpec.GetPdfObject()).GetAsDictionary(PdfName.EF);
-                        PdfStream uf = embeddedDictionary.GetAsStream(PdfName.UF);
-                        return uf != null ? uf : embeddedDictionary.GetAsStream(PdfName.F);
+                    try {
+                        PdfFileSpec fileSpec = PdfEncryptedPayloadFileSpecFactory.Wrap((PdfDictionary)fileSpecObject);
+                        if (fileSpec != null) {
+                            PdfDictionary embeddedDictionary = ((PdfDictionary)fileSpec.GetPdfObject()).GetAsDictionary(PdfName.EF);
+                            PdfStream stream = embeddedDictionary.GetAsStream(PdfName.UF);
+                            if (stream == null) {
+                                stream = embeddedDictionary.GetAsStream(PdfName.F);
+                            }
+                            if (stream != null) {
+                                return new PdfEncryptedPayloadDocument(stream, fileSpec, documentNameUnicode);
+                            }
+                        }
+                    }
+                    catch (PdfException e) {
+                        LogManager.GetLogger(GetType()).Error(e.Message);
                     }
                 }
             }
@@ -1484,7 +1495,7 @@ namespace iText.Kernel.Pdf {
             }
             PdfEncryptedPayload encryptedPayload = PdfEncryptedPayload.ExtractFrom(fs);
             if (encryptedPayload == null) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveCorrectEncryptedPayloadDictionary);
+                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
             }
             PdfCollection collection = GetCatalog().GetCollection();
             if (collection != null) {

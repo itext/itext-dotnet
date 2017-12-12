@@ -111,9 +111,23 @@ namespace iText.Kernel.Pdf.Collection {
             return this;
         }
 
-        //TODO is it ok to break backwards compatibility?
-        public virtual PdfName GetView() {
-            return GetPdfObject().GetAsName(PdfName.View);
+        [System.ObsoleteAttribute(@"Will always return null. The return will be changed to PdfName in 7.2. Use getPdfObject().getAsName(PdfName.View) , or one of IsViewDetails() , IsViewTile() , IsViewHidden() ."
+            )]
+        public virtual PdfNumber GetView() {
+            return GetPdfObject().GetAsNumber(PdfName.View);
+        }
+
+        public virtual bool IsViewDetails() {
+            PdfName view = GetPdfObject().GetAsName(PdfName.View);
+            return view == null || view.Equals(PdfName.D);
+        }
+
+        public virtual bool IsViewTile() {
+            return PdfName.T.Equals(GetPdfObject().GetAsName(PdfName.View));
+        }
+
+        public virtual bool IsViewHidden() {
+            return PdfName.H.Equals(GetPdfObject().GetAsName(PdfName.View));
         }
 
         /// <summary>Sets the Collection sort dictionary.</summary>

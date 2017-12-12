@@ -220,13 +220,17 @@ namespace iText.Kernel {
 
         public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
 
-        public const String EncryptedPayloadFileSpecDoesntHaveCorrectEncryptedPayloadDictionary = "Encrypted payload file spec shall have encrypted payload dictionary with 'Subtype' specifying crypto filter and with 'Type' equal to 'EncryptedPayload' if present";
+        public const String EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary = "Encrypted payload file spec shall have encrypted payload dictionary.";
 
         public const String EncryptedPayloadFileSpecShallBeIndirect = "Encrypted payload file spec shall be indirect.";
 
         public const String EncryptedPayloadFileSpecShallHaveEFDictionary = "Encrypted payload file spec shall have 'EF' key. The value of such key shall be a dictionary that contains embedded file stream.";
 
         public const String EncryptedPayloadFileSpecShallHaveTypeEqualToFilespec = "Encrypted payload file spec shall have 'Type' key. The value of such key shall be 'Filespec'.";
+
+        public const String EncryptedPayloadShallHaveTypeEqualsToEncryptedPayloadIfPresent = "Encrypted payload dictionary shall have field 'Type' equal to 'EncryptedPayload' if present";
+
+        public const String EncryptedPayloadShallHaveSubtype = "Encrypted payload shall have 'Subtype' field specifying crypto filter";
 
         public const String FailedToGetTsaResponseFrom1 = "Failed to get TSA response from {0}.";
 

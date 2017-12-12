@@ -1,4 +1,5 @@
 using System;
+using iText.Kernel;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf {
@@ -14,7 +15,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public static iText.Kernel.Pdf.PdfEncryptedPayload ExtractFrom(PdfFileSpec fileSpec) {
-            if (fileSpec.GetPdfObject().IsDictionary()) {
+            if (fileSpec != null && fileSpec.GetPdfObject().IsDictionary()) {
                 return iText.Kernel.Pdf.PdfEncryptedPayload.Wrap(((PdfDictionary)fileSpec.GetPdfObject()).GetAsDictionary(
                     PdfName.EP));
             }
@@ -23,12 +24,13 @@ namespace iText.Kernel.Pdf {
 
         public static iText.Kernel.Pdf.PdfEncryptedPayload Wrap(PdfDictionary dictionary) {
             PdfName type = dictionary.GetAsName(PdfName.Type);
-            if (type == null || type.Equals(PdfName.EncryptedPayload)) {
-                if (dictionary.GetAsName(PdfName.Subtype) != null) {
-                    return new iText.Kernel.Pdf.PdfEncryptedPayload(dictionary);
-                }
+            if (type != null && !type.Equals(PdfName.EncryptedPayload)) {
+                throw new PdfException(PdfException.EncryptedPayloadShallHaveTypeEqualsToEncryptedPayloadIfPresent);
             }
-            return null;
+            if (dictionary.GetAsName(PdfName.Subtype) == null) {
+                throw new PdfException(PdfException.EncryptedPayloadShallHaveSubtype);
+            }
+            return new iText.Kernel.Pdf.PdfEncryptedPayload(dictionary);
         }
 
         public virtual PdfName GetSubtype() {

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using iText.IO.Source;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -24,13 +25,41 @@ namespace iText.Kernel.Crypto {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleWrapperDocumentTest() {
-            String inPath = sourceFolder + "cmp_customEncryptedDocument.pdf";
-            String cmpPath = sourceFolder + "cmp_simpleUnencryptedWrapper.pdf";
-            String outPath = destinationFolder + "simpleUnencryptedWrapper.pdf";
-            String diff = "diff_simpleUnencryptedWrapper.pdf_";
+            CreateWrapper("customEncryptedDocument.pdf", "simpleUnencryptedWrapper.pdf", "iText");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ExtractCustomEncryptedDocumentTest() {
+            ExtractEncrypted("customEncryptedDocument.pdf", "simpleUnencryptedWrapper.pdf", null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CreateWrapperForStandardEncryptedTest() {
+            CreateWrapper("standardEncryptedDocument.pdf", "standardUnencryptedWrapper.pdf", "Standard");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ExtractStandardEncryptedDocumentTest() {
+            ExtractEncrypted("standardEncryptedDocument.pdf", "standardUnencryptedWrapper.pdf", "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void CreateWrapper(String encryptedName, String wrapperName, String cryptoFilter) {
+            String inPath = sourceFolder + "cmp_" + encryptedName;
+            String cmpPath = sourceFolder + "cmp_" + wrapperName;
+            String outPath = destinationFolder + wrapperName;
+            String diff = "diff_" + wrapperName + "_";
             PdfDocument document = new PdfDocument(new PdfWriter(outPath, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)));
-            PdfFileSpec fs = PdfEncryptedPayloadFileSpecFactory.Create(document, inPath, new PdfEncryptedPayload("iText"
+            PdfFileSpec fs = PdfEncryptedPayloadFileSpecFactory.Create(document, inPath, new PdfEncryptedPayload(cryptoFilter
                 ));
             document.SetEncryptedPayload(fs);
             PdfFont font = PdfFontFactory.CreateFont();
@@ -45,20 +74,33 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void ExtractCustomEncryptedDocumentTest() {
-            String inPath = sourceFolder + "cmp_simpleUnencryptedWrapper.pdf";
-            String cmpPath = sourceFolder + "cmp_customEncryptedDocument.pdf";
-            String outPath = destinationFolder + "customEncryptedDocument.pdf";
+        private void ExtractEncrypted(String encryptedName, String wrapperName, byte[] password) {
+            String inPath = sourceFolder + "cmp_" + wrapperName;
+            String cmpPath = sourceFolder + "cmp_" + encryptedName;
+            String outPath = destinationFolder + encryptedName;
+            String diff = "diff_" + encryptedName + "_";
             PdfDocument document = new PdfDocument(new PdfReader(inPath));
-            PdfStream stream = document.GetEncryptedPayloadAsStream();
-            byte[] encryptedDocumentBytes = stream.GetBytes();
+            PdfEncryptedPayloadDocument encryptedDocument = document.GetEncryptedPayloadDocument();
+            byte[] encryptedDocumentBytes = encryptedDocument.GetDocumentBytes();
             FileStream fos = new FileStream(outPath, FileMode.Create);
             fos.Write(encryptedDocumentBytes);
             fos.Dispose();
             document.Close();
-            //TODO: check files by bytes
-            NUnit.Framework.Assert.IsNotNull(encryptedDocumentBytes);
+            PdfEncryptedPayload ep = encryptedDocument.GetEncryptedPayload();
+            NUnit.Framework.Assert.AreEqual(PdfEncryptedPayloadFileSpecFactory.GenerateFileDisplay(ep), encryptedDocument
+                .GetName());
+            if (password != null) {
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+                    , password, password));
+            }
+            else {
+                RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
+                    (cmpPath));
+                byte[] cmpBytes = new byte[(int)raf.Length()];
+                raf.ReadFully(cmpBytes);
+                raf.Close();
+                NUnit.Framework.Assert.AreEqual(cmpBytes, encryptedDocumentBytes);
+            }
         }
     }
 }

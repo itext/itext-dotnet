@@ -120,17 +120,15 @@ namespace iText.Kernel.Pdf.Filespec {
             if (ef == null || (ef.GetAsStream(PdfName.F) == null) && (ef.GetAsStream(PdfName.UF) == null)) {
                 throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveEFDictionary);
             }
-            //TODO: it is possible to retrieve file spec without this check, should we do it?
             if (!PdfName.Filespec.Equals(dictionary.GetAsName(PdfName.Type))) {
                 throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveTypeEqualToFilespec);
             }
-            //TODO: it is possible to retrieve file spec without this check, should we do it?
             if (!dictionary.IsIndirect()) {
                 throw new PdfException(PdfException.EncryptedPayloadFileSpecShallBeIndirect);
             }
             PdfFileSpec fileSpec = PdfFileSpec.WrapFileSpecObject(dictionary);
             if (PdfEncryptedPayload.ExtractFrom(fileSpec) == null) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveCorrectEncryptedPayloadDictionary);
+                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
             }
             return fileSpec;
         }
