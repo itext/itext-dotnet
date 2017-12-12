@@ -534,6 +534,61 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Sets a border radius for all four edges of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the bottom left corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderBottomLeftRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the bottom right corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderBottomRightRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_BOTTOM_RIGHT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the top left corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderTopLeftRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_TOP_LEFT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the top right corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderTopRightRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_TOP_RIGHT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
         /// <summary>Sets a rule for splitting strings when they don't fit into one line.</summary>
         /// <remarks>
         /// Sets a rule for splitting strings when they don't fit into one line.
@@ -581,6 +636,18 @@ namespace iText.Layout {
         public virtual T SetTextRenderingMode(int textRenderingMode) {
             SetProperty(Property.TEXT_RENDERING_MODE, textRenderingMode);
             return (T)(Object)this;
+        }
+
+        /// <summary>
+        /// This attribute specifies the base direction of directionally neutral text
+        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
+        /// in an element's content and attribute values.
+        /// </summary>
+        /// <param name="baseDirection">base direction</param>
+        /// <returns>this element</returns>
+        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
+        public virtual T SetBaseDirection(BaseDirection baseDirection) {
+            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>Gets the stroke color for the current element.</summary>
@@ -636,18 +703,6 @@ namespace iText.Layout {
         public virtual T SetBold() {
             SetProperty(Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// This attribute specifies the base direction of directionally neutral text
-        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
-        /// in an element's content and attribute values.
-        /// </summary>
-        /// <param name="baseDirection">base direction</param>
-        /// <returns>this element</returns>
-        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>Switch on the simulation of italic style for a font.</summary>
