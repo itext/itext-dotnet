@@ -96,5 +96,33 @@ namespace iText.IO.Util {
             System.Console.Out.WriteLine(bri.ToString());
             System.Console.Out.WriteLine(bre.ToString());
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public static StringBuilder RunProcessAndCollectErrors(String execPath, String @params)
+        {
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
+
+            StringBuilder errorsBuilder = PrintProcessErrorsOutput(p);
+            p.WaitForExit();
+            return errorsBuilder;
+        }
+
+        private static StringBuilder PrintProcessErrorsOutput(Process p)
+        {
+            StringBuilder bre = new StringBuilder();
+            while (!p.HasExited)
+            {
+                bre.Append(p.StandardError.ReadToEnd());
+            }
+            System.Console.Out.WriteLine(bre.ToString());
+            return bre;
+        }
     }
 }
