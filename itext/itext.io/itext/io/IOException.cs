@@ -118,6 +118,8 @@ namespace iText.IO {
 
         public const String ExpectedJpMarker = "Expected JP marker.";
 
+        public const String ExpectedTrailingZeroBitsForByteAlignedLines = "Expected trailing zero bits for byte-aligned lines";
+
         public const String ExtraSamplesAreNotSupported = "Extra samples are not supported.";
 
         public const String FdfStartxrefNotFound = "FDF startxref not found.";
