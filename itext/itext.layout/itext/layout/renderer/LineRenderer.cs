@@ -169,7 +169,7 @@ namespace iText.Layout.Renderer {
                     // TODO width will be recalculated on float layout;
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
-                    // TODO may be process floating spans as inline blocks always?
+                    // TODO DEVSIX-1730: may be process floating spans as inline blocks always?
                     if (!wasXOverflowChanged && childPos > 0) {
                         oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
                         wasXOverflowChanged = true;

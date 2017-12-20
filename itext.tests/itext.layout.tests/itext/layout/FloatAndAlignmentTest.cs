@@ -103,11 +103,11 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BlocksNotInDiv() {
+        public virtual void BlocksNotInDiv01() {
             /* this test shows different combinations of 3 float values blocks
-            * NOTE, that div1 text is partly overlapped
+            * TODO: DEVSIX-1731: div1 text is partly overlapped.
             */
-            String testName = "blocksNotInDiv";
+            String testName = "blocksNotInDiv01";
             String outFileName = destinationFolder + testName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
@@ -138,6 +138,53 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1732: Float is moved outside the page boundaries.")]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest01() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest01";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.RIGHT);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add("Text begin").Add(new Div().Add(new Paragraph("div text").SetBorder(new SolidBorder(2)))).Add
+                ("More text").Add(floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants
+                .GREEN, 2)));
+            document.Add(parentPara);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1732: floating element is misplaced when justification is applied.")]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest02() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest02";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add("Text begin").Add(new Div().Add(new Paragraph("div text").SetBorder(new SolidBorder(2)))).Add
+                (floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants.GREEN, 2
+                ))).Add("MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. "
+                );
+            document.Add(parentPara.SetBorder(new DashedBorder(2)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign01_"));
         }
 
         private Div CreateParentDiv(HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue
