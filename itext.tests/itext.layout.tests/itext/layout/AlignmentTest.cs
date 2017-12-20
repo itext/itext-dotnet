@@ -288,7 +288,7 @@ namespace iText.Layout {
                 ));
             doc.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             AddFloatAndText(doc, FloatPropertyValue.RIGHT);
-            // Alignment is incorrect because indent is replaced by float adjustment
+            // TODO DEVSIX-1732: Alignment is incorrect because indent is replaced by float adjustment
             AddFloatAndText(doc, FloatPropertyValue.LEFT);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
