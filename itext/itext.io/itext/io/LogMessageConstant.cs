@@ -208,7 +208,7 @@ namespace iText.IO {
 
         public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
 
-        public const String PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS = "Png image has color profile with incompatible number of color components. It will be ignored.";
+        public const String PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS = "Png image has color profile with incompatible number of color components.";
 
         public const String POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION = "Popup entry in the markup annotations refers not to the annotation with Popup subtype.";
 

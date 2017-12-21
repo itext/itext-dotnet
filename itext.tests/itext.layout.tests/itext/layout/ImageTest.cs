@@ -514,22 +514,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PngImageColorProfileTest() {
-            SimpleImageTest("pngColorProfileTest.pdf", "png-color-profile-test.png");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
-            )]
-        public virtual void PngImageIncorrectColorProfileTest() {
-            SimpleImageTest("pngIncorrectColorProfileTest.pdf", "png-incorrect-color-profile-test.png");
-        }
-
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
@@ -775,23 +759,6 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        private void SimpleImageTest(String pdfName, String imageName) {
-            String outFileName = destinationFolder + pdfName;
-            String cmpFileName = sourceFolder + "cmp_" + pdfName;
-            String diff = "diff_" + pdfName + "_";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
-            Document document = new Document(pdf);
-            iText.Layout.Element.Image png = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
-                ));
-            png.SetAutoScale(true);
-            document.Add(png);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , diff));
         }
     }
 }
