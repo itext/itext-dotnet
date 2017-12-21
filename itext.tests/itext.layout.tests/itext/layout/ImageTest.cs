@@ -524,6 +524,8 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+            )]
         public virtual void PngImageIncorrectColorProfileTest() {
             SimpleImageTest("pngIncorrectColorProfileTest.pdf", "png-incorrect-color-profile-test.png");
         }

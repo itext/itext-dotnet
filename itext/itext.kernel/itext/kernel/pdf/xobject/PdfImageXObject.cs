@@ -44,11 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using iText.IO.Codec;
+using iText.IO.Colors;
 using iText.IO.Image;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf.Xobject {
@@ -402,6 +405,58 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDictionary additional = CreateDictionaryFromMap(stream, image.GetImageAttributes());
             if (additional != null) {
                 stream.PutAll(additional);
+            }
+            IccProfile iccProfile = image.GetProfile();
+            if (iccProfile != null) {
+                PdfStream iccProfileStream = PdfCieBasedCs.IccBased.GetIccProfileStream(iccProfile);
+                PdfArray iccBasedColorSpace = new PdfArray();
+                iccBasedColorSpace.Add(PdfName.ICCBased);
+                iccBasedColorSpace.Add(iccProfileStream);
+                PdfObject colorSpaceObject = stream.Get(PdfName.ColorSpace);
+                bool iccProfileShouldBeApplied = true;
+                if (colorSpaceObject != null) {
+                    PdfColorSpace cs = PdfColorSpace.MakeColorSpace(colorSpaceObject);
+                    if (cs == null) {
+                        LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
+                            );
+                    }
+                    else {
+                        if (cs is PdfSpecialCs.Indexed) {
+                            PdfColorSpace baseCs = ((PdfSpecialCs.Indexed)cs).GetBaseCs();
+                            if (baseCs == null) {
+                                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
+                                    );
+                            }
+                            else {
+                                if (baseCs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
+                                    LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
+                                        );
+                                    iccProfileShouldBeApplied = false;
+                                }
+                                else {
+                                    iccProfileStream.Put(PdfName.Alternate, baseCs.GetPdfObject());
+                                }
+                            }
+                            if (iccProfileShouldBeApplied) {
+                                ((PdfArray)colorSpaceObject).Set(1, iccBasedColorSpace);
+                                iccProfileShouldBeApplied = false;
+                            }
+                        }
+                        else {
+                            if (cs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
+                                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
+                                    );
+                                iccProfileShouldBeApplied = false;
+                            }
+                            else {
+                                iccProfileStream.Put(PdfName.Alternate, colorSpaceObject);
+                            }
+                        }
+                    }
+                }
+                if (iccProfileShouldBeApplied) {
+                    stream.Put(PdfName.ColorSpace, iccBasedColorSpace);
+                }
             }
             if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > 0xff)) {
                 stream.Put(PdfName.ImageMask, PdfBoolean.TRUE);
