@@ -705,6 +705,29 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1734")]
+        public virtual void SplitCellsTest04A() {
+            fileName = "splitCellsTest04A.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 80 + 72));
+            String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "A\n" + "B\n" + "C\n" + "D";
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            Cell cell;
+            cell = new Cell().Add(new Paragraph(text));
+            cell.SetBorderBottom(new SolidBorder(ColorConstants.RED, 20));
+            cell.SetBorderTop(new SolidBorder(ColorConstants.GREEN, 20));
+            table.AddCell(cell);
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorderTop(new SolidBorder(ColorConstants.YELLOW
+                , 20)));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SplitCellsTest05() {
             fileName = "splitCellsTest05.pdf";
             Document doc = CreateDocument();
@@ -828,6 +851,52 @@ namespace iText.Layout {
             table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "5")).
                 SetKeepTogether(true));
             table.SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 1));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest10A() {
+            // TODO DEVSIX-1735
+            fileName = "splitCellsTest10A.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 140));
+            String textAlphabet = "Cell";
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "1")).SetBackgroundColor(ColorConstants.YELLOW));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "222222222")).SetBackgroundColor(ColorConstants
+                .YELLOW));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "3")).SetBackgroundColor(ColorConstants.YELLOW));
+            table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "4")).
+                SetKeepTogether(true));
+            table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "5")).
+                SetKeepTogether(true));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1736")]
+        public virtual void SplitCellsTest10B() {
+            fileName = "splitCellsTest10B.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 110));
+            String textAlphabet = "Cell";
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "1")).SetBackgroundColor(ColorConstants.YELLOW));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textAlphabet + "222222222")).SetBackgroundColor(ColorConstants
+                .YELLOW));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "3")).SetBackgroundColor(ColorConstants.YELLOW));
+            table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "4")).
+                SetKeepTogether(true));
+            table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "5")).
+                SetKeepTogether(true));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -1171,6 +1240,37 @@ namespace iText.Layout {
             table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add(new Paragraph("Footer")));
             table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add(new Paragraph("Header")));
             for (int i = 0; i < 10; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(i + ": Bazz :")).SetBorder(new SolidBorder(ColorConstants.BLACK
+                    , 10)));
+                table.AddCell(new Cell().Add(new Paragraph("To infinity")).SetBorder(new SolidBorder(ColorConstants.YELLOW
+                    , 30)));
+                table.AddCell(new Cell().Add(new Paragraph(" and beyond!")).SetBorder(new SolidBorder(ColorConstants.RED, 
+                    20)));
+            }
+            table.SetSkipLastFooter(true);
+            doc.Add(table);
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest11A() {
+            // TODO DEVSIX-1737
+            String testName = "tableWithHeaderFooterTest11A.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            table.SetBorder(new SolidBorder(90));
+            table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add(new Paragraph("Footer")));
+            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add(new Paragraph("Header")));
+            for (int i = 0; i < 11; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(i + ": Bazz :")).SetBorder(new SolidBorder(ColorConstants.BLACK
                     , 10)));
                 table.AddCell(new Cell().Add(new Paragraph("To infinity")).SetBorder(new SolidBorder(ColorConstants.YELLOW
