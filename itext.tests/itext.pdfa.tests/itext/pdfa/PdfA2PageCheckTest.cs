@@ -52,7 +52,6 @@ namespace iText.Pdfa {
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck01() {
             NUnit.Framework.Assert.That(() =>  {

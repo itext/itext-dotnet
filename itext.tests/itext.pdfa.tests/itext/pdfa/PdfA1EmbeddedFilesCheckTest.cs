@@ -52,7 +52,6 @@ namespace iText.Pdfa {
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -79,7 +78,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -101,7 +99,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest03() {
             NUnit.Framework.Assert.That(() =>  {
