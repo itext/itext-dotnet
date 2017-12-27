@@ -117,7 +117,7 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="from">- document, from which pages will be copied.</param>
         /// <param name="fromPage">- start page in the range of pages to be copied.</param>
-        /// <param name="toPage">- end page in the range to be copied.</param>
+        /// <param name="toPage">- end (inclusive) page in the range to be copied</param>
         /// <returns>
         /// this
         /// <c>PdfMerger</c>
