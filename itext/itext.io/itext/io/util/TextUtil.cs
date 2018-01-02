@@ -245,6 +245,14 @@ namespace iText.IO.Util {
             int unicode = glyph.GetUnicode();
             return unicode == '\n' || unicode == '\r';
         }
+        
+        public static bool IsCarriageReturnFollowedByLineFeed(GlyphLine glyphLine, int carriageReturnPosition)
+        {
+            return glyphLine.Size() > 1
+                    && carriageReturnPosition <= glyphLine.Size() - 2
+                    && glyphLine.Get(carriageReturnPosition).GetUnicode() == '\r'
+                    && glyphLine.Get(carriageReturnPosition + 1).GetUnicode() == '\n';
+        }
 
         /// <summary>
         /// Determines if represented Glyph is space or whitespace character.
