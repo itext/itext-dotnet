@@ -48,7 +48,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 #if NETSTANDARD1_6
-using System.Runtime.Loader;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyModel;
 #endif
@@ -134,17 +133,19 @@ namespace iText.IO.Util {
                 }
             }
 #else
-            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
-            IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
-            foreach (AssemblyName assemblyName in loadedAssemblies) {
-                if (assemblyName.Name.StartsWith("itext")) {
-                    try {
-                        Assembly assembly = Assembly.Load(assemblyName);
-                        istr = SearchResourceInAssembly(key, assembly);
-                        if (istr != null) {
-                            return istr;
-                        }
-                    } catch { }
+            if (DependencyContext.Default != null) {
+                string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+                IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
+                foreach (AssemblyName assemblyName in loadedAssemblies) {
+                    if (assemblyName.Name.StartsWith("itext")) {
+                        try {
+                            Assembly assembly = Assembly.Load(assemblyName);
+                            istr = SearchResourceInAssembly(key, assembly);
+                            if (istr != null) {
+                                return istr;
+                            }
+                        } catch { }
+                    }
                 }
             }
 #endif
@@ -170,7 +171,7 @@ namespace iText.IO.Util {
 #if !NETSTANDARD1_6
                         istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
 #else
-                        istr = AssemblyLoadContext.Default.LoadFromAssemblyPath(key).GetManifestResourceStream(key);
+                        istr = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(key).GetManifestResourceStream(key);
 #endif
                     }
                     catch
@@ -234,16 +235,16 @@ namespace iText.IO.Util {
             }
 #else
             string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
-            List<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
+            List<AssemblyName> loadedAssemblies = DependencyContext.Default != null ? DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList() : new List<AssemblyName>();
 
             var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
             foreach (String path in referencedPaths)
             {
                 try
                 {
-                    AssemblyName name = AssemblyLoadContext.GetAssemblyName(path);
+                    AssemblyName name = AssemblyLoadContextUtil.GetAssemblyName(path);
                     if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name))) {
-                        Assembly newAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                        Assembly newAssembly = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(path);
                         loadedAssemblies.Add(newAssembly.GetName());
                     }
                 }
