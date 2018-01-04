@@ -89,7 +89,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 this.ownerPassword = new byte[16];
-                new RNGCryptoServiceProvider().GetBytes(this.ownerPassword);
+                RandomBytes(this.ownerPassword);
             }
             this.standardEncryptPermissions = permissions;
             this.encryptionAlgorithm = encryptionAlgorithm;
@@ -137,6 +137,10 @@ namespace iText.Kernel.Pdf {
             this.publicKeyEncryptPermissions = null;
             this.userPassword = null;
             this.ownerPassword = null;
+        }
+
+        private static void RandomBytes(byte[] bytes) {
+            RandomNumberGenerator.Create().GetBytes(bytes);
         }
     }
 }
