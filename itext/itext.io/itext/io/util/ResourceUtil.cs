@@ -133,21 +133,23 @@ namespace iText.IO.Util {
                 }
             }
 #else
-            if (DependencyContext.Default != null) {
-                string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
-                IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
-                foreach (AssemblyName assemblyName in loadedAssemblies) {
-                    if (assemblyName.Name.StartsWith("itext")) {
-                        try {
-                            Assembly assembly = Assembly.Load(assemblyName);
-                            istr = SearchResourceInAssembly(key, assembly);
-                            if (istr != null) {
-                                return istr;
-                            }
-                        } catch { }
+            try {
+                if (DependencyContext.Default != null) {
+                    string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+                    IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
+                    foreach (AssemblyName assemblyName in loadedAssemblies) {
+                        if (assemblyName.Name.StartsWith("itext")) {
+                            try {
+                                Assembly assembly = Assembly.Load(assemblyName);
+                                istr = SearchResourceInAssembly(key, assembly);
+                                if (istr != null) {
+                                    return istr;
+                                }
+                            } catch { }
+                        }
                     }
                 }
-            }
+            } catch { }
 #endif
 
             return istr;
@@ -235,21 +237,29 @@ namespace iText.IO.Util {
             }
 #else
             string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
-            List<AssemblyName> loadedAssemblies = DependencyContext.Default != null ? DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList() : new List<AssemblyName>();
+            List<AssemblyName> loadedAssemblies = null;
+            try {
+                loadedAssemblies = DependencyContext.Default?.GetRuntimeAssemblyNames(runtimeId).ToList();
+            } catch { }
+            if (loadedAssemblies == null) {
+                loadedAssemblies = new List<AssemblyName>();
+            }
 
-            var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
-            foreach (String path in referencedPaths)
-            {
-                try
+            if (FileUtil.GetBaseDirectory() != null) {
+                var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
+                foreach (String path in referencedPaths)
                 {
-                    AssemblyName name = AssemblyLoadContextUtil.GetAssemblyName(path);
-                    if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name))) {
-                        Assembly newAssembly = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(path);
-                        loadedAssemblies.Add(newAssembly.GetName());
+                    try
+                    {
+                        AssemblyName name = AssemblyLoadContextUtil.GetAssemblyName(path);
+                        if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name))) {
+                            Assembly newAssembly = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(path);
+                            loadedAssemblies.Add(newAssembly.GetName());
+                        }
                     }
-                }
-                catch
-                {
+                    catch
+                    {
+                    }
                 }
             }
 #endif
