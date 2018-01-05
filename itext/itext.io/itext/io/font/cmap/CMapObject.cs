@@ -131,5 +131,14 @@ namespace iText.IO.Font.Cmap {
             }
             return value.ToString();
         }
+
+        public virtual byte[] ToHexByteArray() {
+            if (type == HEX_STRING) {
+                return (byte[])value;
+            }
+            else {
+                return null;
+            }
+        }
     }
 }

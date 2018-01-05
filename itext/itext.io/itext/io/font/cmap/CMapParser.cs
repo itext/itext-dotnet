@@ -58,6 +58,8 @@ namespace iText.IO.Font.Cmap {
 
         private const String endbfchar = "endbfchar";
 
+        private const String endcodespacerange = "endcodespacerange";
+
         private const String usecmap = "usecmap";
 
         private const String Registry = "Registry";
@@ -145,6 +147,17 @@ namespace iText.IO.Font.Cmap {
                             else {
                                 if (last.Equals(usecmap) && list.Count == 2 && list[0].IsName()) {
                                     ParseCid(list[0].ToString(), cmap, location, level + 1);
+                                }
+                                else {
+                                    if (last.Equals(endcodespacerange)) {
+                                        for (int i = 0; i < list.Count + 1; i += 2) {
+                                            if (list[i].IsHexString() && list[i + 1].IsHexString()) {
+                                                byte[] low = list[i].ToHexByteArray();
+                                                byte[] high = list[i + 1].ToHexByteArray();
+                                                cmap.AddCodeSpaceRange(low, high);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

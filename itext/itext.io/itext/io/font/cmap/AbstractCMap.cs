@@ -90,6 +90,9 @@ namespace iText.IO.Font.Cmap {
 
         internal abstract void AddChar(String mark, CMapObject code);
 
+        internal virtual void AddCodeSpaceRange(byte[] low, byte[] high) {
+        }
+
         internal virtual void AddRange(String from, String to, CMapObject code) {
             byte[] a1 = DecodeStringToByte(from);
             byte[] a2 = DecodeStringToByte(to);
