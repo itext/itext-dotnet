@@ -43,20 +43,23 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.IO.Font.Constants;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
     public class OverflowTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/OverflowTest/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/OverflowTest/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/OverflowTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -128,6 +131,52 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("ThisIsALongTextWithNoSpacesSoSplittingShouldBeForcedInThisCase").SetFontSize(20
                 ));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AlignedInlineContentOverflowHiddenTest01() {
+            String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_alignedInlineContentOverflowHiddenTest01.pdf";
+            String imgPath = sourceFolder + "itis.jpg";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().SetHeight(150f).SetWidth(150f).SetBorder(new SolidBorder(5f));
+            div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+            div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+            iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(imgPath));
+            Paragraph p = new Paragraph().SetTextAlignment(TextAlignment.CENTER);
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            img.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            img.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            document.Add(div.Add(p.Add(img)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AlignedInlineContentOverflowHiddenTest02() {
+            String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_alignedInlineContentOverflowHiddenTest02.pdf";
+            String imgPath = sourceFolder + "itis.jpg";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath));
+            Paragraph p = new Paragraph().SetTextAlignment(TextAlignment.CENTER).SetHeight(150f).SetWidth(150f).SetBorder
+                (new SolidBorder(5f));
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+            img.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            img.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            document.Add(p.Add(img));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

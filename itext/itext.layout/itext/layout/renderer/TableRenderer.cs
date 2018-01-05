@@ -255,8 +255,8 @@ namespace iText.Layout.Renderer {
             }
             ApplyMargins(layoutBox, false);
             ApplyFixedXOrYPosition(true, layoutBox);
-            if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
-                Property.FORCED_PLACEMENT))) {
+            if (null != blockMaxHeight && blockMaxHeight <= layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean
+                (Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }

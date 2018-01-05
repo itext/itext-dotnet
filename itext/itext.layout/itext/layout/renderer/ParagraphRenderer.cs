@@ -307,10 +307,7 @@ namespace iText.Layout.Renderer {
                                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
                                             ).GetBBox()));
-                                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                                            .FIT.Equals(overflowX))) {
-                                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                                        }
+                                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                                         parent.SetProperty(Property.FULL, true);
                                         lines.Add(currentRenderer);
                                         // Force placement of children we have and do not force placement of the others
@@ -346,10 +343,7 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
                             ().GetBBox()));
-                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                            .FIT.Equals(overflowX))) {
-                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                        }
+                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                     }
                     firstLineInBox = false;
                     layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
