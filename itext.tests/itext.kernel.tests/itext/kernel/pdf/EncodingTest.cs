@@ -298,5 +298,14 @@ namespace iText.Kernel.Pdf {
             String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
             NUnit.Framework.Assert.AreEqual("abc", extractedText);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DifferentCodeSpaceRangeLengthsExtractionTest() {
+            String fileName = sourceFolder + "differentCodeSpaceRangeLengths01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(fileName));
+            String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+            NUnit.Framework.Assert.AreEqual("Hello\u7121\u540dworld\u6b98\u528d", extractedText);
+        }
     }
 }
