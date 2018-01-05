@@ -605,6 +605,7 @@ namespace iText.Kernel.Font {
         /// contains the Unicode code
         /// </param>
         /// <returns>the stream representing this CMap or <CODE>null</CODE></returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2. Use GetToUnicode(int[]) instead")]
         public virtual PdfStream GetToUnicode(Object[] metrics) {
             List<int> unicodeGlyphs = new List<int>(metrics.Length);
             for (int i = 0; i < metrics.Length; i++) {
@@ -672,6 +673,7 @@ namespace iText.Kernel.Font {
         /// <param name="fontName">a name of the font</param>
         /// <param name="metrics">the horizontal width metrics</param>
         /// <returns>fully initialized CIDFont</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2")]
         protected internal virtual PdfDictionary GetCidFontType2(TrueTypeFont ttf, PdfDictionary fontDescriptor, String
              fontName, int[][] metrics) {
             PdfDictionary cidFont = new PdfDictionary();
@@ -725,6 +727,7 @@ namespace iText.Kernel.Font {
             return cidFont;
         }
 
+        [Obsolete]
         protected internal virtual void AddRangeUni(TrueTypeFont ttf, IDictionary<int, int[]> longTag, bool includeMetrics
             ) {
             if (!subset && (subsetRanges != null || ttf.GetDirectoryOffset() > 0)) {
@@ -751,17 +754,6 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-        }
-
-        private bool ContainsUnicodeGlyph(String text, int from) {
-            int ch;
-            if (TextUtil.IsSurrogatePair(text, from)) {
-                ch = TextUtil.ConvertToUtf32(text, from);
-            }
-            else {
-                ch = text[from];
-            }
-            return GetFontProgram().GetGlyph(ch) != null;
         }
 
         private void ConvertToBytes(Glyph glyph, ByteBuffer result) {
