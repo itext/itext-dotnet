@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -145,8 +145,7 @@ namespace iText.Kernel.Pdf {
             PdfNumber rotate = GetPdfObject().GetAsNumber(PdfName.Rotate);
             int rotateValue = 0;
             if (rotate == null) {
-                InitParentPages();
-                rotate = (PdfNumber)GetParentValue(this.parentPages, PdfName.Rotate);
+                rotate = (PdfNumber)GetInheritedValue(PdfName.Rotate, PdfObject.NUMBER);
             }
             if (rotate != null) {
                 rotateValue = rotate.IntValue();
@@ -345,8 +344,7 @@ namespace iText.Kernel.Pdf {
                 bool readOnly = false;
                 PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
                 if (resources == null) {
-                    InitParentPages();
-                    resources = (PdfDictionary)GetParentValue(this.parentPages, PdfName.Resources);
+                    resources = (PdfDictionary)GetInheritedValue(PdfName.Resources, PdfObject.DICTIONARY);
                     if (resources != null) {
                         readOnly = true;
                     }
@@ -623,10 +621,9 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         /// <exception cref="iText.Kernel.PdfException">in case of any error while reading MediaBox object.</exception>
         public virtual Rectangle GetMediaBox() {
-            InitParentPages();
             PdfArray mediaBox = GetPdfObject().GetAsArray(PdfName.MediaBox);
             if (mediaBox == null) {
-                mediaBox = (PdfArray)GetParentValue(parentPages, PdfName.MediaBox);
+                mediaBox = (PdfArray)GetInheritedValue(PdfName.MediaBox, PdfObject.ARRAY);
             }
             if (mediaBox == null) {
                 throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
@@ -678,10 +675,9 @@ namespace iText.Kernel.Pdf {
         /// MediaBox by default.
         /// </returns>
         public virtual Rectangle GetCropBox() {
-            InitParentPages();
             PdfArray cropBox = GetPdfObject().GetAsArray(PdfName.CropBox);
             if (cropBox == null) {
-                cropBox = (PdfArray)GetParentValue(parentPages, PdfName.CropBox);
+                cropBox = (PdfArray)GetInheritedValue(PdfName.CropBox, PdfObject.ARRAY);
                 if (cropBox == null) {
                     return GetMediaBox();
                 }
@@ -1381,7 +1377,15 @@ namespace iText.Kernel.Pdf {
             return annots;
         }
 
-        private PdfObject GetParentValue(PdfPages parentPages, PdfName pdfName) {
+        private PdfObject GetInheritedValue(PdfName pdfName, int type) {
+            if (this.parentPages == null) {
+                this.parentPages = GetDocument().GetCatalog().GetPageTree().FindPageParent(this);
+            }
+            PdfObject val = GetInheritedValue(this.parentPages, pdfName);
+            return val != null && val.GetObjectType() == type ? val : null;
+        }
+
+        private static PdfObject GetInheritedValue(PdfPages parentPages, PdfName pdfName) {
             if (parentPages != null) {
                 PdfDictionary parentDictionary = parentPages.GetPdfObject();
                 PdfObject value = parentDictionary.Get(pdfName);
@@ -1389,7 +1393,7 @@ namespace iText.Kernel.Pdf {
                     return value;
                 }
                 else {
-                    return GetParentValue(parentPages.GetParent(), pdfName);
+                    return GetInheritedValue(parentPages.GetParent(), pdfName);
                 }
             }
             return null;
@@ -1499,15 +1503,6 @@ namespace iText.Kernel.Pdf {
             obj.MakeIndirect(GetDocument()).Flush();
         }
 
-        /*
-        * initialization <code>parentPages</code> if needed
-        */
-        private void InitParentPages() {
-            if (this.parentPages == null) {
-                this.parentPages = GetDocument().GetCatalog().GetPageTree().FindPageParent(this);
-            }
-        }
-
         private void CopyInheritedProperties(iText.Kernel.Pdf.PdfPage copyPdfPage, PdfDocument pdfDocument) {
             if (copyPdfPage.GetPdfObject().Get(PdfName.Resources) == null) {
                 PdfObject copyResource = pdfDocument.GetWriter().CopyObject(GetResources().GetPdfObject(), pdfDocument, false
@@ -1515,13 +1510,23 @@ namespace iText.Kernel.Pdf {
                 copyPdfPage.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             if (copyPdfPage.GetPdfObject().Get(PdfName.MediaBox) == null) {
+                //media box shall be in any case
                 copyPdfPage.SetMediaBox(GetMediaBox());
             }
             if (copyPdfPage.GetPdfObject().Get(PdfName.CropBox) == null) {
-                InitParentPages();
-                PdfArray cropBox = (PdfArray)GetParentValue(parentPages, PdfName.CropBox);
+                //original pdfObject don't have CropBox, otherwise copyPdfPage will contain it
+                PdfArray cropBox = (PdfArray)GetInheritedValue(PdfName.CropBox, PdfObject.ARRAY);
+                //crop box is optional, we shall not set default value.
                 if (cropBox != null) {
-                    copyPdfPage.SetCropBox(cropBox.ToRectangle());
+                    copyPdfPage.Put(PdfName.CropBox, cropBox);
+                }
+            }
+            if (copyPdfPage.GetPdfObject().Get(PdfName.Rotate) == null) {
+                //original pdfObject don't have Rotate, otherwise copyPdfPage will contain it
+                PdfNumber rotate = (PdfNumber)GetInheritedValue(PdfName.Rotate, PdfObject.NUMBER);
+                //rotate is optional, we shall not set default value.
+                if (rotate != null) {
+                    copyPdfPage.Put(PdfName.Rotate, rotate);
                 }
             }
         }
