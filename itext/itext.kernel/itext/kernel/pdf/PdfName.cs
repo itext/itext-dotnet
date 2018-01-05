@@ -343,6 +343,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ClosedArrow = CreateDirectName("ClosedArrow");
 
+        public static readonly iText.Kernel.Pdf.PdfName CMapName = CreateDirectName("CMapName");
+
         public static readonly iText.Kernel.Pdf.PdfName CO = CreateDirectName("CO");
 
         public static readonly iText.Kernel.Pdf.PdfName Code = CreateDirectName("Code");

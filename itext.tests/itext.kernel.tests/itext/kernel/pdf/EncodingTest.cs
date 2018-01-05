@@ -46,6 +46,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -287,6 +288,24 @@ namespace iText.Kernel.Pdf {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncodingStreamExtractionTest() {
+            String fileName = sourceFolder + "encodingStream01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(fileName));
+            String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+            NUnit.Framework.Assert.AreEqual("abc", extractedText);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DifferentCodeSpaceRangeLengthsExtractionTest() {
+            String fileName = sourceFolder + "differentCodeSpaceRangeLengths01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(fileName));
+            String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+            NUnit.Framework.Assert.AreEqual("Hello\u7121\u540dworld\u6b98\u528d", extractedText);
         }
     }
 }

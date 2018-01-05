@@ -150,28 +150,22 @@ namespace iText.IO.Font.Cmap {
         }
 
         internal override void AddChar(String mark, CMapObject code) {
-            try {
-                if (mark.Length == 1) {
+            if (mark.Length == 1) {
+                char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
+                byteMappings.Put((int)mark[0], dest);
+            }
+            else {
+                if (mark.Length == 2) {
                     char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-                    byteMappings.Put((int)mark[0], dest);
+                    byteMappings.Put((mark[0] << 8) + mark[1], dest);
                 }
                 else {
-                    if (mark.Length == 2) {
-                        char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-                        byteMappings.Put((mark[0] << 8) + mark[1], dest);
-                    }
-                    else {
-                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
-                        logger.Warn(iText.IO.LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
-                    }
+                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
+                    logger.Warn(iText.IO.LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                 }
-            }
-            catch (System.IO.IOException) {
-                throw new Exception();
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private char[] CreateCharsFromSingleBytes(byte[] bytes) {
             if (bytes.Length == 1) {
                 return new char[] { (char)(bytes[0] & 0xff) };
@@ -185,7 +179,6 @@ namespace iText.IO.Font.Cmap {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private char[] CreateCharsFromDoubleBytes(byte[] bytes) {
             char[] chars = new char[bytes.Length / 2];
             for (int i = 0; i < bytes.Length; i += 2) {

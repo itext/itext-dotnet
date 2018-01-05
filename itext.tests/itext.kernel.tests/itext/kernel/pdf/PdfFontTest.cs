@@ -108,6 +108,31 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithKozminAndDifferentCodespaceRanges() {
+            String filename = destinationFolder + "DocumentWithKozminDifferentCodespaceRanges.pdf";
+            String cmpFilename = sourceFolder + "cmp_DocumentWithKozminDifferentCodespaceRanges.pdf";
+            String title = "Type 0 test";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "83pv-RKSJ-H", true);
+            NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 50).ShowText(type0Font.CreateGlyphLine
+                ("Hello\u7121\u540dworld\u6b98\u528d")).EndText().RestoreState();
+            canvas.Release();
+            page.Flush();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CreateDocumentWithStSongUni() {
             String filename = destinationFolder + "DocumentWithStSongUni.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithStSongUni.pdf";
