@@ -415,5 +415,14 @@ namespace iText.Kernel.Pdf {
             new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void RotationPagesRotationTest() {
+            String filename = "singlePageDocumentWithRotation.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + filename));
+            PdfPage page = pdfDoc.GetPage(1);
+            NUnit.Framework.Assert.AreEqual(90, page.GetRotation(), "Inherited value is invalid");
+        }
     }
 }

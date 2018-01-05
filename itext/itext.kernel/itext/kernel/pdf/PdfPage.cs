@@ -144,14 +144,16 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual int GetRotation() {
             PdfNumber rotate = GetPdfObject().GetAsNumber(PdfName.Rotate);
+            int rotateValue = 0;
             if (rotate == null) {
-                return 0;
+                InitParentPages();
+                rotate = (PdfNumber)GetParentValue(this.parentPages, PdfName.Rotate);
             }
-            else {
-                int n = rotate.IntValue();
-                n %= 360;
-                return n < 0 ? n + 360 : n;
+            if (rotate != null) {
+                rotateValue = rotate.IntValue();
             }
+            rotateValue %= 360;
+            return rotateValue < 0 ? rotateValue + 360 : rotateValue;
         }
 
         /// <summary>Sets the page rotation.</summary>
