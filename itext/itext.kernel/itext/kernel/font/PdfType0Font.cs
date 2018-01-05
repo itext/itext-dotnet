@@ -534,24 +534,17 @@ namespace iText.Kernel.Font {
                     glyphs.Add(glyph);
                 }
                 else {
-                    glyphs.Add(new Glyph(0, -1));
+                    glyphs.Add(new Glyph(0, fontProgram.GetGlyphByCode(0).GetWidth(), -1));
                 }
             }
             return new GlyphLine(glyphs);
         }
 
         public override float GetContentWidth(PdfString content) {
-            Glyph notdef = fontProgram.GetGlyphByCode(0);
             float width = 0;
             GlyphLine glyphLine = DecodeIntoGlyphLine(content);
             for (int i = glyphLine.start; i < glyphLine.end; i++) {
-                Glyph glyph = glyphLine.Get(i);
-                if (glyph.GetCode() >= 0) {
-                    width += glyph.GetWidth();
-                }
-                else {
-                    width += notdef.GetWidth();
-                }
+                width += glyphLine.Get(i).GetWidth();
             }
             return width;
         }
