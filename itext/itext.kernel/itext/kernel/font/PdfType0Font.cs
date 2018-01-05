@@ -124,10 +124,10 @@ namespace iText.Kernel.Font {
             newFont = false;
             PdfDictionary cidFont = fontDictionary.GetAsArray(PdfName.DescendantFonts).GetAsDictionary(0);
             PdfObject cmap = fontDictionary.Get(PdfName.Encoding);
+            PdfObject toUnicode = fontDictionary.Get(PdfName.ToUnicode);
+            CMapToUnicode toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
             if (cmap.IsName() && (PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()) || PdfEncodings.IDENTITY_V
                 .Equals(((PdfName)cmap).GetValue()))) {
-                PdfObject toUnicode = fontDictionary.Get(PdfName.ToUnicode);
-                CMapToUnicode toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
                 if (toUnicodeCMap == null) {
                     String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont));
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
@@ -157,7 +157,9 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    CMapToUnicode toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
+                    if (toUnicodeCMap == null) {
+                        toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
+                    }
                     if (toUnicodeCMap != null) {
                         fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
                         cmapEncoding = CreateCMap(cmap, uniMap);
