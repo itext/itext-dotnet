@@ -172,9 +172,16 @@ namespace iText.Layout {
             return oldVal;
         }
 
-        public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
-            return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
-        }
+		public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
+			if (list is SingletonList<T>) {
+				if (fromIndex == 0 && toIndex >= 1) {
+					return new List<T>(list);
+				} else {
+					return new List<T>();
+				}
+			}
+			return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
+		}
 
         public static String[] Split(this String str, String regex) {
             return str.Split(regex.ToCharArray());

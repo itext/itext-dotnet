@@ -113,9 +113,17 @@ internal static class KernelExtensions {
         return n;
     }
 
-    public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
-        return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
-    }
+	public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
+		if (list is SingletonList<T>) {
+			if (fromIndex == 0 && toIndex >= 1) {
+				return new List<T>(list);
+			} else {
+				return new List<T>();
+			}
+		}
+		return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
+	}
+
 
     public static void AddAll<T>(this IList<T> list, IEnumerable<T> c) {
         ((List<T>) list).AddRange(c);
