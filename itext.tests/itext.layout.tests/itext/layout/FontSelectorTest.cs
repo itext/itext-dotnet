@@ -166,7 +166,7 @@ namespace iText.Layout {
             sel.GetFontSet().AddFont(StandardFonts.HELVETICA);
             sel.GetFontSet().AddFont(StandardFonts.HELVETICA_BOLD);
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
-            //sel.getFontSet().addFont(FontConstants.TIMES_BOLD);
+            //sel.getFontSet().addFont(StandardFonts.TIMES_BOLD);
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
