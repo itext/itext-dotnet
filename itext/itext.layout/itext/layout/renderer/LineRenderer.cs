@@ -816,6 +816,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void ApplyLeading(float deltaY) {
             occupiedArea.GetBBox().MoveUp(deltaY);
+            occupiedArea.GetBBox().DecreaseHeight(deltaY);
             foreach (IRenderer child in childRenderers) {
                 if (!FloatingHelper.IsRendererFloating(child)) {
                     child.Move(0, deltaY);

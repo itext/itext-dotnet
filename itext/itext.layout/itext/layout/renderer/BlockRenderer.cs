@@ -490,12 +490,12 @@ namespace iText.Layout.Renderer {
             }
             BeginElementOpacityApplying(drawContext);
             BeginRotationIfApplied(drawContext.GetCanvas());
-            DrawBackground(drawContext);
-            DrawBorder(drawContext);
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowPropertyValue? overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             bool processOverflow = OverflowPropertyValue.HIDDEN.Equals(overflowX) || OverflowPropertyValue.HIDDEN.Equals
                 (overflowY);
+            DrawBackground(drawContext);
+            DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
                 Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
