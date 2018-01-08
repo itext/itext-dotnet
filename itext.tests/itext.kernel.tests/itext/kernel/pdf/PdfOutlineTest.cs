@@ -383,7 +383,7 @@ namespace iText.Kernel.Pdf {
             try {
                 pdfDoc.GetOutlines(true);
             }
-            catch (StackOverflowException) {
+            catch (OutOfMemoryException) {
                 NUnit.Framework.Assert.Fail("StackOverflow thrown when reading document with a large number of outlines.");
             }
         }
