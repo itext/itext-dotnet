@@ -374,5 +374,18 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations02.pdf"
                 , destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void OutlineStackOverflowTest01() {
+            PdfReader reader = new PdfReader(sourceFolder + "outlineStackOverflowTest01.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            try {
+                pdfDoc.GetOutlines(true);
+            }
+            catch (StackOverflowException) {
+                NUnit.Framework.Assert.Fail("StackOverflow thrown when reading document with a large number of outlines.");
+            }
+        }
     }
 }

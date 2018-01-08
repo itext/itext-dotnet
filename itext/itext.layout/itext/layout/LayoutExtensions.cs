@@ -48,6 +48,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using iText.IO.Util.Collections;
 
 namespace iText.Layout {
     internal static class LayoutExtensions {
@@ -216,7 +217,7 @@ namespace iText.Layout {
 
 #if NETSTANDARD1_6
         public static MethodInfo GetMethod(this Type type, String methodName, Type[] parameterTypes) {
-            return type.GetTypeInfo().GetMethod(methodName, parameterTypes);
+            return type    .GetTypeInfo().GetMethod(methodName, parameterTypes);
         }
 
         public static ConstructorInfo GetConstructor(this Type type, Type[] parameterTypes) {
