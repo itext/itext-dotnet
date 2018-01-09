@@ -225,37 +225,40 @@ namespace iText.Layout.Font {
                         score -= EXPECTED_FONT_IS_NOT_MONOSPACED_AWARD;
                     }
                 }
-                FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
-                // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
-                // it should not be any 'contains' with aliases.
-                bool checkContains = true;
-                if (fontName.Equals(descriptor.GetFullNameLowerCase())) {
-                    // the next condition can be simplified. it's been written that way to prevent mistakes if the condition is moved.
-                    score += checkContains ? FULL_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
-                    checkContains = false;
-                }
-                if (fontName.Equals(descriptor.GetFontNameLowerCase())) {
-                    score += checkContains ? FONT_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
-                    checkContains = false;
-                }
-                if (fontName.Equals(fontInfo.GetAlias())) {
-                    score += checkContains ? ALIAS_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
-                    checkContains = false;
-                }
-                if (checkContains) {
-                    bool conditionHasBeenSatisfied = false;
-                    if (descriptor.GetFullNameLowerCase().Contains(fontName)) {
+                // empty font name means that font family wasn't detected. in that case one should compare only style characteristics
+                if (!"".Equals(fontName)) {
+                    FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
+                    // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
+                    // it should not be any 'contains' with aliases.
+                    bool checkContains = true;
+                    if (fontName.Equals(descriptor.GetFullNameLowerCase())) {
                         // the next condition can be simplified. it's been written that way to prevent mistakes if the condition is moved.
-                        score += conditionHasBeenSatisfied ? FULL_NAME_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
-                        conditionHasBeenSatisfied = true;
+                        score += checkContains ? FULL_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
+                        checkContains = false;
                     }
-                    if (descriptor.GetFontNameLowerCase().Contains(fontName)) {
-                        score += conditionHasBeenSatisfied ? FONT_NAME_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
-                        conditionHasBeenSatisfied = true;
+                    if (fontName.Equals(descriptor.GetFontNameLowerCase())) {
+                        score += checkContains ? FONT_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
+                        checkContains = false;
                     }
-                    if (null != fontInfo.GetAlias() && fontInfo.GetAlias().Contains(fontName)) {
-                        score += conditionHasBeenSatisfied ? ALIAS_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
-                        conditionHasBeenSatisfied = true;
+                    if (fontName.Equals(fontInfo.GetAlias())) {
+                        score += checkContains ? ALIAS_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
+                        checkContains = false;
+                    }
+                    if (checkContains) {
+                        bool conditionHasBeenSatisfied = false;
+                        if (descriptor.GetFullNameLowerCase().Contains(fontName)) {
+                            // the next condition can be simplified. it's been written that way to prevent mistakes if the condition is moved.
+                            score += conditionHasBeenSatisfied ? FULL_NAME_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
+                            conditionHasBeenSatisfied = true;
+                        }
+                        if (descriptor.GetFontNameLowerCase().Contains(fontName)) {
+                            score += conditionHasBeenSatisfied ? FONT_NAME_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
+                            conditionHasBeenSatisfied = true;
+                        }
+                        if (null != fontInfo.GetAlias() && fontInfo.GetAlias().Contains(fontName)) {
+                            score += conditionHasBeenSatisfied ? ALIAS_CONTAINS_AWARD : CONTAINS_ADDITIONAL_AWARD;
+                            conditionHasBeenSatisfied = true;
+                        }
                     }
                 }
                 // this line is redundant. it's added to prevent mistakes if other condition is added.
