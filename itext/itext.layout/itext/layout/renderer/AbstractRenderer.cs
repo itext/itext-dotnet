@@ -1698,8 +1698,8 @@ namespace iText.Layout.Renderer {
             //Update height related properties on split or overflow
             float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             //For relative heights, we need the parent's resolved height declaration
-            if (HasProperty(Property.MAX_HEIGHT)) {
-                UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
+            UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
+            if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {
                     float? maxHeight = RetrieveMaxHeight();
                     UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - occupiedArea.GetBBox().GetHeight
@@ -1719,8 +1719,8 @@ namespace iText.Layout.Renderer {
                 }
             }
             //If parent has no resolved height, relative height declarations can be ignored
-            if (HasProperty(Property.MIN_HEIGHT)) {
-                UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+            UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+            if (minHeightUV != null) {
                 if (minHeightUV.IsPointValue()) {
                     float? minHeight = RetrieveMinHeight();
                     UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - occupiedArea.GetBBox().GetHeight
@@ -1740,8 +1740,8 @@ namespace iText.Layout.Renderer {
                 }
             }
             //If parent has no resolved height, relative height declarations can be ignored
-            if (HasProperty(Property.HEIGHT)) {
-                UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+            UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+            if (heightUV != null) {
                 if (heightUV.IsPointValue()) {
                     float? height = RetrieveHeight();
                     UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - occupiedArea.GetBBox().GetHeight()));
