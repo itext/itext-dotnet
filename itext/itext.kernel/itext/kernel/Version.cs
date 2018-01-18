@@ -75,7 +75,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private static String release = "7.1.1-SNAPSHOT";
+        private static String release = "7.1.2-SNAPSHOT";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -84,7 +84,7 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private String producerLine = iTextProductName + " " + release + " \u00a92000-2017 iText Group NV";
+        private String producerLine = iTextProductName + " " + release + " \u00a92000-2018 iText Group NV";
 
         /// <summary>The license key.</summary>
         private String key = null;
