@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -284,6 +284,23 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Gets collection dictionary that a conforming reader shall use to enhance the presentation of file attachments
+        /// stored in the PDF document.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Collection.PdfCollection"/>
+        /// wrapper of collection dictionary.
+        /// </returns>
+        public virtual PdfCollection GetCollection() {
+            PdfDictionary collectionDictionary = GetPdfObject().GetAsDictionary(PdfName.Collection);
+            if (collectionDictionary != null) {
+                return new PdfCollection(collectionDictionary);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Sets collection dictionary that a conforming reader shall use to enhance the presentation of file attachments
         /// stored in the PDF document.
         /// </summary>
@@ -377,8 +394,7 @@ namespace iText.Kernel.Pdf {
                 outlines = new PdfOutline(GetDocument());
             }
             else {
-                outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
-                GetNextItem(outlineRoot.GetAsDictionary(PdfName.First), outlines, destsTree.GetNames());
+                ConstructOutlines(outlineRoot, destsTree.GetNames());
             }
             return outlines;
         }
@@ -502,11 +518,70 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void GetNextItem(PdfDictionary item, PdfOutline parent, IDictionary<String, PdfObject> names) {
-            if (null == item) {
-                return;
+        /// <summary>Get the next outline of the current node in the outline tree by looking for a child or sibling node.
+        ///     </summary>
+        /// <remarks>
+        /// Get the next outline of the current node in the outline tree by looking for a child or sibling node.
+        /// If there is no child or sibling of the current node
+        /// <see cref="GetParentNextOutline(PdfDictionary)"/>
+        /// is called to get a hierarchical parent's next node.
+        /// <see langword="null"/>
+        /// is returned if one does not exist.
+        /// </remarks>
+        /// <returns>
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// object of the next outline if one exists,
+        /// <see langword="null"/>
+        /// otherwise.
+        /// </returns>
+        private PdfDictionary GetNextOutline(PdfDictionary first, PdfDictionary next, PdfDictionary parent) {
+            if (first != null) {
+                return first;
             }
-            PdfOutline outline = new PdfOutline(item.GetAsString(PdfName.Title).ToUnicodeString(), item, parent);
+            else {
+                if (next != null) {
+                    return next;
+                }
+                else {
+                    return GetParentNextOutline(parent);
+                }
+            }
+        }
+
+        /// <summary>Gets the parent's next outline of the current node.</summary>
+        /// <remarks>
+        /// Gets the parent's next outline of the current node.
+        /// If the parent does not have a next we look at the grand parent, great-grand parent, etc until we find a next node or reach the root at which point
+        /// <see langword="null"/>
+        /// is returned to signify there is no next node present.
+        /// </remarks>
+        /// <returns>
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// object of the next outline if one exists,
+        /// <see langword="null"/>
+        /// otherwise.
+        /// </returns>
+        private PdfDictionary GetParentNextOutline(PdfDictionary parent) {
+            if (parent == null) {
+                return null;
+            }
+            PdfDictionary current = null;
+            while (current == null) {
+                current = parent.GetAsDictionary(PdfName.Next);
+                if (current == null) {
+                    parent = parent.GetAsDictionary(PdfName.Parent);
+                    if (parent == null) {
+                        return null;
+                    }
+                }
+            }
+            return current;
+        }
+
+        private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IDictionary<String, PdfObject> names
+            ) {
             PdfObject dest = item.Get(PdfName.Dest);
             if (dest != null) {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);
@@ -518,7 +593,7 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary action = item.GetAsDictionary(PdfName.A);
                 if (action != null) {
                     PdfName actionType = action.GetAsName(PdfName.S);
-                    //Check if it a go to action
+                    //Check if it is a go to action
                     if (PdfName.GoTo.Equals(actionType)) {
                         //Retrieve destination if it is.
                         PdfObject destObject = action.Get(PdfName.D);
@@ -531,14 +606,43 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
-            parent.GetAllChildren().Add(outline);
-            PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
-            if (processItem != null) {
-                GetNextItem(processItem, outline, names);
+        }
+
+        /// <summary>
+        /// Constructs
+        /// <see cref="outlines"/>
+        /// iteratively
+        /// </summary>
+        private void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+            if (outlineRoot == null) {
+                return;
             }
-            processItem = item.GetAsDictionary(PdfName.Next);
-            if (processItem != null) {
-                GetNextItem(processItem, parent, names);
+            PdfDictionary first = outlineRoot.GetAsDictionary(PdfName.First);
+            PdfDictionary current = first;
+            PdfDictionary next;
+            PdfDictionary parent;
+            Dictionary<PdfDictionary, PdfOutline> parentOutlineMap = new Dictionary<PdfDictionary, PdfOutline>();
+            outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
+            PdfOutline parentOutline = outlines;
+            parentOutlineMap.Put(outlineRoot, parentOutline);
+            while (current != null) {
+                first = current.GetAsDictionary(PdfName.First);
+                next = current.GetAsDictionary(PdfName.Next);
+                parent = current.GetAsDictionary(PdfName.Parent);
+                parentOutline = parentOutlineMap.Get(parent);
+                PdfOutline currentOutline = new PdfOutline(current.GetAsString(PdfName.Title).ToUnicodeString(), current, 
+                    parentOutline);
+                AddOutlineToPage(currentOutline, current, names);
+                parentOutline.GetAllChildren().Add(currentOutline);
+                if (first != null) {
+                    parentOutlineMap.Put(current, currentOutline);
+                }
+                else {
+                    if (current == parent.GetAsDictionary(PdfName.Last)) {
+                        parentOutlineMap.JRemove(parent);
+                    }
+                }
+                current = GetNextOutline(first, next, parent);
             }
         }
     }

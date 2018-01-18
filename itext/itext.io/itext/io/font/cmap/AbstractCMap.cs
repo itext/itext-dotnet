@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -89,6 +89,9 @@ namespace iText.IO.Font.Cmap {
         }
 
         internal abstract void AddChar(String mark, CMapObject code);
+
+        internal virtual void AddCodeSpaceRange(byte[] low, byte[] high) {
+        }
 
         internal virtual void AddRange(String from, String to, CMapObject code) {
             byte[] a1 = DecodeStringToByte(from);

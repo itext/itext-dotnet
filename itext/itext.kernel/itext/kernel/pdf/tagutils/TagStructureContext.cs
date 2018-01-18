@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -668,7 +668,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal virtual void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
             if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
-                GetPdfObject() == GetRootTag().GetPdfObject()) {
+                GetParent() is PdfStructTreeRoot) {
                 return;
             }
             IList<IStructureNode> kids = parent.GetKids();
@@ -777,8 +777,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (!structParent.IsFlushed()) {
                     structParent.RemoveKid(pageTag);
                     PdfDictionary parentStructDict = structParent.GetPdfObject();
-                    if (waitingTagsManager.GetObjForStructDict(parentStructDict) == null && parent.GetKids().Count == 0 && parentStructDict
-                         != GetRootTag().GetPdfObject()) {
+                    if (waitingTagsManager.GetObjForStructDict(parentStructDict) == null && parent.GetKids().Count == 0 && !(structParent
+                        .GetParent() is PdfStructTreeRoot)) {
                         RemovePageTagFromParent(structParent, parent.GetParent());
                         PdfIndirectReference indRef = parentStructDict.GetIndirectReference();
                         if (indRef != null) {

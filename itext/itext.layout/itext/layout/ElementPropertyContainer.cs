@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -454,6 +454,61 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetBorderLeft(Border border) {
             SetProperty(Property.BORDER_LEFT, border);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for all four edges of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the bottom left corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderBottomLeftRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the bottom right corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderBottomRightRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_BOTTOM_RIGHT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the top left corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderTopLeftRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_TOP_LEFT_RADIUS, borderRadius);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a border radius for the top right corner of this Element.</summary>
+        /// <param name="borderRadius">
+        /// a customized
+        /// <see cref="iText.Layout.Properties.BorderRadius"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBorderTopRightRadius(BorderRadius borderRadius) {
+            SetProperty(Property.BORDER_TOP_RIGHT_RADIUS, borderRadius);
             return (T)(Object)this;
         }
 

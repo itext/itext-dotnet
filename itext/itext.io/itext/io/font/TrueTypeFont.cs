@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -290,7 +290,11 @@ namespace iText.IO.Font {
             if (ttfUniqueId != null) {
                 fontIdentification.SetTtfVersion(ttfUniqueId[0][3]);
             }
-            fontIdentification.SetPanose(os_2.panose);
+            byte[] pdfPanose = new byte[12];
+            pdfPanose[1] = (byte)(os_2.sFamilyClass);
+            pdfPanose[0] = (byte)(os_2.sFamilyClass >> 8);
+            System.Array.Copy(os_2.panose, 0, pdfPanose, 2, 10);
+            fontIdentification.SetPanose(pdfPanose);
             IDictionary<int, int[]> cmap = GetActiveCmap();
             int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
             int numOfGlyphs = fontMetrics.GetNumberOfGlyphs();

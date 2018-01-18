@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -205,6 +205,15 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             public static PdfStream GetIccProfileStream(Stream iccStream) {
                 IccProfile iccProfile = IccProfile.GetInstance(iccStream);
+                return GetIccProfileStream(iccProfile);
+            }
+
+            public static PdfStream GetIccProfileStream(Stream iccStream, float[] range) {
+                IccProfile iccProfile = IccProfile.GetInstance(iccStream);
+                return GetIccProfileStream(iccProfile, range);
+            }
+
+            public static PdfStream GetIccProfileStream(IccProfile iccProfile) {
                 PdfStream stream = new PdfStream(iccProfile.GetData());
                 stream.Put(PdfName.N, new PdfNumber(iccProfile.GetNumComponents()));
                 switch (iccProfile.GetNumComponents()) {
@@ -230,8 +239,8 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return stream;
             }
 
-            public static PdfStream GetIccProfileStream(Stream iccStream, float[] range) {
-                PdfStream stream = GetIccProfileStream(iccStream);
+            public static PdfStream GetIccProfileStream(IccProfile iccProfile, float[] range) {
+                PdfStream stream = GetIccProfileStream(iccProfile);
                 stream.Put(PdfName.Range, new PdfArray(range));
                 return stream;
             }

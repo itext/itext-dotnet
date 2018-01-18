@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -99,7 +98,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest2() {
@@ -126,7 +124,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -148,7 +145,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest4() {
@@ -180,7 +176,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest5() {
             NUnit.Framework.Assert.That(() =>  {
@@ -206,7 +201,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest6() {
@@ -234,7 +228,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest7() {
@@ -264,7 +257,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -284,7 +276,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -307,7 +298,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest1() {
@@ -327,7 +317,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest2() {
@@ -347,7 +336,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest3() {
@@ -378,7 +366,6 @@ namespace iText.Pdfa {
         /// can omit ColorSpace entry if color space is defined implicitly in the image itself.
         /// </remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest4() {
@@ -406,8 +393,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -431,7 +416,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest2() {
@@ -458,7 +442,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -554,8 +537,8 @@ namespace iText.Pdfa {
             colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
                 type2).GetPdfObject());
             attributes.Put(PdfName.Colorants, colorantsDict);
-            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList<String>(separationName
-                ), alternateSpace, type2, attributes), new float[] { 0.5f });
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList(separationName), 
+                alternateSpace, type2, attributes), new float[] { 0.5f });
             canvas.SetColor(deviceN, true);
             doc.Close();
         }

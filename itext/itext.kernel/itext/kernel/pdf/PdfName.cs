@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -343,6 +343,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ClosedArrow = CreateDirectName("ClosedArrow");
 
+        public static readonly iText.Kernel.Pdf.PdfName CMapName = CreateDirectName("CMapName");
+
         public static readonly iText.Kernel.Pdf.PdfName CO = CreateDirectName("CO");
 
         public static readonly iText.Kernel.Pdf.PdfName Code = CreateDirectName("Code");
@@ -561,6 +563,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName EndOfLine = CreateDirectName("EndOfLine");
 
         public static readonly iText.Kernel.Pdf.PdfName Enforce = CreateDirectName("Enforce");
+
+        public static readonly iText.Kernel.Pdf.PdfName EP = CreateDirectName("EP");
 
         public static readonly iText.Kernel.Pdf.PdfName ESIC = CreateDirectName("ESIC");
 

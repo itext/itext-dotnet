@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -63,7 +63,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -82,7 +81,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -101,7 +99,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck03() {
             NUnit.Framework.Assert.That(() =>  {
@@ -120,7 +117,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck04() {
             NUnit.Framework.Assert.That(() =>  {
@@ -139,7 +135,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck05() {
             NUnit.Framework.Assert.That(() =>  {
@@ -158,7 +153,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck06() {
             NUnit.Framework.Assert.That(() =>  {
@@ -177,7 +171,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck07() {
             NUnit.Framework.Assert.That(() =>  {
@@ -196,7 +189,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck08() {
             NUnit.Framework.Assert.That(() =>  {
@@ -216,7 +208,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck09() {
             NUnit.Framework.Assert.That(() =>  {
@@ -235,7 +226,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck10() {
             NUnit.Framework.Assert.That(() =>  {
@@ -254,7 +244,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck11() {
             NUnit.Framework.Assert.That(() =>  {
@@ -273,7 +262,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck12() {
             NUnit.Framework.Assert.That(() =>  {
@@ -292,7 +280,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck13() {
             NUnit.Framework.Assert.That(() =>  {
@@ -309,7 +296,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck14() {
             NUnit.Framework.Assert.That(() =>  {
@@ -326,7 +312,6 @@ namespace iText.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ActionCheck15() {

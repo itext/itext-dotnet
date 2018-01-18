@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,6 +52,8 @@ namespace iText.IO.Font.Cmap {
 
         private readonly byte[] EMPTY = new byte[] {  };
 
+        private IList<byte[]> codeSpaceRanges = new List<byte[]>();
+
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 byte[] ser = DecodeStringToByte(mark);
@@ -81,6 +83,19 @@ namespace iText.IO.Font.Cmap {
                 code2cid.Put(byteCode, cid);
             }
             return code2cid;
+        }
+
+        /// <summary>
+        /// Returns a list containing sequential pairs of code space beginning and endings:
+        /// (begincodespacerange1, endcodespacerange1, begincodespacerange2, endcodespacerange1, ...)
+        /// </summary>
+        public virtual IList<byte[]> GetCodeSpaceRanges() {
+            return codeSpaceRanges;
+        }
+
+        internal override void AddCodeSpaceRange(byte[] low, byte[] high) {
+            codeSpaceRanges.Add(low);
+            codeSpaceRanges.Add(high);
         }
     }
 }

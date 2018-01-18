@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -204,6 +204,8 @@ namespace iText.Layout.Renderer {
             bool forcePartialSplitOnFirstChar = false;
             // true in situations like "Hello\nWorld"
             bool ignoreNewLineSymbol = false;
+            // true when \r\n are found
+            bool crlf = false;
             // For example, if a first character is a RTL mark (U+200F), and the second is a newline, we need to break anyway
             int firstPrintPos = currentTextPos;
             while (firstPrintPos < text.end && NoPrint(text.Get(firstPrintPos))) {
@@ -239,6 +241,10 @@ namespace iText.Layout.Renderer {
                         }
                         if (line.start == -1) {
                             line.start = currentTextPos;
+                        }
+                        crlf = TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos);
+                        if (crlf) {
+                            currentTextPos++;
                         }
                         line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
                         break;
@@ -379,8 +385,10 @@ namespace iText.Layout.Renderer {
                             if (line.start == -1) {
                                 line.start = currentTextPos;
                             }
-                            currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
-                                )) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
+                            if (!crlf) {
+                                currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
+                                    )) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
+                            }
                             line.end = Math.Max(line.end, currentTextPos);
                             wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
                             if (wordSplit || !(forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
@@ -445,7 +453,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 iText.Layout.Renderer.TextRenderer[] split;
-                if (ignoreNewLineSymbol) {
+                if (ignoreNewLineSymbol || crlf) {
                     // ignore '\n'
                     split = SplitIgnoreFirstNewLine(currentTextPos);
                 }
@@ -668,7 +676,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_699();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_712();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -733,8 +741,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_699 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_699() {
+        private sealed class _IGlyphLineFilter_712 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_712() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -949,14 +957,8 @@ namespace iText.Layout.Renderer {
         }
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
-            if (text.Get(currentTextPos).GetUnicode() == '\r') {
-                int next = currentTextPos + 1 < text.end ? text.Get(currentTextPos + 1).GetUnicode() : -1;
-                if (next == '\n') {
-                    return Split(currentTextPos + 2);
-                }
-                else {
-                    return Split(currentTextPos + 1);
-                }
+            if (TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos)) {
+                return Split(currentTextPos + 2);
             }
             else {
                 return Split(currentTextPos + 1);

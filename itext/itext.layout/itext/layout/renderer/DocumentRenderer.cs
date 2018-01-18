@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,6 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
-using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -113,9 +112,8 @@ namespace iText.Layout.Renderer {
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
             Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
-            Border outlineProp = resultRenderer.GetProperty<Border>(Property.OUTLINE);
             if (!waitingDrawingElements.Contains(resultRenderer)) {
-                ProcessWaitingDrawing(resultRenderer, transformProp, outlineProp, waitingDrawingElements);
+                ProcessWaitingDrawing(resultRenderer, transformProp, waitingDrawingElements);
                 if (FloatingHelper.IsRendererFloating(resultRenderer) || transformProp != null) {
                     return;
                 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -117,6 +117,8 @@ namespace iText.IO {
         public const String ExpectedJp2hMarker = "Expected JP2H marker.";
 
         public const String ExpectedJpMarker = "Expected JP marker.";
+
+        public const String ExpectedTrailingZeroBitsForByteAlignedLines = "Expected trailing zero bits for byte-aligned lines";
 
         public const String ExtraSamplesAreNotSupported = "Extra samples are not supported.";
 

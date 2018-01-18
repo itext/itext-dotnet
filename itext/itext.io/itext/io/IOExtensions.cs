@@ -1,7 +1,7 @@
-﻿/*
+/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using iText.IO.Util.Collections;
 
 namespace iText.IO {
     internal static class IOExtensions {
@@ -98,6 +99,13 @@ namespace iText.IO {
         }
 
         public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
+            if (list is SingletonList<T>) {
+                if (fromIndex == 0 && toIndex >= 1) {
+                    return new List<T>(list);
+                } else {
+                    return new List<T>();
+                }
+            }
             return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
         }
 

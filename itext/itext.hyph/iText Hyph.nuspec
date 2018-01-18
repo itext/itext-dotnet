@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7.hyph</id>
-    <version>7.1.0</version>
+    <version>7.1.1</version>
     <title>iText 7 Hyph</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -13,7 +13,7 @@
     <description>XML files that can be used for hyphenation with iText 7, an open source PDF library</description>
     <summary></summary>
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2017 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2018 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf hyphenation hyph</tags>
     <dependencies>

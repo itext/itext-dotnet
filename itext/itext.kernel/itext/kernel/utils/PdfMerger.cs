@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -117,7 +117,7 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="from">- document, from which pages will be copied.</param>
         /// <param name="fromPage">- start page in the range of pages to be copied.</param>
-        /// <param name="toPage">- end page in the range to be copied.</param>
+        /// <param name="toPage">- end (inclusive) page in the range to be copied</param>
         /// <returns>
         /// this
         /// <c>PdfMerger</c>

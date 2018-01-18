@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Font;
-using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.Kernel.Pdf;
 
@@ -71,12 +70,11 @@ namespace iText.Kernel.Font {
         internal PdfType1Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             // if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
             // unused variable.
             // boolean fillStandardEncoding = !fontDictionary.containsKey(PdfName.FontDescriptor);
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
-            fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUni);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
+            fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUnicode);
             if (fontProgram is IDocFontProgram) {
                 embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             }

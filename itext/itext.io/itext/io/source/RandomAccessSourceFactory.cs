@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -153,7 +153,10 @@ namespace iText.IO.Source
 		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(Uri url) {
 #if !NETSTANDARD1_6
-            WebRequest wr = WebRequest.Create(url.LocalPath);
+			// Creation of web request via url.AbsoluteUri breaks UNC pathes (like \\computer-name\\img.jpg),
+			// url.LocalPath and url.AbsolutePath - break http links (like https://website.com/img.jpg).
+			// It seems enough to simply pass Uri instance as is, WebRequest seems to handle both escaping and UNC issues.
+            WebRequest wr = WebRequest.Create(url);
             wr.Credentials = CredentialCache.DefaultCredentials;
             Stream isp = wr.GetResponse().GetResponseStream();
 #else

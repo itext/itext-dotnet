@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -530,22 +530,28 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <summary>Split PDF string into array of single character PDF strings.</summary>
-        /// <param name="string">PDF string to be splitted.</param>
-        /// <returns>splitted PDF string.</returns>
+        /// <param name="string">PDF string to be split.</param>
+        /// <returns>split PDF string.</returns>
         private PdfString[] SplitString(PdfString @string) {
             CheckGraphicsState();
-            IList<PdfString> strings = new List<PdfString>();
-            String stringValue = @string.GetValue();
-            for (int i = 0; i < stringValue.Length; i++) {
-                PdfString newString = new PdfString(stringValue.JSubstring(i, i + 1), @string.GetEncoding());
-                String text = gs.GetFont().Decode(newString);
-                if (text.Length == 0 && i < stringValue.Length - 1) {
-                    newString = new PdfString(stringValue.JSubstring(i, i + 2), @string.GetEncoding());
-                    i++;
+            PdfFont font = gs.GetFont();
+            if (font is PdfType0Font) {
+                // Number of bytes forming one glyph can be arbitrary from [1; 4] range
+                IList<PdfString> strings = new List<PdfString>();
+                GlyphLine glyphLine = gs.GetFont().DecodeIntoGlyphLine(@string);
+                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                    strings.Add(new PdfString(gs.GetFont().ConvertToBytes(glyphLine.Get(i))));
                 }
-                strings.Add(newString);
+                return strings.ToArray(new PdfString[strings.Count]);
             }
-            return strings.ToArray(new PdfString[strings.Count]);
+            else {
+                // One byte corresponds to one character
+                PdfString[] strings = new PdfString[@string.GetValue().Length];
+                for (int i = 0; i < @string.GetValue().Length; i++) {
+                    strings[i] = new PdfString(@string.GetValue().JSubstring(i, i + 1), @string.GetEncoding());
+                }
+                return strings;
+            }
         }
 
         private float[] GetAscentDescent() {

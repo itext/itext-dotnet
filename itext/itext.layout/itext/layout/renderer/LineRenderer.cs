@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -169,7 +169,7 @@ namespace iText.Layout.Renderer {
                     // TODO width will be recalculated on float layout;
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
-                    // TODO may be process floating spans as inline blocks always?
+                    // TODO DEVSIX-1730: may be process floating spans as inline blocks always?
                     if (!wasXOverflowChanged && childPos > 0) {
                         oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
                         wasXOverflowChanged = true;
@@ -816,6 +816,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void ApplyLeading(float deltaY) {
             occupiedArea.GetBBox().MoveUp(deltaY);
+            occupiedArea.GetBBox().DecreaseHeight(deltaY);
             foreach (IRenderer child in childRenderers) {
                 if (!FloatingHelper.IsRendererFloating(child)) {
                     child.Move(0, deltaY);

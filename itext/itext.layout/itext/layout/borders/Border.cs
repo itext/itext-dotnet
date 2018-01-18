@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -204,13 +206,16 @@ namespace iText.Layout.Borders {
         /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
         /// of border joins.
         /// </p>
+        /// <p>
+        /// <code>borderRadius</code> is used to draw rounded borders.
+        /// </p>
         /// </remarks>
         /// <param name="canvas">PdfCanvas to be written to</param>
         /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
         /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
         /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
         /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
-        /// <param name="borderRadius">border radius</param>
+        /// <param name="borderRadius">defines the radius of the element's corners</param>
         /// <param name="defaultSide">
         /// the
         /// <see cref="Side"/>
@@ -218,8 +223,63 @@ namespace iText.Layout.Borders {
         /// </param>
         /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
         /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
-        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
-             defaultSide, float borderWidthBefore, float borderWidthAfter);
+        public virtual void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
+             defaultSide, float borderWidthBefore, float borderWidthAfter) {
+            Draw(canvas, x1, y1, x2, y2, borderRadius, borderRadius, borderRadius, borderRadius, defaultSide, borderWidthBefore
+                , borderWidthAfter);
+        }
+
+        /// <summary>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
+        /// </p>
+        /// <p>
+        /// Given points specify the line which lies on the border of the content area,
+        /// therefore the border itself should be drawn to the left from the drawing direction.
+        /// </p>
+        /// <p>
+        /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
+        /// define the widths of the borders that are before and after the current border, e.g. for
+        /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
+        /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
+        /// of border joins.
+        /// </p>
+        /// <p>
+        /// <code>horizontalRadius1</code>, <code>verticalRadius1</code>, <code>horizontalRadius2</code>
+        /// and <code>verticalRadius2</code> are used to draw rounded borders.
+        /// </p>
+        /// </remarks>
+        /// <param name="canvas">PdfCanvas to be written to</param>
+        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="horizontalRadius1">defines the horizontal radius of the border's first corner</param>
+        /// <param name="verticalRadius1">defines the vertical radius of the border's first corner</param>
+        /// <param name="horizontalRadius2">defines the horizontal radius of the border's second corner</param>
+        /// <param name="verticalRadius2">defines the vertical radius of the border's second corner</param>
+        /// <param name="defaultSide">
+        /// the
+        /// <see cref="Side"/>
+        /// , that we will fallback to, if it cannot be determined by border coordinates
+        /// </param>
+        /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
+        /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
+        public virtual void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float horizontalRadius1
+            , float verticalRadius1, float horizontalRadius2, float verticalRadius2, Border.Side defaultSide, float
+             borderWidthBefore, float borderWidthAfter) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Borders.Border));
+            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED
+                , "Border#draw(PdfCanvas, float, float, float, float, float, float, float, float, Side, float, float", 
+                "Border#draw(PdfCanvas, float, float, float, float, Side, float, float)"));
+            Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);
+        }
 
         /// <summary>Draws the border of a cell.</summary>
         /// <param name="canvas">PdfCanvas to be written to</param>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -255,8 +255,8 @@ namespace iText.Layout.Renderer {
             }
             ApplyMargins(layoutBox, false);
             ApplyFixedXOrYPosition(true, layoutBox);
-            if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
-                Property.FORCED_PLACEMENT))) {
+            if (null != blockMaxHeight && blockMaxHeight <= layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean
+                (Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }

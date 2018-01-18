@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -111,8 +111,23 @@ namespace iText.Kernel.Pdf.Collection {
             return this;
         }
 
+        [System.ObsoleteAttribute(@"Will always return null. The return will be changed to PdfName in 7.2. Use getPdfObject().getAsName(PdfName.View) , or one of IsViewDetails() , IsViewTile() , IsViewHidden() ."
+            )]
         public virtual PdfNumber GetView() {
             return GetPdfObject().GetAsNumber(PdfName.View);
+        }
+
+        public virtual bool IsViewDetails() {
+            PdfName view = GetPdfObject().GetAsName(PdfName.View);
+            return view == null || view.Equals(PdfName.D);
+        }
+
+        public virtual bool IsViewTile() {
+            return PdfName.T.Equals(GetPdfObject().GetAsName(PdfName.View));
+        }
+
+        public virtual bool IsViewHidden() {
+            return PdfName.H.Equals(GetPdfObject().GetAsName(PdfName.View));
         }
 
         /// <summary>Sets the Collection sort dictionary.</summary>

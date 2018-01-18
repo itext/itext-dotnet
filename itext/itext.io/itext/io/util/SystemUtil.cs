@@ -1,7 +1,7 @@
-﻿/*
+/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -95,6 +95,34 @@ namespace iText.IO.Util {
             }
             System.Console.Out.WriteLine(bri.ToString());
             System.Console.Out.WriteLine(bre.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public static StringBuilder RunProcessAndCollectErrors(String execPath, String @params)
+        {
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
+
+            StringBuilder errorsBuilder = PrintProcessErrorsOutput(p);
+            p.WaitForExit();
+            return errorsBuilder;
+        }
+
+        private static StringBuilder PrintProcessErrorsOutput(Process p)
+        {
+            StringBuilder bre = new StringBuilder();
+            while (!p.HasExited)
+            {
+                bre.Append(p.StandardError.ReadToEnd());
+            }
+            System.Console.Out.WriteLine(bre.ToString());
+            return bre;
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -200,12 +200,20 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.JUSTIFIED && !result.IsSplitForcedByNewline
                     () || textAlignment == TextAlignment.JUSTIFIED_ALL) {
                     if (processedRenderer != null) {
-                        processedRenderer.Justify(layoutBox.GetWidth() - lineIndent);
+                        //processedRenderer.justify(layoutBox.getWidth() - lineIndent);
+                        //7.0.5 fix: processedRenderer.justify(result.getMinMaxWidth().getAvailableWidth() - lineIndent);
+                        Rectangle floatBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
+                        processedRenderer.Justify(floatBox.GetWidth() - lineIndent);
                     }
                 }
                 else {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        float deltaX = childBBoxWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                        //float deltaX = childBBoxWidth - processedRenderer.getOccupiedArea().getBBox().getWidth();
+                        //7.0.5 fix: float deltaX = result.getMinMaxWidth().getAvailableWidth() - processedRenderer.getOccupiedArea().getBBox().getWidth();
+                        Rectangle floatBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
+                        float deltaX = floatBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
                                 processedRenderer.Move(deltaX, 0);
@@ -299,10 +307,7 @@ namespace iText.Layout.Renderer {
                                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
                                             ).GetBBox()));
-                                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                                            .FIT.Equals(overflowX))) {
-                                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                                        }
+                                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                                         parent.SetProperty(Property.FULL, true);
                                         lines.Add(currentRenderer);
                                         // Force placement of children we have and do not force placement of the others
@@ -338,10 +343,7 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
                             ().GetBBox()));
-                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                            .FIT.Equals(overflowX))) {
-                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                        }
+                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                     }
                     firstLineInBox = false;
                     layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -189,10 +189,7 @@ namespace iText.Layout.Renderer {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
                             occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                                 ()));
-                            if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                                .FIT.Equals(overflowX))) {
-                                occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                            }
+                            FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                         }
                     }
                     // On page split, content will be drawn on next page, i.e. under all floats on this page
@@ -305,10 +302,7 @@ namespace iText.Layout.Renderer {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
-                        if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() && !(null == overflowX || OverflowPropertyValue
-                            .FIT.Equals(overflowX))) {
-                            occupiedArea.GetBBox().SetWidth(layoutBox.GetWidth());
-                        }
+                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
                     }
                 }
                 if (marginsCollapsingEnabled) {
@@ -496,12 +490,12 @@ namespace iText.Layout.Renderer {
             }
             BeginElementOpacityApplying(drawContext);
             BeginRotationIfApplied(drawContext.GetCanvas());
-            DrawBackground(drawContext);
-            DrawBorder(drawContext);
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowPropertyValue? overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             bool processOverflow = OverflowPropertyValue.HIDDEN.Equals(overflowX) || OverflowPropertyValue.HIDDEN.Equals
                 (overflowY);
+            DrawBackground(drawContext);
+            DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
                 Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
@@ -727,7 +721,7 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             bool wasHeightClipped = false;
-            if (blockMaxHeight < parentBBox.GetHeight()) {
+            if (blockMaxHeight <= parentBBox.GetHeight()) {
                 wasHeightClipped = true;
             }
             float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
@@ -746,6 +740,17 @@ namespace iText.Layout.Renderer {
                 }
             }
             return difference;
+        }
+
+        internal virtual void FixOccupiedAreaWidthAndXPositionIfOverflowed(OverflowPropertyValue? overflowX, Rectangle
+             layoutBox) {
+            if (overflowX == null || OverflowPropertyValue.FIT.Equals(overflowX)) {
+                return;
+            }
+            if ((occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() || occupiedArea.GetBBox().GetLeft() < layoutBox
+                .GetLeft())) {
+                occupiedArea.GetBBox().SetX(layoutBox.GetX()).SetWidth(layoutBox.GetWidth());
+            }
         }
 
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, UnitValue

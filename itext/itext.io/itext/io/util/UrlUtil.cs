@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -71,8 +71,10 @@ namespace iText.IO.Util {
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {
-                // do not replace first argument with Uri.UnescapeDataString(url.AbsolutePath) instead of url.LocalPath
-                // it breaks the recognition of network paths
+                // Use url.LocalPath because it's needed for handling UNC pathes (like used in local
+                // networks, e.g. \\computer\file.ext). It's safe to use #LocalPath because we 
+                // check #IsFile beforehand. On the other hand, the url.AbsolutePath provides escaped string and also breaks
+                // UNC path.
                 isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);     
             } else {
 #if !NETSTANDARD1_6

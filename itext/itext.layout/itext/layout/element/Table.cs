@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.Kernel;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
@@ -632,6 +633,9 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddCell(Cell cell) {
+            if (isComplete && null != lastAddedRow) {
+                throw new PdfException(PdfException.CannotAddCellToCompletedLargeTable);
+            }
             // Try to find first empty slot in table.
             // We shall not use colspan or rowspan, 1x1 will be enough.
             while (true) {
@@ -753,7 +757,17 @@ namespace iText.Layout.Element {
             }
             // In case of large tables, we only add to the renderer the cells from complete row groups,
             // for incomplete ones we may have problem with partial rendering because of cross-dependency.
-            lastAddedRowGroups = isComplete ? null : GetRowGroups();
+            if (isComplete) {
+                // if table was large we need to remove the last flushed group of rows, so we need to update lastAddedRowGroups
+                if (null != lastAddedRow && 0 != rows.Count) {
+                    IList<Table.RowRange> allRows = new List<Table.RowRange>();
+                    allRows.Add(new Table.RowRange(rowWindowStart, rowWindowStart + rows.Count - 1));
+                    lastAddedRowGroups = allRows;
+                }
+            }
+            else {
+                lastAddedRowGroups = GetRowGroups();
+            }
             if (isComplete) {
                 return new TableRenderer(this, new Table.RowRange(rowWindowStart, rowWindowStart + rows.Count - 1));
             }

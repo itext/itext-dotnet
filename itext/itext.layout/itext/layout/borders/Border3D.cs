@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -188,12 +188,6 @@ namespace iText.Layout.Borders {
             SetOuterHalfColor(canvas, borderSide);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             canvas.RestoreState();
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderRadius, Border.Side
-             defaultSide, float borderWidthBefore, float borderWidthAfter) {
-            Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);
         }
 
         /// <summary><inheritDoc/></summary>

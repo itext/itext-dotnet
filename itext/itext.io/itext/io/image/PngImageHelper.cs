@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Common.Logging;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Source;
@@ -214,6 +215,11 @@ namespace iText.IO.Image {
         /// <exception cref="System.IO.IOException"/>
         private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png) {
             ReadPng(pngStream, png);
+            if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
+                ) {
+                LogManager.GetLogger(typeof(PngImageHelper)).Warn(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+                    );
+            }
             try {
                 int pal0 = 0;
                 int palIdx = 0;
@@ -405,6 +411,10 @@ namespace iText.IO.Image {
                 }
                 return array;
             }
+        }
+
+        private static int GetExpectedNumberOfColorComponents(PngImageHelper.PngParameters png) {
+            return (png.colorType & 2) == 0 ? 1 : 3;
         }
 
         /// <exception cref="System.IO.IOException"/>

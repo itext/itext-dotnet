@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -2088,6 +2088,80 @@ namespace iText.Layout {
             table.AddCell("row 2; cell 2");
             doc.Add(table);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CellsWithEdgeCaseLeadingTest01() {
+            String testName = "cellsWithEdgeCaseLeadingTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            SolidBorder border = new SolidBorder(1f);
+            Table table = new Table(UnitValue.CreatePointArray(new float[] { 20, 20, 20, 20 }));
+            Paragraph paragraph5 = new Paragraph(new Text("Cell5"));
+            Paragraph paragraph6 = new Paragraph(new Text("Cell6"));
+            Paragraph paragraph7 = new Paragraph(new Text("Cell7"));
+            Paragraph paragraph8 = new Paragraph(new Text("Cell8"));
+            Paragraph paragraph13 = new Paragraph("Cell13");
+            Paragraph paragraph14 = new Paragraph(new Text(""));
+            Paragraph paragraph15 = new Paragraph(new Text("Cell15VVVVVVVVV"));
+            Paragraph paragraph16 = new Paragraph(new Text(""));
+            Cell cell1 = new Cell().Add(new Paragraph().Add("Cell1")).SetBorder(border);
+            Cell cell2 = new Cell().Add(new Paragraph().Add("Cell2")).SetBorder(border);
+            Cell cell3 = new Cell().Add(new Paragraph().Add("Cell3")).SetBorder(border);
+            Cell cell4 = new Cell().Add(new Paragraph().Add("Cell4")).SetBorder(border);
+            Cell cell5 = new Cell().Add(paragraph5.SetFixedLeading(8)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell6 = new Cell().Add(paragraph6.SetFixedLeading(0)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell7 = new Cell().Add(paragraph7.SetFixedLeading(8)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell8 = new Cell().Add(paragraph8.SetFixedLeading(-4)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell9 = new Cell().Add(new Paragraph().Add("Cell9")).SetBorder(border);
+            Cell cell10 = new Cell().Add(new Paragraph().Add("Cell10")).SetBorder(border);
+            Cell cell11 = new Cell().Add(new Paragraph().Add("Cell11")).SetBorder(border);
+            Cell cell12 = new Cell().Add(new Paragraph().Add("Cell12")).SetBorder(border);
+            Cell cell13 = new Cell().Add(paragraph13.SetMultipliedLeading(-1)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell14 = new Cell().Add(paragraph14.SetMultipliedLeading(4)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell15 = new Cell().Add(paragraph15.SetMultipliedLeading(8)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell16 = new Cell().Add(paragraph16.SetMultipliedLeading(-4)).SetBorder(border).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            Cell cell17 = new Cell().Add(new Paragraph().Add("Cell17")).SetBorder(border);
+            Cell cell18 = new Cell().Add(new Paragraph().Add("Cell18")).SetBorder(border);
+            Cell cell19 = new Cell().Add(new Paragraph().Add("Cell19")).SetBorder(border);
+            Cell cell20 = new Cell().Add(new Paragraph().Add("Cell20")).SetBorder(border);
+            table.AddCell(cell1);
+            table.AddCell(cell2);
+            table.AddCell(cell3);
+            table.AddCell(cell4);
+            table.AddCell(cell5);
+            table.AddCell(cell6);
+            table.AddCell(cell7);
+            table.AddCell(cell8);
+            table.AddCell(cell9);
+            table.AddCell(cell10);
+            table.AddCell(cell11);
+            table.AddCell(cell12);
+            table.AddCell(cell13);
+            table.AddCell(cell14);
+            table.AddCell(cell15);
+            table.AddCell(cell16);
+            table.AddCell(cell17);
+            table.AddCell(cell18);
+            table.AddCell(cell19);
+            table.AddCell(cell20);
+            document.Add(table);
+            document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }

@@ -321,6 +321,9 @@ namespace iText.IO.Codec {
         /// <summary>data not compressed</summary>
         public const int GROUP4OPT_UNCOMPRESSED = 0x2;
 
+        /// <summary>fill to byte boundary</summary>
+        public const int GROUP4OPT_FILLBITS = 0x4;
+
         /// <summary>units of resolutions</summary>
         public const int TIFFTAG_RESOLUTIONUNIT = 296;
 

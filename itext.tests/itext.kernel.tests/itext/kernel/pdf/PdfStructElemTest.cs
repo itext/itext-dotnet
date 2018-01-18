@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -347,6 +347,49 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             document.Close();
             CompareResult("structElemTest07.pdf", "cmp_structElemTest07.pdf", "diff_structElem_07_");
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StructElemTest08() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest08.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfStructTreeRoot doc = document.GetStructTreeRoot();
+            PdfPage firstPage = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(firstPage);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
+            canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
+            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
+            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, firstPage));
+            canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(firstPage, span1))));
+            canvas.ShowText("Hello ");
+            canvas.CloseTag();
+            canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrDictionary(firstPage, span1))));
+            canvas.ShowText("World");
+            canvas.CloseTag();
+            canvas.EndText();
+            canvas.Release();
+            PdfPage secondPage = document.AddNewPage();
+            firstPage.Flush();
+            // on flushing, the Document tag is not added
+            secondPage.Flush();
+            document.Close();
+            CompareResult("structElemTest08.pdf", "cmp_structElemTest08.pdf", "diff_structElem_08_");
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StructElemTest09() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest09.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards_mult_roots.pdf"), 
+                writer);
+            document.RemovePage(1);
+            document.Close();
+            CompareResult("structElemTest09.pdf", "cmp_structElemTest09.pdf", "diff_structElem_09_");
         }
 
         /// <exception cref="System.Exception"/>

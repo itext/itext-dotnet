@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -244,6 +244,14 @@ namespace iText.IO.Util {
         {
             int unicode = glyph.GetUnicode();
             return unicode == '\n' || unicode == '\r';
+        }
+        
+        public static bool IsCarriageReturnFollowedByLineFeed(GlyphLine glyphLine, int carriageReturnPosition)
+        {
+            return glyphLine.Size() > 1
+                    && carriageReturnPosition <= glyphLine.Size() - 2
+                    && glyphLine.Get(carriageReturnPosition).GetUnicode() == '\r'
+                    && glyphLine.Get(carriageReturnPosition + 1).GetUnicode() == '\n';
         }
 
         /// <summary>

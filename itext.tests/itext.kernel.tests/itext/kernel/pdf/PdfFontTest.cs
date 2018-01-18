@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -98,6 +98,31 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World").EndText
                 ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            page.Flush();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithKozminAndDifferentCodespaceRanges() {
+            String filename = destinationFolder + "DocumentWithKozminDifferentCodespaceRanges.pdf";
+            String cmpFilename = sourceFolder + "cmp_DocumentWithKozminDifferentCodespaceRanges.pdf";
+            String title = "Type 0 test";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "83pv-RKSJ-H", true);
+            NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 50).ShowText(type0Font.CreateGlyphLine
+                ("Hello\u7121\u540dworld\u6b98\u528d")).EndText().RestoreState();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,6 +57,8 @@ namespace iText.IO.Font.Cmap {
         private const String endbfrange = "endbfrange";
 
         private const String endbfchar = "endbfchar";
+
+        private const String endcodespacerange = "endcodespacerange";
 
         private const String usecmap = "usecmap";
 
@@ -145,6 +147,17 @@ namespace iText.IO.Font.Cmap {
                             else {
                                 if (last.Equals(usecmap) && list.Count == 2 && list[0].IsName()) {
                                     ParseCid(list[0].ToString(), cmap, location, level + 1);
+                                }
+                                else {
+                                    if (last.Equals(endcodespacerange)) {
+                                        for (int i = 0; i < list.Count + 1; i += 2) {
+                                            if (list[i].IsHexString() && list[i + 1].IsHexString()) {
+                                                byte[] low = list[i].ToHexByteArray();
+                                                byte[] high = list[i + 1].ToHexByteArray();
+                                                cmap.AddCodeSpaceRange(low, high);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

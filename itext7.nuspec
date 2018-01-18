@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.1.0</version>
+    <version>7.1.1</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -13,7 +13,7 @@
     <description>iText 7 represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText 7 can be a boon to nearly every workflow. iText 7 allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in Java and .NET.</description>
     <summary>iText for .NET is a port of the iText open source java library for PDF generation written entirely in C# for the .NET platform.</summary>
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2017 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2018 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
     <dependencies>

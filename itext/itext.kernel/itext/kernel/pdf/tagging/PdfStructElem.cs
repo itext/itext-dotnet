@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -178,6 +178,10 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual IStructureNode RemoveKid(int index) {
+            return RemoveKid(index, false);
+        }
+
+        public virtual IStructureNode RemoveKid(int index, bool prepareForReAdding) {
             PdfObject k = GetK();
             if (k == null || !k.IsArray() && index != 0) {
                 throw new IndexOutOfRangeException();
@@ -196,7 +200,7 @@ namespace iText.Kernel.Pdf.Tagging {
             SetModified();
             IStructureNode removedKid = ConvertPdfObjectToIPdfStructElem(k);
             PdfDocument doc = GetDocument();
-            if (removedKid is PdfMcr && doc != null) {
+            if (removedKid is PdfMcr && doc != null && !prepareForReAdding) {
                 doc.GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
             }
             return removedKid;

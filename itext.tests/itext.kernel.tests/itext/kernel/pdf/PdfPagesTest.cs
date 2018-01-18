@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -414,6 +414,15 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void RotationPagesRotationTest() {
+            String filename = "singlePageDocumentWithRotation.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + filename));
+            PdfPage page = pdfDoc.GetPage(1);
+            NUnit.Framework.Assert.AreEqual(90, page.GetRotation(), "Inherited value is invalid");
         }
     }
 }

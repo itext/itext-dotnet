@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -78,6 +78,8 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
+        public const String COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED = "Collection dictionary already exists. It will be modified.";
+
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
         public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during color creation. Note that opacity can be achieved in some places by using 'setOpacity' method or 'TransparentColor' class";
@@ -104,6 +106,9 @@ namespace iText.IO {
 
         public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
 
+        public const String ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
+             = "Encrypted payload file spec shall have 'AFRelationship' filed equal to 'EncryptedPayload'";
+
         public const String ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY = "Encryption dictionary entries P and EncryptMetadata have value that does not correspond to encrypted values in Perms key.";
 
         public const String EXCEPTION_WHILE_CREATING_DEFAULT_FONT = "Exception while creating default font (Helvetica, WinAnsi)";
@@ -111,6 +116,10 @@ namespace iText.IO {
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
         public const String EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD = "Existing tag structure of the document has a root of \"{0}\" role in \"{1}\" namespace that is not mapped to the standard role.";
+
+        public const String FAILED_TO_DETERMINE_CID_FONT_SUBTYPE = "Failed to determine CIDFont subtype. The type of CIDFont shall be CIDFontType0 or CIDFontType2.";
+
+        public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
 
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
 
@@ -136,6 +145,17 @@ namespace iText.IO {
 
         public const String IMAGE_HAS_JPXDECODE_FILTER = "Image cannot be inline if it has JPXDecode filter. It will be added as an ImageXObject";
 
+        public const String IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
+             = "Image has icc profile with incompatible number of color components compared to image color space. The icc profile will be ignored.";
+
+        public const String IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
+             = "Image has icc profile with incompatible number of color components compared to base color space in image indexed color space. The icc profile will be ignored.";
+
+        public const String IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
+             = "Image has incorrect or unsupported base color space in indexed color space, it will be overridden by one based on embedded icc profile.";
+
+        public const String IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE = "Image has incorrect or unsupported color space, that will be overridden by one based on embedded icc profile.";
+
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
@@ -160,6 +180,8 @@ namespace iText.IO {
 
         public const String MAPPING_IN_STRUCT_ROOT_OVERWRITTEN = "Existing mapping for {0} in structure tree root role map was {1} and it was overwritten with {2}.";
 
+        public const String METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED = "Method {0} is not implemented by default: please, override and implement it. {1} will be used instead.";
+
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
@@ -180,6 +202,8 @@ namespace iText.IO {
 
         public const String OPENTYPE_GDEF_TABLE_ERROR = "OpenType GDEF table error: {0}";
 
+        public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
+
         public const String PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED = "Path key is present. Vertices will be ignored";
 
         public const String PDF_OBJECT_FLUSHING_NOT_PERFORMED = "PdfObject flushing is not performed: PdfDocument is opened in append mode and the object is not marked as modified ( see PdfObject#setModified() ).";
@@ -187,6 +211,8 @@ namespace iText.IO {
         public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
 
         public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
+
+        public const String PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS = "Png image has color profile with incompatible number of color components.";
 
         public const String POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION = "Popup entry in the markup annotations refers not to the annotation with Popup subtype.";
 

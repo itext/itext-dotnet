@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -497,7 +497,8 @@ namespace iText.Layout.Renderer {
                 firtsRow = tableRenderer.headerRenderer.rows[0];
             }
             else {
-                if (tableRenderer.rows.Count > 0) {
+                if (tableRenderer.rows.Count > 0 && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count
+                    ) {
                     firtsRow = tableRenderer.rows[0];
                 }
                 else {
@@ -574,6 +575,14 @@ namespace iText.Layout.Renderer {
                 ());
             UnitValue width = tableRenderer.GetProperty<UnitValue>(Property.WIDTH);
             if (fixedTableLayout && width != null && width.GetValue() >= 0) {
+                if (0 != GetTable().GetLastRowBottomBorder().Count) {
+                    width = GetTable().GetWidth();
+                }
+                else {
+                    if (!GetTable().IsComplete() && null != GetTable().GetWidth() && GetTable().GetWidth().IsPercentValue()) {
+                        GetTable().SetWidth((float)tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH));
+                    }
+                }
                 fixedTableWidth = true;
                 tableWidth = (float)RetrieveTableWidth(width, availableWidth);
                 layoutMinWidth = width.IsPercentValue() ? 0 : tableWidth;

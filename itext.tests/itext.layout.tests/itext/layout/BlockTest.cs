@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -639,7 +639,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Div div = new Div();
             Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.BLUE);
-            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(50));
+            divStyle.SetBorderRadius(new BorderRadius(50));
             // solid
             div.AddStyle(divStyle);
             div.SetBorderTop(new SolidBorder(ColorConstants.RED, 20)).SetBorderRight(new SolidBorder(ColorConstants.YELLOW
@@ -681,20 +681,20 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             // width and height > 2 * radius
             Div div = new Div();
-            div.SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
-                , UnitValue.CreatePointValue(100));
+            div.SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.GREEN).SetBorderRadius(new BorderRadius
+                (100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // 2 * radius > width and height > radius
             div = new Div();
-            div.SetHeight(150).SetWidth(150).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
-                , UnitValue.CreatePointValue(100));
+            div.SetHeight(150).SetWidth(150).SetBackgroundColor(ColorConstants.GREEN).SetBorderRadius(new BorderRadius
+                (100));
             doc.Add(div);
             doc.Add(new AreaBreak());
             // radius > width and height
             div = new Div();
-            div.SetHeight(50).SetWidth(50).SetBackgroundColor(ColorConstants.GREEN).SetProperty(Property.BORDER_RADIUS
-                , UnitValue.CreatePointValue(100));
+            div.SetHeight(50).SetWidth(50).SetBackgroundColor(ColorConstants.GREEN).SetBorderRadius(new BorderRadius(100
+                ));
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -711,7 +711,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Div div = new Div();
             Style divStyle = new Style().SetHeight(500).SetWidth(500).SetBackgroundColor(ColorConstants.GREEN);
-            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(200));
+            divStyle.SetBorderRadius(new BorderRadius(200));
             // solid
             div.AddStyle(divStyle);
             div.SetBorderLeft(new SolidBorder(ColorConstants.MAGENTA, 100)).SetBorderBottom(new SolidBorder(ColorConstants
@@ -757,7 +757,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Div div = new Div();
             Style divStyle = new Style().SetHeight(120).SetWidth(120).SetBackgroundColor(ColorConstants.MAGENTA);
-            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(90));
+            divStyle.SetBorderRadius(new BorderRadius(90));
             // solid
             div.AddStyle(divStyle);
             div.SetBorderBottom(new SolidBorder(ColorConstants.RED, 30)).SetBorderLeft(new SolidBorder(ColorConstants.
@@ -803,7 +803,53 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Div div = new Div();
             Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(ColorConstants.MAGENTA);
-            divStyle.SetProperty(Property.BORDER_RADIUS, UnitValue.CreatePointValue(100));
+            divStyle.SetBorderRadius(new BorderRadius(100));
+            // solid
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new SolidBorder(ColorConstants.RED, 30)).SetBorderLeft(new SolidBorder(ColorConstants.
+                BLUE, 15)).SetBorderTop(new SolidBorder(ColorConstants.GREEN, 60)).SetBorderRight(new SolidBorder(ColorConstants
+                .YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dashed
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DashedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DashedBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new DashedBorder(ColorConstants.GREEN, 60)).SetBorderRight(new DashedBorder(ColorConstants
+                .YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new DottedBorder(ColorConstants.RED, 30)).SetBorderLeft(new DottedBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new DottedBorder(ColorConstants.GREEN, 60)).SetBorderRight(new DottedBorder(ColorConstants
+                .YELLOW, 150));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            // round dotted
+            div = new Div();
+            div.AddStyle(divStyle);
+            div.SetBorderBottom(new RoundDotsBorder(ColorConstants.RED, 30)).SetBorderLeft(new RoundDotsBorder(ColorConstants
+                .BLUE, 15)).SetBorderTop(new RoundDotsBorder(ColorConstants.GREEN, 60)).SetBorderRight(new RoundDotsBorder
+                (ColorConstants.YELLOW, 150));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderRadiusTest06() {
+            String outFileName = destinationFolder + "borderRadiusTest06.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderRadiusTest06.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            Style divStyle = new Style().SetHeight(460).SetWidth(360).SetBackgroundColor(ColorConstants.MAGENTA);
+            divStyle.SetBorderRadius(new BorderRadius(40, 120));
             // solid
             div.AddStyle(divStyle);
             div.SetBorderBottom(new SolidBorder(ColorConstants.RED, 30)).SetBorderLeft(new SolidBorder(ColorConstants.

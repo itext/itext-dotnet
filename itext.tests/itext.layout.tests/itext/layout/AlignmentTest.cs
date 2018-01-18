@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
@@ -268,6 +269,43 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatAlignmentTest01() {
+            String outFileName = destinationFolder + "floatAlignmentTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest01.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
+            Document doc = new Document(pdfDoc);
+            AddFloatAndText(doc, FloatPropertyValue.RIGHT);
+            AddFloatAndText(doc, FloatPropertyValue.LEFT);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("All lines after this one have first line indent = 20. " + "Float left is correct, right is not."
+                ));
+            doc.SetProperty(Property.FIRST_LINE_INDENT, 20f);
+            AddFloatAndText(doc, FloatPropertyValue.RIGHT);
+            // TODO DEVSIX-1732: Alignment is incorrect because indent is replaced by float adjustment
+            AddFloatAndText(doc, FloatPropertyValue.LEFT);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private static void AddFloatAndText(Document doc, FloatPropertyValue? floatPropertyValue) {
+            Div div = new Div();
+            div.SetWidth(150).SetHeight(120);
+            div.SetProperty(Property.FLOAT, floatPropertyValue);
+            div.SetBorder(new SolidBorder(1));
+            doc.Add(div);
+            doc.Add(new Paragraph("Left aligned.").SetTextAlignment(TextAlignment.LEFT));
+            doc.Add(new Paragraph("Right aligned.").SetTextAlignment(TextAlignment.RIGHT));
+            doc.Add(new Paragraph("Center aligned.").SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
+                ).SetTextAlignment(TextAlignment.JUSTIFIED));
         }
     }
 }
