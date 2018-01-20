@@ -407,6 +407,7 @@ namespace iText.Kernel.Pdf {
             decryption = @string.decryption;
             decryptInfoNum = @string.decryptInfoNum;
             decryptInfoGen = @string.decryptInfoGen;
+            encoding = @string.encoding;
         }
     }
 }

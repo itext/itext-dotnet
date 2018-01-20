@@ -86,6 +86,10 @@ namespace iText.Layout.Properties {
 
         public const int BORDER_BOTTOM = 10;
 
+        public const int BORDER_BOTTOM_LEFT_RADIUS = 114;
+
+        public const int BORDER_BOTTOM_RIGHT_RADIUS = 113;
+
         public const int BORDER_LEFT = 11;
 
         public const int BORDER_RADIUS = 101;
@@ -93,6 +97,10 @@ namespace iText.Layout.Properties {
         public const int BORDER_RIGHT = 12;
 
         public const int BORDER_TOP = 13;
+
+        public const int BORDER_TOP_LEFT_RADIUS = 111;
+
+        public const int BORDER_TOP_RIGHT_RADIUS = 112;
 
         public const int BOTTOM = 14;
 

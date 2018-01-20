@@ -52,10 +52,20 @@ namespace iText.Layout.Minmaxwidth {
 
         private float availableWidth;
 
+        public MinMaxWidth(float additionalWidth)
+            : this(0, 0, additionalWidth) {
+        }
+
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use MinMaxWidth(float) instead.")]
         public MinMaxWidth(float additionalWidth, float availableWidth)
             : this(additionalWidth, availableWidth, 0, 0) {
         }
 
+        public MinMaxWidth(float childrenMinWidth, float childrenMaxWidth, float additionalWidth)
+            : this(additionalWidth, MinMaxWidthUtils.GetMax(), childrenMinWidth, childrenMaxWidth) {
+        }
+
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use MinMaxWidth(float, float, float) instead.")]
         public MinMaxWidth(float additionalWidth, float availableWidth, float childrenMinWidth, float childrenMaxWidth
             ) {
             this.childrenMinWidth = childrenMinWidth;
@@ -84,6 +94,8 @@ namespace iText.Layout.Minmaxwidth {
             return additionalWidth;
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Available width should be always equal to MinMaxWidthUtils.GetMax()"
+            )]
         public virtual float GetAvailableWidth() {
             return availableWidth;
         }

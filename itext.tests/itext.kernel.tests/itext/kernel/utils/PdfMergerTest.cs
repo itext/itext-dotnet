@@ -93,6 +93,26 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergeDocumentOutlinesWithNullDestinationTest01() {
+            String resultFile = destinationFolder + "mergeDocumentOutlinesWithNullDestinationTest01.pdf";
+            String filename = sourceFolder + "null_dest_outline.pdf";
+            PdfDocument sourceDocument = new PdfDocument(new PdfReader(filename));
+            PdfMerger resultDocument = new PdfMerger(new PdfDocument(new PdfWriter(resultFile)));
+            resultDocument.Merge(sourceDocument, 1, 1);
+            resultDocument.Close();
+            sourceDocument.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergeDocumentOutlinesWithNullDestinationTest01.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentTest02() {
             String filename = sourceFolder + "doc1.pdf";
             String filename1 = sourceFolder + "doc2.pdf";

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using System.Security.Cryptography;
 using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Pdf {
@@ -88,8 +88,8 @@ namespace iText.Kernel.Pdf {
                 this.ownerPassword = ownerPassword;
             }
             else {
-                int r = (int)(int.MaxValue * iText.IO.Util.JavaUtil.Random());
-                this.ownerPassword = iText.IO.Util.JavaUtil.IntegerToHexString(r).GetBytes();
+                this.ownerPassword = new byte[16];
+                RandomBytes(this.ownerPassword);
             }
             this.standardEncryptPermissions = permissions;
             this.encryptionAlgorithm = encryptionAlgorithm;
@@ -137,6 +137,10 @@ namespace iText.Kernel.Pdf {
             this.publicKeyEncryptPermissions = null;
             this.userPassword = null;
             this.ownerPassword = null;
+        }
+
+        private static void RandomBytes(byte[] bytes) {
+            RandomNumberGenerator.Create().GetBytes(bytes);
         }
     }
 }

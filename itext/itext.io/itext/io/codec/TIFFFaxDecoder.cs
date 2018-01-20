@@ -784,6 +784,7 @@ namespace iText.IO.Codec {
             // uncompressedMode - have written some code for this, but this
             // has not been tested due to lack of test images using this optional
             uncompressedMode = (int)((tiffT6Options & 0x02) >> 1);
+            fillBits = (int)((tiffT6Options & 0x04) >> 2);
             // Local cached reference
             int[] cce = currChangingElems;
             // Assume invisible preceding row of all white pixels and insert
@@ -807,6 +808,16 @@ namespace iText.IO.Codec {
                 currIndex = 0;
                 // Start decoding the scanline at startX in the raster
                 bitOffset = startX;
+                if (fillBits == 1) {
+                    // filter shall expect extra 0 bits before each
+                    // encoded line so that the line begins on a byte boundary
+                    if (bitPointer > 0) {
+                        int bitsLeft = 8 - bitPointer;
+                        if (NextNBits(bitsLeft) != 0) {
+                            throw new iText.IO.IOException(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines);
+                        }
+                    }
+                }
                 // Reset search start position for getNextChangingElement
                 lastChangingElement = 0;
                 // Till one whole scanline is decoded

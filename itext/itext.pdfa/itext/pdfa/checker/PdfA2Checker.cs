@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -90,6 +91,8 @@ namespace iText.Pdfa.Checker {
 
         private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>();
 
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Pdfa.Checker.PdfA2Checker));
+
         /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
         /// the required conformance level, <code>a</code> or
@@ -133,15 +136,15 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_153(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_157(extGStateDict);
                     CheckExtGState(gState);
                 }
             }
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
-        private sealed class _CanvasGraphicsState_153 : CanvasGraphicsState {
-            public _CanvasGraphicsState_153(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_157 : CanvasGraphicsState {
+            public _CanvasGraphicsState_157(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -177,7 +180,7 @@ namespace iText.Pdfa.Checker {
                         foreach (KeyValuePair<PdfName, PdfObject> entry in colorants.EntrySet()) {
                             PdfArray separation = (PdfArray)entry.Value;
                             CheckSeparationInsideDeviceN(separation, ((PdfArray)deviceN.GetPdfObject()).Get(2), ((PdfArray)deviceN.GetPdfObject
-                                ()).Get(3).GetIndirectReference());
+                                ()).Get(3));
                         }
                     }
                     if (checkAlternate) {
@@ -564,7 +567,7 @@ namespace iText.Pdfa.Checker {
                 if (filter.Equals(PdfName.Crypt)) {
                     PdfDictionary decodeParams = stream.GetAsDictionary(PdfName.DecodeParms);
                     if (decodeParams != null) {
-                        PdfString cryptFilterName = decodeParams.GetAsString(PdfName.Name);
+                        PdfName cryptFilterName = decodeParams.GetAsName(PdfName.Name);
                         if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity)) {
                             throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted);
                         }
@@ -582,7 +585,7 @@ namespace iText.Pdfa.Checker {
                             PdfArray decodeParams = stream.GetAsArray(PdfName.DecodeParms);
                             if (decodeParams != null && i < decodeParams.Size()) {
                                 PdfDictionary decodeParam = decodeParams.GetAsDictionary(i);
-                                PdfString cryptFilterName = decodeParam.GetAsString(PdfName.Name);
+                                PdfName cryptFilterName = decodeParam.GetAsName(PdfName.Name);
                                 if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity)) {
                                     throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted);
                                 }
@@ -824,11 +827,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        private void CheckSeparationInsideDeviceN(PdfArray separation, PdfObject deviceNColorSpace, PdfIndirectReference
-             deviceNTintTransform) {
-            if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.GetAsDictionary
-                (3).GetIndirectReference())) {
-                throw new PdfAConformanceException(PdfAConformanceException.TintTransformAndAlternateSpaceOfSeparationArraysInTheColorantsOfDeviceNShallBeConsistentWithSameAttributesOfDeviceN
+        private void CheckSeparationInsideDeviceN(PdfArray separation, PdfObject deviceNColorSpace, PdfObject deviceNTintTransform
+            ) {
+            if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.Get
+                (3))) {
+                LOGGER.Warn(PdfAConformanceException.WarningTintTransformAndAlternateSpaceOfSeparationArraysInTheColorantsOfDeviceNShallBeConsistentWithSameAttributesOfDeviceN
                     );
             }
             CheckSeparationCS(separation);
@@ -836,16 +839,22 @@ namespace iText.Pdfa.Checker {
 
         private void CheckSeparationCS(PdfArray separation) {
             if (separationColorSpaces.ContainsKey(separation.GetAsName(0))) {
-                bool altCSIsTheSame = false;
-                bool tintTransformIsTheSame = false;
+                bool altCSIsTheSame;
+                bool tintTransformIsTheSame;
                 PdfArray sameNameSeparation = separationColorSpaces.Get(separation.GetAsName(0));
                 PdfObject cs1 = separation.Get(2);
                 PdfObject cs2 = sameNameSeparation.Get(2);
                 altCSIsTheSame = IsAltCSIsTheSame(cs1, cs2);
-                PdfDictionary f1 = separation.GetAsDictionary(3);
-                PdfDictionary f2 = sameNameSeparation.GetAsDictionary(3);
-                //todo compare dictionaries or stream references
-                tintTransformIsTheSame = f1.GetIndirectReference().Equals(f2.GetIndirectReference());
+                // TODO(DEVSIX-1672) in fact need to check if objects content is equal. ISO 19005-2, 6.2.4.4 "Separation and DeviceN colour spaces":
+                // In evaluating equivalence, the PDF objects shall be compared, rather than the computational
+                // result of the use of those PDF objects. Compression and whether or not an object is direct or indirect shall be ignored.
+                PdfObject f1Obj = separation.Get(3);
+                PdfObject f2Obj = sameNameSeparation.Get(3);
+                //Can be a stream or dict
+                bool bothAllowedType = (f1Obj.GetObjectType() == f2Obj.GetObjectType()) && (f1Obj.IsDictionary() || f1Obj.
+                    IsStream());
+                //Check if the indirect references are equal
+                tintTransformIsTheSame = bothAllowedType && f1Obj.Equals(f2Obj);
                 if (!altCSIsTheSame || !tintTransformIsTheSame) {
                     throw new PdfAConformanceException(PdfAConformanceException.TintTransformAndAlternateSpaceShallBeTheSameForTheAllSeparationCSWithTheSameName
                         );
@@ -863,7 +872,9 @@ namespace iText.Pdfa.Checker {
             }
             else {
                 if (cs1 is PdfArray && cs2 is PdfArray) {
-                    //todo compare cs dictionaries or stream reference
+                    // TODO(DEVSIX-1672) in fact need to check if objects content is equal. ISO 19005-2, 6.2.4.4 "Separation and DeviceN colour spaces":
+                    // In evaluating equivalence, the PDF objects shall be compared, rather than the computational
+                    // result of the use of those PDF objects. Compression and whether or not an object is direct or indirect shall be ignored.
                     altCSIsTheSame = ((PdfArray)cs1).Get(0).Equals(((PdfArray)cs1).Get(0));
                 }
             }

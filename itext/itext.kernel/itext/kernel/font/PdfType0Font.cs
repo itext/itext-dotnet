@@ -533,24 +533,7 @@ namespace iText.Kernel.Font {
         }
 
         public override String Decode(PdfString content) {
-            // TODO refactor using decodeIntoGlyphLine?
-            String cids = content.GetValue();
-            if (cids.Length == 1) {
-                return "";
-            }
-            StringBuilder builder = new StringBuilder(cids.Length / 2);
-            //number of cids must be even. With i < cids.length() - 1 we garantee, that we will not process the last odd index.
-            for (int i = 0; i < cids.Length - 1; i += 2) {
-                int code = (cids[i] << 8) + cids[i + 1];
-                Glyph glyph = fontProgram.GetGlyphByCode(cmapEncoding.GetCidCode(code));
-                if (glyph != null && glyph.GetChars() != null) {
-                    builder.Append(glyph.GetChars());
-                }
-                else {
-                    builder.Append('\ufffd');
-                }
-            }
-            return builder.ToString();
+            return DecodeIntoGlyphLine(content).ToString();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -563,7 +546,13 @@ namespace iText.Kernel.Font {
             //number of cids must be even. With i < cids.length() - 1 we guarantee, that we will not process the last odd index.
             for (int i = 0; i < cids.Length - 1; i += 2) {
                 int code = (cids[i] << 8) + cids[i + 1];
-                Glyph glyph = fontProgram.GetGlyphByCode(cmapEncoding.GetCidCode(code));
+                int glyphCode = cmapEncoding.GetCidCode(code);
+                Glyph glyph = fontProgram.GetGlyphByCode(glyphCode);
+                if (glyph == null) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode
+                        ));
+                }
                 if (glyph != null && glyph.GetChars() != null) {
                     glyphs.Add(glyph);
                 }
@@ -575,24 +564,17 @@ namespace iText.Kernel.Font {
         }
 
         public override float GetContentWidth(PdfString content) {
-            // TODO refactor using decodeIntoGlyphLine?
-            String cids = content.GetValue();
             Glyph notdef = fontProgram.GetGlyphByCode(0);
             float width = 0;
-            for (int i = 0; i < cids.Length; i++) {
-                int code = cids[i++];
-                if (i < cids.Length) {
-                    code <<= 8;
-                    code |= cids[i];
+            GlyphLine glyphLine = DecodeIntoGlyphLine(content);
+            for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                Glyph glyph = glyphLine.Get(i);
+                if (glyph.GetCode() >= 0) {
+                    width += glyph.GetWidth();
                 }
-                int glyphCode = cmapEncoding.GetCidCode(code);
-                Glyph glyph = fontProgram.GetGlyphByCode(glyphCode);
-                if (glyph == null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode
-                        ));
+                else {
+                    width += notdef.GetWidth();
                 }
-                width += glyph != null ? glyph.GetWidth() : notdef.GetWidth();
             }
             return width;
         }

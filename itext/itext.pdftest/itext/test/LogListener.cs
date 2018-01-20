@@ -42,7 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Common.Logging.Simple;
 using iText.IO.Log;
 using iText.Test.Attributes;
 using log4net;
@@ -58,12 +60,15 @@ namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
         private MemoryAppender appender;
+        //Common.Logging addapter for capturing licensekey 3.0 logger messages.
+        private CapturingLoggerFactoryAdapter adapter;
 
         static LogListener() {
             ITextMemoryAppender memoryAppender = new ITextMemoryAppender();
             memoryAppender.Layout = new PatternLayout("%message");
             ILoggerRepository repo = LogManager.GetRepository(typeof(LogListener).GetAssembly());
             BasicConfigurator.Configure(repo, memoryAppender);
+            Common.Logging.LogManager.Adapter = new ITextMemoryAdapter();
         }
 
         public override void BeforeTest(ITest testDetails) {
@@ -106,6 +111,13 @@ namespace iText.Test {
                     index++;
                 }
             }
+            IList<CapturingLoggerEvent> commonLoggingEventList = adapter.LoggerEvents;
+            for (int i = 0; i < commonLoggingEventList.Count; i++) {
+                if (LogListenerHelper.EqualsMessageByTemplate(commonLoggingEventList[i].RenderedMessage,
+                    loggingStatement)) {
+                    index++;
+                }
+            }
             return index;
         }
 
@@ -116,10 +128,12 @@ namespace iText.Test {
             IAppender[] iAppenders = LogManager.GetRepository(typeof(LogListener).GetAssembly()).GetAppenders();
             appender = iAppenders[0] as MemoryAppender;
             appender.Clear();
+            adapter = Common.Logging.LogManager.Adapter as CapturingLoggerFactoryAdapter;
+            adapter.Clear();
         }
 
         private int GetSize() {
-            return appender.GetEvents().Length;
+            return appender.GetEvents().Length + adapter.LoggerEvents.Count;
         }
     }
 }

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
-using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.Kernel;
@@ -78,9 +77,8 @@ namespace iText.Kernel.Font {
         internal PdfTrueTypeFont(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
-            fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
+            fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding, toUnicode);
             embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             subset = false;
         }
