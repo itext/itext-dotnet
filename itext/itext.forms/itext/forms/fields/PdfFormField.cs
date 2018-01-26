@@ -3401,19 +3401,13 @@ namespace iText.Forms.Fields {
                 value = ObfuscatePassword(value);
             }
             canvas.BeginVariableText().SaveState().NewPath();
+            TextAlignment? textAlignment = ConvertJustificationToTextAlignment();
             float x = X_OFFSET;
-            int? justification = GetJustification();
-            if (justification == null) {
-                justification = 0;
-            }
-            TextAlignment? textAlignment = TextAlignment.LEFT;
-            if (justification == ALIGN_RIGHT) {
-                textAlignment = TextAlignment.RIGHT;
+            if (textAlignment == TextAlignment.RIGHT) {
                 x = rect.GetWidth();
             }
             else {
-                if (justification == ALIGN_CENTER) {
-                    textAlignment = TextAlignment.CENTER;
+                if (textAlignment == TextAlignment.CENTER) {
                     x = rect.GetWidth() / 2;
                 }
             }
@@ -3489,6 +3483,7 @@ namespace iText.Forms.Fields {
                 Paragraph paragraph = new Paragraph(strings[index]).SetFont(font).SetFontSize(fontSize).SetMargins(0, 0, 0
                     , 0).SetMultipliedLeading(1);
                 paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
+                paragraph.SetTextAlignment(ConvertJustificationToTextAlignment());
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
@@ -3858,6 +3853,23 @@ namespace iText.Forms.Fields {
             canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
                 ));
             canvas.RestoreState();
+        }
+
+        private TextAlignment? ConvertJustificationToTextAlignment() {
+            int? justification = GetJustification();
+            if (justification == null) {
+                justification = 0;
+            }
+            TextAlignment? textAlignment = TextAlignment.LEFT;
+            if (justification == ALIGN_RIGHT) {
+                textAlignment = TextAlignment.RIGHT;
+            }
+            else {
+                if (justification == ALIGN_CENTER) {
+                    textAlignment = TextAlignment.CENTER;
+                }
+            }
+            return textAlignment;
         }
 
         private PdfName GetTypeFromParent(PdfDictionary field) {

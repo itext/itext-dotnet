@@ -360,5 +360,26 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + output, sourceFolder 
                 + "cmp_" + output, destinationFolder, "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultilineTextFieldWithAlignmentTest() {
+            String outPdf = destinationFolder + "multilineTextFieldWithAlignment.pdf";
+            String cmpPdf = sourceFolder + "cmp_multilineTextFieldWithAlignment.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect = new Rectangle(210, 600, 150, 100);
+            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "fieldName", "some value\nsecond line\nthird"
+                );
+            field.SetJustification(PdfTextFormField.ALIGN_RIGHT);
+            form.AddField(field);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
