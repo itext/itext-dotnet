@@ -35,6 +35,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\itext\itext.hyph\itext.hyph.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.layout\itext.layout.netstandard.csproj" />

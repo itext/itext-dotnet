@@ -20,5 +20,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("7.1.2-SNAPSHOT")]
 
 #if !NETSTANDARD1_6
-[assembly: NUnit.Framework.Timeout(300000)]
+[assembly: NUnit.Framework.Timeout(600000)]
 #endif

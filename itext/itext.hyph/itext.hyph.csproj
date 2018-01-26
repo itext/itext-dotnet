@@ -105,6 +105,9 @@
     <EmbeddedResource Include="tr.xml" />
     <EmbeddedResource Include="uk.xml" />
     <EmbeddedResource Include="zh_Latn.xml" />
+    <EmbeddedResource Include="external/classes.xml">
+      <LogicalName>iText.Hyph.External.classes.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
