@@ -111,6 +111,7 @@ namespace iText.Layout {
         //?????????
         //??????????
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1793: bad performance compared to java")]
         public virtual void RunTest() {
             foreach (HyphenateTest.TestParams param in @params) {
                 TryHyphenate(param.lang, param.testWorld, param.shouldPass);
