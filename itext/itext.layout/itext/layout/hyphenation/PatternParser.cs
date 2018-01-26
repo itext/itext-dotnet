@@ -237,7 +237,7 @@ namespace iText.Layout.Hyphenation {
 
         /// <exception cref="Org.Xml.Sax.SAXException">if not caught</exception>
         protected internal virtual void GetExternalClasses() {
-            Parse("classes.xml");
+            Parse(ResourceUtil.GetResourceStream("iText.Layout.Hyphenation.classes.xml"), "classes.xml");
         }
 
         //
