@@ -900,6 +900,28 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        public virtual iText.Layout.Element.Table SetHorizontalBorderSpacing(float spacing) {
+            SetProperty(Property.HORIZONTAL_BORDER_SPACING, spacing);
+            if (null != header) {
+                header.SetHorizontalBorderSpacing(spacing);
+            }
+            if (null != footer) {
+                footer.SetHorizontalBorderSpacing(spacing);
+            }
+            return this;
+        }
+
+        public virtual iText.Layout.Element.Table SetVerticalBorderSpacing(float spacing) {
+            SetProperty(Property.VERTICAL_BORDER_SPACING, spacing);
+            if (null != header) {
+                header.SetVerticalBorderSpacing(spacing);
+            }
+            if (null != footer) {
+                footer.SetVerticalBorderSpacing(spacing);
+            }
+            return this;
+        }
+
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.TABLE);
@@ -996,6 +1018,12 @@ namespace iText.Layout.Element {
                     header.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
                         .BORDER_COLLAPSE));
                 }
+                if (HasOwnProperty(Property.HORIZONTAL_BORDER_SPACING)) {
+                    header.SetHorizontalBorderSpacing((float)this.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING));
+                }
+                if (HasOwnProperty(Property.VERTICAL_BORDER_SPACING)) {
+                    header.SetVerticalBorderSpacing((float)this.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING));
+                }
             }
         }
 
@@ -1010,6 +1038,12 @@ namespace iText.Layout.Element {
                 if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
                     footer.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
                         .BORDER_COLLAPSE));
+                }
+                if (HasOwnProperty(Property.HORIZONTAL_BORDER_SPACING)) {
+                    footer.SetHorizontalBorderSpacing((float)this.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING));
+                }
+                if (HasOwnProperty(Property.VERTICAL_BORDER_SPACING)) {
+                    footer.SetVerticalBorderSpacing((float)this.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING));
                 }
             }
         }

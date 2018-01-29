@@ -655,7 +655,9 @@ namespace iText.Layout.Renderer {
                 float[] indents = GetCellBorderIndents(cell);
                 if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
                     .BORDER_COLLAPSE))) {
-                    minMax.SetAdditionalWidth(minMax.GetAdditionalWidth());
+                    float? horizontalSpacing = tableRenderer.GetPropertyAsFloat<float>(Property.HORIZONTAL_BORDER_SPACING);
+                    float spacing = null != horizontalSpacing ? (float)horizontalSpacing : 0;
+                    minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + spacing);
                 }
                 else {
                     minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);

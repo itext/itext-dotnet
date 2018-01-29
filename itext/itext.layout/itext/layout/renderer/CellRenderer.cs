@@ -146,9 +146,36 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal override Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
+        protected internal override Rectangle ApplyMargins(Rectangle rect, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                base.ApplyMargins(rect, reverse);
+            }
             // Do nothing here. Margins shouldn't be processed on cells.
             return rect;
+        }
+
+        protected internal override Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                base.ApplyMargins(rect, margins, reverse);
+            }
+            // Do nothing here. Margins shouldn't be processed on cells.
+            return rect;
+        }
+
+        protected internal override UnitValue[] GetMargins() {
+            bool applyMargins = BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?
+                >(Property.BORDER_COLLAPSE));
+            float?[] cellSpacings = new float?[] { this.parent.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING), 
+                this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING), this.parent.GetProperty<float?>(Property
+                .VERTICAL_BORDER_SPACING), this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING) };
+            UnitValue[] cellSpacingsUV = new UnitValue[4];
+            for (int i = 0; i < cellSpacings.Length; i++) {
+                cellSpacingsUV[i] = UnitValue.CreatePointValue(applyMargins && null != cellSpacings[i] ? (float)cellSpacings
+                    [i] / 2 : 0);
+            }
+            return cellSpacingsUV;
         }
 
         /// <summary><inheritDoc/></summary>

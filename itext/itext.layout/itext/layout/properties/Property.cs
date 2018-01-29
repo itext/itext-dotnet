@@ -175,6 +175,8 @@ namespace iText.Layout.Properties {
 
         public const int HORIZONTAL_ALIGNMENT = 28;
 
+        public const int HORIZONTAL_BORDER_SPACING = 115;
+
         /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int HORIZONTAL_SCALING = 29;
 
@@ -310,6 +312,8 @@ namespace iText.Layout.Properties {
         public const int UNDERLINE = 74;
 
         public const int VERTICAL_ALIGNMENT = 75;
+
+        public const int VERTICAL_BORDER_SPACING = 116;
 
         /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;

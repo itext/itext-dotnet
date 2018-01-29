@@ -105,6 +105,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override TableBorders SkipFooter(Border[] borders) {
+            SetTableBoundingBorders(borders);
             return this;
         }
 

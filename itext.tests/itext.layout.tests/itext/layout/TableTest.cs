@@ -1555,6 +1555,27 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void EmptyTableTest02() {
+            String testName = "emptyTableTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            table.SetBorder(new SolidBorder(1));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetVerticalBorderSpacing(20);
+            doc.Add(table);
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithIncompleteFooter() {
             String testName = "tableWithIncompleteFooter.pdf";
@@ -2162,6 +2183,63 @@ namespace iText.Layout {
             table.AddCell(cell20);
             document.Add(table);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void MarginPaddingTest01() {
+            String testName = "marginPaddingTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            table.AddCell(new Cell().Add(new Paragraph("Body Cell 1")).SetBorder(new SolidBorder(30)));
+            table.AddCell(new Cell().Add(new Paragraph("Body Cell 2")).SetBorder(new SolidBorder(30)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer Cell 1")).SetBorder(new SolidBorder(70)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("Footer Cell 2")).SetBorder(new SolidBorder(70)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header Cell 1")).SetBorder(new SolidBorder(70)));
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Header Cell 2")).SetBorder(new SolidBorder(70)));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetMargin(20);
+            table.SetPadding(20);
+            table.SetBorder(new SolidBorder(ColorConstants.RED, 10));
+            doc.Add(table);
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SpacingTest01() {
+            String testName = "spacingTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            int n = 4;
+            Table table = new Table(UnitValue.CreatePercentArray(n)).UseAllAvailableWidth();
+            for (int j = 0; j < n; j++) {
+                for (int i = 0; i < n; i++) {
+                    table.AddCell(new Cell().Add(new Paragraph(j + "Body Cell" + i)));
+                    table.AddFooterCell(new Cell().Add(new Paragraph(j + "Footer Cell 1")));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph(j + "Header Cell 1")));
+                }
+            }
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetHorizontalBorderSpacing(20f);
+            table.SetVerticalBorderSpacing(20f);
+            table.SetBorder(new SolidBorder(ColorConstants.RED, 10));
+            doc.Add(table);
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
