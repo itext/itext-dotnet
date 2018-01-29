@@ -218,7 +218,7 @@ namespace iText.Layout.Renderer {
             }
             if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
                 // For large tables the width can be changed from flush to flush so the Width attribute shouldn't be applied
-                if (renderer is TableRenderer && ((Table)renderer.GetModelElement()).IsComplete()) {
+                if (!(renderer is TableRenderer) || ((Table)renderer.GetModelElement()).IsComplete()) {
                     UnitValue width = renderer.GetProperty<UnitValue>(Property.WIDTH);
                     if (width != null && width.IsPointValue()) {
                         attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));

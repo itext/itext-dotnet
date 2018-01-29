@@ -130,10 +130,16 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void DrawBorder(DrawContext drawContext) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty(Property.BORDER_COLLAPSE))) {
+                base.DrawBorder(drawContext);
+            }
         }
 
         // Do nothing here. Border drawing for cells is done on TableRenderer.
         protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty(Property.BORDER_COLLAPSE))) {
+                base.ApplyBorderBox(rect, borders, reverse);
+            }
             // Do nothing here. Borders are processed on TableRenderer level.
             return rect;
         }

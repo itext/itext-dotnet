@@ -888,6 +888,18 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        public virtual iText.Layout.Element.Table SetBorderCollapse(BorderCollapsePropertyValue collapsePropertyValue
+            ) {
+            SetProperty(Property.BORDER_COLLAPSE, collapsePropertyValue);
+            if (null != header) {
+                header.SetBorderCollapse(collapsePropertyValue);
+            }
+            if (null != footer) {
+                footer.SetBorderCollapse(collapsePropertyValue);
+            }
+            return this;
+        }
+
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.TABLE);
@@ -980,6 +992,9 @@ namespace iText.Layout.Element {
                     header.SetWidth(width);
                 }
                 header.GetAccessibilityProperties().SetRole(StandardRoles.THEAD);
+                if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
+                    header.SetBorderCollapse((BorderCollapsePropertyValue)GetProperty(Property.BORDER_COLLAPSE));
+                }
             }
         }
 
@@ -991,6 +1006,9 @@ namespace iText.Layout.Element {
                     footer.SetWidth(width);
                 }
                 footer.GetAccessibilityProperties().SetRole(StandardRoles.TFOOT);
+                if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
+                    footer.SetBorderCollapse((BorderCollapsePropertyValue)GetProperty(Property.BORDER_COLLAPSE));
+                }
             }
         }
 

@@ -136,11 +136,17 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
+            if (bordersHandler is SeparatedTableBorders) {
+                base.ApplyBorderBox(rect, borders, reverse);
+            }
             // Do nothing here. Applying border box for tables is indeed difficult operation and is done on #layout()
             return rect;
         }
 
         protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
+            if (bordersHandler is SeparatedTableBorders) {
+                base.ApplyPaddings(rect, paddings, reverse);
+            }
             // Do nothing here. Tables don't have padding.
             return rect;
         }
@@ -204,8 +210,10 @@ namespace iText.Layout.Renderer {
             bool isFirstOnThePage = 0 == rowRange.GetStartRow() || IsFirstOnRootArea(true);
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
-                    bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete ? rowRange
-                        .GetStartRow() : 0);
+                    bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
+                    bordersHandler = isSeparated ? new SeparatedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete
+                         ? rowRange.GetStartRow() : 0) : new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete
+                         ? rowRange.GetStartRow() : 0);
                     bordersHandler.InitializeBorders();
                 }
             }
@@ -259,10 +267,6 @@ namespace iText.Layout.Renderer {
                 (Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
-            }
-            if (layoutBox.GetWidth() > tableWidth) {
-                layoutBox.SetWidth((float)tableWidth + bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth
-                    () / 2);
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), (float)tableWidth, 0));
@@ -328,6 +332,10 @@ namespace iText.Layout.Renderer {
             // Table should have a row and some child elements in order to be considered non empty
             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, tableModel.IsEmpty() || 0 == rows.Count
                 , isAndWasComplete, false);
+            if (bordersHandler is SeparatedTableBorders) {
+                float bottomBorderWidth = bordersHandler.GetMaxBottomWidth();
+                layoutBox.MoveUp(bottomBorderWidth).DecreaseHeight(bottomBorderWidth);
+            }
             LayoutResult[] splits = new LayoutResult[numberOfColumns];
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
@@ -416,8 +424,10 @@ namespace iText.Layout.Renderer {
                     // Apply cell borders
                     float[] cellIndents = bordersHandler.GetCellBorderIndents(currentCellInfo.finishRowInd, col, rowspan, colspan
                         );
-                    bordersHandler.ApplyCellIndents(cellArea.GetBBox(), cellIndents[0], cellIndents[1], cellIndents[2] + widestRowBottomBorderWidth
-                        , cellIndents[3], false);
+                    if (!(bordersHandler is SeparatedTableBorders)) {
+                        bordersHandler.ApplyCellIndents(cellArea.GetBBox(), cellIndents[0], cellIndents[1], cellIndents[2] + widestRowBottomBorderWidth
+                            , cellIndents[3], false);
+                    }
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
                     // create hint for cell if not yet created
@@ -1150,7 +1160,9 @@ namespace iText.Layout.Renderer {
         }
 
         private void InitializeTableLayoutBorders() {
-            bordersHandler = new CollapsedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns(), GetBorders
+            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
+            bordersHandler = isSeparated ? new SeparatedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns
+                (), GetBorders()) : new CollapsedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns(), GetBorders
                 ());
             bordersHandler.InitializeBorders();
             bordersHandler.SetTableBoundingBorders(GetBorders());
@@ -1179,6 +1191,9 @@ namespace iText.Layout.Renderer {
         }
 
         public override void DrawBorder(DrawContext drawContext) {
+            if (bordersHandler is SeparatedTableBorders) {
+                base.DrawBorder(drawContext);
+            }
         }
 
         // Do nothing here. Itext7 handles cell and table borders collapse and draws result borders during #drawBorders()
@@ -1347,14 +1362,16 @@ namespace iText.Layout.Renderer {
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
             Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
+            // TODO Correct for collapsed borders only
             bordersHandler.SetFinishRow(finish);
             if (skip) {
                 // Update bordersHandler
                 bordersHandler.tableBoundingBorders[2] = GetBorders()[2];
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
-            float currentBottomIndent = null == currentBorder ? 0 : currentBorder.GetWidth();
-            float realBottomIndent = bordersHandler.GetMaxBottomWidth();
+            float currentBottomIndent = bordersHandler is CollapsedTableBorders ? null == currentBorder ? 0 : currentBorder
+                .GetWidth() : 0;
+            float realBottomIndent = bordersHandler is CollapsedTableBorders ? bordersHandler.GetMaxBottomWidth() : 0;
             if (0 != heights.Count) {
                 heights[heights.Count - 1] = heights[heights.Count - 1] + (realBottomIndent - currentBottomIndent) / 2;
                 // correct occupied area and layoutbox
@@ -1372,13 +1389,24 @@ namespace iText.Layout.Renderer {
                         float height = 0;
                         int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                         int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
-                        float[] indents = bordersHandler.GetCellBorderIndents(targetOverflowRowIndex[col], col, rowspan, colspan);
+                        float[] indents = bordersHandler.GetCellBorderIndents(bordersHandler is SeparatedTableBorders ? row : targetOverflowRowIndex
+                            [col], col, rowspan, colspan);
                         for (int l = heights.Count - 1 - 1; l > targetOverflowRowIndex[col] - rowspan && l >= 0; l--) {
                             height += (float)heights[l];
                         }
-                        float cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() + indents[0] / 2 + indents[2] / 2
-                             - height;
+                        float cellHeightInLastRow;
+                        if (bordersHandler is SeparatedTableBorders) {
+                            cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() - height;
+                        }
+                        else {
+                            cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() + indents[0] / 2 + indents[2] / 2 - height;
+                        }
                         if (heights[heights.Count - 1] < cellHeightInLastRow) {
+                            if (bordersHandler is SeparatedTableBorders) {
+                                float differenceToConsider = cellHeightInLastRow - heights[heights.Count - 1];
+                                occupiedArea.GetBBox().MoveDown(differenceToConsider);
+                                occupiedArea.GetBBox().IncreaseHeight(differenceToConsider);
+                            }
                             heights[heights.Count - 1] = cellHeightInLastRow;
                         }
                     }
@@ -1435,8 +1463,8 @@ namespace iText.Layout.Renderer {
                 int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                 int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                 float rowspanOffset = 0;
-                float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row ? currentRowIndex : targetOverflowRowIndex
-                    [col], col, rowspan, colspan);
+                float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row || bordersHandler is SeparatedTableBorders
+                     ? currentRowIndex : targetOverflowRowIndex[col], col, rowspan, colspan);
                 // process rowspan
                 for (int l = (currentRowIndex < row ? currentRowIndex : heights.Count - 1) - 1; l > (currentRowIndex < row
                      ? currentRowIndex : targetOverflowRowIndex[col]) - rowspan && l >= 0; l--) {
@@ -1446,7 +1474,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 height += (float)heights[currentRowIndex < row ? currentRowIndex : heights.Count - 1];
-                height -= indents[0] / 2 + indents[2] / 2;
+                if (!(bordersHandler is SeparatedTableBorders)) {
+                    height -= indents[0] / 2 + indents[2] / 2;
+                }
                 // Correcting cell bbox only. We don't need #move() here.
                 // This is because of BlockRenderer's specificity regarding occupied area.
                 float shift = height - cell.GetOccupiedArea().GetBBox().GetHeight();
@@ -1520,11 +1550,13 @@ namespace iText.Layout.Renderer {
             renderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(borders[outerBorder], tableBorders[outerBorder
                 ]), outerBorder);
             bordersHandler.tableBoundingBorders[outerBorder] = Border.NO_BORDER;
-            renderer.bordersHandler = new CollapsedTableBorders(renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns
-                (), renderer.GetBorders());
+            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
+            renderer.bordersHandler = isSeparated ? new SeparatedTableBorders(renderer.rows, ((Table)renderer.GetModelElement
+                ()).GetNumberOfColumns(), renderer.GetBorders()) : new CollapsedTableBorders(renderer.rows, ((Table)renderer
+                .GetModelElement()).GetNumberOfColumns(), renderer.GetBorders());
             renderer.bordersHandler.InitializeBorders();
             renderer.bordersHandler.SetRowRange(renderer.rowRange.GetStartRow(), renderer.rowRange.GetFinishRow());
-            ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
+            renderer.bordersHandler.ProcessAllBordersAndEmptyRows();
             renderer.CorrectRowRange();
             return renderer;
         }
@@ -1579,7 +1611,13 @@ namespace iText.Layout.Renderer {
             foreach (float column in countedColumnWidth) {
                 sum += column;
             }
-            return sum + bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth() / 2;
+            if (bordersHandler is SeparatedTableBorders) {
+                sum += bordersHandler.GetRightBorderMaxWidth() + bordersHandler.GetLeftBorderMaxWidth();
+            }
+            else {
+                sum += bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth() / 2;
+            }
+            return sum;
         }
 
         /// <summary>This are a structs used for convenience in layout.</summary>

@@ -630,8 +630,13 @@ namespace iText.Layout.Renderer {
         }
 
         private float RetrieveTableWidth(float width) {
-            float result = width - rightBorderMaxWidth / 2 - leftBorderMaxWidth / 2;
-            return result > 0 ? result : 0;
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty(Property.BORDER_COLLAPSE))) {
+                width -= (rightBorderMaxWidth + leftBorderMaxWidth);
+            }
+            else {
+                width -= (rightBorderMaxWidth + leftBorderMaxWidth) / 2;
+            }
+            return Math.Max(width, 0);
         }
 
         private Table GetTable() {
@@ -647,7 +652,12 @@ namespace iText.Layout.Renderer {
                 cell.SetParent(tableRenderer);
                 MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth();
                 float[] indents = GetCellBorderIndents(cell);
-                minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
+                if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty(Property.BORDER_COLLAPSE))) {
+                    minMax.SetAdditionalWidth(minMax.GetAdditionalWidth());
+                }
+                else {
+                    minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
+                }
                 if (cell.GetColspan() == 1) {
                     minWidths[cell.GetCol()] = Math.Max(minMax.GetMinWidth(), minWidths[cell.GetCol()]);
                     maxWidths[cell.GetCol()] = Math.Max(minMax.GetMaxWidth(), maxWidths[cell.GetCol()]);
@@ -843,10 +853,12 @@ namespace iText.Layout.Renderer {
                         if (!AbstractRenderer.IsBorderBoxSizing(cell)) {
                             Border[] borders = cell.GetBorders();
                             if (borders[1] != null) {
-                                widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                                widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
+                                    [1].GetWidth() : borders[1].GetWidth() / 2));
                             }
                             if (borders[3] != null) {
-                                widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                                widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
+                                    [3].GetWidth() : borders[3].GetWidth() / 2));
                             }
                             UnitValue[] paddings = cell.GetPaddings();
                             if (!paddings[1].IsPointValue()) {
