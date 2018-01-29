@@ -118,7 +118,7 @@ namespace iText.Layout.Renderer {
              footerBordersHandler, bool hasContent);
 
         protected internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithHeader(iText.Layout.Renderer.TableBorders
-             headerBordersHandler, bool changeThis);
+             headerBordersHandler, bool updateBordersHandler);
 
         protected internal abstract iText.Layout.Renderer.TableBorders FixHeaderOccupiedArea(Rectangle occupiedBox
             , Rectangle layoutBox);

@@ -811,6 +811,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(text)));
             table.AddCell(new Cell().Add(new Paragraph(text)));
             doc.Add(table);
+            // TODO DEVSIX-1735: set pagesize as 196x132 to produce a NPE
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(196, 192));
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -845,6 +846,7 @@ namespace iText.Layout {
             table.AddCell("middle row 2");
             table.AddCell("middle row 3");
             doc.Add(table);
+            // TODO DEVSIX-1735: uncomment to produce a NPE
             //        doc.add(new AreaBreak());
             //
             //        doc.add(new Paragraph("No more"));
@@ -901,6 +903,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(text + "4")));
             table.AddCell(new Cell().Add(new Paragraph(text + "5")));
             doc.Add(table);
+            // TODO DEVSIX-1735: set pagesize as 204x160 to produce a bug: cell with a big rowspan appears only on the final page
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(224, 200));
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -914,6 +917,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest09() {
+            // TODO DEVSIX-1735: uncomment snippet with separated borders to produce a NPE
             fileName = "splitCellsTest09.pdf";
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
@@ -1004,6 +1008,11 @@ namespace iText.Layout {
             table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "5")).
                 SetKeepTogether(true));
             doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetHorizontalBorderSpacing(20);
+            table.SetVerticalBorderSpacing(20);
+            doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -1029,6 +1038,7 @@ namespace iText.Layout {
                 (true).SetBorderBottom(new SolidBorder(ColorConstants.BLACK, 10)));
             table.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             doc.Add(table);
+            // TODO DEVSIX-1736: Set pagesize as 236x162 to produce a NPE
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(236, 222));
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);

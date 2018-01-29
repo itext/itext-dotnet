@@ -2189,6 +2189,29 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableMinMaxWidthTest06() {
+            String testName = "tableMinMaxWidthTest06.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(2));
+            table.SetBorder(new SolidBorder(ColorConstants.RED, 1));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetHorizontalBorderSpacing(20);
+            table.SetVerticalBorderSpacing(20);
+            table.AddCell(new Cell().Add(new Paragraph("The cell with width 50. Number 1").SetWidth(50)));
+            table.AddCell(new Cell().Add(new Paragraph("The cell with width 50. Number 1").SetWidth(50)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void MarginPaddingTest01() {
             String testName = "marginPaddingTest01.pdf";
             String outFileName = destinationFolder + testName;

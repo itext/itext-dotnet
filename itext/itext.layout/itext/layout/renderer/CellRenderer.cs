@@ -146,36 +146,38 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal override Rectangle ApplyMargins(Rectangle rect, bool reverse) {
-            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
-                BORDER_COLLAPSE))) {
-                base.ApplyMargins(rect, reverse);
-            }
-            // Do nothing here. Margins shouldn't be processed on cells.
-            return rect;
-        }
-
         protected internal override Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
+            // If borders are separated, process border's spacing here.
             if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
                 BORDER_COLLAPSE))) {
-                base.ApplyMargins(rect, margins, reverse);
+                ApplySpacings(rect, reverse);
             }
-            // Do nothing here. Margins shouldn't be processed on cells.
             return rect;
         }
 
-        protected internal override UnitValue[] GetMargins() {
-            bool applyMargins = BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?
-                >(Property.BORDER_COLLAPSE));
-            float?[] cellSpacings = new float?[] { this.parent.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING), 
-                this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING), this.parent.GetProperty<float?>(Property
-                .VERTICAL_BORDER_SPACING), this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING) };
-            UnitValue[] cellSpacingsUV = new UnitValue[4];
-            for (int i = 0; i < cellSpacings.Length; i++) {
-                cellSpacingsUV[i] = UnitValue.CreatePointValue(applyMargins && null != cellSpacings[i] ? (float)cellSpacings
-                    [i] / 2 : 0);
+        protected internal virtual Rectangle ApplySpacings(Rectangle rect, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                float? verticalBorderSpacing = this.parent.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING);
+                float? horizontalBorderSpacing = this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING);
+                float[] cellSpacings = new float[4];
+                for (int i = 0; i < cellSpacings.Length; i++) {
+                    cellSpacings[i] = 0 == i % 2 ? null != verticalBorderSpacing ? (float)verticalBorderSpacing : 0f : null !=
+                         horizontalBorderSpacing ? (float)horizontalBorderSpacing : 0f;
+                }
+                ApplySpacings(rect, cellSpacings, reverse);
             }
-            return cellSpacingsUV;
+            // Do nothing here. Spacings are meaningless if borders are collapsed.
+            return rect;
+        }
+
+        protected internal virtual Rectangle ApplySpacings(Rectangle rect, float[] spacings, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                rect.ApplyMargins(spacings[0] / 2, spacings[1] / 2, spacings[2] / 2, spacings[3] / 2, reverse);
+            }
+            // Do nothing here. Spacings are meaningless if borders are collapsed.
+            return rect;
         }
 
         /// <summary><inheritDoc/></summary>

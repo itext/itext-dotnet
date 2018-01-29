@@ -625,11 +625,11 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool changeThis
+        protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool updateBordersHandler
             ) {
             ((iText.Layout.Renderer.CollapsedTableBorders)headerBordersHandler).SetBottomBorderCollapseWith(GetHorizontalBorder
                 (startRow));
-            if (changeThis) {
+            if (updateBordersHandler) {
                 SetTopBorderCollapseWith(headerBordersHandler.GetLastHorizontalBorder());
             }
             return this;

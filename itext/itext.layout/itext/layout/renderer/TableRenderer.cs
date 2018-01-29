@@ -159,8 +159,21 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal virtual Rectangle ApplySpacings(Rectangle rect, float horizontalSpacing, float verticalSpacing
-            , bool reverse) {
+        /// <summary>Applies the given spacings on the given rectangle</summary>
+        /// <param name="rect">a rectangle spacings will be applied on.</param>
+        /// <param name="horizontalSpacing">the horizontal spacing to be applied on the given rectangle</param>
+        /// <param name="verticalSpacing">the vertical spacing to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether the spacings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        private Rectangle ApplySpacing(Rectangle rect, float horizontalSpacing, float verticalSpacing, bool reverse
+            ) {
             if (bordersHandler is SeparatedTableBorders) {
                 return rect.ApplyMargins(verticalSpacing / 2, horizontalSpacing / 2, verticalSpacing / 2, horizontalSpacing
                      / 2, reverse);
@@ -169,10 +182,22 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
-        protected internal virtual Rectangle ApplySpacing(Rectangle rect, float spacing, bool isHorizontal, bool reverse
-            ) {
+        /// <summary>Applies the given horizontal or vertical spacing on the given rectangle</summary>
+        /// <param name="rect">a rectangle spacings will be applied on.</param>
+        /// <param name="spacing">the horizontal or vertical spacing to be applied on the given rectangle</param>
+        /// <param name="isHorizontal">defines whether the provided spacing should be applied as a horizontal or a vertical one
+        ///     </param>
+        /// <param name="reverse">
+        /// indicates whether the spacings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        private Rectangle ApplySingleSpacing(Rectangle rect, float spacing, bool isHorizontal, bool reverse) {
             if (bordersHandler is SeparatedTableBorders) {
-                // horizontal and vertical values should be identical
                 if (isHorizontal) {
                     return rect.ApplyMargins(0, spacing / 2, 0, spacing / 2, reverse);
                 }
@@ -260,11 +285,13 @@ namespace iText.Layout.Renderer {
                 CorrectRowRange();
             }
             float horizontalBorderSpacing = bordersHandler is SeparatedTableBorders && null != this.GetPropertyAsFloat
-                <float>(Property.HORIZONTAL_BORDER_SPACING) ? this.GetPropertyAsFloat<float>(Property.HORIZONTAL_BORDER_SPACING
-                ) : 0;
-            float verticalBorderSpacing = bordersHandler is SeparatedTableBorders && null != this.GetPropertyAsFloat<float
-                >(Property.VERTICAL_BORDER_SPACING) ? this.GetPropertyAsFloat<float>(Property.VERTICAL_BORDER_SPACING)
-                 : 0;
+                (Property.HORIZONTAL_BORDER_SPACING) ? (float)this.GetPropertyAsFloat(Property.HORIZONTAL_BORDER_SPACING
+                ) : 0f;
+            float verticalBorderSpacing = bordersHandler is SeparatedTableBorders && null != this.GetPropertyAsFloat(Property
+                .VERTICAL_BORDER_SPACING) ? (float)this.GetPropertyAsFloat(Property.VERTICAL_BORDER_SPACING) : 0f;
+            if (!isAndWasComplete && !isFirstOnThePage) {
+                layoutBox.IncreaseHeight(verticalBorderSpacing);
+            }
             if (IsOriginalRenderer()) {
                 UnitValue[] margins = GetMargins();
                 if (!margins[1].IsPointValue()) {
@@ -289,7 +316,7 @@ namespace iText.Layout.Renderer {
                         .PADDING_LEFT));
                 }
                 CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
-                    () - paddings[3].GetValue() - horizontalBorderSpacing);
+                    () - paddings[3].GetValue());
             }
             float tableWidth = GetTableWidth();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -388,8 +415,8 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveUp(verticalBorderSpacing).DecreaseHeight(verticalBorderSpacing);
             }
             // Apply spacings. Since occupiedArea was already created it's a bit more difficult for the latter.
-            ApplySpacings(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, false);
-            ApplySpacing(occupiedArea.GetBBox(), (float)horizontalBorderSpacing, true, false);
+            ApplySpacing(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, false);
+            ApplySingleSpacing(occupiedArea.GetBBox(), (float)horizontalBorderSpacing, true, false);
             occupiedArea.GetBBox().MoveDown(verticalBorderSpacing / 2);
             topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
             bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
@@ -531,6 +558,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     else {
+                        //                    if (cellResult.getStatus() != LayoutResult.FULL || Boolean.TRUE.equals(this.<Boolean>getOwnProperty(Property.FORCED_PLACEMENT))) { TODO DEVSIX-1735
                         if (cellResult.GetStatus() != LayoutResult.FULL) {
                             // first time split occurs
                             if (!split) {
@@ -542,7 +570,7 @@ namespace iText.Layout.Renderer {
                                      !true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT));
                                 if (skipLastFooter) {
                                     LayoutArea potentialArea = new LayoutArea(area.GetPageNumber(), layoutBox.Clone());
-                                    ApplySpacing(potentialArea.GetBBox(), horizontalBorderSpacing, true, true);
+                                    ApplySingleSpacing(potentialArea.GetBBox(), horizontalBorderSpacing, true, true);
                                     // Fix layout area
                                     Border widestRowTopBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row);
                                     if (bordersHandler is CollapsedTableBorders && null != widestRowTopBorder) {
@@ -827,8 +855,8 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    ApplySpacings(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, true);
-                    ApplySpacing(occupiedArea.GetBBox(), horizontalBorderSpacing, true, true);
+                    ApplySpacing(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, true);
+                    ApplySingleSpacing(occupiedArea.GetBBox(), horizontalBorderSpacing, true, true);
                     if (null != footerRenderer) {
                         layoutBox.MoveUp(verticalBorderSpacing).DecreaseHeight(verticalBorderSpacing);
                     }
@@ -839,7 +867,11 @@ namespace iText.Layout.Renderer {
                         occupiedArea.GetBBox().MoveUp((float)verticalBorderSpacing / 2);
                     }
                     else {
-                        ApplySpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
+                        ApplySingleSpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
+                    }
+                    // if only footer should be processed
+                    if (!isAndWasComplete && null != footerRenderer && 0 == splitResult[0].rows.Count) {
+                        layoutBox.IncreaseHeight(verticalBorderSpacing);
                     }
                     // Apply borders if there is no footer
                     if (null == footerRenderer) {
@@ -967,8 +999,8 @@ namespace iText.Layout.Renderer {
                 footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
             }
-            ApplySpacings(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, true);
-            ApplySpacing(occupiedArea.GetBBox(), horizontalBorderSpacing, true, true);
+            ApplySpacing(layoutBox, horizontalBorderSpacing, verticalBorderSpacing, true);
+            ApplySingleSpacing(occupiedArea.GetBBox(), horizontalBorderSpacing, true, true);
             if (null != footerRenderer) {
                 layoutBox.MoveUp(verticalBorderSpacing).DecreaseHeight(verticalBorderSpacing);
             }
@@ -979,7 +1011,9 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveUp((float)verticalBorderSpacing / 2);
             }
             else {
-                ApplySpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
+                if (isAndWasComplete || 0 != rows.Count) {
+                    ApplySingleSpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
+                }
             }
             //
             float bottomTableBorderWidth = bordersHandler.GetMaxBottomWidth();
@@ -1062,6 +1096,10 @@ namespace iText.Layout.Renderer {
             AdjustFooterAndFixOccupiedArea(layoutBox, null != headerRenderer || !tableModel.IsEmpty() ? verticalBorderSpacing
                  : 0);
             FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
+            if (!isAndWasComplete && !isFirstOnThePage && (0 != rows.Count || (null != footerRenderer && tableModel.IsComplete
+                ()))) {
+                occupiedArea.GetBBox().DecreaseHeight(verticalBorderSpacing);
+            }
             LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, siblingFloatRendererAreas
                 , layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
             return new LayoutResult(LayoutResult.FULL, editedArea_1, null, null, null);
@@ -1711,10 +1749,10 @@ namespace iText.Layout.Renderer {
             headerOrFooterRenderer.SetProperty(Property.BORDER_COLLAPSE, this.GetProperty<BorderCollapsePropertyValue?
                 >(Property.BORDER_COLLAPSE));
             if (bordersHandler is SeparatedTableBorders) {
-                headerOrFooterRenderer.SetProperty(Property.HORIZONTAL_BORDER_SPACING, this.GetPropertyAsFloat<float>(Property
-                    .HORIZONTAL_BORDER_SPACING));
-                headerOrFooterRenderer.SetProperty(Property.VERTICAL_BORDER_SPACING, this.GetPropertyAsFloat<float>(Property
-                    .VERTICAL_BORDER_SPACING));
+                headerOrFooterRenderer.SetProperty(Property.HORIZONTAL_BORDER_SPACING, this.GetPropertyAsFloat(Property.HORIZONTAL_BORDER_SPACING
+                    ));
+                headerOrFooterRenderer.SetProperty(Property.VERTICAL_BORDER_SPACING, this.GetPropertyAsFloat(Property.VERTICAL_BORDER_SPACING
+                    ));
                 headerOrFooterRenderer.SetProperty(Property.BORDER, Border.NO_BORDER);
                 headerOrFooterRenderer.SetProperty(Property.BORDER_LEFT, Border.NO_BORDER);
                 headerOrFooterRenderer.SetProperty(Property.BORDER_TOP, Border.NO_BORDER);
@@ -1723,7 +1761,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // TODO DEVSIX-994: what about margin, padding, etc?
         private iText.Layout.Renderer.TableRenderer PrepareFooterOrHeaderRendererForLayout(iText.Layout.Renderer.TableRenderer
              renderer, float layoutBoxWidth) {
             renderer.countedColumnWidth = countedColumnWidth;
@@ -1776,7 +1813,7 @@ namespace iText.Layout.Renderer {
             }
             if (bordersHandler is SeparatedTableBorders) {
                 sum += bordersHandler.GetRightBorderMaxWidth() + bordersHandler.GetLeftBorderMaxWidth();
-                float? horizontalSpacing = this.GetPropertyAsFloat<float>(Property.HORIZONTAL_BORDER_SPACING);
+                float? horizontalSpacing = this.GetPropertyAsFloat(Property.HORIZONTAL_BORDER_SPACING);
                 sum += (null == horizontalSpacing) ? 0 : (float)horizontalSpacing;
             }
             else {

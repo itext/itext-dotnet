@@ -61,6 +61,8 @@ namespace iText.Layout.Renderer {
 
         private readonly TableWidths.ColumnWidthData[] widths;
 
+        private readonly float horizontalBorderSpacing;
+
         private IList<TableWidths.CellInfo> cells;
 
         private float tableWidth;
@@ -82,6 +84,13 @@ namespace iText.Layout.Renderer {
             this.widths = new TableWidths.ColumnWidthData[numberOfColumns];
             this.rightBorderMaxWidth = rightBorderMaxWidth;
             this.leftBorderMaxWidth = leftBorderMaxWidth;
+            if (tableRenderer.bordersHandler is SeparatedTableBorders) {
+                float? horizontalSpacing = tableRenderer.GetPropertyAsFloat(Property.HORIZONTAL_BORDER_SPACING);
+                horizontalBorderSpacing = null == horizontalSpacing ? 0 : (float)horizontalSpacing;
+            }
+            else {
+                horizontalBorderSpacing = 0;
+            }
             CalculateTableWidth(availableWidth, calculateTableMaxWidth);
         }
 
@@ -566,6 +575,11 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            if (tableRenderer.bordersHandler is SeparatedTableBorders) {
+                for (int i = 0; i < numberOfColumns; i++) {
+                    columnWidths[i] += horizontalBorderSpacing;
+                }
+            }
             return columnWidths;
         }
 
@@ -633,6 +647,7 @@ namespace iText.Layout.Renderer {
             if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
                 .BORDER_COLLAPSE))) {
                 width -= (rightBorderMaxWidth + leftBorderMaxWidth);
+                width -= (numberOfColumns + 1) * horizontalBorderSpacing;
             }
             else {
                 width -= (rightBorderMaxWidth + leftBorderMaxWidth) / 2;
@@ -655,9 +670,7 @@ namespace iText.Layout.Renderer {
                 float[] indents = GetCellBorderIndents(cell);
                 if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
                     .BORDER_COLLAPSE))) {
-                    float? horizontalSpacing = tableRenderer.GetPropertyAsFloat<float>(Property.HORIZONTAL_BORDER_SPACING);
-                    float spacing = null != horizontalSpacing ? (float)horizontalSpacing : 0;
-                    minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + spacing);
+                    minMax.SetAdditionalWidth((float)(minMax.GetAdditionalWidth() - horizontalBorderSpacing));
                 }
                 else {
                     minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
@@ -743,9 +756,9 @@ namespace iText.Layout.Renderer {
             float[] columnWidths = new float[widths.Length];
             for (int i = 0; i < widths.Length; i++) {
                 System.Diagnostics.Debug.Assert(widths[i].finalWidth >= 0);
-                columnWidths[i] = widths[i].finalWidth;
+                columnWidths[i] = widths[i].finalWidth + horizontalBorderSpacing;
                 actualWidth += widths[i].finalWidth;
-                layoutMinWidth += widths[i].min;
+                layoutMinWidth += widths[i].min + horizontalBorderSpacing;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
