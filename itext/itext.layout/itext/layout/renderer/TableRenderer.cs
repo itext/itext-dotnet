@@ -538,17 +538,23 @@ namespace iText.Layout.Renderer {
                                 // This is a case when last footer should be skipped and we might face an end of the table.
                                 // We check if we can fit all the rows right now and the split occurred only because we reserved
                                 // space for footer before, and if yes we skip footer and write all the content right now.
-                                bool skipLastFooter = null != footerRenderer && tableModel.IsSkipLastFooter() && tableModel.IsComplete();
+                                bool skipLastFooter = null != footerRenderer && tableModel.IsSkipLastFooter() && tableModel.IsComplete() &&
+                                     !true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT));
                                 if (skipLastFooter) {
                                     LayoutArea potentialArea = new LayoutArea(area.GetPageNumber(), layoutBox.Clone());
+                                    ApplySpacing(potentialArea.GetBBox(), horizontalBorderSpacing, true, true);
                                     // Fix layout area
                                     Border widestRowTopBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row);
-                                    if (null != widestRowTopBorder) {
-                                        potentialArea.GetBBox().MoveDown(widestRowTopBorder.GetWidth() / 2).IncreaseHeight(widestRowTopBorder.GetWidth
-                                            () / 2);
+                                    if (bordersHandler is CollapsedTableBorders && null != widestRowTopBorder) {
+                                        potentialArea.GetBBox().IncreaseHeight((float)widestRowTopBorder.GetWidth() / 2);
                                     }
+                                    if (null == headerRenderer) {
+                                        potentialArea.GetBBox().IncreaseHeight(bordersHandler.GetMaxTopWidth());
+                                    }
+                                    bordersHandler.ApplyLeftAndRightTableBorder(potentialArea.GetBBox(), true);
                                     float footerHeight = footerRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                                    potentialArea.GetBBox().MoveDown(footerHeight).IncreaseHeight(footerHeight);
+                                    potentialArea.GetBBox().MoveDown(footerHeight - (float)verticalBorderSpacing / 2).IncreaseHeight(footerHeight
+                                        );
                                     iText.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer(new Table.RowRange(rowRange.
                                         GetStartRow() + row, rowRange.GetFinishRow()));
                                     overflowRenderer.rows = rows.SubList(row, rows.Count);
@@ -571,7 +577,7 @@ namespace iText.Layout.Renderer {
                                     }
                                     int savedStartRow = overflowRenderer.bordersHandler.startRow;
                                     overflowRenderer.bordersHandler.SetStartRow(row);
-                                    PrepareFooterOrHeaderRendererForLayout(overflowRenderer, layoutBox.GetWidth());
+                                    PrepareFooterOrHeaderRendererForLayout(overflowRenderer, potentialArea.GetBBox().GetWidth());
                                     LayoutResult res = overflowRenderer.Layout(new LayoutContext(potentialArea, wasHeightClipped || wasParentsHeightClipped
                                         ));
                                     bordersHandler.SetStartRow(savedStartRow);
@@ -599,9 +605,10 @@ namespace iText.Layout.Renderer {
                                     }
                                     else {
                                         if (null != headerRenderer) {
-                                            bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
+                                            bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, false);
                                         }
-                                        bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
+                                        bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, false);
+                                        bordersHandler.tableBoundingBorders[2] = Border.NO_BORDER;
                                     }
                                 }
                                 // Here we look for a cell with big rowspan (i.e. one which would not be normally processed in

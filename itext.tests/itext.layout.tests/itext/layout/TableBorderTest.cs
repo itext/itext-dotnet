@@ -1495,7 +1495,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest11A() {
-            // TODO DEVSIX-1737
             String testName = "tableWithHeaderFooterTest11A.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
