@@ -139,11 +139,13 @@ namespace iText.Layout.Borders {
             if (isHorizontal) {
                 x2 -= width;
             }
+            canvas.SaveState();
             canvas.SetStrokeColor(transparentColor.GetColor());
             transparentColor.ApplyStrokeTransparency(canvas);
             canvas.SetLineWidth(width);
             canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
             canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
+            canvas.RestoreState();
         }
 
         /// <summary><inheritDoc/></summary>

@@ -408,7 +408,6 @@ namespace iText.Layout.Renderer {
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
                         prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
                         x1 = x2;
                     }
                 }
