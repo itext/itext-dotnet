@@ -210,10 +210,11 @@ namespace iText.Layout.Renderer {
             bool isFirstOnThePage = 0 == rowRange.GetStartRow() || IsFirstOnRootArea(true);
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
-                    bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
-                    bordersHandler = isSeparated ? new SeparatedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete
-                         ? rowRange.GetStartRow() : 0) : new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete
-                         ? rowRange.GetStartRow() : 0);
+                    bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(this.GetProperty<BorderCollapsePropertyValue?
+                        >(Property.BORDER_COLLAPSE));
+                    bordersHandler = isSeparated ? (TableBorders)new SeparatedTableBorders(rows, numberOfColumns, GetBorders()
+                        , !isAndWasComplete ? rowRange.GetStartRow() : 0) : (TableBorders)new CollapsedTableBorders(rows, numberOfColumns
+                        , GetBorders(), !isAndWasComplete ? rowRange.GetStartRow() : 0);
                     bordersHandler.InitializeBorders();
                 }
             }
@@ -1160,10 +1161,11 @@ namespace iText.Layout.Renderer {
         }
 
         private void InitializeTableLayoutBorders() {
-            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
-            bordersHandler = isSeparated ? new SeparatedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns
-                (), GetBorders()) : new CollapsedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns(), GetBorders
-                ());
+            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(this.GetProperty<BorderCollapsePropertyValue?
+                >(Property.BORDER_COLLAPSE));
+            bordersHandler = isSeparated ? (TableBorders)new SeparatedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns
+                (), GetBorders()) : (TableBorders)new CollapsedTableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns
+                (), GetBorders());
             bordersHandler.InitializeBorders();
             bordersHandler.SetTableBoundingBorders(GetBorders());
             bordersHandler.SetRowRange(rowRange.GetStartRow(), rowRange.GetFinishRow());
@@ -1550,10 +1552,11 @@ namespace iText.Layout.Renderer {
             renderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(borders[outerBorder], tableBorders[outerBorder
                 ]), outerBorder);
             bordersHandler.tableBoundingBorders[outerBorder] = Border.NO_BORDER;
-            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(GetProperty(Property.BORDER_COLLAPSE));
-            renderer.bordersHandler = isSeparated ? new SeparatedTableBorders(renderer.rows, ((Table)renderer.GetModelElement
-                ()).GetNumberOfColumns(), renderer.GetBorders()) : new CollapsedTableBorders(renderer.rows, ((Table)renderer
-                .GetModelElement()).GetNumberOfColumns(), renderer.GetBorders());
+            bool isSeparated = BorderCollapsePropertyValue.SEPARATE.Equals(this.GetProperty<BorderCollapsePropertyValue?
+                >(Property.BORDER_COLLAPSE));
+            renderer.bordersHandler = isSeparated ? (TableBorders)new SeparatedTableBorders(renderer.rows, ((Table)renderer
+                .GetModelElement()).GetNumberOfColumns(), renderer.GetBorders()) : (TableBorders)new CollapsedTableBorders
+                (renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns(), renderer.GetBorders());
             renderer.bordersHandler.InitializeBorders();
             renderer.bordersHandler.SetRowRange(renderer.rowRange.GetStartRow(), renderer.rowRange.GetFinishRow());
             renderer.bordersHandler.ProcessAllBordersAndEmptyRows();

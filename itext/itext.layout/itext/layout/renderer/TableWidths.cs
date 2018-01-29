@@ -630,7 +630,8 @@ namespace iText.Layout.Renderer {
         }
 
         private float RetrieveTableWidth(float width) {
-            if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty(Property.BORDER_COLLAPSE))) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
+                .BORDER_COLLAPSE))) {
                 width -= (rightBorderMaxWidth + leftBorderMaxWidth);
             }
             else {
@@ -652,7 +653,8 @@ namespace iText.Layout.Renderer {
                 cell.SetParent(tableRenderer);
                 MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth();
                 float[] indents = GetCellBorderIndents(cell);
-                if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty(Property.BORDER_COLLAPSE))) {
+                if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
+                    .BORDER_COLLAPSE))) {
                     minMax.SetAdditionalWidth(minMax.GetAdditionalWidth());
                 }
                 else {

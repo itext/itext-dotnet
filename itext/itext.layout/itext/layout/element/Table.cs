@@ -993,7 +993,8 @@ namespace iText.Layout.Element {
                 }
                 header.GetAccessibilityProperties().SetRole(StandardRoles.THEAD);
                 if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
-                    header.SetBorderCollapse((BorderCollapsePropertyValue)GetProperty(Property.BORDER_COLLAPSE));
+                    header.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
+                        .BORDER_COLLAPSE));
                 }
             }
         }
@@ -1007,7 +1008,8 @@ namespace iText.Layout.Element {
                 }
                 footer.GetAccessibilityProperties().SetRole(StandardRoles.TFOOT);
                 if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
-                    footer.SetBorderCollapse((BorderCollapsePropertyValue)GetProperty(Property.BORDER_COLLAPSE));
+                    footer.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
+                        .BORDER_COLLAPSE));
                 }
             }
         }
