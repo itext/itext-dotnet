@@ -150,6 +150,7 @@ namespace iText.Layout.Borders {
                 }
             }
             canvas.SaveState();
+            transparentColor.ApplyFillTransparency(canvas);
             SetInnerHalfColor(canvas, borderSide);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             switch (borderSide) {
