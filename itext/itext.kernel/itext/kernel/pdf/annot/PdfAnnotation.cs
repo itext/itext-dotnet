@@ -537,10 +537,12 @@ namespace iText.Kernel.Pdf.Annot {
                 else {
                     for (int i = 1; i <= doc.GetNumberOfPages(); i++) {
                         PdfPage docPage = doc.GetPage(i);
-                        foreach (iText.Kernel.Pdf.Annot.PdfAnnotation annot in docPage.GetAnnotations()) {
-                            if (annotationIndirectReference.Equals(annot.GetPdfObject().GetIndirectReference())) {
-                                page = docPage;
-                                break;
+                        if (!docPage.IsFlushed()) {
+                            foreach (iText.Kernel.Pdf.Annot.PdfAnnotation annot in docPage.GetAnnotations()) {
+                                if (annotationIndirectReference.Equals(annot.GetPdfObject().GetIndirectReference())) {
+                                    page = docPage;
+                                    break;
+                                }
                             }
                         }
                     }
