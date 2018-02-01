@@ -943,6 +943,10 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        public virtual bool IsFirstOnRootArea() {
+            return IsFirstOnRootArea(false);
+        }
+
         protected internal virtual void ApplyDestinationsAndAnnotation(DrawContext drawContext) {
             ApplyDestination(drawContext.GetDocument());
             ApplyAction(drawContext.GetDocument());
@@ -2025,10 +2029,6 @@ namespace iText.Layout.Renderer {
             return value != null && value.IsPointValue();
         }
 
-        internal virtual bool IsFirstOnRootArea() {
-            return IsFirstOnRootArea(false);
-        }
-
         internal virtual bool IsFirstOnRootArea(bool checkRootAreaOnly) {
             bool isFirstOnRootArea = true;
             IRenderer ancestor = this;
@@ -2038,8 +2038,13 @@ namespace iText.Layout.Renderer {
                     isFirstOnRootArea = ((RootRenderer)parent).currentArea.IsEmptyArea();
                 }
                 else {
-                    if (!checkRootAreaOnly) {
-                        isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                    if (parent.GetOccupiedArea() == null) {
+                        break;
+                    }
+                    else {
+                        if (!checkRootAreaOnly) {
+                            isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                        }
                     }
                 }
                 ancestor = parent;
