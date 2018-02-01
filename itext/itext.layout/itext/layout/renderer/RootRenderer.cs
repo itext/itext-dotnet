@@ -287,7 +287,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // TODO Drawing of content. Might need to rename.
         /// <summary>Draws (flushes) the content.</summary>
         /// <seealso cref="AbstractRenderer.Draw(DrawContext)"/>
         public virtual void Flush() {
