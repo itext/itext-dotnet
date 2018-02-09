@@ -164,5 +164,16 @@ namespace iText.IO.Util {
             return AppContext.BaseDirectory;
 #endif
         }
+
+        /// Deletes a file and returns whether the operation succeeded.
+        /// Node that only *files* are supported, not directories.
+        public static bool DeleteFile(FileInfo file) {
+            try {
+                file.Delete();
+                return true;
+            } catch (Exception) {
+                return false;
+            }
+        }
     }
 }
