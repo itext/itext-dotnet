@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             NUnit.Framework.Assert.AreEqual(loc.GetText(), "{{Signature}}");
             NUnit.Framework.Assert.AreEqual(23, (int)loc.GetRectangle().GetX());
             NUnit.Framework.Assert.AreEqual(375, (int)loc.GetRectangle().GetY());
-            NUnit.Framework.Assert.AreEqual(52, (int)loc.GetRectangle().GetWidth());
+            NUnit.Framework.Assert.AreEqual(55, (int)loc.GetRectangle().GetWidth());
             NUnit.Framework.Assert.AreEqual(11, (int)loc.GetRectangle().GetHeight());
             // close
             pdfDocument.Close();
