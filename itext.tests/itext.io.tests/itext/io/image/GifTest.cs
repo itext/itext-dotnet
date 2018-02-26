@@ -52,12 +52,11 @@ namespace iText.IO.Image {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest() {
-            using (FileStream file = new FileStream(sourceFolder + "WP_20140410_001.gif", FileMode.Open)) {
-                byte[] fileContent = StreamUtil.InputStreamToArray(file);
-                ImageData img = ImageDataFactory.Create(fileContent, false);
-                NUnit.Framework.Assert.IsTrue(img.IsRawImage());
-                NUnit.Framework.Assert.AreEqual(ImageType.GIF, img.GetOriginalType());
-            }
+            byte[] fileContent = StreamUtil.InputStreamToArray(new FileStream(sourceFolder + "WP_20140410_001.gif", FileMode.Open
+                , FileAccess.Read));
+            ImageData img = ImageDataFactory.Create(fileContent, false);
+            NUnit.Framework.Assert.IsTrue(img.IsRawImage());
+            NUnit.Framework.Assert.AreEqual(ImageType.GIF, img.GetOriginalType());
         }
     }
 }
