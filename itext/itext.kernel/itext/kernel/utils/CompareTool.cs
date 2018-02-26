@@ -1981,10 +1981,10 @@ namespace iText.Kernel.Utils {
                 errors.SetAttribute("count", this.differences.Count.ToString());
                 root.AppendChild(errors);
                 foreach (KeyValuePair<CompareTool.ObjectPath, String> entry in this.differences) {
-                    XmlElement errorNode = xmlReport.CreateElement("error");
-                    XmlElement message = xmlReport.CreateElement("message");
+                    XmlNode errorNode = xmlReport.CreateElement("error");
+                    XmlNode message = xmlReport.CreateElement("message");
                     message.AppendChild(xmlReport.CreateTextNode(entry.Value));
-                    XmlElement path = entry.Key.ToXmlNode(xmlReport);
+                    XmlNode path = entry.Key.ToXmlNode(xmlReport);
                     errorNode.AppendChild(message);
                     errorNode.AppendChild(path);
                     errors.AppendChild(errorNode);
