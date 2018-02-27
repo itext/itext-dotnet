@@ -87,7 +87,7 @@ namespace iText.Layout {
         // private static final String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t";
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -325,6 +325,81 @@ namespace iText.Layout {
                 ).Add(new Tab()).Add("Text1").Add(image).Add("Text3");
             doc.Add(p);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TabsAnchorSemicolonTest01() {
+            String outFileName = destinationFolder + "tabsAnchorSemicolonTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
+            Paragraph p = new Paragraph();
+            IList<TabStop> tabstops = new List<TabStop>();
+            tabstops.Add(new TabStop(w / 2, TabAlignment.RIGHT));
+            tabstops.Add(new TabStop(w / 2 + 1f, TabAlignment.LEFT));
+            p.AddTabStops(tabstops);
+            p.Add(new Tab()).Add("Test:").Add(new Tab()).Add("Answer");
+            document.Add(p);
+            p = new Paragraph();
+            p.AddTabStops(tabstops);
+            p.Add(new Tab()).Add("Test245454:").Add(new Tab()).Add("Answer2");
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TabsAnchorSemicolonTest02() {
+            String outFileName = destinationFolder + "tabsAnchorSemicolonTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
+            Paragraph p = new Paragraph();
+            p.SetProperty(Property.TAB_DEFAULT, 0.01f);
+            IList<TabStop> tabstops = new List<TabStop>();
+            tabstops.Add(new TabStop(w / 2, TabAlignment.RIGHT));
+            p.AddTabStops(tabstops);
+            p.Add(new Tab()).Add("Test:").Add(new Tab()).Add("Answer");
+            document.Add(p);
+            p = new Paragraph();
+            p.SetProperty(Property.TAB_DEFAULT, 0.01f);
+            p.AddTabStops(tabstops);
+            p.Add(new Tab()).Add("Test245454:").Add(new Tab()).Add("Answer2");
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TabsAnchorSemicolonTest03() {
+            String outFileName = destinationFolder + "tabsAnchorSemicolonTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
+            Paragraph p = new Paragraph();
+            TabStop tabStop = new TabStop(w / 2, TabAlignment.ANCHOR);
+            tabStop.SetTabAnchor(':');
+            p.AddTabStops(tabStop);
+            p.Add(new Tab()).Add("Test:Answer");
+            document.Add(p);
+            p = new Paragraph();
+            p.AddTabStops(tabStop);
+            p.Add(new Tab()).Add("Test245454:Answer2");
+            document.Add(p);
+            document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
