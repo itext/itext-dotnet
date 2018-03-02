@@ -648,7 +648,6 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
-            float wordSpacing = currentGs.GetWordSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
             for (int partIndex = 0; partIndex < glyphLineParts.Count; ++partIndex) {
@@ -720,9 +719,8 @@ namespace iText.Kernel.Pdf.Canvas {
                         }
                         if (glyph.HasAdvance()) {
                             contentStream.GetOutputStream().WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance
-                                ()) * fontSize + charSpacing + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? wordSpacing : 0)) 
-                                * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes
-                                (Td);
+                                ()) * fontSize + charSpacing + GetWordSpacingAddition(glyph)) * scaling, true).WriteSpace().WriteFloat
+                                (glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes(Td);
                         }
                         // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
                         sub = i + 1;
@@ -757,14 +755,12 @@ namespace iText.Kernel.Pdf.Canvas {
         private float GetSubrangeWidth(GlyphLine text, int from, int to) {
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
-            float wordSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             float width = 0;
             for (int iter = from; iter <= to; iter++) {
                 Glyph glyph = text.Get(iter);
                 if (!glyph.HasPlacement()) {
-                    width += (glyph.GetWidth() * fontSize + charSpacing + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? 
-                        wordSpacing : 0)) * scaling;
+                    width += (glyph.GetWidth() * fontSize + charSpacing + GetWordSpacingAddition(glyph)) * scaling;
                 }
                 if (iter > from) {
                     width += text.Get(iter - 1).GetXAdvance() * fontSize * scaling;
@@ -780,6 +776,14 @@ namespace iText.Kernel.Pdf.Canvas {
                 yDelta += text.Get(iter).GetYAdvance() * fontSize;
             }
             return yDelta;
+        }
+
+        private float GetWordSpacingAddition(Glyph glyph) {
+            // From the spec: Word spacing is applied to every occurrence of the single-byte character code 32 in
+            // a string when using a simple font or a composite font that defines code 32 as a single-byte code.
+            // It does not apply to occurrences of the byte value 32 in multiple-byte codes.
+            return !(currentGs.GetFont() is PdfType0Font) && glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? currentGs
+                .GetWordSpacing() : 0;
         }
 
         /// <summary>Shows text (operator TJ)</summary>
