@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -97,7 +98,7 @@ namespace iText.Kernel.Utils {
         /// <param name="charset">the charset of the resultant XML file</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
-            @out = new StreamWriter(os, iText.IO.Util.EncodingUtil.GetEncoding(charset));
+            @out = new StreamWriter(os, EncodingUtil.GetEncoding(charset));
             if (rootTag != null) {
                 @out.Write("<" + rootTag + ">" + Environment.NewLine);
             }

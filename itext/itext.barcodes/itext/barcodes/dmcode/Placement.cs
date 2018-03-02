@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Barcodes.Dmcode {
     public class Placement {
@@ -151,7 +152,7 @@ namespace iText.Barcodes.Dmcode {
             int col;
             int chr;
             /* First, fill the array[] with invalid entries */
-            iText.IO.Util.JavaUtil.Fill(array, (short)0);
+            JavaUtil.Fill(array, (short)0);
             /* Starting in the correct location for character #1, bit 8,... */
             chr = 1;
             row = 4;

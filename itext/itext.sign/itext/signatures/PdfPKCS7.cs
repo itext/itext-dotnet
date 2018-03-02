@@ -58,6 +58,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -326,7 +327,7 @@ namespace iText.Signatures {
                                     IDigest m2 = SignUtils.GetMessageDigest("SHA-1");
                                     byte[] signCertHash = m2.Digest(enc2);
                                     byte[] hs2 = cerv2.GetCertHash();
-                                    if (!iText.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                    if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
                                         throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                     }
                                     foundCades = true;
@@ -343,7 +344,7 @@ namespace iText.Signatures {
                                         IDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.ObjectID.Id));
                                         byte[] signCertHash = m2.Digest(enc2);
                                         byte[] hs2 = cerv2.GetCertHash();
-                                        if (!iText.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                        if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
                                             throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                         }
                                         foundCades = true;
@@ -967,7 +968,7 @@ namespace iText.Signatures {
                 MessageImprint imprint = info.TstInfo.MessageImprint;
                 byte[] md = messageDigest.Digest();
                 byte[] imphashed = imprint.GetHashedMessage();
-                verifyResult = iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
+                verifyResult = JavaUtil.ArraysEquals(md, imphashed);
             }
             else {
                 if (sigAttr != null || sigAttrDer != null) {
@@ -976,11 +977,11 @@ namespace iText.Signatures {
                     // Stefan Santesson fixed a bug, keeping the code backward compatible
                     bool encContDigestCompare = false;
                     if (rsaData != null) {
-                        verifyRSAdata = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, rsaData);
+                        verifyRSAdata = JavaUtil.ArraysEquals(msgDigestBytes, rsaData);
                         encContDigest.Update(rsaData);
-                        encContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
+                        encContDigestCompare = JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
                     }
-                    bool absentEncContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
+                    bool absentEncContDigestCompare = JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
                     bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
                     bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
                     verifyResult = concludingDigestCompare && sigVerify && verifyRSAdata;
@@ -1016,7 +1017,7 @@ namespace iText.Signatures {
             String algOID = info.HashAlgorithm.ObjectID.Id;
             byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest(digest);
             byte[] imphashed = imprint.GetHashedMessage();
-            return iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
+            return JavaUtil.ArraysEquals(md, imphashed);
         }
 
         /// <summary>All the X.509 certificates in no particular order.</summary>

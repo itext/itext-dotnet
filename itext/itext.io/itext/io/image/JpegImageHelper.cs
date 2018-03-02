@@ -333,7 +333,7 @@ namespace iText.IO.Image {
                     }
                     else {
                         if (markertype == UNSUPPORTED_MARKER) {
-                            throw new iText.IO.IOException(iText.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID, iText.IO.Util.JavaUtil.IntegerToString
+                            throw new iText.IO.IOException(iText.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID, JavaUtil.IntegerToString
                                 (marker));
                         }
                         else {
@@ -356,7 +356,7 @@ namespace iText.IO.Image {
                 byte[] ficc = new byte[total];
                 total = 0;
                 for (int k = 0; k < icc.Length; ++k) {
-                    System.Array.Copy(icc[k], 14, ficc, total, icc[k].Length - 14);
+                    Array.Copy(icc[k], 14, ficc, total, icc[k].Length - 14);
                     total += icc[k].Length - 14;
                 }
                 try {

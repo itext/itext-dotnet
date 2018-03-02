@@ -186,11 +186,11 @@ namespace iText.IO.Util {
 
                     default: {
                         if (b < 8 && b >= 0) {
-                            buf.Append("\\00").Append(iText.IO.Util.JavaUtil.IntegerToOctalString(b));
+                            buf.Append("\\00").Append(JavaUtil.IntegerToOctalString(b));
                         }
                         else {
                             if (b >= 8 && b < 32) {
-                                buf.Append("\\0").Append(iText.IO.Util.JavaUtil.IntegerToOctalString(b));
+                                buf.Append("\\0").Append(JavaUtil.IntegerToOctalString(b));
                             }
                             else {
                                 buf.Append(b);

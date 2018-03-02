@@ -90,7 +90,7 @@ namespace iText.Kernel.XMP.Impl {
                 throw new IndexOutOfRangeException("Valid length exceeds the buffer length.");
             }
             this.buffer = new byte[length];
-            System.Array.Copy(buffer, offset, this.buffer, 0, length);
+            Array.Copy(buffer, offset, this.buffer, 0, length);
             this.length = length;
         }
 
@@ -150,7 +150,7 @@ namespace iText.Kernel.XMP.Impl {
         /// <param name="len"/>
         public virtual void Append(byte[] bytes, int offset, int len) {
             EnsureCapacity(length + len);
-            System.Array.Copy(bytes, offset, buffer, length, len);
+            Array.Copy(bytes, offset, buffer, length, len);
             length += len;
         }
 
@@ -256,7 +256,7 @@ namespace iText.Kernel.XMP.Impl {
             if (requestedLength > buffer.Length) {
                 byte[] oldBuf = buffer;
                 buffer = new byte[oldBuf.Length * 2];
-                System.Array.Copy(oldBuf, 0, buffer, 0, oldBuf.Length);
+                Array.Copy(oldBuf, 0, buffer, 0, oldBuf.Length);
             }
         }
     }

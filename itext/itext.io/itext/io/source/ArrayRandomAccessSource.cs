@@ -72,7 +72,7 @@ namespace iText.IO.Source {
             if (offset + len > array.Length) {
                 len = (int)(array.Length - offset);
             }
-            System.Array.Copy(array, (int)offset, bytes, off, len);
+            Array.Copy(array, (int)offset, bytes, off, len);
             return len;
         }
 

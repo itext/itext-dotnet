@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
@@ -1898,7 +1899,7 @@ namespace iText.Kernel.Pdf {
                             if (c < 16) {
                                 buf.Append('0');
                             }
-                            buf.Append(iText.IO.Util.JavaUtil.IntegerToHexString(c));
+                            buf.Append(JavaUtil.IntegerToHexString(c));
                         }
                         break;
                     }

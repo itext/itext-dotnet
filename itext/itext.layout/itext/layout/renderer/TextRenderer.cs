@@ -487,7 +487,7 @@ namespace iText.Layout.Renderer {
                     for (int i = text.start; i < text.end; i++) {
                         int unicode = text.Get(i).GetUnicode();
                         if (unicode > -1) {
-                            UnicodeScript glyphScript = iText.IO.Util.UnicodeScriptUtil.Of(unicode);
+                            UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
                             if (scriptFrequency.ContainsKey(glyphScript)) {
                                 scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
                             }

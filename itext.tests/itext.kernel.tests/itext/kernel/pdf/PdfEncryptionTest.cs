@@ -343,8 +343,8 @@ namespace iText.Kernel.Pdf {
         public virtual void OpenEncryptedDocWithWrongPrivateKey() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), iText.Kernel.Crypto.CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
-                    (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(
+                    new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
                     ())));
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
@@ -359,7 +359,7 @@ namespace iText.Kernel.Pdf {
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), iText.Kernel.Crypto.CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
                     (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
                     ())));
                 PdfDocument doc = new PdfDocument(reader);
@@ -595,15 +595,15 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="Java.Security.Cert.CertificateException"/>
         public virtual X509Certificate GetPublicCertificate(String path) {
             FileStream @is = new FileStream(path, FileMode.Open, FileAccess.Read);
-            return iText.Kernel.Crypto.CryptoUtil.ReadPublicCertificate(@is);
+            return CryptoUtil.ReadPublicCertificate(@is);
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         public virtual ICipherParameters GetPrivateKey() {
             if (privateKey == null) {
-                privateKey = iText.Kernel.Crypto.CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(new FileStream(PRIVATE_KEY, FileMode.Open
-                    , FileAccess.Read), "sandbox", PRIVATE_KEY_PASS);
+                privateKey = CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(new FileStream(PRIVATE_KEY, FileMode.Open, FileAccess.Read
+                    ), "sandbox", PRIVATE_KEY_PASS);
             }
             return privateKey;
         }

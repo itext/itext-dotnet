@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 
@@ -62,7 +63,7 @@ namespace iText.Kernel.Colors {
 
         private static float[] GetDefaultColorants(int numOfColorants) {
             float[] colorants = new float[numOfColorants];
-            iText.IO.Util.JavaUtil.Fill(colorants, 1f);
+            JavaUtil.Fill(colorants, 1f);
             return colorants;
         }
     }

@@ -266,7 +266,7 @@ namespace iText.IO.Font.Otf {
         public override int GetHashCode() {
             int prime = 31;
             int result = 1;
-            result = prime * result + ((chars == null) ? 0 : iText.IO.Util.JavaUtil.ArraysHashCode(chars));
+            result = prime * result + ((chars == null) ? 0 : JavaUtil.ArraysHashCode(chars));
             result = prime * result + code;
             result = prime * result + width;
             return result;
@@ -283,7 +283,7 @@ namespace iText.IO.Font.Otf {
                 return false;
             }
             iText.IO.Font.Otf.Glyph other = (iText.IO.Font.Otf.Glyph)obj;
-            return iText.IO.Util.JavaUtil.ArraysEquals(chars, other.chars) && code == other.code && width == other.width;
+            return JavaUtil.ArraysEquals(chars, other.chars) && code == other.code && width == other.width;
         }
 
         /// <summary>Gets a Unicode string corresponding to this glyph.</summary>
@@ -297,7 +297,7 @@ namespace iText.IO.Font.Otf {
         /// <returns>the Unicode string that corresponds to this glyph</returns>
         public virtual String GetUnicodeString() {
             if (chars != null) {
-                return iText.IO.Util.JavaUtil.GetStringForChars(chars);
+                return JavaUtil.GetStringForChars(chars);
             }
             else {
                 return REPLACEMENT_CHARACTER_STRING;
@@ -323,23 +323,23 @@ namespace iText.IO.Font.Otf {
         }
 
         public override String ToString() {
-            return MessageFormatUtil.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
+            return MessageFormatUtil.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? JavaUtil.ArraysToString
                 (chars) : "null", ToHex(unicode), width);
         }
 
         private static String ToHex(int ch) {
-            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            String s = "0000" + JavaUtil.IntegerToHexString(ch);
             return s.Substring(Math.Min(4, s.Length - 4));
         }
 
         private static int CodePoint(char[] a) {
             if (a != null) {
-                if (a.Length == 1 && iText.IO.Util.JavaUtil.IsValidCodePoint(a[0])) {
+                if (a.Length == 1 && JavaUtil.IsValidCodePoint(a[0])) {
                     return a[0];
                 }
                 else {
-                    if (a.Length == 2 && System.Char.IsHighSurrogate(a[0]) && System.Char.IsLowSurrogate(a[1])) {
-                        return iText.IO.Util.JavaUtil.ToCodePoint(a[0], a[1]);
+                    if (a.Length == 2 && Char.IsHighSurrogate(a[0]) && Char.IsLowSurrogate(a[1])) {
+                        return JavaUtil.ToCodePoint(a[0], a[1]);
                     }
                 }
             }

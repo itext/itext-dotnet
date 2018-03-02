@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
@@ -69,9 +70,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
             // only use for the input as many bit as the key consists of
             for (int k = 0; k < 50; ++k) {
                 md5.Update(digest, 0, mkey.Length);
-                System.Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
+                Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
             }
-            System.Array.Copy(userPad, 0, ownerKey, 0, 32);
+            Array.Copy(userPad, 0, ownerKey, 0, 32);
             for (int i = 0; i < 20; ++i) {
                 for (int j = 0; j < mkey.Length; ++j) {
                     mkey[j] = (byte)(digest[j] ^ i);
@@ -102,19 +103,19 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 md5.Update(metadataPad);
             }
             byte[] digest = new byte[mkey.Length];
-            System.Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
+            Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
             // only use the really needed bits as input for the hash
             for (int k = 0; k < 50; ++k) {
-                System.Array.Copy(md5.Digest(digest), 0, digest, 0, mkey.Length);
+                Array.Copy(md5.Digest(digest), 0, digest, 0, mkey.Length);
             }
-            System.Array.Copy(digest, 0, mkey, 0, mkey.Length);
+            Array.Copy(digest, 0, mkey, 0, mkey.Length);
         }
 
         protected internal override byte[] ComputeUserKey() {
             byte[] userKey = new byte[32];
             md5.Update(pad);
             byte[] digest = md5.Digest(documentId);
-            System.Array.Copy(digest, 0, userKey, 0, 16);
+            Array.Copy(digest, 0, userKey, 0, 16);
             for (int k = 16; k < 32; ++k) {
                 userKey[k] = 0;
             }

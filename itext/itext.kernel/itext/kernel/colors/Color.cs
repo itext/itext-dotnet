@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf.Colorspace;
 
@@ -318,13 +319,13 @@ namespace iText.Kernel.Colors {
             }
             iText.Kernel.Colors.Color color = (iText.Kernel.Colors.Color)o;
             return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject()) : color.colorSpace
-                 == null) && iText.IO.Util.JavaUtil.ArraysEquals(colorValue, color.colorValue);
+                 == null) && JavaUtil.ArraysEquals(colorValue, color.colorValue);
         }
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             int result = colorSpace != null ? colorSpace.GetHashCode() : 0;
-            result = 31 * result + (colorValue != null ? iText.IO.Util.JavaUtil.ArraysHashCode(colorValue) : 0);
+            result = 31 * result + (colorValue != null ? JavaUtil.ArraysHashCode(colorValue) : 0);
             return result;
         }
     }

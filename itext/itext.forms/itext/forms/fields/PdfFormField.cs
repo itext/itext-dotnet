@@ -1370,7 +1370,7 @@ namespace iText.Forms.Fields {
                 if (PdfName.Btn.Equals(formType)) {
                     if ((GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
                         try {
-                            img = ImageDataFactory.Create(System.Convert.FromBase64String(value));
+                            img = ImageDataFactory.Create(Convert.FromBase64String(value));
                         }
                         catch (Exception) {
                             text = value;

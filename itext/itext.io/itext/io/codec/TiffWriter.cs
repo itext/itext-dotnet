@@ -53,7 +53,7 @@ namespace iText.IO.Codec {
             );
 
         public virtual void AddField(TiffWriter.FieldBase field) {
-            ifd.Put(System.Convert.ToInt32(field.GetTag()), field);
+            ifd.Put(Convert.ToInt32(field.GetTag()), field);
         }
 
         public virtual int GetIfdSize() {
@@ -238,7 +238,7 @@ namespace iText.IO.Codec {
                 : base(tag, 2, values.GetBytes(Encoding.ASCII).Length + 1) {
                 byte[] b = values.GetBytes(Encoding.ASCII);
                 data = new byte[b.Length + 1];
-                System.Array.Copy(b, 0, data, 0, b.Length);
+                Array.Copy(b, 0, data, 0, b.Length);
             }
         }
 
@@ -268,7 +268,7 @@ namespace iText.IO.Codec {
                 int off = 0;
                 byte[] rowBuf = new byte[stride];
                 for (int i = 0; i < height; i++) {
-                    System.Array.Copy(b, off, rowBuf, 0, stride);
+                    Array.Copy(b, off, rowBuf, 0, stride);
                     for (int j = stride - 1; j >= samplesPerPixel; j--) {
                         rowBuf[j] -= rowBuf[j - samplesPerPixel];
                     }

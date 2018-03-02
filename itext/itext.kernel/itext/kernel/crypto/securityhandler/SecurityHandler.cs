@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 
@@ -108,7 +109,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private void SafeInitMessageDigest() {
             try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);

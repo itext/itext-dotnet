@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace iText.Layout.Font {
     /// <summary>
@@ -68,8 +69,8 @@ namespace iText.Layout.Font {
                 return false;
             }
             iText.Layout.Font.FontSelectorKey that = (iText.Layout.Font.FontSelectorKey)o;
-            return System.Linq.Enumerable.SequenceEqual(fontFamilies, that.fontFamilies) && (fc != null ? fc.Equals(that
-                .fc) : that.fc == null);
+            return Enumerable.SequenceEqual(fontFamilies, that.fontFamilies) && (fc != null ? fc.Equals(that.fc) : that
+                .fc == null);
         }
 
         public override int GetHashCode() {

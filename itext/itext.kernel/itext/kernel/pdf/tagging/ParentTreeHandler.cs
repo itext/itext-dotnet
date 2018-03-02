@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using System.Linq;
 using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -108,7 +109,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 return 0;
             }
             else {
-                int lastKey = (int)System.Linq.Enumerable.Last(pageMcrs).Key;
+                int lastKey = (int)Enumerable.Last(pageMcrs).Key;
                 if (lastKey < 0) {
                     return 0;
                 }

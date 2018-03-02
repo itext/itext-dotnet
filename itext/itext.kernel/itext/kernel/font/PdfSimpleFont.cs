@@ -257,7 +257,7 @@ namespace iText.Kernel.Font {
                 Glyph glyph = null;
                 if (toUnicode != null && toUnicode.Lookup(code) != null && (glyph = fontProgram.GetGlyphByCode(code)) != null
                     ) {
-                    if (!iText.IO.Util.JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
+                    if (!JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
                         // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
                         glyph = new Glyph(glyph);
                         glyph.SetChars(toUnicode.Lookup(code));

@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -204,7 +205,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copySamePageWithAnnotationsSeveralTimes.pdf"
                 ));
             sourceDoc.InitializeOutlines();
-            sourceDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 1, 1), pdfDoc);
+            sourceDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 1, 1), pdfDoc);
             sourceDoc.Close();
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copySamePageWithAnnotationsSeveralTimes.pdf"

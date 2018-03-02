@@ -195,7 +195,7 @@ namespace iText.Forms.Fields {
         /// <exception cref="System.IO.IOException"/>
         public virtual iText.Forms.Fields.PdfButtonFormField SetImage(String image) {
             Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
-            String str = System.Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
+            String str = Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
             return (iText.Forms.Fields.PdfButtonFormField)SetValue(str);
         }
 

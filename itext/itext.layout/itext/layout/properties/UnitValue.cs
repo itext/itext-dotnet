@@ -187,14 +187,14 @@ namespace iText.Layout.Properties {
                 return false;
             }
             iText.Layout.Properties.UnitValue other = (iText.Layout.Properties.UnitValue)obj;
-            return iText.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && iText.IO.Util.JavaUtil.FloatCompare
-                (value, other.value) == 0;
+            return JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && JavaUtil.FloatCompare(value, other.value)
+                 == 0;
         }
 
         public override int GetHashCode() {
             int hash = 7;
             hash = 71 * hash + this.unitType;
-            hash = 71 * hash + iText.IO.Util.JavaUtil.FloatToIntBits(this.value);
+            hash = 71 * hash + JavaUtil.FloatToIntBits(this.value);
             return hash;
         }
 

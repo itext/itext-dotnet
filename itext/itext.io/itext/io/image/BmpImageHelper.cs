@@ -843,7 +843,7 @@ namespace iText.IO.Image {
         private static void Read1Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp) {
             byte[] bdata = new byte[(bmp.width + 7) / 8 * bmp.height];
             int padding = 0;
-            int bytesPerScanline = (int)System.Math.Ceiling(bmp.width / 8.0d);
+            int bytesPerScanline = (int)Math.Ceiling(bmp.width / 8.0d);
             int remainder = bytesPerScanline % 4;
             if (remainder != 0) {
                 padding = 4 - remainder;
@@ -859,13 +859,13 @@ namespace iText.IO.Image {
                 // Convert the bottom up image to a top down format by copying
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
+                    Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
                         );
                 }
             }
             else {
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
+                    Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
                 }
             }
             IndexedModel(bdata, 1, paletteEntries, bmp);
@@ -877,7 +877,7 @@ namespace iText.IO.Image {
             byte[] bdata = new byte[(bmp.width + 1) / 2 * bmp.height];
             // Padding bytes at the end of each scanline
             int padding = 0;
-            int bytesPerScanline = (int)System.Math.Ceiling(bmp.width / 2.0d);
+            int bytesPerScanline = (int)Math.Ceiling(bmp.width / 2.0d);
             int remainder = bytesPerScanline % 4;
             if (remainder != 0) {
                 padding = 4 - remainder;
@@ -893,13 +893,13 @@ namespace iText.IO.Image {
                 // Convert the bottom up image to a top down format by copying
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
+                    Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
                         );
                 }
             }
             else {
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
+                    Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
                 }
             }
             IndexedModel(bdata, 4, paletteEntries, bmp);
@@ -915,7 +915,7 @@ namespace iText.IO.Image {
             int bitsPerScanline = bmp.width * 8;
             if (bitsPerScanline % 32 != 0) {
                 padding = (bitsPerScanline / 32 + 1) * 32 - bitsPerScanline;
-                padding = (int)System.Math.Ceiling(padding / 8.0);
+                padding = (int)Math.Ceiling(padding / 8.0);
             }
             int imSize = (bmp.width + padding) * bmp.height;
             // Read till we have the whole image
@@ -928,12 +928,12 @@ namespace iText.IO.Image {
                 // Convert the bottom up image to a top down format by copying
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, imSize - (i + 1) * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
+                    Array.Copy(values, imSize - (i + 1) * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
                 }
             }
             else {
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(values, i * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
+                    Array.Copy(values, i * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
                 }
             }
             IndexedModel(bdata, 8, paletteEntries, bmp);
@@ -948,7 +948,7 @@ namespace iText.IO.Image {
             int bitsPerScanline = bmp.width * 24;
             if (bitsPerScanline % 32 != 0) {
                 padding = (bitsPerScanline / 32 + 1) * 32 - bitsPerScanline;
-                padding = (int)System.Math.Ceiling(padding / 8.0);
+                padding = (int)Math.Ceiling(padding / 8.0);
             }
             int imSize = (bmp.width * 3 + 3) / 4 * 4 * bmp.height;
             // Read till we have the whole image
@@ -1032,7 +1032,7 @@ namespace iText.IO.Image {
                 int bitsPerScanline = bmp.width * 16;
                 if (bitsPerScanline % 32 != 0) {
                     padding = (bitsPerScanline / 32 + 1) * 32 - bitsPerScanline;
-                    padding = (int)System.Math.Ceiling(padding / 8.0);
+                    padding = (int)Math.Ceiling(padding / 8.0);
                 }
             }
             int imSize = (int)bmp.imageSize;
@@ -1105,7 +1105,7 @@ namespace iText.IO.Image {
                 byte[] temp = new byte[val.Length];
                 int bytesPerScanline = bmp.width;
                 for (int i = 0; i < bmp.height; i++) {
-                    System.Array.Copy(val, imSize - (i + 1) * bytesPerScanline, temp, i * bytesPerScanline, bytesPerScanline);
+                    Array.Copy(val, imSize - (i + 1) * bytesPerScanline, temp, i * bytesPerScanline, bytesPerScanline);
                 }
                 val = temp;
             }

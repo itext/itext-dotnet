@@ -397,8 +397,8 @@ namespace iText.Layout.Hyphenation {
                 for (int i = 0; i < hyphPoints.Length; i++) {
                     hyphPoints[i] += foreWordsSize;
                 }
-                System.Array.Copy(breaks, 0, combined, 0, breaks.Length);
-                System.Array.Copy(hyphPoints, 0, combined, breaks.Length, hyphPoints.Length);
+                Array.Copy(breaks, 0, combined, 0, breaks.Length);
+                Array.Copy(hyphPoints, 0, combined, breaks.Length, hyphPoints.Length);
                 breaks = combined;
             }
             return breaks;
@@ -514,7 +514,7 @@ namespace iText.Layout.Hyphenation {
             if (k > 0) {
                 // trim result array
                 int[] res = new int[k];
-                System.Array.Copy(result, 0, res, 0, k);
+                Array.Copy(result, 0, res, 0, k);
                 return new iText.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
             }
             else {

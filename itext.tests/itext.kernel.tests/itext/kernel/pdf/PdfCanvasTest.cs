@@ -273,7 +273,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -308,7 +308,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -343,7 +343,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -414,7 +414,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -450,7 +450,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -486,7 +486,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -522,7 +522,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();

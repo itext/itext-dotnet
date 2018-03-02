@@ -388,7 +388,7 @@ namespace iText.IO.Font {
                     ident = tokc.NextToken();
                     switch (ident) {
                         case "C": {
-                            C = System.Convert.ToInt32(tokc.NextToken());
+                            C = Convert.ToInt32(tokc.NextToken());
                             break;
                         }
 
@@ -403,8 +403,8 @@ namespace iText.IO.Font {
                         }
 
                         case "B": {
-                            B = new int[] { System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32
-                                (tokc.NextToken()), System.Convert.ToInt32(tokc.NextToken()) };
+                            B = new int[] { Convert.ToInt32(tokc.NextToken()), Convert.ToInt32(tokc.NextToken()), Convert.ToInt32(tokc
+                                .NextToken()), Convert.ToInt32(tokc.NextToken()) };
                             break;
                         }
                     }

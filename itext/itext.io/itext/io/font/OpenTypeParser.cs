@@ -282,7 +282,7 @@ namespace iText.IO.Font {
             String ttcName = GetTTCName(baseName);
             this.fileName = ttcName;
             if (ttcName.Length < baseName.Length) {
-                ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcName.Length + 1));
+                ttcIndex = Convert.ToInt32(baseName.Substring(ttcName.Length + 1));
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
             InitializeSfntTables();
@@ -754,8 +754,8 @@ namespace iText.IO.Font {
                 else {
                     name = ReadStandardString(length);
                 }
-                names.Add(new String[] { iText.IO.Util.JavaUtil.IntegerToString(platformID), iText.IO.Util.JavaUtil.IntegerToString
-                    (platformEncodingID), iText.IO.Util.JavaUtil.IntegerToString(languageID), name });
+                names.Add(new String[] { JavaUtil.IntegerToString(platformID), JavaUtil.IntegerToString(platformEncodingID
+                    ), JavaUtil.IntegerToString(languageID), name });
                 raf.Seek(pos);
             }
         }

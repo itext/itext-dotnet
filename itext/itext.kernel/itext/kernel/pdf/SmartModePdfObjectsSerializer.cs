@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -55,7 +56,7 @@ namespace iText.Kernel.Pdf {
 
         internal SmartModePdfObjectsSerializer() {
             try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);

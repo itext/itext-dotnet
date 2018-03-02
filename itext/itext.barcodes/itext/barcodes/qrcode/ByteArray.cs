@@ -115,7 +115,7 @@ namespace iText.Barcodes.Qrcode {
             if (bytes == null || bytes.Length < capacity) {
                 byte[] newArray = new byte[capacity];
                 if (bytes != null) {
-                    System.Array.Copy(bytes, 0, newArray, 0, bytes.Length);
+                    Array.Copy(bytes, 0, newArray, 0, bytes.Length);
                 }
                 bytes = newArray;
             }

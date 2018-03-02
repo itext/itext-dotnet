@@ -163,7 +163,7 @@ namespace iText.IO.Codec {
             if (str.Length < max) {
                 max = str.Length;
             }
-            System.Array.Copy(str, 0, uncompData, dstIndex, max);
+            Array.Copy(str, 0, uncompData, dstIndex, max);
             dstIndex += max;
         }
 
@@ -171,7 +171,7 @@ namespace iText.IO.Codec {
         public virtual void AddStringToTable(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];
-            System.Array.Copy(oldString, 0, str, 0, length);
+            Array.Copy(oldString, 0, str, 0, length);
             str[length] = newString;
             // Add this new String to the table
             stringTable[tableIndex++] = str;
@@ -213,7 +213,7 @@ namespace iText.IO.Codec {
         public virtual byte[] ComposeString(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];
-            System.Array.Copy(oldString, 0, str, 0, length);
+            Array.Copy(oldString, 0, str, 0, length);
             str[length] = newString;
             return str;
         }

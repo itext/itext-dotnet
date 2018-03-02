@@ -99,7 +99,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     continue;
                 }
                 byte[] userPassword = new byte[i];
-                System.Array.Copy(userPad, 0, userPassword, 0, i);
+                Array.Copy(userPad, 0, userPassword, 0, i);
                 return userPassword;
             }
             return userPad;
@@ -139,8 +139,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 md5.Update(metadataPad);
             }
             byte[] digest = new byte[mkey.Length];
-            System.Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
-            System.Array.Copy(digest, 0, mkey, 0, mkey.Length);
+            Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
+            Array.Copy(digest, 0, mkey, 0, mkey.Length);
         }
 
         protected internal virtual byte[] ComputeUserKey() {
@@ -211,12 +211,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
         private byte[] PadPassword(byte[] password) {
             byte[] userPad = new byte[32];
             if (password == null) {
-                System.Array.Copy(pad, 0, userPad, 0, 32);
+                Array.Copy(pad, 0, userPad, 0, 32);
             }
             else {
-                System.Array.Copy(password, 0, userPad, 0, Math.Min(password.Length, 32));
+                Array.Copy(password, 0, userPad, 0, Math.Min(password.Length, 32));
                 if (password.Length < 32) {
-                    System.Array.Copy(pad, 0, userPad, password.Length, 32 - password.Length);
+                    Array.Copy(pad, 0, userPad, password.Length, 32 - password.Length);
                 }
             }
             return userPad;

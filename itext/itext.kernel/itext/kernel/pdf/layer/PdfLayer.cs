@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Layer {
@@ -225,14 +226,14 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual ICollection<PdfName> GetIntents() {
             PdfObject intent = GetPdfObject().Get(PdfName.Intent);
             if (intent is PdfName) {
-                return iText.IO.Util.JavaUtil.ArraysAsList((PdfName)intent);
+                return JavaUtil.ArraysAsList((PdfName)intent);
             }
             else {
                 if (intent is PdfArray) {
                     return (ICollection<PdfName>)intent;
                 }
             }
-            return iText.IO.Util.JavaUtil.ArraysAsList(PdfName.View);
+            return JavaUtil.ArraysAsList(PdfName.View);
         }
 
         /// <summary>Sets the intents of the layer.</summary>

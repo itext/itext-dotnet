@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -139,12 +140,11 @@ namespace iText.Kernel.Geom {
             //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
             float width = urx - llx;
             float height = ury - lly;
-            if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) >= 0 && iText.IO.Util.JavaUtil.FloatCompare(height, 0) >=
-                 0) {
-                if (iText.IO.Util.JavaUtil.FloatCompare(width, 0) < 0) {
+            if (JavaUtil.FloatCompare(width, 0) >= 0 && JavaUtil.FloatCompare(height, 0) >= 0) {
+                if (JavaUtil.FloatCompare(width, 0) < 0) {
                     width = 0;
                 }
-                if (iText.IO.Util.JavaUtil.FloatCompare(height, 0) < 0) {
+                if (JavaUtil.FloatCompare(height, 0) < 0) {
                     height = 0;
                 }
                 result = new iText.Kernel.Geom.Rectangle(llx, lly, width, height);
@@ -556,7 +556,7 @@ namespace iText.Kernel.Geom {
                 throw new PdfException(PdfException.QuadPointArrayLengthIsNotAMultipleOfEight);
             }
             for (int i = 0; i < quadPoints.Size(); i += 8) {
-                float[] quadPointEntry = iText.IO.Util.JavaUtil.ArraysCopyOfRange(quadPoints.ToFloatArray(), i, i + 8);
+                float[] quadPointEntry = JavaUtil.ArraysCopyOfRange(quadPoints.ToFloatArray(), i, i + 8);
                 PdfArray quadPointEntryFA = new PdfArray(quadPointEntry);
                 boundingRectangles.Add(CreateBoundingRectangleFromQuadPoint(quadPointEntryFA));
             }

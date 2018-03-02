@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Filespec {
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
             ) {
-            PdfStream stream = new PdfStream(doc, iText.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
+            PdfStream stream = new PdfStream(doc, UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue, isUnicodeFileName
                 );
         }

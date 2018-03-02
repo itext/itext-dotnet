@@ -180,22 +180,22 @@ namespace iText.Layout.Renderer {
                             }
 
                             case ListNumberingType.ZAPF_DINGBATS_1: {
-                                numberText = iText.IO.Util.JavaUtil.CharToString((char)(index + 171));
+                                numberText = JavaUtil.CharToString((char)(index + 171));
                                 break;
                             }
 
                             case ListNumberingType.ZAPF_DINGBATS_2: {
-                                numberText = iText.IO.Util.JavaUtil.CharToString((char)(index + 181));
+                                numberText = JavaUtil.CharToString((char)(index + 181));
                                 break;
                             }
 
                             case ListNumberingType.ZAPF_DINGBATS_3: {
-                                numberText = iText.IO.Util.JavaUtil.CharToString((char)(index + 191));
+                                numberText = JavaUtil.CharToString((char)(index + 191));
                                 break;
                             }
 
                             case ListNumberingType.ZAPF_DINGBATS_4: {
-                                numberText = iText.IO.Util.JavaUtil.CharToString((char)(index + 201));
+                                numberText = JavaUtil.CharToString((char)(index + 201));
                                 break;
                             }
 

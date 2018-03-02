@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Function;
@@ -251,8 +252,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             public UncoloredTilingPattern(PdfColorSpace underlyingColorSpace)
-                : base(new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace.GetPdfObject
-                    ()))) {
+                : base(new PdfArray(JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace.GetPdfObject()))) {
             }
 
             public override int GetNumberOfComponents() {

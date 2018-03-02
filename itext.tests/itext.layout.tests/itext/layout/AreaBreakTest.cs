@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -244,9 +245,8 @@ namespace iText.Layout {
             }
 
             public override IList<Rectangle> InitElementAreas(LayoutArea area) {
-                return iText.IO.Util.JavaUtil.ArraysAsList(new Rectangle(area.GetBBox()).SetWidth(area.GetBBox().GetWidth(
-                    ) / 2), new Rectangle(area.GetBBox()).SetWidth(area.GetBBox().GetWidth() / 2).MoveRight(area.GetBBox()
-                    .GetWidth() / 2));
+                return JavaUtil.ArraysAsList(new Rectangle(area.GetBBox()).SetWidth(area.GetBBox().GetWidth() / 2), new Rectangle
+                    (area.GetBBox()).SetWidth(area.GetBBox().GetWidth() / 2).MoveRight(area.GetBBox().GetWidth() / 2));
             }
 
             public override IRenderer GetNextRenderer() {
