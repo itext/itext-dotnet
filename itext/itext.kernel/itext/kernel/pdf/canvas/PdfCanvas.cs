@@ -706,7 +706,7 @@ namespace iText.Kernel.Pdf.Canvas {
                                         currentGlyphIndex += currentGlyph.GetAnchorDelta();
                                     }
                                 }
-                                yPlacement = glyph.GetYAdvance() * fontSize + yPlacementAddition * fontSize;
+                                yPlacement = -GetSubrangeYDelta(text, currentGlyphIndex, i) + yPlacementAddition * fontSize;
                             }
                             contentStream.GetOutputStream().WriteFloat(xPlacement, true).WriteSpace().WriteFloat(yPlacement, true).WriteSpace
                                 ().WriteBytes(Td);
@@ -718,11 +718,11 @@ namespace iText.Kernel.Pdf.Canvas {
                                 ().WriteBytes(Td);
                         }
                         if (glyph.HasAdvance()) {
-                            contentStream.GetOutputStream().WriteFloat(((glyph.GetWidth() + glyph.GetXAdvance()) * fontSize + charSpacing
-                                ) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes
-                                (Td);
+                            contentStream.GetOutputStream().WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance
+                                ()) * fontSize + charSpacing) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, 
+                                true).WriteSpace().WriteBytes(Td);
                         }
-                        // TODO shall previous y position been restored?
+                        // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
                         sub = i + 1;
                     }
                 }
@@ -746,6 +746,12 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
+        /// <summary>Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.</summary>
+        /// <remarks>
+        /// Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.
+        /// Glyphs with placement are ignored.
+        /// XAdvance is not taken into account neither before `from` nor after `to` glyphs.
+        /// </remarks>
         private float GetSubrangeWidth(GlyphLine text, int from, int to) {
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
@@ -754,10 +760,24 @@ namespace iText.Kernel.Pdf.Canvas {
             float width = 0;
             for (int iter = from; iter <= to; iter++) {
                 Glyph glyph = text.Get(iter);
-                width += (glyph.GetWidth() * fontSize + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? wordSpacing : 
-                    charSpacing)) * scaling;
+                if (!glyph.HasPlacement()) {
+                    width += (glyph.GetWidth() * fontSize + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? wordSpacing : 
+                        charSpacing)) * scaling;
+                }
+                if (iter > from) {
+                    width += text.Get(iter - 1).GetXAdvance() * fontSize * scaling;
+                }
             }
             return width;
+        }
+
+        private float GetSubrangeYDelta(GlyphLine text, int from, int to) {
+            float fontSize = currentGs.GetFontSize() / 1000f;
+            float yDelta = 0;
+            for (int iter = from; iter < to; iter++) {
+                yDelta += text.Get(iter).GetYAdvance() * fontSize;
+            }
+            return yDelta;
         }
 
         /// <summary>Shows text (operator TJ)</summary>
