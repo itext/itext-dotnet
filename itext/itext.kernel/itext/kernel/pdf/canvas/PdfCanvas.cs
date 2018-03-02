@@ -690,7 +690,7 @@ namespace iText.Kernel.Pdf.Canvas {
                                         currentGlyph = text.Get(currentGlyphIndex);
                                     }
                                 }
-                                xPlacement = -GetSubrangeWidth(text, currentGlyphIndex, i) + xPlacementAddition * fontSize;
+                                xPlacement = -GetSubrangeWidth(text, currentGlyphIndex, i) + xPlacementAddition * fontSize * scaling;
                             }
  {
                                 float yPlacementAddition = 0;
