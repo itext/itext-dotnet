@@ -262,7 +262,7 @@ namespace iText.Kernel.Pdf {
             if (CheckState(READ_ONLY)) {
                 states.Append("ReadOnly; ");
             }
-            return MessageFormatUtil.Format("{0} {1} R{2}", iText.IO.Util.JavaUtil.IntegerToString(GetObjNumber()), iText.IO.Util.JavaUtil.IntegerToString
+            return MessageFormatUtil.Format("{0} {1} R{2}", JavaUtil.IntegerToString(GetObjNumber()), JavaUtil.IntegerToString
                 (GetGenNumber()), states.JSubstring(0, states.Length - 1));
         }
 

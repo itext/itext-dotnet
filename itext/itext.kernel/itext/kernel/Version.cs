@@ -244,10 +244,10 @@ namespace iText.Kernel {
         private static void CheckLicenseVersion(String coreVersionString, String licenseVersionString) {
             String[] coreVersions = ParseVersionString(coreVersionString);
             String[] licenseVersions = ParseVersionString(licenseVersionString);
-            int coreMajor = System.Convert.ToInt32(coreVersions[0]);
-            int coreMinor = System.Convert.ToInt32(coreVersions[1]);
-            int licenseMajor = System.Convert.ToInt32(licenseVersions[0]);
-            int licenseMinor = System.Convert.ToInt32(licenseVersions[1]);
+            int coreMajor = Convert.ToInt32(coreVersions[0]);
+            int coreMinor = Convert.ToInt32(coreVersions[1]);
+            int licenseMajor = Convert.ToInt32(licenseVersions[0]);
+            int licenseMinor = Convert.ToInt32(licenseVersions[1]);
             //Major version check
             if (licenseMajor < coreMajor) {
                 throw new LicenseVersionException(LicenseVersionException.THE_MAJOR_VERSION_OF_THE_LICENSE_0_IS_LOWER_THAN_THE_MAJOR_VERSION_1_OF_THE_CORE_LIBRARY
@@ -324,7 +324,7 @@ namespace iText.Kernel {
             //I did not want to introduce an extra dependency on apache.commons in order to use StringUtils.
             //This small method is not the most optimal, but it should do for release
             try {
-                System.Double.Parse(version, System.Globalization.CultureInfo.InvariantCulture);
+                Double.Parse(version, System.Globalization.CultureInfo.InvariantCulture);
                 return true;
             }
             catch (FormatException) {

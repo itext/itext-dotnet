@@ -1820,22 +1820,22 @@ namespace iText.Layout.Renderer {
         /// </returns>
         protected internal virtual bool IsFixedLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
         }
 
         protected internal virtual bool IsStaticLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);
-            return positioning == null || System.Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
+            return positioning == null || Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
         }
 
         protected internal virtual bool IsRelativePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
         }
 
         protected internal virtual bool IsAbsolutePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
         }
 
         protected internal virtual bool IsKeepTogether() {
@@ -1981,9 +1981,9 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual IList<Point> RectangleToPointsList(Rectangle rect) {
             IList<Point> points = new List<Point>();
-            points.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect
-                .GetRight(), rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect
-                .GetTop())));
+            points.AddAll(JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect.GetRight()
+                , rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect.GetTop(
+                ))));
             return points;
         }
 
@@ -2169,8 +2169,8 @@ namespace iText.Layout.Renderer {
             float? bottom = GetPropertyAsFloat(childPositionedRenderer, Property.BOTTOM);
             childPositionedRenderer.SetParent(this);
             AdjustPositionedRendererLayoutBoxWidth(childPositionedRenderer, fullBbox, left, right);
-            if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property
-                .POSITION))) {
+            if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property.POSITION
+                ))) {
                 UpdateMinHeightForAbsolutelyPositionedRenderer(childPositionedRenderer, parentBbox, top, bottom);
             }
         }

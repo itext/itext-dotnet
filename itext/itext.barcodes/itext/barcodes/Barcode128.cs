@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -208,7 +209,7 @@ namespace iText.Barcodes {
                     if (code.Length < k) {
                         break;
                     }
-                    int subcode = System.Convert.ToInt32(code.JSubstring(0, k));
+                    int subcode = Convert.ToInt32(code.JSubstring(0, k));
                     n = ais.ContainsKey(subcode) ? (int)ais.Get(subcode) : 0;
                     if (n != 0) {
                         idlen = k;
@@ -444,9 +445,9 @@ namespace iText.Barcodes {
             byte[] bars = new byte[(text.Length + 1) * 6 + 7];
             int k_1;
             for (k_1 = 0; k_1 < text.Length; ++k_1) {
-                System.Array.Copy(BARS[text[k_1]], 0, bars, k_1 * 6, 6);
+                Array.Copy(BARS[text[k_1]], 0, bars, k_1 * 6, 6);
             }
-            System.Array.Copy(BARS_STOP, 0, bars, k_1 * 6, 7);
+            Array.Copy(BARS_STOP, 0, bars, k_1 * 6, 7);
             return bars;
         }
 
@@ -671,12 +672,12 @@ namespace iText.Barcodes {
                     if (sai.Length < 2) {
                         throw new ArgumentException("AI is too short");
                     }
-                    int ai = System.Convert.ToInt32(sai);
+                    int ai = Convert.ToInt32(sai);
                     int len = (int)ais.Get(ai);
                     if (len == 0) {
                         throw new ArgumentException("AI not found");
                     }
-                    sai = iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(ai));
+                    sai = JavaUtil.IntegerToString(Convert.ToInt32(ai));
                     if (sai.Length == 1) {
                         sai = "0" + sai;
                     }

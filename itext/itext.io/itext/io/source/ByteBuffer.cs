@@ -81,7 +81,7 @@ namespace iText.IO.Source {
             int newCount = count + 1;
             if (newCount > buffer.Length) {
                 byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
-                System.Array.Copy(buffer, 0, newBuffer, 0, count);
+                Array.Copy(buffer, 0, newBuffer, 0, count);
                 buffer = newBuffer;
             }
             buffer[count] = b;
@@ -97,10 +97,10 @@ namespace iText.IO.Source {
             int newCount = count + len;
             if (newCount > buffer.Length) {
                 byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
-                System.Array.Copy(buffer, 0, newBuffer, 0, count);
+                Array.Copy(buffer, 0, newBuffer, 0, count);
                 buffer = newBuffer;
             }
-            System.Array.Copy(b, off, buffer, count, len);
+            Array.Copy(b, off, buffer, count, len);
             count = newCount;
             return this;
         }
@@ -152,7 +152,7 @@ namespace iText.IO.Source {
 
         public virtual byte[] ToByteArray(int off, int len) {
             byte[] newBuf = new byte[len];
-            System.Array.Copy(buffer, off, newBuf, 0, len);
+            Array.Copy(buffer, off, newBuf, 0, len);
             return newBuf;
         }
 
@@ -215,7 +215,7 @@ namespace iText.IO.Source {
         /// .
         /// </returns>
         internal virtual iText.IO.Source.ByteBuffer Prepend(byte[] b) {
-            System.Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);
+            Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);
             count += b.Length;
             return this;
         }

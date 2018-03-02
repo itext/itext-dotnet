@@ -322,7 +322,7 @@ namespace iText.Layout.Borders {
         /// <param name="initialGap">the initial size of the gap</param>
         /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
-            double gapsNum = System.Math.Ceiling(distance / initialGap);
+            double gapsNum = Math.Ceiling(distance / initialGap);
             if (gapsNum == 0) {
                 return initialGap;
             }

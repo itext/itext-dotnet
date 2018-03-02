@@ -89,7 +89,7 @@ namespace iText.Kernel.Crypto {
             }
             if (n != outp.Length) {
                 byte[] outp2 = new byte[n];
-                System.Array.Copy(outp, 0, outp2, 0, n);
+                Array.Copy(outp, 0, outp2, 0, n);
                 return outp2;
             }
             else {

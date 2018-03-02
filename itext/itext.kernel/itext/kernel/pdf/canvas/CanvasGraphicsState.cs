@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -104,8 +105,8 @@ namespace iText.Kernel.Pdf.Canvas {
         /// An empty dash array (first element in the array) and zero phase (second element in the array)
         /// can be used to restore the dash pattern to a solid line.
         /// </remarks>
-        private PdfArray dashPattern = new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfArray
-            (), new PdfNumber(0) }));
+        private PdfArray dashPattern = new PdfArray(JavaUtil.ArraysAsList(new PdfObject[] { new PdfArray(), new PdfNumber
+            (0) }));
 
         private PdfName renderingIntent = PdfName.RelativeColorimetric;
 

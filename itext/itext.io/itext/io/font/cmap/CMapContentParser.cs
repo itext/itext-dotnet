@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
     public class CMapContentParser {
@@ -182,7 +183,7 @@ namespace iText.IO.Font.Cmap {
                 case PdfTokenizer.TokenType.Number: {
                     CMapObject numObject = new CMapObject(CMapObject.NUMBER, null);
                     try {
-                        numObject.SetValue((int)System.Double.Parse(tokeniser.GetStringValue(), System.Globalization.CultureInfo.InvariantCulture
+                        numObject.SetValue((int)Double.Parse(tokeniser.GetStringValue(), System.Globalization.CultureInfo.InvariantCulture
                             ));
                     }
                     catch (FormatException) {
@@ -250,7 +251,7 @@ namespace iText.IO.Font.Cmap {
         }
 
         private static String ToHex4(int n) {
-            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(n);
+            String s = "0000" + JavaUtil.IntegerToHexString(n);
             return s.Substring(s.Length - 4);
         }
 

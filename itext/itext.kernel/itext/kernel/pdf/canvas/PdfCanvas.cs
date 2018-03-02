@@ -936,7 +936,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 Nfrag = 1;
             }
             else {
-                Nfrag = (int)System.Math.Ceiling(Math.Abs(extent) / 90f);
+                Nfrag = (int)Math.Ceiling(Math.Abs(extent) / 90f);
                 fragAngle = extent / Nfrag;
             }
             double x_cen = (x1 + x2) / 2f;

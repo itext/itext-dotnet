@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
+using iText.IO.Util;
 
 namespace iText.IO.Codec {
     /// <summary>General purpose LZW String Table.</summary>
@@ -258,8 +259,8 @@ namespace iText.IO.Codec {
         public virtual void Dump(StreamWriter output) {
             int i;
             for (i = 258; i < numStrings_; ++i) {
-                output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + iText.IO.Util.JavaUtil.IntegerToHexString
-                    (strChr_[i] & 0xFF) + " strLen_ " + iText.IO.Util.JavaUtil.IntegerToHexString(strLen_[i]));
+                output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + JavaUtil.IntegerToHexString(strChr_
+                    [i] & 0xFF) + " strLen_ " + JavaUtil.IntegerToHexString(strLen_[i]));
             }
         }
     }

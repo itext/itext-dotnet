@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -846,7 +847,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             Stream imgIn;
             byte[] data;
             if (image.GetData() == null) {
-                imgIn = iText.IO.Util.UrlUtil.OpenStream(image.GetUrl());
+                imgIn = UrlUtil.OpenStream(image.GetUrl());
                 MemoryStream @out = new MemoryStream();
                 int b = 0;
                 while ((b = imgIn.Read()) != -1) {

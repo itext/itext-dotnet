@@ -2139,7 +2139,7 @@ namespace iText.Kernel.Pdf {
                         PdfDictionary action = annot.GetAction();
                         if (action != null) {
                             if (PdfName.GoTo.Equals(action.Get(PdfName.S))) {
-                                copiedAction = action.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.D), false);
+                                copiedAction = action.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.D), false);
                                 PdfDestination goToDest = GetCatalog().CopyDestination(action.Get(PdfName.D), page2page, toDocument);
                                 if (goToDest != null) {
                                     copiedAction.Put(PdfName.D, goToDest.GetPdfObject());

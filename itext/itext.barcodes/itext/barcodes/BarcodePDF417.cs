@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -712,7 +713,7 @@ namespace iText.Barcodes {
             pad = tot - lenErr - lenCodewords;
             if ((options & PDF417_USE_MACRO) != 0) {
                 // the padding comes before the control block
-                System.Array.Copy(codewords, macroIndex, codewords, macroIndex + pad, lenCodewords - macroIndex);
+                Array.Copy(codewords, macroIndex, codewords, macroIndex + pad, lenCodewords - macroIndex);
                 cwPtr = lenCodewords + pad;
                 while (pad-- != 0) {
                     codewords[macroIndex++] = TEXT_MODE;
@@ -1404,7 +1405,7 @@ namespace iText.Barcodes {
 
         private void Append(int @in, int len) {
             StringBuilder sb = new StringBuilder(len + 1);
-            sb.Append(iText.IO.Util.JavaUtil.IntegerToString(@in));
+            sb.Append(JavaUtil.IntegerToString(@in));
             for (int i = sb.Length; i < len; i++) {
                 sb.Insert(0, "0");
             }

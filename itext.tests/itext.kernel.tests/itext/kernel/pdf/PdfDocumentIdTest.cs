@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Pdf.Canvas;
@@ -89,7 +90,7 @@ namespace iText.Kernel.Pdf {
             MemoryStream baos = new MemoryStream();
             IDigest md5;
             try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -117,7 +118,7 @@ namespace iText.Kernel.Pdf {
             MemoryStream baosModified = new MemoryStream();
             IDigest md5;
             try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);

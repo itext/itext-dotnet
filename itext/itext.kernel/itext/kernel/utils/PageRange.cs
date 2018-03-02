@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
 
@@ -109,10 +110,10 @@ namespace iText.Kernel.Utils {
             else {
                 Match matcher;
                 if ((matcher = iText.IO.Util.StringUtil.Match(SEQUENCE_PATTERN, rangeDef)).Success) {
-                    int start = System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1));
+                    int start = Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1));
                     if (iText.IO.Util.StringUtil.Group(matcher, 2) != null) {
-                        return new PageRange.PageRangePartSequence(start, System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher
-                            , 2)));
+                        return new PageRange.PageRangePartSequence(start, Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 
+                            2)));
                     }
                     else {
                         return new PageRange.PageRangePartAfter(start);
@@ -120,8 +121,7 @@ namespace iText.Kernel.Utils {
                 }
                 else {
                     if ((matcher = iText.IO.Util.StringUtil.Match(SINGLE_PAGE_PATTERN, rangeDef)).Success) {
-                        return new PageRange.PageRangePartSingle(System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1)
-                            ));
+                        return new PageRange.PageRangePartSingle(Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1)));
                     }
                     else {
                         if ("odd".EqualsIgnoreCase(rangeDef)) {
@@ -206,7 +206,7 @@ namespace iText.Kernel.Utils {
                 return false;
             }
             iText.Kernel.Utils.PageRange other = (iText.Kernel.Utils.PageRange)obj;
-            return System.Linq.Enumerable.SequenceEqual(sequences, other.sequences);
+            return Enumerable.SequenceEqual(sequences, other.sequences);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -401,7 +401,7 @@ namespace iText.Kernel.Utils {
             private readonly IList<PageRange.IPageRangePart> conditions = new List<PageRange.IPageRangePart>();
 
             public PageRangePartAnd(params PageRange.IPageRangePart[] conditions) {
-                this.conditions.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(conditions));
+                this.conditions.AddAll(JavaUtil.ArraysAsList(conditions));
             }
 
             public virtual IList<int> GetAllPagesInRange(int nbPages) {
@@ -430,7 +430,7 @@ namespace iText.Kernel.Utils {
                     return false;
                 }
                 PageRange.PageRangePartAnd other = (PageRange.PageRangePartAnd)obj;
-                return System.Linq.Enumerable.SequenceEqual(conditions, other.conditions);
+                return Enumerable.SequenceEqual(conditions, other.conditions);
             }
 
             /// <summary><inheritDoc/></summary>

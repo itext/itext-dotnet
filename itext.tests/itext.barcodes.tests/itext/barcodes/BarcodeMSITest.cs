@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -103,7 +104,7 @@ namespace iText.Barcodes {
             byte[] expected = new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 
                 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
             byte[] barcodeBytes = BarcodeMSI.GetBarsMSI("1234");
-            bool isEqual = iText.IO.Util.JavaUtil.ArraysEquals(expected, barcodeBytes);
+            bool isEqual = JavaUtil.ArraysEquals(expected, barcodeBytes);
             NUnit.Framework.Assert.IsTrue(isEqual);
         }
 

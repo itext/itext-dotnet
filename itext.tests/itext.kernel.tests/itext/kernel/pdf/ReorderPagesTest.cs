@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -115,7 +116,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument sourceDoc = new PdfDocument(new PdfReader(inPath));
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
             pdfDoc.SetTagged();
-            sourceDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(2, 1, 3), pdfDoc);
+            sourceDoc.CopyPagesTo(JavaUtil.ArraysAsList(2, 1, 3), pdfDoc);
             sourceDoc.Close();
             pdfDoc.Close();
             Compare(outPath, cmpPath, destinationFolder, "diff_04");

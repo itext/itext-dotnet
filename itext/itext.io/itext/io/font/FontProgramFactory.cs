@@ -256,7 +256,7 @@ namespace iText.IO.Font {
                                     try {
                                         String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                         // count(.ttc) = 4
-                                        int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        int ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                                         // count(.ttc,) = 5)
                                         fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                     }

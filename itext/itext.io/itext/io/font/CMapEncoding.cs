@@ -50,8 +50,8 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class CMapEncoding {
-        private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = iText.IO.Util.JavaUtil.ArraysAsList(
-            new byte[] { 0, 0 }, new byte[] { (byte)0xff, (byte)0xff });
+        private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = JavaUtil.ArraysAsList(new byte[] { 0
+            , 0 }, new byte[] { (byte)0xff, (byte)0xff });
 
         private String cmap;
 

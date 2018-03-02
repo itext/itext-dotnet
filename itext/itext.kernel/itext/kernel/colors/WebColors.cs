@@ -248,18 +248,18 @@ namespace iText.Kernel.Colors {
                     if (colorName.Length == 3) {
                         String red = colorName.JSubstring(0, 1);
                         color = new float[] { 0, 0, 0, 1 };
-                        color[0] = (float)(System.Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
+                        color[0] = (float)(Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
                         String green = colorName.JSubstring(1, 2);
-                        color[1] = (float)(System.Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
+                        color[1] = (float)(Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
                         String blue = colorName.Substring(2);
-                        color[2] = (float)(System.Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
+                        color[2] = (float)(Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
                     }
                     else {
                         if (colorName.Length == 6) {
                             color = new float[] { 0, 0, 0, 1 };
-                            color[0] = (float)(System.Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
-                            color[1] = (float)(System.Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
-                            color[2] = (float)(System.Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
+                            color[0] = (float)(Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
+                            color[1] = (float)(Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
+                            color[2] = (float)(Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
                         }
                         else {
                             ILog logger = LogManager.GetLogger(typeof(WebColors));
@@ -342,7 +342,7 @@ namespace iText.Kernel.Colors {
                 return ParsePercentValue(rgbChannel);
             }
             else {
-                return (float)(System.Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
+                return (float)(Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
             }
         }
 

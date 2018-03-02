@@ -30,6 +30,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using iText.IO.Util;
 using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Options {
@@ -150,7 +151,7 @@ namespace iText.Kernel.XMP.Options {
 
         /// <returns>Returns the options as hex bitmask.</returns>
         public override String ToString() {
-            return "0x" + iText.IO.Util.JavaUtil.IntegerToHexString(options);
+            return "0x" + JavaUtil.IntegerToHexString(options);
         }
 
         /// <summary>To be implemeted by inheritants.</summary>
@@ -193,8 +194,8 @@ namespace iText.Kernel.XMP.Options {
                 AssertConsistency(options);
             }
             else {
-                throw new XMPException("The option bit(s) 0x" + iText.IO.Util.JavaUtil.IntegerToHexString(invalidOptions) 
-                    + " are invalid!", XMPError.BADOPTIONS);
+                throw new XMPException("The option bit(s) 0x" + JavaUtil.IntegerToHexString(invalidOptions) + " are invalid!"
+                    , XMPError.BADOPTIONS);
             }
         }
 

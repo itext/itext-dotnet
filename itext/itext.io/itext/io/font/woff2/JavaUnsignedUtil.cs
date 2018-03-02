@@ -40,6 +40,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.IO.Font.Woff2 {
     /// <summary>Helper class to deal with unsigned primitives in java</summary>
     internal class JavaUnsignedUtil {
@@ -60,7 +62,7 @@ namespace iText.IO.Font.Woff2 {
         }
 
         public static int CompareAsUnsigned(int left, int right) {
-            return System.Convert.ToInt64(left & unchecked((long)(0xffffffffL))).CompareTo(right & unchecked((long)(0xffffffffL
+            return Convert.ToInt64(left & unchecked((long)(0xffffffffL))).CompareTo(right & unchecked((long)(0xffffffffL
                 )));
         }
     }

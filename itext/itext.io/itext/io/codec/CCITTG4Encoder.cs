@@ -41,6 +41,7 @@ Copyright (c) 1998-2018 iText Group NV
 * For more information, please contact iText Software Corp. at this
 * address: sales@itextpdf.com
 */
+using System;
 using iText.IO.Source;
 
 namespace iText.IO.Codec {
@@ -82,7 +83,7 @@ namespace iText.IO.Codec {
             sizeData = size;
             while (sizeData > 0) {
                 Fax3Encode2DRow();
-                System.Array.Copy(dataBp, offsetData, refline, 0, rowbytes);
+                Array.Copy(dataBp, offsetData, refline, 0, rowbytes);
                 offsetData += rowbytes;
                 sizeData -= rowbytes;
             }

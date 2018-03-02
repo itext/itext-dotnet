@@ -377,16 +377,16 @@ namespace iText.Layout.Hyphenation {
         private void RedimNodeArrays(int newsize) {
             int len = newsize < lo.Length ? newsize : lo.Length;
             char[] na = new char[newsize];
-            System.Array.Copy(lo, 0, na, 0, len);
+            Array.Copy(lo, 0, na, 0, len);
             lo = na;
             na = new char[newsize];
-            System.Array.Copy(hi, 0, na, 0, len);
+            Array.Copy(hi, 0, na, 0, len);
             hi = na;
             na = new char[newsize];
-            System.Array.Copy(eq, 0, na, 0, len);
+            Array.Copy(eq, 0, na, 0, len);
             eq = na;
             na = new char[newsize];
-            System.Array.Copy(sc, 0, na, 0, len);
+            Array.Copy(sc, 0, na, 0, len);
             sc = na;
         }
 

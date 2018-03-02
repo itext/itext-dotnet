@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf.Collection {
                 }
 
                 case NUMBER: {
-                    return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
+                    return new PdfNumber(Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
             throw new PdfException(PdfException._1IsNotAnAcceptableValueForTheField2).SetMessageParams(value, GetPdfObject

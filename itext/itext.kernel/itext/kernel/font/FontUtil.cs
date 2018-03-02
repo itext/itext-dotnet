@@ -105,7 +105,7 @@ namespace iText.Kernel.Font {
         internal static String CreateRandomFontName() {
             StringBuilder s = new StringBuilder("");
             for (int k = 0; k < 7; ++k) {
-                s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                s.Append((char)(JavaUtil.Random() * 26 + 'A'));
             }
             return s.ToString();
         }

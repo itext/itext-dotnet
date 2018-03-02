@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
     /// <summary>Represents a vector (i.e.</summary>
@@ -189,7 +190,7 @@ namespace iText.Kernel.Geom {
         public override int GetHashCode() {
             int prime = 31;
             int result = 1;
-            result = prime * result + iText.IO.Util.JavaUtil.ArraysHashCode(vals);
+            result = prime * result + JavaUtil.ArraysHashCode(vals);
             return result;
         }
 
@@ -205,7 +206,7 @@ namespace iText.Kernel.Geom {
                 return false;
             }
             iText.Kernel.Geom.Vector other = (iText.Kernel.Geom.Vector)obj;
-            if (!iText.IO.Util.JavaUtil.ArraysEquals(vals, other.vals)) {
+            if (!JavaUtil.ArraysEquals(vals, other.vals)) {
                 return false;
             }
             return true;

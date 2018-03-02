@@ -63,7 +63,7 @@ namespace iText.IO.Font {
             }
             srcPos += 4;
             byte[] flavor = new byte[4];
-            System.Array.Copy(woffBytes, srcPos, flavor, 0, 4);
+            Array.Copy(woffBytes, srcPos, flavor, 0, 4);
             srcPos += 4;
             // length
             if (BytesToUInt(woffBytes, srcPos) != woffBytes.Length) {
@@ -71,7 +71,7 @@ namespace iText.IO.Font {
             }
             srcPos += 4;
             byte[] numTables = new byte[2];
-            System.Array.Copy(woffBytes, srcPos, numTables, 0, 2);
+            Array.Copy(woffBytes, srcPos, numTables, 0, 2);
             srcPos += 2;
             // reserved
             if (BytesToUShort(woffBytes, srcPos) != 0) {
@@ -96,9 +96,9 @@ namespace iText.IO.Font {
             // privLength
             byte[] otfBytes = new byte[(int)totalSfntSize];
             // assuming font won't be larger than 2GB
-            System.Array.Copy(flavor, 0, otfBytes, destPos, 4);
+            Array.Copy(flavor, 0, otfBytes, destPos, 4);
             destPos += 4;
-            System.Array.Copy(numTables, 0, otfBytes, destPos, 2);
+            Array.Copy(numTables, 0, otfBytes, destPos, 2);
             destPos += 2;
             int entrySelector = -1;
             int searchRange = -1;
@@ -128,7 +128,7 @@ namespace iText.IO.Font {
             IList<WoffConverter.TableDirectory> tdList = new List<WoffConverter.TableDirectory>(numTablesVal);
             for (int i = 0; i < numTablesVal; ++i) {
                 WoffConverter.TableDirectory td = new WoffConverter.TableDirectory();
-                System.Array.Copy(woffBytes, srcPos, td.tag, 0, 4);
+                Array.Copy(woffBytes, srcPos, td.tag, 0, 4);
                 srcPos += 4;
                 td.offset = BytesToUInt(woffBytes, srcPos);
                 srcPos += 4;
@@ -137,25 +137,25 @@ namespace iText.IO.Font {
                 }
                 td.compLength = BytesToUInt(woffBytes, srcPos);
                 srcPos += 4;
-                System.Array.Copy(woffBytes, srcPos, td.origLength, 0, 4);
+                Array.Copy(woffBytes, srcPos, td.origLength, 0, 4);
                 td.origLengthVal = BytesToUInt(td.origLength, 0);
                 srcPos += 4;
-                System.Array.Copy(woffBytes, srcPos, td.origChecksum, 0, 4);
+                Array.Copy(woffBytes, srcPos, td.origChecksum, 0, 4);
                 srcPos += 4;
                 tdList.Add(td);
                 outTableOffset += 4 * 4;
             }
             foreach (WoffConverter.TableDirectory td in tdList) {
-                System.Array.Copy(td.tag, 0, otfBytes, destPos, 4);
+                Array.Copy(td.tag, 0, otfBytes, destPos, 4);
                 destPos += 4;
-                System.Array.Copy(td.origChecksum, 0, otfBytes, destPos, 4);
+                Array.Copy(td.origChecksum, 0, otfBytes, destPos, 4);
                 destPos += 4;
                 otfBytes[destPos] = (byte)(outTableOffset >> 24);
                 otfBytes[destPos + 1] = (byte)(outTableOffset >> 16);
                 otfBytes[destPos + 2] = (byte)(outTableOffset >> 8);
                 otfBytes[destPos + 3] = (byte)(outTableOffset);
                 destPos += 4;
-                System.Array.Copy(td.origLength, 0, otfBytes, destPos, 4);
+                Array.Copy(td.origLength, 0, otfBytes, destPos, 4);
                 destPos += 4;
                 td.outOffset = outTableOffset;
                 outTableOffset += (int)td.origLengthVal;
@@ -169,7 +169,7 @@ namespace iText.IO.Font {
             foreach (WoffConverter.TableDirectory td in tdList) {
                 byte[] compressedData = new byte[(int)td.compLength];
                 byte[] uncompressedData;
-                System.Array.Copy(woffBytes, (int)td.offset, compressedData, 0, (int)td.compLength);
+                Array.Copy(woffBytes, (int)td.offset, compressedData, 0, (int)td.compLength);
                 int expectedUncompressedLen = (int)td.origLengthVal;
                 if (td.compLength > td.origLengthVal) {
                     throw new ArgumentException();
@@ -193,7 +193,7 @@ namespace iText.IO.Font {
                 else {
                     uncompressedData = compressedData;
                 }
-                System.Array.Copy(uncompressedData, 0, otfBytes, td.outOffset, expectedUncompressedLen);
+                Array.Copy(uncompressedData, 0, otfBytes, td.outOffset, expectedUncompressedLen);
             }
             return otfBytes;
         }

@@ -374,7 +374,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     // Link annotations could be not added to the toDocument, so we need to identify this case.
                     // When obj.copyTo is called, and annotation was already copied, we would get this already created copy.
                     // If it was already copied and added, /P key would be set. Otherwise /P won't be set.
-                    obj = obj.CopyTo(copyingParams.GetToDocument(), iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P), false);
+                    obj = obj.CopyTo(copyingParams.GetToDocument(), JavaUtil.ArraysAsList(PdfName.P), false);
                     copied.Put(PdfName.Obj, obj);
                 }
                 PdfDictionary nsDict = source.GetAsDictionary(PdfName.NS);

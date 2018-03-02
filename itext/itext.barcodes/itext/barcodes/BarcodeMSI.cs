@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -173,7 +174,7 @@ namespace iText.Barcodes {
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             String fullCode = this.code;
             if (this.checksumText) {
-                fullCode = fullCode + iText.IO.Util.JavaUtil.IntegerToString(GetChecksum(this.code));
+                fullCode = fullCode + JavaUtil.IntegerToString(GetChecksum(this.code));
             }
             float fontX = 0.0f;
             if (this.font != null) {
@@ -260,16 +261,16 @@ namespace iText.Barcodes {
                 throw new ArgumentException("Valid code required to generate MSI barcode.");
             }
             byte[] bars = new byte[((text.Length) * BARS_PER_CHARACTER) + 7];
-            System.Array.Copy(BARS_START, 0, bars, 0, 3);
+            Array.Copy(BARS_START, 0, bars, 0, 3);
             for (int x = 0; x < text.Length; x++) {
                 char ch = text[x];
                 int idx = CHARS.IndexOf(ch);
                 if (idx < 0) {
                     throw new ArgumentException("The character " + text[x] + " is illegal in MSI bar codes.");
                 }
-                System.Array.Copy(BARS[idx], 0, bars, 3 + x * 12, 12);
+                Array.Copy(BARS[idx], 0, bars, 3 + x * 12, 12);
             }
-            System.Array.Copy(BARS_END, 0, bars, bars.Length - 4, 4);
+            Array.Copy(BARS_END, 0, bars, bars.Length - 4, 4);
             return bars;
         }
 

@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -83,7 +84,7 @@ namespace iText.Kernel.Pdf.Annot {
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
             : base(rect) {
-            PdfStream sound = new PdfStream(document, iText.IO.Util.JavaUtil.CorrectWavFile(soundStream));
+            PdfStream sound = new PdfStream(document, JavaUtil.CorrectWavFile(soundStream));
             sound.Put(PdfName.R, new PdfNumber(sampleRate));
             sound.Put(PdfName.E, encoding);
             sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));

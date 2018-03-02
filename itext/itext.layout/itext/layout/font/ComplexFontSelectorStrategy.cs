@@ -100,7 +100,7 @@ namespace iText.Layout.Font {
                 int to = nextUnignorable;
                 for (int i = nextUnignorable; i < text.Length; i++) {
                     int codePoint = IsSurrogatePair(text, i) ? TextUtil.ConvertToUtf32(text, i) : (int)text[i];
-                    UnicodeScript? currScript = iText.IO.Util.UnicodeScriptUtil.Of(codePoint);
+                    UnicodeScript? currScript = UnicodeScriptUtil.Of(codePoint);
                     if (IsSignificantUnicodeScript(currScript) && currScript != unicodeScript) {
                         break;
                     }
@@ -146,7 +146,7 @@ namespace iText.Layout.Font {
                 else {
                     codePoint = (int)text[i];
                 }
-                UnicodeScript? unicodeScript = iText.IO.Util.UnicodeScriptUtil.Of(codePoint);
+                UnicodeScript? unicodeScript = UnicodeScriptUtil.Of(codePoint);
                 if (IsSignificantUnicodeScript(unicodeScript)) {
                     return unicodeScript;
                 }

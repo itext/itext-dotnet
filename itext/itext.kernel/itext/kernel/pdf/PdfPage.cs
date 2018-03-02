@@ -66,8 +66,8 @@ namespace iText.Kernel.Pdf {
 
         internal PdfPages parentPages;
 
-        private IList<PdfName> excludedKeys = new List<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.Parent
-            , PdfName.Annots, PdfName.StructParents, PdfName.B));
+        private IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.Parent, PdfName.Annots
+            , PdfName.StructParents, PdfName.B));
 
         /// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )</summary>
         private bool ignorePageRotationForContent = false;
@@ -497,7 +497,7 @@ namespace iText.Kernel.Pdf {
                     GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
-                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList
+                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, JavaUtil.ArraysAsList
                         (PdfName.P, PdfName.Parent), true));
                     if (PdfName.Widget.Equals(annot.GetSubtype())) {
                         RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
@@ -530,8 +530,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
-            IList<PdfName> excludedKeys = new List<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName
-                .CropBox, PdfName.Contents));
+            IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
+                .Contents));
             excludedKeys.AddAll(this.excludedKeys);
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
             xObject.GetPdfObject().GetOutputStream().Write(GetContentBytes());
@@ -853,8 +853,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 0; i < streamCount; i++) {
                     streamBytes = GetStreamBytes(i);
                     baos.Write(streamBytes);
-                    if (0 != streamBytes.Length && !iText.IO.Util.TextUtil.IsWhiteSpace((char)streamBytes[streamBytes.Length -
-                         1])) {
+                    if (0 != streamBytes.Length && !TextUtil.IsWhiteSpace((char)streamBytes[streamBytes.Length - 1])) {
                         baos.Write('\n');
                     }
                 }
@@ -1644,11 +1643,11 @@ namespace iText.Kernel.Pdf {
             }
             PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
-                PdfDictionary newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName
-                    .Kids, PdfName.Parent), false);
+                PdfDictionary newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
+                    .Parent), false);
                 if (newParent.IsFlushed()) {
-                    newParent = oldParent.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
-                        .Parent), true);
+                    newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName.Parent), true
+                        );
                 }
                 RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);

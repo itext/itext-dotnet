@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -62,7 +63,7 @@ namespace iText.Kernel.Pdf.Collection {
         /// <param name="keys">the keys of the fields that will be used to sort entries</param>
         public PdfCollectionSort(String[] keys)
             : this(new PdfDictionary()) {
-            GetPdfObject().Put(PdfName.S, new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(keys), true));
+            GetPdfObject().Put(PdfName.S, new PdfArray(JavaUtil.ArraysAsList(keys), true));
         }
 
         /// <summary>Defines the sort order of the field (ascending or descending).</summary>

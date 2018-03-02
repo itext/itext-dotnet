@@ -786,7 +786,7 @@ namespace iText.Kernel.Font {
                 GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
                 PdfDictionary fontDescriptor = GetFontDescriptor(name);
                 int[] metrics = HashSetToArray(longTag);
-                iText.IO.Util.JavaUtil.Sort(metrics);
+                JavaUtil.Sort(metrics);
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
@@ -800,7 +800,7 @@ namespace iText.Kernel.Font {
                     TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
                     AddRangeUni(ttf, longTag);
                     int[] metrics = HashSetToArray(longTag);
-                    iText.IO.Util.JavaUtil.Sort(metrics);
+                    JavaUtil.Sort(metrics);
                     PdfStream fontStream;
                     String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
@@ -981,7 +981,7 @@ namespace iText.Kernel.Font {
 
         //TODO optimize memory ussage
         private static String ToHex4(char ch) {
-            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            String s = "0000" + JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
         }
 

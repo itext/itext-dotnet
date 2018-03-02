@@ -356,7 +356,7 @@ namespace iText.Layout.Renderer {
                 if (!className.Equals(that.className)) {
                     return false;
                 }
-                if (!iText.IO.Util.JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                if (!JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
                     return false;
                 }
                 return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
@@ -364,7 +364,7 @@ namespace iText.Layout.Renderer {
 
             public override int GetHashCode() {
                 int result = className.GetHashCode();
-                result = 31 * result + iText.IO.Util.JavaUtil.ArraysHashCode(parameterTypes);
+                result = 31 * result + JavaUtil.ArraysHashCode(parameterTypes);
                 result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
                 return result;
             }

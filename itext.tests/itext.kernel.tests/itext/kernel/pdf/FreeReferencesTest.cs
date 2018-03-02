@@ -260,8 +260,8 @@ namespace iText.Kernel.Pdf {
             a2.Add(new PdfString(innerString));
             catalogDict.Put(new PdfName("TestArray"), a1);
             a2.GetIndirectReference().SetFree();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             NUnit.Framework.Assert.IsTrue(a1.Get(1, false) is PdfIndirectReference);
             NUnit.Framework.Assert.IsTrue(((PdfIndirectReference)a1.Get(1, false)).IsFree());
@@ -296,8 +296,8 @@ namespace iText.Kernel.Pdf {
             a1.Flush();
             a2.GetIndirectReference().SetFree();
             NUnit.Framework.Assert.IsFalse(a2.GetIndirectReference().IsFree());
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -330,8 +330,8 @@ namespace iText.Kernel.Pdf {
             a2.Flush();
             a2.GetIndirectReference().SetFree();
             NUnit.Framework.Assert.IsFalse(a2.GetIndirectReference().IsFree());
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -391,8 +391,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), new PdfWriter(destinationFolder
                  + @out));
             new PdfArray().MakeIndirect(pdfDocument).GetIndirectReference().SetFree();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -444,8 +444,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), new PdfWriter(destinationFolder
                  + @out), new StampingProperties().UseAppendMode());
             new PdfArray().MakeIndirect(pdfDocument).GetIndirectReference().SetFree();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -466,8 +466,8 @@ namespace iText.Kernel.Pdf {
             pdfDocument.SetFlushUnusedObjects(true);
             PdfIndirectReference newIndRef1 = pdfDocument.CreateNextIndirectReference();
             PdfIndirectReference newIndRef2 = pdfDocument.CreateNextIndirectReference();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -488,8 +488,8 @@ namespace iText.Kernel.Pdf {
             pdfDocument.SetFlushUnusedObjects(false);
             PdfIndirectReference newIndRef1 = pdfDocument.CreateNextIndirectReference();
             PdfIndirectReference newIndRef2 = pdfDocument.CreateNextIndirectReference();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
@@ -509,8 +509,8 @@ namespace iText.Kernel.Pdf {
                  + @out), new StampingProperties().UseAppendMode());
             PdfIndirectReference newIndRef1 = pdfDocument.CreateNextIndirectReference();
             PdfIndirectReference newIndRef2 = pdfDocument.CreateNextIndirectReference();
-            IList<PdfObject> objects = iText.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is "
-                ), new PdfNumber(42) });
+            IList<PdfObject> objects = JavaUtil.ArraysAsList(new PdfObject[] { new PdfString("The answer to life is ")
+                , new PdfNumber(42) });
             new PdfArray(objects).MakeIndirect(pdfDocument).Flush();
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);

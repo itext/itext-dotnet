@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using Common.Logging;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfPrimitiveObject : PdfObject {
@@ -106,7 +107,7 @@ namespace iText.Kernel.Pdf {
             base.CopyContent(from, document);
             iText.Kernel.Pdf.PdfPrimitiveObject @object = (iText.Kernel.Pdf.PdfPrimitiveObject)from;
             if (@object.content != null) {
-                content = iText.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
+                content = JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
             }
         }
 
@@ -119,7 +120,7 @@ namespace iText.Kernel.Pdf {
                     return -1;
                 }
             }
-            return iText.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length);
+            return JavaUtil.IntegerCompare(content.Length, o.content.Length);
         }
     }
 }

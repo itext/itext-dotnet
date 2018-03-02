@@ -182,7 +182,7 @@ namespace iText.Kernel.Pdf.Filespec {
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
-            PdfStream stream = new PdfStream(doc, iText.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
+            PdfStream stream = new PdfStream(doc, UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
             PdfDictionary @params = new PdfDictionary();
             if (fileParameter != null) {
                 @params.MergeDifferent(fileParameter);

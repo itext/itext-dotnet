@@ -457,7 +457,7 @@ namespace iText.Kernel.Pdf {
 
         private void ExtendXref(int capacity) {
             PdfIndirectReference[] newXref = new PdfIndirectReference[capacity];
-            System.Array.Copy(xref, 0, newXref, 0, xref.Length);
+            Array.Copy(xref, 0, newXref, 0, xref.Length);
             xref = newXref;
         }
 

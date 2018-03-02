@@ -120,7 +120,7 @@ namespace iText.IO.Util {
         /// <param name="value">new element</param>
         /// <returns>combined hashCode</returns>
         public static int Combine(int hashCode, float value) {
-            int v = iText.IO.Util.JavaUtil.FloatToIntBits(value);
+            int v = JavaUtil.FloatToIntBits(value);
             return Combine(hashCode, v);
         }
 
@@ -129,7 +129,7 @@ namespace iText.IO.Util {
         /// <param name="value">new element</param>
         /// <returns>combined hashCode</returns>
         public static int Combine(int hashCode, double value) {
-            long v = iText.IO.Util.JavaUtil.DoubleToLongBits(value);
+            long v = JavaUtil.DoubleToLongBits(value);
             return Combine(hashCode, v);
         }
 

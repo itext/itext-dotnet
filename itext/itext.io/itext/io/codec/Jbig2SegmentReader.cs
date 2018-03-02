@@ -255,7 +255,7 @@ namespace iText.IO.Codec {
 
         public static byte[] CopyByteArray(byte[] b) {
             byte[] bc = new byte[b.Length];
-            System.Array.Copy(b, 0, bc, 0, b.Length);
+            Array.Copy(b, 0, bc, 0, b.Length);
             return bc;
         }
 

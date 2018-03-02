@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -650,7 +651,7 @@ namespace iText.Barcodes {
             for (int k = 0; k < bars.Length; ++k) {
                 float w = bars[k] * x;
                 if (print) {
-                    if (iText.IO.Util.JavaUtil.ArraysBinarySearch(guard, k) >= 0) {
+                    if (JavaUtil.ArraysBinarySearch(guard, k) >= 0) {
                         canvas.Rectangle(barStartX, barStartY - gd, w - inkSpreading, barHeight + gd);
                     }
                     else {
