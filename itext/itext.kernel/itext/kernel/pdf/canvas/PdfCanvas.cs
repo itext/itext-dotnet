@@ -648,6 +648,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
+            float wordSpacing = currentGs.GetWordSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
             for (int partIndex = 0; partIndex < glyphLineParts.Count; ++partIndex) {
@@ -719,8 +720,9 @@ namespace iText.Kernel.Pdf.Canvas {
                         }
                         if (glyph.HasAdvance()) {
                             contentStream.GetOutputStream().WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance
-                                ()) * fontSize + charSpacing) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, 
-                                true).WriteSpace().WriteBytes(Td);
+                                ()) * fontSize + charSpacing + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? wordSpacing : 0)) 
+                                * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes
+                                (Td);
                         }
                         // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
                         sub = i + 1;
@@ -761,8 +763,8 @@ namespace iText.Kernel.Pdf.Canvas {
             for (int iter = from; iter <= to; iter++) {
                 Glyph glyph = text.Get(iter);
                 if (!glyph.HasPlacement()) {
-                    width += (glyph.GetWidth() * fontSize + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? wordSpacing : 
-                        charSpacing)) * scaling;
+                    width += (glyph.GetWidth() * fontSize + charSpacing + (glyph.HasValidUnicode() && glyph.GetCode() == ' ' ? 
+                        wordSpacing : 0)) * scaling;
                 }
                 if (iter > from) {
                     width += text.Get(iter - 1).GetXAdvance() * fontSize * scaling;
