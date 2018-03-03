@@ -895,7 +895,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
         public virtual void FloatsOnPageSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit07.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit07.pdf";
@@ -909,9 +908,9 @@ namespace iText.Layout {
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            // TODO Adding float that WILL fit on the first page.
+            // Adding float that WILL fit on the first page.
             containerDiv.Add(img);
-            // TODO Adding that shall be overflowed to the next page. containerDiv occupied area shall not have zero height on first page.
+            // Adding img that shall be overflowed to the next page. containerDiv occupied area shall not have zero height on first page.
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -921,10 +920,35 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
-        public virtual void FloatsOnPageSplit08() {
-            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08.pdf";
-            String outFile = destinationFolder + "floatsOnPageSplit08.pdf";
+        public virtual void FloatsOnPageSplit08_01() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_01.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit08_01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(310).SetWidth(310);
+            div.Add(img);
+            // Adding image that will not fit on first page in floating div.
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            containerDiv.Add(img);
+            // Adding normal image that will not fit on the first page.
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff28_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatsOnPageSplit08_02() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_02.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit08_02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
@@ -933,21 +957,48 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             div.Add(img);
-            // TODO Adding image that will not fit on first page to float.
+            // Adding image that will not fit on first page in floating div.
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
             containerDiv.Add(img);
-            // TODO Adding normal image that will not fit on the first page.
+            // Adding normal image that will not fit on the first page and requires forced placement.
             document.Add(containerDiv);
             document.Close();
+            // TODO DEVSIX-1001: currently forced placement is applied on containerDiv, which results in all it's content
+            // being forced placed at once, rather than content being split more gracefully (it makes sense to put the second
+            // image on the next empty area, not on current area).
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff28_"));
+                "diff28_02_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatsOnPageSplit08_03() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_03.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit08_03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            containerDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(750).SetWidth(600);
+            containerDiv.Add(img);
+            // Adding normal image that will not fit on the first page and requires forced placement.
+            containerDiv.Add(new Paragraph(text));
+            // Adding more text that is naturally expected to be correctly shown.
+            document.Add(containerDiv);
+            document.Close();
+            // TODO DEVSIX-1001: text in the container div gets lost. And floating property doesn't actually affect this.
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff28_03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit09() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit09.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit09.pdf";
@@ -959,11 +1010,11 @@ namespace iText.Layout {
             div.Add(new Paragraph(text).SetWidth(250));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            // TODO Adding float that will be split.
+            // Adding float that will be split.
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(250);
             containerDiv.Add(img);
-            // TODO Adding image that will not fit on first page. containerDiv shall return PARTIAL status
+            // Adding image that will not fit on first page. containerDiv shall return PARTIAL status
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
