@@ -260,8 +260,13 @@ namespace iText.Layout.Renderer {
         }
 
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
-            ) {
+            , ICollection<Rectangle> nonChildFloatingRendererAreas) {
             foreach (Rectangle floatBox in floatRendererAreas) {
+                if (nonChildFloatingRendererAreas.Contains(floatBox)) {
+                    // Currently there is no other way to distinguish floats that are not descendants of this renderer
+                    // except by preserving a set of such.
+                    continue;
+                }
                 renderer.GetOccupiedArea().SetBBox(Rectangle.GetCommonRectangle(renderer.GetOccupiedArea().GetBBox(), floatBox
                     ));
             }

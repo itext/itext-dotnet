@@ -157,6 +157,8 @@ namespace iText.Layout.Renderer {
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
             bool floatOverflowedToNextPageWithNothing = false;
+            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
+            // rectangles are compared by instances
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -387,7 +389,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
-                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                 FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
             }
             if (wasHeightClipped) {

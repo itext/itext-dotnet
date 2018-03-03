@@ -122,6 +122,8 @@ namespace iText.Layout.Renderer {
             ShrinkOccupiedAreaForAbsolutePosition();
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
+            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
+            // rectangles are compared by instances
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
             IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
@@ -146,7 +148,7 @@ namespace iText.Layout.Renderer {
                     if (marginsCollapsingEnabled && !isCellRenderer) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
-                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     result = new LayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
                     int layoutResult = anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
@@ -207,7 +209,7 @@ namespace iText.Layout.Renderer {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
                     // On page split, content will be drawn on next page, i.e. under all floats on this page
-                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     if (result.GetSplitRenderer() != null) {
                         // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
@@ -338,7 +340,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
-                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                 FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
             }
             if (wasHeightClipped) {
