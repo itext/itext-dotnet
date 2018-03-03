@@ -119,17 +119,20 @@ namespace iText.Layout.Renderer {
             AddContent(document, true, 0, null, 0, null, ClearPropertyValue.BOTH, firstImage, lastImage);
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\n"));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.WIDTH, new 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.WIDTH, new 
                 UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Max width < actual width.\n"));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.MAX_WIDTH, 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\nMax width > actual width.\n"
                 ));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.MAX_WIDTH, 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 60f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff01_"));

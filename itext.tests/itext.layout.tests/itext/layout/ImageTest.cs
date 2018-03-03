@@ -514,6 +514,26 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void ImageTest22() {
+            String cmpFileName = sourceFolder + "cmp_imageTest22.pdf";
+            String outFile = destinationFolder + "imageTest22.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph("Very small paragraph with text."));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400);
+            // Image doesn't fit horizontally, so it's force placed.
+            // However even though based on code, image should also be autoscaled to fit the available area,
+            // current forced placement autoscaling implementation results in ignoring fixed dimensions in this case.
+            document.Add(img);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_"));
+        }
+
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>

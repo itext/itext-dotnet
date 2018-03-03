@@ -737,7 +737,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
         public virtual void FloatsOnPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit02.pdf";
@@ -750,7 +749,6 @@ namespace iText.Layout {
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             document.Add(div);
             document.Add(img);
-            // TODO Image shall have overflowed to the next page.
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff18_"));
@@ -1013,6 +1011,28 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff32_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit14() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit14.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit14.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            ImageData imgData = ImageDataFactory.Create(sourceFolder + "itis.jpg");
+            iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(imgData).SetHeight(200);
+            div.Add(img1);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(imgData).SetHeight(200);
+            img2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(img2);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff33_"));
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -141,8 +141,9 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.NOTHING) {
                             if (result.GetOverflowRenderer() is ImageRenderer) {
-                                if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer()).GetOccupiedArea().GetBBox
-                                    ().GetHeight() && !currentArea.IsEmptyArea()) {
+                                float imgHeight = ((ImageRenderer)result.GetOverflowRenderer()).GetOccupiedArea().GetBBox().GetHeight();
+                                if (!floatRendererAreas.IsEmpty() || currentArea.GetBBox().GetHeight() < imgHeight && !currentArea.IsEmptyArea
+                                    ()) {
                                     if (rendererIsFloat) {
                                         waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                         break;
