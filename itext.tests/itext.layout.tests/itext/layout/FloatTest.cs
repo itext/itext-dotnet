@@ -1535,6 +1535,8 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
+            div.SetFillAvailableAreaOnSplit(true);
+            // specifying fill available area option
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -1543,8 +1545,6 @@ namespace iText.Layout {
             document.Add(div);
             document.Add(new Paragraph(text + text + text).SetMargin(0));
             document.Close();
-            // TODO It might make sense for split blocks occupied area (or at least the area around which the content floating occurs)
-            // to be extended down to the layout area bottom border.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff54_"));
         }
@@ -1557,6 +1557,8 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
+            div.SetFillAvailableAreaOnSplit(true);
+            // specifying fill available area option
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -1570,8 +1572,6 @@ namespace iText.Layout {
             document.Add(wideFloatingDiv);
             document.Add(new Paragraph(text + text).SetMargin(0));
             document.Close();
-            // TODO It might make sense for split blocks occupied area (or at least the area around which the content floating occurs)
-            // to be extended down to the layout area bottom border.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff55_"));
         }
