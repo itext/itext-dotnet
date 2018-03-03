@@ -137,6 +137,12 @@ namespace iText.Layout.Renderer {
                 }
                 if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsClearanceApplied(waitingOverflowFloatRenderers
                     , childRenderer.GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
+                    if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                        waitingFloatsSplitRenderers.Put(childPos, null);
+                        waitingOverflowFloatRenderers.Add(childRenderer);
+                        floatOverflowedCompletely = true;
+                        continue;
+                    }
                     if (marginsCollapsingEnabled && !isCellRenderer) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }

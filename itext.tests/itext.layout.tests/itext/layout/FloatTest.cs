@@ -556,7 +556,34 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearancePageSplitFloatPartialInRoot03() {
+            String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot03.pdf";
+            String outFile = destinationFolder + "clearancePageSplitFloatPartialInRoot03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
+            divClear.Add(new Paragraph("Cleared floating div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(divClear);
+            Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
+            div2.Add(new Paragraph("Last float."));
+            div2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(div2);
+            document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff14_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInBlock01.pdf";
@@ -578,8 +605,9 @@ namespace iText.Layout {
             containerDiv.Add(new Paragraph(text));
             // text shall start on the first page.
             document.Add(containerDiv);
+            document.Add(new Paragraph(text));
+            // TODO DEVSIX-1270: text around green cleared float is trying to wrap to the left of it (there are 2px of space)
             document.Close();
-            // TODO DEVSIX-1269: text overlapping with green float is caused by not taking into account vertical overlapping with floats
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff23_"));
         }
@@ -613,7 +641,41 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearancePageSplitFloatPartialInBlock03() {
+            String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock03.pdf";
+            String outFile = destinationFolder + "clearancePageSplitFloatPartialInBlock03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.Add(new Paragraph("Floating div."));
+            div.SetHeight(400).SetWidth(100);
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
+            divClear.Add(new Paragraph("Cleared floating div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            containerDiv.Add(divClear);
+            // Float with clear shall be drawn under the previous float on second page.
+            Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
+            div2.Add(new Paragraph("Last float."));
+            div2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            containerDiv.Add(div2);
+            // This float top shall not appear higher than floats tops added before this one.
+            containerDiv.Add(new Paragraph(text + text));
+            // text shall start on the first page.
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff23_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ClearancePageSplitFloatNothingInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot01.pdf";
@@ -638,7 +700,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
         public virtual void ClearancePageSplitFloatNothingInRoot02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot02.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot02.pdf";
@@ -656,6 +717,32 @@ namespace iText.Layout {
             document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
             document.Add(new Paragraph(text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff16_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ClearancePageSplitFloatNothingInRoot03() {
+            String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot03.pdf";
+            String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
+                SetWidth(300));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            document.Add(div);
+            // Adding float at the end of the page, it doesn't fit vertically.
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(divClear);
+            // Adding cleared element which shall be after the previous float.
+            document.Add(new Paragraph(text + text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff16_02_"));
@@ -720,7 +807,35 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
+        public virtual void ClearancePageSplitFloatNothingInBlock03() {
+            String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock03.pdf";
+            String outFile = destinationFolder + "clearancePageSplitFloatNothingInBlock03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div containerDiv = new Div();
+            containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
+                SetWidth(300));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            containerDiv.Add(div);
+            // Adding float at the end of the page, it doesn't fit vertically.
+            Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
+            divClear.Add(new Paragraph("Cleared div."));
+            divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            containerDiv.Add(divClear);
+            // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(new Paragraph(text + text));
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff25_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void ClearanceNoContentPageSplitFloatPartialInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearanceNoContentPageSplitFloatPartialInRoot01.pdf";
             String outFile = destinationFolder + "clearanceNoContentPageSplitFloatPartialInRoot01.pdf";
@@ -734,7 +849,6 @@ namespace iText.Layout {
             // Adding float at the end of the page, it is split.
             Div divClear = new Div();
             divClear.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
-            //
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             document.Add(divClear);
             // Adding empty element with clearance - it shall be placed after the overflow part of the float.
