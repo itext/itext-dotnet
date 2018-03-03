@@ -1137,7 +1137,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsOnPageSplit19() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit19.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit19.pdf";
@@ -1201,7 +1200,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit01.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit01.pdf";
@@ -1221,7 +1219,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit02.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit02.pdf";
@@ -1245,7 +1242,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit03.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit03.pdf";
@@ -1269,7 +1265,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit04() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit04.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit04.pdf";
@@ -1293,7 +1288,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit05() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit05.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit05.pdf";
@@ -1313,7 +1307,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit06() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit06.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit06.pdf";
@@ -1342,7 +1335,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit07.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit07.pdf";
@@ -1371,7 +1363,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
         public virtual void FloatsInParagraphPartialSplit08() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit08.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit08.pdf";
@@ -1474,7 +1465,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Floating inline blocks partial splitting not supported.")]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit01() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit01.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit01.pdf";
@@ -1583,6 +1574,27 @@ namespace iText.Layout {
             // to be extended down to the layout area bottom border.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff55_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatInParagraphLastLineLeadingOverflow01() {
+            String cmpFileName = sourceFolder + "cmp_floatInParagraphLastLineLeadingOverflow01.pdf";
+            String outFile = destinationFolder + "floatInParagraphLastLineLeadingOverflow01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text).SetMargin(0).SetMultipliedLeading(1.3f));
+            Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED).SetFixedLeading(20f);
+            p.Add("First line of red paragraph.\n");
+            ImageData img = ImageDataFactory.Create(sourceFolder + "itis.jpg");
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(img);
+            image.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p.Add(image.SetHeight(730).SetWidth(300));
+            p.Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff56_"));
         }
 
         /// <exception cref="System.IO.IOException"/>

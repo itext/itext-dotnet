@@ -109,7 +109,15 @@ namespace iText.Layout.Renderer {
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
             bool floatsPlaced = false;
-            IList<IRenderer> overflowFloats = new List<IRenderer>();
+            // The floatsToNextPage collections currently contain only partially split renderers.
+            // All renderers that don't fit completely go to floatsOverflowedToNextLine and try to be placed
+            // on the next line.
+            // This might be improved in future, however special way of passing information from paragraph to a line would
+            // need to be defined in order to notify next lines that they cannot place floats since a float is already waiting
+            // next page.
+            IDictionary<int, IRenderer> floatsToNextPageSplitRenderers = new LinkedDictionary<int, IRenderer>();
+            IList<IRenderer> floatsToNextPageOverflowRenderers = new List<IRenderer>();
+            IList<IRenderer> floatsOverflowedToNextLine = new List<IRenderer>();
             int lastTabIndex = 0;
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
@@ -175,7 +183,7 @@ namespace iText.Layout.Renderer {
                         wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
-                    if (overflowFloats.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
+                    if (floatsOverflowedToNextLine.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                             ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas, wasParentsHeightClipped));
                     }
@@ -204,21 +212,35 @@ namespace iText.Layout.Renderer {
                         widthHandler.UpdateMaxChildWidth(kidMinMaxWidth.GetMaxWidth() + AbstractRenderer.EPS);
                     }
                     if (childResult == null || childResult.GetStatus() == LayoutResult.NOTHING) {
-                        overflowFloats.Add(childRenderer);
+                        floatsOverflowedToNextLine.Add(childRenderer);
                     }
                     else {
                         if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                             floatsPlaced = true;
-                            LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
-                            IRenderer splitRenderer = childResult.GetSplitRenderer();
-                            if (splitRenderer is TextRenderer) {
-                                ((TextRenderer)splitRenderer).TrimFirst();
-                                ((TextRenderer)splitRenderer).TrimLast();
+                            if (childRenderer is TextRenderer) {
+                                // This code is specifically for floating inline text elements:
+                                // inline elements cannot have fixed width, also they progress horizontally, which means
+                                // that if they don't fit in one line, they will definitely be moved onto the new line (and also
+                                // under all floats). Specifying the whole width of layout area is required to avoid possible normal
+                                // content wrapping around floating text in case floating text gets wrapped onto the next line
+                                // not evenly.
+                                LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
+                                IRenderer splitRenderer = childResult.GetSplitRenderer();
+                                if (splitRenderer is TextRenderer) {
+                                    ((TextRenderer)splitRenderer).TrimFirst();
+                                    ((TextRenderer)splitRenderer).TrimLast();
+                                }
+                                // ensure no other thing (like text wrapping the float) will occupy the line
+                                splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
+                                result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
+                                break;
                             }
-                            // ensure no other thing (like text wrapping the float) will occupy the line
-                            splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
-                            result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
-                            break;
+                            else {
+                                floatsToNextPageSplitRenderers.Put(childPos, childResult.GetSplitRenderer());
+                                floatsToNextPageOverflowRenderers.Add(childResult.GetOverflowRenderer());
+                                AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childResult.GetSplitRenderer().GetOccupiedArea
+                                    ().GetBBox());
+                            }
                         }
                         else {
                             floatsPlaced = true;
@@ -436,10 +458,11 @@ namespace iText.Layout.Renderer {
                         }
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                     }
-                    split[0].childRenderers.RemoveAll(overflowFloats);
-                    split[1].childRenderers.AddAll(0, overflowFloats);
+                    ReplaceSplitRendererKidFloats(floatsToNextPageSplitRenderers, split[0]);
+                    split[0].childRenderers.RemoveAll(floatsOverflowedToNextLine);
+                    split[1].childRenderers.AddAll(0, floatsOverflowedToNextLine);
                     // no sense to process empty renderer
-                    if (split[1].childRenderers.Count == 0) {
+                    if (split[1].childRenderers.Count == 0 && floatsToNextPageOverflowRenderers.IsEmpty()) {
                         split[1] = null;
                     }
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
@@ -454,6 +477,7 @@ namespace iText.Layout.Renderer {
                         else {
                             result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], null);
                         }
+                        result.SetFloatsOverflowedToNextPage(floatsToNextPageOverflowRenderers);
                     }
                     if (newLineOccurred) {
                         result.SetSplitForcedByNewline(true);
@@ -466,11 +490,13 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (result == null) {
-                if ((anythingPlaced || floatsPlaced) && overflowFloats.IsEmpty() || 0 == childRenderers.Count) {
+                bool noOverflowedFloats = floatsOverflowedToNextLine.IsEmpty() && floatsToNextPageOverflowRenderers.IsEmpty
+                    ();
+                if ((anythingPlaced || floatsPlaced) && noOverflowedFloats || 0 == childRenderers.Count) {
                     result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                 }
                 else {
-                    if (overflowFloats.IsEmpty()) {
+                    if (noOverflowedFloats) {
                         // all kids were some non-image and non-text kids (tab-stops?),
                         // but in this case, it should be okay to return FULL, as there is nothing to be placed
                         result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
@@ -479,14 +505,18 @@ namespace iText.Layout.Renderer {
                         if (anythingPlaced || floatsPlaced) {
                             LineRenderer[] split = Split();
                             split[0].childRenderers.AddAll(childRenderers.SubList(0, childPos));
-                            split[0].childRenderers.RemoveAll(overflowFloats);
-                            // If result variable is null up until now but not everything was placed - there is no
+                            ReplaceSplitRendererKidFloats(floatsToNextPageSplitRenderers, split[0]);
+                            split[0].childRenderers.RemoveAll(floatsOverflowedToNextLine);
+                            // If `result` variable is null up until now but not everything was placed - there is no
                             // content overflow, only floats are overflowing.
-                            split[1].childRenderers.AddAll(overflowFloats);
+                            // The floatsOverflowedToNextLine might be empty, while the only overflowing floats are
+                            // in floatsToNextPageOverflowRenderers. This situation is handled in ParagraphRenderer separately.
+                            split[1].childRenderers.AddAll(floatsOverflowedToNextLine);
                             result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
+                            result.SetFloatsOverflowedToNextPage(floatsToNextPageOverflowRenderers);
                         }
                         else {
-                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, overflowFloats[0]);
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, floatsOverflowedToNextLine[0]);
                         }
                     }
                 }
@@ -958,6 +988,13 @@ namespace iText.Layout.Renderer {
         }
 
         // TODO
+        private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> floatsToNextPageSplitRenderers, LineRenderer
+             splitRenderer) {
+            foreach (KeyValuePair<int, IRenderer> splitFloat in floatsToNextPageSplitRenderers) {
+                splitRenderer.childRenderers[splitFloat.Key] = splitFloat.Value;
+            }
+        }
+
         private IRenderer GetLastChildRenderer() {
             return childRenderers[childRenderers.Count - 1];
         }

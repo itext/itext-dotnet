@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
@@ -52,6 +53,8 @@ namespace iText.Layout.Layout {
     public class LineLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
+
+        private IList<IRenderer> floatsOverflowedToNextPage;
 
         /// <summary>
         /// Creates the
@@ -123,6 +126,14 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
+        }
+
+        public virtual IList<IRenderer> GetFloatsOverflowedToNextPage() {
+            return floatsOverflowedToNextPage;
+        }
+
+        public virtual void SetFloatsOverflowedToNextPage(IList<IRenderer> floatsOverflowedToNextPage) {
+            this.floatsOverflowedToNextPage = floatsOverflowedToNextPage;
         }
     }
 }

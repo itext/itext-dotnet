@@ -154,6 +154,8 @@ namespace iText.Layout.Renderer {
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
             float lastLineBottomLeadingIndent = 0;
+            bool onlyOverflowedFloatsLeft = false;
+            IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -170,6 +172,9 @@ namespace iText.Layout.Renderer {
                 LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped
                     ));
+                if (result.GetFloatsOverflowedToNextPage() != null) {
+                    inlineFloatsOverflowedToNextPage.AddAll(result.GetFloatsOverflowedToNextPage());
+                }
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
@@ -194,6 +199,12 @@ namespace iText.Layout.Renderer {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         processedRenderer = (LineRenderer)result.GetSplitRenderer();
                     }
+                }
+                if (onlyOverflowedFloatsLeft) {
+                    // This is done to trick ParagraphRenderer to break rendering and to overflow to the next page.
+                    // The `onlyOverflowedFloatsLeft` is set to true only when no other content is left except
+                    // overflowed floating elements.
+                    processedRenderer = null;
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
                     .LEFT);
@@ -280,7 +291,12 @@ namespace iText.Layout.Renderer {
                             foreach (LineRenderer line in lines) {
                                 split[0].childRenderers.AddAll(line.GetChildRenderers());
                             }
+                            split[1].childRenderers.AddAll(inlineFloatsOverflowedToNextPage);
                             if (processedRenderer != null) {
+                                // TODO in case processedRenderer is split renderer, this makes line split renderer kids before floats overflowed to next line.
+                                // If floats overflowed to next line were only the floats that overflowed due to floating
+                                // positioning rules and floats that didn't fit were put in inlineFloatsOverflowedToNextPage,
+                                // in this case this issue would be solved. TODO See FloatTest#floatInParagraphLastLineLeadingOverflow01
                                 split[1].childRenderers.AddAll(processedRenderer.GetChildRenderers());
                             }
                             if (result.GetOverflowRenderer() != null) {
@@ -351,8 +367,13 @@ namespace iText.Layout.Renderer {
                     anythingPlaced = true;
                     currentRenderer = (LineRenderer)result.GetOverflowRenderer();
                     previousDescent = processedRenderer.GetMaxDescent();
+                    if (!inlineFloatsOverflowedToNextPage.IsEmpty() && result.GetOverflowRenderer() == null) {
+                        onlyOverflowedFloatsLeft = true;
+                        currentRenderer = new LineRenderer();
+                    }
                 }
             }
+            // dummy renderer to trick paragraph renderer to continue kids loop
             float moveDown = lastLineBottomLeadingIndent;
             if ((null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY)) && moveDown > occupiedArea.GetBBox(
                 ).GetY() - layoutBox.GetY()) {
