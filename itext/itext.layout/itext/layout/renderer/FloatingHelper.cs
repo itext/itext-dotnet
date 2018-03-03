@@ -44,7 +44,9 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
+using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
@@ -373,9 +375,26 @@ namespace iText.Layout.Renderer {
         }
 
         internal static void RemoveParentArtifactsOnPageSplitIfOnlyFloatsOverflow(IRenderer overflowRenderer) {
+            overflowRenderer.SetProperty(Property.BACKGROUND, null);
+            overflowRenderer.SetProperty(Property.BACKGROUND_IMAGE, null);
+            overflowRenderer.SetProperty(Property.OUTLINE, null);
+            Border[] borders = AbstractRenderer.GetBorders(overflowRenderer);
+            overflowRenderer.SetProperty(Property.BORDER_TOP, null);
+            overflowRenderer.SetProperty(Property.BORDER_BOTTOM, null);
+            if (borders[1] != null) {
+                overflowRenderer.SetProperty(Property.BORDER_RIGHT, new SolidBorder(ColorConstants.BLACK, borders[1].GetWidth
+                    (), 0));
+            }
+            if (borders[3] != null) {
+                overflowRenderer.SetProperty(Property.BORDER_LEFT, new SolidBorder(ColorConstants.BLACK, borders[3].GetWidth
+                    (), 0));
+            }
+            overflowRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(0));
         }
 
-        // TODO implement
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {
             layoutBox.SetX(layoutBox.GetRight() - blockWidth);
             layoutBox.SetWidth(blockWidth);

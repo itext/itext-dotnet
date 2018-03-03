@@ -2251,7 +2251,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest01.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest01.pdf";
@@ -2273,7 +2272,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMinHeightApplyingOnSplitTest02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest02.pdf";
@@ -2319,7 +2317,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest04() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest04.pdf";
@@ -2560,6 +2557,50 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff16_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatOverflowAlongWithNewContent01() {
+            String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent01.pdf";
+            String outFile = destinationFolder + "floatOverflowAlongWithNewContent01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div divContainer = new Div();
+            divContainer.SetMargin(20);
+            divContainer.SetBorder(new SolidBorder(ColorConstants.BLACK, 10));
+            divContainer.Add(new Paragraph(text + text));
+            Paragraph pFloat = new Paragraph(text).SetFontColor(ColorConstants.RED).SetWidth(300).SetBackgroundColor(ColorConstants
+                .LIGHT_GRAY);
+            pFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            divContainer.Add(pFloat);
+            document.Add(divContainer);
+            document.Add(new Paragraph(text + text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_overflowNewContent01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatOverflowAlongWithNewContent02() {
+            String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent02.pdf";
+            String outFile = destinationFolder + "floatOverflowAlongWithNewContent02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div divContainer = new Div();
+            divContainer.SetMargin(20);
+            divContainer.SetBorder(new SolidBorder(ColorConstants.BLACK, 10));
+            divContainer.Add(new Paragraph(text + text));
+            Paragraph pFloat = new Paragraph(text + text + text).SetFontColor(ColorConstants.RED).SetWidth(300).SetBackgroundColor
+                (ColorConstants.LIGHT_GRAY);
+            pFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            divContainer.Add(pFloat);
+            document.Add(divContainer);
+            document.Add(new Paragraph(text + text + text));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_overflowNewContent02_"));
         }
     }
 }
