@@ -200,11 +200,18 @@ namespace iText.Layout.Renderer {
                         marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                     }
                     if (FloatingHelper.IsRendererFloating(childRenderer)) {
-                        waitingFloatsSplitRenderers.Put(childPos, result.GetStatus() == LayoutResult.PARTIAL ? result.GetSplitRenderer
-                            () : null);
-                        waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
-                        floatOverflowedCompletely = result.GetStatus() == LayoutResult.NOTHING;
-                        break;
+                        // Check if current block is empty, kid returns nothing and neither floats nor content
+                        // were met on root area (e.g. page area) - return NOTHING, don't layout other kids,
+                        // expect FORCED_PLACEMENT to be set.
+                        bool immediatelyReturnNothing = result.GetStatus() == LayoutResult.NOTHING && !anythingPlaced && floatRendererAreas
+                            .IsEmpty() && IsFirstOnRootArea();
+                        if (!immediatelyReturnNothing) {
+                            waitingFloatsSplitRenderers.Put(childPos, result.GetStatus() == LayoutResult.PARTIAL ? result.GetSplitRenderer
+                                () : null);
+                            waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
+                            floatOverflowedCompletely = result.GetStatus() == LayoutResult.NOTHING;
+                            break;
+                        }
                     }
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);

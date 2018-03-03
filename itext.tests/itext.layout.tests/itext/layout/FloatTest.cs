@@ -1853,7 +1853,6 @@ namespace iText.Layout {
             document.Add(new Paragraph(text + text).SetBorder(new SolidBorder(ColorConstants.LIGHT_GRAY, 3)).SetFontColor
                 (ColorConstants.RED));
             document.Close();
-            // TODO might be better to avoid floating element overflow if it's placed on empty area. Also to make it consistent with inline floats and root level floats behaviour.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff49_"));
         }
