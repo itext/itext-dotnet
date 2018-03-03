@@ -455,6 +455,84 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void FloatsFixedWidthTest01_floatRight() {
+            String cmpFileName = sourceFolder + "cmp_floatsFixedWidthTest01_floatRight.pdf";
+            String outFile = destinationFolder + "floatsFixedWidthTest01_floatRight.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
+            Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
+                , 3));
+            Div childFixedDiv = new Div().SetWidth(400).SetBorder(new SolidBorder(ColorConstants.GREEN, 3));
+            childFixedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            childFixedDiv.Add(new Paragraph("inside float; float right, width 400pt").SetMargin(0));
+            parentFixedDiv.Add(new Paragraph("before float; width 300pt").SetMargin(0));
+            parentFixedDiv.Add(childFixedDiv);
+            parentFixedDiv.Add(new Paragraph("after float").SetMargin(0));
+            containerDiv.Add(parentFixedDiv);
+            Paragraph clearfix = new Paragraph("clearfix");
+            clearfix.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(clearfix);
+            document.Add(containerDiv);
+            document.Close();
+            // TODO with default overflow behaviour floating elements should not be wider than parents
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_width01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsFixedWidth01_noFloat() {
+            String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_noFloat.pdf";
+            String outFile = destinationFolder + "floatsFixedWidth01_noFloat.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
+            Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
+                , 3));
+            Div childFixedDiv = new Div().SetWidth(400).SetBorder(new SolidBorder(ColorConstants.GREEN, 3));
+            childFixedDiv.Add(new Paragraph("inside child; width 400pt").SetMargin(0));
+            parentFixedDiv.Add(new Paragraph("before child; width 300pt").SetMargin(0));
+            parentFixedDiv.Add(childFixedDiv);
+            parentFixedDiv.Add(new Paragraph("after child").SetMargin(0));
+            containerDiv.Add(parentFixedDiv);
+            Paragraph clearfix = new Paragraph("clearfix");
+            clearfix.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(clearfix);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_width01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsFixedWidth01_floatLeft() {
+            String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_floatLeft.pdf";
+            String outFile = destinationFolder + "floatsFixedWidth01_floatLeft.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
+            Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
+                , 3));
+            Div childFixedDiv = new Div().SetWidth(400).SetBorder(new SolidBorder(ColorConstants.GREEN, 3));
+            childFixedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            childFixedDiv.Add(new Paragraph("inside float; float left; width 400pt").SetMargin(0));
+            parentFixedDiv.Add(new Paragraph("before float; width 300pt").SetMargin(0));
+            parentFixedDiv.Add(childFixedDiv);
+            parentFixedDiv.Add(new Paragraph("after float").SetMargin(0));
+            containerDiv.Add(parentFixedDiv);
+            Paragraph clearfix = new Paragraph("clearfix");
+            clearfix.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            containerDiv.Add(clearfix);
+            document.Add(containerDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_width01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
         public virtual void FloatFixedHeightContentNotFit() {
             String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
