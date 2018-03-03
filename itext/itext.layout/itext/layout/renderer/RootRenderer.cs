@@ -73,6 +73,8 @@ namespace iText.Layout.Renderer {
 
         private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
+        private bool floatOverflowedCompletely = false;
+
         public override void AddChild(IRenderer renderer) {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {
@@ -103,6 +105,11 @@ namespace iText.Layout.Renderer {
             // Static layout
             for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
                 renderer = addedRenderers[i];
+                bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
+                if (rendererIsFloat && floatOverflowedCompletely) {
+                    waitingNextPageRenderers.Add(renderer);
+                    continue;
+                }
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
@@ -112,7 +119,6 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
-                bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
                     (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
                     bool currentAreaNeedsToBeUpdated = false;
@@ -122,19 +128,14 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                         else {
-                            if (result.GetOverflowRenderer() is ImageRenderer) {
-                                ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                            ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
+                            if (nextStoredArea != null) {
+                                currentArea = nextStoredArea;
+                                currentPageNumber = nextStoredArea.GetPageNumber();
+                                nextStoredArea = null;
                             }
                             else {
-                                ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
-                                if (nextStoredArea != null) {
-                                    currentArea = nextStoredArea;
-                                    currentPageNumber = nextStoredArea.GetPageNumber();
-                                    nextStoredArea = null;
-                                }
-                                else {
-                                    currentAreaNeedsToBeUpdated = true;
-                                }
+                                currentAreaNeedsToBeUpdated = true;
                             }
                         }
                     }
@@ -146,6 +147,7 @@ namespace iText.Layout.Renderer {
                                     ()) {
                                     if (rendererIsFloat) {
                                         waitingNextPageRenderers.Add(result.GetOverflowRenderer());
+                                        floatOverflowedCompletely = true;
                                         break;
                                     }
                                     currentAreaNeedsToBeUpdated = true;
@@ -213,6 +215,7 @@ namespace iText.Layout.Renderer {
                                     else {
                                         if (rendererIsFloat) {
                                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
+                                            floatOverflowedCompletely = true;
                                             break;
                                         }
                                         currentAreaNeedsToBeUpdated = true;
@@ -486,6 +489,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void AddWaitingNextPageRenderers() {
+            floatOverflowedCompletely = false;
             IList<IRenderer> waitingFloatRenderers = new List<IRenderer>(waitingNextPageRenderers);
             waitingNextPageRenderers.Clear();
             foreach (IRenderer renderer in waitingFloatRenderers) {

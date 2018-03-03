@@ -65,6 +65,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             IDictionary<int, IRenderer> waitingFloatsSplitRenderers = new LinkedDictionary<int, IRenderer>();
             IList<IRenderer> waitingOverflowFloatRenderers = new List<IRenderer>();
+            bool floatOverflowedCompletely = false;
             bool wasHeightClipped = false;
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
@@ -129,6 +130,11 @@ namespace iText.Layout.Renderer {
                 LayoutResult result;
                 childRenderer.SetParent(this);
                 MarginsCollapseInfo childMarginsInfo = null;
+                if (floatOverflowedCompletely && FloatingHelper.IsRendererFloating(childRenderer)) {
+                    waitingFloatsSplitRenderers.Put(childPos, null);
+                    waitingOverflowFloatRenderers.Add(childRenderer);
+                    continue;
+                }
                 if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsClearanceApplied(waitingOverflowFloatRenderers
                     , childRenderer.GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
                     if (marginsCollapsingEnabled && !isCellRenderer) {
@@ -176,6 +182,7 @@ namespace iText.Layout.Renderer {
                         waitingFloatsSplitRenderers.Put(childPos, result.GetStatus() == LayoutResult.PARTIAL ? result.GetSplitRenderer
                             () : null);
                         waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
+                        floatOverflowedCompletely = result.GetStatus() == LayoutResult.NOTHING;
                         break;
                     }
                     if (marginsCollapsingEnabled) {
