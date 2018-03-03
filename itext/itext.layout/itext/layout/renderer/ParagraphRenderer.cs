@@ -156,6 +156,7 @@ namespace iText.Layout.Renderer {
             float lastLineBottomLeadingIndent = 0;
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
+            bool floatOverflowedToNextPageWithNothing = false;
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -169,12 +170,11 @@ namespace iText.Layout.Renderer {
                     layoutBox.GetHeight());
                 currentRenderer.SetProperty(Property.OVERFLOW_X, overflowX);
                 currentRenderer.SetProperty(Property.OVERFLOW_Y, overflowY);
-                LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
-                    (new LayoutArea(pageNumber, childLayoutBox), null, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped
-                    ));
-                if (result.GetFloatsOverflowedToNextPage() != null) {
-                    inlineFloatsOverflowedToNextPage.AddAll(result.GetFloatsOverflowedToNextPage());
-                }
+                LineLayoutContext lineLayoutContext = new LineLayoutContext(new LayoutArea(pageNumber, childLayoutBox), null
+                    , floatRendererAreas, wasHeightClipped || wasParentsHeightClipped).SetFloatOverflowedToNextPageWithNothing
+                    (floatOverflowedToNextPageWithNothing);
+                LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(lineLayoutContext
+                    );
                 if (result.GetStatus() == LayoutResult.NOTHING) {
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
@@ -182,6 +182,10 @@ namespace iText.Layout.Renderer {
                         firstLineInBox = true;
                         continue;
                     }
+                }
+                floatOverflowedToNextPageWithNothing = lineLayoutContext.IsFloatOverflowedToNextPageWithNothing();
+                if (result.GetFloatsOverflowedToNextPage() != null) {
+                    inlineFloatsOverflowedToNextPage.AddAll(result.GetFloatsOverflowedToNextPage());
                 }
                 float minChildWidth = 0;
                 float maxChildWidth = 0;
@@ -293,10 +297,6 @@ namespace iText.Layout.Renderer {
                             }
                             split[1].childRenderers.AddAll(inlineFloatsOverflowedToNextPage);
                             if (processedRenderer != null) {
-                                // TODO in case processedRenderer is split renderer, this makes line split renderer kids before floats overflowed to next line.
-                                // If floats overflowed to next line were only the floats that overflowed due to floating
-                                // positioning rules and floats that didn't fit were put in inlineFloatsOverflowedToNextPage,
-                                // in this case this issue would be solved. TODO See FloatTest#floatInParagraphLastLineLeadingOverflow01
                                 split[1].childRenderers.AddAll(processedRenderer.GetChildRenderers());
                             }
                             if (result.GetOverflowRenderer() != null) {

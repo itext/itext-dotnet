@@ -109,12 +109,8 @@ namespace iText.Layout.Renderer {
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
             bool floatsPlaced = false;
-            // The floatsToNextPage collections currently contain only partially split renderers.
-            // All renderers that don't fit completely go to floatsOverflowedToNextLine and try to be placed
-            // on the next line.
-            // This might be improved in future, however special way of passing information from paragraph to a line would
-            // need to be defined in order to notify next lines that they cannot place floats since a float is already waiting
-            // next page.
+            LineLayoutContext lineLayoutContext = layoutContext is LineLayoutContext ? (LineLayoutContext)layoutContext
+                 : new LineLayoutContext(layoutContext);
             IDictionary<int, IRenderer> floatsToNextPageSplitRenderers = new LinkedDictionary<int, IRenderer>();
             IList<IRenderer> floatsToNextPageOverflowRenderers = new List<IRenderer>();
             IList<IRenderer> floatsOverflowedToNextLine = new List<IRenderer>();
@@ -183,7 +179,8 @@ namespace iText.Layout.Renderer {
                         wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
-                    if (floatsOverflowedToNextLine.IsEmpty() && (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
+                    if (!lineLayoutContext.IsFloatOverflowedToNextPageWithNothing() && floatsOverflowedToNextLine.IsEmpty() &&
+                         (!anythingPlaced || floatingBoxFullWidth <= bbox.GetWidth())) {
                         childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                             ), layoutContext.GetArea().GetBBox().Clone()), null, floatRendererAreas, wasParentsHeightClipped));
                     }
@@ -211,45 +208,53 @@ namespace iText.Layout.Renderer {
                         widthHandler.UpdateMinChildWidth(kidMinMaxWidth.GetMinWidth() + AbstractRenderer.EPS);
                         widthHandler.UpdateMaxChildWidth(kidMinMaxWidth.GetMaxWidth() + AbstractRenderer.EPS);
                     }
-                    if (childResult == null || childResult.GetStatus() == LayoutResult.NOTHING) {
+                    if (childResult == null && !lineLayoutContext.IsFloatOverflowedToNextPageWithNothing()) {
                         floatsOverflowedToNextLine.Add(childRenderer);
                     }
                     else {
-                        if (childResult.GetStatus() == LayoutResult.PARTIAL) {
-                            floatsPlaced = true;
-                            if (childRenderer is TextRenderer) {
-                                // This code is specifically for floating inline text elements:
-                                // inline elements cannot have fixed width, also they progress horizontally, which means
-                                // that if they don't fit in one line, they will definitely be moved onto the new line (and also
-                                // under all floats). Specifying the whole width of layout area is required to avoid possible normal
-                                // content wrapping around floating text in case floating text gets wrapped onto the next line
-                                // not evenly.
-                                LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
-                                IRenderer splitRenderer = childResult.GetSplitRenderer();
-                                if (splitRenderer is TextRenderer) {
-                                    ((TextRenderer)splitRenderer).TrimFirst();
-                                    ((TextRenderer)splitRenderer).TrimLast();
-                                }
-                                // ensure no other thing (like text wrapping the float) will occupy the line
-                                splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
-                                result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
-                                break;
-                            }
-                            else {
-                                floatsToNextPageSplitRenderers.Put(childPos, childResult.GetSplitRenderer());
-                                floatsToNextPageOverflowRenderers.Add(childResult.GetOverflowRenderer());
-                                AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childResult.GetSplitRenderer().GetOccupiedArea
-                                    ().GetBBox());
-                            }
+                        if (lineLayoutContext.IsFloatOverflowedToNextPageWithNothing() || childResult.GetStatus() == LayoutResult.
+                            NOTHING) {
+                            floatsToNextPageSplitRenderers.Put(childPos, null);
+                            floatsToNextPageOverflowRenderers.Add(childRenderer);
+                            lineLayoutContext.SetFloatOverflowedToNextPageWithNothing(true);
                         }
                         else {
-                            floatsPlaced = true;
-                            if (childRenderer is TextRenderer) {
-                                ((TextRenderer)childRenderer).TrimFirst();
-                                ((TextRenderer)childRenderer).TrimLast();
+                            if (childResult.GetStatus() == LayoutResult.PARTIAL) {
+                                floatsPlaced = true;
+                                if (childRenderer is TextRenderer) {
+                                    // This code is specifically for floating inline text elements:
+                                    // inline elements cannot have fixed width, also they progress horizontally, which means
+                                    // that if they don't fit in one line, they will definitely be moved onto the new line (and also
+                                    // under all floats). Specifying the whole width of layout area is required to avoid possible normal
+                                    // content wrapping around floating text in case floating text gets wrapped onto the next line
+                                    // not evenly.
+                                    LineRenderer[] split = SplitNotFittingFloat(childPos, childResult);
+                                    IRenderer splitRenderer = childResult.GetSplitRenderer();
+                                    if (splitRenderer is TextRenderer) {
+                                        ((TextRenderer)splitRenderer).TrimFirst();
+                                        ((TextRenderer)splitRenderer).TrimLast();
+                                    }
+                                    // ensure no other thing (like text wrapping the float) will occupy the line
+                                    splitRenderer.GetOccupiedArea().GetBBox().SetWidth(layoutContext.GetArea().GetBBox().GetWidth());
+                                    result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], null);
+                                    break;
+                                }
+                                else {
+                                    floatsToNextPageSplitRenderers.Put(childPos, childResult.GetSplitRenderer());
+                                    floatsToNextPageOverflowRenderers.Add(childResult.GetOverflowRenderer());
+                                    AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childResult.GetSplitRenderer().GetOccupiedArea
+                                        ().GetBBox());
+                                }
                             }
-                            AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childRenderer.GetOccupiedArea().GetBBox(
-                                ));
+                            else {
+                                floatsPlaced = true;
+                                if (childRenderer is TextRenderer) {
+                                    ((TextRenderer)childRenderer).TrimFirst();
+                                    ((TextRenderer)childRenderer).TrimLast();
+                                }
+                                AdjustLineOnFloatPlaced(layoutBox, childPos, kidFloatPropertyVal, childRenderer.GetOccupiedArea().GetBBox(
+                                    ));
+                            }
                         }
                     }
                     childPos++;
@@ -516,7 +521,9 @@ namespace iText.Layout.Renderer {
                             result.SetFloatsOverflowedToNextPage(floatsToNextPageOverflowRenderers);
                         }
                         else {
-                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, floatsOverflowedToNextLine[0]);
+                            IRenderer causeOfNothing = floatsOverflowedToNextLine.IsEmpty() ? floatsToNextPageOverflowRenderers[0] : floatsOverflowedToNextLine
+                                [0];
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, causeOfNothing);
                         }
                     }
                 }
@@ -991,7 +998,17 @@ namespace iText.Layout.Renderer {
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> floatsToNextPageSplitRenderers, LineRenderer
              splitRenderer) {
             foreach (KeyValuePair<int, IRenderer> splitFloat in floatsToNextPageSplitRenderers) {
-                splitRenderer.childRenderers[splitFloat.Key] = splitFloat.Value;
+                if (splitFloat.Value != null) {
+                    splitRenderer.childRenderers[splitFloat.Key] = splitFloat.Value;
+                }
+                else {
+                    splitRenderer.childRenderers[splitFloat.Key] = null;
+                }
+            }
+            for (int i = splitRenderer.GetChildRenderers().Count - 1; i >= 0; --i) {
+                if (splitRenderer.GetChildRenderers()[i] == null) {
+                    splitRenderer.GetChildRenderers().JRemoveAt(i);
+                }
             }
         }
 

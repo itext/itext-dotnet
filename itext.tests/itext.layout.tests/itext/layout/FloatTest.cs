@@ -1600,6 +1600,54 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void FloatOverflowNothingInParagraph01() {
+            String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph01.pdf";
+            String outFile = destinationFolder + "floatOverflowNothingInParagraph01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED);
+            ImageData img = ImageDataFactory.Create(sourceFolder + "itis.jpg");
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(img);
+            image.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p.Add(image.SetHeight(400).SetWidth(300));
+            p.Add("Some text goes here. ");
+            Div div1 = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).Add(new Paragraph("Floating div text"
+                ));
+            Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 3)).Add(new Paragraph("Floating div text"
+                ));
+            div1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            p.Add(div1);
+            p.Add(div2);
+            p.Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff57_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatOverflowNothingInParagraph02() {
+            String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph02.pdf";
+            String outFile = destinationFolder + "floatOverflowNothingInParagraph02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED);
+            ImageData img = ImageDataFactory.Create(sourceFolder + "itis.jpg");
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(img);
+            image.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p.Add(image.SetHeight(400).SetWidth(300));
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff58_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FloatInlineBlockTest01() {
             String cmpFileName = sourceFolder + "cmp_floatInlineBlockTest01.pdf";
             String outFile = destinationFolder + "floatInlineBlockTest01.pdf";
