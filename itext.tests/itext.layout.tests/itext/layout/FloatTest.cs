@@ -822,26 +822,74 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
-        public virtual void FloatsOnPageSplit06() {
-            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06.pdf";
-            String outFile = destinationFolder + "floatsOnPageSplit06.pdf";
+        public virtual void FloatsOnPageSplit06_01() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_01.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit06_01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.SetHeight(600);
-            // TODO Setting fixed height for the div, that will be split between pages.
+            // Setting fixed height for the div, that will be split between pages.
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(280);
+            img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(img);
+            // Adding float that will not fit on the first page.
+            div.Add(new Paragraph("some small text"));
+            document.Add(div);
+            // div height shall be correct on the second page.
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff22_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit06_02() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_02.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit06_02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetHeight(600);
+            // Setting fixed height for the div, that will be split between pages.
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(250);
+            img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(img);
+            // Adding float that WILL fit on the first page.
+            div.Add(new Paragraph("some small text"));
+            document.Add(div);
+            // div height shall be correct on the second page.
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff22_02"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatsOnPageSplit06_03() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_03.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit06_03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetHeight(600);
+            // Setting fixed height for the div, that will be split between pages.
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             div.Add(img);
-            // TODO Adding float that will not fit on the first page.
+            // Adding float that will not fit on the first page and will be have FORCED_PLACEMENT on the second.
             div.Add(new Paragraph("some small text"));
             document.Add(div);
-            // TODO div height shall be correct on the second page.
+            // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff22_"));
+                "diff22_03"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -977,21 +1025,41 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
-        public virtual void FloatsOnPageSplit12() {
-            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12.pdf";
-            String outFile = destinationFolder + "floatsOnPageSplit12.pdf";
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatsOnPageSplit12_01() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_01.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit12_01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             div.SetHeight(300).Add(img);
-            // TODO Div shall have height of 300pt.
+            // Div shall have height of 300pt.
+            document.Add(div);
+            document.Close();
+            // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff32_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnPageSplit12_02() {
+            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_02.pdf";
+            String outFile = destinationFolder + "floatsOnPageSplit12_02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(400).SetWidth(100);
+            img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.SetHeight(500).Add(img);
+            // Div shall have height of 500pt.
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff32_"));
+                "diff32_02_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
