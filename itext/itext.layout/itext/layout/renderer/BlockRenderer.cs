@@ -590,6 +590,9 @@ namespace iText.Layout.Renderer {
                 return;
             }
             float deltaY = lowestChildBottom - GetInnerAreaBBox().GetY();
+            if (deltaY < 0) {
+                return;
+            }
             switch (verticalAlignment) {
                 case VerticalAlignment.BOTTOM: {
                     foreach (IRenderer child in childRenderers) {
