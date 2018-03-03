@@ -181,6 +181,17 @@ namespace iText.Layout.Renderer {
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
                     ), childMarginsInfo, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped))).GetStatus() !=
                      LayoutResult.FULL) {
+                    if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
+                        (Property.FILL_AVAILABLE_AREA))) {
+                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
+                    }
+                    else {
+                        if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
+                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                                ()));
+                            FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
+                        }
+                    }
                     if (marginsCollapsingEnabled && result.GetStatus() != LayoutResult.NOTHING) {
                         marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                     }
@@ -193,17 +204,6 @@ namespace iText.Layout.Renderer {
                     }
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-                    }
-                    if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
-                        (Property.FILL_AVAILABLE_AREA))) {
-                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
-                    }
-                    else {
-                        if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
-                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                                ()));
-                            FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
-                        }
                     }
                     // On page split, content will be drawn on next page, i.e. under all floats on this page
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
