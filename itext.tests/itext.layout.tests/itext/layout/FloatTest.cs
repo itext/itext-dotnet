@@ -1127,13 +1127,14 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            div.SetHeight(600);
-            // Setting fixed height for the div, that will be split between pages.
+            // Setting min height for the div, that will be split between pages.
+            // Not setting max height, because float won't be forced placed because it doesn't fit in max height constraints.
+            div.SetMinHeight(600);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             div.Add(img);
-            // Adding float that will not fit on the first page and will be have FORCED_PLACEMENT on the second.
+            // Adding float that will not fit on the first page and will have FORCED_PLACEMENT on the second.
             div.Add(new Paragraph("some small text"));
             document.Add(div);
             // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
@@ -1316,9 +1317,10 @@ namespace iText.Layout {
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div2);
-            // Adding float that shall be after the previous float.
+            // Adding float that shall be after the previous float. And shall overflow to the third page.
             document.Add(containerDiv);
             document.Close();
+            // TODO DEVSIX-1001: Forced placement is applied to the parent element, forcing it to return FULL even though part of the child element overflowed.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff31_"));
         }
@@ -1326,7 +1328,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit12_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit12_01.pdf";
@@ -1335,11 +1336,10 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetHeight(300).Add(img);
+            div.SetMinHeight(300).Add(img);
             // Div shall have height of 300pt.
             document.Add(div);
             document.Close();
-            // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff32_01_"));
         }
@@ -1361,24 +1361,6 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff32_02_"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1437")]
-        public virtual void FloatsOnPageSplit13() {
-            String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit13.pdf";
-            String outFile = destinationFolder + "floatsOnPageSplit13.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            Paragraph p = new Paragraph(text);
-            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetHeight(100).Add(p);
-            document.Add(div);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
-                "diff32_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -2034,6 +2016,469 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff14_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsHeightFixedInBlock01() {
+            String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock01.pdf";
+            String outFile = destinationFolder + "floatsHeightFixedInBlock01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetHeight(100);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_height_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsHeightFixedInBlock02() {
+            String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock02.pdf";
+            String outFile = destinationFolder + "floatsHeightFixedInBlock02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetHeight(200);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_height_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsHeightFixedInParagraph01() {
+            String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph01.pdf";
+            String outFile = destinationFolder + "floatsHeightFixedInParagraph01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetHeight
+                (100);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_height_03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsHeightFixedInParagraph02() {
+            String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph02.pdf";
+            String outFile = destinationFolder + "floatsHeightFixedInParagraph02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetHeight
+                (200);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_height_04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMaxHeightFixedInBlock01() {
+            String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock01.pdf";
+            String outFile = destinationFolder + "floatsMaxHeightFixedInBlock01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMaxHeight(100);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_maxheight_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMaxHeightFixedInBlock02() {
+            String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock02.pdf";
+            String outFile = destinationFolder + "floatsMaxHeightFixedInBlock02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMaxHeight(200);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_maxheight_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMaxHeightFixedInParagraph01() {
+            String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph01.pdf";
+            String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
+                (100);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_maxheight_03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMaxHeightFixedInParagraph02() {
+            String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph02.pdf";
+            String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
+                (200);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_maxheight_04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsMinHeightFixedInBlock01() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock01.pdf";
+            String outFile = destinationFolder + "floatsMinHeightFixedInBlock01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMinHeight(100);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheight_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsMinHeightFixedInBlock02() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock02.pdf";
+            String outFile = destinationFolder + "floatsMinHeightFixedInBlock02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMinHeight(200);
+            Paragraph p = new Paragraph(text);
+            p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheight_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsMinHeightFixedInParagraph01() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph01.pdf";
+            String outFile = destinationFolder + "floatsMinHeightFixedInParagraph01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMinHeight
+                (100);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheight_03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsMinHeightFixedInParagraph02() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph02.pdf";
+            String outFile = destinationFolder + "floatsMinHeightFixedInParagraph02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMinHeight
+                (200);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.Add(new Paragraph(text));
+            parentParagraph.Add(div);
+            document.Add(parentParagraph);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheight_04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
+        public virtual void FloatsMinHeightApplyingOnSplitTest01() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest01.pdf";
+            String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text));
+            // Gray area in this test is expected to be not split, continuous and have height equal
+            // exactly to mainDiv min height property value. Floating elements shall not affect
+            // occupied area of parent and also there is no proper way to split it.
+            Div mainDiv = new Div();
+            mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMinHeight(400);
+            mainDiv.Add(new Paragraph(text));
+            AddFloatingElements(mainDiv);
+            document.Add(mainDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheightapplying_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMinHeightApplyingOnSplitTest02() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest02.pdf";
+            String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text));
+            // Gray area in this test is expected to be not split, continuous and have height equal
+            // exactly to mainDiv min height property value. Floating elements shall not affect
+            // occupied area of parent and also there is no proper way to split it.
+            // Floats on the second page are expected to be clipped, due to max_height constraints.
+            Div mainDiv = new Div();
+            mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMinHeight(400).SetMaxHeight(750);
+            mainDiv.Add(new Paragraph(text));
+            AddFloatingElements(mainDiv);
+            document.Add(mainDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheightapplying_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void FloatsMinHeightApplyingOnSplitTest03() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest03.pdf";
+            String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text));
+            // Gray area in this test is expected to be split, however also not to have a gap before page end.
+            // Min height shall be resolved exactly the way as it would be resolved if no floats were there.
+            // The place at which floats are clipped on the second page shall be the same as in previous two tests.
+            Div mainDiv = new Div();
+            mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMinHeight(750).SetMaxHeight(750);
+            mainDiv.Add(new Paragraph(text));
+            AddFloatingElements(mainDiv);
+            document.Add(mainDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheightapplying_03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void FloatsMinHeightApplyingOnSplitTest04() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest04.pdf";
+            String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest04.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div mainDiv = new Div();
+            mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMaxHeight(750);
+            mainDiv.Add(new Paragraph(text));
+            AddFloatingElements(mainDiv);
+            // Both additions of mainDiv to document are the same except the second one also contains a bit of non-floating
+            // content in it. Places at which floating elements are clipped due to max_height shall be the same in both cases.
+            // The place at which they are clipped shall also be the same with tests floatsMinHeightApplyingOnSplitTest01-03.
+            // first addition
+            document.Add(new Paragraph(text));
+            document.Add(mainDiv);
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            // second addition
+            document.Add(new Paragraph(text));
+            int textLen = 100;
+            mainDiv.Add(new Paragraph(text.Length > textLen ? text.JSubstring(0, textLen) : text));
+            document.Add(mainDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheightapplying_04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void FloatsMinHeightApplyingOnSplitTest05() {
+            String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest05.pdf";
+            String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest05.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            // Since mainDiv is floating here, it encompasses all the floating children in it's occupied area.
+            // In this case, behaviour is expected to be the same as with just normal content and min_height property:
+            // height is not extended to all available height on first page in order not to "spend" height and ultimately
+            // to have more space to show content constrained by max_height.
+            Div mainDiv = new Div();
+            mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMinHeight(500).SetMaxHeight(750);
+            mainDiv.Add(new Paragraph(text));
+            mainDiv.SetWidth(UnitValue.CreatePercentValue(100)).SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            AddFloatingElements(mainDiv);
+            // Places where floating elements are clipped shall be the same in both additions. However these places are
+            // different from previous tests because floats are included in parent's occupied area here.
+            // first addition
+            document.Add(new Paragraph(text));
+            document.Add(mainDiv);
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            // TODO DEVSIX-1819: floats break area-break logic if min_height doesn't overflow to the next page on first addition: SMALL TICKET
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            // adding two page breaks two work around the issue
+            // second addition
+            mainDiv.SetMinHeight(50);
+            document.Add(new Paragraph(text));
+            document.Add(mainDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_minheightapplying_05_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOverflowToNextLineAtPageEndInParagraph01() {
+            String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
+            String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
+                3)).SetMargin(0).SetFontSize(30).SetMinHeight(240);
+            int textLen = 180;
+            mainP.Add(text.Length > textLen ? text.JSubstring(0, textLen) : text);
+            Div floatingDiv = new Div().SetBackgroundColor(ColorConstants.YELLOW);
+            floatingDiv.Add(new Paragraph("Floating div contents.").SetMargin(0));
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            mainP.Add(floatingDiv);
+            // On second page there shall be no parent paragraph artifacts: background and borders,
+            // since min_height completely fits on first page.
+            // Only floating element is overflown to the next page.
+            // TODO not working
+            document.Add(mainP);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_overflowNextLineAtPageEnd_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOverflowToNextLineAtPageEndInParagraph02() {
+            String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph02.pdf";
+            String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
+                3)).SetMargin(0);
+            mainP.Add(text.JSubstring(0, (int)(text.Length * 0.8)));
+            Text floatingText = new Text(text.JSubstring(0, text.Length / 3)).SetBorder(new SolidBorder(ColorConstants
+                .CYAN, 3));
+            floatingText.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            mainP.Add(floatingText);
+            // Since it's floats-only split, min_height is expected to be applied fully on the first page (it fits there)
+            // and also no parent artifacts (borders, background) shall be drawn on second page.
+            // TODO not working
+            document.Add(mainP);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_overflowNextLineAtPageEnd_02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOverflowToNextLineAtPageEndInParagraph03() {
+            String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph03.pdf";
+            String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text));
+            Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
+                3)).SetMargin(0).SetMinHeight(240);
+            mainP.Add(text.JSubstring(0, (int)(text.Length * 0.6)));
+            Text floatingText = new Text(text.JSubstring(0, text.Length / 8)).SetBorder(new SolidBorder(ColorConstants
+                .CYAN, 3)).SetFontSize(40);
+            floatingText.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            mainP.Add(floatingText);
+            // Since it's floats-only split, min_height is expected to be applied fully on the first page (it fits there)
+            // and also no parent artifacts (borders, background) shall be drawn on second page.
+            // TODO not working
+            document.Add(mainP);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_overflowNextLineAtPageEnd_03_"));
+        }
+
+        private void AddFloatingElements(Div mainDiv) {
+            Div yellow = new Div().SetBackgroundColor(ColorConstants.YELLOW).SetHeight(150).SetWidth(UnitValue.CreatePercentValue
+                (40)).SetMargin(5);
+            Div green = new Div().SetBackgroundColor(ColorConstants.GREEN).SetHeight(150).SetWidth(UnitValue.CreatePercentValue
+                (40)).SetMargin(5);
+            Div blue = new Div().SetBackgroundColor(ColorConstants.BLUE).SetHeight(150).SetWidth(UnitValue.CreatePercentValue
+                (90)).SetMargin(5);
+            Div orange = new Div().SetBackgroundColor(ColorConstants.ORANGE).SetWidth(UnitValue.CreatePercentValue(40)
+                ).SetMargin(5);
+            Div cyan = new Div().SetBackgroundColor(ColorConstants.CYAN).SetWidth(UnitValue.CreatePercentValue(40)).SetMargin
+                (5);
+            yellow.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            green.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            blue.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            orange.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            cyan.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            blue.SetKeepTogether(true);
+            orange.Add(new Paragraph(text + text));
+            cyan.Add(new Paragraph(text + text));
+            mainDiv.Add(yellow);
+            mainDiv.Add(green);
+            mainDiv.Add(blue);
+            mainDiv.Add(orange);
+            mainDiv.Add(cyan);
         }
 
         /// <summary>Suggested by Richard Cohn.</summary>

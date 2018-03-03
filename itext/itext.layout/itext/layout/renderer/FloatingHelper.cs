@@ -261,15 +261,22 @@ namespace iText.Layout.Renderer {
 
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
             , ICollection<Rectangle> nonChildFloatingRendererAreas) {
+            Rectangle commonRectangle = IncludeChildFloatsInOccupiedArea(floatRendererAreas, renderer.GetOccupiedArea(
+                ).GetBBox(), nonChildFloatingRendererAreas);
+            renderer.GetOccupiedArea().SetBBox(commonRectangle);
+        }
+
+        internal static Rectangle IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, Rectangle 
+            occupiedAreaBbox, ICollection<Rectangle> nonChildFloatingRendererAreas) {
             foreach (Rectangle floatBox in floatRendererAreas) {
                 if (nonChildFloatingRendererAreas.Contains(floatBox)) {
                     // Currently there is no other way to distinguish floats that are not descendants of this renderer
                     // except by preserving a set of such.
                     continue;
                 }
-                renderer.GetOccupiedArea().SetBBox(Rectangle.GetCommonRectangle(renderer.GetOccupiedArea().GetBBox(), floatBox
-                    ));
+                occupiedAreaBbox = Rectangle.GetCommonRectangle(occupiedAreaBbox, floatBox);
             }
+            return occupiedAreaBbox;
         }
 
         internal static MinMaxWidth CalculateMinMaxWidthForFloat(AbstractRenderer renderer, FloatPropertyValue? floatPropertyVal
@@ -365,6 +372,10 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
+        internal static void RemoveParentArtifactsOnPageSplitIfOnlyFloatsOverflow(IRenderer overflowRenderer) {
+        }
+
+        // TODO implement
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {
             layoutBox.SetX(layoutBox.GetRight() - blockWidth);
             layoutBox.SetWidth(blockWidth);

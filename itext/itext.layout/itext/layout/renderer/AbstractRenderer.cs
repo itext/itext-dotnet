@@ -1699,6 +1699,25 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
              splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
+            UpdateHeightsOnSplit(occupiedArea.GetBBox().GetHeight(), wasHeightClipped, splitRenderer, overflowRenderer
+                , true);
+        }
+
+        internal virtual void UpdateHeightsOnSplit(float usedHeight, bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
+             splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer, bool enlargeOccupiedAreaOnHeightWasClipped
+            ) {
+            if (wasHeightClipped) {
+                //if height was clipped, max height exists and can be resolved
+                ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
+                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                if (enlargeOccupiedAreaOnHeightWasClipped) {
+                    float? maxHeight = RetrieveMaxHeight();
+                    splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - usedHeight).SetHeight((float)maxHeight);
+                }
+            }
+            if (overflowRenderer == null) {
+                return;
+            }
             //Update height related properties on split or overflow
             float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             //For relative heights, we need the parent's resolved height declaration
@@ -1706,15 +1725,13 @@ namespace iText.Layout.Renderer {
             if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {
                     float? maxHeight = RetrieveMaxHeight();
-                    UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - occupiedArea.GetBBox().GetHeight
-                        ()));
+                    UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - usedHeight));
                     overflowRenderer.UpdateMaxHeight(updateMaxHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
                         //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
                         //Fraction
                         float newFraction = maxHeightUV.GetValue() - currentOccupiedFraction;
                         //Update
@@ -1727,15 +1744,13 @@ namespace iText.Layout.Renderer {
             if (minHeightUV != null) {
                 if (minHeightUV.IsPointValue()) {
                     float? minHeight = RetrieveMinHeight();
-                    UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - occupiedArea.GetBBox().GetHeight
-                        ()));
+                    UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - usedHeight));
                     overflowRenderer.UpdateMinHeight(updateminHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
                         //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
                         //Fraction
                         float newFraction = minHeightUV.GetValue() - currentOccupiedFraction;
                         //Update
@@ -1748,14 +1763,13 @@ namespace iText.Layout.Renderer {
             if (heightUV != null) {
                 if (heightUV.IsPointValue()) {
                     float? height = RetrieveHeight();
-                    UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - occupiedArea.GetBBox().GetHeight()));
+                    UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - usedHeight));
                     overflowRenderer.UpdateHeight(updateHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
                         //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
                         //Fraction
                         float newFraction = heightUV.GetValue() - currentOccupiedFraction;
                         //Update
@@ -1763,17 +1777,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            //If parent has no resolved height, relative height declarations can be ignored
-            if (wasHeightClipped) {
-                //if height was clipped, max height exists and can be resolved
-                float? maxHeight = RetrieveMaxHeight();
-                ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
-                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
-                    ((float)maxHeight);
-            }
         }
 
+        //If parent has no resolved height, relative height declarations can be ignored
         protected internal virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
