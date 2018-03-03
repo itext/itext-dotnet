@@ -747,30 +747,30 @@ namespace iText.Layout.Renderer {
             float? blockMinHeight = RetrieveMinHeight();
             if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight
                  > occupiedArea.GetBBox().GetHeight()) {
+                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
+                    ());
                 if (IsFixedLayout()) {
-                    occupiedArea.GetBBox().MoveDown((float)blockMinHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
-                        )blockMinHeight);
+                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }
                 else {
-                    float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
-                        ());
-                    if ((null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY)) && blockBottom < layoutBox.GetBottom
-                        ()) {
-                        blockBottom = layoutBox.GetBottom();
-                    }
-                    occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
-                    if (occupiedArea.GetBBox().GetHeight() < 0) {
-                        occupiedArea.GetBBox().SetHeight(0);
-                    }
-                    blockMinHeight -= occupiedArea.GetBBox().GetHeight();
-                    if (blockMinHeight > AbstractRenderer.EPS) {
+                    bool overflowFit = null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY);
+                    if (overflowFit && blockBottom < layoutBox.GetBottom()) {
+                        float hDelta = occupiedArea.GetBBox().GetBottom() - layoutBox.GetBottom();
+                        occupiedArea.GetBBox().IncreaseHeight(hDelta).SetY(layoutBox.GetBottom());
+                        if (occupiedArea.GetBBox().GetHeight() < 0) {
+                            occupiedArea.GetBBox().SetHeight(0);
+                        }
                         this.isLastRendererForModelElement = false;
                         overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight));
+                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight - occupiedArea.GetBBox()
+                            .GetHeight()));
                         if (HasProperty(Property.HEIGHT)) {
                             overflowRenderer.UpdateHeight(UnitValue.CreatePointValue((float)RetrieveHeight() - occupiedArea.GetBBox().
                                 GetHeight()));
                         }
+                    }
+                    else {
+                        occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                     }
                 }
             }
