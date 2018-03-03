@@ -74,6 +74,7 @@ namespace iText.Layout.Renderer {
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
@@ -92,7 +93,7 @@ namespace iText.Layout.Renderer {
                 (this));
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = FloatingHelper.AdjustFloatedBlockLayoutBox(this, parentBBox, blockWidth, floatRendererAreas, 
-                    floatPropertyValue);
+                    floatPropertyValue, overflowX);
                 floatRendererAreas = new List<Rectangle>();
             }
             bool isCellRenderer = this is CellRenderer;
@@ -102,7 +103,6 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
             ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
-            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             float? blockMaxHeight = RetrieveMaxHeight();
             OverflowPropertyValue? overflowY = (null == blockMaxHeight || blockMaxHeight > parentBBox.GetHeight()) && 
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property

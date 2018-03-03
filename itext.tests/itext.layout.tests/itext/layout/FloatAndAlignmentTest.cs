@@ -225,9 +225,6 @@ namespace iText.Layout {
             divParent3.Add(divOrange);
             divOrange.Add(divYellow);
             document.Add(divParent3);
-            // TODO
-            // 1) right floats overflow even if overflow default value is used (which is FIT);
-            // 2) floats completely take floats children occupied area inside own, even if they are bigger than own fixed width;
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff02_sameFixedWidth_"));

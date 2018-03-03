@@ -474,7 +474,6 @@ namespace iText.Layout {
             containerDiv.Add(clearfix);
             document.Add(containerDiv);
             document.Close();
-            // TODO with default overflow behaviour floating elements should not be wider than parents
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff_width01_"));
         }

@@ -148,17 +148,25 @@ namespace iText.Layout.Renderer {
         }
 
         internal static float? AdjustFloatedBlockLayoutBox(AbstractRenderer renderer, Rectangle parentBBox, float?
-             blockWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
+             blockWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue, OverflowPropertyValue?
+             overflowX) {
             renderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float floatElemWidth;
+            bool overflowFit = overflowX == null || overflowX.Equals(OverflowPropertyValue.FIT);
             if (blockWidth != null) {
                 floatElemWidth = (float)blockWidth + AbstractRenderer.CalculateAdditionalWidth(renderer);
+                if (overflowFit && floatElemWidth > parentBBox.GetWidth()) {
+                    floatElemWidth = parentBBox.GetWidth();
+                }
             }
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(renderer, floatPropertyValue);
                 float maxWidth = minMaxWidth.GetMaxWidth();
                 if (maxWidth > parentBBox.GetWidth()) {
                     maxWidth = parentBBox.GetWidth();
+                }
+                if (!overflowFit && minMaxWidth.GetMinWidth() > parentBBox.GetWidth()) {
+                    maxWidth = minMaxWidth.GetMinWidth();
                 }
                 floatElemWidth = maxWidth + AbstractRenderer.EPS;
                 blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;

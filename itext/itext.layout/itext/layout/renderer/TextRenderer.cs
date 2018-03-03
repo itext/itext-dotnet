@@ -148,10 +148,12 @@ namespace iText.Layout.Renderer {
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
+            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
-                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue);
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue, 
+                    overflowX);
             }
             UnitValue[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
@@ -195,7 +197,6 @@ namespace iText.Layout.Renderer {
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
-            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowPropertyValue? overflowY = !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent
                 .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
@@ -676,7 +677,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_712();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_713();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -741,8 +742,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_712 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_712() {
+        private sealed class _IGlyphLineFilter_713 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_713() {
             }
 
             public bool Accept(Glyph glyph) {

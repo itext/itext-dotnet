@@ -101,13 +101,16 @@ namespace iText.Layout.Renderer {
             imageWidth = modelElement.GetImageWidth();
             imageHeight = modelElement.GetImageHeight();
             CalculateImageDimensions(layoutBox, t, xObject);
+            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : OverflowPropertyValue.FIT;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 layoutBox.DecreaseHeight(clearHeightCorrection);
-                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, width, floatRendererAreas, floatPropertyValue);
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, width, floatRendererAreas, floatPropertyValue, 
+                    overflowX);
             }
             else {
                 clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, width
@@ -116,8 +119,6 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
-                ) : OverflowPropertyValue.FIT;
             float? declaredMaxHeight = RetrieveMaxHeight();
             OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
                 .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
