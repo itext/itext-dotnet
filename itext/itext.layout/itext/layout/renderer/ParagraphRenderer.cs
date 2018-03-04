@@ -168,13 +168,12 @@ namespace iText.Layout.Renderer {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));
                 float lineIndent = anythingPlaced ? 0 : (float)this.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
-                float childBBoxWidth = layoutBox.GetWidth() - lineIndent;
-                Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox.GetY(), childBBoxWidth, 
-                    layoutBox.GetHeight());
+                Rectangle childLayoutBox = new Rectangle(layoutBox.GetX(), layoutBox.GetY(), layoutBox.GetWidth(), layoutBox
+                    .GetHeight());
                 currentRenderer.SetProperty(Property.OVERFLOW_X, overflowX);
                 currentRenderer.SetProperty(Property.OVERFLOW_Y, overflowY);
                 LineLayoutContext lineLayoutContext = new LineLayoutContext(new LayoutArea(pageNumber, childLayoutBox), null
-                    , floatRendererAreas, wasHeightClipped || wasParentsHeightClipped).SetFloatOverflowedToNextPageWithNothing
+                    , floatRendererAreas, wasHeightClipped || wasParentsHeightClipped).SetTextIndent(lineIndent).SetFloatOverflowedToNextPageWithNothing
                     (floatOverflowedToNextPageWithNothing);
                 LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(lineLayoutContext
                     );
@@ -222,31 +221,28 @@ namespace iText.Layout.Renderer {
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
                     .LEFT);
-                if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.JUSTIFIED && !result.IsSplitForcedByNewline
-                    () || textAlignment == TextAlignment.JUSTIFIED_ALL) {
+                if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
+                    () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
                     if (processedRenderer != null) {
-                        //processedRenderer.justify(layoutBox.getWidth() - lineIndent);
-                        //7.0.5 fix: processedRenderer.justify(result.getMinMaxWidth().getAvailableWidth() - lineIndent);
-                        Rectangle floatBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
-                        processedRenderer.Justify(floatBox.GetWidth() - lineIndent);
+                        Rectangle actualLineLayoutBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                        processedRenderer.Justify(actualLineLayoutBox.GetWidth() - lineIndent);
                     }
                 }
                 else {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        //float deltaX = childBBoxWidth - processedRenderer.getOccupiedArea().getBBox().getWidth();
-                        //7.0.5 fix: float deltaX = result.getMinMaxWidth().getAvailableWidth() - processedRenderer.getOccupiedArea().getBBox().getWidth();
-                        Rectangle floatBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, floatBox);
-                        float deltaX = floatBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                        Rectangle actualLineLayoutBox = layoutBox.Clone();
+                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                        float deltaX = actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox()
+                            .GetWidth();
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
-                                processedRenderer.Move(deltaX, 0);
+                                AlignStaticKids(processedRenderer, deltaX);
                                 break;
                             }
 
                             case TextAlignment.CENTER: {
-                                processedRenderer.Move(deltaX / 2, 0);
+                                AlignStaticKids(processedRenderer, deltaX / 2);
                                 break;
                             }
                         }
@@ -623,6 +619,16 @@ namespace iText.Layout.Renderer {
             float firstLineIndent = (float)overflowRenderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
             if (firstLineIndent != 0) {
                 overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0f);
+            }
+        }
+
+        private void AlignStaticKids(LineRenderer renderer, float dxRight) {
+            renderer.GetOccupiedArea().GetBBox().MoveRight(dxRight);
+            foreach (IRenderer childRenderer in renderer.GetChildRenderers()) {
+                if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                    continue;
+                }
+                childRenderer.Move(dxRight, 0);
             }
         }
     }

@@ -11,6 +11,8 @@ namespace iText.Layout.Layout {
     public class LineLayoutContext : LayoutContext {
         private bool floatOverflowedToNextPageWithNothing = false;
 
+        private float textIndent;
+
         public LineLayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
             , bool clippedHeight)
             : base(area, marginsCollapseInfo, floatedRendererAreas, clippedHeight) {
@@ -45,6 +47,24 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.LineLayoutContext SetFloatOverflowedToNextPageWithNothing(bool floatOverflowedToNextPageWithNothing
             ) {
             this.floatOverflowedToNextPageWithNothing = floatOverflowedToNextPageWithNothing;
+            return this;
+        }
+
+        /// <summary>Gets the indent of text in the beginning of the current line.</summary>
+        /// <returns>the indent of text in this line.</returns>
+        public virtual float GetTextIndent() {
+            return textIndent;
+        }
+
+        /// <summary>Sets the indent of text in the beginning of the current line.</summary>
+        /// <param name="textIndent">the indent of text in this line.</param>
+        /// <returns>
+        /// this
+        /// <see cref="LineLayoutContext"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Layout.Layout.LineLayoutContext SetTextIndent(float textIndent) {
+            this.textIndent = textIndent;
             return this;
         }
     }

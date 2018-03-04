@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -56,6 +57,12 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/FloatAndAlignmentTest/";
+
+        private static String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+             + "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
+             + "laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+             + "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa "
+             + "qui officia deserunt mollit anim id est laborum.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -312,7 +319,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1732: Float is moved outside the page boundaries.")]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest01() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest01";
             String outFileName = destinationFolder + testName + ".pdf";
@@ -335,7 +341,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1732: floating element is misplaced when justification is applied.")]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest02() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest02";
             String outFileName = destinationFolder + testName + ".pdf";
@@ -353,7 +358,85 @@ namespace iText.Layout {
             document.Add(parentPara.SetBorder(new DashedBorder(2)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diffTextAlign01_"));
+                , "diffTextAlign02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest03() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest03";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            // making an inline float a last element in the line
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add("Text begin").Add(new Div().Add(new Paragraph("div text").SetBorder(new SolidBorder(2)))).Add
+                ("MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. "
+                ).Add(floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants.GREEN
+                , 2))).Add("MoretextMoretextMoretext.");
+            document.Add(parentPara.SetBorder(new DashedBorder(2)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest04() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest04";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            try {
+                using (PdfWriter writer = new PdfWriter(outFileName)) {
+                    using (PdfDocument pdfDocument = new PdfDocument(writer)) {
+                        pdfDocument.SetDefaultPageSize(PageSize.A5);
+                        using (Document document = new Document(pdfDocument)) {
+                            Table table2 = new Table(1).SetWidth(150f).SetBorder(new SolidBorder(1f)).SetMargin(5f).SetHorizontalAlignment
+                                (HorizontalAlignment.LEFT).AddCell(new Cell().Add(new Paragraph(text.JSubstring(0, text.Length / 2))));
+                            table2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                            document.Add(table2);
+                            document.Add(new Paragraph(text).SetTextAlignment(TextAlignment.JUSTIFIED));
+                            Table table3 = new Table(1).SetWidth(150f).SetBorder(new SolidBorder(1f)).SetMargin(5f).SetHorizontalAlignment
+                                (HorizontalAlignment.RIGHT).AddCell(new Cell().Add(new Paragraph(text.JSubstring(0, text.Length / 2)))
+                                );
+                            table3.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                            document.Add(table3);
+                            document.Add(new Paragraph(text).SetTextAlignment(TextAlignment.JUSTIFIED));
+                        }
+                    }
+                }
+            }
+            catch (Exception) {
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnlyJustificationTest01() {
+            String testName = "floatsOnlyJustificationTest01";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add(floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants
+                .GREEN, 2)));
+            document.Add(parentPara.SetBorder(new DashedBorder(2)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
         }
 
         private Div CreateParentDiv(HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue
