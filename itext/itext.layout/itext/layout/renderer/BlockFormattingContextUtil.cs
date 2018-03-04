@@ -20,6 +20,21 @@ namespace iText.Layout.Renderer {
     /// for more info.
     /// </remarks>
     public class BlockFormattingContextUtil {
+        /// <summary>Defines whether a renderer creates a new "Block formatting context" in terms of CSS.</summary>
+        /// <remarks>
+        /// Defines whether a renderer creates a new "Block formatting context" in terms of CSS.
+        /// <p>
+        /// See
+        /// <see cref="BlockFormattingContextUtil"/>
+        /// class description for more info.
+        /// </remarks>
+        /// <param name="renderer">
+        /// an
+        /// <see cref="IRenderer"/>
+        /// to be checked.
+        /// </param>
+        /// <returns>true if given renderer creates a new "Block formatting context" in terms of CSS, false otherwise.
+        ///     </returns>
         public static bool IsRendererCreateBfc(IRenderer renderer) {
             return (renderer is RootRenderer) || (renderer is CellRenderer) || IsInlineBlock(renderer) || FloatingHelper
                 .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || AbstractRenderer
