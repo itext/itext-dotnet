@@ -1386,6 +1386,13 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float? GetLastYLineRecursively() {
+            OverflowPropertyValue? overflow_x = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflow_y = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            if (overflow_x != null && OverflowPropertyValue.HIDDEN.Equals(overflow_x) || overflow_y != null && OverflowPropertyValue
+                .HIDDEN.Equals(overflow_y)) {
+                // TODO may be this logic should also be based on BlockFormattingContextUtil?
+                return null;
+            }
             for (int i = childRenderers.Count - 1; i >= 0; i--) {
                 IRenderer child = childRenderers[i];
                 if (child is iText.Layout.Renderer.AbstractRenderer) {

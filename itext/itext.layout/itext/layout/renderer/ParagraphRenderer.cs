@@ -531,6 +531,13 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetLastYLineRecursively() {
+            OverflowPropertyValue? overflow_x = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowPropertyValue? overflow_y = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+            if (overflow_x != null && OverflowPropertyValue.HIDDEN.Equals(overflow_x) || overflow_y != null && OverflowPropertyValue
+                .HIDDEN.Equals(overflow_y)) {
+                // TODO may be this logic should also be based on BlockFormattingContextUtil?
+                return null;
+            }
             if (lines == null || lines.Count == 0) {
                 return null;
             }
