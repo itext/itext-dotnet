@@ -2380,6 +2380,34 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void FloatsFixedMaxHeightAndOverflowHidden01() {
+            String cmpFileName = sourceFolder + "cmp_floatsFixedMaxHeightAndOverflowHidden01.pdf";
+            String outFile = destinationFolder + "floatsFixedMaxHeightAndOverflowHidden01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
+            Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
+                (200);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph(text);
+            div.Add(p);
+            parentParagraph.Add(div);
+            parentParagraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+            parentParagraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+            div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            document.Add(parentParagraph);
+            document.Close();
+            // TODO DEVSIX-1818: overflow value HIDDEN doesn't clip floats because they are drawn later in different part of content stream.
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff_maxheighthidden_01_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
             String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph01.pdf";

@@ -163,8 +163,7 @@ namespace iText.Layout.Renderer {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
             }
-            bool includeFloatsInOccupiedArea = FloatingHelper.IsRendererFloating(this, floatPropertyValue);
-            // TODO improve this bool calc
+            bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
             while (currentRenderer != null) {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));

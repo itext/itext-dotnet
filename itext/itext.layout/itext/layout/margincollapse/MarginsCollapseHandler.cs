@@ -461,13 +461,13 @@ namespace iText.Layout.Margincollapse {
 
         // inline block
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
-                (parent) && !HasTopBorders(parent) && !HasTopPadding(parent);
+            return !BlockFormattingContextUtil.IsRendererCreateBfc(parent) && !(parent is TableRenderer) && !HasTopBorders
+                (parent) && !HasTopPadding(parent);
         }
 
         private static bool LastChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
-                (parent) && !HasBottomBorders(parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
+            return !BlockFormattingContextUtil.IsRendererCreateBfc(parent) && !(parent is TableRenderer) && !HasBottomBorders
+                (parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
         }
 
         private static bool IsBlockElement(IRenderer renderer) {

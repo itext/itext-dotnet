@@ -88,6 +88,7 @@ namespace iText.Layout.Renderer {
             if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
+            bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, parentBBox
                 );
             FloatingHelper.ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection, FloatingHelper.IsRendererFloating
@@ -323,7 +324,7 @@ namespace iText.Layout.Renderer {
                 }
                 anythingPlaced = anythingPlaced || result.GetStatus() != LayoutResult.NOTHING;
                 if (result.GetOccupiedArea() != null) {
-                    if (!FloatingHelper.IsRendererFloating(childRenderer)) {
+                    if (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea) {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
@@ -347,7 +348,6 @@ namespace iText.Layout.Renderer {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
             }
-            bool includeFloatsInOccupiedArea = IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this) || isCellRenderer;
             if (includeFloatsInOccupiedArea) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                 FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
