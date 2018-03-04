@@ -748,8 +748,7 @@ namespace iText.Layout.Renderer {
             return wasHeightClipped;
         }
 
-        protected internal virtual AbstractRenderer ApplyMinHeight(OverflowPropertyValue? overflowY, Rectangle layoutBox
-            ) {
+        internal virtual AbstractRenderer ApplyMinHeight(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
             AbstractRenderer overflowRenderer = null;
             float? blockMinHeight = RetrieveMinHeight();
             if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight
