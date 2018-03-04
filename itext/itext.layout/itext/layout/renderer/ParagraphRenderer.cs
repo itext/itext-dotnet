@@ -186,6 +186,13 @@ namespace iText.Layout.Renderer {
                         firstLineInBox = true;
                         continue;
                     }
+                    bool allRemainingKidsAreFloats = !currentRenderer.childRenderers.IsEmpty();
+                    foreach (IRenderer renderer in currentRenderer.childRenderers) {
+                        allRemainingKidsAreFloats = allRemainingKidsAreFloats && FloatingHelper.IsRendererFloating(renderer);
+                    }
+                    if (allRemainingKidsAreFloats) {
+                        onlyOverflowedFloatsLeft = true;
+                    }
                 }
                 floatOverflowedToNextPageWithNothing = lineLayoutContext.IsFloatOverflowedToNextPageWithNothing();
                 if (result.GetFloatsOverflowedToNextPage() != null) {

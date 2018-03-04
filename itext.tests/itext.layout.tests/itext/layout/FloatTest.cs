@@ -2396,7 +2396,6 @@ namespace iText.Layout {
             // On second page there shall be no parent paragraph artifacts: background and borders,
             // since min_height completely fits on first page.
             // Only floating element is overflown to the next page.
-            // TODO not working
             document.Add(mainP);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2420,7 +2419,6 @@ namespace iText.Layout {
             mainP.Add(floatingText);
             // Since it's floats-only split, min_height is expected to be applied fully on the first page (it fits there)
             // and also no parent artifacts (borders, background) shall be drawn on second page.
-            // TODO not working
             document.Add(mainP);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2444,7 +2442,6 @@ namespace iText.Layout {
             mainP.Add(floatingText);
             // Since it's floats-only split, min_height is expected to be applied fully on the first page (it fits there)
             // and also no parent artifacts (borders, background) shall be drawn on second page.
-            // TODO not working
             document.Add(mainP);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
