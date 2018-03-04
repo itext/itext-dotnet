@@ -291,7 +291,7 @@ namespace iText.Layout.Renderer {
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
                     if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
-                        if ((null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX))) {
+                        if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
                             // we will have to split the word anyway.
                             break;
@@ -322,8 +322,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     // check if line height exceeds the allowed height
-                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight() && (null == overflowY ||
-                         OverflowPropertyValue.FIT.Equals(overflowY))) {
+                    if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight() && IsOverflowFit(overflowY
+                        )) {
                         ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                         ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                         ApplyMargins(occupiedArea.GetBBox(), margins, true);
@@ -387,13 +387,12 @@ namespace iText.Layout.Renderer {
                                 line.start = currentTextPos;
                             }
                             if (!crlf) {
-                                currentTextPos = (forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
-                                    )) ? firstCharacterWhichExceedsAllowedWidth : nonBreakablePartEnd + 1;
+                                currentTextPos = (forcePartialSplitOnFirstChar || IsOverflowFit(overflowX)) ? firstCharacterWhichExceedsAllowedWidth
+                                     : nonBreakablePartEnd + 1;
                             }
                             line.end = Math.Max(line.end, currentTextPos);
                             wordSplit = !forcePartialSplitOnFirstChar && (text.end != currentTextPos);
-                            if (wordSplit || !(forcePartialSplitOnFirstChar || null == overflowX || OverflowPropertyValue.FIT.Equals(overflowX
-                                ))) {
+                            if (wordSplit || !(forcePartialSplitOnFirstChar || IsOverflowFit(overflowX))) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
@@ -427,8 +426,7 @@ namespace iText.Layout.Renderer {
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
             if (currentLineHeight > layoutBox.GetHeight()) {
-                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (null == overflowY || OverflowPropertyValue
-                    .FIT.Equals(overflowY))) {
+                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && IsOverflowFit(overflowY)) {
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);

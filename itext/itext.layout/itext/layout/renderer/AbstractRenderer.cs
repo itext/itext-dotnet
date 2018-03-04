@@ -958,6 +958,25 @@ namespace iText.Layout.Renderer {
             return boxSizing != null && boxSizing.Equals(BoxSizingPropertyValue.BORDER_BOX);
         }
 
+        internal virtual bool IsOverflowProperty(OverflowPropertyValue? equalsTo, int overflowProperty) {
+            return IsOverflowProperty(equalsTo, this.GetProperty<OverflowPropertyValue?>(overflowProperty));
+        }
+
+        internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, IRenderer renderer, int overflowProperty
+            ) {
+            return IsOverflowProperty(equalsTo, renderer.GetProperty<OverflowPropertyValue?>(overflowProperty));
+        }
+
+        internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, OverflowPropertyValue? rendererOverflowProperty
+            ) {
+            return equalsTo.Equals(rendererOverflowProperty) || equalsTo.Equals(OverflowPropertyValue.FIT) && rendererOverflowProperty
+                 == null;
+        }
+
+        internal static bool IsOverflowFit(OverflowPropertyValue? rendererOverflowProperty) {
+            return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
+        }
+
         internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, IList<IRenderer> waitingDrawing
             ) {
             if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
@@ -1386,10 +1405,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float? GetLastYLineRecursively() {
-            OverflowPropertyValue? overflow_x = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflow_y = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            if (overflow_x != null && OverflowPropertyValue.HIDDEN.Equals(overflow_x) || overflow_y != null && OverflowPropertyValue
-                .HIDDEN.Equals(overflow_y)) {
+            if (IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) || IsOverflowProperty(OverflowPropertyValue
+                .HIDDEN, Property.OVERFLOW_Y)) {
                 // TODO may be this logic should also be based on BlockFormattingContextUtil?
                 return null;
             }

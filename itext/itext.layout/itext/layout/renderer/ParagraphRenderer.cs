@@ -276,8 +276,7 @@ namespace iText.Layout.Renderer {
                     doesNotFit = leading != null && processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY < layoutBox.
                         GetY();
                 }
-                if (doesNotFit && (null == processedRenderer || null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY
-                    ))) {
+                if (doesNotFit && (null == processedRenderer || IsOverflowFit(overflowY))) {
                     if (currentAreaPos + 1 < areas.Count) {
                         layoutBox = areas[++currentAreaPos].Clone();
                         lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
@@ -403,8 +402,7 @@ namespace iText.Layout.Renderer {
             }
             // dummy renderer to trick paragraph renderer to continue kids loop
             float moveDown = lastLineBottomLeadingIndent;
-            if ((null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY)) && moveDown > occupiedArea.GetBBox(
-                ).GetY() - layoutBox.GetY()) {
+            if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
                 moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();
             }
             occupiedArea.GetBBox().MoveDown(moveDown);
@@ -531,10 +529,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetLastYLineRecursively() {
-            OverflowPropertyValue? overflow_x = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflow_y = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            if (overflow_x != null && OverflowPropertyValue.HIDDEN.Equals(overflow_x) || overflow_y != null && OverflowPropertyValue
-                .HIDDEN.Equals(overflow_y)) {
+            if (IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) || IsOverflowProperty(OverflowPropertyValue
+                .HIDDEN, Property.OVERFLOW_Y)) {
                 // TODO may be this logic should also be based on BlockFormattingContextUtil?
                 return null;
             }

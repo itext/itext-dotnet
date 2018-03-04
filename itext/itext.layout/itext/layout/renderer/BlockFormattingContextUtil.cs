@@ -22,8 +22,9 @@ namespace iText.Layout.Renderer {
     public class BlockFormattingContextUtil {
         public static bool IsRendererCreateBfc(IRenderer renderer) {
             return (renderer is RootRenderer) || (renderer is CellRenderer) || IsInlineBlock(renderer) || FloatingHelper
-                .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || IsOverflowHidden
-                (renderer);
+                .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || AbstractRenderer
+                .IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_X) || AbstractRenderer.IsOverflowProperty
+                (OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_Y);
         }
 
         private static bool IsInlineBlock(IRenderer renderer) {
@@ -38,20 +39,6 @@ namespace iText.Layout.Renderer {
         private static bool IsFixedPosition(IRenderer renderer) {
             int? positioning = NumberUtil.AsInteger(renderer.GetProperty<Object>(Property.POSITION));
             return Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
-        }
-
-        private static bool IsOverflowHidden(IRenderer renderer) {
-            OverflowPropertyValue? overflow = renderer.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW);
-            OverflowPropertyValue? overflowX = renderer.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = renderer.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            if (overflowX == null) {
-                overflowX = overflow;
-            }
-            if (overflowY == null) {
-                overflowY = overflow;
-            }
-            return overflowX != null && OverflowPropertyValue.HIDDEN.Equals(overflowX) || overflowY != null && OverflowPropertyValue
-                .HIDDEN.Equals(overflowY);
         }
     }
 }

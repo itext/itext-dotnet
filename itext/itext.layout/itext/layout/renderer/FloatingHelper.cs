@@ -154,7 +154,7 @@ namespace iText.Layout.Renderer {
              overflowX) {
             renderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float floatElemWidth;
-            bool overflowFit = overflowX == null || overflowX.Equals(OverflowPropertyValue.FIT);
+            bool overflowFit = AbstractRenderer.IsOverflowFit(overflowX);
             if (blockWidth != null) {
                 floatElemWidth = (float)blockWidth + AbstractRenderer.CalculateAdditionalWidth(renderer);
                 if (overflowFit && floatElemWidth > parentBBox.GetWidth()) {

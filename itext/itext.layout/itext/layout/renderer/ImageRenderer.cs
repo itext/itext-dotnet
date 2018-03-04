@@ -123,8 +123,8 @@ namespace iText.Layout.Renderer {
             OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
                 .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
                 >(Property.OVERFLOW_Y);
-            bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
-            bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
+            bool processOverflowX = !IsOverflowFit(overflowX);
+            bool processOverflowY = !IsOverflowFit(overflowY);
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }

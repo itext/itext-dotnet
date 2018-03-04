@@ -503,20 +503,19 @@ namespace iText.Layout.Renderer {
             }
             BeginElementOpacityApplying(drawContext);
             BeginRotationIfApplied(drawContext.GetCanvas());
-            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            bool processOverflow = OverflowPropertyValue.HIDDEN.Equals(overflowX) || OverflowPropertyValue.HIDDEN.Equals
-                (overflowY);
+            bool overflowXHidden = IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X);
+            bool overflowYHidden = IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_Y);
+            bool processOverflow = overflowXHidden || overflowYHidden;
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
                 Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
                 Rectangle area = GetBorderAreaBBox();
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowX)) {
+                if (overflowXHidden) {
                     clippedArea.SetX(area.GetX()).SetWidth(area.GetWidth());
                 }
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowY)) {
+                if (overflowYHidden) {
                     clippedArea.SetY(area.GetY()).SetHeight(area.GetHeight());
                 }
                 drawContext.GetCanvas().Rectangle(clippedArea).Clip().NewPath();
@@ -717,8 +716,8 @@ namespace iText.Layout.Renderer {
             // maxWidth has already taken in attention in blockWidth,
             // therefore only `parentBBox > minWidth` needs to be checked.
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (null
-                 != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX)))) {
+            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (!IsOverflowFit
+                (overflowX)))) {
                 parentBBox.SetWidth((float)blockWidth);
             }
             else {
@@ -732,8 +731,7 @@ namespace iText.Layout.Renderer {
 
         internal virtual bool ApplyMaxHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
             , bool isCellRenderer, bool wasParentsHeightClipped, OverflowPropertyValue? overflowY) {
-            if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (null == overflowY || OverflowPropertyValue
-                .FIT.Equals(overflowY)))) {
+            if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (IsOverflowFit(overflowY)))) {
                 return false;
             }
             bool wasHeightClipped = false;
@@ -759,8 +757,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }
                 else {
-                    bool overflowFit = null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY);
-                    if (overflowFit && blockBottom < layoutBox.GetBottom()) {
+                    if (IsOverflowFit(overflowY) && blockBottom < layoutBox.GetBottom()) {
                         float hDelta = occupiedArea.GetBBox().GetBottom() - layoutBox.GetBottom();
                         occupiedArea.GetBBox().IncreaseHeight(hDelta).SetY(layoutBox.GetBottom());
                         if (occupiedArea.GetBBox().GetHeight() < 0) {
@@ -784,7 +781,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
-            if (overflowX == null || OverflowPropertyValue.FIT.Equals(overflowX)) {
+            if (IsOverflowFit(overflowX)) {
                 return;
             }
             if ((occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() || occupiedArea.GetBBox().GetLeft() < layoutBox
@@ -794,7 +791,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void FixOccupiedAreaIfOverflowedY(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
-            if (overflowY == null || OverflowPropertyValue.FIT.Equals(overflowY)) {
+            if (IsOverflowFit(overflowY)) {
                 return;
             }
             if (occupiedArea.GetBBox().GetBottom() < layoutBox.GetBottom()) {

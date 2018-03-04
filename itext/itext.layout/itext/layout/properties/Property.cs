@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -238,6 +240,8 @@ namespace iText.Layout.Properties {
 
         public const int OUTLINE_OFFSET = 107;
 
+        [System.ObsoleteAttribute(@"Use OVERFLOW_X and/or OVERFLOW_Y instead. The OVERFLOW property doesn't have any affect and will be removed in iText 7.2"
+            )]
         public const int OVERFLOW = 102;
 
         public const int OVERFLOW_X = 103;
