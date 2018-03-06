@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Util {
@@ -54,6 +56,8 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
     public sealed class TextUtil {
+
+        public const int CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT = 0x010000;
 
         private static HashSet<char> javaNonUnicodeCategoryWhiteSpaceChars = new HashSet<char> {
                 '\t', //  U+0009 HORIZONTAL TABULATION
@@ -288,5 +292,32 @@ namespace iText.IO.Util {
             return IsWhiteSpace((char)code) || IsNonPrintable(code);
         }
 
+        public static char[] ToChars(int codePoint)
+        {
+            return char.ConvertFromUtf32(codePoint).ToCharArray();
+        }
+
+        public static int CharCount(int codePoint)
+        {
+            return codePoint >= CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT ? 2 : 1;
+        }
+
+        public static Encoding NewEncoder(Encoding charset)
+        {
+            return charset;
+        }
+
+        public static bool CharsetIsSupported(string charset)
+        {
+            try
+            {
+                var enc = EncodingUtil.GetEncoding(charset);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
     }
 }
