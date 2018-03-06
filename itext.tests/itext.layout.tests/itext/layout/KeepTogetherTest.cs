@@ -201,5 +201,34 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherDefaultTest01() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherDefaultTest01.pdf";
+            String outFile = destinationFolder + "keepTogetherDefaultTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            Div div = new KeepTogetherTest.KeepTogetherDiv();
+            doc.Add(new Paragraph("first string"));
+            for (int i = 0; i < 130; i++) {
+                div.Add(new Paragraph("String number " + i));
+            }
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        private class KeepTogetherDiv : Div {
+            public override T1 GetDefaultProperty<T1>(int property) {
+                if (property == Property.KEEP_TOGETHER) {
+                    return (T1)(Object)true;
+                }
+                return base.GetDefaultProperty<T1>(property);
+            }
+        }
     }
 }

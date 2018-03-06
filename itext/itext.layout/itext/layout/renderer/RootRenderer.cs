@@ -187,9 +187,14 @@ namespace iText.Layout.Renderer {
                                             .KEEP_TOGETHER))) {
                                             // set KEEP_TOGETHER false on the deepest parent (maybe the element itself) to have KEEP_TOGETHER == true
                                             IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
+                                            IRenderer parent;
                                             while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
                                                 ).GetOwnProperty<bool?>(Property.KEEP_TOGETHER)) {
-                                                theDeepestKeptTogether = ((AbstractRenderer)theDeepestKeptTogether).parent;
+                                                parent = ((AbstractRenderer)theDeepestKeptTogether).parent;
+                                                if (parent == null) {
+                                                    break;
+                                                }
+                                                theDeepestKeptTogether = parent;
                                             }
                                             theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                             ILog logger = LogManager.GetLogger(typeof(RootRenderer));
