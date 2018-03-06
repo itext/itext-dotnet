@@ -1288,6 +1288,7 @@ namespace iText.Forms.Fields {
             field.text = caption;
             field.font = font;
             field.fontSize = fontSize;
+            field.backgroundColor = ColorConstants.LIGHT_GRAY;
             PdfFormXObject xObject = field.DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), caption, font, 
                 fontSize);
             annot.SetNormalAppearance(xObject.GetPdfObject());
@@ -2437,7 +2438,11 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>backgroundColor</code> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
-        /// <param name="backgroundColor">The new color to be set</param>
+        /// <param name="backgroundColor">
+        /// The new color to be set or
+        /// <see langword="null"/>
+        /// if no background needed
+        /// </param>
         /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
@@ -2445,7 +2450,12 @@ namespace iText.Forms.Fields {
             if (mk == null) {
                 mk = new PdfDictionary();
             }
-            mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+            if (backgroundColor == null) {
+                mk.Remove(PdfName.BG);
+            }
+            else {
+                mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+            }
             RegenerateField();
             return this;
         }
@@ -3727,9 +3737,6 @@ namespace iText.Forms.Fields {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            if (backgroundColor == null) {
-                backgroundColor = ColorConstants.LIGHT_GRAY;
-            }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
                 PdfImageXObject imgXObj = new PdfImageXObject(img);
