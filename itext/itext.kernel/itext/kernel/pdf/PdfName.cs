@@ -274,6 +274,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BorderThickness = CreateDirectName("BorderThickness");
 
+        public static readonly iText.Kernel.Pdf.PdfName Both = CreateDirectName("Both");
+
         public static readonly iText.Kernel.Pdf.PdfName Bounds = CreateDirectName("Bounds");
 
         public static readonly iText.Kernel.Pdf.PdfName BS = CreateDirectName("BS");
@@ -377,6 +379,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName ColorSpace = CreateDirectName("ColorSpace");
 
         public static readonly iText.Kernel.Pdf.PdfName ColorTransform = CreateDirectName("ColorTransform");
+
+        public static readonly iText.Kernel.Pdf.PdfName Column = CreateDirectName("Column");
 
         public static readonly iText.Kernel.Pdf.PdfName Columns = CreateDirectName("Columns");
 
@@ -1354,6 +1358,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Root = CreateDirectName("Root");
 
         public static readonly iText.Kernel.Pdf.PdfName Rotate = CreateDirectName("Rotate");
+
+        public static readonly iText.Kernel.Pdf.PdfName Row = CreateDirectName("Row");
 
         public static readonly iText.Kernel.Pdf.PdfName Rows = CreateDirectName("Rows");
 
