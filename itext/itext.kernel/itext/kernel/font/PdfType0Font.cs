@@ -277,8 +277,8 @@ namespace iText.Kernel.Font {
             else {
                 for (int k = 0; k < len; ++k) {
                     int val;
-                    if (TextUtil.IsSurrogatePair(text, k)) {
-                        val = TextUtil.ConvertToUtf32(text, k);
+                    if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                        val = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                         k++;
                     }
                     else {
@@ -352,8 +352,8 @@ namespace iText.Kernel.Font {
                 else {
                     for (int k = 0; k < len; ++k) {
                         int ch;
-                        if (TextUtil.IsSurrogatePair(content, k)) {
-                            ch = TextUtil.ConvertToUtf32(content, k);
+                        if (iText.IO.Util.TextUtil.IsSurrogatePair(content, k)) {
+                            ch = iText.IO.Util.TextUtil.ConvertToUtf32(content, k);
                             k++;
                         }
                         else {
@@ -379,8 +379,8 @@ namespace iText.Kernel.Font {
                     else {
                         for (int k = 0; k < len; ++k) {
                             int val;
-                            if (TextUtil.IsSurrogatePair(content, k)) {
-                                val = TextUtil.ConvertToUtf32(content, k);
+                            if (iText.IO.Util.TextUtil.IsSurrogatePair(content, k)) {
+                                val = iText.IO.Util.TextUtil.ConvertToUtf32(content, k);
                                 k++;
                             }
                             else {
@@ -448,8 +448,8 @@ namespace iText.Kernel.Font {
             for (int k = from; k <= to; ++k) {
                 int val;
                 int currentlyProcessed = processed;
-                if (TextUtil.IsSurrogatePair(text, k)) {
-                    val = TextUtil.ConvertToUtf32(text, k);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                    val = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                     processed += 2;
                 }
                 else {
@@ -479,8 +479,8 @@ namespace iText.Kernel.Font {
                 }
                 else {
                     int ch;
-                    if (TextUtil.IsSurrogatePair(text, from)) {
-                        ch = TextUtil.ConvertToUtf32(text, from);
+                    if (iText.IO.Util.TextUtil.IsSurrogatePair(text, from)) {
+                        ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, from);
                         process = 2;
                     }
                     else {
@@ -503,8 +503,8 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         int ch;
-                        if (TextUtil.IsSurrogatePair(text, from)) {
-                            ch = TextUtil.ConvertToUtf32(text, from);
+                        if (iText.IO.Util.TextUtil.IsSurrogatePair(text, from)) {
+                            ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, from);
                             process = 2;
                         }
                         else {
@@ -524,7 +524,7 @@ namespace iText.Kernel.Font {
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.
-            return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
+            return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
         public override String Decode(PdfString content) {

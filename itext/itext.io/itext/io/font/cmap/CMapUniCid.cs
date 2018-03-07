@@ -53,8 +53,8 @@ namespace iText.IO.Font.Cmap {
             if (code.IsNumber()) {
                 int codePoint;
                 String s = ToUnicodeString(mark, true);
-                if (TextUtil.IsSurrogatePair(s, 0)) {
-                    codePoint = TextUtil.ConvertToUtf32(s, 0);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(s, 0)) {
+                    codePoint = iText.IO.Util.TextUtil.ConvertToUtf32(s, 0);
                 }
                 else {
                     codePoint = (int)s[0];
@@ -71,11 +71,11 @@ namespace iText.IO.Font.Cmap {
             CMapToUnicode uni = new CMapToUnicode();
             int[] keys = map.ToOrderedKeys();
             foreach (int key in keys) {
-                uni.AddChar(map.Get(key), TextUtil.ConvertFromUtf32(key));
+                uni.AddChar(map.Get(key), iText.IO.Util.TextUtil.ConvertFromUtf32(key));
             }
             int spaceCid = Lookup(32);
             if (spaceCid != 0) {
-                uni.AddChar(spaceCid, TextUtil.ConvertFromUtf32(32));
+                uni.AddChar(spaceCid, iText.IO.Util.TextUtil.ConvertFromUtf32(32));
             }
             return uni;
         }

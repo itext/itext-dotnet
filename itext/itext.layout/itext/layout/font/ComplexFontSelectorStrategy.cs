@@ -84,8 +84,8 @@ namespace iText.Layout.Font {
             if (nextUnignorable < text.Length) {
                 foreach (FontInfo f in selector.GetFonts()) {
                     PdfFont currentFont = GetPdfFont(f);
-                    int codePoint = IsSurrogatePair(text, nextUnignorable) ? TextUtil.ConvertToUtf32(text, nextUnignorable) : 
-                        (int)text[nextUnignorable];
+                    int codePoint = IsSurrogatePair(text, nextUnignorable) ? iText.IO.Util.TextUtil.ConvertToUtf32(text, nextUnignorable
+                        ) : (int)text[nextUnignorable];
                     Glyph glyph = currentFont.GetGlyph(codePoint);
                     if (null != glyph && 0 != glyph.GetCode()) {
                         font = currentFont;
@@ -99,7 +99,7 @@ namespace iText.Layout.Font {
                 UnicodeScript? unicodeScript = NextSignificantUnicodeScript(nextUnignorable);
                 int to = nextUnignorable;
                 for (int i = nextUnignorable; i < text.Length; i++) {
-                    int codePoint = IsSurrogatePair(text, i) ? TextUtil.ConvertToUtf32(text, i) : (int)text[i];
+                    int codePoint = IsSurrogatePair(text, i) ? iText.IO.Util.TextUtil.ConvertToUtf32(text, i) : (int)text[i];
                     UnicodeScript? currScript = UnicodeScriptUtil.Of(codePoint);
                     if (IsSignificantUnicodeScript(currScript) && currScript != unicodeScript) {
                         break;
@@ -129,7 +129,7 @@ namespace iText.Layout.Font {
         private int NextSignificantIndex() {
             int nextValidChar = index;
             for (; nextValidChar < text.Length; nextValidChar++) {
-                if (!TextUtil.IsWhitespaceOrNonPrintable(text[nextValidChar])) {
+                if (!iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(text[nextValidChar])) {
                     break;
                 }
             }
@@ -140,7 +140,7 @@ namespace iText.Layout.Font {
             for (int i = from; i < text.Length; i++) {
                 int codePoint;
                 if (IsSurrogatePair(text, i)) {
-                    codePoint = TextUtil.ConvertToUtf32(text, i);
+                    codePoint = iText.IO.Util.TextUtil.ConvertToUtf32(text, i);
                     i++;
                 }
                 else {
@@ -161,8 +161,8 @@ namespace iText.Layout.Font {
 
         //This method doesn't perform additional checks if compare with TextUtil#isSurrogatePair()
         private static bool IsSurrogatePair(String text, int idx) {
-            return TextUtil.IsSurrogateHigh(text[idx]) && idx < text.Length - 1 && TextUtil.IsSurrogateLow(text[idx + 
-                1]);
+            return iText.IO.Util.TextUtil.IsSurrogateHigh(text[idx]) && idx < text.Length - 1 && iText.IO.Util.TextUtil
+                .IsSurrogateLow(text[idx + 1]);
         }
     }
 }

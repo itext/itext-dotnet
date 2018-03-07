@@ -53,8 +53,8 @@ namespace iText.IO.Font.Cmap {
             if (code.IsNumber()) {
                 int codePoint;
                 String s = ToUnicodeString(mark, true);
-                if (TextUtil.IsSurrogatePair(s, 0)) {
-                    codePoint = TextUtil.ConvertToUtf32(s, 0);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(s, 0)) {
+                    codePoint = iText.IO.Util.TextUtil.ConvertToUtf32(s, 0);
                 }
                 else {
                     codePoint = (int)s[0];

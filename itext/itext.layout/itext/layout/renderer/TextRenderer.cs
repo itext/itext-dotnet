@@ -229,7 +229,7 @@ namespace iText.Layout.Renderer {
                 float nonBreakablePartMaxHeight = 0;
                 int firstCharacterWhichExceedsAllowedWidth = -1;
                 for (int ind = currentTextPos; ind < text.end; ind++) {
-                    if (TextUtil.IsNewLine(text.Get(ind))) {
+                    if (iText.IO.Util.TextUtil.IsNewLine(text.Get(ind))) {
                         wordBreakGlyphAtLineEnding = text.Get(ind);
                         isSplitForcedByNewLine = true;
                         firstCharacterWhichExceedsAllowedWidth = ind + 1;
@@ -243,7 +243,7 @@ namespace iText.Layout.Renderer {
                         if (line.start == -1) {
                             line.start = currentTextPos;
                         }
-                        crlf = TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos);
+                        crlf = iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos);
                         if (crlf) {
                             currentTextPos++;
                         }
@@ -252,7 +252,7 @@ namespace iText.Layout.Renderer {
                     }
                     Glyph currentGlyph = text.Get(ind);
                     if (NoPrint(currentGlyph)) {
-                        if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind + 1) && TextUtil.IsSpaceOrWhitespace
+                        if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace
                             (text.Get(ind + 1))) {
                             nonBreakablePartEnd = ind;
                             break;
@@ -272,7 +272,7 @@ namespace iText.Layout.Renderer {
                     if ((nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition) > layoutBox
                         .GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
-                        if (TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
+                        if (iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
                             wordBreakGlyphAtLineEnding = currentGlyph;
                             if (ind == firstPrintPos) {
                                 forcePartialSplitOnFirstChar = true;
@@ -298,7 +298,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
-                        (text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
+                        (text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
                         nonBreakablePartEnd = ind;
                         break;
                     }
@@ -659,7 +659,7 @@ namespace iText.Layout.Renderer {
                         //
                         // For PdfType0Font we must add word manually with glyph offsets
                         for (int gInd = line.start; gInd < line.end; gInd++) {
-                            if (TextUtil.IsUni0020(line.Get(gInd))) {
+                            if (iText.IO.Util.TextUtil.IsUni0020(line.Get(gInd))) {
                                 short advance = (short)(iText.Layout.Renderer.TextRenderer.TEXT_SPACE_COEFF * (float)wordSpacing / fontSize
                                     .GetValue());
                                 Glyph copy = new Glyph(line.Get(gInd));
@@ -782,8 +782,8 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             if (text != null) {
                 Glyph glyph;
-                while (text.start < text.end && TextUtil.IsWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
-                    (glyph)) {
+                while (text.start < text.end && iText.IO.Util.TextUtil.IsWhitespace(glyph = text.Get(text.start)) && !iText.IO.Util.TextUtil
+                    .IsNewLine(glyph)) {
                     text.start++;
                 }
             }
@@ -806,7 +806,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!TextUtil.IsWhitespace(currentGlyph)) {
+                if (!iText.IO.Util.TextUtil.IsWhitespace(currentGlyph)) {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
@@ -956,7 +956,7 @@ namespace iText.Layout.Renderer {
         }
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
-            if (TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos)) {
+            if (iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos)) {
                 return Split(currentTextPos + 2);
             }
             else {
@@ -1196,7 +1196,7 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             int c = g.GetUnicode();
-            return TextUtil.IsNonPrintable(c);
+            return iText.IO.Util.TextUtil.IsNonPrintable(c);
         }
 
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing
@@ -1236,7 +1236,7 @@ namespace iText.Layout.Renderer {
         private int[] GetWordBoundsForHyphenation(GlyphLine text, int leftTextPos, int rightTextPos, int wordMiddleCharPos
             ) {
             while (wordMiddleCharPos >= leftTextPos && !IsGlyphPartOfWordForHyphenation(text.Get(wordMiddleCharPos)) &&
-                 !TextUtil.IsUni0020(text.Get(wordMiddleCharPos))) {
+                 !iText.IO.Util.TextUtil.IsUni0020(text.Get(wordMiddleCharPos))) {
                 wordMiddleCharPos--;
             }
             if (wordMiddleCharPos >= leftTextPos) {
@@ -1280,7 +1280,7 @@ namespace iText.Layout.Renderer {
 
         private void SaveWordBreakIfNotYetSaved(Glyph wordBreak) {
             if (savedWordBreakAtLineEnding == null) {
-                if (TextUtil.IsNewLine(wordBreak)) {
+                if (iText.IO.Util.TextUtil.IsNewLine(wordBreak)) {
                     wordBreak = font.GetGlyph('\u0020');
                 }
                 // we don't want to print '\n' in content stream

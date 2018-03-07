@@ -225,7 +225,7 @@ namespace iText.IO.Font {
         /// could be encoded.
         /// </returns>
         public virtual bool CanEncode(int unicode) {
-            return unicodeToCode.ContainsKey(unicode) || TextUtil.IsNonPrintable(unicode);
+            return unicodeToCode.ContainsKey(unicode) || iText.IO.Util.TextUtil.IsNonPrintable(unicode);
         }
 
         /// <summary>

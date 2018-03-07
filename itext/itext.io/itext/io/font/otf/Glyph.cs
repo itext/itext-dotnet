@@ -347,7 +347,7 @@ namespace iText.IO.Font.Otf {
         }
 
         private static char[] GetChars(int unicode) {
-            return unicode > -1 ? TextUtil.ConvertFromUtf32(unicode) : null;
+            return unicode > -1 ? iText.IO.Util.TextUtil.ConvertFromUtf32(unicode) : null;
         }
     }
 }

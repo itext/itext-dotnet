@@ -559,7 +559,7 @@ namespace iText.Layout.Renderer {
                         if (child is TextRenderer) {
                             GlyphLine childLine = ((TextRenderer)child).line;
                             for (int i = childLine.start; i < childLine.end; i++) {
-                                if (TextUtil.IsNewLine(childLine.Get(i))) {
+                                if (iText.IO.Util.TextUtil.IsNewLine(childLine.Get(i))) {
                                     newLineFound = true;
                                     break;
                                 }
@@ -607,8 +607,8 @@ namespace iText.Layout.Renderer {
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
                             while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer) {
                                 if (pos + 1 < lineGlyphs.Count) {
-                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1].glyph) && !TextUtil
-                                        .IsSpaceOrWhitespace(lineGlyphs[pos].glyph)) {
+                                    if (reorder[pos] == reorder[pos + 1] + 1 && !iText.IO.Util.TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1
+                                        ].glyph) && !iText.IO.Util.TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos].glyph)) {
                                         reversed = true;
                                     }
                                     else {
@@ -1199,7 +1199,7 @@ namespace iText.Layout.Renderer {
                         GlyphLine text = ((TextRenderer)child).GetText();
                         for (int i = text.start; i < text.end; i++) {
                             Glyph glyph = text.Get(i);
-                            if (TextUtil.IsNewLine(glyph)) {
+                            if (iText.IO.Util.TextUtil.IsNewLine(glyph)) {
                                 newLineFound = true;
                                 break;
                             }
