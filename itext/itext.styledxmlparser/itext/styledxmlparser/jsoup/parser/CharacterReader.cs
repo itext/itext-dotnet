@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
@@ -195,7 +196,7 @@ OUTER_break: ;
             int remaining = length;
             char[] val = input;
             while (pos < remaining) {
-                if (iText.IO.Util.JavaUtil.ArraysBinarySearch(chars, val[pos]) >= 0) {
+                if (JavaUtil.ArraysBinarySearch(chars, val[pos]) >= 0) {
                     break;
                 }
                 pos++;
@@ -351,7 +352,7 @@ OUTER_break: ;
         }
 
         internal bool MatchesAnySorted(char[] seq) {
-            return !IsEmpty() && iText.IO.Util.JavaUtil.ArraysBinarySearch(seq, input[pos]) >= 0;
+            return !IsEmpty() && JavaUtil.ArraysBinarySearch(seq, input[pos]) >= 0;
         }
 
         internal bool MatchesLetter() {

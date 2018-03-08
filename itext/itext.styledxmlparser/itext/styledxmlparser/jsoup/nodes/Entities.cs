@@ -237,7 +237,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                                     accum.Append('&').Append(map.Get(c)).Append(';');
                                 }
                                 else {
-                                    accum.Append("&#x").Append(iText.IO.Util.JavaUtil.IntegerToHexString(codePoint)).Append(';');
+                                    accum.Append("&#x").Append(JavaUtil.IntegerToHexString(codePoint)).Append(';');
                                 }
                             }
                             break;
@@ -251,7 +251,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                         accum.Append(c);
                     }
                     else {
-                        accum.Append("&#x").Append(iText.IO.Util.JavaUtil.IntegerToHexString(codePoint)).Append(';');
+                        accum.Append("&#x").Append(JavaUtil.IntegerToHexString(codePoint)).Append(';');
                     }
                 }
             }
@@ -347,7 +347,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 throw new MissingResourceException("Error loading entities resource: " + e.Message, "Entities", filename);
             }
             foreach (Object name in properties.Keys) {
-                char? val = (char)System.Convert.ToInt32(properties.GetProperty((String)name), 16);
+                char? val = (char)Convert.ToInt32(properties.GetProperty((String)name), 16);
                 entities.Put((String)name, val);
             }
             return entities;

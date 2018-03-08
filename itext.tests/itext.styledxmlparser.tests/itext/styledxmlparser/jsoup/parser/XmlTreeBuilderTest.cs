@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -181,7 +182,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public virtual void TestCreatesValidProlog() {
             Document document = Document.CreateShell("");
             document.OutputSettings().Syntax(Syntax.xml);
-            document.Charset(iText.IO.Util.EncodingUtil.GetEncoding("utf-8"));
+            document.Charset(EncodingUtil.GetEncoding("utf-8"));
             NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<html>\n" + " <head></head>\n"
                  + " <body></body>\n" + "</html>", document.OuterHtml());
         }

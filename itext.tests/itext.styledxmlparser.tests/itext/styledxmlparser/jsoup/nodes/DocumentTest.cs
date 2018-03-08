@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 
@@ -218,7 +219,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateUtf8() {
             Document doc = CreateHtmlDocument("changeThis");
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            doc.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             String htmlCharsetUTF8 = "<html>\n" + " <head>\n" + "  <meta charset=\"" + charsetUtf8 + "\">\n" + " </head>\n"
                  + " <body></body>\n" + "</html>";
             NUnit.Framework.Assert.AreEqual(htmlCharsetUTF8, doc.ToString());
@@ -232,7 +233,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateIso8859() {
             Document doc = CreateHtmlDocument("changeThis");
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetIso8859));
+            doc.Charset(EncodingUtil.GetEncoding(charsetIso8859));
             String htmlCharsetISO = "<html>\n" + " <head>\n" + "  <meta charset=\"" + charsetIso8859 + "\">\n" + " </head>\n"
                  + " <body></body>\n" + "</html>";
             NUnit.Framework.Assert.AreEqual(htmlCharsetISO, doc.ToString());
@@ -246,7 +247,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateNoCharset() {
             Document docNoCharset = Document.CreateShell("");
             docNoCharset.UpdateMetaCharsetElement(true);
-            docNoCharset.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            docNoCharset.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             NUnit.Framework.Assert.AreEqual(charsetUtf8, docNoCharset.Select("meta[charset]").First().Attr("charset"));
             String htmlCharsetUTF8 = "<html>\n" + " <head>\n" + "  <meta charset=\"" + charsetUtf8 + "\">\n" + " </head>\n"
                  + " <body></body>\n" + "</html>";
@@ -278,7 +279,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void TestMetaCharsetUpdateEnabledAfterCharsetChange() {
             Document doc = CreateHtmlDocument("dontTouch");
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            doc.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             iText.StyledXmlParser.Jsoup.Nodes.Element selectedElement = doc.Select("meta[charset]").First();
             NUnit.Framework.Assert.AreEqual(charsetUtf8, selectedElement.Attr("charset"));
             NUnit.Framework.Assert.IsTrue(doc.Select("meta[name=charset]").IsEmpty());
@@ -288,7 +289,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateCleanup() {
             Document doc = CreateHtmlDocument("dontTouch");
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            doc.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             String htmlCharsetUTF8 = "<html>\n" + " <head>\n" + "  <meta charset=\"" + charsetUtf8 + "\">\n" + " </head>\n"
                  + " <body></body>\n" + "</html>";
             NUnit.Framework.Assert.AreEqual(htmlCharsetUTF8, doc.ToString());
@@ -298,7 +299,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateXmlUtf8() {
             Document doc = CreateXmlDocument("1.0", "changeThis", true);
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            doc.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\"?>\n" + "<root>\n" + " node\n"
                  + "</root>";
             NUnit.Framework.Assert.AreEqual(xmlCharsetUTF8, doc.ToString());
@@ -312,7 +313,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateXmlIso8859() {
             Document doc = CreateXmlDocument("1.0", "changeThis", true);
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetIso8859));
+            doc.Charset(EncodingUtil.GetEncoding(charsetIso8859));
             String xmlCharsetISO = "<?xml version=\"1.0\" encoding=\"" + charsetIso8859 + "\"?>\n" + "<root>\n" + " node\n"
                  + "</root>";
             NUnit.Framework.Assert.AreEqual(xmlCharsetISO, doc.ToString());
@@ -326,7 +327,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestMetaCharsetUpdateXmlNoCharset() {
             Document doc = CreateXmlDocument("1.0", "none", false);
             doc.UpdateMetaCharsetElement(true);
-            doc.Charset(iText.IO.Util.EncodingUtil.GetEncoding(charsetUtf8));
+            doc.Charset(EncodingUtil.GetEncoding(charsetUtf8));
             String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\"?>\n" + "<root>\n" + " node\n"
                  + "</root>";
             NUnit.Framework.Assert.AreEqual(xmlCharsetUTF8, doc.ToString());
@@ -382,7 +383,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestShiftJisRoundtrip() {
             String input = "<html>" + "<head>" + "<meta http-equiv=\"content-type\" content=\"text/html; charset=Shift_JIS\" />"
                  + "</head>" + "<body>" + "before&nbsp;after" + "</body>" + "</html>";
-            Stream @is = new MemoryStream(input.GetBytes(iText.IO.Util.EncodingUtil.GetEncoding("ASCII")));
+            Stream @is = new MemoryStream(input.GetBytes(EncodingUtil.GetEncoding("ASCII")));
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@is, null, "http://example.com");
             doc.OutputSettings().EscapeMode(Entities.EscapeMode.xhtml);
             String output = iText.IO.Util.JavaUtil.GetStringForBytes(doc.Html().GetBytes(doc.OutputSettings().Charset(

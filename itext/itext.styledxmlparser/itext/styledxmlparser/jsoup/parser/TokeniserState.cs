@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>States and transition activations for the Tokeniser.</summary>
@@ -2813,10 +2814,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private const char eof = CharacterReader.EOF;
 
         static TokeniserState() {
-            iText.IO.Util.JavaUtil.Sort(attributeSingleValueCharsSorted);
-            iText.IO.Util.JavaUtil.Sort(attributeDoubleValueCharsSorted);
-            iText.IO.Util.JavaUtil.Sort(attributeNameCharsSorted);
-            iText.IO.Util.JavaUtil.Sort(attributeValueUnquoted);
+            JavaUtil.Sort(attributeSingleValueCharsSorted);
+            JavaUtil.Sort(attributeDoubleValueCharsSorted);
+            JavaUtil.Sort(attributeNameCharsSorted);
+            JavaUtil.Sort(attributeValueUnquoted);
         }
 
         /// <summary>Handles RawtextEndTagName, ScriptDataEndTagName, and ScriptDataEscapedEndTagName.</summary>

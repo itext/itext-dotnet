@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
@@ -75,7 +76,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         [NUnit.Framework.Test]
         public virtual void DiscardsSpuriousByteOrderMark() {
             String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-            ByteBuffer buffer = iText.IO.Util.EncodingUtil.GetEncoding("UTF-8").Encode(html);
+            ByteBuffer buffer = EncodingUtil.GetEncoding("UTF-8").Encode(html);
             Document doc = DataUtil.ParseByteData(buffer, "UTF-8", "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .HtmlParser());
             NUnit.Framework.Assert.AreEqual("One", doc.Head().Text());
@@ -84,7 +85,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         [NUnit.Framework.Test]
         public virtual void DiscardsSpuriousByteOrderMarkWhenNoCharsetSet() {
             String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-            ByteBuffer buffer = iText.IO.Util.EncodingUtil.GetEncoding("UTF-8").Encode(html);
+            ByteBuffer buffer = EncodingUtil.GetEncoding("UTF-8").Encode(html);
             Document doc = DataUtil.ParseByteData(buffer, null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .HtmlParser());
             NUnit.Framework.Assert.AreEqual("One", doc.Head().Text());

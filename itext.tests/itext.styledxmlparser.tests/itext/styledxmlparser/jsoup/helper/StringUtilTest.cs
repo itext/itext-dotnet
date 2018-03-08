@@ -41,16 +41,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
     public class StringUtilTest {
         [NUnit.Framework.Test]
         public virtual void Join() {
-            NUnit.Framework.Assert.AreEqual("", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(iText.IO.Util.JavaUtil.ArraysAsList
+            NUnit.Framework.Assert.AreEqual("", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(JavaUtil.ArraysAsList
                 (""), " "));
-            NUnit.Framework.Assert.AreEqual("one", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(iText.IO.Util.JavaUtil.ArraysAsList
+            NUnit.Framework.Assert.AreEqual("one", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(JavaUtil.ArraysAsList
                 ("one"), " "));
-            NUnit.Framework.Assert.AreEqual("one two three", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(iText.IO.Util.JavaUtil.ArraysAsList
+            NUnit.Framework.Assert.AreEqual("one two three", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(JavaUtil.ArraysAsList
                 ("one", "two", "three"), " "));
         }
 

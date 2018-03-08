@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Select;
 
@@ -460,7 +461,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
  {
         private Entities.EscapeMode escapeMode = Entities.EscapeMode.@base;
 
-        private Encoding charset = iText.IO.Util.EncodingUtil.GetEncoding("UTF-8");
+        private Encoding charset = EncodingUtil.GetEncoding("UTF-8");
 
         private Encoding charsetEncoder;
 
@@ -533,7 +534,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="charset">the new charset (by name) to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Charset(String charset) {
-            Charset(iText.IO.Util.EncodingUtil.GetEncoding(charset));
+            Charset(EncodingUtil.GetEncoding(charset));
             return this;
         }
 

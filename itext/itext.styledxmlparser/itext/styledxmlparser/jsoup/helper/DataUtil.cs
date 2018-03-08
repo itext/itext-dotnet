@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
@@ -135,7 +136,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (charsetName == null) {
                 // determine from meta. safe first parse as UTF-8
                 // look for <meta http-equiv="Content-Type" content="text/html;charset=gb2312"> or HTML5 <meta charset="gb2312">
-                docData = iText.IO.Util.EncodingUtil.GetEncoding(defaultCharset).Decode(byteData).ToString();
+                docData = EncodingUtil.GetEncoding(defaultCharset).Decode(byteData).ToString();
                 doc = parser.ParseInput(docData, baseUri);
                 iText.StyledXmlParser.Jsoup.Nodes.Element meta = doc.Select("meta[http-equiv=content-type], meta[charset]"
                     ).First();
@@ -162,7 +163,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                     foundCharset = iText.IO.Util.StringUtil.ReplaceAll(foundCharset.Trim(), "[\"']", "");
                     charsetName = foundCharset;
                     byteData.Rewind();
-                    docData = iText.IO.Util.EncodingUtil.GetEncoding(foundCharset).Decode(byteData).ToString();
+                    docData = EncodingUtil.GetEncoding(foundCharset).Decode(byteData).ToString();
                     doc = null;
                 }
             }
@@ -170,7 +171,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 // specified by content type header (or by user on file load)
                 Validate.NotEmpty(charsetName, "Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML"
                     );
-                docData = iText.IO.Util.EncodingUtil.GetEncoding(charsetName).Decode(byteData).ToString();
+                docData = EncodingUtil.GetEncoding(charsetName).Decode(byteData).ToString();
             }
             if (doc == null) {
                 doc = parser.ParseInput(docData, baseUri);

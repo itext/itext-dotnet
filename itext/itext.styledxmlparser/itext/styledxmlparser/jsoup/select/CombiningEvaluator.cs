@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
 
             internal And(params Evaluator[] evaluators)
-                : this(iText.IO.Util.JavaUtil.ArraysAsList(evaluators)) {
+                : this(JavaUtil.ArraysAsList(evaluators)) {
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element

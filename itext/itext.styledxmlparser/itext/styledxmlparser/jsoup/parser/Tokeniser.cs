@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         static Tokeniser() {
             // replaces null character
-            iText.IO.Util.JavaUtil.Sort(notCharRefCharsSorted);
+            JavaUtil.Sort(notCharRefCharsSorted);
         }
 
         private CharacterReader reader;
@@ -172,7 +172,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal void Emit(char[] chars) {
-            Emit(iText.IO.Util.JavaUtil.GetStringForChars(chars));
+            Emit(JavaUtil.GetStringForChars(chars));
         }
 
         internal void Emit(char c) {
@@ -228,7 +228,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 int charval = -1;
                 try {
                     int @base = isHexMode ? 16 : 10;
-                    charval = System.Convert.ToInt32(numRef, @base);
+                    charval = Convert.ToInt32(numRef, @base);
                 }
                 catch (FormatException) {
                 }
