@@ -613,11 +613,6 @@ namespace iText.Kernel.Pdf {
                 GetPdfObject().Put(resType, resourceCategory = new PdfDictionary());
             }
             resourceCategory.Put(resName, resource);
-            PdfDictionary resDictionary = (PdfDictionary)GetPdfObject().Get(resType);
-            if (resDictionary == null) {
-                GetPdfObject().Put(resType, resDictionary = new PdfDictionary());
-            }
-            resDictionary.Put(resName, resource);
         }
 
         internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {
