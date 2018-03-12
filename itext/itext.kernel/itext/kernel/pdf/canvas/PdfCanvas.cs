@@ -283,6 +283,12 @@ namespace iText.Kernel.Pdf.Canvas {
             return resources;
         }
 
+        /// <summary>Get the document this canvas belongs to</summary>
+        /// <returns>PdfDocument the document that this canvas belongs to</returns>
+        public virtual PdfDocument GetDocument() {
+            return document;
+        }
+
         /// <summary>Attaches new content stream to the canvas.</summary>
         /// <remarks>
         /// Attaches new content stream to the canvas.
