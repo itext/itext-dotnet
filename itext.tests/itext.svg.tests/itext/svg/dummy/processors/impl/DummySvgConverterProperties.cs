@@ -1,9 +1,10 @@
 using iText.Svg.Css;
-using iText.Svg.Css.Impl;
+using iText.Svg.Dummy.Css.Impl;
+using iText.Svg.Dummy.Factories;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
-namespace iText.Svg.Processors.Impl {
+namespace iText.Svg.Dummy.Processors.Impl {
     public class DummySvgConverterProperties : ISvgConverterProperties {
         internal ICssResolver cssResolver;
 

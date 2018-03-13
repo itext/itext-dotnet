@@ -1,14 +1,14 @@
 using System;
+using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
-using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Processors {
     public class ProcessorStateTest {
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPush() {
             ProcessorState testProcessorState = new ProcessorState();
-            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test", null);
+            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test");
             testProcessorState.Push(renderer);
             NUnit.Framework.Assert.IsTrue(testProcessorState.GetStack().Count == 1);
         }
@@ -17,7 +17,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPop() {
             ProcessorState testProcessorState = new ProcessorState();
-            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test", null);
+            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test");
             testProcessorState.Push(renderer);
             ISvgNodeRenderer popped = testProcessorState.Pop();
             NUnit.Framework.Assert.IsTrue(popped.ToString().Equals("test") && testProcessorState.Empty());
@@ -26,7 +26,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPeek() {
             ProcessorState testProcessorState = new ProcessorState();
-            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test", null);
+            ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test");
             testProcessorState.Push(renderer);
             ISvgNodeRenderer viewed = testProcessorState.Top();
             NUnit.Framework.Assert.IsTrue(viewed.ToString().Equals("test") && !testProcessorState.Empty());
@@ -36,9 +36,9 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestMultiplePushesPopAndPeek() {
             ProcessorState testProcessorState = new ProcessorState();
-            ISvgNodeRenderer rendererOne = new DummySvgNodeRenderer("test01", null);
+            ISvgNodeRenderer rendererOne = new DummySvgNodeRenderer("test01");
             testProcessorState.Push(rendererOne);
-            ISvgNodeRenderer rendererTwo = new DummySvgNodeRenderer("test02", null);
+            ISvgNodeRenderer rendererTwo = new DummySvgNodeRenderer("test02");
             testProcessorState.Push(rendererTwo);
             ISvgNodeRenderer popped = testProcessorState.Pop();
             bool result = popped.ToString().Equals("test02");
@@ -59,7 +59,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPushSameElementTwice() {
             ProcessorState testProcessorState = new ProcessorState();
-            ISvgNodeRenderer rendererOne = new DummySvgNodeRenderer("test01", null);
+            ISvgNodeRenderer rendererOne = new DummySvgNodeRenderer("test01");
             testProcessorState.Push(rendererOne);
             testProcessorState.Push(rendererOne);
             ISvgNodeRenderer popped = testProcessorState.Pop();

@@ -1,11 +1,12 @@
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Css;
+using iText.Svg.Dummy.Processors.Impl;
+using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
-using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Processors {
     public class DefaultSvgProcessorTest {
@@ -28,9 +29,9 @@ namespace iText.Svg.Processors {
             ISvgConverterProperties props = new DummySvgConverterProperties();
             ISvgNodeRenderer rootActual = processor.Process(root, props);
             //setup expected
-            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg", null);
-            rootExpected.AddChild(new DummySvgNodeRenderer("circle", rootExpected));
-            rootExpected.AddChild(new DummySvgNodeRenderer("path", rootExpected));
+            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
+            rootExpected.AddChild(new DummySvgNodeRenderer("circle"));
+            rootExpected.AddChild(new DummySvgNodeRenderer("path"));
             //Compare
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
@@ -57,12 +58,12 @@ namespace iText.Svg.Processors {
             ISvgConverterProperties props = new DummySvgConverterProperties();
             ISvgNodeRenderer rootActual = processor.Process(root, props);
             //setup expected
-            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg", null);
-            rootExpected.AddChild(new DummySvgNodeRenderer("circle", rootExpected));
-            rootExpected.AddChild(new DummySvgNodeRenderer("path", rootExpected));
-            ISvgNodeRenderer nestedSvgRend = new DummySvgNodeRenderer("svg", rootExpected);
-            nestedSvgRend.AddChild(new DummySvgNodeRenderer("circle", nestedSvgRend));
-            nestedSvgRend.AddChild(new DummySvgNodeRenderer("circle", nestedSvgRend));
+            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
+            rootExpected.AddChild(new DummySvgNodeRenderer("circle"));
+            rootExpected.AddChild(new DummySvgNodeRenderer("path"));
+            ISvgNodeRenderer nestedSvgRend = new DummySvgNodeRenderer("svg");
+            nestedSvgRend.AddChild(new DummySvgNodeRenderer("circle"));
+            nestedSvgRend.AddChild(new DummySvgNodeRenderer("circle"));
             rootExpected.AddChild(nestedSvgRend);
             //Compare
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
@@ -84,7 +85,7 @@ namespace iText.Svg.Processors {
             ISvgConverterProperties props = new DummySvgConverterProperties();
             ISvgNodeRenderer rootActual = processor.Process(root, props);
             //setup expected
-            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg", null);
+            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
         }
 
         [NUnit.Framework.Test]
@@ -104,8 +105,8 @@ namespace iText.Svg.Processors {
             ISvgConverterProperties props = new DummySvgConverterProperties();
             ISvgNodeRenderer rootActual = processor.Process(root, props);
             //setup expected
-            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg", null);
-            rootExpected.AddChild(new DummySvgNodeRenderer("circle", rootExpected));
+            ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
+            rootExpected.AddChild(new DummySvgNodeRenderer("circle"));
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
@@ -199,7 +200,7 @@ namespace iText.Svg.Processors {
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new _ISvgConverterProperties_207();
+            ISvgConverterProperties convProps = new _ISvgConverterProperties_206();
             ISvgNodeRenderer rootActual = processor.Process(root, convProps);
             //setup expected
             ISvgNodeRenderer rootExpected = null;
@@ -207,8 +208,8 @@ namespace iText.Svg.Processors {
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
-        private sealed class _ISvgConverterProperties_207 : ISvgConverterProperties {
-            public _ISvgConverterProperties_207() {
+        private sealed class _ISvgConverterProperties_206 : ISvgConverterProperties {
+            public _ISvgConverterProperties_206() {
             }
 
             public ICssResolver GetCssResolver() {

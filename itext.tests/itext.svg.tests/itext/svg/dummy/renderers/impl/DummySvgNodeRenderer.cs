@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using iText.Svg.Renderers;
 
-namespace iText.Svg.Renderers.Impl {
+namespace iText.Svg.Dummy.Renderers.Impl {
     /// <summary>
     /// A dummy implementation of
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
@@ -15,10 +15,17 @@ namespace iText.Svg.Renderers.Impl {
 
         internal String name;
 
-        public DummySvgNodeRenderer(String name, ISvgNodeRenderer parent) {
+        public DummySvgNodeRenderer()
+            : this("dummy") {
+        }
+
+        public DummySvgNodeRenderer(String name) {
             this.name = name;
-            this.parent = parent;
             this.children = new List<ISvgNodeRenderer>();
+        }
+
+        public virtual void SetParent(ISvgNodeRenderer parent) {
+            this.parent = parent;
         }
 
         public virtual ISvgNodeRenderer GetParent() {
@@ -42,12 +49,12 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override bool Equals(Object o) {
-            if (!(o is iText.Svg.Renderers.Impl.DummySvgNodeRenderer)) {
+            if (!(o is iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer)) {
                 return false;
             }
             //Name
-            iText.Svg.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Renderers.Impl.DummySvgNodeRenderer)
-                o;
+            iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer
+                )o;
             if (!this.name.Equals(otherDummy.name)) {
                 return false;
             }
