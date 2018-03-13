@@ -177,7 +177,8 @@ namespace iText.Svg.Processors.Impl {
             LinkedList<INode> q = new LinkedList<INode>();
             q.Add(node);
             while (!q.IsEmpty()) {
-                INode currentNode = q.RemoveFirst();
+                INode currentNode = q.JGetFirst();
+                q.RemoveFirst();
                 if (currentNode != null && currentNode is IElementNode && ((IElementNode)currentNode).Name() != null && ((
                     IElementNode)currentNode).Name().Equals(tagName)) {
                     return (IElementNode)currentNode;

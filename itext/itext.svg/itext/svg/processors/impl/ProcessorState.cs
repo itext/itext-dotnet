@@ -30,7 +30,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         public virtual bool Empty() {
-            return stack.Empty();
+            return stack.Count == 0;
         }
     }
 }

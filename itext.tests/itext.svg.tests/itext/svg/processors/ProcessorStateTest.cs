@@ -46,11 +46,14 @@ namespace iText.Svg.Processors {
             NUnit.Framework.Assert.IsTrue(result);
         }
 
-        [NUnit.Framework.ExpectedException(typeof(InvalidOperationException))]
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPopEmpty() {
-            ProcessorState testProcessorState = new ProcessorState();
-            testProcessorState.Pop();
+            NUnit.Framework.Assert.That(() =>  {
+                ProcessorState testProcessorState = new ProcessorState();
+                testProcessorState.Pop();
+            }
+            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+;
         }
 
         [NUnit.Framework.Test]
@@ -65,11 +68,14 @@ namespace iText.Svg.Processors {
             NUnit.Framework.Assert.IsTrue(result);
         }
 
-        [NUnit.Framework.ExpectedException(typeof(InvalidOperationException))]
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPeekEmpty() {
-            ProcessorState testProcessorState = new ProcessorState();
-            testProcessorState.Pop();
+            NUnit.Framework.Assert.That(() =>  {
+                ProcessorState testProcessorState = new ProcessorState();
+                testProcessorState.Pop();
+            }
+            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+;
         }
     }
 }
