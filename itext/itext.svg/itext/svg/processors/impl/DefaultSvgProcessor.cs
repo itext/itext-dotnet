@@ -37,13 +37,13 @@ namespace iText.Svg.Processors.Impl {
 
         public DefaultSvgProcessor() {
             //Processor context
-            defaultProps = new DefaultSvgProperties();
+            defaultProps = new DefaultSvgConverterProperties();
         }
 
         /// <summary><inheritDoc/></summary>
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgNodeRenderer Process(INode root) {
-            return Process(root, new DefaultSvgProperties());
+            return Process(root, new DefaultSvgConverterProperties());
         }
 
         /// <summary><inheritDoc/></summary>
@@ -57,7 +57,7 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(converterProps);
             }
             else {
-                PerformSetup(new DefaultSvgProperties());
+                PerformSetup(new DefaultSvgConverterProperties());
             }
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgTagConstants.SVG);

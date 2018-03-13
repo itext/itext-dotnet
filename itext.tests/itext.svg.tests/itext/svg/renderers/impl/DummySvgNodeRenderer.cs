@@ -40,5 +40,31 @@ namespace iText.Svg.Renderers.Impl {
         public override String ToString() {
             return name;
         }
+
+        public override bool Equals(Object o) {
+            if (!(o is iText.Svg.Renderers.Impl.DummySvgNodeRenderer)) {
+                return false;
+            }
+            //Name
+            iText.Svg.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Renderers.Impl.DummySvgNodeRenderer)
+                o;
+            if (!this.name.Equals(otherDummy.name)) {
+                return false;
+            }
+            //children
+            if (!(this.children.IsEmpty() && otherDummy.children.IsEmpty())) {
+                if (this.children.Count != otherDummy.children.Count) {
+                    return false;
+                }
+                bool iterationResult = true;
+                for (int i = 0; i < this.children.Count; i++) {
+                    iterationResult &= this.children[i].Equals(otherDummy.GetChildren()[i]);
+                }
+                if (!iterationResult) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

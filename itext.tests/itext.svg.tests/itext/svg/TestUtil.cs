@@ -1,7 +1,9 @@
+using System;
 using iText.Svg.Renderers;
 
 namespace iText.Svg {
     public class TestUtil {
+        [Obsolete]
         public static bool CompareDummyRendererTrees(ISvgNodeRenderer treeOne, ISvgNodeRenderer treeTwo) {
             return CompareDummyRendererTreesRecursive(treeOne, treeTwo);
         }
