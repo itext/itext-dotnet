@@ -57,13 +57,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     public class Entities {
         public class EscapeMode {
             /// <summary>Restricted entities suitable for XHTML output: lt, gt, amp, and quot only.</summary>
-            public static Entities.EscapeMode xhtml = new Entities.EscapeMode(xhtmlByVal, "xhtml");
+            public static readonly Entities.EscapeMode xhtml = new Entities.EscapeMode(xhtmlByVal, "xhtml");
 
             /// <summary>Default HTML output entities.</summary>
-            public static Entities.EscapeMode @base = new Entities.EscapeMode(baseByVal, "base");
+            public static readonly Entities.EscapeMode @base = new Entities.EscapeMode(baseByVal, "base");
 
             /// <summary>Complete HTML entities.</summary>
-            public static Entities.EscapeMode extended = new Entities.EscapeMode(fullByVal, "extended");
+            public static readonly Entities.EscapeMode extended = new Entities.EscapeMode(fullByVal, "extended");
 
             private static IDictionary<String, Entities.EscapeMode> nameValueMap = new Dictionary<String, Entities.EscapeMode
                 >();
