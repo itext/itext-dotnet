@@ -1842,17 +1842,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>Comparison between both values or, if one of the values is null, Comparison between contents. If one of the values and one of the contents are equal to null, generate values and compare those.
         ///     </returns>
         public virtual int CompareTo(iText.Kernel.Pdf.PdfName o) {
-            if (value != null && o.value != null) {
-                return string.CompareOrdinal(value, o.value);
-            }
-            else {
-                if (content != null && o.content != null) {
-                    return CompareContent(o);
-                }
-                else {
-                    return string.CompareOrdinal(GetValue(), o.GetValue());
-                }
-            }
+            return string.CompareOrdinal(GetValue(), o.GetValue());
         }
 
         public override bool Equals(Object o) {
