@@ -2778,10 +2778,9 @@ namespace iText.Forms.Fields {
                                     PdfObject kid = kids.Get(i);
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
-                                    PdfDictionary buttonValues = (PdfDictionary)field.GetPdfObject().GetAsDictionary(PdfName.AP).Get(PdfName.N
-                                        );
+                                    PdfDictionary apStream = field.GetPdfObject().GetAsDictionary(PdfName.AP);
                                     String state;
-                                    if (buttonValues.Get(new PdfName(value)) != null) {
+                                    if (null != apStream && null != apStream.GetAsDictionary(PdfName.N).Get(new PdfName(value))) {
                                         state = value;
                                     }
                                     else {
