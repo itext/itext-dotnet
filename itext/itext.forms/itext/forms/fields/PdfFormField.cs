@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
+using iText.Forms.Util;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -162,29 +163,6 @@ namespace iText.Forms.Fields {
         protected internal PdfFormXObject form;
 
         protected internal PdfAConformanceLevel pdfAConformanceLevel;
-
-        protected internal const String check = "0.8 0 0 0.8 0.3 0.5 cm 0 0 m\n" + "0.066 -0.026 l\n" + "0.137 -0.15 l\n"
-             + "0.259 0.081 0.46 0.391 0.553 0.461 c\n" + "0.604 0.489 l\n" + "0.703 0.492 l\n" + "0.543 0.312 0.255 -0.205 0.154 -0.439 c\n"
-             + "0.069 -0.399 l\n" + "0.035 -0.293 -0.039 -0.136 -0.091 -0.057 c\n" + "h\n" + "f\n";
-
-        protected internal const String circle = "1 0 0 1 0.86 0.5 cm 0 0 m\n" + "0 0.204 -0.166 0.371 -0.371 0.371 c\n"
-             + "-0.575 0.371 -0.741 0.204 -0.741 0 c\n" + "-0.741 -0.204 -0.575 -0.371 -0.371 -0.371 c\n" + "-0.166 -0.371 0 -0.204 0 0 c\n"
-             + "f\n";
-
-        protected internal const String cross = "1 0 0 1 0.80 0.8 cm 0 0 m\n" + "-0.172 -0.027 l\n" + "-0.332 -0.184 l\n"
-             + "-0.443 -0.019 l\n" + "-0.475 -0.009 l\n" + "-0.568 -0.168 l\n" + "-0.453 -0.324 l\n" + "-0.58 -0.497 l\n"
-             + "-0.59 -0.641 l\n" + "-0.549 -0.627 l\n" + "-0.543 -0.612 -0.457 -0.519 -0.365 -0.419 c\n" + "-0.163 -0.572 l\n"
-             + "-0.011 -0.536 l\n" + "-0.004 -0.507 l\n" + "-0.117 -0.441 l\n" + "-0.246 -0.294 l\n" + "-0.132 -0.181 l\n"
-             + "0.031 -0.04 l\n" + "h\n" + "f\n";
-
-        protected internal const String diamond = "1 0 0 1 0.5 0.12 cm 0 0 m\n" + "0.376 0.376 l\n" + "0 0.751 l\n"
-             + "-0.376 0.376 l\n" + "h\n" + "f\n";
-
-        protected internal const String square = "1 0 0 1 0.835 0.835 cm 0 0 -0.669 -0.67 re\n" + "f\n";
-
-        protected internal const String star = "0.95 0 0 0.95 0.85 0.6 cm 0 0 m\n" + "-0.291 0 l\n" + "-0.381 0.277 l\n"
-             + "-0.47 0 l\n" + "-0.761 0 l\n" + "-0.526 -0.171 l\n" + "-0.616 -0.448 l\n" + "-0.381 -0.277 l\n" + 
-            "-0.145 -0.448 l\n" + "-0.236 -0.171 l\n" + "h\n" + "f\n";
 
         /// <summary>
         /// Creates a form field as a wrapper object around a
@@ -3635,7 +3613,8 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawRadioField(PdfCanvas canvas, float width, float height, bool on) {
             canvas.SaveState();
             if (on) {
-                canvas.ResetFillColorRgb().Circle(width / 2, height / 2, Math.Min(width, height) / 4).Fill();
+                canvas.ResetFillColorRgb();
+                DrawingUtil.DrawCircle(canvas, width / 2, height / 2, Math.Min(width, height) / 4);
             }
             canvas.RestoreState();
         }
@@ -3805,10 +3784,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             if (checkType == TYPE_CROSS) {
-                float offset = borderWidth * 2;
-                canvas.MoveTo((width - height) / 2 + offset, height - offset).LineTo((width + height) / 2 - offset, offset
-                    ).MoveTo((width + height) / 2 - offset, height - offset).LineTo((width - height) / 2 + offset, offset)
-                    .Stroke();
+                DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
             }
             PdfFont ufont = GetFont();
@@ -3821,44 +3797,37 @@ namespace iText.Forms.Fields {
             if (!on) {
                 return;
             }
-            String appearanceString = check;
             switch (checkType) {
                 case TYPE_CHECK: {
-                    appearanceString = check;
+                    DrawingUtil.DrawPdfACheck(canvas, width, height);
                     break;
                 }
 
                 case TYPE_CIRCLE: {
-                    appearanceString = circle;
+                    DrawingUtil.DrawPdfACircle(canvas, width, height);
                     break;
                 }
 
                 case TYPE_CROSS: {
-                    appearanceString = cross;
+                    DrawingUtil.DrawPdfACross(canvas, width, height);
                     break;
                 }
 
                 case TYPE_DIAMOND: {
-                    appearanceString = diamond;
+                    DrawingUtil.DrawPdfADiamond(canvas, width, height);
                     break;
                 }
 
                 case TYPE_SQUARE: {
-                    appearanceString = square;
+                    DrawingUtil.DrawPdfASquare(canvas, width, height);
                     break;
                 }
 
                 case TYPE_STAR: {
-                    appearanceString = star;
+                    DrawingUtil.DrawPdfAStar(canvas, width, height);
                     break;
                 }
             }
-            canvas.SaveState();
-            canvas.ResetFillColorRgb();
-            canvas.ConcatMatrix(width, 0, 0, height, 0, 0);
-            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                ));
-            canvas.RestoreState();
         }
 
         private TextAlignment? ConvertJustificationToTextAlignment() {
