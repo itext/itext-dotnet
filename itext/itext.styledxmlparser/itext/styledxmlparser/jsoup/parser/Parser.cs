@@ -119,6 +119,15 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return treeBuilder.Parse(html, baseUri, ParseErrorList.NoTracking());
         }
 
+        /// <summary>Parse XML into a Document.</summary>
+        /// <param name="xml">XML to parse</param>
+        /// <param name="baseUri">base URI of document (i.e. original fetch location), for resolving relative URLs.</param>
+        /// <returns>parsed Document</returns>
+        public static Document ParseXml(String xml, String baseUri) {
+            TreeBuilder treeBuilder = new XmlTreeBuilder();
+            return treeBuilder.Parse(xml, baseUri, ParseErrorList.NoTracking());
+        }
+
         /// <summary>Parse a fragment of HTML into a list of nodes.</summary>
         /// <remarks>Parse a fragment of HTML into a list of nodes. The context element, if supplied, supplies parsing context.
         ///     </remarks>

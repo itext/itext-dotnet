@@ -104,6 +104,30 @@ namespace iText.StyledXmlParser.Jsoup {
             return iText.StyledXmlParser.Jsoup.Parser.Parser.Parse(html, "");
         }
 
+        /// <summary>Parse XML into a Document.</summary>
+        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
+        ///     </remarks>
+        /// <param name="xml">XML to parse</param>
+        /// <param name="baseUri">
+        /// The URL where the HTML was retrieved from. Used to resolve relative URLs to absolute URLs, that occur
+        /// before the HTML declares a
+        /// <c>&lt;base href&gt;</c>
+        /// tag.
+        /// </param>
+        /// <returns>sane XML</returns>
+        public static Document ParseXML(String xml, String baseUri) {
+            return iText.StyledXmlParser.Jsoup.Parser.Parser.ParseXml(xml, baseUri);
+        }
+
+        /// <summary>Parse XML into a Document.</summary>
+        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
+        ///     </remarks>
+        /// <param name="xml">XML to parse</param>
+        /// <returns>sane XML</returns>
+        public static Document ParseXML(String xml) {
+            return iText.StyledXmlParser.Jsoup.Parser.Parser.ParseXml(xml, "");
+        }
+
         /// <summary>Parse the contents of a file as HTML.</summary>
         /// <param name="in">file to load HTML from</param>
         /// <param name="charsetName">
