@@ -1,4 +1,4 @@
-using iText.Svg.Css;
+using iText.StyledXmlParser.Css;
 using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Processors {
@@ -14,7 +14,7 @@ namespace iText.Svg.Processors {
         /// </summary>
         /// <returns>
         /// A
-        /// <see cref="iText.Svg.Css.ICssResolver"/>
+        /// <see cref="iText.StyledXmlParser.Css.ICssResolver"/>
         /// implementation
         /// </returns>
         ICssResolver GetCssResolver();

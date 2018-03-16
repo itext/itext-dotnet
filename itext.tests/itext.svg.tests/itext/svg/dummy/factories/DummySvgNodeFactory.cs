@@ -15,5 +15,9 @@ namespace iText.Svg.Dummy.Factories {
             result.SetParent(parent);
             return result;
         }
+
+        public virtual bool IsTagIgnored(IElementNode tag) {
+            return false;
+        }
     }
 }

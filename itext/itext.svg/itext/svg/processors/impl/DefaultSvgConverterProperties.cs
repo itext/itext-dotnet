@@ -1,4 +1,5 @@
-using iText.Svg.Css;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Node;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
@@ -15,8 +16,8 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgNodeRendererFactory rendererFactory;
 
-        public DefaultSvgConverterProperties() {
-            cssResolver = new DefaultCssResolver();
+        public DefaultSvgConverterProperties(INode root) {
+            cssResolver = new DefaultSvgStyleResolver(root);
             rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 

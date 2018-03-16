@@ -103,6 +103,10 @@ namespace iText.Svg.Renderers {
                 result.Put("test", typeof(DummyProcessableSvgNodeRenderer));
                 return result;
             }
+
+            public virtual IList<String> GetIgnoredTags() {
+                return new List<String>();
+            }
         }
 
         [NUnit.Framework.Test]
@@ -133,6 +137,10 @@ namespace iText.Svg.Renderers {
         private class FaultyTestMapper : ISvgNodeRendererMapper {
             public virtual IDictionary<String, Type> GetMapping() {
                 throw new Exception();
+            }
+
+            public virtual IList<String> GetIgnoredTags() {
+                return null;
             }
         }
 

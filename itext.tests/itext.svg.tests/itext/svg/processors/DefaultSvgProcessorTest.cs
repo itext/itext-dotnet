@@ -1,6 +1,6 @@
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.Svg.Css;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;

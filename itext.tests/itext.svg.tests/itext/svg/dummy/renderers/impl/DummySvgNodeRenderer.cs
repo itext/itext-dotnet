@@ -44,6 +44,9 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             return children;
         }
 
+        public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
+        }
+
         public override String ToString() {
             return name;
         }

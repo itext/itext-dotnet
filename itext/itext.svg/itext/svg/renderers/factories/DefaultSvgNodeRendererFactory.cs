@@ -15,6 +15,8 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererFactory : ISvgNodeRendererFactory {
         private IDictionary<String, Type> rendererMap = new Dictionary<String, Type>();
 
+        private IList<String> ignoredList = new List<String>();
+
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory
             ));
 
@@ -40,9 +42,12 @@ namespace iText.Svg.Renderers.Factories {
         public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
             if (mapper != null) {
                 rendererMap.AddAll(mapper.GetMapping());
+                ignoredList.AddAll(mapper.GetIgnoredTags());
             }
             else {
-                rendererMap.AddAll(new DefaultSvgNodeRendererMapper().GetMapping());
+                ISvgNodeRendererMapper defaultMapper = new DefaultSvgNodeRendererMapper();
+                rendererMap.AddAll(defaultMapper.GetMapping());
+                ignoredList.AddAll(defaultMapper.GetIgnoredTags());
             }
         }
 
@@ -72,6 +77,10 @@ namespace iText.Svg.Renderers.Factories {
                 parent.AddChild(result);
             }
             return result;
+        }
+
+        public virtual bool IsTagIgnored(IElementNode tag) {
+            return ignoredList.Contains(tag.Name());
         }
     }
 }

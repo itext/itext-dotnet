@@ -1,4 +1,4 @@
-using iText.Svg.Css;
+using iText.StyledXmlParser.Css;
 using iText.Svg.Dummy.Css.Impl;
 using iText.Svg.Dummy.Factories;
 using iText.Svg.Processors;

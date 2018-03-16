@@ -16,5 +16,7 @@ namespace iText.Svg.Renderers.Factories {
         /// <param name="parent">renderer of the parent tag</param>
         /// <returns>Configured ISvgNodeRenderer</returns>
         ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent);
+
+        bool IsTagIgnored(IElementNode tag);
     }
 }

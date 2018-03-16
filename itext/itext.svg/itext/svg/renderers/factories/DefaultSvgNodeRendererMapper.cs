@@ -21,7 +21,14 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgTagConstants.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgTagConstants.PATH, typeof(PathSvgNodeRenderer));
+            result.Put(SvgTagConstants.ELLIPSE, typeof(EllipseSvgNodeRenderer));
             return result;
+        }
+
+        public virtual IList<String> GetIgnoredTags() {
+            IList<String> ignored = new List<String>();
+            ignored.Add(SvgTagConstants.STYLE);
+            return ignored;
         }
     }
 }

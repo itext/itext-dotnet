@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace iText.Svg.Renderers {
@@ -39,5 +40,7 @@ namespace iText.Svg.Renderers {
         /// <summary>Gets all child renderers of this object.</summary>
         /// <returns>the list of child renderers (in the order that they were added)</returns>
         IList<ISvgNodeRenderer> GetChildren();
+
+        void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles);
     }
 }

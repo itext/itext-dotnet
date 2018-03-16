@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.Svg;
 using iText.Svg.Css;
@@ -29,21 +30,20 @@ namespace iText.Svg.Processors.Impl {
 
         private ICssResolver cssResolver;
 
-        private CssContext cssContext;
+        private SvgCssContext cssContext;
 
         private ISvgNodeRendererFactory rendererFactory;
 
         private ISvgConverterProperties defaultProps;
 
         public DefaultSvgProcessor() {
-            //Processor context
-            defaultProps = new DefaultSvgConverterProperties();
         }
 
+        //Processor context
         /// <summary><inheritDoc/></summary>
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgNodeRenderer Process(INode root) {
-            return Process(root, new DefaultSvgConverterProperties());
+            return Process(root, new DefaultSvgConverterProperties(root));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -57,7 +57,7 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(converterProps);
             }
             else {
-                PerformSetup(new DefaultSvgConverterProperties());
+                PerformSetup(new DefaultSvgConverterProperties(root));
             }
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgTagConstants.SVG);
@@ -88,7 +88,7 @@ namespace iText.Svg.Processors.Impl {
             else {
                 rendererFactory = defaultProps.GetRendererFactory();
             }
-            cssContext = new CssContext();
+            cssContext = new SvgCssContext();
         }
 
         //TODO: resolve/initialize CSS context
@@ -96,11 +96,13 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="startingNode">node to start on</param>
         private void ExecuteDepthFirstTraversal(INode startingNode) {
             //Create and push rootNode
-            ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag((IElementNode)startingNode
-                , null);
-            processorState.Push(startingRenderer);
-            foreach (INode rootChild in startingNode.ChildNodes()) {
-                Visit(rootChild);
+            if (!(startingNode is IElementNode) || !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
+                ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag((IElementNode)startingNode
+                    , null);
+                processorState.Push(startingRenderer);
+                foreach (INode rootChild in startingNode.ChildNodes()) {
+                    Visit(rootChild);
+                }
             }
         }
 
@@ -126,16 +128,18 @@ namespace iText.Svg.Processors.Impl {
             if (node is IElementNode) {
                 IElementNode element = (IElementNode)node;
                 element.SetStyles(cssResolver.ResolveStyles(node, cssContext));
-                ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
-                if (renderer != null) {
-                    processorState.Top().AddChild(renderer);
-                    processorState.Push(renderer);
-                }
-                foreach (INode childNode in element.ChildNodes()) {
-                    Visit(childNode);
-                }
-                if (renderer != null) {
-                    processorState.Pop();
+                if (!rendererFactory.IsTagIgnored(element)) {
+                    ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
+                    if (renderer != null) {
+                        processorState.Top().AddChild(renderer);
+                        processorState.Push(renderer);
+                    }
+                    foreach (INode childNode in element.ChildNodes()) {
+                        Visit(childNode);
+                    }
+                    if (renderer != null) {
+                        processorState.Pop();
+                    }
                 }
             }
             else {
@@ -179,8 +183,11 @@ namespace iText.Svg.Processors.Impl {
             while (!q.IsEmpty()) {
                 INode currentNode = q.JGetFirst();
                 q.RemoveFirst();
-                if (currentNode != null && currentNode is IElementNode && ((IElementNode)currentNode).Name() != null && ((
-                    IElementNode)currentNode).Name().Equals(tagName)) {
+                if (currentNode == null) {
+                    return null;
+                }
+                if (currentNode is IElementNode && ((IElementNode)currentNode).Name() != null && ((IElementNode)currentNode
+                    ).Name().Equals(tagName)) {
                     return (IElementNode)currentNode;
                 }
                 foreach (INode child in currentNode.ChildNodes()) {

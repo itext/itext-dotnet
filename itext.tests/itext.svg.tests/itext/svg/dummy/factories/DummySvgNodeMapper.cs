@@ -13,5 +13,9 @@ namespace iText.Svg.Dummy.Factories {
             result.Put("argumented", typeof(DummyArgumentedConstructorSvgNodeRenderer));
             return result;
         }
+
+        public virtual IList<String> GetIgnoredTags() {
+            return new List<String>();
+        }
     }
 }
