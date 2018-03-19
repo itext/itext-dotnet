@@ -139,8 +139,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                         if (CssConstants.SKEW.Equals(function) || CssConstants.SKEW_X.Equals(function) || CssConstants.SKEW_Y.Equals
                             (function)) {
                             String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
-                            if ((arg.Length == 1 || arg.Length == 2 && CssConstants.SKEW.Equals(function)) || (arg.Length == 1 && (CssConstants
-                                .SKEW_X.Equals(function) || CssConstants.SKEW_Y.Equals(function)))) {
+                            if ((arg.Length == 1 && !CssConstants.SKEW.Equals(function)) || (arg.Length == 2 && CssConstants.SKEW.Equals
+                                (function))) {
                                 for (int k = 0; k < arg.Length; k++) {
                                     try {
                                         float value = float.Parse(arg[k], System.Globalization.CultureInfo.InvariantCulture);

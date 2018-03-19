@@ -888,13 +888,14 @@ namespace iText.StyledXmlParser.Css {
             (new String[] { THIN, MEDIUM, THICK }));
 
         /// <summary>The Constant BORDER_STYLE_VALUES.</summary>
-        public static readonly ICollection<String> BORDER_STYLE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (new String[] { NONE, HIDDEN, DOTTED, DASHED, SOLID, DOUBLE, GROOVE, RIDGE, INSET, OUTSET }));
+        public static readonly ICollection<String> BORDER_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(new String[] { NONE, HIDDEN, DOTTED, DASHED, SOLID, DOUBLE, GROOVE, RIDGE
+            , INSET, OUTSET })));
 
         /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
-        public static readonly ICollection<String> FONT_ABSOLUTE_SIZE_KEYWORDS = new HashSet<String>(JavaUtil.ArraysAsList
-            (CssConstants.MEDIUM, CssConstants.XX_SMALL, CssConstants.X_SMALL, CssConstants.SMALL, CssConstants.LARGE
-            , CssConstants.X_LARGE, CssConstants.XX_LARGE));
+        public static readonly ICollection<String> FONT_ABSOLUTE_SIZE_KEYWORDS = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CssConstants.MEDIUM, CssConstants.XX_SMALL, CssConstants.X_SMALL
+            , CssConstants.SMALL, CssConstants.LARGE, CssConstants.X_LARGE, CssConstants.XX_LARGE)));
 
         /// <summary>The Constant OVERFLOW_VALUES.</summary>
         public static readonly ICollection<String> OVERFLOW_VALUES = new HashSet<String>(JavaUtil.ArraysAsList(new 
