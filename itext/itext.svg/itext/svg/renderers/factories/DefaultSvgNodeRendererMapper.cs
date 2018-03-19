@@ -25,8 +25,8 @@ namespace iText.Svg.Renderers.Factories {
             return result;
         }
 
-        public virtual IList<String> GetIgnoredTags() {
-            IList<String> ignored = new List<String>();
+        public virtual ICollection<String> GetIgnoredTags() {
+            ICollection<String> ignored = new HashSet<String>();
             ignored.Add(SvgTagConstants.STYLE);
             return ignored;
         }

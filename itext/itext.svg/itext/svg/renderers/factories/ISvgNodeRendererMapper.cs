@@ -24,6 +24,6 @@ namespace iText.Svg.Renderers.Factories {
 
         /// <summary>Get the list of tags that do not map to any Renderer and should be ignored</summary>
         /// <returns/>
-        IList<String> GetIgnoredTags();
+        ICollection<String> GetIgnoredTags();
     }
 }

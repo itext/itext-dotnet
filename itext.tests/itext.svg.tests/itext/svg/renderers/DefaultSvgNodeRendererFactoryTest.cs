@@ -104,7 +104,7 @@ namespace iText.Svg.Renderers {
                 return result;
             }
 
-            public virtual IList<String> GetIgnoredTags() {
+            public virtual ICollection<String> GetIgnoredTags() {
                 return new List<String>();
             }
         }
@@ -139,7 +139,7 @@ namespace iText.Svg.Renderers {
                 throw new Exception();
             }
 
-            public virtual IList<String> GetIgnoredTags() {
+            public virtual ICollection<String> GetIgnoredTags() {
                 return null;
             }
         }

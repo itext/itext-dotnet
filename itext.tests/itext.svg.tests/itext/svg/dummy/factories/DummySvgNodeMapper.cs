@@ -14,7 +14,7 @@ namespace iText.Svg.Dummy.Factories {
             return result;
         }
 
-        public virtual IList<String> GetIgnoredTags() {
+        public virtual ICollection<String> GetIgnoredTags() {
             return new List<String>();
         }
     }
