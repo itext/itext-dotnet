@@ -1369,7 +1369,9 @@ namespace iText.Layout.Renderer {
             }
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
-                    return baseValue * value.GetValue() / 100;
+                    // during mathematical operations the precision can be lost, so avoiding them if possible (100 / 100 == 1) is a good practice
+                    // TODO Maybe decrease the result value by AbstractRenderer.EPS ?
+                    return value.GetValue() != 100 ? baseValue * value.GetValue() / 100 : baseValue;
                 }
                 else {
                     System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
@@ -2057,6 +2059,17 @@ namespace iText.Layout.Renderer {
         protected internal virtual bool HasAbsoluteUnitValue(int property) {
             UnitValue value = this.GetProperty<UnitValue>(property);
             return value != null && value.IsPointValue();
+        }
+
+        /// <summary>Check if corresponding property has relative value.</summary>
+        /// <param name="property">
+        /// 
+        /// <see cref="iText.Layout.Properties.Property"/>
+        /// </param>
+        /// <returns>false if property value either null, or point, otherwise true.</returns>
+        protected internal virtual bool HasRelativeUnitValue(int property) {
+            UnitValue value = this.GetProperty<UnitValue>(property);
+            return value != null && value.IsPercentValue();
         }
 
         internal virtual bool IsFirstOnRootArea(bool checkRootAreaOnly) {
