@@ -884,8 +884,8 @@ namespace iText.StyledXmlParser.Css {
             (LEFT, CENTER, BOTTOM, TOP, RIGHT));
 
         /// <summary>The Constant BORDER_WIDTH_VALUES.</summary>
-        public static readonly ICollection<String> BORDER_WIDTH_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (new String[] { THIN, MEDIUM, THICK }));
+        public static readonly ICollection<String> BORDER_WIDTH_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(new String[] { THIN, MEDIUM, THICK })));
 
         /// <summary>The Constant BORDER_STYLE_VALUES.</summary>
         public static readonly ICollection<String> BORDER_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet

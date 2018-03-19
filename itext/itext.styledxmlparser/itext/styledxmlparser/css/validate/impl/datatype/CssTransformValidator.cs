@@ -101,8 +101,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                 if (CssConstants.TRANSLATE.Equals(function) || CssConstants.TRANSLATE_X.Equals(function) || CssConstants.TRANSLATE_Y
                     .Equals(function)) {
                     String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
-                    if ((arg.Length == 1 || arg.Length == 2 && CssConstants.TRANSLATE.Equals(function)) || (arg.Length == 1 &&
-                         (CssConstants.TRANSLATE_X.Equals(function) || CssConstants.TRANSLATE_Y.Equals(function)))) {
+                    if ((arg.Length == 1 || arg.Length == 2 && CssConstants.TRANSLATE.Equals(function))) {
                         foreach (String a in arg) {
                             if (!IsValidForTranslate(a)) {
                                 return false;
