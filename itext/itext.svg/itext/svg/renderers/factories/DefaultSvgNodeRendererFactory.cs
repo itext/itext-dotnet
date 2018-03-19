@@ -53,19 +53,15 @@ namespace iText.Svg.Renderers.Factories {
 
         public virtual ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {
             ISvgNodeRenderer result;
+            if (tag == null) {
+                throw new SvgProcessingException(SvgLogMessageConstant.TAGPARAMETERNULL);
+            }
             try {
-                if (tag == null) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.TAGPARAMETERNULL);
-                }
                 Type clazz = rendererMap.Get(tag.Name());
                 if (clazz == null) {
-                    throw new NullReferenceException();
+                    throw new SvgProcessingException(SvgLogMessageConstant.UNMAPPEDTAG).SetMessageParams(tag.Name());
                 }
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
-            }
-            catch (NullReferenceException ex) {
-                LOGGER.Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory).FullName, ex);
-                throw new SvgProcessingException(SvgLogMessageConstant.UNMAPPEDTAG, ex).SetMessageParams(tag.Name());
             }
             catch (MissingMethodException ex) {
                 LOGGER.Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory).FullName, ex);
