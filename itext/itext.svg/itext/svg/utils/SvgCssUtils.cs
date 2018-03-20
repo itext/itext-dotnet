@@ -43,72 +43,51 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Svg.Exceptions;
 
-namespace iText.Svg {
-    /// <summary>Class containing constants to represent all the SVG-tags.</summary>
-    public sealed class SvgTagConstants {
-        private SvgTagConstants() {
+namespace iText.Svg.Utils {
+    /// <summary>Utility class that facilitates parsing values from CSS.</summary>
+    public sealed class SvgCssUtils {
+        private SvgCssUtils() {
         }
 
-        public const String CIRCLE = "circle";
+        /// <summary>Parse a float from a given String.</summary>
+        /// <param name="value">string to be parsed</param>
+        /// <returns>float value</returns>
+        public static float ParseFloat(String value) {
+            try {
+                // we want to mimic behvior in Java that allows strings containing a double ("2.0d")
+                // to be parsed into floats
+                if ( value != null && value.EndsWith("d"))
+                {
+                    value = value.Replace("d", "");
+                }
 
-        public const String DEFS = "defs";
+                return float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (FormatException nfe) {
+                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, nfe);
+            } 
+            catch (ArgumentNullException ane)
+            {
+                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, ane);
+            }
+        }
 
-        public const String ELLIPSE = "ellipse";
-
-        public const String FOREIGN_OBJECT = "foreignObject";
-
-        public const String G = "g";
-
-        public const String IMAGE = "image";
-
-        public const String LINE = "line";
-
-        public const String LINEAR_GRADIENT = "linearGradient";
-
-        public const String PATH = "path";
-
-        public const String PATTERN = "pattern";
-
-        public const String POLYLINE = "polyline";
-
-        public const String POLYGON = "polygon";
-
-        public const String RADIAL_GRADIENT = "radialGradient";
-
-        public const String RECT = "rect";
-
-        public const String SVG = "svg";
-
-        public const String SYMBOL = "symbol";
-
-        public const String TEXT = "text";
-
-        public const String TSPAN = "tspan";
-
-        public const String TEXTPATH = "textpath";
-
-        public const String USE = "use";
-
-        public const String TRANSFORM = "transform";
-
-        public const String ANIMATE = "animate";
-
-        public const String ANIMATE_MOTION = "animateMotion";
-
-        public const String ANIMATE_TRANSFORM = "animateTransform";
-
-        public const String DISCARD = "discard";
-
-        public const String SET = "set";
-
-        public static readonly ICollection<String> ANIMATION_ELEMENTS = new HashSet<String>(JavaUtil.ArraysAsList(
-            ANIMATE, ANIMATE_MOTION, ANIMATE_TRANSFORM, DISCARD, SET));
-
-        public const String STYLE = "style";
-        // tags
-        // attributes
-        //Animation
-        //CSS
+        /// <summary>Splits a given String into a list of substrings.</summary>
+        /// <remarks>
+        /// Splits a given String into a list of substrings.
+        /// The string is split up by commas and whitespace characters (\t, \n, \r, \f).
+        /// </remarks>
+        /// <param name="value">the string to be split</param>
+        /// <returns>a list containing the split strings, an empty list if the value is null or empty</returns>
+        public static IList<String> SplitValueList(String value) {
+            IList<String> result = new List<String>();
+            if (value != null && value.Length > 0) {
+                String[] list = iText.IO.Util.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
+                result.AddAll(JavaUtil.ArraysAsList(list));
+            }
+            return result;
+        }
     }
 }

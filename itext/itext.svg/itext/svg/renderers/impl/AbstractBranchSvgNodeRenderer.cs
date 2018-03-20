@@ -18,7 +18,7 @@ namespace iText.Svg.Renderers.Impl {
         /// the object that knows the place to draw this element and
         /// maintains its state
         /// </param>
-        public override void Draw(SvgDrawContext context) {
+        protected internal override void DoDraw(SvgDrawContext context) {
             PdfStream stream = new PdfStream();
             stream.Put(PdfName.Type, PdfName.XObject);
             stream.Put(PdfName.Subtype, PdfName.Form);

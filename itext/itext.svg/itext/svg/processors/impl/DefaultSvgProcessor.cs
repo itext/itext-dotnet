@@ -96,9 +96,10 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="startingNode">node to start on</param>
         private void ExecuteDepthFirstTraversal(INode startingNode) {
             //Create and push rootNode
-            if (!(startingNode is IElementNode) || !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
-                ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag((IElementNode)startingNode
-                    , null);
+            if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
+                IElementNode rootElementNode = (IElementNode)startingNode;
+                rootElementNode.SetStyles(cssResolver.ResolveStyles(startingNode, cssContext));
+                ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
                 processorState.Push(startingRenderer);
                 foreach (INode rootChild in startingNode.ChildNodes()) {
                     Visit(rootChild);
@@ -116,7 +117,7 @@ namespace iText.Svg.Processors.Impl {
         ///     </summary>
         /// <remarks>
         /// Recursive visit of the object tree, depth-first, processing the visited node and calling visit on its children.
-        /// Visit responsiblities for element nodes:
+        /// Visit responsibilities for element nodes:
         /// - Assign styles(CSS & attributes) to element
         /// - Create Renderer based on element
         /// - push & pop renderer to stack
@@ -164,7 +165,6 @@ namespace iText.Svg.Processors.Impl {
             return node is ITextNode;
         }
 
-        //&& processorState.top() instanceof ITextSvgRenderer
         /// <summary>Process the text contained in the text-node</summary>
         /// <param name="textNode">node containing text to process</param>
         private void ProcessText(ITextNode textNode) {

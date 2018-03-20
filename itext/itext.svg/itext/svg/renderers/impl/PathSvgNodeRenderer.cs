@@ -7,7 +7,7 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;path&gt; tag.
     /// </summary>
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
-        public override void Draw(SvgDrawContext context) {
+        protected internal override void DoDraw(SvgDrawContext context) {
             throw new NotSupportedException("Not supported yet.");
         }
         //To change body of generated methods, choose Tools | Templates.

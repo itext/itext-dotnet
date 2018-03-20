@@ -27,10 +27,7 @@ namespace iText.Svg.Renderers {
         ISvgNodeRenderer GetParent();
 
         /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
-        /// <param name="context">
-        /// the object that knows the place to draw this element and
-        /// maintains its state
-        /// </param>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         void Draw(SvgDrawContext context);
 
         /// <summary>Adds a renderer as the last element of the list of children.</summary>
