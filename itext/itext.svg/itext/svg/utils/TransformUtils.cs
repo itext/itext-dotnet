@@ -134,9 +134,8 @@ namespace iText.Svg.Utils {
             if (String.IsNullOrEmpty(transform)) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_EMPTY);
             }
-            iText.Svg.Utils.TransformUtils utils = new iText.Svg.Utils.TransformUtils();
             AffineTransform matrix = new AffineTransform();
-            IList<String> listWithTransformations = iText.Svg.Utils.TransformUtils.SplitString(transform);
+            IList<String> listWithTransformations = SplitString(transform);
             foreach (String transformation in listWithTransformations) {
                 AffineTransform newMatrix = TransformationStringToMatrix(transformation);
                 if (newMatrix != null) {
