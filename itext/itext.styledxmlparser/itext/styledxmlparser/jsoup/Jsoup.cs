@@ -128,6 +128,49 @@ namespace iText.StyledXmlParser.Jsoup {
             return iText.StyledXmlParser.Jsoup.Parser.Parser.ParseXml(xml, "");
         }
 
+        /// <summary>Parse XML into a Document.</summary>
+        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
+        ///     </remarks>
+        /// <param name="in">input stream to read. Make sure to close it after parsing.</param>
+        /// <param name="charsetName">
+        /// (optional) character set of file contents. Set to
+        /// <see langword="null"/>
+        /// to determine from
+        /// <c>http-equiv</c>
+        /// meta tag, if
+        /// present, or fall back to
+        /// <c>UTF-8</c>
+        /// (which is often safe to do).
+        /// </param>
+        /// <param name="baseUri">The URL where the HTML was retrieved from, to resolve relative links against.</param>
+        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
+        ///     </exception>
+        /// <returns>sane XML</returns>
+        public static Document ParseXML(Stream @in, String charsetName, String baseUri) {
+            return Parse(@in, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+        }
+
+        /// <summary>Parse XML into a Document.</summary>
+        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
+        ///     </remarks>
+        /// <param name="in">input stream to read. Make sure to close it after parsing.</param>
+        /// <param name="charsetName">
+        /// (optional) character set of file contents. Set to
+        /// <see langword="null"/>
+        /// to determine from
+        /// <c>http-equiv</c>
+        /// meta tag, if
+        /// present, or fall back to
+        /// <c>UTF-8</c>
+        /// (which is often safe to do).
+        /// </param>
+        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
+        ///     </exception>
+        /// <returns>sane XML</returns>
+        public static Document ParseXML(Stream @in, String charsetName) {
+            return ParseXML(@in, charsetName, "");
+        }
+
         /// <summary>Parse the contents of a file as HTML.</summary>
         /// <param name="in">file to load HTML from</param>
         /// <param name="charsetName">
