@@ -47,6 +47,10 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
         }
 
+        public virtual String GetAttribute(String key) {
+            return "";
+        }
+
         public override String ToString() {
             return name;
         }

@@ -1,3 +1,4 @@
+using System;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
@@ -217,6 +218,10 @@ namespace iText.Svg.Processors {
             }
 
             public ISvgNodeRendererFactory GetRendererFactory() {
+                return null;
+            }
+
+            public String GetCharset() {
                 return null;
             }
         }

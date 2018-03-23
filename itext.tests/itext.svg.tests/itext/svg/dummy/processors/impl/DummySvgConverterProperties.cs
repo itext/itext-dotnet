@@ -1,3 +1,4 @@
+using System;
 using iText.StyledXmlParser.Css;
 using iText.Svg.Dummy.Css.Impl;
 using iText.Svg.Dummy.Factories;
@@ -21,6 +22,10 @@ namespace iText.Svg.Dummy.Processors.Impl {
 
         public virtual ISvgNodeRendererFactory GetRendererFactory() {
             return rendererFactory;
+        }
+
+        public virtual String GetCharset() {
+            return null;
         }
     }
 }

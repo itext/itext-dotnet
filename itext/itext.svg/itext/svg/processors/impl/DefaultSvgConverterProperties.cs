@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Css.Impl;
@@ -27,6 +29,11 @@ namespace iText.Svg.Processors.Impl {
 
         public virtual ISvgNodeRendererFactory GetRendererFactory() {
             return rendererFactory;
+        }
+
+        public virtual String GetCharset() {
+            // may also return null, but null will always default to UTF-8 in JSoup
+            return Encoding.UTF8.Name();
         }
     }
 }

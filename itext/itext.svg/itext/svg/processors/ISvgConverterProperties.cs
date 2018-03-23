@@ -1,3 +1,4 @@
+using System;
 using iText.StyledXmlParser.Css;
 using iText.Svg.Renderers.Factories;
 
@@ -8,9 +9,10 @@ namespace iText.Svg.Processors {
     /// </summary>
     public interface ISvgConverterProperties {
         /// <summary>
-        /// Retrieve the Css Resolver that the
+        /// Retrieve the CSS Resolver that the
         /// <see cref="ISvgProcessor"/>
-        /// should use for resolving and assigning Css
+        /// should use for
+        /// resolving and assigning CSS.
         /// </summary>
         /// <returns>
         /// A
@@ -29,5 +31,25 @@ namespace iText.Svg.Processors {
         /// implementation
         /// </returns>
         ISvgNodeRendererFactory GetRendererFactory();
+
+        /// <summary>Get the name of the Charset to be used when decoding an InputStream.</summary>
+        /// <remarks>
+        /// Get the name of the Charset to be used when decoding an InputStream. This
+        /// method is allowed to return null, in which case
+        /// <c>UTF-8</c>
+        /// will
+        /// be used (by JSoup).
+        /// Please be aware that this method is NOT used when handling a
+        /// <c>String</c>
+        /// variable in the
+        /// <see cref="iText.Svg.Converter.SvgConverter"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// the String name of the
+        /// <see cref="System.Text.Encoding"/>
+        /// used for decoding
+        /// </returns>
+        String GetCharset();
     }
 }

@@ -1,0 +1,389 @@
+using System;
+using System.IO;
+using System.Text;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
+
+namespace iText.Svg.Converter {
+    /// <summary>
+    /// These tests will make sure that a NullPointerException is never thrown: if a
+    /// null check is made, an SVG-specific exception should tell the user where the
+    /// null check failed.
+    /// </summary>
+    /// <remarks>
+    /// These tests will make sure that a NullPointerException is never thrown: if a
+    /// null check is made, an SVG-specific exception should tell the user where the
+    /// null check failed.
+    /// If the (optional)
+    /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
+    /// parameter is null, this
+    /// should NOT throw an exception as this is caught in the library.
+    /// </remarks>
+    public class SvgConverterUnitNullTest {
+        private PdfDocument doc;
+
+        private readonly String content = "<svg/>";
+
+        private Stream @is;
+
+        // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
+        [NUnit.Framework.SetUp]
+        public virtual void Setup() {
+            doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.AddNewPage();
+            @is = new MemoryStream(content.GetBytes(Encoding.UTF8));
+        }
+
+        [NUnit.Framework.TearDown]
+        public virtual void Teardown() {
+            doc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument((String)null, doc, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentInputStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument((Stream)null, doc, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentDocNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument(@is, null, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentAllNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument((String)null, null, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentAllNullTest2() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument((Stream)null, null, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentStringPropsNullTest() {
+            SvgConverter.DrawOnDocument(content, doc, 1, null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentInputStreamPropsNullTest() {
+            SvgConverter.DrawOnDocument(@is, doc, 1, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfPage page = doc.GetFirstPage();
+                SvgConverter.DrawOnPage((String)null, page);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageInputStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfPage page = doc.GetFirstPage();
+                SvgConverter.DrawOnPage((Stream)null, page);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageDocNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnPage(@is, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageAllNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnPage((String)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageAllNullTest2() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnPage((Stream)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStringPropsNullTest() {
+            PdfPage page = doc.GetFirstPage();
+            SvgConverter.DrawOnPage(content, page, null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageInputStreamPropsNullTest() {
+            PdfPage page = doc.GetFirstPage();
+            SvgConverter.DrawOnPage(@is, page, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+                SvgConverter.DrawOnCanvas((String)null, canvas);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasInputStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+                SvgConverter.DrawOnCanvas((Stream)null, canvas);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasDocNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnCanvas(@is, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasAllNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnCanvas((String)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasAllNullTest2() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnCanvas((Stream)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStringPropsNullTest() {
+            PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+            SvgConverter.DrawOnCanvas(content, canvas, null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasInputStreamPropsNullTest() {
+            PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+            SvgConverter.DrawOnCanvas(@is, canvas, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((String)null, doc);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectInputStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((Stream)null, doc);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectRendererNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((ISvgNodeRenderer)null, doc);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectDocWithStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject(@is, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectDocWithStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject(@is, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectDocWithRendererNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is));
+                SvgConverter.ConvertToXObject(renderer, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectAllWithStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((String)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectAllWithStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((Stream)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectAllWithRendererNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.ConvertToXObject((ISvgNodeRenderer)null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectStringPropsNullTest() {
+            SvgConverter.ConvertToXObject(content, doc, null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectInputStreamPropsNullTest() {
+            SvgConverter.ConvertToXObject(@is, doc, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseStringNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.Parse((String)null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseStreamNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.Parse((Stream)null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseStreamPropsNullTest() {
+            SvgConverter.Parse(@is, null);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseStringPropsNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.Parse(null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.Process(null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessAllNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.Process(null, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessPropsNullTest() {
+            INode svg = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("svg"), ""));
+            SvgConverter.Process(svg, null);
+        }
+    }
+}

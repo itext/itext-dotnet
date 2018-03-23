@@ -27,7 +27,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void BasicRootRendererTest() {
             String filename = "basicRootRendererTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + "basicRootRendererTest.pdf"));
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new SvgSvgNodeRenderer();
             ISvgNodeRenderer subRoot = new SvgSvgNodeRenderer();

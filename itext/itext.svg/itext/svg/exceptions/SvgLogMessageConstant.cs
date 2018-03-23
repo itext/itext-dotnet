@@ -30,5 +30,7 @@ namespace iText.Svg.Exceptions {
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+
+        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null";
     }
 }

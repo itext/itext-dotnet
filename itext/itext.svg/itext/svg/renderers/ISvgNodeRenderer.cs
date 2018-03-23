@@ -38,6 +38,19 @@ namespace iText.Svg.Renderers {
         /// <returns>the list of child renderers (in the order that they were added)</returns>
         IList<ISvgNodeRenderer> GetChildren();
 
+        /// <summary>
+        /// Sets the map of XML node attributes and CSS style properties that this
+        /// renderer needs.
+        /// </summary>
+        /// <param name="attributesAndStyles">the mapping from key names to values</param>
         void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles);
+
+        /// <summary>Retrieves the property value for a given key name.</summary>
+        /// <param name="key">the name of the property to search for</param>
+        /// <returns>
+        /// the value for this key, or
+        /// <see langword="null"/>
+        /// </returns>
+        String GetAttribute(String key);
     }
 }
