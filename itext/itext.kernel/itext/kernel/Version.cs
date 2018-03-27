@@ -353,14 +353,14 @@ namespace iText.Kernel {
                     fileLoadExceptionMessage = fileLoadException.Message;
                 }
 
-                if (fileLoadExceptionMessage != null) {
+                if (type == null) {
                     ILog logger = LogManager.GetLogger(typeof(Version));
                     try {
                         type = System.Type.GetType(licenseKeyClassPartialName);
                     } catch {
                         // ignore
                     }
-                    if (type == null) {
+                    if (type == null && fileLoadExceptionMessage != null) {
                         logger.Error(fileLoadExceptionMessage);
                     }
                 }
