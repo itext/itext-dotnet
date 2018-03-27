@@ -193,7 +193,7 @@ namespace iText.IO.Util {
 
         /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
-        /// <returns>the corresponding characters in a char arrat</returns>
+        /// <returns>the corresponding characters in a char array</returns>
         public static char[] ConvertFromUtf32ToCharArray(int codePoint) {
             if (codePoint < 0x10000) {
                 return new char[] { (char)codePoint };
@@ -203,19 +203,24 @@ namespace iText.IO.Util {
         }
 
         public static bool IsWhiteSpace(char ch) {
-            if (ch == '\u00A0' || ch == '\u2007' || ch == '\u202F') {
+            return IsWhiteSpace((int) ch);
+        }
+
+        public static bool IsWhiteSpace(int unicode) {
+            if (unicode == '\u00A0' || unicode == '\u2007' || unicode == '\u202F') {
                 // non-breaking space char
                 return false;
             }
-
-            UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(ch);
+            
+            UnicodeCategory category = unicode <= Char.MaxValue ? CharUnicodeInfo.GetUnicodeCategory((char)unicode) : 
+                CharUnicodeInfo.GetUnicodeCategory(new String(ConvertFromUtf32(unicode)), 0);
             if (category == UnicodeCategory.SpaceSeparator || category == UnicodeCategory.LineSeparator ||
                 category == UnicodeCategory.ParagraphSeparator) {
 
                 return true;
             }
 
-            return javaNonUnicodeCategoryWhiteSpaceChars.Contains(ch);
+            return unicode <= Char.MaxValue && javaNonUnicodeCategoryWhiteSpaceChars.Contains((char)unicode);
         }
 
 
@@ -273,7 +278,7 @@ namespace iText.IO.Util {
         /// </summary>
         public static bool IsWhitespace(Glyph glyph)
         {
-            return IsWhiteSpace((char)glyph.GetUnicode());
+            return IsWhiteSpace(glyph.GetUnicode());
         }
 
         /// <summary>
