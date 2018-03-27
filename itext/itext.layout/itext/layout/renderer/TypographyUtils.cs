@@ -392,7 +392,7 @@ namespace iText.Layout.Renderer {
                 } catch (FileLoadException fileLoadException) {
                     fileLoadExceptionMessage = fileLoadException.Message;
                 }
-                if (fileLoadExceptionMessage != null) {
+                if (type == null) {
                     // try to find typography assembly by it's partial name and check if it refers to current version of itext core
                     try {
                         type = System.Type.GetType(partialName);
@@ -411,7 +411,7 @@ namespace iText.Layout.Renderer {
                             type = null;
                         }
                     }
-                    if (type == null) {
+                    if (type == null && fileLoadExceptionMessage != null) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
                         logger.Error(fileLoadExceptionMessage);
                     }
