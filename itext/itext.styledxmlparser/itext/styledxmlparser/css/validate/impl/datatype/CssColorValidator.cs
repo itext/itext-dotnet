@@ -57,7 +57,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             float[] rgbaColor = WebColors.getRGBAColor(objectString);
             return rgbaColor != null;
             */
-            //TODO: figure out the possible dependency on Kernel
+            //TODO (RND-767): figure out the possible dependency on Kernel
             return true;
         }
     }

@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
+using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource
 {
@@ -140,7 +141,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
             if (baseUrl == null)
             {
                 // TODO Html2PdfException?
-                throw new ArgumentException(MessageFormatUtil.Format("Invalid base URI: {0}", @base));
+                throw new StyledXMLParserException(MessageFormatUtil.Format("Invalid base URI: {0}", @base));
             }
         }
 

@@ -110,7 +110,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     }
 
                     case ':': {
-                        //TODO: Consider pseudo-elements in SVG
+                        //TODO (RND-866): Consider pseudo-elements in SVG
                         //appendPseudoSelector(selectorItems, selectorItem, match);
                         break;
                     }

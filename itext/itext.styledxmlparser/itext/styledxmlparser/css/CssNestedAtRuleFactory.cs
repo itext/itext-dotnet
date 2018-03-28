@@ -93,7 +93,7 @@ namespace iText.StyledXmlParser.Css {
                 case CssRuleName.BOTTOM_RIGHT_CORNER:
                 case CssRuleName.FONT_FACE:
                 default: {
-                    //TODO consider media rules in SVG
+                    //TODO (RND-863) consider media rules in SVG
                     //return new CssMediaRule(ruleParameters);
                     //return new CssPageRule(ruleParameters);
                     //return new CssMarginRule(ruleName, ruleParameters);
