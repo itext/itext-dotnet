@@ -1257,7 +1257,7 @@ namespace iText.Layout.Renderer {
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
             return char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode
-                ();
+                () || '\u00a0' == g.GetUnicode();
         }
 
         private void UpdateFontAndText() {
