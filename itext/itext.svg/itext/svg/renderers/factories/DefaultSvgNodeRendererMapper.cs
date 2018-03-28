@@ -17,6 +17,7 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
+            result.Put(SvgTagConstants.LINE, typeof(LineSvgNodeRenderer));
             result.Put(SvgTagConstants.SVG, typeof(SvgSvgNodeRenderer));
             result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgTagConstants.RECT, typeof(RectangleSvgNodeRenderer));

@@ -90,6 +90,18 @@ namespace iText.Svg {
 
         public const String USE = "use";
 
+        public const String X = "x";
+
+        public const String X1 = "x1";
+
+        public const String X2 = "x2";
+
+        public const String SY = "y";
+
+        public const String Y1 = "y1";
+
+        public const String Y2 = "y2";
+
         public const String TRANSFORM = "transform";
 
         public const String ANIMATE = "animate";
