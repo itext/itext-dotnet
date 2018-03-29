@@ -58,17 +58,5 @@ namespace iText.Svg.Css {
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
-
-        [NUnit.Framework.Test]
-        public virtual void DefaultSvgCssResolverInheritedTest() {
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SvgCssResolverRelativeValueTest() {
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DefaultSvgCssResolverDefaultsTest() {
-        }
     }
 }

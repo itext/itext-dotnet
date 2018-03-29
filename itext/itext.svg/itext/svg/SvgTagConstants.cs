@@ -116,8 +116,8 @@ namespace iText.Svg {
 
         public const String SET = "set";
 
-        public static readonly ICollection<String> ANIMATION_ELEMENTS = new HashSet<String>(JavaUtil.ArraysAsList(
-            ANIMATE, ANIMATE_MOTION, ANIMATE_TRANSFORM, DISCARD, SET));
+        public static readonly ICollection<String> ANIMATION_ELEMENTS = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(ANIMATE, ANIMATE_MOTION, ANIMATE_TRANSFORM, DISCARD, SET)));
 
         public const String STYLE = "style";
         // tags

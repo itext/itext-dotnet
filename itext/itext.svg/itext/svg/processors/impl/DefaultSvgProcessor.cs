@@ -91,7 +91,7 @@ namespace iText.Svg.Processors.Impl {
             cssContext = new SvgCssContext();
         }
 
-        //TODO: resolve/initialize CSS context
+        //TODO(RND-865): resolve/initialize CSS context
         /// <summary>Start the depth-first traversal of the INode tree, pushing the results on the stack</summary>
         /// <param name="startingNode">node to start on</param>
         private void ExecuteDepthFirstTraversal(INode startingNode) {

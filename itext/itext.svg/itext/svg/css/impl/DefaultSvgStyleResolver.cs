@@ -19,9 +19,8 @@ namespace iText.Svg.Css.Impl {
         public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             //Load in defaults
-            //TODO: Figure out if defaults are necessary
+            //TODO (RND-865): Figure out if defaults are necessary
             //Load in from collected style sheets
-            //TODO: quick band-aid for loading in internal style sheets
             IList<CssDeclaration> styleSheetDeclarations = internalStyleSheet.GetCssDeclarations(node, MediaDeviceDescription
                 .CreateDefault());
             foreach (CssDeclaration ssd in styleSheetDeclarations) {
@@ -84,13 +83,13 @@ namespace iText.Svg.Css.Impl {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO: mediaquery wrap
+                            //TODO(RND-863): mediaquery wrap
                             //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             internalStyleSheet.AppendCssStyleSheet(styleSheet);
                         }
                     }
                 }
-                //TODO resolution of external style sheets via the link tag
+                //TODO(RND-864): resolution of external style sheets via the link tag
                 foreach (INode child in currentNode.ChildNodes()) {
                     if (child is IElementNode) {
                         q.Add(child);
@@ -98,7 +97,9 @@ namespace iText.Svg.Css.Impl {
                 }
             }
         }
+        //TODO(RND-863): Media query resolution
         //    private CssStyleSheet wrapStyleSheetInMediaQueryIfNecessary(IElementNode headChildElement, CssStyleSheet styleSheet) {
+        //
         //        String mediaAttribute = headChildElement.getAttribute(AttributeConstants.MEDIA);
         //        if (mediaAttribute != null && mediaAttribute.length() > 0) {
         //            CssMediaRule mediaRule = new CssMediaRule(mediaAttribute);
@@ -107,6 +108,7 @@ namespace iText.Svg.Css.Impl {
         //            styleSheet.addStatement(mediaRule);
         //        }
         //        return styleSheet;
+        //        throw new NotImplementedException();
         //    }
     }
 }
