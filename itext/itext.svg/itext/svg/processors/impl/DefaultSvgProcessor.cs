@@ -98,8 +98,8 @@ namespace iText.Svg.Processors.Impl {
             //Create and push rootNode
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
-                rootElementNode.SetStyles(cssResolver.ResolveStyles(startingNode, cssContext));
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
+                startingRenderer.SetAttributesAndStyles(cssResolver.ResolveStyles(startingNode, cssContext));
                 processorState.Push(startingRenderer);
                 foreach (INode rootChild in startingNode.ChildNodes()) {
                     Visit(rootChild);
@@ -128,10 +128,10 @@ namespace iText.Svg.Processors.Impl {
         private void Visit(INode node) {
             if (node is IElementNode) {
                 IElementNode element = (IElementNode)node;
-                element.SetStyles(cssResolver.ResolveStyles(node, cssContext));
                 if (!rendererFactory.IsTagIgnored(element)) {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
+                        renderer.SetAttributesAndStyles(cssResolver.ResolveStyles(node, cssContext));
                         processorState.Top().AddChild(renderer);
                         processorState.Push(renderer);
                     }

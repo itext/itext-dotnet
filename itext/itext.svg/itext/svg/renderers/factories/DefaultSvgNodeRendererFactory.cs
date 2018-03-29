@@ -62,7 +62,6 @@ namespace iText.Svg.Renderers.Factories {
                     throw new SvgProcessingException(SvgLogMessageConstant.UNMAPPEDTAG).SetMessageParams(tag.Name());
                 }
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
-                result.SetAttributesAndStyles(tag.GetStyles());
             }
             catch (MissingMethodException ex) {
                 LOGGER.Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory).FullName, ex);
@@ -71,7 +70,6 @@ namespace iText.Svg.Renderers.Factories {
             }
             if (parent != null) {
                 result.SetParent(parent);
-                parent.AddChild(result);
             }
             return result;
         }

@@ -130,8 +130,6 @@ namespace iText.Svg.Renderers {
             ISvgNodeRenderer parentRenderer = fact.CreateSvgNodeRendererForTag(parentTag, null);
             ISvgNodeRenderer childRenderer = fact.CreateSvgNodeRendererForTag(childTag, parentRenderer);
             NUnit.Framework.Assert.AreEqual(parentRenderer, childRenderer.GetParent());
-            NUnit.Framework.Assert.AreEqual(1, parentRenderer.GetChildren().Count);
-            NUnit.Framework.Assert.AreEqual(childRenderer, parentRenderer.GetChildren()[0]);
         }
 
         private class FaultyTestMapper : ISvgNodeRendererMapper {

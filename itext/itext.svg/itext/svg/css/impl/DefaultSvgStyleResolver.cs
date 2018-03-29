@@ -32,6 +32,7 @@ namespace iText.Svg.Css.Impl {
             if (node is IElementNode) {
                 IElementNode eNode = (IElementNode)node;
                 foreach (IAttribute attr in eNode.GetAttributes()) {
+                    //TODO: filter out svg tags
                     ProcessAttribute(attr, styles);
                 }
             }

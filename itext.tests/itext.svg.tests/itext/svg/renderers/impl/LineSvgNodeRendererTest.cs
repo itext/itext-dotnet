@@ -142,6 +142,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
-        //TODO We'll need an integration test with the entire (not yet created) pipeline as well
+        //TODO(RND-823) We'll need an integration test with the entire (not yet created) pipeline as well
     }
 }
