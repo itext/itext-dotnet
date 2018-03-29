@@ -47,6 +47,8 @@ using iText.IO.Util;
 namespace iText.Svg {
     /// <summary>Class containing constants to represent all the SVG-tags.</summary>
     public sealed class SvgTagConstants {
+        public const String CSS_STROKE_WIDTH_PROPERTY = "stroke-width";
+
         private SvgTagConstants() {
         }
 

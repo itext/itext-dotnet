@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -30,25 +31,22 @@ namespace iText.Svg.Renderers.Impl {
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
-            canvas.MoveTo(GetAttribute(attributesAndStyles, SvgTagConstants.X1), GetAttribute(attributesAndStyles, SvgTagConstants
-                .Y1)).LineTo(GetAttribute(attributesAndStyles, SvgTagConstants.X2), GetAttribute(attributesAndStyles, 
-                SvgTagConstants.Y2));
-        }
-
-        public virtual float GetX1() {
-            return x1;
-        }
-
-        public virtual float GetX2() {
-            return x2;
-        }
-
-        public virtual float GetY1() {
-            return y1;
-        }
-
-        public virtual float GetY2() {
-            return y2;
+            /*Set line width when provided*/
+            float Strokewidth = GetAttribute(attributesAndStyles, SvgTagConstants.CSS_STROKE_WIDTH_PROPERTY);
+            if (Strokewidth != 0) {
+                canvas.SetLineWidth(Strokewidth);
+            }
+            //TODO apply stroke when provided
+            try {
+                if (attributesAndStyles.Count > 0) {
+                    canvas.MoveTo(GetAttribute(attributesAndStyles, SvgTagConstants.X1), GetAttribute(attributesAndStyles, SvgTagConstants
+                        .Y1)).LineTo(GetAttribute(attributesAndStyles, SvgTagConstants.X2), GetAttribute(attributesAndStyles, 
+                        SvgTagConstants.Y2)).ClosePathStroke();
+                }
+            }
+            catch (FormatException e) {
+                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, e);
+            }
         }
 
         private float GetAttribute(IDictionary<String, String> attributes, String key) {
