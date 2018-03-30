@@ -150,6 +150,9 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float ParseAbsoluteLength(String length, String defaultMetric) {
             int pos = DeterminePositionBetweenValueAndUnit(length);
             if (pos == 0) {
+                if (length == null) {
+                    length = "null";
+                }
                 throw new StyledXMLParserException(MessageFormatUtil.Format(LogMessageConstant.NAN, length));
             }
             float f = float.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
