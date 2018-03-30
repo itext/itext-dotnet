@@ -9,28 +9,40 @@ namespace iText.Svg.Processors.Impl {
     public class ProcessorState {
         private Stack<ISvgNodeRenderer> stack;
 
+        /// <summary>Instantiates the processor state.</summary>
         public ProcessorState() {
-            stack = new Stack<ISvgNodeRenderer>();
+            this.stack = new Stack<ISvgNodeRenderer>();
         }
 
-        public virtual Stack<ISvgNodeRenderer> GetStack() {
-            return stack;
+        /// <summary>Returns the amount of ISvgNodeRenderers being processed.</summary>
+        /// <returns>amount of ISvgNodeRenderers</returns>
+        public virtual int Size() {
+            return this.stack.Count;
         }
 
-        public virtual void Push(ISvgNodeRenderer svgElement) {
-            stack.Push(svgElement);
+        /// <summary>Adds an ISvgNodeRenderer to the processor's state.</summary>
+        /// <param name="svgNodeRenderer">renderer to be added to the state</param>
+        public virtual void Push(ISvgNodeRenderer svgNodeRenderer) {
+            this.stack.Push(svgNodeRenderer);
         }
 
+        /// <summary>Removes and returns the first renderer of the processor state.</summary>
+        /// <returns>the removed ISvgNodeRenderer object</returns>
         public virtual ISvgNodeRenderer Pop() {
-            return stack.Pop();
+            return this.stack.Pop();
         }
 
+        /// <summary>Returns the first ISvgNodeRenderer object without removing it.</summary>
+        /// <returns>the first ISvgNodeRenderer</returns>
         public virtual ISvgNodeRenderer Top() {
-            return stack.Peek();
+            return this.stack.Peek();
         }
 
+        /// <summary>Returns true when the processorstate is empty, false when there is at least one ISvgNodeRenderer in the state.
+        ///     </summary>
+        /// <returns>true if empty, false if not empty</returns>
         public virtual bool Empty() {
-            return stack.Count == 0;
+            return this.stack.Count == 0;
         }
     }
 }

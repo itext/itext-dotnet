@@ -89,5 +89,10 @@ namespace iText.Svg.Utils {
             }
             return result;
         }
+
+        public static float ConvertPtsToPx(float v)
+        {
+            return v * 0.75f;
+        }
     }
 }

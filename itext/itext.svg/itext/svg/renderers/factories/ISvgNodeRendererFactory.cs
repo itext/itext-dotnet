@@ -17,6 +17,11 @@ namespace iText.Svg.Renderers.Factories {
         /// <returns>Configured ISvgNodeRenderer</returns>
         ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent);
 
+        /// <summary>Checks whether the provided tag is an ignored tag of this factory or not.</summary>
+        /// <remarks>Checks whether the provided tag is an ignored tag of this factory or not. If ignored, the factory won't process this IElementNode into an ISvgNodeRenderer.
+        ///     </remarks>
+        /// <param name="tag">the IElementNode</param>
+        /// <returns>true if ignored</returns>
         bool IsTagIgnored(IElementNode tag);
     }
 }

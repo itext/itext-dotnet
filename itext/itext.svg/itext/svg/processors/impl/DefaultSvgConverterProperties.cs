@@ -18,6 +18,10 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgNodeRendererFactory rendererFactory;
 
+        /// <summary>Creates a DefaultSvgConverterProperties object.</summary>
+        /// <remarks>Creates a DefaultSvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
+        ///     </remarks>
+        /// <param name="root">the root tag of the SVG image</param>
         public DefaultSvgConverterProperties(INode root) {
             cssResolver = new DefaultSvgStyleResolver(root);
             rendererFactory = new DefaultSvgNodeRendererFactory();

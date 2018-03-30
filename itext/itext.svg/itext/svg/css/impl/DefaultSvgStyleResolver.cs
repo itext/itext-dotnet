@@ -8,9 +8,16 @@ using iText.StyledXmlParser.Node;
 using iText.Svg;
 
 namespace iText.Svg.Css.Impl {
+    /// <summary>Default CSS resolver implementation.</summary>
     public class DefaultSvgStyleResolver : ICssResolver {
         private CssStyleSheet internalStyleSheet;
 
+        /// <summary>Creates a DefaultSvgStyleResolver.</summary>
+        /// <remarks>
+        /// Creates a DefaultSvgStyleResolver. This constructor will instantiate its internal style sheet and it
+        /// will collect the css declarations from the provided node.
+        /// </remarks>
+        /// <param name="rootNode">node to collect css from</param>
         public DefaultSvgStyleResolver(INode rootNode) {
             internalStyleSheet = new CssStyleSheet();
             CollectCssDeclarations(rootNode);
@@ -27,12 +34,11 @@ namespace iText.Svg.Css.Impl {
                 styles.Put(ssd.GetProperty(), ssd.GetExpression());
             }
             //Load in inherited declarations from parent
-            //TODO: parent inheritance
+            //TODO: RND-880
             //Load in attributes declarations
             if (node is IElementNode) {
                 IElementNode eNode = (IElementNode)node;
                 foreach (IAttribute attr in eNode.GetAttributes()) {
-                    //TODO: filter out svg tags
                     ProcessAttribute(attr, styles);
                 }
             }
@@ -98,18 +104,5 @@ namespace iText.Svg.Css.Impl {
                 }
             }
         }
-        //TODO(RND-863): Media query resolution
-        //    private CssStyleSheet wrapStyleSheetInMediaQueryIfNecessary(IElementNode headChildElement, CssStyleSheet styleSheet) {
-        //
-        //        String mediaAttribute = headChildElement.getAttribute(AttributeConstants.MEDIA);
-        //        if (mediaAttribute != null && mediaAttribute.length() > 0) {
-        //            CssMediaRule mediaRule = new CssMediaRule(mediaAttribute);
-        //            mediaRule.addStatementsToBody(styleSheet.getStatements());
-        //            styleSheet = new CssStyleSheet();
-        //            styleSheet.addStatement(mediaRule);
-        //        }
-        //        return styleSheet;
-        //        throw new NotImplementedException();
-        //    }
     }
 }

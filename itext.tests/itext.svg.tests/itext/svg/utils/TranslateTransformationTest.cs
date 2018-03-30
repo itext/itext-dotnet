@@ -5,7 +5,7 @@ namespace iText.Svg.Utils {
     public class TranslateTransformationTest {
         [NUnit.Framework.Test]
         public virtual void NormalTranslateTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 20d, 50d);
+            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 15d, 37.5d);
             AffineTransform actual = TransformUtils.ParseTransform("translate(20, 50)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -21,21 +21,21 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void OneTranslateValuesTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 10d, 0d);
+            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 7.5d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("translate(10)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void TwoTranslateValuesTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 23d, 58d);
+            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 17.25d, 43.5d);
             AffineTransform actual = TransformUtils.ParseTransform("translate(23,58)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeTranslateValuesTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, -23d, -58d);
+            AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, -17.25d, -43.5d);
             AffineTransform actual = TransformUtils.ParseTransform("translate(-23,-58)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

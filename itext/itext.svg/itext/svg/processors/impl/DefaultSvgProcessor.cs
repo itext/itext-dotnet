@@ -36,6 +36,7 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgConverterProperties defaultProps;
 
+        /// <summary>Instantiates a DefaultSvgProcessor object.</summary>
         public DefaultSvgProcessor() {
         }
 
@@ -64,8 +65,8 @@ namespace iText.Svg.Processors.Impl {
             if (svgRoot != null) {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
-                //Cleanup
-                return CreateResultAndClean();
+                ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
+                return rootSvgRenderer;
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
@@ -132,6 +133,7 @@ namespace iText.Svg.Processors.Impl {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
                         renderer.SetAttributesAndStyles(cssResolver.ResolveStyles(node, cssContext));
+                        //TODO DEVSIX-1891
                         processorState.Top().AddChild(renderer);
                         processorState.Push(renderer);
                     }

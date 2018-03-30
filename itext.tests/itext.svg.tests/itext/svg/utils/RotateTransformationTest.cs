@@ -7,7 +7,7 @@ namespace iText.Svg.Utils {
     public class RotateTransformationTest {
         [NUnit.Framework.Test]
         public virtual void NormalRotateTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(10f), 20f, 30f);
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(7.5d), 15d, 22.5d);
             AffineTransform actual = TransformUtils.ParseTransform("rotate(10, 20, 30)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -23,7 +23,7 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void OneRotateValuesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(10d));
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(7.5d));
             AffineTransform actual = TransformUtils.ParseTransform("rotate(10)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -39,8 +39,8 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void ThreeRotateValuesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(23d), 58d, 57d);
-            AffineTransform actual = TransformUtils.ParseTransform("rotate(23,58, 57)");
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(17.25d), 43.5d, 42.75d);
+            AffineTransform actual = TransformUtils.ParseTransform("rotate(23, 58, 57)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
@@ -55,14 +55,14 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void NegativeRotateValuesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(-23d), -58d, -1d);
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(-17.25d), -43.5d, -0.75d);
             AffineTransform actual = TransformUtils.ParseTransform("rotate(-23,-58,-1)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void NinetyDegreesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(90));
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(67.5d));
             AffineTransform actual = TransformUtils.ParseTransform("rotate(90)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

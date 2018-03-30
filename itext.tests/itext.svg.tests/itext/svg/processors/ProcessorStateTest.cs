@@ -10,7 +10,7 @@ namespace iText.Svg.Processors {
             ProcessorState testProcessorState = new ProcessorState();
             ISvgNodeRenderer renderer = new DummySvgNodeRenderer("test");
             testProcessorState.Push(renderer);
-            NUnit.Framework.Assert.IsTrue(testProcessorState.GetStack().Count == 1);
+            NUnit.Framework.Assert.IsTrue(testProcessorState.Size() == 1);
         }
 
         /// <summary>Pop test</summary>

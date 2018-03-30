@@ -11,42 +11,39 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;line&gt; tag.
     /// </summary>
     public class LineSvgNodeRenderer : AbstractSvgNodeRenderer {
-        private float x1;
-
-        private float x2;
-
-        private float y1;
-
-        private float y2;
-
         public LineSvgNodeRenderer() {
-        }
-
-        public LineSvgNodeRenderer(float x1, float y1, float x2, float y2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
-            /*Set line width when provided*/
-            float Strokewidth = GetAttribute(attributesAndStyles, SvgTagConstants.CSS_STROKE_WIDTH_PROPERTY);
-            if (Strokewidth != 0) {
-                canvas.SetLineWidth(Strokewidth);
-            }
-            //TODO apply stroke when provided
             try {
                 if (attributesAndStyles.Count > 0) {
-                    canvas.MoveTo(GetAttribute(attributesAndStyles, SvgTagConstants.X1), GetAttribute(attributesAndStyles, SvgTagConstants
-                        .Y1)).LineTo(GetAttribute(attributesAndStyles, SvgTagConstants.X2), GetAttribute(attributesAndStyles, 
-                        SvgTagConstants.Y2)).ClosePathStroke();
+                    float x1 = 0f;
+                    float y1 = 0f;
+                    float x2 = 0f;
+                    float y2 = 0f;
+                    if (attributesAndStyles.ContainsKey(SvgTagConstants.X1)) {
+                        x1 = GetAttribute(attributesAndStyles, SvgTagConstants.X1);
+                    }
+                    if (attributesAndStyles.ContainsKey(SvgTagConstants.Y1)) {
+                        y1 = GetAttribute(attributesAndStyles, SvgTagConstants.Y1);
+                    }
+                    if (attributesAndStyles.ContainsKey(SvgTagConstants.X2)) {
+                        x2 = GetAttribute(attributesAndStyles, SvgTagConstants.X2);
+                    }
+                    if (attributesAndStyles.ContainsKey(SvgTagConstants.Y2)) {
+                        y2 = GetAttribute(attributesAndStyles, SvgTagConstants.Y2);
+                    }
+                    canvas.MoveTo(x1, y1).LineTo(x2, y2);
                 }
             }
             catch (FormatException e) {
                 throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, e);
             }
+        }
+
+        protected internal override bool CanElementFill() {
+            return false;
         }
 
         private float GetAttribute(IDictionary<String, String> attributes, String key) {

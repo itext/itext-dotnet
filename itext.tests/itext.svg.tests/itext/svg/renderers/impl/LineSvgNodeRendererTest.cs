@@ -4,9 +4,11 @@ using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
+using iText.StyledXmlParser;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class LineSvgNodeRendererTest {
@@ -35,6 +37,7 @@ namespace iText.Svg.Renderers.Impl {
             lineProperties.Put("y1", "800");
             lineProperties.Put("x2", "300");
             lineProperties.Put("y2", "800");
+            lineProperties.Put("stroke", "green");
             lineProperties.Put("stroke-width", "25");
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
@@ -67,7 +70,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LnvalidAttributeTest01() {
+        public virtual void InvalidAttributeTest01() {
             bool isThrown = false;
             PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
             doc.AddNewPage();
@@ -86,7 +89,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             catch (SvgProcessingException e) {
                 isThrown = true;
-                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage.Trim(), e.Message, "Exception wasn't thrown");
+                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, e.Message, "Correct exception wasn't thrown");
             }
             finally {
                 doc.Close();
@@ -94,17 +97,22 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsTrue(isThrown, "Exception wasn't thrown");
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LnvalidAttributeTest02() {
+        [LogMessage(LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void InvalidAttributeTest02() {
             bool isThrown = false;
-            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            doc.AddNewPage();
-            ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");
             lineProperties.Put("y1", "800");
             lineProperties.Put("x2", "1 0");
             lineProperties.Put("y2", "0 2 0");
+            lineProperties.Put("stroke", "orange");
+            String filename = "invalidAttributes02.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            doc.AddNewPage();
+            LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
@@ -114,11 +122,12 @@ namespace iText.Svg.Renderers.Impl {
             }
             catch (SvgProcessingException e) {
                 isThrown = true;
-                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage.Trim(), e.Message, "Exception wasn't thrown");
+                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, e.Message, "Correct exception wasn't thrown");
             }
             finally {
                 doc.Close();
             }
+            doc.Close();
             NUnit.Framework.Assert.IsTrue(isThrown, "Exception wasn't thrown");
         }
 

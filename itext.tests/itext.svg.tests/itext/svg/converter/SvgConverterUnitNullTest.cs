@@ -26,7 +26,7 @@ namespace iText.Svg.Converter {
     public class SvgConverterUnitNullTest {
         private PdfDocument doc;
 
-        private readonly String content = "<svg/>";
+        private readonly String content = "<svg width=\"10\" height=\"10\"/>";
 
         private Stream @is;
 

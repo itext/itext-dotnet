@@ -52,7 +52,6 @@ namespace iText.Svg.Utils {
 ;
         }
 
-        [NUnit.Framework.Test]
         public virtual void CommaSplitValueTest() {
             String input = "a,b,c,d";
             IList<String> expected = new List<String>();
@@ -122,6 +121,30 @@ namespace iText.Svg.Utils {
         public virtual void EmptySplitValueTest() {
             IList<String> actual = SvgCssUtils.SplitValueList("");
             NUnit.Framework.Assert.IsTrue(actual.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalConvertPtsToPxTest() {
+            float[] input = new float[] { -1f, 0f, 1f };
+            float[] expected = new float[] { -0.75f, 0f, 0.75f };
+            for (int i = 0; i < input.Length; i++) {
+                float actual = SvgCssUtils.ConvertPtsToPx(input[i]);
+                NUnit.Framework.Assert.AreEqual(expected[i], actual, 0f);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertFloatMaximumToPdfTest() {
+            float expected = 2.5521175E38f;
+            float actual = SvgCssUtils.ConvertPtsToPx(float.MaxValue);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertFloatMinimumToPdfTest() {
+            float expected = 1.4E-45f;
+            float actual = SvgCssUtils.ConvertPtsToPx(float.MinValue);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
         }
     }
 }

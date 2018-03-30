@@ -23,6 +23,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgTagConstants.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgTagConstants.PATH, typeof(PathSvgNodeRenderer));
             result.Put(SvgTagConstants.ELLIPSE, typeof(EllipseSvgNodeRenderer));
+            result.Put(SvgTagConstants.G, typeof(NoDrawOperationSvgNodeRenderer));
             return result;
         }
 

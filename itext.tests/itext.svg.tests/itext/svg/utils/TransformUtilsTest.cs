@@ -1,5 +1,7 @@
-using System;
+using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser;
+using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
@@ -36,7 +38,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix(a b c d e f)");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.FLOAT_PARSING_NAN));
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "a")));
 ;
         }
 
@@ -79,14 +81,14 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void CommasWithWhitespaceTest() {
-            AffineTransform expected = new AffineTransform(10d, 20d, 30d, 40d, 50d, 60d);
+            AffineTransform expected = new AffineTransform(7.5d, 15d, 22.5d, 30d, 37.5d, 45d);
             AffineTransform actual = TransformUtils.ParseTransform("matrix(10, 20, 30, 40, 50, 60)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void CommasTest() {
-            AffineTransform expected = new AffineTransform(10d, 20d, 30d, 40d, 50d, 60d);
+            AffineTransform expected = new AffineTransform(7.5d, 15d, 22.5d, 30d, 37.5d, 45d);
             AffineTransform actual = TransformUtils.ParseTransform("matrix(10,20,30,40,50,60)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -94,21 +96,20 @@ namespace iText.Svg.Utils {
         [NUnit.Framework.Test]
         public virtual void CombinedTransformTest() {
             AffineTransform actual = TransformUtils.ParseTransform("translate(40,20) scale(3)");
-            AffineTransform expected = new AffineTransform(3, 0, 0, 3, 40, 20);
+            AffineTransform expected = new AffineTransform(2.25d, 0d, 0d, 2.25d, 30d, 15d);
             NUnit.Framework.Assert.AreEqual(actual, expected);
         }
 
         [NUnit.Framework.Test]
         public virtual void CombinedReverseTransformTest() {
             AffineTransform actual = TransformUtils.ParseTransform("scale(3) translate(40,20)");
-            AffineTransform expected = new AffineTransform(3, 0, 0, 3, 120, 60);
+            AffineTransform expected = new AffineTransform(2.25d, 0d, 0d, 2.25d, 67.5d, 33.75d);
             NUnit.Framework.Assert.AreEqual(actual, expected);
         }
 
         [NUnit.Framework.Test]
         public virtual void DoubleTransformationTest() {
-            double expectedScaleValue = Math.Pow(43d, 2);
-            AffineTransform expected = new AffineTransform(expectedScaleValue, 0d, 0d, expectedScaleValue, 0d, 0d);
+            AffineTransform expected = new AffineTransform(1040.0625d, 0d, 0d, 1040.0625d, 0d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("scale(43) scale(43)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

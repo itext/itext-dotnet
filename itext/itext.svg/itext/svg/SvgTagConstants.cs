@@ -92,19 +92,39 @@ namespace iText.Svg {
 
         public const String USE = "use";
 
+        public const String HEIGHT = "height";
+
+        public const String ID = "id";
+
+        public const String FILL = "fill";
+
+        public const String FILL_RULE_EVEN_ODD = "evenodd";
+
+        public const String FILL_RULE = "fill-rule";
+
+        public const String PRESERVE_ASPECT_RATIO = "preserveaspectratio";
+
+        public const String STROKE = "stroke";
+
+        public const String STROKE_WIDTH = "stroke-width";
+
+        public const String TRANSFORM = "transform";
+
+        public const String VIEWBOX = "viewbox";
+
+        public const String WIDTH = "width";
+
         public const String X = "x";
 
         public const String X1 = "x1";
 
         public const String X2 = "x2";
 
-        public const String SY = "y";
+        public const String Y = "y";
 
         public const String Y1 = "y1";
 
         public const String Y2 = "y2";
-
-        public const String TRANSFORM = "transform";
 
         public const String ANIMATE = "animate";
 
@@ -120,9 +140,41 @@ namespace iText.Svg {
             <String>(JavaUtil.ArraysAsList(ANIMATE, ANIMATE_MOTION, ANIMATE_TRANSFORM, DISCARD, SET)));
 
         public const String STYLE = "style";
+
+        public const String DEFAULT_ASPECT_RATIO = "xmidymid";
+
+        public const String DEFER = "defer";
+
+        public const String MEET = "meet";
+
+        public const String MEET_OR_SLICE_DEFAULT = "meet";
+
+        public const String NONE = "none";
+
+        public const String SLICE = "slice";
+
+        public const String XMIN_YMIN = "xminymin";
+
+        public const String XMIN_YMID = "xminymid";
+
+        public const String XMIN_YMAX = "xminymax";
+
+        public const String XMID_YMIN = "xmidymin";
+
+        public const String XMID_YMID = "xmidymid";
+
+        public const String XMID_YMAX = "xmidymax";
+
+        public const String XMAX_YMIN = "xmaxymin";
+
+        public const String XMAX_YMID = "xmaxymid";
+
+        public const String XMAX_YMAX = "xmaxymax";
+        // TODO RND-874 make inner Tag and Attribute classes
         // tags
         // attributes
         //Animation
         //CSS
+        // values
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Dummy.Renderers.Impl {
@@ -48,6 +49,9 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         }
 
         public virtual String GetAttribute(String key) {
+            if (SvgTagConstants.WIDTH.EqualsIgnoreCase(key) || SvgTagConstants.HEIGHT.EqualsIgnoreCase(key)) {
+                return "10";
+            }
             return "";
         }
 

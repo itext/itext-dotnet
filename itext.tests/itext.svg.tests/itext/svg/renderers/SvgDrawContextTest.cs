@@ -1,7 +1,11 @@
 using System;
 using System.IO;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Svg.Exceptions;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers {
     public class SvgDrawContextTest {
@@ -97,6 +101,54 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.AreEqual(page2, context.PopCanvas());
             NUnit.Framework.Assert.AreEqual(1, context.Size());
             NUnit.Framework.Assert.AreEqual(page1, context.PopCanvas());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddPdfFormXObject() {
+            String name = "expected";
+            PdfFormXObject expected = new PdfFormXObject(new Rectangle(0, 0, 0, 0));
+            this.context.AddNamedObject(name, expected);
+            Object actual = this.context.GetNamedObject(name);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddISvgNodeRender() {
+            String name = "expected";
+            ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+            this.context.AddNamedObject(name, expected);
+            Object actual = this.context.GetNamedObject(name);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNullToNamedObjects() {
+            NUnit.Framework.Assert.That(() =>  {
+                String name = "expected";
+                this.context.AddNamedObject(name, null);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NULL));
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNamedObjectWithNullName() {
+            NUnit.Framework.Assert.That(() =>  {
+                ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+                this.context.AddNamedObject(null, expected);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNamedObjectWithEmptyName() {
+            NUnit.Framework.Assert.That(() =>  {
+                ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+                this.context.AddNamedObject("", expected);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
+;
         }
     }
 }

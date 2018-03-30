@@ -1,6 +1,7 @@
 using System;
 
 namespace iText.Svg.Exceptions {
+    /// <summary>Class that holds the logging and exception messages.</summary>
     public sealed class SvgLogMessageConstant {
         private SvgLogMessageConstant() {
         }
@@ -15,7 +16,13 @@ namespace iText.Svg.Exceptions {
 
         public const String LOOP = "Loop detected";
 
+        public const String NAMED_OBJECT_NAME_NULL_OR_EMPTY = "The name of the named object can't be null or empty.";
+
+        public const String NAMED_OBJECT_NULL = "A named object can't be null.";
+
         public const String NOROOT = "No root found";
+
+        public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 
         public const String TAGPARAMETERNULL = "Tag parameter must not be null";
 
@@ -31,6 +38,6 @@ namespace iText.Svg.Exceptions {
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
 
-        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null";
+        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
     }
 }

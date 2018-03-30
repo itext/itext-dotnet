@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
@@ -207,7 +208,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0])));
             return new AffineTransform(1, 0, tan, 1, 0, 0);
         }
 
@@ -218,7 +219,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0])));
             return new AffineTransform(1, tan, 0, 1, 0, 0);
         }
 
@@ -229,10 +230,10 @@ namespace iText.Svg.Utils {
             if (values.Count != 1 && values.Count != 3) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double angle = MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0]));
+            double angle = MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0]));
             if (values.Count == 3) {
-                float centerX = SvgCssUtils.ParseFloat(values[1]);
-                float centerY = SvgCssUtils.ParseFloat(values[2]);
+                float centerX = CssUtils.ParseAbsoluteLength(values[1]);
+                float centerY = CssUtils.ParseAbsoluteLength(values[2]);
                 return AffineTransform.GetRotateInstance(angle, centerX, centerY);
             }
             return AffineTransform.GetRotateInstance(angle);
@@ -245,8 +246,8 @@ namespace iText.Svg.Utils {
             if (values.Count == 0 || values.Count > 2) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            float scaleX = SvgCssUtils.ParseFloat(values[0]);
-            float scaleY = values.Count == 2 ? SvgCssUtils.ParseFloat(values[1]) : scaleX;
+            float scaleX = CssUtils.ParseAbsoluteLength(values[0]);
+            float scaleY = values.Count == 2 ? CssUtils.ParseAbsoluteLength(values[1]) : scaleX;
             return AffineTransform.GetScaleInstance(scaleX, scaleY);
         }
 
@@ -257,8 +258,8 @@ namespace iText.Svg.Utils {
             if (values.Count == 0 || values.Count > 2) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            float translateX = SvgCssUtils.ParseFloat(values[0]);
-            float translateY = values.Count == 2 ? SvgCssUtils.ParseFloat(values[1]) : 0;
+            float translateX = CssUtils.ParseAbsoluteLength(values[0]);
+            float translateY = values.Count == 2 ? CssUtils.ParseAbsoluteLength(values[1]) : 0;
             return AffineTransform.GetTranslateInstance(translateX, translateY);
         }
 
@@ -269,12 +270,12 @@ namespace iText.Svg.Utils {
             if (values.Count != 6) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            float a = SvgCssUtils.ParseFloat(values[0]);
-            float b = SvgCssUtils.ParseFloat(values[1]);
-            float c = SvgCssUtils.ParseFloat(values[2]);
-            float d = SvgCssUtils.ParseFloat(values[3]);
-            float e = SvgCssUtils.ParseFloat(values[4]);
-            float f = SvgCssUtils.ParseFloat(values[5]);
+            float a = CssUtils.ParseAbsoluteLength(values[0]);
+            float b = CssUtils.ParseAbsoluteLength(values[1]);
+            float c = CssUtils.ParseAbsoluteLength(values[2]);
+            float d = CssUtils.ParseAbsoluteLength(values[3]);
+            float e = CssUtils.ParseAbsoluteLength(values[4]);
+            float f = CssUtils.ParseAbsoluteLength(values[5]);
             return new AffineTransform(a, b, c, d, e, f);
         }
 
