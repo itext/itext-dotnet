@@ -46,6 +46,7 @@ using Common.Logging;
 using iText.IO.Util;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
@@ -149,7 +150,7 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float ParseAbsoluteLength(String length, String defaultMetric) {
             int pos = DeterminePositionBetweenValueAndUnit(length);
             if (pos == 0) {
-                return 0f;
+                throw new StyledXMLParserException(MessageFormatUtil.Format(LogMessageConstant.NAN, length));
             }
             float f = float.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
             String unit = length.Substring(pos);
