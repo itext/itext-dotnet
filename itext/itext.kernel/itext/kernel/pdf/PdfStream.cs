@@ -314,7 +314,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.CannotOperateWithFlushedPdfStream);
             }
             if (inputStream != null) {
-                throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputStream);
+                throw new PdfException(PdfException.CannotSetDataToPdfStreamWhichWasCreatedByInputStream);
             }
             bool outputStreamIsUninitialized = outputStream == null;
             if (outputStreamIsUninitialized) {

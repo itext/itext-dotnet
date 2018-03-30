@@ -110,7 +110,7 @@ namespace iText.IO.Font.Cmap {
                 int one = seq[idx] & 0xff;
                 char c = plane[one];
                 if (c != 0 && (c & 0x8000) == 0) {
-                    throw new iText.IO.IOException("inconsistent.mapping");
+                    throw new iText.IO.IOException("Inconsistent mapping.");
                 }
                 if (c == 0) {
                     planes.Add(new char[256]);
@@ -123,7 +123,7 @@ namespace iText.IO.Font.Cmap {
             int one_1 = seq[size] & 0xff;
             char c_1 = plane_1[one_1];
             if ((c_1 & 0x8000) != 0) {
-                throw new iText.IO.IOException("inconsistent.mapping");
+                throw new iText.IO.IOException("Inconsistent mapping.");
             }
             plane_1[one_1] = cid;
         }

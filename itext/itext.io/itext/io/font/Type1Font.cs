@@ -77,7 +77,7 @@ namespace iText.IO.Font {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
             }
             else {
-                throw new iText.IO.IOException("1.is.not.a.standard.type1.font").SetMessageParams(name);
+                throw new iText.IO.IOException("{0} is not a standard type1 font.").SetMessageParams(name);
             }
         }
 
@@ -358,10 +358,10 @@ namespace iText.IO.Font {
             if (!startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("missing.startcharmetrics.in.1").SetMessageParams(metricsPath);
+                    throw new iText.IO.IOException("startcharmetrics is missing in {0}.").SetMessageParams(metricsPath);
                 }
                 else {
-                    throw new iText.IO.IOException("missing.startcharmetrics.in.the.metrics.file");
+                    throw new iText.IO.IOException("startcharmetrics is missing in the metrics file.");
                 }
             }
             avgWidth = 0;
@@ -427,10 +427,10 @@ namespace iText.IO.Font {
             if (startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("missing.endcharmetrics.in.1").SetMessageParams(metricsPath);
+                    throw new iText.IO.IOException("endcharmetrics is missing in {0}.").SetMessageParams(metricsPath);
                 }
                 else {
-                    throw new iText.IO.IOException("missing.endcharmetrics.in.the.metrics.file");
+                    throw new iText.IO.IOException("endcharmetrics is missing in the metrics file.");
                 }
             }
             // From AdobeGlyphList:
@@ -490,20 +490,20 @@ namespace iText.IO.Font {
                 if (!endOfMetrics) {
                     String metricsPath = fontParser.GetAfmPath();
                     if (metricsPath != null) {
-                        throw new iText.IO.IOException("missing.endfontmetrics.in.1").SetMessageParams(metricsPath);
+                        throw new iText.IO.IOException("endfontmetrics is missing in {0}.").SetMessageParams(metricsPath);
                     }
                     else {
-                        throw new iText.IO.IOException("missing.endfontmetrics.in.the.metrics.file");
+                        throw new iText.IO.IOException("endfontmetrics is missing in the metrics file.");
                     }
                 }
             }
             if (startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("missing.endkernpairs.in.1").SetMessageParams(metricsPath);
+                    throw new iText.IO.IOException("endkernpairs is missing in {0}.").SetMessageParams(metricsPath);
                 }
                 else {
-                    throw new iText.IO.IOException("missing.endkernpairs.in.the.metrics.file");
+                    throw new iText.IO.IOException("endkernpairs is missing in the metrics file.");
                 }
             }
             raf.Close();

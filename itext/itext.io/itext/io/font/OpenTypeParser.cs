@@ -446,30 +446,30 @@ namespace iText.IO.Font {
                 int dirIdx = ttcIndex;
                 if (dirIdx < 0) {
                     if (fileName != null) {
-                        throw new iText.IO.IOException("the.font.index.for.1.must.be.positive").SetMessageParams(fileName);
+                        throw new iText.IO.IOException("The font index for {0} must be positive.").SetMessageParams(fileName);
                     }
                     else {
-                        throw new iText.IO.IOException("the.font.index.must.be.positive");
+                        throw new iText.IO.IOException("The font index must be positive.");
                     }
                 }
                 String mainTag = ReadStandardString(4);
                 if (!mainTag.Equals("ttcf")) {
                     if (fileName != null) {
-                        throw new iText.IO.IOException("1.is.not.a.valid.ttc.file").SetMessageParams(fileName);
+                        throw new iText.IO.IOException("{0} is not a valid ttc file.").SetMessageParams(fileName);
                     }
                     else {
-                        throw new iText.IO.IOException("not.a.valid.ttc.file");
+                        throw new iText.IO.IOException("Not a valid ttc file.");
                     }
                 }
                 raf.SkipBytes(4);
                 int dirCount = raf.ReadInt();
                 if (dirIdx >= dirCount) {
                     if (fileName != null) {
-                        throw new iText.IO.IOException("the.font.index.for.1.must.be.between.0.and.2.it.was.3").SetMessageParams(fileName
-                            , dirCount - 1, dirIdx);
+                        throw new iText.IO.IOException("The font index for {0} must be between 0 and {1}. It is {2}.").SetMessageParams
+                            (fileName, dirCount - 1, dirIdx);
                     }
                     else {
-                        throw new iText.IO.IOException("the.font.index.must.be.between.0.and.1.it.was.2").SetMessageParams(dirCount
+                        throw new iText.IO.IOException("The font index must be between 0 and {0}. It is {1}.").SetMessageParams(dirCount
                              - 1, dirIdx);
                     }
                 }
@@ -480,10 +480,10 @@ namespace iText.IO.Font {
             int ttId = raf.ReadInt();
             if (ttId != 0x00010000 && ttId != 0x4F54544F) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("1.is.not.a.valid.ttf.or.otf.file").SetMessageParams(fileName);
+                    throw new iText.IO.IOException("{0} is not a valid ttf or otf file.").SetMessageParams(fileName);
                 }
                 else {
-                    throw new iText.IO.IOException("not.a.valid.ttf.or.otf.file");
+                    throw new iText.IO.IOException("Not a valid ttf or otf file.");
                 }
             }
             int num_tables = raf.ReadUnsignedShort();

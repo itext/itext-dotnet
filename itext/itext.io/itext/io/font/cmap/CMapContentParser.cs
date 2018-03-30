@@ -98,7 +98,7 @@ namespace iText.IO.Font.Cmap {
             IDictionary<String, CMapObject> dic = new Dictionary<String, CMapObject>();
             while (true) {
                 if (!NextValidToken()) {
-                    throw new iText.IO.IOException("unexpected.end.of.file");
+                    throw new iText.IO.IOException("Unexpected end of file.");
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
                     break;
@@ -107,7 +107,7 @@ namespace iText.IO.Font.Cmap {
                     continue;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    throw new iText.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams(tokeniser.GetStringValue
+                    throw new iText.IO.IOException("Dictionary key {0} is not a name.").SetMessageParams(tokeniser.GetStringValue
                         ());
                 }
                 String name = tokeniser.GetStringValue();

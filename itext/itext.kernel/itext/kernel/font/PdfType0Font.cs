@@ -108,8 +108,8 @@ namespace iText.Kernel.Font {
             // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
             // There is no typography features in CJK fonts.
             if (!CidFontProperties.IsCidFont(font.GetFontNames().GetFontName(), cmap)) {
-                throw new PdfException("font.1.with.2.encoding.is.not.a.cjk.font").SetMessageParams(font.GetFontNames().GetFontName
-                    (), cmap);
+                throw new PdfException("Font {0} with {1} encoding is not a cjk font.").SetMessageParams(font.GetFontNames
+                    ().GetFontName(), cmap);
             }
             this.fontProgram = font;
             vertical = cmap.EndsWith("V");
@@ -391,7 +391,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
             return new GlyphLine(glyphs);
@@ -438,7 +438,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
         }
@@ -514,7 +514,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
             return process;

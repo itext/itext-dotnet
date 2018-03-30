@@ -173,7 +173,7 @@ namespace iText.Kernel.Colors {
                 }
             }
             if (unknownColorSpace) {
-                throw new PdfException("unknown.color.space");
+                throw new PdfException("Unknown color space.");
             }
             return c;
         }
