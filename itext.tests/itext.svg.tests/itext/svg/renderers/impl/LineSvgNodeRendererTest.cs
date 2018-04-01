@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.StyledXmlParser;
-using iText.Svg.Exceptions;
+using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -17,8 +18,6 @@ namespace iText.Svg.Renderers.Impl {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/LineSvgNodeRendererTest/";
-
-        public const String expectedExceptionMessage = SvgLogMessageConstant.FLOAT_PARSING_NAN;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -71,30 +70,23 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAttributeTest01() {
-            bool isThrown = false;
-            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            doc.AddNewPage();
-            ISvgNodeRenderer root = new LineSvgNodeRenderer();
-            IDictionary<String, String> lineProperties = new Dictionary<String, String>();
-            lineProperties.Put("x1", "1");
-            lineProperties.Put("y1", "800");
-            lineProperties.Put("x2", "notAnum");
-            lineProperties.Put("y2", "alsoNotANum");
-            root.SetAttributesAndStyles(lineProperties);
-            SvgDrawContext context = new SvgDrawContext();
-            PdfCanvas cv = new PdfCanvas(doc, 1);
-            context.PushCanvas(cv);
-            try {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+                doc.AddNewPage();
+                ISvgNodeRenderer root = new LineSvgNodeRenderer();
+                IDictionary<String, String> lineProperties = new Dictionary<String, String>();
+                lineProperties.Put("x1", "1");
+                lineProperties.Put("y1", "800");
+                lineProperties.Put("x2", "notAnum");
+                lineProperties.Put("y2", "alsoNotANum");
+                root.SetAttributesAndStyles(lineProperties);
+                SvgDrawContext context = new SvgDrawContext();
+                PdfCanvas cv = new PdfCanvas(doc, 1);
+                context.PushCanvas(cv);
                 root.Draw(context);
             }
-            catch (SvgProcessingException e) {
-                isThrown = true;
-                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, e.Message, "Correct exception wasn't thrown");
-            }
-            finally {
-                doc.Close();
-            }
-            NUnit.Framework.Assert.IsTrue(isThrown, "Exception wasn't thrown");
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "notAnum")));
+;
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -102,7 +94,6 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void InvalidAttributeTest02() {
-            bool isThrown = false;
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");
             lineProperties.Put("y1", "800");
@@ -117,18 +108,8 @@ namespace iText.Svg.Renderers.Impl {
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
-            try {
-                root.Draw(context);
-            }
-            catch (SvgProcessingException e) {
-                isThrown = true;
-                NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, e.Message, "Correct exception wasn't thrown");
-            }
-            finally {
-                doc.Close();
-            }
+            root.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsTrue(isThrown, "Exception wasn't thrown");
         }
 
         /// <exception cref="System.IO.IOException"/>

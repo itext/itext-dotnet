@@ -104,10 +104,6 @@ namespace iText.Svg.Renderers.Impl {
                     values.JRemoveAt(0);
                 }
                 String align = values[0];
-                String meetOrSlice = SvgTagConstants.MEET_OR_SLICE_DEFAULT;
-                if (values.Count > 1) {
-                    meetOrSlice = values[1];
-                }
                 float x = 0f;
                 float y = 0f;
                 float midXBox = viewBoxValues[0] + (viewBoxValues[2] / 2);
@@ -167,13 +163,10 @@ namespace iText.Svg.Renderers.Impl {
                         break;
                     }
 
-                    case SvgTagConstants.DEFAULT_ASPECT_RATIO: {
+                    case SvgTagConstants.DEFAULT_ASPECT_RATIO:
+                    default: {
                         x = midXPort - midXBox;
                         y = midYPort - midYBox;
-                        goto default;
-                    }
-
-                    default: {
                         break;
                     }
                 }

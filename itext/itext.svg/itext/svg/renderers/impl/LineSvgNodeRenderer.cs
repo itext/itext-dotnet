@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -49,7 +50,7 @@ namespace iText.Svg.Renderers.Impl {
         private float GetAttribute(IDictionary<String, String> attributes, String key) {
             String value = attributes.Get(key);
             if (value != null && !String.IsNullOrEmpty(value)) {
-                return float.Parse(attributes.Get(key), System.Globalization.CultureInfo.InvariantCulture);
+                return CssUtils.ParseAbsoluteLength(attributes.Get(key));
             }
             return 0;
         }
