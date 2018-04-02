@@ -78,7 +78,7 @@ namespace iText.Barcodes {
         private const int BARS_PER_CHARACTER = 12;
 
         /// <summary>Creates a new BarcodeMSI</summary>
-        protected internal BarcodeMSI(PdfDocument document)
+        public BarcodeMSI(PdfDocument document)
             : base(document) {
             // 0
             // 1
