@@ -126,6 +126,8 @@ namespace iText.Svg {
 
         public const String Y2 = "y2";
 
+        public const String POINTS = "points";
+
         public const String ANIMATE = "animate";
 
         public const String ANIMATE_MOTION = "animateMotion";

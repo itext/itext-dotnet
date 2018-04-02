@@ -24,6 +24,8 @@ namespace iText.Svg.Exceptions {
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 
+        public const String POINTS_ATTRIBUTE_INVALID_LIST = "Points attribute {0} on polyline tag does not contain a valid set of points";
+
         public const String TAGPARAMETERNULL = "Tag parameter must not be null";
 
         public const String TRANSFORM_EMPTY = "The transformation value is empty.";

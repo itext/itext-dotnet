@@ -22,6 +22,8 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgTagConstants.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgTagConstants.PATH, typeof(PathSvgNodeRenderer));
+            result.Put(SvgTagConstants.POLYGON, typeof(PolygonSvgNodeRenderer));
+            result.Put(SvgTagConstants.POLYLINE, typeof(PolylineSvgNodeRenderer));
             result.Put(SvgTagConstants.ELLIPSE, typeof(EllipseSvgNodeRenderer));
             result.Put(SvgTagConstants.G, typeof(NoDrawOperationSvgNodeRenderer));
             return result;
