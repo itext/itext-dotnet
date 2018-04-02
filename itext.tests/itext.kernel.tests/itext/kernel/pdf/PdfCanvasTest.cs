@@ -55,6 +55,7 @@ using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Function;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -436,6 +437,77 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+#if !NETSTANDARD1_6
+        [NUnit.Framework.Timeout(0)]
+#endif
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("Too big result file. This test is for manual testing. -Xmx6g shall be set.")]
+        public virtual void HugeDocumentWithFullCompression() {
+            int pageCount = 800;
+            String filename = destinationFolder + "hugeDocumentWithFullCompression.pdf";
+            String author = "Alexander Chingarev";
+            String creator = "iText 6";
+            String title = "Empty iText 6 Document";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            for (int i = 0; i < pageCount; i++) {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Willaerts_Adam_The_Embarkation_of_the_Elector_Palantine_Oil_Canvas-huge.jpg"
+                    ));
+                canvas.AddXObject(xObject, 100, 500, 400);
+                canvas.Release();
+                page.Flush();
+            }
+            pdfDoc.Close();
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
+            NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author");
+            NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
+            NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
+                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
+            }
+            pdfDocument.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void SmallDocumentWithFullCompression() {
+            String filename = destinationFolder + "smallDocumentWithFullCompression.pdf";
+            String author = "Alexander Chingarev";
+            String creator = "iText 6";
+            String title = "Empty iText 6 Document";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 72).ShowText("Hi!").EndText().RestoreState();
+            page.Flush();
+            pdfDoc.Close();
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
+            NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author");
+            NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
+            NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
+            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
+            page = pdfDocument.GetPage(1);
+            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.GetPdfObject().Get(PdfName.Type));
+            pdfDocument.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create100PagesDocumentWithFullCompression() {
             int pageCount = 100;
@@ -585,7 +657,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest2() {
             String file1 = destinationFolder + "copyPages2_1.pdf";
@@ -632,7 +703,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest3() {
             String file1 = destinationFolder + "copyPages3_1.pdf";
@@ -679,7 +749,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest4() {
             String file1 = destinationFolder + "copyPages4_1.pdf";
@@ -722,7 +791,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest5() {
             int documentCount = 3;
@@ -773,7 +841,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest6() {
             String file1 = destinationFolder + "copyPages6_1.pdf";
@@ -834,7 +901,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MarkedContentTest1() {
             String message = "";
@@ -875,7 +941,6 @@ namespace iText.Kernel.Pdf {
                 , sourceFolder + "cmp_markedContentTest2.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GraphicsStateTest1() {
             PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
@@ -1215,7 +1280,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest04() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest04.pdf"));

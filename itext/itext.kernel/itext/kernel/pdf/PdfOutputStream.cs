@@ -139,6 +139,26 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Writes corresponding amount of bytes from a given long</summary>
+        /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
+        /// <param name="size">expected amount of bytes</param>
+        /// <exception cref="System.IO.IOException"/>
+        internal virtual void Write(long bytes, int size) {
+            System.Diagnostics.Debug.Assert(bytes >= 0);
+            while (--size >= 0) {
+                Write((byte)(bytes >> 8 * size & 0xff));
+            }
+        }
+
+        /// <summary>Writes corresponding amount of bytes from a given int</summary>
+        /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
+        /// <param name="size">expected amount of bytes</param>
+        /// <exception cref="System.IO.IOException"/>
+        internal virtual void Write(int bytes, int size) {
+            //safe convert to long, despite sign.
+            Write(bytes & 0xFFFFFFFFL, size);
+        }
+
         private void Write(PdfArray pdfArray) {
             WriteByte('[');
             for (int i = 0; i < pdfArray.Size(); i++) {
