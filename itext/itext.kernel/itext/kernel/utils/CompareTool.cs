@@ -2042,6 +2042,7 @@ namespace iText.Kernel.Utils {
             protected internal ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject) {
                 this.baseCmpObject = baseCmpObject;
                 this.baseOutObject = baseOutObject;
+                indirects.Push(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject, baseOutObject));
             }
 
             private ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject, Stack<CompareTool.ObjectPath.LocalPathItem
@@ -2073,8 +2074,8 @@ namespace iText.Kernel.Utils {
             /// </returns>
             public virtual CompareTool.ObjectPath ResetDirectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference
                  baseOutObject) {
-                CompareTool.ObjectPath newPath = new CompareTool.ObjectPath(baseCmpObject, baseOutObject);
-                newPath.indirects = (Stack<CompareTool.ObjectPath.IndirectPathItem>)indirects.Clone();
+                CompareTool.ObjectPath newPath = new CompareTool.ObjectPath(baseCmpObject, baseOutObject, new Stack<CompareTool.ObjectPath.LocalPathItem
+                    >(), (Stack<CompareTool.ObjectPath.IndirectPathItem>)indirects.Clone());
                 newPath.indirects.Push(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject, baseOutObject));
                 return newPath;
             }
