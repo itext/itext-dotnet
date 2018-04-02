@@ -113,8 +113,6 @@ namespace iText.Forms {
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
 
-        internal ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
-
         private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
             , PdfName.Pattern };
 
@@ -186,7 +184,6 @@ namespace iText.Forms {
                     acroForm.MakeIndirect(document);
                     document.GetCatalog().Put(PdfName.AcroForm, acroForm.GetPdfObject());
                     document.GetCatalog().SetModified();
-                    acroForm.SetDefaultAppearance("/Helv 0 Tf 0 g ");
                 }
             }
             else {
@@ -948,6 +945,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
                 logger.Warn(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
@@ -964,6 +962,7 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
                     logger.Warn(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
