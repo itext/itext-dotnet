@@ -17,6 +17,8 @@ namespace iText.Svg {
 
         public const String CY_ATTRIBUTE = "cy";
 
+        public const String R_ATTRIBUTE = "r";
+
         public const String RX_ATTRIBUTE = "rx";
 
         public const String RY_ATTRIBUTE = "ry";
