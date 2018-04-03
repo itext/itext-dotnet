@@ -46,6 +46,7 @@ using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class XMPMetadataTest : ExtendedITextTest {
@@ -153,6 +154,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void CreateEmptyDocumentWithAbcXmp() {
             MemoryStream fos = new MemoryStream();
             PdfWriter writer = new PdfWriter(fos);

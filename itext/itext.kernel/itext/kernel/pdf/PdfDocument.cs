@@ -1940,7 +1940,8 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void UpdateXmpMetadata() {
             try {
                 // We add PDF producer info in any case, and the valid way to do it for PDF 2.0 in only in metadata, not in the info dictionary.
-                if (writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                if (xmpMetadata != null || writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0) >=
+                     0) {
                     SetXmpMetadata(UpdateDefaultXmpMetadata());
                 }
             }
