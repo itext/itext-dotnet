@@ -1877,7 +1877,7 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
-            //DA is an inherited key, therefore AcroForm shall be checked if there is no parent or no DA in parent.
+            // DA is an inherited key, therefore AcroForm shall be checked if there is no parent or no DA in parent.
             if (defaultAppearance == null) {
                 defaultAppearance = (PdfString)GetAcroFormKey(PdfName.DA, PdfObject.STRING);
             }
