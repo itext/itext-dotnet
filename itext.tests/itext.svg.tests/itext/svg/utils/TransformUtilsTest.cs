@@ -96,21 +96,21 @@ namespace iText.Svg.Utils {
         [NUnit.Framework.Test]
         public virtual void CombinedTransformTest() {
             AffineTransform actual = TransformUtils.ParseTransform("translate(40,20) scale(3)");
-            AffineTransform expected = new AffineTransform(2.25d, 0d, 0d, 2.25d, 30d, 15d);
+            AffineTransform expected = new AffineTransform(3.0, 0d, 0d, 3.0d, 30d, 15d);
             NUnit.Framework.Assert.AreEqual(actual, expected);
         }
 
         [NUnit.Framework.Test]
         public virtual void CombinedReverseTransformTest() {
             AffineTransform actual = TransformUtils.ParseTransform("scale(3) translate(40,20)");
-            AffineTransform expected = new AffineTransform(2.25d, 0d, 0d, 2.25d, 67.5d, 33.75d);
+            AffineTransform expected = new AffineTransform(3d, 0d, 0d, 3d, 90d, 45d);
             NUnit.Framework.Assert.AreEqual(actual, expected);
         }
 
         [NUnit.Framework.Test]
         public virtual void DoubleTransformationTest() {
-            AffineTransform expected = new AffineTransform(1040.0625d, 0d, 0d, 1040.0625d, 0d, 0d);
-            AffineTransform actual = TransformUtils.ParseTransform("scale(43) scale(43)");
+            AffineTransform expected = new AffineTransform(9d, 0d, 0d, 9d, 0d, 0d);
+            AffineTransform actual = TransformUtils.ParseTransform("scale(3) scale(3)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 

@@ -208,8 +208,9 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0])));
-            return new AffineTransform(1, 0, tan, 1, 0, 0);
+            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            //Differs from the notation in the PDF-spec for skews
+            return new AffineTransform(1, tan, 0, 1, 0, 0);
         }
 
         /// <summary>Creates a skewX transformation.</summary>
@@ -219,8 +220,9 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0])));
-            return new AffineTransform(1, tan, 0, 1, 0, 0);
+            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            //Differs from the notation in the PDF-spec for skews
+            return new AffineTransform(1, 0, tan, 1, 0, 0);
         }
 
         /// <summary>Creates a rotate transformation.</summary>
@@ -230,7 +232,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1 && values.Count != 3) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double angle = MathUtil.ToRadians(CssUtils.ParseAbsoluteLength(values[0]));
+            double angle = MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0]));
             if (values.Count == 3) {
                 float centerX = CssUtils.ParseAbsoluteLength(values[1]);
                 float centerY = CssUtils.ParseAbsoluteLength(values[2]);
@@ -246,8 +248,8 @@ namespace iText.Svg.Utils {
             if (values.Count == 0 || values.Count > 2) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            float scaleX = CssUtils.ParseAbsoluteLength(values[0]);
-            float scaleY = values.Count == 2 ? CssUtils.ParseAbsoluteLength(values[1]) : scaleX;
+            float scaleX = CssUtils.ParseRelativeValue(values[0], 1);
+            float scaleY = values.Count == 2 ? CssUtils.ParseRelativeValue(values[1], 1) : scaleX;
             return AffineTransform.GetScaleInstance(scaleX, scaleY);
         }
 

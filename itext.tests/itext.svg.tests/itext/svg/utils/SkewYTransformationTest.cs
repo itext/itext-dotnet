@@ -1,15 +1,13 @@
 using System;
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
     public class SkewYTransformationTest {
         [NUnit.Framework.Test]
         public virtual void NormalSkewYTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength
-                ("143"))), 1d, 0d, 0d);
+            AffineTransform expected = new AffineTransform(1d, Math.Tan(MathUtil.ToRadians(143)), 0d, 1d, 0d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("skewY(143)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -34,16 +32,14 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void NegativeSkewYTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength
-                ("-26"))), 1d, 0d, 0d);
+            AffineTransform expected = new AffineTransform(1d, Math.Tan(MathUtil.ToRadians(-26)), 0d, 1d, 0d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("skewY(-26)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void NinetyDegreesTest() {
-            AffineTransform expected = new AffineTransform(1d, 0d, Math.Tan(MathUtil.ToRadians(CssUtils.ParseAbsoluteLength
-                ("90"))), 1d, 0d, 0d);
+            AffineTransform expected = new AffineTransform(1d, Math.Tan(MathUtil.ToRadians(90)), 0d, 1d, 0d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("skewY(90)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

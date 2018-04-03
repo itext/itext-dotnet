@@ -1,5 +1,8 @@
-using System;
+using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
@@ -7,8 +10,48 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;circle&gt; tag.
     /// </summary>
     public class EllipseSvgNodeRenderer : AbstractSvgNodeRenderer {
+        internal float cx;
+
+        internal float cy;
+
+        internal float rx;
+
+        internal float ry;
+
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException("Not supported yet.");
+            PdfCanvas cv = context.GetCurrentCanvas();
+            if (SetParameters()) {
+                cv.MoveTo(cx + rx, cy);
+                DrawUtils.Arc(cx - rx, cy - ry, cx + rx, cy + ry, 0, 360, cv);
+            }
+        }
+
+        protected internal virtual bool SetParameters() {
+            cx = 0;
+            cy = 0;
+            if (GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE) != null) {
+                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE));
+            }
+            if (GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE) != null) {
+                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE));
+            }
+            if (GetAttribute(SvgAttributeConstants.RX_ATTRIBUTE) != null && CssUtils.ParseAbsoluteLength(GetAttribute(
+                SvgAttributeConstants.RX_ATTRIBUTE)) > 0) {
+                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RX_ATTRIBUTE));
+            }
+            else {
+                return false;
+            }
+            //No drawing if rx is absent
+            if (GetAttribute(SvgAttributeConstants.RY_ATTRIBUTE) != null && CssUtils.ParseAbsoluteLength(GetAttribute(
+                SvgAttributeConstants.RY_ATTRIBUTE)) > 0) {
+                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RY_ATTRIBUTE));
+            }
+            else {
+                return false;
+            }
+            //No drawing if ry is absent
+            return true;
         }
     }
 }
