@@ -1877,6 +1877,10 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
+            //DA is an inherited key, therefore AcroForm shall be checked if there is no parent or no DA in parent.
+            if (defaultAppearance == null) {
+                defaultAppearance = (PdfString)GetAcroFormKey(PdfName.DA, PdfObject.STRING);
+            }
             return defaultAppearance;
         }
 
@@ -2283,9 +2287,7 @@ namespace iText.Forms.Fields {
                         appearance = new PdfFormXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
                             ()));
                     }
-                    if (matrix != null) {
-                        appearance.Put(PdfName.Matrix, matrix);
-                    }
+                    appearance.Put(PdfName.Matrix, matrix);
                     //Create text appearance
                     if (PdfName.Tx.Equals(type)) {
                         if (!IsMultiline()) {
@@ -2422,6 +2424,18 @@ namespace iText.Forms.Fields {
                 }
             }
             return true;
+        }
+
+        private PdfObject GetAcroFormKey(PdfName key, int type) {
+            PdfObject acroFormKey = null;
+            PdfDocument document = GetDocument();
+            if (document != null) {
+                PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+                if (acroFormDictionary != null) {
+                    acroFormKey = acroFormDictionary.Get(key);
+                }
+            }
+            return (acroFormKey != null && acroFormKey.GetObjectType() == type) ? acroFormKey : null;
         }
 
         /// <summary>According to spec (ISO-32000-1, 12.7.3.3) zero font size should interpretaded as auto size.</summary>
@@ -2846,12 +2860,7 @@ namespace iText.Forms.Fields {
             PdfDictionary normalResources = null;
             PdfDictionary defaultResources = null;
             PdfDocument document = GetDocument();
-            if (document != null) {
-                PdfDictionary acroformDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
-                if (acroformDictionary != null) {
-                    defaultResources = acroformDictionary.GetAsDictionary(PdfName.DR);
-                }
-            }
+            defaultResources = (PdfDictionary)GetAcroFormKey(PdfName.DR, PdfObject.DICTIONARY);
             if (asNormal != null) {
                 normalResources = asNormal.GetAsDictionary(PdfName.Resources);
             }
