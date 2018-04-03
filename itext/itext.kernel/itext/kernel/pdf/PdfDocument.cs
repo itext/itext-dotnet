@@ -1846,7 +1846,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal virtual void UpdateXmpMetadata() {
             try {
-                if (writer.properties.addXmpMetadata) {
+                if (xmpMetadata != null || writer.properties.addXmpMetadata) {
                     SetXmpMetadata(UpdateDefaultXmpMetadata());
                 }
             }
