@@ -98,6 +98,14 @@ namespace iText.Kernel.Utils {
 
         private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
+        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa))?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
+
+        private const String versionReplacement = "iText\u00ae <version>";
+
+        private const String copyrightRegexp = "\u00a9\\d+-\\d+ iText Group NV";
+
+        private const String copyrightReplacement = "\u00a9<copyright years> iText Group NV";
+
         private String gsExec;
 
         private String compareExec;
@@ -724,7 +732,8 @@ namespace iText.Kernel.Utils {
             String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
             for (int i = 0; i < cmpInfo.Length; ++i) {
                 if (!cmpInfo[i].Equals(outInfo[i])) {
-                    message = "Document info fail";
+                    message = MessageFormatUtil.Format("Document info fail. Expected: \"{0}\", actual: \"{1}\"", cmpInfo[i], outInfo
+                        [i]);
                     break;
                 }
             }
@@ -1835,7 +1844,7 @@ namespace iText.Kernel.Utils {
         }
 
         private String[] ConvertInfo(PdfDocumentInfo info) {
-            String[] convertedInfo = new String[] { "", "", "", "" };
+            String[] convertedInfo = new String[] { "", "", "", "", "" };
             String infoValue = info.GetTitle();
             if (infoValue != null) {
                 convertedInfo[0] = infoValue;
@@ -1852,7 +1861,16 @@ namespace iText.Kernel.Utils {
             if (infoValue != null) {
                 convertedInfo[3] = infoValue;
             }
+            infoValue = info.GetProducer();
+            if (infoValue != null) {
+                convertedInfo[4] = ConvertProducerLine(infoValue);
+            }
             return convertedInfo;
+        }
+
+        private String ConvertProducerLine(String producer) {
+            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, versionRegexp, versionReplacement
+                ), copyrightRegexp, copyrightReplacement);
         }
 
         private class PngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
