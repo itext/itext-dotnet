@@ -176,6 +176,32 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1899: fails in .NET passes in Java")]
+        public virtual void CustomXmpTest() {
+            String xmp = "<?xpacket begin='' id='W5M0MpCehiHzreSzNTczkc9d' bytes='770'?>\n" + "\n" + "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'\n"
+                 + " xmlns:iX='http://ns.adobe.com/iX/1.0/'>\n" + "\n" + " <rdf:Description about=''\n" + "  xmlns='http://ns.adobe.com/pdf/1.3/'\n"
+                 + "  xmlns:pdf='http://ns.adobe.com/pdf/1.3/'>\n" + "  <pdf:ModDate>2001-03-28T15:17:00-08:00</pdf:ModDate>\n"
+                 + "  <pdf:CreationDate>2001-03-28T15:19:45-08:00</pdf:CreationDate>\n" + " </rdf:Description>\n" + "\n"
+                 + " <rdf:Description about=''\n" + "  xmlns='http://ns.adobe.com/xap/1.0/'\n" + "  xmlns:xap='http://ns.adobe.com/xap/1.0/'>\n"
+                 + "  <xap:ModifyDate>2001-03-28T15:17:00-08:00</xap:ModifyDate>\n" + "  <xap:CreateDate>2001-03-28T15:19:45-08:00</xap:CreateDate>\n"
+                 + "  <xap:MetadataDate>2001-03-28T15:17:00-08:00</xap:MetadataDate>\n" + " </rdf:Description>\n" + "\n"
+                 + "</rdf:RDF>\n" + "<?xpacket end='r'?>";
+            String outPath = destinationFolder + "customXmp.pdf";
+            String cmpPath = sourceFolder + "cmp_customXmp.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
+            PdfPage page = pdfDoc.AddNewPage();
+            page.Flush();
+            pdfDoc.SetXmpMetadata(xmp.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_customXmp_"
+                ));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareDocumentInfo(outPath, cmpPath));
+        }
+
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private byte[] RemoveAlwaysDifferentEntries(byte[] cmpBytes) {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
