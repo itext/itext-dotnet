@@ -56,11 +56,14 @@ namespace iText.Kernel {
     /// Also, the nature of open source software is that you honor the copyright of the original creators of the software.
     /// </remarks>
     public sealed class Version {
+        /// <summary>Lock object used for synchronization</summary>
+        private static readonly Object staticLock = new Object();
+
         /// <summary>String that will indicate if the AGPL version is used.</summary>
-        private static String AGPL = " (AGPL-version)";
+        private const String AGPL = " (AGPL-version)";
 
         /// <summary>The iText version instance.</summary>
-        private static iText.Kernel.Version version = null;
+        private static volatile iText.Kernel.Version version = null;
 
         /// <summary>This String contains the name of the product.</summary>
         /// <remarks>
@@ -68,14 +71,14 @@ namespace iText.Kernel {
         /// iText is a registered trademark by iText Group NV.
         /// Please don't change this constant.
         /// </remarks>
-        private static String iTextProductName = "iText\u00ae";
+        private const String iTextProductName = "iText\u00ae";
 
         /// <summary>This String contains the version number of this iText release.</summary>
         /// <remarks>
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private static String release = "7.0.7-SNAPSHOT";
+        private const String release = "7.0.7-SNAPSHOT";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -98,78 +101,79 @@ namespace iText.Kernel {
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
         public static iText.Kernel.Version GetInstance() {
-            if (version == null) {
-                version = new iText.Kernel.Version();
-                lock (version) {
-                    try {
-                        String coreVersion = release;
-                        String[] info = GetLicenseeInfoFromLicenseKey(coreVersion);
-                        if (info != null) {
-                            if (info[3] != null && info[3].Trim().Length > 0) {
-                                version.key = info[3];
-                            }
-                            else {
-                                version.key = "Trial version ";
-                                if (info[5] == null) {
-                                    version.key += "unauthorised";
-                                }
-                                else {
-                                    version.key += info[5];
-                                }
-                            }
-                            if (info.Length > 6) {
-                                if (info[6] != null && info[6].Trim().Length > 0) {
-                                    //Compare versions with this release versions
-                                    CheckLicenseVersion(coreVersion, info[6]);
-                                }
-                            }
-                            if (info[4] != null && info[4].Trim().Length > 0) {
-                                version.producerLine = info[4];
-                            }
-                            else {
-                                if (info[2] != null && info[2].Trim().Length > 0) {
-                                    version.AddLicensedPostfix(info[2]);
-                                }
-                                else {
-                                    if (info[0] != null && info[0].Trim().Length > 0) {
-                                        // fall back to contact name, if company name is unavailable.
-                                        // we shouldn't have a licensed version without company name,
-                                        // but let's account for it anyway
-                                        version.AddLicensedPostfix(info[0]);
-                                    }
-                                    else {
-                                        version.AddAGPLPostfix(null);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            version.AddAGPLPostfix(null);
-                        }
-                    }
-                    catch (LicenseVersionException lve) {
-                        //Catch the exception
-                        //Rethrow license version exceptions
-                        throw;
-                    }
-                    catch (TypeLoadException) {
-                        //License key library not on classpath, switch to AGPL
-                        version.AddAGPLPostfix(null);
-                    }
-                    catch (Exception e) {
-                        //Check if an iText5 license is loaded
-                        if (e.InnerException != null && e.InnerException.Message.Equals(LicenseVersionException.LICENSE_FILE_NOT_LOADED
-                            )) {
-                            if (IsiText5licenseLoaded()) {
-                                throw new LicenseVersionException(LicenseVersionException.NO_I_TEXT7_LICENSE_IS_LOADED_BUT_AN_I_TEXT5_LICENSE_IS_LOADED
-                                    );
-                            }
-                        }
-                        version.AddAGPLPostfix(e.InnerException);
-                    }
+            lock (staticLock) {
+                if (version != null) {
+                    return version;
                 }
             }
-            return version;
+            iText.Kernel.Version localVersion = new iText.Kernel.Version();
+            try {
+                String coreVersion = release;
+                String[] info = GetLicenseeInfoFromLicenseKey(coreVersion);
+                if (info != null) {
+                    if (info[3] != null && info[3].Trim().Length > 0) {
+                        localVersion.key = info[3];
+                    }
+                    else {
+                        localVersion.key = "Trial version ";
+                        if (info[5] == null) {
+                            localVersion.key += "unauthorised";
+                        }
+                        else {
+                            localVersion.key += info[5];
+                        }
+                    }
+                    if (info.Length > 6) {
+                        if (info[6] != null && info[6].Trim().Length > 0) {
+                            //Compare versions with this release versions
+                            CheckLicenseVersion(coreVersion, info[6]);
+                        }
+                    }
+                    if (info[4] != null && info[4].Trim().Length > 0) {
+                        localVersion.producerLine = info[4];
+                    }
+                    else {
+                        if (info[2] != null && info[2].Trim().Length > 0) {
+                            localVersion.AddLicensedPostfix(info[2]);
+                        }
+                        else {
+                            if (info[0] != null && info[0].Trim().Length > 0) {
+                                // fall back to contact name, if company name is unavailable.
+                                // we shouldn't have a licensed version without company name,
+                                // but let's account for it anyway
+                                localVersion.AddLicensedPostfix(info[0]);
+                            }
+                            else {
+                                localVersion.AddAGPLPostfix(null);
+                            }
+                        }
+                    }
+                }
+                else {
+                    localVersion.AddAGPLPostfix(null);
+                }
+            }
+            catch (LicenseVersionException lve) {
+                //Catch the exception
+                //Rethrow license version exceptions
+                throw;
+            }
+            catch (TypeLoadException) {
+                //License key library not on classpath, switch to AGPL
+                localVersion.AddAGPLPostfix(null);
+            }
+            catch (Exception e) {
+                //Check if an iText5 license is loaded
+                if (e.InnerException != null && e.InnerException.Message.Equals(LicenseVersionException.LICENSE_FILE_NOT_LOADED
+                    )) {
+                    if (IsiText5licenseLoaded()) {
+                        throw new LicenseVersionException(LicenseVersionException.NO_I_TEXT7_LICENSE_IS_LOADED_BUT_AN_I_TEXT5_LICENSE_IS_LOADED
+                            );
+                    }
+                }
+                localVersion.AddAGPLPostfix(e.InnerException);
+            }
+            return AtomicSetVersion(localVersion);
         }
 
         /// <summary>Checks if the AGPL version is used.</summary>
@@ -329,6 +333,13 @@ namespace iText.Kernel {
             }
             catch (FormatException) {
                 return false;
+            }
+        }
+
+        private static iText.Kernel.Version AtomicSetVersion(iText.Kernel.Version newVersion) {
+            lock (staticLock) {
+                version = newVersion;
+                return version;
             }
         }
 
