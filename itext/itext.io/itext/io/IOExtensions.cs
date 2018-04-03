@@ -165,6 +165,11 @@ namespace iText.IO {
             return dictionary.ContainsKey(key);
         }
 
+        public static bool EqualsIgnoreCase(this String str, String anotherString)
+        {
+            return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD1_6
             return type.Assembly;
