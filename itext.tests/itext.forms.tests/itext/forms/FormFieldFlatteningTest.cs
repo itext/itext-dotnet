@@ -76,6 +76,24 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void FormFlatteningChoiceFieldTest01() {
+            String srcFilename = sourceFolder + "formFlatteningSourceChoiceField.pdf";
+            String filename = destinationFolder + "formFlatteningChoiceFieldTest01.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            form.FlattenFields();
+            doc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFlatteningChoiceFieldTest01.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot0() {
             String srcFilePattern = "FormFlatteningDefaultAppearance_0_";
             String destPattern = "FormFlatteningDefaultAppearance_0_";

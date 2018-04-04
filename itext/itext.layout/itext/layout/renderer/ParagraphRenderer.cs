@@ -529,9 +529,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetLastYLineRecursively() {
-            if (IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) || IsOverflowProperty(OverflowPropertyValue
-                .HIDDEN, Property.OVERFLOW_Y)) {
-                // TODO may be this logic should also be based on BlockFormattingContextUtil?
+            if (!AllowLastYLineRecursiveExtraction()) {
                 return null;
             }
             if (lines == null || lines.Count == 0) {

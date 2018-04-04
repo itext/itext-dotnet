@@ -943,6 +943,58 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        /// <summary>Applies margins of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle margins will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether margins will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetMargins()"/>
+        public virtual Rectangle ApplyMargins(Rectangle rect, bool reverse) {
+            return this.ApplyMargins(rect, GetMargins(), reverse);
+        }
+
+        /// <summary>
+        /// Applies the border box of the renderer on the given rectangle
+        /// If the border of a certain side is null, the side will remain as it was.
+        /// </summary>
+        /// <param name="rect">a rectangle the border box will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether the border box will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetBorders()"/>
+        public virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse) {
+            Border[] borders = GetBorders();
+            return ApplyBorderBox(rect, borders, reverse);
+        }
+
+        /// <summary>Applies paddings of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetPaddings()"/>
+        public virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse) {
+            return ApplyPaddings(rect, GetPaddings(), reverse);
+        }
+
         public virtual bool IsFirstOnRootArea() {
             return IsFirstOnRootArea(false);
         }
@@ -953,27 +1005,27 @@ namespace iText.Layout.Renderer {
             ApplyLinkAnnotation(drawContext.GetDocument());
         }
 
-        internal static bool IsBorderBoxSizing(IRenderer renderer) {
+        protected internal static bool IsBorderBoxSizing(IRenderer renderer) {
             BoxSizingPropertyValue? boxSizing = renderer.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING);
             return boxSizing != null && boxSizing.Equals(BoxSizingPropertyValue.BORDER_BOX);
         }
 
-        internal virtual bool IsOverflowProperty(OverflowPropertyValue? equalsTo, int overflowProperty) {
+        protected internal virtual bool IsOverflowProperty(OverflowPropertyValue? equalsTo, int overflowProperty) {
             return IsOverflowProperty(equalsTo, this.GetProperty<OverflowPropertyValue?>(overflowProperty));
         }
 
-        internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, IRenderer renderer, int overflowProperty
-            ) {
+        protected internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, IRenderer renderer, int
+             overflowProperty) {
             return IsOverflowProperty(equalsTo, renderer.GetProperty<OverflowPropertyValue?>(overflowProperty));
         }
 
-        internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, OverflowPropertyValue? rendererOverflowProperty
-            ) {
+        protected internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, OverflowPropertyValue? 
+            rendererOverflowProperty) {
             return equalsTo.Equals(rendererOverflowProperty) || equalsTo.Equals(OverflowPropertyValue.FIT) && rendererOverflowProperty
                  == null;
         }
 
-        internal static bool IsOverflowFit(OverflowPropertyValue? rendererOverflowProperty) {
+        protected internal static bool IsOverflowFit(OverflowPropertyValue? rendererOverflowProperty) {
             return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
         }
 
@@ -1128,7 +1180,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedWidthValue">element's new fixed content box width.</param>
-        internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
+        protected internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
             if (updatedWidthValue.IsPointValue() && IsBorderBoxSizing(this)) {
                 updatedWidthValue.SetValue(updatedWidthValue.GetValue() + CalculatePaddingBorderWidth(this));
             }
@@ -1236,7 +1288,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedHeight">element's new fixed content box height, shall be not null.</param>
-        internal virtual void UpdateHeight(UnitValue updatedHeight) {
+        protected internal virtual void UpdateHeight(UnitValue updatedHeight) {
             if (IsBorderBoxSizing(this) && updatedHeight.IsPointValue()) {
                 updatedHeight.SetValue(updatedHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1297,7 +1349,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedMaxHeight">element's new content box max-height, shall be not null.</param>
-        internal virtual void UpdateMaxHeight(UnitValue updatedMaxHeight) {
+        protected internal virtual void UpdateMaxHeight(UnitValue updatedMaxHeight) {
             if (IsBorderBoxSizing(this) && updatedMaxHeight.IsPointValue()) {
                 updatedMaxHeight.SetValue(updatedMaxHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1349,7 +1401,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedMinHeight">element's new content box min-height, shall be not null.</param>
-        internal virtual void UpdateMinHeight(UnitValue updatedMinHeight) {
+        protected internal virtual void UpdateMinHeight(UnitValue updatedMinHeight) {
             if (IsBorderBoxSizing(this) && updatedMinHeight.IsPointValue()) {
                 updatedMinHeight.SetValue(updatedMinHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1407,9 +1459,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float? GetLastYLineRecursively() {
-            if (IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) || IsOverflowProperty(OverflowPropertyValue
-                .HIDDEN, Property.OVERFLOW_Y)) {
-                // TODO may be this logic should also be based on BlockFormattingContextUtil?
+            if (!AllowLastYLineRecursiveExtraction()) {
                 return null;
             }
             for (int i = childRenderers.Count - 1; i >= 0; i--) {
@@ -1424,20 +1474,9 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        /// <summary>Applies margins of the renderer on the given rectangle</summary>
-        /// <param name="rect">a rectangle margins will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether margins will be applied
-        /// inside (in case of false) or outside (in case of true) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetMargins()"/>
-        protected internal virtual Rectangle ApplyMargins(Rectangle rect, bool reverse) {
-            return this.ApplyMargins(rect, GetMargins(), reverse);
+        protected internal virtual bool AllowLastYLineRecursiveExtraction() {
+            return !IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) && !IsOverflowProperty(OverflowPropertyValue
+                .HIDDEN, Property.OVERFLOW_Y);
         }
 
         /// <summary>Applies given margins on the given rectangle</summary>
@@ -1497,22 +1536,6 @@ namespace iText.Layout.Renderer {
             return GetPaddings(this);
         }
 
-        /// <summary>Applies paddings of the renderer on the given rectangle</summary>
-        /// <param name="rect">a rectangle paddings will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether paddings will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetPaddings()"/>
-        protected internal virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse) {
-            return ApplyPaddings(rect, GetPaddings(), reverse);
-        }
-
         /// <summary>Applies given paddings on the given rectangle</summary>
         /// <param name="rect">a rectangle paddings will be applied on.</param>
         /// <param name="paddings">the paddings to be applied on the given rectangle</param>
@@ -1548,26 +1571,6 @@ namespace iText.Layout.Renderer {
             }
             return rect.ApplyMargins(paddings[0].GetValue(), paddings[1].GetValue(), paddings[2].GetValue(), paddings[
                 3].GetValue(), reverse);
-        }
-
-        /// <summary>
-        /// Applies the border box of the renderer on the given rectangle
-        /// If the border of a certain side is null, the side will remain as it was.
-        /// </summary>
-        /// <param name="rect">a rectangle the border box will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether the border box will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetBorders()"/>
-        protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse) {
-            Border[] borders = GetBorders();
-            return ApplyBorderBox(rect, borders, reverse);
         }
 
         /// <summary>Applies the given border box (borders) on the given rectangle</summary>
