@@ -60,6 +60,8 @@ namespace iText.Svg {
 
         public const String FOREIGN_OBJECT = "foreignObject";
 
+        public const String D = "d";
+
         public const String G = "g";
 
         public const String IMAGE = "image";
@@ -128,6 +130,44 @@ namespace iText.Svg {
 
         public const String POINTS = "points";
 
+        public const String PATH_DATA_ELIP_ARC = "A";
+
+        public const String PATH_DATA_ELIP_ARC_RELATIVE = "a";
+
+        public const String PATH_DATA_LINE_TO = "L";
+
+        public const String PATH_DATA_LINE_RELATIVE_TO = "l";
+
+        public const String PATH_DATA_MOVE_TO = "M";
+
+        public const String PATH_DATA_MOVE_RELATIVE_TO = "m";
+
+        public const String PATH_DATA_HORIZNTL_TO = "H";
+
+        public const String PATH_DATA_HORIZNTL_RELATIVE_TO = "h";
+
+        public const String PATH_DATA_VERTICL_TO = "V";
+
+        public const String PATH_DATA_VERTICL_RELATIVE_TO = "v";
+
+        public const String PATH_DATA_CLOSE_PATH = "z";
+
+        public const String PATH_DATA_CURVE_TO = "C";
+
+        public const String PATH_DATA_CURVE_RELATIVE_TO = "c";
+
+        public const String PATH_DATA_CURVE_TO_S = "S";
+
+        public const String PATH_DATA_CURVE_TO_RELATIVE_S = "s";
+
+        public const String PATH_DATA_QUARD_CURVE_TO = "Q";
+
+        public const String PATH_DATA_QUARD_CURVE_RELATIVE_TO = "q";
+
+        public const String PATH_DATA_QUARD_CURVE_TO_T = "T";
+
+        public const String PATH_DATA_QUARD_CURVE_TO_RELATIVE_T = "t";
+
         public const String ANIMATE = "animate";
 
         public const String ANIMATE_MOTION = "animateMotion";
@@ -175,6 +215,7 @@ namespace iText.Svg {
         // TODO RND-874 make inner Tag and Attribute classes
         // tags
         // attributes
+        //Svg path element commands
         //Animation
         //CSS
         // values
