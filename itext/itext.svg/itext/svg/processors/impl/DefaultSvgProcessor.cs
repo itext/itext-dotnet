@@ -9,6 +9,7 @@ using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Processors.Impl {
     /// <summary>
@@ -170,9 +171,16 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Process the text contained in the text-node</summary>
         /// <param name="textNode">node containing text to process</param>
         private void ProcessText(ITextNode textNode) {
+            ISvgNodeRenderer parentRenderer = this.processorState.Top();
+            if (parentRenderer != null && parentRenderer is TextSvgNodeRenderer) {
+                // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
+                // tab/space indented xml files will retain their tabs and spaces.
+                // The following regex replaces all whitespace with a single space.
+                String trimmedText = iText.IO.Util.StringUtil.ReplaceAll(textNode.WholeText(), "\\s+", " ");
+                parentRenderer.SetAttribute(SvgTagConstants.TEXT_CONTENT, trimmedText);
+            }
         }
 
-        //Process text here
         /// <summary>Find the first element in the node-tree that corresponds with the passed tag-name.</summary>
         /// <remarks>Find the first element in the node-tree that corresponds with the passed tag-name. Search is performed depth-first
         ///     </remarks>

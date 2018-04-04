@@ -52,5 +52,7 @@ namespace iText.Svg.Renderers {
         /// <see langword="null"/>
         /// </returns>
         String GetAttribute(String key);
+
+        void SetAttribute(String key, String value);
     }
 }

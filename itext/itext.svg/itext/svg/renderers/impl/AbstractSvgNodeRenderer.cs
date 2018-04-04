@@ -145,5 +145,9 @@ namespace iText.Svg.Renderers.Impl {
         public virtual String GetAttribute(String key) {
             return attributesAndStyles.Get(key);
         }
+
+        public virtual void SetAttribute(String key, String value) {
+            this.attributesAndStyles.Put(key, value);
+        }
     }
 }
