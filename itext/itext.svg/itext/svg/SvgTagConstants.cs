@@ -104,11 +104,15 @@ namespace iText.Svg {
 
         public const String FILL_RULE = "fill-rule";
 
+        public const String FONT_SIZE = "font-size";
+
         public const String PRESERVE_ASPECT_RATIO = "preserveaspectratio";
 
         public const String STROKE = "stroke";
 
         public const String STROKE_WIDTH = "stroke-width";
+
+        public const String TEXT_CONTENT = "text_content";
 
         public const String TRANSFORM = "transform";
 

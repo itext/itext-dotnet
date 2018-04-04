@@ -140,6 +140,20 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ConvertFloatToStringTest() {
+            String expected = "0.5";
+            String actual = SvgCssUtils.ConvertFloatToString(0.5f);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertLongerFloatToStringTest() {
+            String expected = "0.1234567";
+            String actual = SvgCssUtils.ConvertFloatToString(0.1234567f);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
         [NUnit.Framework.Ignore("TODO: Check autoport for failing float comparisons. Blocked by RND-882\n")]
         [NUnit.Framework.Test]
         public virtual void ConvertFloatMinimumToPdfTest() {

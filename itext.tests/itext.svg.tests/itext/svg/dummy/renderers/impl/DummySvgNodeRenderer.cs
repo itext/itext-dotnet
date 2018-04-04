@@ -55,6 +55,9 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             return "";
         }
 
+        public virtual void SetAttribute(String key, String value) {
+        }
+
         public override String ToString() {
             return name;
         }

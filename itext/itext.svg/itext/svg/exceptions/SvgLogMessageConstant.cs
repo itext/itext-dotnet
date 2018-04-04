@@ -10,6 +10,8 @@ namespace iText.Svg.Exceptions {
 
         public const String FLOAT_PARSING_NAN = "The passed value is not a number.";
 
+        public const String FONT_NOT_FOUND = "The font wasn't found.";
+
         public const String INODEROOTISNULL = "Input root value is null";
 
         public const String INVALID_TRANSFORM_DECLARATION = "Transformation declaration is not formed correctly.";

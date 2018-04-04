@@ -5,7 +5,7 @@ namespace iText.Svg.Renderers {
     /// <summary>
     /// Interface for SvgNodeRenderer, the renderer draws the SVG to its Pdf-canvas
     /// passed in
-    /// <see cref="iText.Layout.Renderer.DrawContext"/>
+    /// <see cref="SvgDrawContext"/>
     /// , applying styling
     /// (CSS and attributes).
     /// </summary>
@@ -52,5 +52,7 @@ namespace iText.Svg.Renderers {
         /// <see langword="null"/>
         /// </returns>
         String GetAttribute(String key);
+
+        void SetAttribute(String key, String value);
     }
 }

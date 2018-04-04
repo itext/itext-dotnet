@@ -29,10 +29,12 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects and appends them to
         /// <see cref="points"/>
+        /// .
+        /// Throws an
+        /// <see cref="iText.Svg.Exceptions.SvgProcessingException"/>
+        /// if pointsAttribute does not have a valid list of numerical x,y pairs.
         /// </summary>
         /// <param name="pointsAttribute">A string of space separated x,y value pairs</param>
-        /// <exception>{@link SvgProcessingException} if pointsAttribute does not have a valid list of numerical x,y pairs.
-        ///     </exception>
         protected internal virtual void SetPoints(String pointsAttribute) {
             if (pointsAttribute == null) {
                 return;

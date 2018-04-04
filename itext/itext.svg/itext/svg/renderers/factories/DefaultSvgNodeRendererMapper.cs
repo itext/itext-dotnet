@@ -27,6 +27,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgTagConstants.ELLIPSE, typeof(EllipseSvgNodeRenderer));
             result.Put(SvgTagConstants.G, typeof(NoDrawOperationSvgNodeRenderer));
             result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgTagConstants.TEXT, typeof(TextSvgNodeRenderer));
             return result;
         }
 
