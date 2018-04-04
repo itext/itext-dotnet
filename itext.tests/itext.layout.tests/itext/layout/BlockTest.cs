@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -48,6 +49,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -880,6 +882,26 @@ namespace iText.Layout {
                 .BLUE, 15)).SetBorderTop(new RoundDotsBorder(ColorConstants.GREEN, 60)).SetBorderRight(new RoundDotsBorder
                 (ColorConstants.YELLOW, 150));
             doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1897")]
+        public virtual void ParagraphVerticalAlignmentTest01() {
+            String outFileName = destinationFolder + "paragraphVerticalAlignmentTest01.pdf";
+            String cmpFileName = sourceFolder + "paragraphVerticalAlignmentTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.AddStandardPdfFonts();
+            doc.SetFontProvider(fontProvider);
+            String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+            doc.Add(new Paragraph(loremIpsum).SetHeight(100).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(
+                new SolidBorder(3)).SetFont(StandardFonts.TIMES_ROMAN));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
