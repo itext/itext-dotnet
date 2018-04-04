@@ -60,8 +60,8 @@ namespace iText.Svg.Renderers.Impl {
             foreach (String inst in coordinates) {
                 if (!inst.Equals(SEPERATOR)) {
                     String instruction = inst[0] + SPACE_CHAR;
-                    inst = instruction + inst.Replace(inst[0] + SEPERATOR, SEPERATOR).Replace(",", SPACE_CHAR).Trim();
-                    result.Append(SPACE_CHAR).Append(inst);
+                    String temp = instruction + inst.Replace(inst[0] + SEPERATOR, SEPERATOR).Replace(",", SPACE_CHAR).Trim();
+                    result.Append(SPACE_CHAR).Append(temp);
                 }
             }
             String[] resultArray = iText.IO.Util.StringUtil.Split(result.ToString(), SPLIT_REGEX);

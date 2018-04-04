@@ -1,13 +1,14 @@
 using System;
-using System.IO;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
     public class GUnitTest {
-        private const String SOURCE_FOLDER = "C:\\Temp\\demo\\resources\\";
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/gunit/";
 
-        private const String DESTINATION_FOLDER = "C:\\Temp\\demo\\resources\\out\\";
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/svg/renderers/impl/gunit/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -15,11 +16,11 @@ namespace iText.Svg.Renderers {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MeetTheTeam() {
             for (int i = 1; i < 6; i++) {
-                SvgNodeRendererTestUtility.Convert(new FileStream(SOURCE_FOLDER + "test_00" + i + ".svg", FileMode.Open, FileAccess.Read
-                    ), new FileStream(DESTINATION_FOLDER + "test_00" + i + ".pdf", FileMode.Create));
+                SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_00" + i);
             }
         }
     }

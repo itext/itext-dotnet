@@ -9,7 +9,7 @@ namespace iText.Svg.Renderers.Path {
     /// </summary>
     public class DefaultSvgPathShapeFactory {
         public static IPathShape CreatePathShape(String name) {
-            return new PatheShapeMapper().GetMapping().Get(name);
+            return new PathShapeMapper().GetMapping().Get(name);
         }
     }
 }

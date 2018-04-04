@@ -9,12 +9,11 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// <see cref="iText.Svg.Renderers.Path.IPathShapeMapper"/>
     /// that will be used by
     /// sub classes of
-    /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer">
+    /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer"/>
     /// To map the path-data
     /// instructions(moveto, lineto, corveto ...) to their respective implementations.
-    /// </see>
     /// </summary>
-    public class PatheShapeMapper : IPathShapeMapper {
+    public class PathShapeMapper : IPathShapeMapper {
         public virtual IDictionary<String, IPathShape> GetMapping() {
             IDictionary<String, IPathShape> result = new Dictionary<String, IPathShape>();
             result.Put(SvgTagConstants.PATH_DATA_LINE_TO, new LineTo());
