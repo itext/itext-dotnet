@@ -18,8 +18,14 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% rect\n");
-            float x = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.X_ATTRIBUTE));
-            float y = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.Y_ATTRIBUTE));
+            float x = 0.0f;
+            float y = 0.0f;
+            if (GetAttribute(SvgAttributeConstants.X_ATTRIBUTE) != null) {
+                x = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.X_ATTRIBUTE));
+            }
+            if (GetAttribute(SvgAttributeConstants.Y_ATTRIBUTE) != null) {
+                y = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.Y_ATTRIBUTE));
+            }
             float width = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.WIDTH_ATTRIBUTE));
             float height = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.HEIGHT_ATTRIBUTE));
             bool rxPresent = false;

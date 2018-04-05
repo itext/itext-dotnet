@@ -1,57 +1,8 @@
 using System;
 using System.Collections.Generic;
-using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
     public class SvgCssUtilsTest {
-        [NUnit.Framework.Test]
-        public virtual void NormalParseFloat() {
-            float? expected = 3.0f;
-            float? actual = SvgCssUtils.ParseFloat("3.0");
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NegativeFloatParsing() {
-            float? expected = -3.0f;
-            float? actual = SvgCssUtils.ParseFloat("-3.0");
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TextFloatParsing() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCssUtils.ParseFloat("Definitely not a float.");
-            }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.FLOAT_PARSING_NAN));
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DoubleFloatParsing() {
-            float? expected = 2.0f;
-            float? actual = SvgCssUtils.ParseFloat("2.0d");
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MixedTextFloatParsing() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCssUtils.ParseFloat("15.0WaitWhat?30.0f");
-            }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.FLOAT_PARSING_NAN));
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NullFloatParsing() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCssUtils.ParseFloat(null);
-            }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.FLOAT_PARSING_NAN));
-;
-        }
-
         public virtual void CommaSplitValueTest() {
             String input = "a,b,c,d";
             IList<String> expected = new List<String>();

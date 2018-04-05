@@ -5,6 +5,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
+using iText.StyledXmlParser.Exceptions;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -57,7 +58,7 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(cv);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
 ;
         }
 
@@ -114,9 +115,9 @@ namespace iText.Svg.Renderers.Impl {
             root.Draw(context);
             IList<Point> expectedPoints = new List<Point>();
             expectedPoints.Add(new Point(0, 0));
-            expectedPoints.Add(new Point(100, 100));
-            expectedPoints.Add(new Point(200, 200));
-            expectedPoints.Add(new Point(300, 300));
+            expectedPoints.Add(new Point(75, 75));
+            expectedPoints.Add(new Point(150, 150));
+            expectedPoints.Add(new Point(225, 225));
             IList<Point> attributePoints = ((PolylineSvgNodeRenderer)root).GetPoints();
             NUnit.Framework.Assert.AreEqual(expectedPoints.Count, attributePoints.Count);
             for (int x = 0; x < attributePoints.Count; x++) {

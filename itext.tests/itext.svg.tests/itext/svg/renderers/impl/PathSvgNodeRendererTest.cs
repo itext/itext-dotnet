@@ -66,6 +66,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("RND-900")]
         public virtual void PathLineRendererCurveToTest() {
             String filename = "pathNodeRendererCurveToTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
@@ -86,6 +87,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("RND-900")]
         public virtual void PathLineRendererCurveToTest1() {
             String filename = "pathNodeRendererCurveToTest1.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));

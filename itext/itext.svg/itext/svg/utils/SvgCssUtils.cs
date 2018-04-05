@@ -51,29 +51,6 @@ namespace iText.Svg.Utils {
         private SvgCssUtils() {
         }
 
-        /// <summary>Parse a float from a given String.</summary>
-        /// <param name="value">string to be parsed</param>
-        /// <returns>float value</returns>
-        public static float ParseFloat(String value) {
-            try {
-                // we want to mimic behvior in Java that allows strings containing a double ("2.0d")
-                // to be parsed into floats
-                if ( value != null && value.EndsWith("d"))
-                {
-                    value = value.Replace("d", "");
-                }
-
-                return float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (FormatException nfe) {
-                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, nfe);
-            } 
-            catch (ArgumentNullException ane)
-            {
-                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, ane);
-            }
-        }
-
         /// <summary>Splits a given String into a list of substrings.</summary>
         /// <remarks>
         /// Splits a given String into a list of substrings.

@@ -208,7 +208,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians((float)CssUtils.ParseFloat(values[0])));
             //Differs from the notation in the PDF-spec for skews
             return new AffineTransform(1, tan, 0, 1, 0, 0);
         }
@@ -220,7 +220,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians((float)CssUtils.ParseFloat(values[0])));
             //Differs from the notation in the PDF-spec for skews
             return new AffineTransform(1, 0, tan, 1, 0, 0);
         }
@@ -232,7 +232,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1 && values.Count != 3) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double angle = MathUtil.ToRadians(SvgCssUtils.ParseFloat(values[0]));
+            double angle = MathUtil.ToRadians((float)CssUtils.ParseFloat(values[0]));
             if (values.Count == 3) {
                 float centerX = CssUtils.ParseAbsoluteLength(values[1]);
                 float centerY = CssUtils.ParseAbsoluteLength(values[2]);

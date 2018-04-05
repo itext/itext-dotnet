@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Renderers.Path;
 
 namespace iText.Svg.Renderers.Path.Impl {
@@ -12,7 +13,7 @@ namespace iText.Svg.Renderers.Path.Impl {
                 value = attributes.Get(key);
             }
             if (value != null && !String.IsNullOrEmpty(value)) {
-                return float.Parse(attributes.Get(key), System.Globalization.CultureInfo.InvariantCulture);
+                return CssUtils.ParseAbsoluteLength(attributes.Get(key));
             }
             return 0;
         }
