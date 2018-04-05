@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
 
@@ -19,9 +20,27 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MeetTheTeam() {
+            IList<Exception> assertionErrorsThrown = new List<Exception>();
             for (int i = 1; i < 6; i++) {
-                SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_00" + i);
+                try {
+                    SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_00" + i);
+                }
+                catch (Exception ae) {
+                    if (ae.Message.Contains("expected null, but was")) {
+                        assertionErrorsThrown.Add(ae);
+                    }
+                }
             }
+            if (assertionErrorsThrown.Count != 0) {
+                NUnit.Framework.Assert.Fail("At least one compare file was not identical with the result");
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ViewboxTest() {
+            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_viewbox");
         }
     }
 }

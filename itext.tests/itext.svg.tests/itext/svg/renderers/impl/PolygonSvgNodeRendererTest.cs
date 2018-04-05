@@ -56,9 +56,9 @@ namespace iText.Svg.Renderers.Impl {
             root.Draw(context);
             IList<Point> expectedPoints = new List<Point>();
             expectedPoints.Add(new Point(0, 0));
-            expectedPoints.Add(new Point(100, 100));
-            expectedPoints.Add(new Point(200, 200));
-            expectedPoints.Add(new Point(300, 300));
+            expectedPoints.Add(new Point(75, 75));
+            expectedPoints.Add(new Point(150, 150));
+            expectedPoints.Add(new Point(225, 225));
             expectedPoints.Add(new Point(0, 0));
             IList<Point> attributePoints = ((PolygonSvgNodeRenderer)root).GetPoints();
             NUnit.Framework.Assert.AreEqual(expectedPoints.Count, attributePoints.Count);
@@ -81,9 +81,9 @@ namespace iText.Svg.Renderers.Impl {
             root.Draw(context);
             IList<Point> expectedPoints = new List<Point>();
             expectedPoints.Add(new Point(0, 0));
-            expectedPoints.Add(new Point(100, 100));
-            expectedPoints.Add(new Point(200, 200));
-            expectedPoints.Add(new Point(300, 300));
+            expectedPoints.Add(new Point(75, 75));
+            expectedPoints.Add(new Point(150, 150));
+            expectedPoints.Add(new Point(225, 225));
             expectedPoints.Add(new Point(0, 0));
             IList<Point> attributePoints = ((PolygonSvgNodeRenderer)root).GetPoints();
             NUnit.Framework.Assert.AreEqual(expectedPoints.Count, attributePoints.Count);

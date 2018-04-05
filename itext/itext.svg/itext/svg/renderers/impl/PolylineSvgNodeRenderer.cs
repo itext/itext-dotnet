@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -47,8 +48,8 @@ namespace iText.Svg.Renderers.Impl {
             float x;
             float y;
             for (int i = 0; i < points.Count; i = i + 2) {
-                x = SvgCssUtils.ParseFloat(points[i]);
-                y = SvgCssUtils.ParseFloat(points[i + 1]);
+                x = CssUtils.ParseAbsoluteLength(points[i]);
+                y = CssUtils.ParseAbsoluteLength(points[i + 1]);
                 this.points.Add(new Point(x, y));
             }
         }
