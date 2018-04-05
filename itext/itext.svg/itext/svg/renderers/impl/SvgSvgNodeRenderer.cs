@@ -38,9 +38,10 @@ namespace iText.Svg.Renderers.Impl {
             Rectangle viewPort = context.GetCurrentViewPort();
             AffineTransform transform;
             if (outermost) {
+                float vertical = viewPort.GetY() + viewPort.GetHeight();
                 // flip coordinate space vertically and translate on the y axis with the viewport height
-                transform = TransformUtils.ParseTransform("matrix(1 0 0 -1 " + viewPort.GetX() + " " + (viewPort.GetY() + 
-                    viewPort.GetHeight()));
+                transform = TransformUtils.ParseTransform("matrix(1 0 0 -1 " + SvgCssUtils.ConvertFloatToString(viewPort.GetX
+                    ()) + " " + SvgCssUtils.ConvertFloatToString(vertical));
             }
             else {
                 transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());

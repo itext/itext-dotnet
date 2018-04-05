@@ -25,8 +25,8 @@ namespace iText.Svg.Renderers.Impl {
                 ) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 Rectangle currentViewPort = context.GetCurrentViewPort();
-                currentCanvas.ConcatMatrix(TransformUtils.ParseTransform("matrix(1 0 0 -1 0 " + currentViewPort.GetHeight(
-                    ) + ")"));
+                currentCanvas.ConcatMatrix(TransformUtils.ParseTransform("matrix(1 0 0 -1 0 " + SvgCssUtils.ConvertFloatToString
+                    (currentViewPort.GetHeight()) + ")"));
                 String xRawValue = this.attributesAndStyles.Get(SvgTagConstants.X);
                 String yRawValue = this.attributesAndStyles.Get(SvgTagConstants.Y);
                 String fontSizeRawValue = this.attributesAndStyles.Get(SvgTagConstants.FONT_SIZE);

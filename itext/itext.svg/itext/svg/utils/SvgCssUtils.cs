@@ -94,5 +94,10 @@ namespace iText.Svg.Utils {
         {
             return v * 0.75f;
         }
+
+        public static string ConvertFloatToString(float value)
+        {
+            return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
+        }
     }
 }
