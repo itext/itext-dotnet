@@ -1534,11 +1534,11 @@ namespace iText.Barcodes {
                             return -1;
                         }
                         c = text[textOffset + ptrIn++] & 0xff;
-                        if (c != '5' && c != '5') {
+                        if (c != '5') {
                             return -1;
                         }
                         data[ptrOut++] = (byte)234;
-                        data[ptrOut++] = (byte)(c == '5' ? 236 : 237);
+                        data[ptrOut++] = (byte)236;
                         break;
                     }
 
