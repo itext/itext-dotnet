@@ -347,7 +347,7 @@ namespace iText.Layout.Renderer {
                                             if (line.start == -1) {
                                                 line.start = currentTextPos;
                                             }
-                                            line.end = Math.Max(line.end, currentTextPos + pre.Length);
+                                            line.end = Math.Max(line.end, wordBounds[0] + pre.Length);
                                             GlyphLine lineCopy = line.Copy(line.start, line.end);
                                             lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
                                             lineCopy.end++;
@@ -361,7 +361,7 @@ namespace iText.Layout.Renderer {
                                                 );
                                             widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
                                                 );
-                                            currentTextPos += pre.Length;
+                                            currentTextPos = wordBounds[0] + pre.Length;
                                             break;
                                         }
                                     }
