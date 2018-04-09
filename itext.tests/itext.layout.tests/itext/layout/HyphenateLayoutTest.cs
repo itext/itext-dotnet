@@ -41,53 +41,45 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
 using iText.Layout.Hyphenation;
 using iText.Test;
 
 namespace iText.Layout {
-    public class HyphenateResultTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void UkraineHyphenTest() {
-            //здравствуйте
-            TestHyphenateResult("uk", "\u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439", new int[] { 5 });
+    public class HyphenateLayoutTest : ExtendedITextTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/HyphenateLayoutTest/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/layout/HyphenateLayoutTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateDestinationFolder(destinationFolder);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void UkraineNoneHyphenTest() {
-            //день
-            TestHyphenateResult("uk", "\u0434\u0435\u043D\u044C", null);
-        }
-
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ParenthesisTest01() {
-            //Annuitätendarlehen
-            TestHyphenateResult("de", "((:::(\"|;Annuitätendarlehen|\")))", new int[] { 5, 7, 10, 13, 15 });
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SpacesTest01() {
-            //Annuitätendarlehen
-            TestHyphenateResult("de", "    Annuitätendarlehen", new int[] { 5, 7, 10, 13, 15 });
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SoftHyphenTest01() {
-            //Ann\u00ADuit\u00ADätendarl\u00ADehen
-            TestHyphenateResult("de", "Ann\u00ADuit\u00ADätendarl\u00ADehen", new int[] { 3, 7, 16 });
-        }
-
-        private void TestHyphenateResult(String lang, String testWorld, int[] expectedHyphenatePoints) {
-            String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
-            lang = parts[0];
-            String country = (parts.Length == 2) ? parts[1] : null;
-            HyphenationConfig config = new HyphenationConfig(lang, country, 3, 3);
-            iText.Layout.Hyphenation.Hyphenation result = config.Hyphenate(testWorld);
-            if (result != null) {
-                NUnit.Framework.Assert.AreEqual(expectedHyphenatePoints, result.GetHyphenationPoints());
-            }
-            else {
-                NUnit.Framework.Assert.IsNull(expectedHyphenatePoints);
-            }
+            String outFileName = destinationFolder + "parenthesisTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_parenthesisTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc, new PageSize(300, 500));
+            Hyphenator hyphenator = new Hyphenator("de", "de", 3, 3);
+            HyphenationConfig hyphenationConfig = new HyphenationConfig(hyphenator);
+            document.SetHyphenation(hyphenationConfig);
+            document.Add(new Paragraph("1                             (((\"|Annuitätendarlehen|\")))"));
+            document.Add(new Paragraph("2                              ((\"|Annuitätendarlehen|\"))"));
+            document.Add(new Paragraph("3                               (\"|Annuitätendarlehen|\")"));
+            document.Add(new Paragraph("4                                \"|Annuitätendarlehen|\""));
+            document.Add(new Paragraph("5                                 \"Annuitätendarlehen\""));
+            document.Add(new Paragraph("6                                      Annuitätendarlehen"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
     }
 }
