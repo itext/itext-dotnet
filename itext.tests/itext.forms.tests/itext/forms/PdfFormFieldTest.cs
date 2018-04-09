@@ -381,5 +381,26 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FlushedPagesTest() {
+            String filename = destinationFolder + "flushedPagesTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage().Flush();
+            pdfDoc.AddNewPage().Flush();
+            pdfDoc.AddNewPage();
+            PdfTextFormField field = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 100, 300, 20), "name", "");
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(field);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_flushedPagesTest.pdf", destinationFolder
+                , "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
