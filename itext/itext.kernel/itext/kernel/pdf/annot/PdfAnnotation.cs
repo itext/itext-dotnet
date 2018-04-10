@@ -339,7 +339,7 @@ namespace iText.Kernel.Pdf.Annot {
                             }
                             else {
                                 if (PdfName._3D.Equals(subtype)) {
-                                    throw new NotSupportedException();
+                                    annotation = new Pdf3DAnnotation((PdfDictionary)pdfObject);
                                 }
                                 else {
                                     if (PdfName.Highlight.Equals(subtype) || PdfName.Underline.Equals(subtype) || PdfName.Squiggly.Equals(subtype

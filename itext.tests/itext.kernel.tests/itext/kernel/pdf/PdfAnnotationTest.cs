@@ -1020,5 +1020,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
                 ));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void Make3dAnnotationTest() {
+            String filename = sourceFolder + "3d_annotation.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfPage page1 = pdfDoc.GetPage(1);
+            IList<PdfAnnotation> annots = page1.GetAnnotations();
+            NUnit.Framework.Assert.IsTrue(annots[0] is Pdf3DAnnotation);
+        }
     }
 }
