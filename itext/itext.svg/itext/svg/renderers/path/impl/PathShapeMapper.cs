@@ -20,6 +20,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             result.Put(SvgTagConstants.PATH_DATA_MOVE_TO, new MoveTo());
             result.Put(SvgTagConstants.PATH_DATA_CURVE_TO, new CurveTo());
             result.Put(SvgTagConstants.PATH_DATA_QUARD_CURVE_TO, new QuadraticCurveTo());
+            result.Put(SvgTagConstants.PATH_DATA_CLOSE_PATH, new ClosePath());
             result.Put(SvgTagConstants.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
             return result;
         }
