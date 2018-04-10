@@ -22,5 +22,9 @@ namespace iText.Svg.Renderers.Path.Impl {
             map.Put("y", coordinates.Length > 1 && !String.IsNullOrEmpty(coordinates[1]) ? coordinates[1] : "0");
             SetProperties(map);
         }
+
+        public override IDictionary<String, String> GetCoordinates() {
+            return properties;
+        }
     }
 }

@@ -13,12 +13,14 @@ namespace iText.Svg.Renderers.Path.Impl {
                 value = attributes.Get(key);
             }
             if (value != null && !String.IsNullOrEmpty(value)) {
-                return CssUtils.ParseAbsoluteLength(attributes.Get(key));
+                return CssUtils.ParseAbsoluteLength(value);
             }
             return 0;
         }
 
         public abstract void Draw(PdfCanvas arg1);
+
+        public abstract IDictionary<String, String> GetCoordinates();
 
         public abstract void SetCoordinates(String[] arg1);
 

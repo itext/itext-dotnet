@@ -9,5 +9,7 @@ namespace iText.Svg.Renderers.Path {
         void SetProperties(IDictionary<String, String> properties);
 
         void SetCoordinates(String[] coordinates);
+
+        IDictionary<String, String> GetCoordinates();
     }
 }
