@@ -10,6 +10,7 @@ using iText.Svg.Processors;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
 using iText.Svg.Renderers.Impl;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Processors.Impl {
     /// <summary>
@@ -176,7 +177,12 @@ namespace iText.Svg.Processors.Impl {
                 // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
                 // tab/space indented xml files will retain their tabs and spaces.
                 // The following regex replaces all whitespace with a single space.
+                //TODO(RND-906) evaluate regex and trim methods
                 String trimmedText = iText.IO.Util.StringUtil.ReplaceAll(textNode.WholeText(), "\\s+", " ");
+                //Trim leading whitespace
+                trimmedText = SvgTextUtil.TrimLeadingWhitespace(trimmedText);
+                //Trim trailing whitespace
+                trimmedText = SvgTextUtil.TrimTrailingWhitespace(trimmedText);
                 parentRenderer.SetAttribute(SvgTagConstants.TEXT_CONTENT, trimmedText);
             }
         }

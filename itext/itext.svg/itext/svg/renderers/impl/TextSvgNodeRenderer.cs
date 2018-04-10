@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
@@ -24,9 +23,6 @@ namespace iText.Svg.Renderers.Impl {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgTagConstants.TEXT_CONTENT)
                 ) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                Rectangle currentViewPort = context.GetCurrentViewPort();
-                currentCanvas.ConcatMatrix(TransformUtils.ParseTransform("matrix(1 0 0 -1 0 " + SvgCssUtils.ConvertFloatToString
-                    (currentViewPort.GetHeight()) + ")"));
                 String xRawValue = this.attributesAndStyles.Get(SvgTagConstants.X);
                 String yRawValue = this.attributesAndStyles.Get(SvgTagConstants.Y);
                 String fontSizeRawValue = this.attributesAndStyles.Get(SvgTagConstants.FONT_SIZE);
@@ -39,10 +35,10 @@ namespace iText.Svg.Renderers.Impl {
                     fontSize = CssUtils.ParseAbsoluteLength(fontSizeRawValue, CssConstants.PT);
                 }
                 if (!xValuesList.IsEmpty()) {
-                    x = float.Parse(xValuesList[0], System.Globalization.CultureInfo.InvariantCulture);
+                    x = CssUtils.ParseAbsoluteLength(xValuesList[0]);
                 }
                 if (!yValuesList.IsEmpty()) {
-                    y = float.Parse(yValuesList[0], System.Globalization.CultureInfo.InvariantCulture);
+                    y = CssUtils.ParseAbsoluteLength(yValuesList[0]);
                 }
                 currentCanvas.BeginText();
                 try {
@@ -52,9 +48,12 @@ namespace iText.Svg.Renderers.Impl {
                 catch (System.IO.IOException e) {
                     throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
                 }
-                currentCanvas.MoveText(x, y);
+                //Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
+                currentCanvas.SaveState();
+                currentCanvas.SetTextMatrix(1, 0, 0, -1, x, y);
                 currentCanvas.SetColor(ColorConstants.BLACK, true);
                 currentCanvas.ShowText(this.attributesAndStyles.Get(SvgTagConstants.TEXT_CONTENT));
+                currentCanvas.RestoreState();
                 currentCanvas.EndText();
             }
         }
