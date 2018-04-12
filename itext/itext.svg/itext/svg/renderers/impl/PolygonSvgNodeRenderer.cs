@@ -8,9 +8,7 @@ namespace iText.Svg.Renderers.Impl {
     /// </summary>
     public class PolygonSvgNodeRenderer : PolylineSvgNodeRenderer {
         /// <summary>
-        /// Calls
-        /// <see cref="PolylineSvgNodeRenderer.SetPoints(System.String)"/>
-        /// to set
+        /// Calls setPoints(String) to set
         /// <see cref="PolylineSvgNodeRenderer.points"/>
         /// Then calls
         /// <see cref="ConnectPoints()"/>

@@ -5,6 +5,7 @@ using iText.Svg.Renderers;
 
 namespace iText.Svg.Processors {
     public class ProcessorStateTest {
+        /// <summary>Push test</summary>
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPush() {
             ProcessorState testProcessorState = new ProcessorState();
@@ -23,6 +24,7 @@ namespace iText.Svg.Processors {
             NUnit.Framework.Assert.IsTrue(popped.ToString().Equals("test") && testProcessorState.Empty());
         }
 
+        /// <summary>Peek test</summary>
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPeek() {
             ProcessorState testProcessorState = new ProcessorState();

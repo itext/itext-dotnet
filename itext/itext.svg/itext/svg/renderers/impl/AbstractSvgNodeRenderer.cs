@@ -10,12 +10,16 @@ using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
-    /// <summary><inheritDoc/></summary>
+    /// <summary>
+    /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+    /// abstract implementation.
+    /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
         private ISvgNodeRenderer parent;
 
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
+        /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
         private bool doFill = false;
@@ -107,6 +111,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <returns>boolean checks if the drawn element can be filled</returns>
         protected internal virtual bool CanElementFill() {
             return true;
         }

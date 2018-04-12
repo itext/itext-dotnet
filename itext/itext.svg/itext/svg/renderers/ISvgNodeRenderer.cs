@@ -53,6 +53,9 @@ namespace iText.Svg.Renderers {
         /// </returns>
         String GetAttribute(String key);
 
+        /// <summary>Sets a property key and value pairs for a given attribute</summary>
+        /// <param name="key">the name of the attribute</param>
+        /// <param name="value">the value of the attribute</param>
         void SetAttribute(String key, String value);
     }
 }

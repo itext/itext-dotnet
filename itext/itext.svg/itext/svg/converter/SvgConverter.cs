@@ -399,8 +399,7 @@ namespace iText.Svg.Converter {
         /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
-        /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
-        /// , or look into
+        /// this method, or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
         /// .

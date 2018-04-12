@@ -26,6 +26,11 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <summary>
+        /// Fetches a map of String values by calling getAttribute(Strng s) method
+        /// and maps it's values to arc parmateter cx, cy , rx, ry respectively
+        /// </summary>
+        /// <returns>boolean values to indicate whether all values exit or not</returns>
         protected internal virtual bool SetParameters() {
             cx = 0;
             cy = 0;

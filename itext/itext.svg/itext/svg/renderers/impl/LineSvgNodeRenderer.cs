@@ -12,9 +12,6 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;line&gt; tag.
     /// </summary>
     public class LineSvgNodeRenderer : AbstractSvgNodeRenderer {
-        public LineSvgNodeRenderer() {
-        }
-
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             try {

@@ -43,13 +43,11 @@ namespace iText.Svg.Processors.Impl {
         }
 
         //Processor context
-        /// <summary><inheritDoc/></summary>
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgNodeRenderer Process(INode root) {
             return Process(root, new DefaultSvgConverterProperties(root));
         }
 
-        /// <summary><inheritDoc/></summary>
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgNodeRenderer Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
@@ -76,7 +74,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
-        /// <param name="converterProps"/>
+        /// <param name="converterProps">that contains configuration properties and operations</param>
         private void PerformSetup(ISvgConverterProperties converterProps) {
             processorState = new ProcessorState();
             if (converterProps.GetCssResolver() != null) {
@@ -192,7 +190,7 @@ namespace iText.Svg.Processors.Impl {
         ///     </remarks>
         /// <param name="node">root-node to start with</param>
         /// <param name="tagName">name of the tag that needs to be fonund</param>
-        /// <returns/>
+        /// <returns>IElementNode</returns>
         private static IElementNode FindFirstElement(INode node, String tagName) {
             LinkedList<INode> q = new LinkedList<INode>();
             q.Add(node);

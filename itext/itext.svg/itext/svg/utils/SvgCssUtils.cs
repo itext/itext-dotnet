@@ -67,11 +67,17 @@ namespace iText.Svg.Utils {
             return result;
         }
 
+        ///<summary>Converts a float pts values to pixels </summary>
+        ///<param name="v"> the value to be converted pixels</param>
+        ///<returns>float converted value pts*0.75f</returns>
         public static float ConvertPtsToPx(float v)
         {
             return v * 0.75f;
         }
-
+       
+        ///<summary>Converts a float to a String.</summary>
+        ///<param name="value">to be converted float value</param>
+        ///<returns>the value in a String representation</returns>   
         public static string ConvertFloatToString(float value)
         {
             return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;

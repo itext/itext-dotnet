@@ -54,6 +54,8 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal override void DoDraw(SvgDrawContext context) {
             String pointsAttribute = attributesAndStyles.ContainsKey(SvgTagConstants.POINTS) ? attributesAndStyles.Get
                 (SvgTagConstants.POINTS) : null;

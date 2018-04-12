@@ -12,6 +12,7 @@ using iText.Svg.Renderers.Factories;
 namespace iText.Svg.Processors {
     public class DefaultSvgProcessorUnitTest {
         //Main success scenario
+        /// <summary>Simple correct example</summary>
         [NUnit.Framework.Test]
         public virtual void DummyProcessingTestCorrectSimple() {
             //Setup nodes
@@ -71,6 +72,7 @@ namespace iText.Svg.Processors {
         }
 
         //Edge cases
+        /// <summary>Invalid input: null</summary>
         [NUnit.Framework.Test]
         public virtual void DummyProcessingTestNodeHasNullChild() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag

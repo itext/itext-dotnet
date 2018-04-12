@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Svg.Utils {
+    /// <summary>
+    /// Utility class for drowing shapes on
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// </summary>
     public class DrawUtils {
         /// <summary>
         /// Draw an arc on the passed canvas,

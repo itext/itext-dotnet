@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace iText.Svg.Renderers.Path {
     /// <summary>
-    /// Maps
+    /// Interface that will provide a mapping from path element-data  instruction names to
     /// <see cref="IPathShape"/>
-    /// on their names.
+    /// .
     /// </summary>
     public interface IPathShapeMapper {
         /// <summary>Provides a mapping of Path-data instructions' names to path shape classes.</summary>
