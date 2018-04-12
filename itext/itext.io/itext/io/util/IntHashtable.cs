@@ -386,7 +386,7 @@ namespace iText.IO.Util {
 
         public virtual int[] ToOrderedKeys() {
             int[] res = GetKeys();
-            iText.IO.Util.JavaUtil.Sort(res);
+            JavaUtil.Sort(res);
             return res;
         }
 

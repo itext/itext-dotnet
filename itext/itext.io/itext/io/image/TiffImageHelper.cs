@@ -523,12 +523,12 @@ namespace iText.IO.Image {
                                 tablelength -= 2;
                             }
                             byte[] tables = new byte[tablelength];
-                            System.Array.Copy(temp, tableoffset, tables, 0, tablelength);
+                            Array.Copy(temp, tableoffset, tables, 0, tablelength);
                             // TODO insert after JFIF header, instead of at the start
                             byte[] jpegwithtables = new byte[jpeg.Length + tables.Length];
-                            System.Array.Copy(jpeg, 0, jpegwithtables, 0, 2);
-                            System.Array.Copy(tables, 0, jpegwithtables, 2, tables.Length);
-                            System.Array.Copy(jpeg, 2, jpegwithtables, tables.Length + 2, jpeg.Length - 2);
+                            Array.Copy(jpeg, 0, jpegwithtables, 0, 2);
+                            Array.Copy(tables, 0, jpegwithtables, 2, tables.Length);
+                            Array.Copy(jpeg, 2, jpegwithtables, tables.Length + 2, jpeg.Length - 2);
                             jpeg = jpegwithtables;
                         }
                         tiff.image.data = jpeg;

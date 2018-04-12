@@ -42,12 +42,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>Represents the most common properties of color spaces.</summary>
     public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject> {
-        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName.Pattern));
 
         protected internal PdfColorSpace(PdfObject pdfObject)

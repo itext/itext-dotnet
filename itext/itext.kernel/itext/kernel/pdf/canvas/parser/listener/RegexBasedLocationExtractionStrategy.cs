@@ -73,8 +73,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             Match mat = iText.IO.Util.StringUtil.Match(pattern, txt.text);
             while (mat.Success) {
                 int? startIndex = txt.indexMap.Get(mat.Index);
-                int? endIndex = txt.indexMap.Get(mat.Index + mat.Length);
-                foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value))) {
+                int? endIndex = txt.indexMap.Get(mat.Index + mat.Length - 1);
+                foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value + 1))) {
                     retval.Add(new DefaultPdfTextLocation(0, r, iText.IO.Util.StringUtil.Group(mat, 0)));
                 }
                 mat = mat.NextMatch();

@@ -1076,7 +1076,7 @@ namespace iText.Layout {
             cellStyle.SetBorderLeft(Border.NO_BORDER).SetBorderRight(Border.NO_BORDER).SetBorderTop(new SolidBorder(ColorConstants
                 .BLUE, 1)).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 1));
             for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add(iText.IO.Util.JavaUtil.IntegerToString(i)).AddStyle(cellStyle));
+                table.AddCell(new Cell().Add(JavaUtil.IntegerToString(i)).AddStyle(cellStyle));
                 table.AddCell(new Cell().Add(text).AddStyle(cellStyle));
             }
             doc.Add(table);

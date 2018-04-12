@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Layout.Properties {
     /// <summary>
@@ -107,7 +108,7 @@ namespace iText.Layout.Properties {
         }
 
         public override int GetHashCode() {
-            return iText.IO.Util.JavaUtil.ArraysHashCode(type, value);
+            return JavaUtil.ArraysHashCode(type, value);
         }
     }
 }

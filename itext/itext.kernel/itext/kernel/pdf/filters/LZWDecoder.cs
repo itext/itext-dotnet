@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf.Filters {
         public virtual void AddStringToTable(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] @string = new byte[length + 1];
-            System.Array.Copy(oldString, 0, @string, 0, length);
+            Array.Copy(oldString, 0, @string, 0, length);
             @string[length] = newString;
             // Add this new String to the table
             stringTable[tableIndex++] = @string;
@@ -193,7 +193,7 @@ namespace iText.Kernel.Pdf.Filters {
         public virtual byte[] ComposeString(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] @string = new byte[length + 1];
-            System.Array.Copy(oldString, 0, @string, 0, length);
+            Array.Copy(oldString, 0, @string, 0, length);
             @string[length] = newString;
             return @string;
         }

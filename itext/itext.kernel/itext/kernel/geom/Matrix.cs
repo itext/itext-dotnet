@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
     /// <summary>
@@ -240,7 +241,7 @@ namespace iText.Kernel.Geom {
             if (!(obj is iText.Kernel.Geom.Matrix)) {
                 return false;
             }
-            return iText.IO.Util.JavaUtil.ArraysEquals(vals, ((iText.Kernel.Geom.Matrix)obj).vals);
+            return JavaUtil.ArraysEquals(vals, ((iText.Kernel.Geom.Matrix)obj).vals);
         }
 
         /// <summary>Generates a hash code for this object.</summary>
@@ -250,7 +251,7 @@ namespace iText.Kernel.Geom {
             //return Arrays.hashCode(vals); // JDK 5 code, replaced with the following
             int result = 1;
             for (int i = 0; i < vals.Length; i++) {
-                result = 31 * result + iText.IO.Util.JavaUtil.FloatToIntBits(vals[i]);
+                result = 31 * result + JavaUtil.FloatToIntBits(vals[i]);
             }
             return result;
         }

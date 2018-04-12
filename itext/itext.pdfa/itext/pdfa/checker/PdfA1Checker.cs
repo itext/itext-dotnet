@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -63,21 +64,21 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-1
     /// </summary>
     public class PdfA1Checker : PdfAChecker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
 
-        protected internal static readonly ICollection<PdfName> contentAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> contentAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Text, PdfName.FreeText, PdfName.Line, PdfName.Square, PdfName.Circle, PdfName.Stamp, PdfName.
             Ink, PdfName.Popup));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
             , PdfName.Hide));
 
-        protected internal static readonly ICollection<PdfName> allowedNamedActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedNamedActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.NextPage, PdfName.PrevPage, PdfName.FirstPage, PdfName.LastPage));
 
-        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
 
         /// <summary>Creates a PdfA1Checker with the required conformance level</summary>

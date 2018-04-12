@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
@@ -106,13 +107,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 nextObjectKey = IVGenerator.GetIV(32);
                 nextObjectKeySize = 32;
                 // Algorithm 3.8.1
-                IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
+                IDigest md = DigestUtilities.GetDigest("SHA-256");
                 md.Update(userPassword, 0, Math.Min(userPassword.Length, 127));
                 md.Update(uvs);
                 userKey = new byte[48];
                 md.Digest(userKey, 0, 32);
-                System.Array.Copy(uvs, 0, userKey, 32, 8);
-                System.Array.Copy(uks, 0, userKey, 40, 8);
+                Array.Copy(uvs, 0, userKey, 32, 8);
+                Array.Copy(uks, 0, userKey, 40, 8);
                 // Algorithm 3.8.2
                 md.Update(userPassword, 0, Math.Min(userPassword.Length, 127));
                 md.Update(uks);
@@ -126,8 +127,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 md.Update(userKey);
                 ownerKey = new byte[48];
                 md.Digest(ownerKey, 0, 32);
-                System.Array.Copy(ovs, 0, ownerKey, 32, 8);
-                System.Array.Copy(oks, 0, ownerKey, 40, 8);
+                Array.Copy(ovs, 0, ownerKey, 32, 8);
+                Array.Copy(oks, 0, ownerKey, 40, 8);
                 // Algorithm 3.9.2
                 md.Update(ownerPassword, 0, Math.Min(ownerPassword.Length, 127));
                 md.Update(oks);
@@ -202,7 +203,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
                 PdfNumber pValue = (PdfNumber)encryptionDictionary.Get(PdfName.P);
                 this.permissions = pValue.LongValue();
-                IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
+                IDigest md = DigestUtilities.GetDigest("SHA-256");
                 md.Update(password, 0, Math.Min(password.Length, 127));
                 md.Update(oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
                 md.Update(uValue, 0, OU_LENGTH);

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 
 namespace iText.IO.Util {
@@ -56,7 +57,7 @@ namespace iText.IO.Util {
         public static byte[] ShortenArray(byte[] src, int length) {
             if (length < src.Length) {
                 byte[] shortened = new byte[length];
-                System.Array.Copy(src, 0, shortened, 0, length);
+                Array.Copy(src, 0, shortened, 0, length);
                 return shortened;
             }
             return src;

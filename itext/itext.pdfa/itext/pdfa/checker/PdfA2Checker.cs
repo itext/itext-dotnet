@@ -47,6 +47,7 @@ using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Log;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -67,14 +68,14 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-2
     /// </summary>
     public class PdfA2Checker : PdfA1Checker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
             , PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName.Trans, PdfName.GoTo3DView));
 
-        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Normal, PdfName.Compatible, PdfName.Multiply, PdfName.Screen, PdfName.Overlay, PdfName.Darken
             , PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight, PdfName
             .Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName.Color, PdfName.Luminosity));
@@ -238,7 +239,7 @@ namespace iText.Pdfa.Checker {
         }
 
         public override void CheckExtGState(CanvasGraphicsState extGState) {
-            if (System.Convert.ToInt32(1).Equals(extGState.GetOverprintMode())) {
+            if (Convert.ToInt32(1).Equals(extGState.GetOverprintMode())) {
                 if (extGState.GetFillOverprint() && currentFillCsIsIccBasedCMYK) {
                     throw new PdfAConformanceException(PdfAConformanceException.OverprintModeShallNotBeOneWhenAnICCBasedCMYKColourSpaceIsUsedAndWhenOverprintingIsSetToTrue
                         );

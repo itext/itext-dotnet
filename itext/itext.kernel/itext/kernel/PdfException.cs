@@ -203,6 +203,8 @@ namespace iText.Kernel {
 
         public const String DecodeParameterType1IsNotSupported = "Decode parameter type {0} is not supported.";
 
+        public const String DefaultAppearanceNotFound = "DefaultAppearance is required but not found";
+
         public const String DefaultcryptfilterNotFoundEncryption = "/DefaultCryptFilter not found (encryption).";
 
         public const String DictionaryKey1IsNotAName = "Dictionary key {0} is not a name.";

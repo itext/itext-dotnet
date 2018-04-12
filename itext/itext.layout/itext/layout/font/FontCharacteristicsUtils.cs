@@ -160,7 +160,7 @@ namespace iText.Layout.Font {
 
                 default: {
                     try {
-                        return NormalizeFontWeight((short)System.Convert.ToInt32(fw));
+                        return NormalizeFontWeight((short)Convert.ToInt32(fw));
                     }
                     catch (FormatException) {
                         return -1;

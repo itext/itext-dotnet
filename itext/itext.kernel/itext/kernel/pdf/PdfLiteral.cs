@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Font;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfLiteral : PdfPrimitiveObject {
@@ -55,7 +56,7 @@ namespace iText.Kernel.Pdf {
 
         public PdfLiteral(int size)
             : this(new byte[size]) {
-            iText.IO.Util.JavaUtil.Fill(content, (byte)32);
+            JavaUtil.Fill(content, (byte)32);
         }
 
         public PdfLiteral(String content)
@@ -95,12 +96,12 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object o) {
-            return this == o || o != null && GetType() == o.GetType() && iText.IO.Util.JavaUtil.ArraysEquals(content, 
-                ((iText.Kernel.Pdf.PdfLiteral)o).content);
+            return this == o || o != null && GetType() == o.GetType() && JavaUtil.ArraysEquals(content, ((iText.Kernel.Pdf.PdfLiteral
+                )o).content);
         }
 
         public override int GetHashCode() {
-            return content == null ? 0 : iText.IO.Util.JavaUtil.ArraysHashCode(content);
+            return content == null ? 0 : JavaUtil.ArraysHashCode(content);
         }
 
         protected internal override PdfObject NewInstance() {

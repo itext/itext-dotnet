@@ -47,6 +47,7 @@ using Org.BouncyCastle;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>
@@ -112,7 +113,7 @@ namespace iText.Signatures {
             if (url == null) {
                 return null;
             }
-            return SignUtils.ParseCrlFromStream(iText.IO.Util.UrlUtil.OpenStream(new Uri(url)));
+            return SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(url)));
         }
 
         // Online Certificate Status Protocol

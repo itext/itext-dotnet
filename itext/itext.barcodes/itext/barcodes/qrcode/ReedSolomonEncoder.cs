@@ -94,7 +94,7 @@ namespace iText.Barcodes.Qrcode {
             }
             GF256Poly generator = BuildGenerator(ecBytes);
             int[] infoCoefficients = new int[dataBytes];
-            System.Array.Copy(toEncode, 0, infoCoefficients, 0, dataBytes);
+            Array.Copy(toEncode, 0, infoCoefficients, 0, dataBytes);
             GF256Poly info = new GF256Poly(field, infoCoefficients);
             info = info.MultiplyByMonomial(ecBytes, 1);
             GF256Poly remainder = info.Divide(generator)[1];
@@ -103,7 +103,7 @@ namespace iText.Barcodes.Qrcode {
             for (int i = 0; i < numZeroCoefficients; i++) {
                 toEncode[dataBytes + i] = 0;
             }
-            System.Array.Copy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.Length);
+            Array.Copy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.Length);
         }
     }
 }

@@ -542,7 +542,7 @@ namespace iText.Layout.Renderer {
                     }
                     byte[] lineLevels = new byte[lineGlyphs.Count];
                     if (levels != null) {
-                        System.Array.Copy(levels, 0, lineLevels, 0, lineGlyphs.Count);
+                        Array.Copy(levels, 0, lineLevels, 0, lineGlyphs.Count);
                     }
                     int[] reorder = TypographyUtils.ReorderLine(lineGlyphs, lineLevels, levels);
                     if (reorder != null) {
@@ -618,7 +618,7 @@ namespace iText.Layout.Renderer {
                         LineRenderer overflow = (LineRenderer)result.GetOverflowRenderer();
                         if (levels != null) {
                             overflow.levels = new byte[levels.Length - lineLevels.Length];
-                            System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
+                            Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
                             if (overflow.levels.Length == 0) {
                                 overflow.levels = null;
                             }
@@ -1094,7 +1094,7 @@ namespace iText.Layout.Renderer {
 
         private void UpdateBidiLevels(int totalNumberOfTrimmedGlyphs, BaseDirection? baseDirection) {
             if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
-                levels = iText.IO.Util.JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
+                levels = JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
             }
             IList<int> unicodeIdsReorderingList = null;
             if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.IO.Log;
+using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>
@@ -156,7 +157,7 @@ namespace iText.Signatures {
                     return null;
                 }
                 LOGGER.Info("Getting CRL from " + crlurl);
-                return (X509Crl)SignUtils.ParseCrlFromStream(iText.IO.Util.UrlUtil.OpenStream(new Uri(crlurl)));
+                return (X509Crl)SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(crlurl)));
             }
             catch (System.IO.IOException) {
                 return null;

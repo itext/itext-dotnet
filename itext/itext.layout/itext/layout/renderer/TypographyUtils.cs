@@ -356,7 +356,7 @@ namespace iText.Layout.Renderer {
                 if (!className.Equals(that.className)) {
                     return false;
                 }
-                if (!iText.IO.Util.JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                if (!JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
                     return false;
                 }
                 return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
@@ -364,7 +364,7 @@ namespace iText.Layout.Renderer {
 
             public override int GetHashCode() {
                 int result = className.GetHashCode();
-                result = 31 * result + iText.IO.Util.JavaUtil.ArraysHashCode(parameterTypes);
+                result = 31 * result + JavaUtil.ArraysHashCode(parameterTypes);
                 result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
                 return result;
             }
@@ -392,7 +392,7 @@ namespace iText.Layout.Renderer {
                 } catch (FileLoadException fileLoadException) {
                     fileLoadExceptionMessage = fileLoadException.Message;
                 }
-                if (fileLoadExceptionMessage != null) {
+                if (type == null) {
                     // try to find typography assembly by it's partial name and check if it refers to current version of itext core
                     try {
                         type = System.Type.GetType(partialName);
@@ -411,7 +411,7 @@ namespace iText.Layout.Renderer {
                             type = null;
                         }
                     }
-                    if (type == null) {
+                    if (type == null && fileLoadExceptionMessage != null) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
                         logger.Error(fileLoadExceptionMessage);
                     }

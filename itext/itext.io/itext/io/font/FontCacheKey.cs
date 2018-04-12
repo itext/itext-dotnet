@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     public abstract class FontCacheKey {
@@ -93,8 +94,7 @@ namespace iText.IO.Font {
             internal FontCacheBytesKey(byte[] fontBytes) {
                 if (fontBytes != null) {
                     int maxBytesNum = 10000;
-                    this.firstFontBytes = fontBytes.Length > maxBytesNum ? iText.IO.Util.JavaUtil.ArraysCopyOf(fontBytes, maxBytesNum
-                        ) : fontBytes;
+                    this.firstFontBytes = fontBytes.Length > maxBytesNum ? JavaUtil.ArraysCopyOf(fontBytes, maxBytesNum) : fontBytes;
                     this.fontLength = fontBytes.Length;
                 }
                 this.hashcode = CalcHashCode();
@@ -111,7 +111,7 @@ namespace iText.IO.Font {
                 if (fontLength != that.fontLength) {
                     return false;
                 }
-                return iText.IO.Util.JavaUtil.ArraysEquals(firstFontBytes, that.firstFontBytes);
+                return JavaUtil.ArraysEquals(firstFontBytes, that.firstFontBytes);
             }
 
             public override int GetHashCode() {
@@ -119,7 +119,7 @@ namespace iText.IO.Font {
             }
 
             private int CalcHashCode() {
-                int result = iText.IO.Util.JavaUtil.ArraysHashCode(firstFontBytes);
+                int result = JavaUtil.ArraysHashCode(firstFontBytes);
                 result = 31 * result + fontLength;
                 return result;
             }

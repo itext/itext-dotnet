@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfNumber : PdfPrimitiveObject {
@@ -177,7 +178,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object o) {
-            return this == o || o != null && GetType() == o.GetType() && iText.IO.Util.JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
+            return this == o || o != null && GetType() == o.GetType() && JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
                 )o).value, value) == 0;
         }
 
@@ -188,7 +189,7 @@ namespace iText.Kernel.Pdf {
                 logger.Warn(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
                 changed = false;
             }
-            long hash = iText.IO.Util.JavaUtil.DoubleToLongBits(value);
+            long hash = JavaUtil.DoubleToLongBits(value);
             return (int)(hash ^ ((long)(((ulong)hash) >> 32)));
         }
 
@@ -211,7 +212,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void GenerateValue() {
             try {
-                value = System.Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
+                value = Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
                     );
             }
             catch (FormatException) {

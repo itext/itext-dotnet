@@ -72,7 +72,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             IDigest md;
             byte[] encodedRecipient;
             try {
-                md = Org.BouncyCastle.Security.DigestUtilities.GetDigest(messageDigestAlgorithm);
+                md = DigestUtilities.GetDigest(messageDigestAlgorithm);
                 md.Update(GetSeed());
                 for (int i = 0; i < GetRecipientsSize(); i++) {
                     encodedRecipient = GetEncodedRecipient(i);
@@ -99,7 +99,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] encryptionKey;
             IDigest md;
             try {
-                md = Org.BouncyCastle.Security.DigestUtilities.GetDigest(digestAlgorithm);
+                md = DigestUtilities.GetDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);
                 for (int i = 0; i < recipients.Size(); i++) {
                     byte[] encodedRecipient = recipients.GetAsString(i).GetValueBytes();
@@ -169,7 +169,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private byte[] GetSeed() {
             byte[] clonedSeed = new byte[seed.Length];
-            System.Array.Copy(seed, 0, clonedSeed, 0, seed.Length);
+            Array.Copy(seed, 0, clonedSeed, 0, seed.Length);
             return clonedSeed;
         }
 
@@ -202,7 +202,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte two = (byte)(permission >> 8);
             byte three = (byte)(permission >> 16);
             byte four = (byte)(permission >> 24);
-            System.Array.Copy(seed, 0, pkcs7input, 0, 20);
+            Array.Copy(seed, 0, pkcs7input, 0, 20);
             // put this seed in the pkcs7 input
             pkcs7input[20] = four;
             pkcs7input[21] = three;

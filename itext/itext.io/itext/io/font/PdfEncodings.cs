@@ -262,7 +262,7 @@ namespace iText.IO.Font {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
-                System.Array.Copy(b, 0, b2, 0, ptr);
+                Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
             try {
@@ -465,7 +465,7 @@ namespace iText.IO.Font {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
-                System.Array.Copy(b, 0, b2, 0, ptr);
+                Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
 
@@ -522,7 +522,7 @@ namespace iText.IO.Font {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
-                System.Array.Copy(b, 0, b2, 0, ptr);
+                Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
 
@@ -618,7 +618,7 @@ namespace iText.IO.Font {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
-                System.Array.Copy(b, 0, b2, 0, ptr);
+                Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
 
@@ -731,7 +731,7 @@ namespace iText.IO.Font {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
-                System.Array.Copy(b, 0, b2, 0, ptr);
+                Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
 

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -253,7 +254,7 @@ namespace iText.Kernel.Pdf {
         public static byte[] GenerateNewDocumentId() {
             IDigest md5;
             try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
@@ -313,7 +314,7 @@ namespace iText.Kernel.Pdf {
 
         private static byte[] PadByteArrayTo16(byte[] documentId) {
             byte[] paddingBytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-            System.Array.Copy(documentId, 0, paddingBytes, 0, documentId.Length);
+            Array.Copy(documentId, 0, paddingBytes, 0, documentId.Length);
             return paddingBytes;
         }
 

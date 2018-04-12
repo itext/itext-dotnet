@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
     /// <summary>Paths define shapes, trajectories, and regions of all sorts.</summary>
@@ -154,8 +155,8 @@ namespace iText.Kernel.Geom {
             Point secondPoint = new Point(x1, y1);
             Point thirdPoint = new Point(x2, y2);
             Point fourthPoint = new Point(x3, y3);
-            IList<Point> controlPoints = new List<Point>(iText.IO.Util.JavaUtil.ArraysAsList(currentPoint, secondPoint
-                , thirdPoint, fourthPoint));
+            IList<Point> controlPoints = new List<Point>(JavaUtil.ArraysAsList(currentPoint, secondPoint, thirdPoint, 
+                fourthPoint));
             GetLastSubpath().AddSegment(new BezierCurve(controlPoints));
             currentPoint = fourthPoint;
         }

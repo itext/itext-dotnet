@@ -122,7 +122,7 @@ namespace iText.Barcodes {
                 if (idx < 0) {
                     throw new ArgumentException(PdfException.IllegalCharacterInCodabarBarcode);
                 }
-                System.Array.Copy(BARS[idx], 0, bars, k * 8, 7);
+                Array.Copy(BARS[idx], 0, bars, k * 8, 7);
             }
             return bars;
         }

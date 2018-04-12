@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 using iText.Kernel.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -226,8 +227,8 @@ namespace iText.Signatures.Sign {
             String fileName = "encrypted_cert.pdf";
             String src = sourceFolder + fileName;
             String dest = destinationFolder + "signed_" + fileName;
-            X509Certificate cert = iText.Kernel.Crypto.CryptoUtil.ReadPublicCertificate(new FileStream(sourceFolder + 
-                "test.cer", FileMode.Open, FileAccess.Read));
+            X509Certificate cert = CryptoUtil.ReadPublicCertificate(new FileStream(sourceFolder + "test.cer", FileMode.Open
+                , FileAccess.Read));
             ICipherParameters privateKey = Pkcs12FileHelper.ReadFirstKey(sourceFolder + "test.p12", password, password
                 );
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPublicKeySecurityParams(cert, privateKey));
@@ -259,7 +260,7 @@ namespace iText.Signatures.Sign {
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
             IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
-            result.Put(1, iText.IO.Util.JavaUtil.ArraysAsList(ignoredArea));
+            result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
             return result;
         }
     }

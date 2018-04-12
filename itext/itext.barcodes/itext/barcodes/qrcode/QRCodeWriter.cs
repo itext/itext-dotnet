@@ -144,7 +144,7 @@ namespace iText.Barcodes.Qrcode {
                 // d. Write the completed row multiple times
                 offset = topPadding + (y * multiple);
                 for (int z = 0; z < multiple; z++) {
-                    System.Array.Copy(row, 0, outputArray[offset + z], 0, outputWidth);
+                    Array.Copy(row, 0, outputArray[offset + z], 0, outputWidth);
                 }
             }
             // 3. Write the white lines at the bottom

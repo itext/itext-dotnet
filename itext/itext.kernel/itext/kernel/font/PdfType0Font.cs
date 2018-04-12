@@ -787,7 +787,7 @@ namespace iText.Kernel.Font {
 
         //TODO optimize memory usage
         private static String ToHex4(char ch) {
-            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            String s = "0000" + JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
         }
 
@@ -805,7 +805,7 @@ namespace iText.Kernel.Font {
                 GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
                 PdfDictionary fontDescriptor = GetFontDescriptor(name);
                 int[][] metrics = longTag.Values.ToArray(new int[0][]);
-                iText.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
+                JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
@@ -819,7 +819,7 @@ namespace iText.Kernel.Font {
                     TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
                     AddRangeUni(ttf, longTag, true);
                     int[][] metrics = longTag.Values.ToArray(new int[0][]);
-                    iText.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
+                    JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
                     PdfStream fontStream;
                     String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
@@ -914,7 +914,7 @@ namespace iText.Kernel.Font {
             public virtual int Compare(int[] o1, int[] o2) {
                 int m1 = o1[0];
                 int m2 = o2[0];
-                return iText.IO.Util.JavaUtil.IntegerCompare(m1, m2);
+                return JavaUtil.IntegerCompare(m1, m2);
             }
         }
     }

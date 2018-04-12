@@ -69,12 +69,8 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             form.FlattenFields();
             doc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFlatteningTest01.pdf"
-                , destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_formFlatteningTest01.pdf"
+                , destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -94,11 +90,7 @@ namespace iText.Forms {
                 }
                 form.FlattenFields();
                 doc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(dest, cmp, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             }
         }
 
@@ -119,11 +111,7 @@ namespace iText.Forms {
                 }
                 form.FlattenFields();
                 doc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(dest, cmp, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             }
         }
 
@@ -144,11 +132,7 @@ namespace iText.Forms {
                 }
                 form.FlattenFields();
                 doc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(dest, cmp, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             }
         }
 
@@ -169,11 +153,7 @@ namespace iText.Forms {
                 }
                 form.FlattenFields();
                 doc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(dest, cmp, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             }
         }
     }

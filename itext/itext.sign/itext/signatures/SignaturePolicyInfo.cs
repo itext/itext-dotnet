@@ -102,8 +102,8 @@ namespace iText.Signatures {
         /// <param name="policyUri">the uri of the full policy description</param>
         public SignaturePolicyInfo(String policyIdentifier, String policyHashBase64, String policyDigestAlgorithm, 
             String policyUri)
-            : this(policyIdentifier, policyHashBase64 != null ? System.Convert.FromBase64String(policyHashBase64) : null
-                , policyDigestAlgorithm, policyUri) {
+            : this(policyIdentifier, policyHashBase64 != null ? Convert.FromBase64String(policyHashBase64) : null, policyDigestAlgorithm
+                , policyUri) {
         }
 
         public virtual String GetPolicyIdentifier() {

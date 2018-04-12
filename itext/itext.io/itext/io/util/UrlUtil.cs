@@ -71,7 +71,11 @@ namespace iText.IO.Util {
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {
-                isp = new FileStream(Uri.UnescapeDataString(url.AbsolutePath), FileMode.Open, FileAccess.Read);
+                // Use url.LocalPath because it's needed for handling UNC pathes (like used in local
+                // networks, e.g. \\computer\file.ext). It's safe to use #LocalPath because we 
+                // check #IsFile beforehand. On the other hand, the url.AbsolutePath provides escaped string and also breaks
+                // UNC path.
+                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
             } else {
 #if !NETSTANDARD1_6
                 WebRequest req = WebRequest.Create(url);
@@ -120,6 +124,16 @@ namespace iText.IO.Util {
         /// <returns>the last redirected url</returns>
         public static Uri GetFinalURL(Uri uri) {
             return uri;
+        }
+
+        /// <summary>
+        /// This method gets uri string from a file.
+        /// </summary>
+        /// <param name="filename">a given filename</param>
+        /// <returns>a uri string</returns>
+        public static String GetFileUriString(String filename)
+        {
+            return new FileInfo(filename).FullName;
         }
     }
 }

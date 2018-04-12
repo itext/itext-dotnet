@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
@@ -140,7 +141,7 @@ namespace iText.Layout.Element {
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
         public virtual iText.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops) {
-            AddTabStopsAsProperty(iText.IO.Util.JavaUtil.ArraysAsList(tabStops));
+            AddTabStopsAsProperty(JavaUtil.ArraysAsList(tabStops));
             return this;
         }
 

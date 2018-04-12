@@ -16,6 +16,8 @@
 // https://code.google.com/p/ots/ project.
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
+using System;
+
 namespace iText.IO.Font.Woff2 {
     internal class Buffer {
         private byte[] data;
@@ -71,7 +73,7 @@ namespace iText.IO.Font.Woff2 {
                 if (data_offset + n_bytes > data.Length || data_offset > data.Length - n_bytes) {
                     throw new FontCompressionException(FontCompressionException.BUFFER_READ_FAILED);
                 }
-                System.Array.Copy(this.data, initial_offset + offset, data, data_offset, n_bytes);
+                Array.Copy(this.data, initial_offset + offset, data, data_offset, n_bytes);
             }
             this.offset += n_bytes;
         }

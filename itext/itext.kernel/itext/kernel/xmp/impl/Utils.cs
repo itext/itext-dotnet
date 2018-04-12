@@ -29,6 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Text;
+using iText.IO.Util;
 using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Impl {
@@ -406,7 +407,7 @@ namespace iText.Kernel.XMP.Impl {
                         // write control chars escaped,
                         // if there are others than tab, LF and CR the xml will become invalid.
                         buffer.Append("&#x");
-                        buffer.Append(iText.IO.Util.JavaUtil.IntegerToHexString(c).ToUpperInvariant());
+                        buffer.Append(JavaUtil.IntegerToHexString(c).ToUpperInvariant());
                         buffer.Append(';');
                     }
                 }

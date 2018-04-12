@@ -91,7 +91,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         private static byte[] ReadImageType(Uri source) {
             Stream @is = null;
             try {
-                @is = iText.IO.Util.UrlUtil.OpenStream(source);
+                @is = UrlUtil.OpenStream(source);
                 byte[] bytes = new byte[8];
                 @is.Read(bytes);
                 return bytes;

@@ -264,8 +264,8 @@ namespace iText.Layout.Renderer {
                 // For position=absolute, if none of the top, bottom, left, right properties are provided,
                 // the content should be displayed in the flow of the current content, not overlapping it.
                 // The behavior is just if it would be statically positioned except it does not affect other elements
-                if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty<int?>(Property.POSITION)) 
-                    && AbstractRenderer.NoAbsolutePositionInfo(renderer)) {
+                if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty<int?>(Property.POSITION)) && AbstractRenderer
+                    .NoAbsolutePositionInfo(renderer)) {
                     layoutArea = new LayoutArea((int)positionedPageNumber, currentArea.GetBBox().Clone());
                 }
                 else {

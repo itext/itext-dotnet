@@ -229,8 +229,8 @@ namespace iText.IO.Font {
             IntHashtable h = new IntHashtable();
             StringTokenizer tk = new StringTokenizer(s);
             while (tk.HasMoreTokens()) {
-                int n1 = System.Convert.ToInt32(tk.NextToken());
-                h.Put(n1, System.Convert.ToInt32(tk.NextToken()));
+                int n1 = Convert.ToInt32(tk.NextToken());
+                h.Put(n1, Convert.ToInt32(tk.NextToken()));
             }
             return h;
         }

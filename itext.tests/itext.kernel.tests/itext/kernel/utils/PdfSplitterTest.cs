@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -67,7 +68,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentTest01() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            IList<int> pageNumbers = iText.IO.Util.JavaUtil.ArraysAsList(30, 100);
+            IList<int> pageNumbers = JavaUtil.ArraysAsList(30, 100);
             IList<PdfDocument> splitDocuments = new _PdfSplitter_86(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
@@ -153,7 +154,7 @@ namespace iText.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_155(inputPdfDoc).ExtractPageRanges(iText.IO.Util.JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_155(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -194,7 +195,7 @@ namespace iText.Kernel.Utils {
             PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
                 (1, 2);
             PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_189(inputPdfDoc).ExtractPageRanges(iText.IO.Util.JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_189(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();

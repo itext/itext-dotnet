@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -286,8 +287,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         }
 
         public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
-            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iText.IO.Util.JavaUtil.ArraysAsList
-                (rectVertices)))), polyType, true);
+            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(rectVertices)
+                ))), polyType, true);
         }
     }
 }

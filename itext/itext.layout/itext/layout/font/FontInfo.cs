@@ -199,7 +199,7 @@ namespace iText.Layout.Font {
                 return false;
             }
             iText.Layout.Font.FontInfo that = (iText.Layout.Font.FontInfo)o;
-            return (fontName != null ? fontName.Equals(that.fontName) : that.fontName == null) && iText.IO.Util.JavaUtil.ArraysEquals
+            return (fontName != null ? fontName.Equals(that.fontName) : that.fontName == null) && JavaUtil.ArraysEquals
                 (fontData, that.fontData) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding == null
                 );
         }

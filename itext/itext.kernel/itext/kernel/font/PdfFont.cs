@@ -460,7 +460,7 @@ namespace iText.Kernel.Font {
             float tokenLength = 0;
             for (int i = 0; i < text.Length; i++) {
                 char ch = text[i];
-                if (iText.IO.Util.TextUtil.IsWhiteSpace(ch)) {
+                if (TextUtil.IsWhiteSpace(ch)) {
                     lastWhiteSpace = i;
                 }
                 float currentCharWidth = GetWidth(ch, fontSize);
@@ -542,7 +542,7 @@ namespace iText.Kernel.Font {
         protected internal static String CreateSubsetPrefix() {
             StringBuilder s = new StringBuilder("");
             for (int k = 0; k < 6; ++k) {
-                s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                s.Append((char)(JavaUtil.Random() * 26 + 'A'));
             }
             return s + "+";
         }
@@ -553,7 +553,7 @@ namespace iText.Kernel.Font {
             if (isSubset && isEmbedded) {
                 StringBuilder s = new StringBuilder(fontName.Length + 7);
                 for (int k = 0; k < 6; ++k) {
-                    s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                    s.Append((char)(JavaUtil.Random() * 26 + 'A'));
                 }
                 return s.Append('+').Append(fontName).ToString();
             }
