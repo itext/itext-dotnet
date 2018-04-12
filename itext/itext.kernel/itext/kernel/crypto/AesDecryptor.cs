@@ -58,7 +58,7 @@ namespace iText.Kernel.Crypto {
         /// <summary>Creates a new instance of AesDecryption</summary>
         public AesDecryptor(byte[] key, int off, int len) {
             this.key = new byte[len];
-            System.Array.Copy(key, off, this.key, 0, len);
+            Array.Copy(key, off, this.key, 0, len);
         }
 
         public virtual byte[] Update(byte[] b, int off, int len) {
@@ -67,7 +67,7 @@ namespace iText.Kernel.Crypto {
             }
             else {
                 int left = Math.Min(iv.Length - ivptr, len);
-                System.Array.Copy(b, off, iv, ivptr, left);
+                Array.Copy(b, off, iv, ivptr, left);
                 off += left;
                 len -= left;
                 ivptr += left;

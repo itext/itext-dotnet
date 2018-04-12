@@ -112,7 +112,5 @@ namespace iText.IO.Font.Constants {
 
         /// <summary>This is a possible value of a base 14 type 1 font</summary>
         public const String ZAPFDINGBATS = "ZapfDingbats";
-
-        public const String TIMES = "Times";
     }
 }

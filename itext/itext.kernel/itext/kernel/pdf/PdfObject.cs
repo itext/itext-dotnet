@@ -345,9 +345,23 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Checks if it's forbidden to release this
+        /// <see cref="PdfObject"/>
+        /// instance.
+        /// Some objects are vital for the living period of
+        /// <see cref="PdfDocument"/>
+        /// or may be
+        /// prevented from releasing by high-level entities dealing with the objects.
+        /// Also it's not possible to release the objects that have been modified.
+        /// </summary>
+        public virtual bool IsReleaseForbidden() {
+            return CheckState(FORBID_RELEASE);
+        }
+
         public virtual void Release() {
             // In case ForbidRelease flag is set, release will not be performed.
-            if (CheckState(FORBID_RELEASE)) {
+            if (IsReleaseForbidden()) {
                 ILog logger = LogManager.GetLogger(typeof(PdfObject));
                 logger.Warn(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
             }

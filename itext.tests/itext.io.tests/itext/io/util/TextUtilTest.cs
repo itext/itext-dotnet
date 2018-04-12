@@ -85,9 +85,9 @@ namespace iText.IO.Util {
         }
 
         private void Helper(bool expected, int currentCRPosition, params Glyph[] glyphs) {
-            GlyphLine glyphLine = new GlyphLine(iText.IO.Util.JavaUtil.ArraysAsList(glyphs));
-            NUnit.Framework.Assert.IsTrue(expected == TextUtil.IsCarriageReturnFollowedByLineFeed(glyphLine, currentCRPosition
-                ));
+            GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyphs));
+            NUnit.Framework.Assert.IsTrue(expected == iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(glyphLine
+                , currentCRPosition));
         }
     }
 }

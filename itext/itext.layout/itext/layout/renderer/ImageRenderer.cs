@@ -76,10 +76,6 @@ namespace iText.Layout.Renderer {
 
         private float? width;
 
-        private float imageItselfScaledWidth;
-
-        private float imageItselfScaledHeight;
-
         private Rectangle initialOccupiedAreaBBox;
 
         private float rotatedDeltaX;
@@ -99,121 +95,48 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox().Clone();
-            float? retrievedWidth = HasProperty(Property.WIDTH) ? RetrieveWidth(layoutBox.GetWidth()) : null;
+            AffineTransform t = new AffineTransform();
+            Image modelElement = (Image)(GetModelElement());
+            PdfXObject xObject = modelElement.GetXObject();
+            imageWidth = modelElement.GetImageWidth();
+            imageHeight = modelElement.GetImageHeight();
+            CalculateImageDimensions(layoutBox, t, xObject);
+            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
+                ) : OverflowPropertyValue.FIT;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 layoutBox.DecreaseHeight(clearHeightCorrection);
-                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, retrievedWidth, floatRendererAreas, floatPropertyValue
-                    );
+                FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, width, floatRendererAreas, floatPropertyValue, 
+                    overflowX);
             }
             else {
-                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, retrievedWidth
+                clearHeightCorrection = FloatingHelper.AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, width
                     , clearHeightCorrection, null);
             }
-            width = retrievedWidth;
-            height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
-                ) : OverflowPropertyValue.FIT;
             float? declaredMaxHeight = RetrieveMaxHeight();
             OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
                 .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
                 >(Property.OVERFLOW_Y);
-            bool processOverflowX = (null != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX));
-            bool processOverflowY = (null != overflowY && !OverflowPropertyValue.FIT.Equals(overflowY));
+            bool processOverflowX = !IsOverflowFit(overflowX);
+            bool processOverflowY = !IsOverflowFit(overflowY);
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
-            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            Image modelElement = (Image)(GetModelElement());
-            PdfXObject xObject = modelElement.GetXObject();
-            imageWidth = modelElement.GetImageWidth();
-            imageHeight = modelElement.GetImageHeight();
-            if (width == null && height == null) {
-                width = imageWidth;
-                height = (float)width / imageWidth * imageHeight;
-            }
-            else {
-                if (width == null) {
-                    width = (float)height / imageHeight * imageWidth;
-                }
-                else {
-                    if (height == null) {
-                        height = (float)width / imageWidth * imageHeight;
-                    }
-                }
-            }
+            float imageItselfScaledWidth = (float)width;
+            float imageItselfScaledHeight = (float)height;
             if (IsFixedLayout()) {
                 fixedXPosition = this.GetPropertyAsFloat(Property.LEFT);
                 fixedYPosition = this.GetPropertyAsFloat(Property.BOTTOM);
             }
-            float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
-            float? verticalScaling = this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
-            AffineTransform t = new AffineTransform();
-            if (xObject is PdfFormXObject && width != imageWidth) {
-                horizontalScaling *= width / imageWidth;
-                verticalScaling *= height / imageHeight;
-            }
-            if (horizontalScaling != 1) {
-                if (xObject is PdfFormXObject) {
-                    t.Scale((float)horizontalScaling, 1);
-                    width = imageWidth * (float)horizontalScaling;
-                }
-                else {
-                    width *= (float)horizontalScaling;
-                }
-            }
-            if (verticalScaling != 1) {
-                if (xObject is PdfFormXObject) {
-                    t.Scale(1, (float)verticalScaling);
-                    height = imageHeight * (float)verticalScaling;
-                }
-                else {
-                    height *= (float)verticalScaling;
-                }
-            }
-            // Constrain width and height according to min/max width
-            float? minWidth = RetrieveMinWidth(layoutBox.GetWidth());
-            float? maxWidth = RetrieveMaxWidth(layoutBox.GetWidth());
-            if (null != minWidth && width < minWidth) {
-                height *= minWidth / width;
-                width = minWidth;
-            }
-            else {
-                if (null != maxWidth && width > maxWidth) {
-                    height *= maxWidth / width;
-                    width = maxWidth;
-                }
-            }
-            // Constrain width and height according to min/max height, which has precedence over width settings
-            float? minHeight = RetrieveMinHeight();
-            float? maxHeight = RetrieveMaxHeight();
-            float? declaredHeight = RetrieveHeight();
-            if (null != minHeight && height < minHeight) {
-                width *= minHeight / height;
-                height = minHeight;
-            }
-            else {
-                if (null != maxHeight && height > maxHeight) {
-                    width *= maxHeight / height;
-                    this.height = maxHeight;
-                }
-                else {
-                    if (null != declaredHeight && !height.Equals(declaredHeight)) {
-                        width *= declaredHeight / height;
-                        height = declaredHeight;
-                    }
-                }
-            }
-            imageItselfScaledWidth = (float)width;
-            imageItselfScaledHeight = (float)height;
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             // See in adjustPositionAfterRotation why angle = 0 is necessary
             if (null == angle) {
                 angle = 0f;
@@ -426,6 +349,82 @@ namespace iText.Layout.Renderer {
                 UpdateWidth(UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
+        }
+
+        private void CalculateImageDimensions(Rectangle layoutBox, AffineTransform t, PdfXObject xObject) {
+            width = this.GetProperty<UnitValue>(Property.WIDTH) != null ? RetrieveWidth(layoutBox.GetWidth()) : null;
+            float? declaredHeight = RetrieveHeight();
+            height = declaredHeight;
+            if (width == null && height == null) {
+                width = imageWidth;
+                height = (float)width / imageWidth * imageHeight;
+            }
+            else {
+                if (width == null) {
+                    width = (float)height / imageHeight * imageWidth;
+                }
+                else {
+                    if (height == null) {
+                        height = (float)width / imageWidth * imageHeight;
+                    }
+                }
+            }
+            float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
+            float? verticalScaling = this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
+            if (xObject is PdfFormXObject && width != imageWidth) {
+                horizontalScaling *= width / imageWidth;
+                verticalScaling *= height / imageHeight;
+            }
+            if (horizontalScaling != 1) {
+                if (xObject is PdfFormXObject) {
+                    t.Scale((float)horizontalScaling, 1);
+                    width = imageWidth * (float)horizontalScaling;
+                }
+                else {
+                    width *= (float)horizontalScaling;
+                }
+            }
+            if (verticalScaling != 1) {
+                if (xObject is PdfFormXObject) {
+                    t.Scale(1, (float)verticalScaling);
+                    height = imageHeight * (float)verticalScaling;
+                }
+                else {
+                    height *= (float)verticalScaling;
+                }
+            }
+            // Constrain width and height according to min/max width
+            float? minWidth = RetrieveMinWidth(layoutBox.GetWidth());
+            float? maxWidth = RetrieveMaxWidth(layoutBox.GetWidth());
+            if (null != minWidth && width < minWidth) {
+                height *= minWidth / width;
+                width = minWidth;
+            }
+            else {
+                if (null != maxWidth && width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            }
+            // Constrain width and height according to min/max height, which has precedence over width settings
+            float? minHeight = RetrieveMinHeight();
+            float? maxHeight = RetrieveMaxHeight();
+            if (null != minHeight && height < minHeight) {
+                width *= minHeight / height;
+                height = minHeight;
+            }
+            else {
+                if (null != maxHeight && height > maxHeight) {
+                    width *= maxHeight / height;
+                    this.height = maxHeight;
+                }
+                else {
+                    if (null != declaredHeight && !height.Equals(declaredHeight)) {
+                        width *= declaredHeight / height;
+                        height = declaredHeight;
+                    }
+                }
+            }
         }
 
         private void GetMatrix(AffineTransform t, float imageItselfScaledWidth, float imageItselfScaledHeight) {

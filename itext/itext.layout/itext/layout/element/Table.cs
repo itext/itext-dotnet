@@ -888,6 +888,40 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        public virtual iText.Layout.Element.Table SetBorderCollapse(BorderCollapsePropertyValue collapsePropertyValue
+            ) {
+            SetProperty(Property.BORDER_COLLAPSE, collapsePropertyValue);
+            if (null != header) {
+                header.SetBorderCollapse(collapsePropertyValue);
+            }
+            if (null != footer) {
+                footer.SetBorderCollapse(collapsePropertyValue);
+            }
+            return this;
+        }
+
+        public virtual iText.Layout.Element.Table SetHorizontalBorderSpacing(float spacing) {
+            SetProperty(Property.HORIZONTAL_BORDER_SPACING, spacing);
+            if (null != header) {
+                header.SetHorizontalBorderSpacing(spacing);
+            }
+            if (null != footer) {
+                footer.SetHorizontalBorderSpacing(spacing);
+            }
+            return this;
+        }
+
+        public virtual iText.Layout.Element.Table SetVerticalBorderSpacing(float spacing) {
+            SetProperty(Property.VERTICAL_BORDER_SPACING, spacing);
+            if (null != header) {
+                header.SetVerticalBorderSpacing(spacing);
+            }
+            if (null != footer) {
+                footer.SetVerticalBorderSpacing(spacing);
+            }
+            return this;
+        }
+
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.TABLE);
@@ -980,6 +1014,16 @@ namespace iText.Layout.Element {
                     header.SetWidth(width);
                 }
                 header.GetAccessibilityProperties().SetRole(StandardRoles.THEAD);
+                if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
+                    header.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
+                        .BORDER_COLLAPSE));
+                }
+                if (HasOwnProperty(Property.HORIZONTAL_BORDER_SPACING)) {
+                    header.SetHorizontalBorderSpacing((float)this.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING));
+                }
+                if (HasOwnProperty(Property.VERTICAL_BORDER_SPACING)) {
+                    header.SetVerticalBorderSpacing((float)this.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING));
+                }
             }
         }
 
@@ -991,6 +1035,16 @@ namespace iText.Layout.Element {
                     footer.SetWidth(width);
                 }
                 footer.GetAccessibilityProperties().SetRole(StandardRoles.TFOOT);
+                if (HasOwnProperty(Property.BORDER_COLLAPSE)) {
+                    footer.SetBorderCollapse((BorderCollapsePropertyValue)this.GetProperty<BorderCollapsePropertyValue?>(Property
+                        .BORDER_COLLAPSE));
+                }
+                if (HasOwnProperty(Property.HORIZONTAL_BORDER_SPACING)) {
+                    footer.SetHorizontalBorderSpacing((float)this.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING));
+                }
+                if (HasOwnProperty(Property.VERTICAL_BORDER_SPACING)) {
+                    footer.SetVerticalBorderSpacing((float)this.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING));
+                }
             }
         }
 

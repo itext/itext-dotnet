@@ -119,17 +119,20 @@ namespace iText.Layout.Renderer {
             AddContent(document, true, 0, null, 0, null, ClearPropertyValue.BOTH, firstImage, lastImage);
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\n"));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.WIDTH, new 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.WIDTH, new 
                 UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Max width < actual width.\n"));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.MAX_WIDTH, 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\nMax width > actual width.\n"
                 ));
-            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 100f), Property.MAX_WIDTH, 
+            AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 60f), ClearPropertyValue.BOTH, firstImage, lastImage);
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff01_"));
@@ -142,13 +145,7 @@ namespace iText.Layout.Renderer {
             /* This test illustrate behaviour of images, wrapped in Div containers, that have paragraph below image
             Divs have property CLEAR = BOTH, and different values of FLOAT
             Text in divs has HorizontalAlignment.CENTER
-            Now this example shows several problems with FLOAT:
-            * 1. image and text under image are splitted  to different pages
-            * 2. order of images is displayed ignoring CLEAR = BOTH property (last div before previous, not after)
-            * 3. incorrect line wrapping (paragraph and div overlaps)
-            * */
-            //TODO: update after DEVSIX-1437 fix (Fix edge cases for floats splitting)
-            //TODO: update after DEVSIX-1269 fix (Float property: support correct lines wrapping around floats that are under the lines)
+            */
             String cmpFileName = sourceFolder + "cmp_floatMaxWidthTest02.pdf";
             String outFile = destinationFolder + "floatMaxWidthTest02.pdf";
             // defined range is 0..3

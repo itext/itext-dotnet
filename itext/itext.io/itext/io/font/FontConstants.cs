@@ -126,10 +126,6 @@ namespace iText.IO.Font {
         /// <summary>This is a possible value of a base 14 type 1 font</summary>
         [System.ObsoleteAttribute(@"use iText.IO.Font.Constants.StandardFonts.ZAPFDINGBATS instead.")]
         public const String ZAPFDINGBATS = "ZapfDingbats";
-
-        /// <summary>This is a possible value of a base 14 type 1 font</summary>
-        [System.ObsoleteAttribute(@"use iText.IO.Font.Constants.StandardFonts.TIMES instead.")]
-        public const String TIMES = "Times";
         //-Font styles------------------------------------------------------------------------------------------------------
         //-Default fonts----------------------------------------------------------------------------------------------------
     }

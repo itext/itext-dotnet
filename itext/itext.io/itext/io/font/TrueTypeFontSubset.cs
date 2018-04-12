@@ -243,14 +243,14 @@ namespace iText.IO.Font {
                 }
                 switch (name) {
                     case "glyf": {
-                        System.Array.Copy(newGlyfTable, 0, outFont, fontPtr, newGlyfTable.Length);
+                        Array.Copy(newGlyfTable, 0, outFont, fontPtr, newGlyfTable.Length);
                         fontPtr += newGlyfTable.Length;
                         newGlyfTable = null;
                         break;
                     }
 
                     case "loca": {
-                        System.Array.Copy(newLocaTableOut, 0, outFont, fontPtr, newLocaTableOut.Length);
+                        Array.Copy(newLocaTableOut, 0, outFont, fontPtr, newLocaTableOut.Length);
                         fontPtr += newLocaTableOut.Length;
                         newLocaTableOut = null;
                         break;
@@ -324,7 +324,7 @@ namespace iText.IO.Font {
             for (int k = 0; k < activeGlyphs.Length; ++k) {
                 activeGlyphs[k] = (int)glyphsInList[k];
             }
-            iText.IO.Util.JavaUtil.Sort(activeGlyphs);
+            JavaUtil.Sort(activeGlyphs);
             int glyfSize = 0;
             foreach (int glyph in activeGlyphs) {
                 glyfSize += locaTable[glyph + 1] - locaTable[glyph];
@@ -472,7 +472,7 @@ namespace iText.IO.Font {
 
         protected internal virtual void WriteFontString(String s) {
             byte[] b = PdfEncodings.ConvertToBytes(s, PdfEncodings.WINANSI);
-            System.Array.Copy(b, 0, outFont, fontPtr, b.Length);
+            Array.Copy(b, 0, outFont, fontPtr, b.Length);
             fontPtr += b.Length;
         }
 

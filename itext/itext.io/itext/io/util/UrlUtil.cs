@@ -125,5 +125,15 @@ namespace iText.IO.Util {
         public static Uri GetFinalURL(Uri uri) {
             return uri;
         }
+
+        /// <summary>
+        /// This method gets uri string from a file.
+        /// </summary>
+        /// <param name="filename">a given filename</param>
+        /// <returns>a uri string</returns>
+        public static String GetFileUriString(String filename)
+        {
+            return new FileInfo(filename).FullName;
+        }
     }
 }

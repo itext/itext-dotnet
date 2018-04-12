@@ -495,7 +495,7 @@ namespace iText.Signatures {
                 throw new System.IO.IOException("Not enough space");
             }
             byte[] paddedSig = new byte[estimatedSize];
-            System.Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
+            Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
             PdfDictionary dic2 = new PdfDictionary();
             dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
             Close(dic2);
@@ -538,7 +538,7 @@ namespace iText.Signatures {
                 throw new System.IO.IOException("Not enough space");
             }
             byte[] paddedSig = new byte[estimatedSize];
-            System.Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
+            Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
             PdfDictionary dic2 = new PdfDictionary();
             dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
             Close(dic2);
@@ -593,7 +593,7 @@ namespace iText.Signatures {
                 throw new System.IO.IOException("Not enough space");
             }
             byte[] paddedSig = new byte[contentEstimated];
-            System.Array.Copy(tsToken, 0, paddedSig, 0, tsToken.Length);
+            Array.Copy(tsToken, 0, paddedSig, 0, tsToken.Length);
             PdfDictionary dic2 = new PdfDictionary();
             dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
             Close(dic2);
@@ -810,7 +810,7 @@ namespace iText.Signatures {
                 range[idx++] = n;
                 range[idx++] = lit1.GetBytesCount() + n;
             }
-            iText.IO.Util.JavaUtil.Sort(range, 1, range.Length - 1);
+            JavaUtil.Sort(range, 1, range.Length - 1);
             for (int k = 3; k < range.Length - 2; k += 2) {
                 range[k] -= range[k - 1];
             }
@@ -824,7 +824,7 @@ namespace iText.Signatures {
                     os.WriteLong(range[k]).Write(' ');
                 }
                 os.Write(']');
-                System.Array.Copy(bos.ToArray(), 0, bout, (int)byteRangePosition, (int)bos.Length);
+                Array.Copy(bos.ToArray(), 0, bout, (int)byteRangePosition, (int)bos.Length);
             }
             else {
                 try {
@@ -914,7 +914,7 @@ namespace iText.Signatures {
                         throw new ArgumentException("The key is too big");
                     }
                     if (tempFile == null) {
-                        System.Array.Copy(bous.ToArray(), 0, bout, (int)lit.GetPosition(), (int)bous.Length);
+                        Array.Copy(bous.ToArray(), 0, bout, (int)lit.GetPosition(), (int)bous.Length);
                     }
                     else {
                         raf.Seek(lit.GetPosition());

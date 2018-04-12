@@ -152,7 +152,7 @@ namespace iText.IO.Font {
                 try {
                     ttcName = baseName.JSubstring(0, ttcSplit + 4);
                     // count(.ttc) = 4
-                    ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                    ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                 }
                 catch (FormatException nfe) {
                     // count(.ttc,) = 5)

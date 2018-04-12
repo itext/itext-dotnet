@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -66,70 +65,6 @@ namespace iText.Layout.Renderer {
         }
 
         // region constructors
-        // endregion
-        // region collapse
-        protected internal virtual iText.Layout.Renderer.CollapsedTableBorders CollapseAllBordersAndEmptyRows() {
-            CellRenderer[] currentRow;
-            int[] rowspansToDeduct = new int[numberOfColumns];
-            int numOfRowsToRemove = 0;
-            if (!rows.IsEmpty()) {
-                for (int row = startRow - largeTableIndexOffset; row <= finishRow - largeTableIndexOffset; row++) {
-                    currentRow = rows[row];
-                    bool hasCells = false;
-                    for (int col = 0; col < numberOfColumns; col++) {
-                        if (null != currentRow[col]) {
-                            int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
-                            if (rowspansToDeduct[col] > 0) {
-                                int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
-                                if (rowspan < 1) {
-                                    ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                                    logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
-                                    rowspan = 1;
-                                }
-                                currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
-                                if (0 != numOfRowsToRemove) {
-                                    RemoveRows(row - numOfRowsToRemove, numOfRowsToRemove);
-                                    row -= numOfRowsToRemove;
-                                    numOfRowsToRemove = 0;
-                                }
-                            }
-                            BuildBordersArrays(currentRow[col], row, col, rowspansToDeduct);
-                            hasCells = true;
-                            for (int i = 0; i < colspan; i++) {
-                                rowspansToDeduct[col + i] = 0;
-                            }
-                            col += colspan - 1;
-                        }
-                        else {
-                            if (horizontalBorders[row].Count <= col) {
-                                horizontalBorders[row].Add(null);
-                            }
-                        }
-                    }
-                    if (!hasCells) {
-                        if (row == rows.Count - 1) {
-                            RemoveRows(row - rowspansToDeduct[0], rowspansToDeduct[0]);
-                            // delete current row
-                            rows.JRemoveAt(row - rowspansToDeduct[0]);
-                            SetFinishRow(finishRow - 1);
-                            ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                            logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
-                        }
-                        else {
-                            for (int i = 0; i < numberOfColumns; i++) {
-                                rowspansToDeduct[i]++;
-                            }
-                            numOfRowsToRemove++;
-                        }
-                    }
-                }
-            }
-            if (finishRow < startRow) {
-                SetFinishRow(startRow);
-            }
-            return this;
-        }
-
         // endregion
         // region getters
         public virtual IList<Border> GetTopBorderCollapseWith() {
@@ -298,7 +233,7 @@ namespace iText.Layout.Renderer {
         }
 
         //endregion
-        protected internal virtual void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
+        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
             ) {
             // We should check if the row number is less than horizontal borders array size. It can happen if the cell with
             // big rowspan doesn't fit current area and is going to be placed partial.
@@ -443,17 +378,6 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        private void RemoveRows(int startRow, int numOfRows) {
-            for (int row = startRow; row < startRow + numOfRows; row++) {
-                rows.JRemoveAt(startRow);
-                horizontalBorders.JRemoveAt(startRow + 1);
-                for (int j = 0; j <= numberOfColumns; j++) {
-                    verticalBorders[j].JRemoveAt(startRow + 1);
-                }
-            }
-            SetFinishRow(finishRow - numOfRows);
-        }
-
         // endregion
         // region draw
         protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
@@ -483,7 +407,6 @@ namespace iText.Layout.Renderer {
                 Border curBorder = borders[j];
                 if (prevBorder != null) {
                     if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
                         prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
                         x1 = x2;
                     }
@@ -656,7 +579,7 @@ namespace iText.Layout.Renderer {
                 // collapse all cell borders
                 if (isOriginalNonSplitRenderer) {
                     if (null != rows) {
-                        CollapseAllBordersAndEmptyRows();
+                        ProcessAllBordersAndEmptyRows();
                         rightBorderMaxWidth = GetMaxRightWidth();
                         leftBorderMaxWidth = GetMaxLeftWidth();
                     }
@@ -702,11 +625,11 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool changeThis
+        protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool updateBordersHandler
             ) {
             ((iText.Layout.Renderer.CollapsedTableBorders)headerBordersHandler).SetBottomBorderCollapseWith(GetHorizontalBorder
                 (startRow));
-            if (changeThis) {
+            if (updateBordersHandler) {
                 SetTopBorderCollapseWith(headerBordersHandler.GetLastHorizontalBorder());
             }
             return this;

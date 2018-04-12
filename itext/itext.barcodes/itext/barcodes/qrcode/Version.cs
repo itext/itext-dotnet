@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>See ISO 18004:2006 Annex D.</summary>
@@ -273,7 +274,7 @@ namespace iText.Barcodes.Qrcode {
 
         /// <returns>The version number as a string</returns>
         public override String ToString() {
-            return iText.IO.Util.JavaUtil.IntegerToString(versionNumber);
+            return JavaUtil.IntegerToString(versionNumber);
         }
 
         /// <summary>See ISO 18004:2006 6.5.1 Table 9.</summary>

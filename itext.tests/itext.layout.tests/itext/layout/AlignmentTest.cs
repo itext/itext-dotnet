@@ -274,6 +274,21 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void EmptyLineJustification01() {
+            String outFileName = destinationFolder + "emptyLineJustification01.pdf";
+            String cmpFileName = sourceFolder + "cmp_emptyLineJustification01.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void FloatAlignmentTest01() {
             String outFileName = destinationFolder + "floatAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_floatAlignmentTest01.pdf";
@@ -288,7 +303,6 @@ namespace iText.Layout {
                 ));
             doc.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             AddFloatAndText(doc, FloatPropertyValue.RIGHT);
-            // TODO DEVSIX-1732: Alignment is incorrect because indent is replaced by float adjustment
             AddFloatAndText(doc, FloatPropertyValue.LEFT);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -305,6 +319,75 @@ namespace iText.Layout {
             doc.Add(new Paragraph("Right aligned.").SetTextAlignment(TextAlignment.RIGHT));
             doc.Add(new Paragraph("Center aligned.").SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
+                ).SetTextAlignment(TextAlignment.JUSTIFIED));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatAlignmentTest02() {
+            String outFileName = destinationFolder + "floatAlignmentTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest02.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("All lines after this one have first line indent = 20."));
+            doc.SetProperty(Property.FIRST_LINE_INDENT, 20f);
+            Div div = new Div().Add(new Paragraph("float"));
+            div.SetBorder(new SolidBorder(1));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            AddInlineBlockFloatAndText(doc, div);
+            doc.Add(new AreaBreak());
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            AddInlineBlockFloatAndText(doc, div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private void AddInlineBlockFloatAndText(Document doc, Div div) {
+            doc.Add(new Paragraph("Left aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.LEFT));
+            doc.Add(new Paragraph("Right aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.RIGHT)
+                );
+            doc.Add(new Paragraph("Center aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.CENTER
+                ));
+            doc.Add(new Paragraph().Add(div).Add("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
+                ).SetTextAlignment(TextAlignment.JUSTIFIED));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatAlignmentTest03() {
+            String outFileName = destinationFolder + "floatAlignmentTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest03.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("All lines after this one have first line indent = 20."));
+            doc.SetProperty(Property.FIRST_LINE_INDENT, 20f);
+            Text text = new Text("float");
+            text.SetBorder(new SolidBorder(1));
+            text.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            AddInlineBlockFloatAndText(doc, text);
+            doc.Add(new AreaBreak());
+            text.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            AddInlineBlockFloatAndText(doc, text);
+            doc.Close();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private void AddInlineBlockFloatAndText(Document doc, Text text) {
+            doc.Add(new Paragraph("Left aligned.").SetMarginBottom(30).Add(text).SetTextAlignment(TextAlignment.LEFT));
+            doc.Add(new Paragraph("Right aligned.").SetMarginBottom(30).Add(text).SetTextAlignment(TextAlignment.RIGHT
+                ));
+            doc.Add(new Paragraph("Center aligned.").SetMarginBottom(30).Add(text).SetTextAlignment(TextAlignment.CENTER
+                ));
+            doc.Add(new Paragraph().Add(text).Add("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
                 ).SetTextAlignment(TextAlignment.JUSTIFIED));
         }
     }

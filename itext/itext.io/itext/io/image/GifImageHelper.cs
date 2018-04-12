@@ -341,7 +341,7 @@ namespace iText.IO.Image {
             if (gif.transparency && gif.m_bpc == 1) {
                 // Acrobat 5.05 doesn't like this combination
                 byte[] tp = new byte[12];
-                System.Array.Copy(gif.m_curr_table, 0, tp, 0, 6);
+                Array.Copy(gif.m_curr_table, 0, tp, 0, 6);
                 gif.m_curr_table = tp;
                 gif.m_bpc = 2;
             }
@@ -359,7 +359,7 @@ namespace iText.IO.Image {
                 colorspace[3] = PdfEncodings.ConvertToString(gif.m_curr_table, null);
                 IDictionary<String, Object> ad = new Dictionary<String, Object>();
                 ad.Put("ColorSpace", colorspace);
-                RawImageData img = new RawImageData(gif.m_out, ImageType.NONE);
+                RawImageData img = new RawImageData(gif.m_out, ImageType.GIF);
                 RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out);
                 RawImageHelper.UpdateImageAttributes(img, ad);
                 gif.image.AddFrame(img);

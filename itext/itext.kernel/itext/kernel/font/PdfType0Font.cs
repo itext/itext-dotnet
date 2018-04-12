@@ -108,8 +108,8 @@ namespace iText.Kernel.Font {
             // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
             // There is no typography features in CJK fonts.
             if (!CidFontProperties.IsCidFont(font.GetFontNames().GetFontName(), cmap)) {
-                throw new PdfException("font.1.with.2.encoding.is.not.a.cjk.font").SetMessageParams(font.GetFontNames().GetFontName
-                    (), cmap);
+                throw new PdfException("Font {0} with {1} encoding is not a cjk font.").SetMessageParams(font.GetFontNames
+                    ().GetFontName(), cmap);
             }
             this.fontProgram = font;
             vertical = cmap.EndsWith("V");
@@ -277,8 +277,8 @@ namespace iText.Kernel.Font {
             else {
                 for (int k = 0; k < len; ++k) {
                     int val;
-                    if (TextUtil.IsSurrogatePair(text, k)) {
-                        val = TextUtil.ConvertToUtf32(text, k);
+                    if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                        val = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                         k++;
                     }
                     else {
@@ -352,8 +352,8 @@ namespace iText.Kernel.Font {
                 else {
                     for (int k = 0; k < len; ++k) {
                         int ch;
-                        if (TextUtil.IsSurrogatePair(content, k)) {
-                            ch = TextUtil.ConvertToUtf32(content, k);
+                        if (iText.IO.Util.TextUtil.IsSurrogatePair(content, k)) {
+                            ch = iText.IO.Util.TextUtil.ConvertToUtf32(content, k);
                             k++;
                         }
                         else {
@@ -379,8 +379,8 @@ namespace iText.Kernel.Font {
                     else {
                         for (int k = 0; k < len; ++k) {
                             int val;
-                            if (TextUtil.IsSurrogatePair(content, k)) {
-                                val = TextUtil.ConvertToUtf32(content, k);
+                            if (iText.IO.Util.TextUtil.IsSurrogatePair(content, k)) {
+                                val = iText.IO.Util.TextUtil.ConvertToUtf32(content, k);
                                 k++;
                             }
                             else {
@@ -391,7 +391,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
             return new GlyphLine(glyphs);
@@ -438,7 +438,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
         }
@@ -448,8 +448,8 @@ namespace iText.Kernel.Font {
             for (int k = from; k <= to; ++k) {
                 int val;
                 int currentlyProcessed = processed;
-                if (TextUtil.IsSurrogatePair(text, k)) {
-                    val = TextUtil.ConvertToUtf32(text, k);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                    val = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                     processed += 2;
                 }
                 else {
@@ -479,8 +479,8 @@ namespace iText.Kernel.Font {
                 }
                 else {
                     int ch;
-                    if (TextUtil.IsSurrogatePair(text, from)) {
-                        ch = TextUtil.ConvertToUtf32(text, from);
+                    if (iText.IO.Util.TextUtil.IsSurrogatePair(text, from)) {
+                        ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, from);
                         process = 2;
                     }
                     else {
@@ -503,8 +503,8 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         int ch;
-                        if (TextUtil.IsSurrogatePair(text, from)) {
-                            ch = TextUtil.ConvertToUtf32(text, from);
+                        if (iText.IO.Util.TextUtil.IsSurrogatePair(text, from)) {
+                            ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, from);
                             process = 2;
                         }
                         else {
@@ -514,7 +514,7 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Font has no suitable cmap.");
                 }
             }
             return process;
@@ -524,7 +524,7 @@ namespace iText.Kernel.Font {
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.
-            return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
+            return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
         public override String Decode(PdfString content) {
@@ -786,7 +786,7 @@ namespace iText.Kernel.Font {
                 GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
                 PdfDictionary fontDescriptor = GetFontDescriptor(name);
                 int[] metrics = HashSetToArray(longTag);
-                iText.IO.Util.JavaUtil.Sort(metrics);
+                JavaUtil.Sort(metrics);
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
@@ -800,7 +800,7 @@ namespace iText.Kernel.Font {
                     TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
                     AddRangeUni(ttf, longTag);
                     int[] metrics = HashSetToArray(longTag);
-                    iText.IO.Util.JavaUtil.Sort(metrics);
+                    JavaUtil.Sort(metrics);
                     PdfStream fontStream;
                     String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
@@ -981,7 +981,7 @@ namespace iText.Kernel.Font {
 
         //TODO optimize memory ussage
         private static String ToHex4(char ch) {
-            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            String s = "0000" + JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
         }
 

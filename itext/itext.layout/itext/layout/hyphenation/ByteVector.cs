@@ -14,6 +14,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+using System;
+
 namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>This class implements a simple byte vector with access to the
@@ -121,7 +123,7 @@ namespace iText.Layout.Hyphenation {
             int len = array.Length;
             if (n + size >= len) {
                 byte[] aux = new byte[len + blockSize];
-                System.Array.Copy(array, 0, aux, 0, len);
+                Array.Copy(array, 0, aux, 0, len);
                 array = aux;
             }
             n += size;
@@ -132,7 +134,7 @@ namespace iText.Layout.Hyphenation {
         public virtual void TrimToSize() {
             if (n < array.Length) {
                 byte[] aux = new byte[n];
-                System.Array.Copy(array, 0, aux, 0, n);
+                Array.Copy(array, 0, aux, 0, n);
                 array = aux;
             }
         }

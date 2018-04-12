@@ -94,7 +94,7 @@ namespace iText.IO.Font {
                     if (t2.HasMoreTokens()) {
                         continue;
                     }
-                    int num = System.Convert.ToInt32(hex, 16);
+                    int num = Convert.ToInt32(hex, 16);
                     unicode2names.Put(num, name);
                     names2unicode.Put(name, num);
                 }
@@ -121,7 +121,7 @@ namespace iText.IO.Font {
             }
             if (v == -1 && name.Length == 7 && name.ToLowerInvariant().StartsWith("uni")) {
                 try {
-                    return System.Convert.ToInt32(name.Substring(3), 16);
+                    return Convert.ToInt32(name.Substring(3), 16);
                 }
                 catch (Exception) {
                 }

@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Util {
@@ -54,6 +56,8 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
     public sealed class TextUtil {
+
+        public const int CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT = 0x010000;
 
         private static HashSet<char> javaNonUnicodeCategoryWhiteSpaceChars = new HashSet<char> {
                 '\t', //  U+0009 HORIZONTAL TABULATION
@@ -189,7 +193,7 @@ namespace iText.IO.Util {
 
         /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
-        /// <returns>the corresponding characters in a char arrat</returns>
+        /// <returns>the corresponding characters in a char array</returns>
         public static char[] ConvertFromUtf32ToCharArray(int codePoint) {
             if (codePoint < 0x10000) {
                 return new char[] { (char)codePoint };
@@ -199,19 +203,24 @@ namespace iText.IO.Util {
         }
 
         public static bool IsWhiteSpace(char ch) {
-            if (ch == '\u00A0' || ch == '\u2007' || ch == '\u202F') {
+            return IsWhiteSpace((int) ch);
+        }
+
+        public static bool IsWhiteSpace(int unicode) {
+            if (unicode == '\u00A0' || unicode == '\u2007' || unicode == '\u202F') {
                 // non-breaking space char
                 return false;
             }
-
-            UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(ch);
+            
+            UnicodeCategory category = unicode <= Char.MaxValue ? CharUnicodeInfo.GetUnicodeCategory((char)unicode) : 
+                CharUnicodeInfo.GetUnicodeCategory(new String(ConvertFromUtf32(unicode)), 0);
             if (category == UnicodeCategory.SpaceSeparator || category == UnicodeCategory.LineSeparator ||
                 category == UnicodeCategory.ParagraphSeparator) {
 
                 return true;
             }
 
-            return javaNonUnicodeCategoryWhiteSpaceChars.Contains(ch);
+            return unicode <= Char.MaxValue && javaNonUnicodeCategoryWhiteSpaceChars.Contains((char)unicode);
         }
 
 
@@ -269,7 +278,7 @@ namespace iText.IO.Util {
         /// </summary>
         public static bool IsWhitespace(Glyph glyph)
         {
-            return IsWhiteSpace((char)glyph.GetUnicode());
+            return IsWhiteSpace(glyph.GetUnicode());
         }
 
         /// <summary>
@@ -288,5 +297,32 @@ namespace iText.IO.Util {
             return IsWhiteSpace((char)code) || IsNonPrintable(code);
         }
 
+        public static char[] ToChars(int codePoint)
+        {
+            return char.ConvertFromUtf32(codePoint).ToCharArray();
+        }
+
+        public static int CharCount(int codePoint)
+        {
+            return codePoint >= CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT ? 2 : 1;
+        }
+
+        public static Encoding NewEncoder(Encoding charset)
+        {
+            return charset;
+        }
+
+        public static bool CharsetIsSupported(string charset)
+        {
+            try
+            {
+                var enc = EncodingUtil.GetEncoding(charset);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
     }
 }

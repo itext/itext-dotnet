@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Barcodes.Dmcode;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -590,7 +591,7 @@ namespace iText.Barcodes {
             if (prevEnc == DM_B256) {
                 textLength = 1;
             }
-            System.Array.Copy(text, textOffset, data, minRequiredDataIncrement + dataOffset, textLength);
+            Array.Copy(text, textOffset, data, minRequiredDataIncrement + dataOffset, textLength);
             for (int j = prevEnc != DM_B256 ? dataOffset + 1 : dataOffset; j < minRequiredDataIncrement + textLength +
                  dataOffset; ++j) {
                 RandomizationAlgorithm255(data, j);
@@ -1225,7 +1226,7 @@ namespace iText.Barcodes {
             int ys;
             int z;
             int xByte = (dm.width + ws * 2 + 7) / 8;
-            iText.IO.Util.JavaUtil.Fill(image, (byte)0);
+            JavaUtil.Fill(image, (byte)0);
             //alignment patterns
             //dotted horizontal line
             for (i = ws; i < dm.height + ws; i += dm.heightSection) {
@@ -1318,7 +1319,7 @@ namespace iText.Barcodes {
                 byte[][] dataDynamic = new byte[][] { new byte[data.Length], new byte[data.Length], new byte[data.Length], 
                     new byte[data.Length], new byte[data.Length], new byte[data.Length] };
                 for (int i = 0; i < 6; i++) {
-                    System.Array.Copy(data, 0, dataDynamic[i], 0, data.Length);
+                    Array.Copy(data, 0, dataDynamic[i], 0, data.Length);
                     switchMode[i][0] = i + 1;
                 }
                 f[0][0] = AsciiEncodation(text, textOffset, 1, dataDynamic[0], dataOffset, dataSize, 0, -1, dataOffset);
@@ -1340,7 +1341,7 @@ namespace iText.Barcodes {
                         byte[][] dataDynamicInner = new byte[][] { new byte[data.Length], new byte[data.Length], new byte[data.Length
                             ], new byte[data.Length], new byte[data.Length], new byte[data.Length] };
                         for (int prevEnc = 0; prevEnc < 6; prevEnc++) {
-                            System.Array.Copy(dataDynamic[prevEnc], 0, dataDynamicInner[prevEnc], 0, data.Length);
+                            Array.Copy(dataDynamic[prevEnc], 0, dataDynamicInner[prevEnc], 0, data.Length);
                             if (currEnc == 0) {
                                 tempForMin[prevEnc] = AsciiEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
                                     ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
@@ -1368,7 +1369,7 @@ namespace iText.Barcodes {
                         }
                         SolveFAndSwitchMode(tempForMin, currEnc, i);
                         if (switchMode[currEnc][i] != 0) {
-                            System.Array.Copy(dataDynamicInner[switchMode[currEnc][i] - 1], 0, dataDynamic[currEnc], 0, data.Length);
+                            Array.Copy(dataDynamicInner[switchMode[currEnc][i] - 1], 0, dataDynamic[currEnc], 0, data.Length);
                         }
                     }
                 }
@@ -1377,7 +1378,7 @@ namespace iText.Barcodes {
                     return -1;
                 }
                 int bestDataDynamicResultIndex = ValuePositionInColumn(f, textSize - 1, e);
-                System.Array.Copy(dataDynamic[bestDataDynamicResultIndex], 0, data, 0, data.Length);
+                Array.Copy(dataDynamic[bestDataDynamicResultIndex], 0, data, 0, data.Length);
                 return e;
             }
             switch (options) {
@@ -1412,7 +1413,7 @@ namespace iText.Barcodes {
                     if (textSize > dataSize) {
                         return -1;
                     }
-                    System.Array.Copy(text, textOffset, data, dataOffset, textSize);
+                    Array.Copy(text, textOffset, data, dataOffset, textSize);
                     return textSize;
                 }
             }

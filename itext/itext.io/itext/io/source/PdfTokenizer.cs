@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.IO.Util;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {
@@ -316,16 +317,16 @@ namespace iText.IO.Source {
                             if (TokenValueEqualsTo(R)) {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
-                                reference = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                generation = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
                                 return;
                             }
                             else {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
                                     return;
                                 }
                             }
@@ -531,11 +532,11 @@ namespace iText.IO.Source {
         }
 
         public virtual long GetLongValue() {
-            return System.Convert.ToInt64(GetStringValue());
+            return Convert.ToInt64(GetStringValue());
         }
 
         public virtual int GetIntValue() {
-            return System.Convert.ToInt32(GetStringValue());
+            return Convert.ToInt32(GetStringValue());
         }
 
         public virtual bool IsHexString() {
@@ -898,7 +899,7 @@ namespace iText.IO.Source {
                 if (!lineTokenizer.NextToken()) {
                     return null;
                 }
-                if (!iText.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent())) {
+                if (!JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent())) {
                     return null;
                 }
                 return new int[] { num, gen };
@@ -936,7 +937,7 @@ namespace iText.IO.Source {
                 if (offset + len > buffer.Size()) {
                     len = (int)(buffer.Size() - offset);
                 }
-                System.Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
+                Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
                 return len;
             }
 

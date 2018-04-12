@@ -512,7 +512,7 @@ namespace iText.IO.Font.Woff2 {
                 int n_contours = 0;
                 bool have_bbox = false;
                 byte[] bitmap = new byte[bitmap_length];
-                System.Array.Copy(data, bbox_bitmap_offset, bitmap, 0, bitmap_length);
+                Array.Copy(data, bbox_bitmap_offset, bitmap, 0, bitmap_length);
                 if ((data[bbox_bitmap_offset + (i >> 3)] & (0x80 >> (i & 7))) != 0) {
                     have_bbox = true;
                 }
@@ -1128,7 +1128,7 @@ namespace iText.IO.Font.Woff2 {
             System.Diagnostics.Debug.Assert(firstTableOffset <= int.MaxValue);
             byte[] output = new byte[(int)firstTableOffset];
             // Re-order tables in output (OTSpec) order
-            IList<Woff2Common.Table> sorted_tables = iText.IO.Util.JavaUtil.ArraysAsList(hdr.tables);
+            IList<Woff2Common.Table> sorted_tables = JavaUtil.ArraysAsList(hdr.tables);
             if (hdr.header_version != 0) {
                 // collection font; we have to sort the table offset vector in each font
                 foreach (Woff2Dec.TtcFont ttc_font in hdr.ttc_fonts) {

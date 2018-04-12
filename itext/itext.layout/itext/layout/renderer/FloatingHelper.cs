@@ -44,7 +44,9 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
+using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
@@ -148,17 +150,25 @@ namespace iText.Layout.Renderer {
         }
 
         internal static float? AdjustFloatedBlockLayoutBox(AbstractRenderer renderer, Rectangle parentBBox, float?
-             blockWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
+             blockWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue, OverflowPropertyValue?
+             overflowX) {
             renderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
             float floatElemWidth;
+            bool overflowFit = AbstractRenderer.IsOverflowFit(overflowX);
             if (blockWidth != null) {
                 floatElemWidth = (float)blockWidth + AbstractRenderer.CalculateAdditionalWidth(renderer);
+                if (overflowFit && floatElemWidth > parentBBox.GetWidth()) {
+                    floatElemWidth = parentBBox.GetWidth();
+                }
             }
             else {
                 MinMaxWidth minMaxWidth = CalculateMinMaxWidthForFloat(renderer, floatPropertyValue);
                 float maxWidth = minMaxWidth.GetMaxWidth();
                 if (maxWidth > parentBBox.GetWidth()) {
                     maxWidth = parentBBox.GetWidth();
+                }
+                if (!overflowFit && minMaxWidth.GetMinWidth() > parentBBox.GetWidth()) {
+                    maxWidth = minMaxWidth.GetMinWidth();
                 }
                 floatElemWidth = maxWidth + AbstractRenderer.EPS;
                 blockWidth = maxWidth - minMaxWidth.GetAdditionalWidth() + AbstractRenderer.EPS;
@@ -252,11 +262,23 @@ namespace iText.Layout.Renderer {
         }
 
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
-            ) {
+            , ICollection<Rectangle> nonChildFloatingRendererAreas) {
+            Rectangle commonRectangle = IncludeChildFloatsInOccupiedArea(floatRendererAreas, renderer.GetOccupiedArea(
+                ).GetBBox(), nonChildFloatingRendererAreas);
+            renderer.GetOccupiedArea().SetBBox(commonRectangle);
+        }
+
+        internal static Rectangle IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, Rectangle 
+            occupiedAreaBbox, ICollection<Rectangle> nonChildFloatingRendererAreas) {
             foreach (Rectangle floatBox in floatRendererAreas) {
-                renderer.GetOccupiedArea().SetBBox(Rectangle.GetCommonRectangle(renderer.GetOccupiedArea().GetBBox(), floatBox
-                    ));
+                if (nonChildFloatingRendererAreas.Contains(floatBox)) {
+                    // Currently there is no other way to distinguish floats that are not descendants of this renderer
+                    // except by preserving a set of such.
+                    continue;
+                }
+                occupiedAreaBbox = Rectangle.GetCommonRectangle(occupiedAreaBbox, floatBox);
             }
+            return occupiedAreaBbox;
         }
 
         internal static MinMaxWidth CalculateMinMaxWidthForFloat(AbstractRenderer renderer, FloatPropertyValue? floatPropertyVal
@@ -350,6 +372,27 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        internal static void RemoveParentArtifactsOnPageSplitIfOnlyFloatsOverflow(IRenderer overflowRenderer) {
+            overflowRenderer.SetProperty(Property.BACKGROUND, null);
+            overflowRenderer.SetProperty(Property.BACKGROUND_IMAGE, null);
+            overflowRenderer.SetProperty(Property.OUTLINE, null);
+            Border[] borders = AbstractRenderer.GetBorders(overflowRenderer);
+            overflowRenderer.SetProperty(Property.BORDER_TOP, null);
+            overflowRenderer.SetProperty(Property.BORDER_BOTTOM, null);
+            if (borders[1] != null) {
+                overflowRenderer.SetProperty(Property.BORDER_RIGHT, new SolidBorder(ColorConstants.BLACK, borders[1].GetWidth
+                    (), 0));
+            }
+            if (borders[3] != null) {
+                overflowRenderer.SetProperty(Property.BORDER_LEFT, new SolidBorder(ColorConstants.BLACK, borders[3].GetWidth
+                    (), 0));
+            }
+            overflowRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(0));
+            overflowRenderer.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(0));
         }
 
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {

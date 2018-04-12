@@ -225,7 +225,7 @@ namespace iText.IO.Font {
         /// could be encoded.
         /// </returns>
         public virtual bool CanEncode(int unicode) {
-            return unicodeToCode.ContainsKey(unicode) || TextUtil.IsNonPrintable(unicode);
+            return unicodeToCode.ContainsKey(unicode) || iText.IO.Util.TextUtil.IsNonPrintable(unicode);
         }
 
         /// <summary>
@@ -253,14 +253,14 @@ namespace iText.IO.Font {
                 while (tok.HasMoreTokens()) {
                     String order = tok.NextToken();
                     String name = tok.NextToken();
-                    char uni = (char)System.Convert.ToInt32(tok.NextToken(), 16);
+                    char uni = (char)Convert.ToInt32(tok.NextToken(), 16);
                     int uniName = AdobeGlyphList.NameToUnicode(name);
                     int orderK;
                     if (order.StartsWith("'")) {
                         orderK = order[1];
                     }
                     else {
-                        orderK = System.Convert.ToInt32(order);
+                        orderK = Convert.ToInt32(order);
                     }
                     orderK %= 256;
                     unicodeToCode.Put(uni, orderK);
@@ -272,11 +272,11 @@ namespace iText.IO.Font {
             else {
                 int k = 0;
                 if (tok.HasMoreTokens()) {
-                    k = System.Convert.ToInt32(tok.NextToken());
+                    k = Convert.ToInt32(tok.NextToken());
                 }
                 while (tok.HasMoreTokens() && k < 256) {
                     String hex = tok.NextToken();
-                    int uni = System.Convert.ToInt32(hex, 16) % 0x10000;
+                    int uni = Convert.ToInt32(hex, 16) % 0x10000;
                     String name = AdobeGlyphList.UnicodeToName(uni);
                     if (name == null) {
                         name = "uni" + hex;

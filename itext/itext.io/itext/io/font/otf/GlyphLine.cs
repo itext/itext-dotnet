@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class GlyphLine {
@@ -215,7 +214,7 @@ namespace iText.IO.Font.Otf {
             }
             else {
                 if (currentGlyph.HasValidUnicode()) {
-                    chars.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
+                    chars.Append(iText.IO.Util.TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
                 }
             }
             for (int j = 0; j < rightPartLen; ++j) {
@@ -226,7 +225,7 @@ namespace iText.IO.Font.Otf {
                 }
                 else {
                     if (currentGlyph.HasValidUnicode()) {
-                        chars.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
+                        chars.Append(iText.IO.Util.TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
                     }
                 }
                 RemoveGlyph(gidx.idx--);
@@ -247,11 +246,11 @@ namespace iText.IO.Font.Otf {
             }
             else {
                 if (newGlyph.HasValidUnicode()) {
-                    newGlyph.SetChars(TextUtil.ConvertFromUtf32(newGlyph.GetUnicode()));
+                    newGlyph.SetChars(iText.IO.Util.TextUtil.ConvertFromUtf32(newGlyph.GetUnicode()));
                 }
                 else {
                     if (oldGlyph.HasValidUnicode()) {
-                        newGlyph.SetChars(TextUtil.ConvertFromUtf32(oldGlyph.GetUnicode()));
+                        newGlyph.SetChars(iText.IO.Util.TextUtil.ConvertFromUtf32(oldGlyph.GetUnicode()));
                     }
                 }
             }

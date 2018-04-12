@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
+using iText.Forms.Util;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -162,29 +163,6 @@ namespace iText.Forms.Fields {
         protected internal PdfFormXObject form;
 
         protected internal PdfAConformanceLevel pdfAConformanceLevel;
-
-        protected internal const String check = "0.8 0 0 0.8 0.3 0.5 cm 0 0 m\n" + "0.066 -0.026 l\n" + "0.137 -0.15 l\n"
-             + "0.259 0.081 0.46 0.391 0.553 0.461 c\n" + "0.604 0.489 l\n" + "0.703 0.492 l\n" + "0.543 0.312 0.255 -0.205 0.154 -0.439 c\n"
-             + "0.069 -0.399 l\n" + "0.035 -0.293 -0.039 -0.136 -0.091 -0.057 c\n" + "h\n" + "f\n";
-
-        protected internal const String circle = "1 0 0 1 0.86 0.5 cm 0 0 m\n" + "0 0.204 -0.166 0.371 -0.371 0.371 c\n"
-             + "-0.575 0.371 -0.741 0.204 -0.741 0 c\n" + "-0.741 -0.204 -0.575 -0.371 -0.371 -0.371 c\n" + "-0.166 -0.371 0 -0.204 0 0 c\n"
-             + "f\n";
-
-        protected internal const String cross = "1 0 0 1 0.80 0.8 cm 0 0 m\n" + "-0.172 -0.027 l\n" + "-0.332 -0.184 l\n"
-             + "-0.443 -0.019 l\n" + "-0.475 -0.009 l\n" + "-0.568 -0.168 l\n" + "-0.453 -0.324 l\n" + "-0.58 -0.497 l\n"
-             + "-0.59 -0.641 l\n" + "-0.549 -0.627 l\n" + "-0.543 -0.612 -0.457 -0.519 -0.365 -0.419 c\n" + "-0.163 -0.572 l\n"
-             + "-0.011 -0.536 l\n" + "-0.004 -0.507 l\n" + "-0.117 -0.441 l\n" + "-0.246 -0.294 l\n" + "-0.132 -0.181 l\n"
-             + "0.031 -0.04 l\n" + "h\n" + "f\n";
-
-        protected internal const String diamond = "1 0 0 1 0.5 0.12 cm 0 0 m\n" + "0.376 0.376 l\n" + "0 0.751 l\n"
-             + "-0.376 0.376 l\n" + "h\n" + "f\n";
-
-        protected internal const String square = "1 0 0 1 0.835 0.835 cm 0 0 -0.669 -0.67 re\n" + "f\n";
-
-        protected internal const String star = "0.95 0 0 0.95 0.85 0.6 cm 0 0 m\n" + "-0.291 0 l\n" + "-0.381 0.277 l\n"
-             + "-0.47 0 l\n" + "-0.761 0 l\n" + "-0.526 -0.171 l\n" + "-0.616 -0.448 l\n" + "-0.381 -0.277 l\n" + 
-            "-0.145 -0.448 l\n" + "-0.236 -0.171 l\n" + "h\n" + "f\n";
 
         /// <summary>
         /// Creates a form field as a wrapper object around a
@@ -1288,6 +1266,7 @@ namespace iText.Forms.Fields {
             field.text = caption;
             field.font = font;
             field.fontSize = fontSize;
+            field.backgroundColor = ColorConstants.LIGHT_GRAY;
             PdfFormXObject xObject = field.DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), caption, font, 
                 fontSize);
             annot.SetNormalAppearance(xObject.GetPdfObject());
@@ -1778,7 +1757,7 @@ namespace iText.Forms.Fields {
                 if (PdfName.Btn.Equals(formType)) {
                     if ((GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
                         try {
-                            img = ImageDataFactory.Create(System.Convert.FromBase64String(value));
+                            img = ImageDataFactory.Create(Convert.FromBase64String(value));
                         }
                         catch (Exception) {
                             text = value;
@@ -2272,6 +2251,10 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
+            // DA is an inherited key, therefore AcroForm shall be checked if there is no parent or no DA in parent.
+            if (defaultAppearance == null) {
+                defaultAppearance = (PdfString)GetAcroFormKey(PdfName.DA, PdfObject.STRING);
+            }
             return defaultAppearance;
         }
 
@@ -2437,7 +2420,11 @@ namespace iText.Forms.Fields {
         /// Basic setter for the <code>backgroundColor</code> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
-        /// <param name="backgroundColor">The new color to be set</param>
+        /// <param name="backgroundColor">
+        /// The new color to be set or
+        /// <see langword="null"/>
+        /// if no background needed
+        /// </param>
         /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
@@ -2445,7 +2432,12 @@ namespace iText.Forms.Fields {
             if (mk == null) {
                 mk = new PdfDictionary();
             }
-            mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+            if (backgroundColor == null) {
+                mk.Remove(PdfName.BG);
+            }
+            else {
+                mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+            }
             RegenerateField();
             return this;
         }
@@ -2680,9 +2672,7 @@ namespace iText.Forms.Fields {
                         appearance = new PdfFormXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
                             ()));
                     }
-                    if (matrix != null) {
-                        appearance.Put(PdfName.Matrix, matrix);
-                    }
+                    appearance.Put(PdfName.Matrix, matrix);
                     //Create text appearance
                     if (PdfName.Tx.Equals(type)) {
                         if (!IsMultiline()) {
@@ -2768,10 +2758,9 @@ namespace iText.Forms.Fields {
                                     PdfObject kid = kids.Get(i);
                                     iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
-                                    PdfDictionary buttonValues = (PdfDictionary)field.GetPdfObject().GetAsDictionary(PdfName.AP).Get(PdfName.N
-                                        );
+                                    PdfDictionary apStream = field.GetPdfObject().GetAsDictionary(PdfName.AP);
                                     String state;
-                                    if (buttonValues.Get(new PdfName(value)) != null) {
+                                    if (null != apStream && null != apStream.GetAsDictionary(PdfName.N).Get(new PdfName(value))) {
                                         state = value;
                                     }
                                     else {
@@ -3232,12 +3221,7 @@ namespace iText.Forms.Fields {
             PdfDictionary normalResources = null;
             PdfDictionary defaultResources = null;
             PdfDocument document = GetDocument();
-            if (document != null) {
-                PdfDictionary acroformDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
-                if (acroformDictionary != null) {
-                    defaultResources = acroformDictionary.GetAsDictionary(PdfName.DR);
-                }
-            }
+            defaultResources = (PdfDictionary)GetAcroFormKey(PdfName.DR, PdfObject.DICTIONARY);
             if (asNormal != null) {
                 normalResources = asNormal.GetAsDictionary(PdfName.Resources);
             }
@@ -3401,19 +3385,13 @@ namespace iText.Forms.Fields {
                 value = ObfuscatePassword(value);
             }
             canvas.BeginVariableText().SaveState().NewPath();
+            TextAlignment? textAlignment = ConvertJustificationToTextAlignment();
             float x = X_OFFSET;
-            int? justification = GetJustification();
-            if (justification == null) {
-                justification = 0;
-            }
-            TextAlignment? textAlignment = TextAlignment.LEFT;
-            if (justification == ALIGN_RIGHT) {
-                textAlignment = TextAlignment.RIGHT;
+            if (textAlignment == TextAlignment.RIGHT) {
                 x = rect.GetWidth();
             }
             else {
-                if (justification == ALIGN_CENTER) {
-                    textAlignment = TextAlignment.CENTER;
+                if (textAlignment == TextAlignment.CENTER) {
                     x = rect.GetWidth() / 2;
                 }
             }
@@ -3489,6 +3467,7 @@ namespace iText.Forms.Fields {
                 Paragraph paragraph = new Paragraph(strings[index]).SetFont(font).SetFontSize(fontSize).SetMargins(0, 0, 0
                     , 0).SetMultipliedLeading(1);
                 paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
+                paragraph.SetTextAlignment(ConvertJustificationToTextAlignment());
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
@@ -3631,7 +3610,8 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawRadioField(PdfCanvas canvas, float width, float height, bool on) {
             canvas.SaveState();
             if (on) {
-                canvas.ResetFillColorRgb().Circle(width / 2, height / 2, Math.Min(width, height) / 4).Fill();
+                canvas.ResetFillColorRgb();
+                DrawingUtil.DrawCircle(canvas, width / 2, height / 2, Math.Min(width, height) / 4);
             }
             canvas.RestoreState();
         }
@@ -3732,9 +3712,6 @@ namespace iText.Forms.Fields {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            if (backgroundColor == null) {
-                backgroundColor = ColorConstants.LIGHT_GRAY;
-            }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
                 PdfImageXObject imgXObj = new PdfImageXObject(img);
@@ -3804,10 +3781,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             if (checkType == TYPE_CROSS) {
-                float offset = borderWidth * 2;
-                canvas.MoveTo((width - height) / 2 + offset, height - offset).LineTo((width + height) / 2 - offset, offset
-                    ).MoveTo((width + height) / 2 - offset, height - offset).LineTo((width - height) / 2 + offset, offset)
-                    .Stroke();
+                DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
             }
             PdfFont ufont = GetFont();
@@ -3820,44 +3794,66 @@ namespace iText.Forms.Fields {
             if (!on) {
                 return;
             }
-            String appearanceString = check;
             switch (checkType) {
                 case TYPE_CHECK: {
-                    appearanceString = check;
+                    DrawingUtil.DrawPdfACheck(canvas, width, height);
                     break;
                 }
 
                 case TYPE_CIRCLE: {
-                    appearanceString = circle;
+                    DrawingUtil.DrawPdfACircle(canvas, width, height);
                     break;
                 }
 
                 case TYPE_CROSS: {
-                    appearanceString = cross;
+                    DrawingUtil.DrawPdfACross(canvas, width, height);
                     break;
                 }
 
                 case TYPE_DIAMOND: {
-                    appearanceString = diamond;
+                    DrawingUtil.DrawPdfADiamond(canvas, width, height);
                     break;
                 }
 
                 case TYPE_SQUARE: {
-                    appearanceString = square;
+                    DrawingUtil.DrawPdfASquare(canvas, width, height);
                     break;
                 }
 
                 case TYPE_STAR: {
-                    appearanceString = star;
+                    DrawingUtil.DrawPdfAStar(canvas, width, height);
                     break;
                 }
             }
-            canvas.SaveState();
-            canvas.ResetFillColorRgb();
-            canvas.ConcatMatrix(width, 0, 0, height, 0, 0);
-            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                ));
-            canvas.RestoreState();
+        }
+
+        private PdfObject GetAcroFormKey(PdfName key, int type) {
+            PdfObject acroFormKey = null;
+            PdfDocument document = GetDocument();
+            if (document != null) {
+                PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+                if (acroFormDictionary != null) {
+                    acroFormKey = acroFormDictionary.Get(key);
+                }
+            }
+            return (acroFormKey != null && acroFormKey.GetObjectType() == type) ? acroFormKey : null;
+        }
+
+        private TextAlignment? ConvertJustificationToTextAlignment() {
+            int? justification = GetJustification();
+            if (justification == null) {
+                justification = 0;
+            }
+            TextAlignment? textAlignment = TextAlignment.LEFT;
+            if (justification == ALIGN_RIGHT) {
+                textAlignment = TextAlignment.RIGHT;
+            }
+            else {
+                if (justification == ALIGN_CENTER) {
+                    textAlignment = TextAlignment.CENTER;
+                }
+            }
+            return textAlignment;
         }
 
         private PdfName GetTypeFromParent(PdfDictionary field) {

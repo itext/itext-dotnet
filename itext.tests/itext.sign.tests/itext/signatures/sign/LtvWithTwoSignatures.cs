@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -80,7 +81,7 @@ namespace iText.Signatures.Sign {
             ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            TestTsaClient testTsa = new TestTsaClient(iText.IO.Util.JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient(caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
             AddLtvInfo(srcFileName, ltvFileName, "sig", testOcspClient, testCrlClient);

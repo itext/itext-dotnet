@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -56,6 +57,12 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/FloatAndAlignmentTest/";
+
+        private static String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+             + "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
+             + "laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+             + "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa "
+             + "qui officia deserunt mollit anim id est laborum.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -75,22 +82,25 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div1 = CreateDiv(ColorConstants.RED, HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, FloatPropertyValue
-                .NONE);
+                .NONE, UnitValue.CreatePercentValue(80));
             Div div2 = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .NONE);
+                .NONE, UnitValue.CreatePercentValue(80));
             Div div3 = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .NONE);
-            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, 500);
+                .NONE, UnitValue.CreatePercentValue(80));
+            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (80));
             divParent1.Add(div3);
             divParent1.Add(div2);
             divParent1.Add(div1);
             document.Add(divParent1);
-            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, 500);
+            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (80));
             divParent2.Add(div2);
             divParent2.Add(div1);
             divParent2.Add(div3);
             document.Add(divParent2);
-            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, 500);
+            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (80));
             divParent3.Add(div1);
             divParent3.Add(div2);
             divParent3.Add(div3);
@@ -113,22 +123,25 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div1 = CreateDiv(ColorConstants.RED, HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, FloatPropertyValue
-                .NONE);
+                .NONE, UnitValue.CreatePercentValue(80));
             Div div2 = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .RIGHT);
+                .RIGHT, UnitValue.CreatePercentValue(80));
             Div div3 = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .LEFT);
-            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, 400);
+                .LEFT, UnitValue.CreatePercentValue(80));
+            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (75));
             divParent1.Add(div3);
             divParent1.Add(div2);
             divParent1.Add(div1);
             document.Add(divParent1);
-            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, 400);
+            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (75));
             divParent2.Add(div2);
             divParent2.Add(div1);
             divParent2.Add(div3);
             document.Add(divParent2);
-            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, 400);
+            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (75));
             divParent3.Add(div1);
             divParent3.Add(div2);
             divParent3.Add(div3);
@@ -143,8 +156,6 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void BlocksInsideEachOther() {
             /* this test shows different combinations of float blocks  inside each other
-            * NOTE: second page - incorrect shift of block
-            * NOTE: incorrectly placed out of containing divs
             */
             String testName = "blocksInsideEachOther";
             String outFileName = destinationFolder + testName + ".pdf";
@@ -152,32 +163,78 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Div div1 = CreateDiv(ColorConstants.RED, HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, FloatPropertyValue
-                .NONE);
-            Div div2 = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .RIGHT);
-            Div div3 = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, FloatPropertyValue
-                .LEFT);
-            Div div4 = CreateDiv(ColorConstants.YELLOW, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
-                .RIGHT);
-            Div div5 = CreateDiv(ColorConstants.ORANGE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
-                .LEFT);
-            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, 500);
-            divParent1.Add(div1);
-            div1.Add(div2);
-            div2.Add(div3);
+            Div divRed = CreateDiv(ColorConstants.RED, HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, FloatPropertyValue
+                .NONE, UnitValue.CreatePercentValue(80));
+            Div divBlue = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePercentValue(80));
+            Div divGreen = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, FloatPropertyValue
+                .LEFT, UnitValue.CreatePercentValue(80));
+            Div divYellow = CreateDiv(ColorConstants.YELLOW, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePercentValue(80));
+            Div divOrange = CreateDiv(ColorConstants.ORANGE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
+                .LEFT, UnitValue.CreatePercentValue(80));
+            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (85));
+            divParent1.Add(divRed);
+            divRed.Add(divBlue);
+            divBlue.Add(divGreen);
             document.Add(divParent1);
-            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, 500);
-            divParent2.Add(div4);
-            div4.Add(div1);
+            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (85));
+            divParent2.Add(divYellow);
+            divYellow.Add(divRed);
             document.Add(divParent2);
-            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, 500);
-            divParent3.Add(div5);
-            div5.Add(div4);
+            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (85));
+            divParent3.Add(divOrange);
+            divOrange.Add(divYellow);
             document.Add(divParent3);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BlocksInsideEachOther_sameFixedWidthsNesting() {
+            /* this test shows different combinations of float blocks inside each other with blocks nested inside each other that have the same fixed width
+            */
+            String testName = "blocksInsideEachOther_sameFixedWidthsNesting";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Div divRed = CreateDiv(ColorConstants.RED, HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, FloatPropertyValue
+                .NONE, UnitValue.CreatePointValue(300));
+            Div divBlue = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePointValue(300));
+            Div divGreen = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, FloatPropertyValue
+                .LEFT, UnitValue.CreatePointValue(300));
+            Div divYellow = CreateDiv(ColorConstants.YELLOW, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePointValue(300));
+            Div divOrange = CreateDiv(ColorConstants.ORANGE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
+                .LEFT, UnitValue.CreatePointValue(300));
+            Div divParent1 = CreateParentDiv(HorizontalAlignment.CENTER, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (70));
+            divParent1.Add(divRed);
+            divRed.Add(divBlue);
+            divBlue.Add(divGreen);
+            document.Add(divParent1);
+            Div divParent2 = CreateParentDiv(HorizontalAlignment.LEFT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (70));
+            divParent2.Add(divYellow);
+            divYellow.Add(divRed);
+            document.Add(divParent2);
+            Div divParent3 = CreateParentDiv(HorizontalAlignment.RIGHT, ClearPropertyValue.BOTH, UnitValue.CreatePercentValue
+                (70));
+            divParent3.Add(divOrange);
+            divOrange.Add(divYellow);
+            document.Add(divParent3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff02_sameFixedWidth_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -234,35 +291,34 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Div div1 = CreateDiv(ColorConstants.RED, horizontalAlignment, ClearPropertyValue.NONE, FloatPropertyValue.
-                NONE);
-            Div div2 = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
-                .RIGHT);
-            Div div3 = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
-                .LEFT);
-            Div div4 = CreateDiv(ColorConstants.YELLOW, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
-                .RIGHT);
-            Div div5 = CreateDiv(ColorConstants.ORANGE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
-                .LEFT);
-            document.Add(div5);
-            document.Add(div4);
-            document.Add(div3);
-            document.Add(div2);
-            document.Add(div1);
-            document.Add(div5);
-            document.Add(div4);
-            document.Add(div3);
-            document.Add(div2);
-            document.Add(div1);
-            document.Add(div1);
-            document.Add(div1);
+            Div divRed = CreateDiv(ColorConstants.RED, horizontalAlignment, ClearPropertyValue.NONE, FloatPropertyValue
+                .NONE, UnitValue.CreatePointValue(300));
+            Div divBlue = CreateDiv(ColorConstants.BLUE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePointValue(300));
+            Div divGreen = CreateDiv(ColorConstants.GREEN, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
+                .LEFT, UnitValue.CreatePointValue(300));
+            Div divYellow = CreateDiv(ColorConstants.YELLOW, HorizontalAlignment.RIGHT, ClearPropertyValue.NONE, FloatPropertyValue
+                .RIGHT, UnitValue.CreatePointValue(300));
+            Div divOrange = CreateDiv(ColorConstants.ORANGE, HorizontalAlignment.LEFT, ClearPropertyValue.NONE, FloatPropertyValue
+                .LEFT, UnitValue.CreatePointValue(300));
+            document.Add(divOrange);
+            document.Add(divYellow);
+            document.Add(divGreen);
+            document.Add(divBlue);
+            document.Add(divRed);
+            document.Add(divOrange);
+            document.Add(divYellow);
+            document.Add(divGreen);
+            document.Add(divBlue);
+            document.Add(divRed);
+            document.Add(divRed);
+            document.Add(divRed);
             document.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1732: Float is moved outside the page boundaries.")]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest01() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest01";
             String outFileName = destinationFolder + testName + ".pdf";
@@ -285,7 +341,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1732: floating element is misplaced when justification is applied.")]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest02() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest02";
             String outFileName = destinationFolder + testName + ".pdf";
@@ -303,11 +358,89 @@ namespace iText.Layout {
             document.Add(parentPara.SetBorder(new DashedBorder(2)));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diffTextAlign01_"));
+                , "diffTextAlign02_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest03() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest03";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            // making an inline float a last element in the line
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add("Text begin").Add(new Div().Add(new Paragraph("div text").SetBorder(new SolidBorder(2)))).Add
+                ("MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. MoretextMoretextMoretext. "
+                ).Add(floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants.GREEN
+                , 2))).Add("MoretextMoretextMoretext.");
+            document.Add(parentPara.SetBorder(new DashedBorder(2)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign03_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InlineBlocksAndFloatsWithTextAlignmentTest04() {
+            String testName = "inlineBlocksAndFloatsWithTextAlignmentTest04";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            try {
+                using (PdfWriter writer = new PdfWriter(outFileName)) {
+                    using (PdfDocument pdfDocument = new PdfDocument(writer)) {
+                        pdfDocument.SetDefaultPageSize(PageSize.A5);
+                        using (Document document = new Document(pdfDocument)) {
+                            Table table2 = new Table(1).SetWidth(150f).SetBorder(new SolidBorder(1f)).SetMargin(5f).SetHorizontalAlignment
+                                (HorizontalAlignment.LEFT).AddCell(new Cell().Add(new Paragraph(text.JSubstring(0, text.Length / 2))));
+                            table2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                            document.Add(table2);
+                            document.Add(new Paragraph(text).SetTextAlignment(TextAlignment.JUSTIFIED));
+                            Table table3 = new Table(1).SetWidth(150f).SetBorder(new SolidBorder(1f)).SetMargin(5f).SetHorizontalAlignment
+                                (HorizontalAlignment.RIGHT).AddCell(new Cell().Add(new Paragraph(text.JSubstring(0, text.Length / 2)))
+                                );
+                            table3.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                            document.Add(table3);
+                            document.Add(new Paragraph(text).SetTextAlignment(TextAlignment.JUSTIFIED));
+                        }
+                    }
+                }
+            }
+            catch (Exception) {
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diffTextAlign04_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FloatsOnlyJustificationTest01() {
+            String testName = "floatsOnlyJustificationTest01";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Paragraph parentPara = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parentPara.Add(floatingDiv.Add(new Paragraph("floating div text")).SetBorder(new SolidBorder(ColorConstants
+                .GREEN, 2)));
+            document.Add(parentPara.SetBorder(new DashedBorder(2)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
         }
 
         private Div CreateParentDiv(HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue
-            , float width) {
+            , UnitValue width) {
             Div divParent1 = new Div().SetBorder(new SolidBorder(5)).SetWidth(width);
             divParent1.SetHorizontalAlignment(horizontalAlignment);
             divParent1.SetProperty(Property.CLEAR, clearPropertyValue);
@@ -317,9 +450,9 @@ namespace iText.Layout {
         }
 
         private static Div CreateDiv(Color color, HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue
-            , FloatPropertyValue? floatPropertyValue) {
+            , FloatPropertyValue? floatPropertyValue, UnitValue width) {
             Div div = new Div().SetBorder(new SolidBorder(color, 1)).SetBackgroundColor(color, 0.3f).SetMargins(10, 10
-                , 10, 10).SetWidth(300);
+                , 10, 10).SetWidth(width);
             div.SetHorizontalAlignment(horizontalAlignment);
             div.SetProperty(Property.CLEAR, clearPropertyValue);
             div.SetProperty(Property.FLOAT, floatPropertyValue);

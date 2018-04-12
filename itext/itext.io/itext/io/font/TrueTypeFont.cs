@@ -293,7 +293,7 @@ namespace iText.IO.Font {
             byte[] pdfPanose = new byte[12];
             pdfPanose[1] = (byte)(os_2.sFamilyClass);
             pdfPanose[0] = (byte)(os_2.sFamilyClass >> 8);
-            System.Array.Copy(os_2.panose, 0, pdfPanose, 2, 10);
+            Array.Copy(os_2.panose, 0, pdfPanose, 2, 10);
             fontIdentification.SetPanose(pdfPanose);
             IDictionary<int, int[]> cmap = GetActiveCmap();
             int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();

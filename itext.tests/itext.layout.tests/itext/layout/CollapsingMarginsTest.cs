@@ -210,6 +210,34 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CollapsingMarginsTest05() {
+            String outFileName = destinationFolder + "collapsingMarginsTest05.pdf";
+            String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest05.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            DrawPageBorders(pdfDocument, 2);
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            Document doc = new Document(pdfDocument);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Paragraph p = new Paragraph(textByron).SetBackgroundColor(ColorConstants.YELLOW);
+            for (int i = 0; i < 3; i++) {
+                p.Add(textByron);
+            }
+            doc.Add(p);
+            p.SetMarginTop(80);
+            Div div = new Div();
+            div.Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private void DrawPageBorders(PdfDocument pdfDocument, int pageNum) {
             for (int i = 1; i <= pageNum; ++i) {
                 while (pdfDocument.GetNumberOfPages() < i) {

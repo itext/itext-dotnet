@@ -52,6 +52,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class OverflowTest : ExtendedITextTest {
@@ -178,6 +179,61 @@ namespace iText.Layout {
             img.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             document.Add(p.Add(img));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ForcedPlacementTest01() {
+            String outFileName = destinationFolder + "forcedPlacementTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_forcedPlacementTest01.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            String text = "Text that is not fitting into single line, but requires several of them. " + "It should be repeated twice and all of it should be shown in the document. ";
+            Div div = new Div();
+            div.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(750).SetWidth(600);
+            div.Add(img);
+            div.Add(new Paragraph(text + text));
+            // Warning! Property.FORCED_PLACEMENT is for internal usage only!
+            // It is highly advised not to use it unless you know what you are doing.
+            // It is used here for specific testing purposes.
+            div.SetProperty(Property.FORCED_PLACEMENT, true);
+            document.Add(div);
+            document.Close();
+            // TODO DEVSIX-1001: text might be lost later in the element if previously forced placement was applied.
+            // This test is really artificial in fact, since FORCED_PLACEMENT is set explicitly. Even though at the moment
+            // of test creation such situation in fact really happens during elements layout.
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED)]
+        public virtual void ForcedPlacementTest02() {
+            String outFileName = destinationFolder + "forcedPlacementTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_forcedPlacementTest02.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            String text = "Text that is not fitting into single line, but requires several of them. " + "It should be repeated twice and all of it should be shown in the document. ";
+            Div div = new Div();
+            div.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                )).SetHeight(750).SetWidth(600);
+            div.Add(img);
+            div.Add(new Paragraph().Add(text).Add(text));
+            // Warning! Property.FORCED_PLACEMENT is for internal usage only!
+            // It is highly advised not to use it unless you know what you are doing.
+            // It is used here for specific testing purposes.
+            div.SetProperty(Property.FORCED_PLACEMENT, true);
+            document.Add(div);
+            document.Close();
+            // TODO DEVSIX-1001: text might be lost later in the element if previously forced placement was applied.
+            // This test is really artificial in fact, since FORCED_PLACEMENT is set explicitly. Even though at the moment
+            // of test creation such situation in fact really happens during elements layout
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

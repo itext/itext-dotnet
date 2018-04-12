@@ -63,8 +63,10 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            this.isLastRendererForModelElement = true;
             IDictionary<int, IRenderer> waitingFloatsSplitRenderers = new LinkedDictionary<int, IRenderer>();
             IList<IRenderer> waitingOverflowFloatRenderers = new List<IRenderer>();
+            bool floatOverflowedCompletely = false;
             bool wasHeightClipped = false;
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
@@ -73,6 +75,7 @@ namespace iText.Layout.Renderer {
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
@@ -85,13 +88,14 @@ namespace iText.Layout.Renderer {
             if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
+            bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, parentBBox
                 );
             FloatingHelper.ApplyClearance(parentBBox, marginsCollapseHandler, clearHeightCorrection, FloatingHelper.IsRendererFloating
                 (this));
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 blockWidth = FloatingHelper.AdjustFloatedBlockLayoutBox(this, parentBBox, blockWidth, floatRendererAreas, 
-                    floatPropertyValue);
+                    floatPropertyValue, overflowX);
                 floatRendererAreas = new List<Rectangle>();
             }
             bool isCellRenderer = this is CellRenderer;
@@ -101,7 +105,6 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
             ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
-            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             float? blockMaxHeight = RetrieveMaxHeight();
             OverflowPropertyValue? overflowY = (null == blockMaxHeight || blockMaxHeight > parentBBox.GetHeight()) && 
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property
@@ -121,6 +124,8 @@ namespace iText.Layout.Renderer {
             ShrinkOccupiedAreaForAbsolutePosition();
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
+            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
+            // rectangles are compared by instances
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
             IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
@@ -129,12 +134,24 @@ namespace iText.Layout.Renderer {
                 LayoutResult result;
                 childRenderer.SetParent(this);
                 MarginsCollapseInfo childMarginsInfo = null;
+                if (floatOverflowedCompletely && FloatingHelper.IsRendererFloating(childRenderer)) {
+                    waitingFloatsSplitRenderers.Put(childPos, null);
+                    waitingOverflowFloatRenderers.Add(childRenderer);
+                    continue;
+                }
                 if (!waitingOverflowFloatRenderers.IsEmpty() && FloatingHelper.IsClearanceApplied(waitingOverflowFloatRenderers
                     , childRenderer.GetProperty<ClearPropertyValue?>(Property.CLEAR))) {
+                    if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                        waitingFloatsSplitRenderers.Put(childPos, null);
+                        waitingOverflowFloatRenderers.Add(childRenderer);
+                        floatOverflowedCompletely = true;
+                        continue;
+                    }
                     if (marginsCollapsingEnabled && !isCellRenderer) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
-                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
+                    FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     result = new LayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
                     int layoutResult = anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
@@ -169,18 +186,6 @@ namespace iText.Layout.Renderer {
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
                     ), childMarginsInfo, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped))).GetStatus() !=
                      LayoutResult.FULL) {
-                    if (marginsCollapsingEnabled && result.GetStatus() != LayoutResult.NOTHING) {
-                        marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
-                    }
-                    if (FloatingHelper.IsRendererFloating(childRenderer)) {
-                        waitingFloatsSplitRenderers.Put(childPos, result.GetStatus() == LayoutResult.PARTIAL ? result.GetSplitRenderer
-                            () : null);
-                        waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
-                        break;
-                    }
-                    if (marginsCollapsingEnabled) {
-                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-                    }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
                         (Property.FILL_AVAILABLE_AREA))) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
@@ -189,11 +194,32 @@ namespace iText.Layout.Renderer {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
                             occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                                 ()));
-                            FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
+                            FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                         }
                     }
+                    if (marginsCollapsingEnabled && result.GetStatus() != LayoutResult.NOTHING) {
+                        marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
+                    }
+                    if (FloatingHelper.IsRendererFloating(childRenderer)) {
+                        // Check if current block is empty, kid returns nothing and neither floats nor content
+                        // were met on root area (e.g. page area) - return NOTHING, don't layout other kids,
+                        // expect FORCED_PLACEMENT to be set.
+                        bool immediatelyReturnNothing = result.GetStatus() == LayoutResult.NOTHING && !anythingPlaced && floatRendererAreas
+                            .IsEmpty() && IsFirstOnRootArea();
+                        if (!immediatelyReturnNothing) {
+                            waitingFloatsSplitRenderers.Put(childPos, result.GetStatus() == LayoutResult.PARTIAL ? result.GetSplitRenderer
+                                () : null);
+                            waitingOverflowFloatRenderers.Add(result.GetOverflowRenderer());
+                            floatOverflowedCompletely = result.GetStatus() == LayoutResult.NOTHING;
+                            break;
+                        }
+                    }
+                    if (marginsCollapsingEnabled) {
+                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+                    }
                     // On page split, content will be drawn on next page, i.e. under all floats on this page
-                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
+                    FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
+                    FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     if (result.GetSplitRenderer() != null) {
                         // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
                         // in case when parent box should wrap around child boxes.
@@ -298,11 +324,11 @@ namespace iText.Layout.Renderer {
                 }
                 anythingPlaced = anythingPlaced || result.GetStatus() != LayoutResult.NOTHING;
                 if (result.GetOccupiedArea() != null) {
-                    if (!FloatingHelper.IsRendererFloating(childRenderer)) {
+                    if (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea) {
                         // this check is needed only if margins collapsing is enabled
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
-                        FixOccupiedAreaWidthAndXPositionIfOverflowed(overflowX, layoutBox);
+                        FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     }
                 }
                 if (marginsCollapsingEnabled) {
@@ -322,51 +348,62 @@ namespace iText.Layout.Renderer {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
             }
-            float overflowPartHeight = GetOverflowPartHeight(overflowY, layoutBox);
+            if (includeFloatsInOccupiedArea) {
+                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
+                FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+            }
+            if (wasHeightClipped) {
+                FixOccupiedAreaIfOverflowedY(overflowY, layoutBox);
+            }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
-            if (IsAbsolutePosition() || FloatingHelper.IsRendererFloating(this) || isCellRenderer) {
-                FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this);
-            }
+            int layoutResult_1 = LayoutResult.FULL;
+            bool processOverflowedFloats = !waitingOverflowFloatRenderers.IsEmpty() && !wasHeightClipped && !true.Equals
+                (GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             AbstractRenderer overflowRenderer_1 = null;
-            float? blockMinHeight = RetrieveMinHeight();
-            if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight
-                 > occupiedArea.GetBBox().GetHeight()) {
-                if (IsFixedLayout()) {
-                    occupiedArea.GetBBox().MoveDown((float)blockMinHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
-                        )blockMinHeight);
+            if (!includeFloatsInOccupiedArea || !processOverflowedFloats) {
+                overflowRenderer_1 = ApplyMinHeight(overflowY, layoutBox);
+            }
+            bool minHeightOverflow = overflowRenderer_1 != null;
+            if (minHeightOverflow && IsKeepTogether()) {
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
+            }
+            if (overflowRenderer_1 != null || processOverflowedFloats) {
+                // in this case layout result need to be changed
+                layoutResult_1 = !anythingPlaced && !waitingOverflowFloatRenderers.IsEmpty() ? LayoutResult.NOTHING : LayoutResult
+                    .PARTIAL;
+            }
+            // nothing was placed and there are some overflowed floats
+            // either something was placed or (since there are no overflowed floats) there is overflow renderer
+            // that indicates overflowed min_height
+            if (processOverflowedFloats) {
+                if (overflowRenderer_1 == null || layoutResult_1 == LayoutResult.NOTHING) {
+                    // if layout result is NOTHING - avoid possible usage of the overflowRenderer created
+                    // for overflow of min_height with adjusted height properties
+                    overflowRenderer_1 = CreateOverflowRenderer(layoutResult_1);
                 }
-                else {
-                    float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
-                        ());
-                    if ((null == overflowY || OverflowPropertyValue.FIT.Equals(overflowY)) && blockBottom < layoutBox.GetBottom
-                        ()) {
-                        blockBottom = layoutBox.GetBottom();
-                    }
-                    occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
-                    if (occupiedArea.GetBBox().GetHeight() < 0) {
-                        occupiedArea.GetBBox().SetHeight(0);
-                    }
-                    blockMinHeight -= occupiedArea.GetBBox().GetHeight();
-                    if (!IsFixedLayout() && blockMinHeight > AbstractRenderer.EPS) {
-                        if (IsKeepTogether()) {
-                            return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
-                        }
-                        else {
-                            this.isLastRendererForModelElement = false;
-                            overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                            overflowRenderer_1.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight));
-                            if (HasProperty(Property.HEIGHT)) {
-                                overflowRenderer_1.UpdateHeight(UnitValue.CreatePointValue((float)RetrieveHeight() - occupiedArea.GetBBox(
-                                    ).GetHeight()));
-                            }
-                        }
-                    }
+                overflowRenderer_1.GetChildRenderers().AddAll(waitingOverflowFloatRenderers);
+                if (layoutResult_1 == LayoutResult.PARTIAL && !minHeightOverflow && !includeFloatsInOccupiedArea) {
+                    FloatingHelper.RemoveParentArtifactsOnPageSplitIfOnlyFloatsOverflow(overflowRenderer_1);
                 }
+            }
+            AbstractRenderer splitRenderer_1 = this;
+            if (waitingFloatsSplitRenderers.Count > 0 && layoutResult_1 != LayoutResult.NOTHING) {
+                splitRenderer_1 = CreateSplitRenderer(layoutResult_1);
+                splitRenderer_1.childRenderers = new List<IRenderer>(childRenderers);
+                ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer_1);
+                float usedHeight = occupiedArea.GetBBox().GetHeight();
+                if (!includeFloatsInOccupiedArea) {
+                    Rectangle commonRectangle = Rectangle.GetCommonRectangle(layoutBox, occupiedArea.GetBBox());
+                    usedHeight = commonRectangle.GetHeight();
+                }
+                // this must be processed before margin/border/padding
+                UpdateHeightsOnSplit(usedHeight, wasHeightClipped, splitRenderer_1, overflowRenderer_1, includeFloatsInOccupiedArea
+                    );
             }
             if (positionedRenderers.Count > 0) {
                 foreach (IRenderer childPositionedRenderer in positionedRenderers) {
@@ -403,41 +440,17 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyVerticalAlignment();
-            if (wasHeightClipped) {
-                occupiedArea.GetBBox().MoveUp(overflowPartHeight).DecreaseHeight(overflowPartHeight);
-            }
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
-            int layoutResult_1 = LayoutResult.FULL;
-            if (overflowRenderer_1 != null || !waitingOverflowFloatRenderers.IsEmpty()) {
-                // TODO as we still might have kids (floats) to process, we shall be able to support "NOTHING", "wasHeightClipped => return FULL" and "FORCED_PLACEMENT" cases
-                layoutResult_1 = !anythingPlaced && !waitingOverflowFloatRenderers.IsEmpty() ? LayoutResult.NOTHING : LayoutResult
-                    .PARTIAL;
-            }
-            if (!waitingOverflowFloatRenderers.IsEmpty()) {
-                if (overflowRenderer_1 == null || layoutResult_1 == LayoutResult.NOTHING) {
-                    overflowRenderer_1 = CreateOverflowRenderer(layoutResult_1);
-                }
-                overflowRenderer_1.GetChildRenderers().AddAll(waitingOverflowFloatRenderers);
-            }
-            AbstractRenderer splitRenderer_1 = this;
-            if (waitingFloatsSplitRenderers.Count > 0) {
-                splitRenderer_1 = CreateSplitRenderer(layoutResult_1);
-                splitRenderer_1.childRenderers = new List<IRenderer>(childRenderers);
-                ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer_1);
-            }
-            if (layoutResult_1 == LayoutResult.NOTHING) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer_1, causeOfNothing);
-            }
-            else {
+            if (layoutResult_1 != LayoutResult.NOTHING) {
                 LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                     (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
-                if (overflowRenderer_1 == null) {
-                    return new LayoutResult(LayoutResult.FULL, editedArea, splitRenderer_1, null, causeOfNothing);
+                return new LayoutResult(layoutResult_1, editedArea, splitRenderer_1, overflowRenderer_1, causeOfNothing);
+            }
+            else {
+                if (positionedRenderers.Count > 0) {
+                    overflowRenderer_1.positionedRenderers = new List<IRenderer>(positionedRenderers);
                 }
-                else {
-                    return new LayoutResult(LayoutResult.PARTIAL, editedArea, splitRenderer_1, overflowRenderer_1, causeOfNothing
-                        );
-                }
+                return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer_1, causeOfNothing);
             }
         }
 
@@ -490,20 +503,19 @@ namespace iText.Layout.Renderer {
             }
             BeginElementOpacityApplying(drawContext);
             BeginRotationIfApplied(drawContext.GetCanvas());
-            OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-            OverflowPropertyValue? overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
-            bool processOverflow = OverflowPropertyValue.HIDDEN.Equals(overflowX) || OverflowPropertyValue.HIDDEN.Equals
-                (overflowY);
+            bool overflowXHidden = IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X);
+            bool overflowYHidden = IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_Y);
+            bool processOverflow = overflowXHidden || overflowYHidden;
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
                 Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
                 Rectangle area = GetBorderAreaBBox();
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowX)) {
+                if (overflowXHidden) {
                     clippedArea.SetX(area.GetX()).SetWidth(area.GetWidth());
                 }
-                if (OverflowPropertyValue.HIDDEN.Equals(overflowY)) {
+                if (overflowYHidden) {
                     clippedArea.SetY(area.GetY()).SetHeight(area.GetHeight());
                 }
                 drawContext.GetCanvas().Rectangle(clippedArea).Clip().NewPath();
@@ -573,6 +585,9 @@ namespace iText.Layout.Renderer {
                 return;
             }
             float deltaY = lowestChildBottom - GetInnerAreaBBox().GetY();
+            if (deltaY < 0) {
+                return;
+            }
             switch (verticalAlignment) {
                 case VerticalAlignment.BOTTOM: {
                     foreach (IRenderer child in childRenderers) {
@@ -701,8 +716,8 @@ namespace iText.Layout.Renderer {
             // maxWidth has already taken in attention in blockWidth,
             // therefore only `parentBBox > minWidth` needs to be checked.
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (null
-                 != overflowX && !OverflowPropertyValue.FIT.Equals(overflowX)))) {
+            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (!IsOverflowFit
+                (overflowX)))) {
                 parentBBox.SetWidth((float)blockWidth);
             }
             else {
@@ -716,8 +731,7 @@ namespace iText.Layout.Renderer {
 
         internal virtual bool ApplyMaxHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
             , bool isCellRenderer, bool wasParentsHeightClipped, OverflowPropertyValue? overflowY) {
-            if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (null == overflowY || OverflowPropertyValue
-                .FIT.Equals(overflowY)))) {
+            if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (IsOverflowFit(overflowY)))) {
                 return false;
             }
             bool wasHeightClipped = false;
@@ -732,24 +746,57 @@ namespace iText.Layout.Renderer {
             return wasHeightClipped;
         }
 
-        internal virtual float GetOverflowPartHeight(OverflowPropertyValue? overflowY, Rectangle parentBox) {
-            float difference = 0;
-            if (null != overflowY && OverflowPropertyValue.FIT != overflowY) {
-                if (occupiedArea.GetBBox().GetBottom() < parentBox.GetBottom()) {
-                    difference = parentBox.GetBottom() - occupiedArea.GetBBox().GetBottom();
+        internal virtual AbstractRenderer ApplyMinHeight(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
+            AbstractRenderer overflowRenderer = null;
+            float? blockMinHeight = RetrieveMinHeight();
+            if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight
+                 > occupiedArea.GetBBox().GetHeight()) {
+                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
+                    ());
+                if (IsFixedLayout()) {
+                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
+                }
+                else {
+                    if (IsOverflowFit(overflowY) && blockBottom < layoutBox.GetBottom()) {
+                        float hDelta = occupiedArea.GetBBox().GetBottom() - layoutBox.GetBottom();
+                        occupiedArea.GetBBox().IncreaseHeight(hDelta).SetY(layoutBox.GetBottom());
+                        if (occupiedArea.GetBBox().GetHeight() < 0) {
+                            occupiedArea.GetBBox().SetHeight(0);
+                        }
+                        this.isLastRendererForModelElement = false;
+                        overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
+                        overflowRenderer.UpdateMinHeight(UnitValue.CreatePointValue((float)blockMinHeight - occupiedArea.GetBBox()
+                            .GetHeight()));
+                        if (HasProperty(Property.HEIGHT)) {
+                            overflowRenderer.UpdateHeight(UnitValue.CreatePointValue((float)RetrieveHeight() - occupiedArea.GetBBox().
+                                GetHeight()));
+                        }
+                    }
+                    else {
+                        occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
+                    }
                 }
             }
-            return difference;
+            return overflowRenderer;
         }
 
-        internal virtual void FixOccupiedAreaWidthAndXPositionIfOverflowed(OverflowPropertyValue? overflowX, Rectangle
-             layoutBox) {
-            if (overflowX == null || OverflowPropertyValue.FIT.Equals(overflowX)) {
+        internal virtual void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
+            if (IsOverflowFit(overflowX)) {
                 return;
             }
             if ((occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() || occupiedArea.GetBBox().GetLeft() < layoutBox
                 .GetLeft())) {
                 occupiedArea.GetBBox().SetX(layoutBox.GetX()).SetWidth(layoutBox.GetWidth());
+            }
+        }
+
+        internal virtual void FixOccupiedAreaIfOverflowedY(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
+            if (IsOverflowFit(overflowY)) {
+                return;
+            }
+            if (occupiedArea.GetBBox().GetBottom() < layoutBox.GetBottom()) {
+                float difference = layoutBox.GetBottom() - occupiedArea.GetBBox().GetBottom();
+                occupiedArea.GetBBox().MoveUp(difference).DecreaseHeight(difference);
             }
         }
 

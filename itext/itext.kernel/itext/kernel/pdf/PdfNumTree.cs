@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfNumTree {
@@ -91,7 +92,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfDictionary BuildTree() {
             int?[] numbers = new int?[items.Count];
             numbers = items.Keys.ToArray(numbers);
-            iText.IO.Util.JavaUtil.Sort(numbers);
+            JavaUtil.Sort(numbers);
             if (numbers.Length <= NODE_SIZE) {
                 PdfDictionary dic = new PdfDictionary();
                 PdfArray ar = new PdfArray();

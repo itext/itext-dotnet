@@ -147,7 +147,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfDictionary BuildTree() {
             String[] names = new String[items.Count];
             names = items.Keys.ToArray(names);
-            iText.IO.Util.JavaUtil.Sort(names);
+            JavaUtil.Sort(names);
             if (names.Length <= NODE_SIZE) {
                 PdfDictionary dic = new PdfDictionary();
                 PdfArray ar = new PdfArray();

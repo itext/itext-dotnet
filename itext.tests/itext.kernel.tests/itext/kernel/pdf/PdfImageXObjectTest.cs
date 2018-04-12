@@ -54,11 +54,11 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + filename));
             try {
                 PdfResources resources = pdfDocument.GetPage(page).GetResources();
-                PdfDictionary xobjets = resources.GetResource(PdfName.XObject);
-                PdfObject obj = xobjets.Get(new PdfName(objectid));
+                PdfDictionary xobjects = resources.GetResource(PdfName.XObject);
+                PdfObject obj = xobjects.Get(new PdfName(objectid));
                 if (obj == null) {
-                    throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjets.KeySet(
-                        ));
+                    throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjects.KeySet
+                        ());
                 }
                 PdfImageXObject img = new PdfImageXObject((PdfStream)(obj.IsIndirectReference() ? ((PdfIndirectReference)obj
                     ).GetRefersTo() : obj));

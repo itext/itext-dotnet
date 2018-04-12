@@ -46,6 +46,7 @@ using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout {
@@ -65,12 +66,20 @@ namespace iText.Layout {
     /// .
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_LEFT instead."
+            )]
         protected internal float leftMargin = 36;
 
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_RIGHT instead."
+            )]
         protected internal float rightMargin = 36;
 
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_TOP instead."
+            )]
         protected internal float topMargin = 36;
 
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_BOTTOM instead."
+            )]
         protected internal float bottomMargin = 36;
 
         /// <summary>
@@ -222,48 +231,56 @@ namespace iText.Layout {
         /// <summary>Gets the left margin, measured in points</summary>
         /// <returns>a <code>float</code> containing the left margin value</returns>
         public virtual float GetLeftMargin() {
-            return leftMargin;
+            float? property = this.GetProperty<float?>(Property.MARGIN_LEFT);
+            return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_LEFT));
         }
 
         /// <summary>Sets the left margin, measured in points</summary>
         /// <param name="leftMargin">a <code>float</code> containing the new left margin value</param>
         public virtual void SetLeftMargin(float leftMargin) {
+            SetProperty(Property.MARGIN_LEFT, leftMargin);
             this.leftMargin = leftMargin;
         }
 
         /// <summary>Gets the right margin, measured in points</summary>
         /// <returns>a <code>float</code> containing the right margin value</returns>
         public virtual float GetRightMargin() {
-            return rightMargin;
+            float? property = this.GetProperty<float?>(Property.MARGIN_RIGHT);
+            return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_RIGHT));
         }
 
         /// <summary>Sets the right margin, measured in points</summary>
         /// <param name="rightMargin">a <code>float</code> containing the new right margin value</param>
         public virtual void SetRightMargin(float rightMargin) {
+            SetProperty(Property.MARGIN_RIGHT, rightMargin);
             this.rightMargin = rightMargin;
         }
 
         /// <summary>Gets the top margin, measured in points</summary>
         /// <returns>a <code>float</code> containing the top margin value</returns>
         public virtual float GetTopMargin() {
-            return topMargin;
+            float? property = this.GetProperty<float?>(Property.MARGIN_TOP);
+            return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_TOP));
         }
 
         /// <summary>Sets the top margin, measured in points</summary>
         /// <param name="topMargin">a <code>float</code> containing the new top margin value</param>
         public virtual void SetTopMargin(float topMargin) {
+            SetProperty(Property.MARGIN_TOP, topMargin);
             this.topMargin = topMargin;
         }
 
         /// <summary>Gets the bottom margin, measured in points</summary>
         /// <returns>a <code>float</code> containing the bottom margin value</returns>
         public virtual float GetBottomMargin() {
-            return bottomMargin;
+            float? property = this.GetProperty<float?>(Property.MARGIN_BOTTOM);
+            return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_BOTTOM));
         }
 
         /// <summary>Sets the bottom margin, measured in points</summary>
         /// <param name="bottomMargin">a <code>float</code> containing the new bottom margin value</param>
         public virtual void SetBottomMargin(float bottomMargin) {
+            SetProperty(Property.MARGIN_BOTTOM, bottomMargin);
             this.bottomMargin = bottomMargin;
         }
 
@@ -294,8 +311,26 @@ namespace iText.Layout {
         /// with the required dimensions and origin point
         /// </returns>
         public virtual Rectangle GetPageEffectiveArea(PageSize pageSize) {
-            return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
-                () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
+            float x = pageSize.GetLeft() + GetLeftMargin();
+            float y = pageSize.GetBottom() + GetBottomMargin();
+            float width = pageSize.GetWidth() - GetLeftMargin() - GetRightMargin();
+            float height = pageSize.GetHeight() - GetBottomMargin() - GetTopMargin();
+            return new Rectangle(x, y, width, height);
+        }
+
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case Property.MARGIN_BOTTOM:
+                case Property.MARGIN_LEFT:
+                case Property.MARGIN_RIGHT:
+                case Property.MARGIN_TOP: {
+                    return (T1)(Object)36f;
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
         }
 
         protected internal override RootRenderer EnsureRootRendererNotNull() {

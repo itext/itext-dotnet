@@ -94,7 +94,8 @@ namespace iText.IO.Font {
                 return null;
             }
             String lowerCaseFontName = fontName.ToLowerInvariant();
-            IList<String> family = fontFamilies.Get(lowerCaseFontName);
+            IList<String> family = !lowerCaseFontName.EqualsIgnoreCase(StandardFonts.TIMES_ROMAN) ? fontFamilies.Get(lowerCaseFontName
+                ) : fontFamilies.Get(StandardFontFamilies.TIMES.ToLowerInvariant());
             if (family != null) {
                 lock (family) {
                     // some bugs were fixed here by Daniel Marczisovszky
@@ -142,26 +143,25 @@ namespace iText.IO.Font {
             family.Add(StandardFonts.COURIER_BOLD);
             family.Add(StandardFonts.COURIER_OBLIQUE);
             family.Add(StandardFonts.COURIER_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFonts.COURIER.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontFamilies.COURIER.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(StandardFonts.HELVETICA);
             family.Add(StandardFonts.HELVETICA_BOLD);
             family.Add(StandardFonts.HELVETICA_OBLIQUE);
             family.Add(StandardFonts.HELVETICA_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFonts.HELVETICA.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontFamilies.HELVETICA.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(StandardFonts.SYMBOL);
-            fontFamilies.Put(StandardFonts.SYMBOL.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontFamilies.SYMBOL.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(StandardFonts.TIMES_ROMAN);
             family.Add(StandardFonts.TIMES_BOLD);
             family.Add(StandardFonts.TIMES_ITALIC);
             family.Add(StandardFonts.TIMES_BOLDITALIC);
-            fontFamilies.Put(StandardFonts.TIMES.ToLowerInvariant(), family);
-            fontFamilies.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontFamilies.TIMES.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(StandardFonts.ZAPFDINGBATS);
-            fontFamilies.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), family);
+            fontFamilies.Put(StandardFontFamilies.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
         /// <exception cref="System.IO.IOException"/>

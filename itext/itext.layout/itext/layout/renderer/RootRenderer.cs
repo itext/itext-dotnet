@@ -73,6 +73,8 @@ namespace iText.Layout.Renderer {
 
         private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
+        private bool floatOverflowedCompletely = false;
+
         public override void AddChild(IRenderer renderer) {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {
@@ -103,6 +105,14 @@ namespace iText.Layout.Renderer {
             // Static layout
             for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
                 renderer = addedRenderers[i];
+                bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
+                bool clearanceOverflowsToNextPage = FloatingHelper.IsClearanceApplied(waitingNextPageRenderers, renderer.GetProperty
+                    <ClearPropertyValue?>(Property.CLEAR));
+                if (rendererIsFloat && (floatOverflowedCompletely || clearanceOverflowsToNextPage)) {
+                    waitingNextPageRenderers.Add(renderer);
+                    floatOverflowedCompletely = true;
+                    continue;
+                }
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
@@ -112,39 +122,40 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
-                bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
-                while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
-                    (currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus() != LayoutResult.FULL) {
+                while (clearanceOverflowsToNextPage || currentArea != null && renderer != null && (result = renderer.SetParent
+                    (this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus
+                    () != LayoutResult.FULL) {
                     bool currentAreaNeedsToBeUpdated = false;
+                    if (clearanceOverflowsToNextPage) {
+                        result = new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
+                        currentAreaNeedsToBeUpdated = true;
+                    }
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (rendererIsFloat) {
                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                             break;
                         }
                         else {
-                            if (result.GetOverflowRenderer() is ImageRenderer) {
-                                ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                            ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
+                            if (nextStoredArea != null) {
+                                currentArea = nextStoredArea;
+                                currentPageNumber = nextStoredArea.GetPageNumber();
+                                nextStoredArea = null;
                             }
                             else {
-                                ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
-                                if (nextStoredArea != null) {
-                                    currentArea = nextStoredArea;
-                                    currentPageNumber = nextStoredArea.GetPageNumber();
-                                    nextStoredArea = null;
-                                }
-                                else {
-                                    currentAreaNeedsToBeUpdated = true;
-                                }
+                                currentAreaNeedsToBeUpdated = true;
                             }
                         }
                     }
                     else {
-                        if (result.GetStatus() == LayoutResult.NOTHING) {
+                        if (result.GetStatus() == LayoutResult.NOTHING && !clearanceOverflowsToNextPage) {
                             if (result.GetOverflowRenderer() is ImageRenderer) {
-                                if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer()).GetOccupiedArea().GetBBox
-                                    ().GetHeight() && !currentArea.IsEmptyArea()) {
+                                float imgHeight = ((ImageRenderer)result.GetOverflowRenderer()).GetOccupiedArea().GetBBox().GetHeight();
+                                if (!floatRendererAreas.IsEmpty() || currentArea.GetBBox().GetHeight() < imgHeight && !currentArea.IsEmptyArea
+                                    ()) {
                                     if (rendererIsFloat) {
                                         waitingNextPageRenderers.Add(result.GetOverflowRenderer());
+                                        floatOverflowedCompletely = true;
                                         break;
                                     }
                                     currentAreaNeedsToBeUpdated = true;
@@ -176,9 +187,14 @@ namespace iText.Layout.Renderer {
                                             .KEEP_TOGETHER))) {
                                             // set KEEP_TOGETHER false on the deepest parent (maybe the element itself) to have KEEP_TOGETHER == true
                                             IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
+                                            IRenderer parent;
                                             while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
                                                 ).GetOwnProperty<bool?>(Property.KEEP_TOGETHER)) {
-                                                theDeepestKeptTogether = ((AbstractRenderer)theDeepestKeptTogether).parent;
+                                                parent = ((AbstractRenderer)theDeepestKeptTogether).parent;
+                                                if (parent == null) {
+                                                    break;
+                                                }
+                                                theDeepestKeptTogether = parent;
                                             }
                                             theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                             ILog logger = LogManager.GetLogger(typeof(RootRenderer));
@@ -212,6 +228,7 @@ namespace iText.Layout.Renderer {
                                     else {
                                         if (rendererIsFloat) {
                                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
+                                            floatOverflowedCompletely = true;
                                             break;
                                         }
                                         currentAreaNeedsToBeUpdated = true;
@@ -231,6 +248,8 @@ namespace iText.Layout.Renderer {
                         marginsCollapseHandler = new MarginsCollapseHandler(this, null);
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
+                    clearanceOverflowsToNextPage = clearanceOverflowsToNextPage && FloatingHelper.IsClearanceApplied(waitingNextPageRenderers
+                        , renderer.GetProperty<ClearPropertyValue?>(Property.CLEAR));
                 }
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
@@ -269,8 +288,8 @@ namespace iText.Layout.Renderer {
                 // For position=absolute, if none of the top, bottom, left, right properties are provided,
                 // the content should be displayed in the flow of the current content, not overlapping it.
                 // The behavior is just if it would be statically positioned except it does not affect other elements
-                if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty<int?>(Property.POSITION)) 
-                    && AbstractRenderer.NoAbsolutePositionInfo(renderer)) {
+                if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty<int?>(Property.POSITION)) && AbstractRenderer
+                    .NoAbsolutePositionInfo(renderer)) {
                     layoutArea = new LayoutArea((int)positionedPageNumber, currentArea.GetBBox().Clone());
                 }
                 else {
@@ -287,7 +306,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // TODO Drawing of content. Might need to rename.
         /// <summary>Draws (flushes) the content.</summary>
         /// <seealso cref="AbstractRenderer.Draw(DrawContext)"/>
         public virtual void Flush() {
@@ -486,6 +504,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void AddWaitingNextPageRenderers() {
+            floatOverflowedCompletely = false;
             IList<IRenderer> waitingFloatRenderers = new List<IRenderer>(waitingNextPageRenderers);
             waitingNextPageRenderers.Clear();
             foreach (IRenderer renderer in waitingFloatRenderers) {

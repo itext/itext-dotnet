@@ -148,6 +148,7 @@ namespace iText.Layout.Margincollapse {
             return childMarginsInfo;
         }
 
+        /// <summary>This method shall be called after child occupied area is included into parent occupied area.</summary>
         public virtual void EndChildMarginsHandling(Rectangle layoutBox) {
             int childIndex = processedChildrenNum - 1;
             if (RendererIsFloated(GetRendererChild(childIndex))) {
@@ -448,7 +449,7 @@ namespace iText.Layout.Margincollapse {
 
         private void GetRidOfCollapseArtifactsAtopOccupiedArea() {
             Rectangle bBox = renderer.GetOccupiedArea().GetBBox();
-            bBox.SetHeight(bBox.GetHeight() - collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize());
+            bBox.DecreaseHeight(collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize());
         }
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
@@ -460,13 +461,13 @@ namespace iText.Layout.Margincollapse {
 
         // inline block
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
-                (parent) && !HasTopBorders(parent) && !HasTopPadding(parent);
+            return !BlockFormattingContextUtil.IsRendererCreateBfc(parent) && !(parent is TableRenderer) && !HasTopBorders
+                (parent) && !HasTopPadding(parent);
         }
 
         private static bool LastChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !(parent is TableRenderer) && !(parent is CellRenderer) && !RendererIsFloated
-                (parent) && !HasBottomBorders(parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
+            return !BlockFormattingContextUtil.IsRendererCreateBfc(parent) && !(parent is TableRenderer) && !HasBottomBorders
+                (parent) && !HasBottomPadding(parent) && !HasHeightProp(parent);
         }
 
         private static bool IsBlockElement(IRenderer renderer) {

@@ -1368,7 +1368,7 @@ namespace iText.Kernel.Pdf {
                 if (offset + len > buffer.Size()) {
                     len = (int)(buffer.Size() - offset);
                 }
-                System.Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
+                Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
                 return len;
             }
 

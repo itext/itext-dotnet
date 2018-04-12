@@ -28,8 +28,6 @@ namespace iText.Layout.Hyphenation {
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </remarks>
     public sealed class Hyphenator {
-        private const String HYPHENATION_DEFAULT_RESOURCE = "iText.Hyph.";
-
         private const char SOFT_HYPHEN = '\u00ad';
 
         private static readonly Object staticLock = new Object();
@@ -186,8 +184,8 @@ namespace iText.Layout.Hyphenation {
             }
             if (hTree == null) {
                 // get from the default directory
-                Stream defaultHyphenationResourceStream = ResourceUtil.GetResourceStream(HYPHENATION_DEFAULT_RESOURCE + key
-                     + ".xml");
+                Stream defaultHyphenationResourceStream = ResourceUtil.GetResourceStream(HyphenationConstants.HYPHENATION_DEFAULT_RESOURCE
+                     + key + ".xml");
                 if (defaultHyphenationResourceStream != null) {
                     hTree = GetHyphenationTree(defaultHyphenationResourceStream, key);
                 }

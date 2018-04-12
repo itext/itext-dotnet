@@ -60,8 +60,8 @@ namespace iText.Kernel.Font {
             this.embedded = embedded;
             FontNames fontNames = ttf.GetFontNames();
             if (embedded && !fontNames.AllowEmbedding()) {
-                throw new PdfException("1.cannot.be.embedded.due.to.licensing.restrictions").SetMessageParams(fontNames.GetFontName
-                    ());
+                throw new PdfException("{0} cannot be embedded due to licensing restrictions.").SetMessageParams(fontNames
+                    .GetFontName());
             }
             if ((encoding == null || encoding.Length == 0) && ttf.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;

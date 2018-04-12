@@ -90,7 +90,7 @@ namespace iText.Barcodes.Qrcode {
                 }
                 else {
                     this.coefficients = new int[coefficientsLength - firstNonZero];
-                    System.Array.Copy(coefficients, firstNonZero, this.coefficients, 0, this.coefficients.Length);
+                    Array.Copy(coefficients, firstNonZero, this.coefficients, 0, this.coefficients.Length);
                 }
             }
             else {
@@ -162,7 +162,7 @@ namespace iText.Barcodes.Qrcode {
             int[] sumDiff = new int[largerCoefficients.Length];
             int lengthDiff = largerCoefficients.Length - smallerCoefficients.Length;
             // Copy high-order terms only found in higher-degree polynomial's coefficients
-            System.Array.Copy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
+            Array.Copy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
             for (int i = lengthDiff; i < largerCoefficients.Length; i++) {
                 sumDiff[i] = GF256.AddOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
             }

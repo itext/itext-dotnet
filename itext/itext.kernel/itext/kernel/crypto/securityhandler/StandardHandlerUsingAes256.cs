@@ -46,6 +46,7 @@ using System.IO;
 using Common.Logging;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
@@ -106,11 +107,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
                 else {
                     if (userPassword.Length > 127) {
-                        userPassword = iText.IO.Util.JavaUtil.ArraysCopyOf(userPassword, 127);
+                        userPassword = JavaUtil.ArraysCopyOf(userPassword, 127);
                     }
                 }
                 if (ownerPassword.Length > 127) {
-                    ownerPassword = iText.IO.Util.JavaUtil.ArraysCopyOf(ownerPassword, 127);
+                    ownerPassword = JavaUtil.ArraysCopyOf(ownerPassword, 127);
                 }
                 // first 8 bytes are validation salt; second 8 bytes are key salt
                 byte[] userValAndKeySalt = IVGenerator.GetIV(16);
@@ -120,16 +121,16 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 byte[] hash;
                 // Algorithm 8.1
                 hash = ComputeHash(userPassword, userValAndKeySalt, 0, 8);
-                userKey = iText.IO.Util.JavaUtil.ArraysCopyOf(hash, 48);
-                System.Array.Copy(userValAndKeySalt, 0, userKey, 32, 16);
+                userKey = JavaUtil.ArraysCopyOf(hash, 48);
+                Array.Copy(userValAndKeySalt, 0, userKey, 32, 16);
                 // Algorithm 8.2
                 hash = ComputeHash(userPassword, userValAndKeySalt, 8, 8);
                 AESCipherCBCnoPad ac = new AESCipherCBCnoPad(true, hash);
                 ueKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 9.1
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 0, 8, userKey);
-                ownerKey = iText.IO.Util.JavaUtil.ArraysCopyOf(hash, 48);
-                System.Array.Copy(ownerValAndKeySalt, 0, ownerKey, 32, 16);
+                ownerKey = JavaUtil.ArraysCopyOf(hash, 48);
+                Array.Copy(ownerValAndKeySalt, 0, ownerKey, 32, 16);
                 // Algorithm 9.2
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 8, 8, userKey);
                 ac = new AESCipherCBCnoPad(true, hash);
@@ -199,7 +200,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
                 else {
                     if (password.Length > 127) {
-                        password = iText.IO.Util.JavaUtil.ArraysCopyOf(password, 127);
+                        password = JavaUtil.ArraysCopyOf(password, 127);
                     }
                 }
                 isPdf2 = encryptionDictionary.GetAsNumber(PdfName.R).GetValue() == 6;
@@ -261,7 +262,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
-            IDigest mdSha256 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
+            IDigest mdSha256 = DigestUtilities.GetDigest("SHA-256");
             mdSha256.Update(password);
             mdSha256.Update(salt, saltOffset, saltLen);
             if (userKey != null) {
@@ -270,8 +271,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] k = mdSha256.Digest();
             if (isPdf2) {
                 // See 7.6.4.3.3 "Algorithm 2.B"
-                IDigest mdSha384 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-384");
-                IDigest mdSha512 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-512");
+                IDigest mdSha384 = DigestUtilities.GetDigest("SHA-384");
+                IDigest mdSha512 = DigestUtilities.GetDigest("SHA-512");
                 int userKeyLen = userKey != null ? userKey.Length : 0;
                 int passAndUserKeyLen = password.Length + userKeyLen;
                 // k1 repetition length
@@ -281,21 +282,21 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     // a)
                     k1RepLen = passAndUserKeyLen + k.Length;
                     byte[] k1 = new byte[k1RepLen * 64];
-                    System.Array.Copy(password, 0, k1, 0, password.Length);
-                    System.Array.Copy(k, 0, k1, password.Length, k.Length);
+                    Array.Copy(password, 0, k1, 0, password.Length);
+                    Array.Copy(k, 0, k1, password.Length, k.Length);
                     if (userKey != null) {
-                        System.Array.Copy(userKey, 0, k1, password.Length + k.Length, userKeyLen);
+                        Array.Copy(userKey, 0, k1, password.Length + k.Length, userKeyLen);
                     }
                     for (int i = 1; i < 64; ++i) {
-                        System.Array.Copy(k1, 0, k1, k1RepLen * i, k1RepLen);
+                        Array.Copy(k1, 0, k1, k1RepLen * i, k1RepLen);
                     }
                     // b)
-                    AESCipherCBCnoPad cipher = new AESCipherCBCnoPad(true, iText.IO.Util.JavaUtil.ArraysCopyOf(k, 16), iText.IO.Util.JavaUtil.ArraysCopyOfRange
+                    AESCipherCBCnoPad cipher = new AESCipherCBCnoPad(true, JavaUtil.ArraysCopyOf(k, 16), JavaUtil.ArraysCopyOfRange
                         (k, 16, 32));
                     byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
                     // c)
                     IDigest md = null;
-                    BigInteger i_1 = new BigInteger(1, iText.IO.Util.JavaUtil.ArraysCopyOf(e, 16));
+                    BigInteger i_1 = new BigInteger(1, JavaUtil.ArraysCopyOf(e, 16));
                     int remainder = i_1.Remainder(BigInteger.ValueOf(3)).IntValue;
                     switch (remainder) {
                         case 0: {
@@ -325,7 +326,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         }
                     }
                 }
-                k = k.Length == 32 ? k : iText.IO.Util.JavaUtil.ArraysCopyOf(k, 32);
+                k = k.Length == 32 ? k : JavaUtil.ArraysCopyOf(k, 32);
             }
             return k;
         }

@@ -1031,7 +1031,7 @@ namespace iText.Kernel.Pdf {
             catch (iText.IO.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual("invalid.afm.or.pfm.font.file", message);
+            NUnit.Framework.Assert.AreEqual("Invalid afm or pfm font file.", message);
         }
 
         /// <exception cref="System.IO.IOException"/>

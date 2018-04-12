@@ -318,7 +318,7 @@ namespace iText.Forms.Xfa
 		/// <returns>the complete name or <CODE>null</CODE> if not found</returns>
 		public virtual String FindFieldName(String name)
 		{
-			if (acroFieldsSom == null && xfaPresent)
+            if (acroFieldsSom == null && xfaPresent)
 			{
 				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName

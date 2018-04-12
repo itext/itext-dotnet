@@ -49,10 +49,12 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -155,7 +157,7 @@ namespace iText.Signatures {
                         foreach (byte[] cim in cims) {
                             bool dup = false;
                             foreach (byte[] b in vd.crls) {
-                                if (iText.IO.Util.JavaUtil.ArraysEquals(b, cim)) {
+                                if (JavaUtil.ArraysEquals(b, cim)) {
                                     dup = true;
                                     break;
                                 }
@@ -261,7 +263,7 @@ namespace iText.Signatures {
 
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         private static byte[] HashBytesSha1(byte[] b) {
-            IDigest sh = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA1");
+            IDigest sh = DigestUtilities.GetDigest("SHA1");
             return sh.Digest(b);
         }
 

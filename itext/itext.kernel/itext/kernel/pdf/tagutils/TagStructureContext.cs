@@ -806,8 +806,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 String nsName = @namespace.GetNamespaceName();
                 PdfIndirectReference @ref = @namespace.GetPdfObject().GetIndirectReference();
                 if (@ref != null) {
-                    nsName = nsName + " (" + iText.IO.Util.JavaUtil.IntegerToString(@ref.GetObjNumber()) + " " + iText.IO.Util.JavaUtil.IntegerToString
-                        (@ref.GetGenNumber()) + " obj)";
+                    nsName = nsName + " (" + JavaUtil.IntegerToString(@ref.GetObjNumber()) + " " + JavaUtil.IntegerToString(@ref
+                        .GetGenNumber()) + " obj)";
                 }
                 return String.Format(withNsEx, role, nsName);
             }

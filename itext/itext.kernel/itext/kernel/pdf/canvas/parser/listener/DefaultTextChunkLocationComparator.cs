@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     internal class DefaultTextChunkLocationComparator : IComparer<ITextChunkLocation> {
@@ -60,8 +61,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
             // not really needed, but just in case
             int result;
-            result = iText.IO.Util.JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude()
-                );
+            result = JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude());
             if (result != 0) {
                 return result;
             }
@@ -69,8 +69,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             if (distPerpendicularDiff != 0) {
                 return distPerpendicularDiff;
             }
-            return leftToRight ? iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelStart(), second.DistParallelStart
-                ()) : -iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelEnd(), second.DistParallelEnd());
+            return leftToRight ? JavaUtil.FloatCompare(first.DistParallelStart(), second.DistParallelStart()) : -JavaUtil.FloatCompare
+                (first.DistParallelEnd(), second.DistParallelEnd());
         }
     }
 }

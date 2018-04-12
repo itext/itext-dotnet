@@ -132,5 +132,14 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report01.xml", destinationFolder
                  + "simple_pdf.report.xml"), "CompareTool report differs from the reference one");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void DifferentProducerTest() {
+            String expectedMessage = "Document info fail. Expected: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (iText Software; licensed version)\", actual: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (AGPL-version)\"";
+            String licensed = sourceFolder + "producerLicensed.pdf";
+            String agpl = sourceFolder + "producerAGPL.pdf";
+            NUnit.Framework.Assert.AreEqual(expectedMessage, new CompareTool().CompareDocumentInfo(agpl, licensed));
+        }
     }
 }

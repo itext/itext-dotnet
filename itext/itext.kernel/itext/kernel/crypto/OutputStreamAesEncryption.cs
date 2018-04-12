@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
 using iText.Kernel;
 
@@ -55,7 +56,7 @@ namespace iText.Kernel.Crypto {
             : base(@out) {
             byte[] iv = IVGenerator.GetIV();
             byte[] nkey = new byte[len];
-            System.Array.Copy(key, off, nkey, 0, len);
+            Array.Copy(key, off, nkey, 0, len);
             cipher = new AESCipher(true, nkey, iv);
             try {
                 Write(iv);

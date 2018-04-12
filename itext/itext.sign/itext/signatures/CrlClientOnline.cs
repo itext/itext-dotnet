@@ -87,8 +87,12 @@ namespace iText.Signatures {
             for (int i = 0; i < chain.Length; i++) {
                 X509Certificate cert = (X509Certificate)chain[i];
                 LOGGER.Info("Checking certificate: " + cert.SubjectDN);
+                String url = null;
                 try {
-                    AddUrl(CertificateUtil.GetCRLURL(cert));
+                    url = CertificateUtil.GetCRLURL(cert);
+                    if (url != null) {
+                        AddUrl(url);
+                    }
                 }
                 catch (CertificateParsingException) {
                     LOGGER.Info("Skipped CRL url (certificate could not be parsed)");

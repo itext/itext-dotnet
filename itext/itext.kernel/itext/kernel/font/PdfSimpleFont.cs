@@ -121,7 +121,7 @@ namespace iText.Kernel.Font {
                         processed++;
                     }
                     else {
-                        if (glyph == null && TextUtil.IsWhitespaceOrNonPrintable((int)text[i])) {
+                        if (glyph == null && iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable((int)text[i])) {
                             processed++;
                         }
                         else {
@@ -156,7 +156,7 @@ namespace iText.Kernel.Font {
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.
-            return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
+            return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
         public virtual FontEncoding GetFontEncoding() {
@@ -254,7 +254,7 @@ namespace iText.Kernel.Font {
                 Glyph glyph = null;
                 if (toUnicode != null && toUnicode.Lookup(code) != null && (glyph = fontProgram.GetGlyphByCode(code)) != null
                     ) {
-                    if (!iText.IO.Util.JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
+                    if (!JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
                         // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
                         glyph = new Glyph(glyph);
                         glyph.SetChars(toUnicode.Lookup(code));

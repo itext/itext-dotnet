@@ -130,16 +130,53 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void DrawBorder(DrawContext drawContext) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                base.DrawBorder(drawContext);
+            }
         }
 
         // Do nothing here. Border drawing for cells is done on TableRenderer.
         protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                base.ApplyBorderBox(rect, borders, reverse);
+            }
             // Do nothing here. Borders are processed on TableRenderer level.
             return rect;
         }
 
         protected internal override Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
-            // Do nothing here. Margins shouldn't be processed on cells.
+            // If borders are separated, process border's spacing here.
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                ApplySpacings(rect, reverse);
+            }
+            return rect;
+        }
+
+        protected internal virtual Rectangle ApplySpacings(Rectangle rect, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                float? verticalBorderSpacing = this.parent.GetProperty<float?>(Property.VERTICAL_BORDER_SPACING);
+                float? horizontalBorderSpacing = this.parent.GetProperty<float?>(Property.HORIZONTAL_BORDER_SPACING);
+                float[] cellSpacings = new float[4];
+                for (int i = 0; i < cellSpacings.Length; i++) {
+                    cellSpacings[i] = 0 == i % 2 ? null != verticalBorderSpacing ? (float)verticalBorderSpacing : 0f : null !=
+                         horizontalBorderSpacing ? (float)horizontalBorderSpacing : 0f;
+                }
+                ApplySpacings(rect, cellSpacings, reverse);
+            }
+            // Do nothing here. Spacings are meaningless if borders are collapsed.
+            return rect;
+        }
+
+        protected internal virtual Rectangle ApplySpacings(Rectangle rect, float[] spacings, bool reverse) {
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
+                BORDER_COLLAPSE))) {
+                rect.ApplyMargins(spacings[0] / 2, spacings[1] / 2, spacings[2] / 2, spacings[3] / 2, reverse);
+            }
+            // Do nothing here. Spacings are meaningless if borders are collapsed.
             return rect;
         }
 

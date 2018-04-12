@@ -54,5 +54,38 @@ namespace iText.Kernel.Pdf {
             PdfName name2 = new PdfName(str2);
             NUnit.Framework.Assert.AreEqual(str2, CreateStringByEscaped(name2.GetInternalContent()));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicCompareToTest() {
+            // /#C3#9Cberschrift_1
+            byte[] name1Content = new byte[] { 35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 105, 102, 116, 
+                95, 49 };
+            // /TOC-1
+            byte[] name2Content = new byte[] { 84, 79, 67, 45, 49 };
+            // /NormalParagraphStyle
+            byte[] name3Content = new byte[] { 78, 111, 114, 109, 97, 108, 80, 97, 114, 97, 103, 114, 97, 112, 104, 83
+                , 116, 121, 108, 101 };
+            // /#C3#9Cberschrift_1, Ãberschrift_1
+            PdfName name1 = new PdfName(name1Content);
+            PdfName name1ContentOnly = new PdfName(name1Content);
+            // /TOC-1, TOC-1
+            PdfName name2 = new PdfName(name2Content);
+            // /NormalParagraphStyle, NormalParagraphStyle
+            PdfName name3 = new PdfName(name3Content);
+            name1.GenerateValue();
+            name2.GenerateValue();
+            int oneToTwo = name1.CompareTo(name2);
+            int twoToOne = name2.CompareTo(name1);
+            int oneToThree = name1.CompareTo(name3);
+            int twoToThree = name2.CompareTo(name3);
+            int oneToOneContent = name1.CompareTo(name1ContentOnly);
+            int oneContentToTwo = name1ContentOnly.CompareTo(name2);
+            double delta = 1e-8;
+            NUnit.Framework.Assert.AreEqual(Math.Sign(oneToTwo), -Math.Sign(twoToOne), delta);
+            NUnit.Framework.Assert.AreEqual(Math.Sign(oneToTwo), Math.Sign(twoToThree), delta);
+            NUnit.Framework.Assert.AreEqual(Math.Sign(oneToTwo), Math.Sign(oneToThree), delta);
+            NUnit.Framework.Assert.AreEqual(oneToOneContent, 0);
+            NUnit.Framework.Assert.AreEqual(Math.Sign(oneToTwo), Math.Sign(oneContentToTwo), delta);
+        }
     }
 }

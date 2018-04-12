@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Text;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -197,6 +198,79 @@ namespace iText.Layout {
             }
             div.SetKeepTogether(true);
             doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherDefaultTest01() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherDefaultTest01.pdf";
+            String outFile = destinationFolder + "keepTogetherDefaultTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            Div div = new KeepTogetherTest.KeepTogetherDiv();
+            doc.Add(new Paragraph("first string"));
+            for (int i = 0; i < 130; i++) {
+                div.Add(new Paragraph("String number " + i));
+            }
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        private class KeepTogetherDiv : Div {
+            public override T1 GetDefaultProperty<T1>(int property) {
+                if (property == Property.KEEP_TOGETHER) {
+                    return (T1)(Object)true;
+                }
+                return base.GetDefaultProperty<T1>(property);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1837: NPE")]
+        public virtual void KeepTogetherInlineDiv01() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherInlineDiv01.pdf";
+            String outFile = destinationFolder + "keepTogetherInlineDiv01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("first string"));
+            Div div = new Div().SetWidth(200);
+            for (int i = 0; i < 130; i++) {
+                div.Add(new Paragraph("Part of inline div; string number " + i));
+            }
+            div.SetKeepTogether(true);
+            doc.Add(new Paragraph().Add(div));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherInlineDiv02() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherInlineDiv02.pdf";
+            String outFile = destinationFolder + "keepTogetherInlineDiv02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("first string"));
+            Div div = new Div().SetWidth(200);
+            StringBuilder buffer = new StringBuilder();
+            for (int i = 0; i < 130; i++) {
+                buffer.Append("Part #" + i + " of inline div");
+            }
+            div.Add(new Paragraph(buffer.ToString()));
+            div.SetKeepTogether(true);
+            doc.Add(new Paragraph().Add(div));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));

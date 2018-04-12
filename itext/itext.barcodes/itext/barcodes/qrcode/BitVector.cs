@@ -211,7 +211,7 @@ namespace iText.Barcodes.Qrcode {
         private void AppendByte(int value) {
             if ((sizeInBits >> 3) == array.Length) {
                 byte[] newArray = new byte[(array.Length << 1)];
-                System.Array.Copy(array, 0, newArray, 0, array.Length);
+                Array.Copy(array, 0, newArray, 0, array.Length);
                 array = newArray;
             }
             array[sizeInBits >> 3] = (byte)value;

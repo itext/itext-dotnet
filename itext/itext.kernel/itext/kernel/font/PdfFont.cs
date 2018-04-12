@@ -203,8 +203,8 @@ namespace iText.Kernel.Font {
             int total = 0;
             for (int i = 0; i < text.Length; i++) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, i)) {
-                    ch = TextUtil.ConvertToUtf32(text, i);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, i)) {
+                    ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, i);
                     i++;
                 }
                 else {
@@ -251,8 +251,8 @@ namespace iText.Kernel.Font {
             int min = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, k)) {
-                    ch = TextUtil.ConvertToUtf32(text, k);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                    ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                     k++;
                 }
                 else {
@@ -317,8 +317,8 @@ namespace iText.Kernel.Font {
             int max = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, k)) {
-                    ch = TextUtil.ConvertToUtf32(text, k);
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
+                    ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                     k++;
                 }
                 else {
@@ -481,7 +481,7 @@ namespace iText.Kernel.Font {
             if (isSubset && isEmbedded) {
                 StringBuilder s = new StringBuilder(fontName.Length + 7);
                 for (int k = 0; k < 6; ++k) {
-                    s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                    s.Append((char)(JavaUtil.Random() * 26 + 'A'));
                 }
                 return s.Append('+').Append(fontName).ToString();
             }

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -1221,8 +1222,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class SetLineDashPatternOperator : IContentOperator {
             /// <summary><inheritDoc/></summary>
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
-                processor.GetGraphicsState().SetDashPattern(new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(operands[0], 
-                    operands[1])));
+                processor.GetGraphicsState().SetDashPattern(new PdfArray(JavaUtil.ArraysAsList(operands[0], operands[1])));
             }
         }
 

@@ -943,15 +943,90 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        /// <summary>Applies margins of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle margins will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether margins will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetMargins()"/>
+        public virtual Rectangle ApplyMargins(Rectangle rect, bool reverse) {
+            return this.ApplyMargins(rect, GetMargins(), reverse);
+        }
+
+        /// <summary>
+        /// Applies the border box of the renderer on the given rectangle
+        /// If the border of a certain side is null, the side will remain as it was.
+        /// </summary>
+        /// <param name="rect">a rectangle the border box will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether the border box will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetBorders()"/>
+        public virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse) {
+            Border[] borders = GetBorders();
+            return ApplyBorderBox(rect, borders, reverse);
+        }
+
+        /// <summary>Applies paddings of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetPaddings()"/>
+        public virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse) {
+            return ApplyPaddings(rect, GetPaddings(), reverse);
+        }
+
+        public virtual bool IsFirstOnRootArea() {
+            return IsFirstOnRootArea(false);
+        }
+
         protected internal virtual void ApplyDestinationsAndAnnotation(DrawContext drawContext) {
             ApplyDestination(drawContext.GetDocument());
             ApplyAction(drawContext.GetDocument());
             ApplyLinkAnnotation(drawContext.GetDocument());
         }
 
-        internal static bool IsBorderBoxSizing(IRenderer renderer) {
+        protected internal static bool IsBorderBoxSizing(IRenderer renderer) {
             BoxSizingPropertyValue? boxSizing = renderer.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING);
             return boxSizing != null && boxSizing.Equals(BoxSizingPropertyValue.BORDER_BOX);
+        }
+
+        protected internal virtual bool IsOverflowProperty(OverflowPropertyValue? equalsTo, int overflowProperty) {
+            return IsOverflowProperty(equalsTo, this.GetProperty<OverflowPropertyValue?>(overflowProperty));
+        }
+
+        protected internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, IRenderer renderer, int
+             overflowProperty) {
+            return IsOverflowProperty(equalsTo, renderer.GetProperty<OverflowPropertyValue?>(overflowProperty));
+        }
+
+        protected internal static bool IsOverflowProperty(OverflowPropertyValue? equalsTo, OverflowPropertyValue? 
+            rendererOverflowProperty) {
+            return equalsTo.Equals(rendererOverflowProperty) || equalsTo.Equals(OverflowPropertyValue.FIT) && rendererOverflowProperty
+                 == null;
+        }
+
+        protected internal static bool IsOverflowFit(OverflowPropertyValue? rendererOverflowProperty) {
+            return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
         }
 
         internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, IList<IRenderer> waitingDrawing
@@ -1105,7 +1180,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedWidthValue">element's new fixed content box width.</param>
-        internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
+        protected internal virtual void UpdateWidth(UnitValue updatedWidthValue) {
             if (updatedWidthValue.IsPointValue() && IsBorderBoxSizing(this)) {
                 updatedWidthValue.SetValue(updatedWidthValue.GetValue() + CalculatePaddingBorderWidth(this));
             }
@@ -1213,7 +1288,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedHeight">element's new fixed content box height, shall be not null.</param>
-        internal virtual void UpdateHeight(UnitValue updatedHeight) {
+        protected internal virtual void UpdateHeight(UnitValue updatedHeight) {
             if (IsBorderBoxSizing(this) && updatedHeight.IsPointValue()) {
                 updatedHeight.SetValue(updatedHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1274,7 +1349,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedMaxHeight">element's new content box max-height, shall be not null.</param>
-        internal virtual void UpdateMaxHeight(UnitValue updatedMaxHeight) {
+        protected internal virtual void UpdateMaxHeight(UnitValue updatedMaxHeight) {
             if (IsBorderBoxSizing(this) && updatedMaxHeight.IsPointValue()) {
                 updatedMaxHeight.SetValue(updatedMaxHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1326,7 +1401,7 @@ namespace iText.Layout.Renderer {
         /// property value.
         /// </remarks>
         /// <param name="updatedMinHeight">element's new content box min-height, shall be not null.</param>
-        internal virtual void UpdateMinHeight(UnitValue updatedMinHeight) {
+        protected internal virtual void UpdateMinHeight(UnitValue updatedMinHeight) {
             if (IsBorderBoxSizing(this) && updatedMinHeight.IsPointValue()) {
                 updatedMinHeight.SetValue(updatedMinHeight.GetValue() + CalculatePaddingBorderHeight(this));
             }
@@ -1346,7 +1421,9 @@ namespace iText.Layout.Renderer {
             }
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
-                    return baseValue * value.GetValue() / 100;
+                    // during mathematical operations the precision can be lost, so avoiding them if possible (100 / 100 == 1) is a good practice
+                    // TODO Maybe decrease the result value by AbstractRenderer.EPS ?
+                    return value.GetValue() != 100 ? baseValue * value.GetValue() / 100 : baseValue;
                 }
                 else {
                     System.Diagnostics.Debug.Assert(value.GetUnitType() == UnitValue.POINT);
@@ -1382,6 +1459,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float? GetLastYLineRecursively() {
+            if (!AllowLastYLineRecursiveExtraction()) {
+                return null;
+            }
             for (int i = childRenderers.Count - 1; i >= 0; i--) {
                 IRenderer child = childRenderers[i];
                 if (child is iText.Layout.Renderer.AbstractRenderer) {
@@ -1394,20 +1474,9 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        /// <summary>Applies margins of the renderer on the given rectangle</summary>
-        /// <param name="rect">a rectangle margins will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether margins will be applied
-        /// inside (in case of false) or outside (in case of true) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetMargins()"/>
-        protected internal virtual Rectangle ApplyMargins(Rectangle rect, bool reverse) {
-            return this.ApplyMargins(rect, GetMargins(), reverse);
+        protected internal virtual bool AllowLastYLineRecursiveExtraction() {
+            return !IsOverflowProperty(OverflowPropertyValue.HIDDEN, Property.OVERFLOW_X) && !IsOverflowProperty(OverflowPropertyValue
+                .HIDDEN, Property.OVERFLOW_Y);
         }
 
         /// <summary>Applies given margins on the given rectangle</summary>
@@ -1467,22 +1536,6 @@ namespace iText.Layout.Renderer {
             return GetPaddings(this);
         }
 
-        /// <summary>Applies paddings of the renderer on the given rectangle</summary>
-        /// <param name="rect">a rectangle paddings will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether paddings will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetPaddings()"/>
-        protected internal virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse) {
-            return ApplyPaddings(rect, GetPaddings(), reverse);
-        }
-
         /// <summary>Applies given paddings on the given rectangle</summary>
         /// <param name="rect">a rectangle paddings will be applied on.</param>
         /// <param name="paddings">the paddings to be applied on the given rectangle</param>
@@ -1518,26 +1571,6 @@ namespace iText.Layout.Renderer {
             }
             return rect.ApplyMargins(paddings[0].GetValue(), paddings[1].GetValue(), paddings[2].GetValue(), paddings[
                 3].GetValue(), reverse);
-        }
-
-        /// <summary>
-        /// Applies the border box of the renderer on the given rectangle
-        /// If the border of a certain side is null, the side will remain as it was.
-        /// </summary>
-        /// <param name="rect">a rectangle the border box will be applied on.</param>
-        /// <param name="reverse">
-        /// indicates whether the border box will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
-        /// of the renderer
-        /// </returns>
-        /// <seealso cref="GetBorders()"/>
-        protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse) {
-            Border[] borders = GetBorders();
-            return ApplyBorderBox(rect, borders, reverse);
         }
 
         /// <summary>Applies the given border box (borders) on the given rectangle</summary>
@@ -1695,81 +1728,87 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
              splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
-            //Update height related properties on split or overflow
+            UpdateHeightsOnSplit(occupiedArea.GetBBox().GetHeight(), wasHeightClipped, splitRenderer, overflowRenderer
+                , true);
+        }
+
+        internal virtual void UpdateHeightsOnSplit(float usedHeight, bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
+             splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer, bool enlargeOccupiedAreaOnHeightWasClipped
+            ) {
+            if (wasHeightClipped) {
+                // if height was clipped, max height exists and can be resolved
+                ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
+                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                if (enlargeOccupiedAreaOnHeightWasClipped) {
+                    float? maxHeight = RetrieveMaxHeight();
+                    splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - usedHeight).SetHeight((float)maxHeight);
+                }
+            }
+            if (overflowRenderer == null) {
+                return;
+            }
+            // Update height related properties on split or overflow
             float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
-            //For relative heights, we need the parent's resolved height declaration
-            if (HasProperty(Property.MAX_HEIGHT)) {
-                UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
+            // For relative heights, we need the parent's resolved height declaration
+            UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
+            if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {
                     float? maxHeight = RetrieveMaxHeight();
-                    UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - occupiedArea.GetBBox().GetHeight
-                        ()));
+                    UnitValue updateMaxHeight = UnitValue.CreatePointValue((float)(maxHeight - usedHeight));
                     overflowRenderer.UpdateMaxHeight(updateMaxHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
-                        //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
-                        //Fraction
+                        // Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
+                        // Fraction
                         float newFraction = maxHeightUV.GetValue() - currentOccupiedFraction;
-                        //Update
+                        // Update
                         overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
                     }
                 }
             }
-            //If parent has no resolved height, relative height declarations can be ignored
-            if (HasProperty(Property.MIN_HEIGHT)) {
-                UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+            // If parent has no resolved height, relative height declarations can be ignored
+            UnitValue minHeightUV = GetPropertyAsUnitValue(this, Property.MIN_HEIGHT);
+            if (minHeightUV != null) {
                 if (minHeightUV.IsPointValue()) {
                     float? minHeight = RetrieveMinHeight();
-                    UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - occupiedArea.GetBBox().GetHeight
-                        ()));
+                    UnitValue updateminHeight = UnitValue.CreatePointValue((float)(minHeight - usedHeight));
                     overflowRenderer.UpdateMinHeight(updateminHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
-                        //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
-                        //Fraction
+                        // Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
+                        // Fraction
                         float newFraction = minHeightUV.GetValue() - currentOccupiedFraction;
-                        //Update
+                        // Update
                         overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
                     }
                 }
             }
-            //If parent has no resolved height, relative height declarations can be ignored
-            if (HasProperty(Property.HEIGHT)) {
-                UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+            // If parent has no resolved height, relative height declarations can be ignored
+            UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+            if (heightUV != null) {
                 if (heightUV.IsPointValue()) {
                     float? height = RetrieveHeight();
-                    UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - occupiedArea.GetBBox().GetHeight()));
+                    UnitValue updateHeight = UnitValue.CreatePointValue((float)(height - usedHeight));
                     overflowRenderer.UpdateHeight(updateHeight);
                 }
                 else {
                     if (parentResolvedHeightPropertyValue != null) {
-                        //Calculate occupied fraction and update overflow renderer
-                        float currentOccupiedFraction = occupiedArea.GetBBox().GetHeight() / (float)parentResolvedHeightPropertyValue
-                             * 100;
-                        //Fraction
+                        // Calculate occupied fraction and update overflow renderer
+                        float currentOccupiedFraction = usedHeight / (float)parentResolvedHeightPropertyValue * 100;
+                        // Fraction
                         float newFraction = heightUV.GetValue() - currentOccupiedFraction;
-                        //Update
+                        // Update
                         overflowRenderer.UpdateMinHeight(UnitValue.CreatePercentValue(newFraction));
                     }
                 }
             }
-            //If parent has no resolved height, relative height declarations can be ignored
-            if (wasHeightClipped) {
-                //if height was clipped, max height exists and can be resolved
-                float? maxHeight = RetrieveMaxHeight();
-                ILog logger = LogManager.GetLogger(typeof(BlockRenderer));
-                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
-                    ((float)maxHeight);
-            }
         }
 
+        // If parent has no resolved height, relative height declarations can be ignored
         protected internal virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
@@ -1816,22 +1855,22 @@ namespace iText.Layout.Renderer {
         /// </returns>
         protected internal virtual bool IsFixedLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
         }
 
         protected internal virtual bool IsStaticLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);
-            return positioning == null || System.Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
+            return positioning == null || Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
         }
 
         protected internal virtual bool IsRelativePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
         }
 
         protected internal virtual bool IsAbsolutePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
-            return System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
+            return Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
         }
 
         protected internal virtual bool IsKeepTogether() {
@@ -1977,9 +2016,9 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual IList<Point> RectangleToPointsList(Rectangle rect) {
             IList<Point> points = new List<Point>();
-            points.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect
-                .GetRight(), rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect
-                .GetTop())));
+            points.AddAll(JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect.GetRight()
+                , rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect.GetTop(
+                ))));
             return points;
         }
 
@@ -2025,8 +2064,15 @@ namespace iText.Layout.Renderer {
             return value != null && value.IsPointValue();
         }
 
-        internal virtual bool IsFirstOnRootArea() {
-            return IsFirstOnRootArea(false);
+        /// <summary>Check if corresponding property has relative value.</summary>
+        /// <param name="property">
+        /// 
+        /// <see cref="iText.Layout.Properties.Property"/>
+        /// </param>
+        /// <returns>false if property value either null, or point, otherwise true.</returns>
+        protected internal virtual bool HasRelativeUnitValue(int property) {
+            UnitValue value = this.GetProperty<UnitValue>(property);
+            return value != null && value.IsPercentValue();
         }
 
         internal virtual bool IsFirstOnRootArea(bool checkRootAreaOnly) {
@@ -2038,8 +2084,13 @@ namespace iText.Layout.Renderer {
                     isFirstOnRootArea = ((RootRenderer)parent).currentArea.IsEmptyArea();
                 }
                 else {
-                    if (!checkRootAreaOnly) {
-                        isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                    if (parent.GetOccupiedArea() == null) {
+                        break;
+                    }
+                    else {
+                        if (!checkRootAreaOnly) {
+                            isFirstOnRootArea = parent.GetOccupiedArea().GetBBox().GetHeight() < EPS;
+                        }
                     }
                 }
                 ancestor = parent;
@@ -2149,6 +2200,28 @@ namespace iText.Layout.Renderer {
                 ());
         }
 
+        internal static Border[] GetBorders(IRenderer renderer) {
+            Border border = renderer.GetProperty<Border>(Property.BORDER);
+            Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
+            Border rightBorder = renderer.GetProperty<Border>(Property.BORDER_RIGHT);
+            Border bottomBorder = renderer.GetProperty<Border>(Property.BORDER_BOTTOM);
+            Border leftBorder = renderer.GetProperty<Border>(Property.BORDER_LEFT);
+            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP)) {
+                borders[0] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_RIGHT)) {
+                borders[1] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM)) {
+                borders[2] = border;
+            }
+            if (!HasOwnOrModelProperty(renderer, Property.BORDER_LEFT)) {
+                borders[3] = border;
+            }
+            return borders;
+        }
+
         internal virtual void ApplyAbsolutePositionIfNeeded(LayoutContext layoutContext) {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutContext is PositionedLayoutContext ? ((PositionedLayoutContext)layoutContext).
@@ -2164,8 +2237,8 @@ namespace iText.Layout.Renderer {
             float? bottom = GetPropertyAsFloat(childPositionedRenderer, Property.BOTTOM);
             childPositionedRenderer.SetParent(this);
             AdjustPositionedRendererLayoutBoxWidth(childPositionedRenderer, fullBbox, left, right);
-            if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property
-                .POSITION))) {
+            if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(childPositionedRenderer.GetProperty<int?>(Property.POSITION
+                ))) {
                 UpdateMinHeightForAbsolutelyPositionedRenderer(childPositionedRenderer, parentBbox, top, bottom);
             }
         }
@@ -2268,28 +2341,6 @@ namespace iText.Layout.Renderer {
             return new UnitValue[] { renderer.GetProperty<UnitValue>(Property.MARGIN_TOP), renderer.GetProperty<UnitValue
                 >(Property.MARGIN_RIGHT), renderer.GetProperty<UnitValue>(Property.MARGIN_BOTTOM), renderer.GetProperty
                 <UnitValue>(Property.MARGIN_LEFT) };
-        }
-
-        private static Border[] GetBorders(IRenderer renderer) {
-            Border border = renderer.GetProperty<Border>(Property.BORDER);
-            Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
-            Border rightBorder = renderer.GetProperty<Border>(Property.BORDER_RIGHT);
-            Border bottomBorder = renderer.GetProperty<Border>(Property.BORDER_BOTTOM);
-            Border leftBorder = renderer.GetProperty<Border>(Property.BORDER_LEFT);
-            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP)) {
-                borders[0] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_RIGHT)) {
-                borders[1] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM)) {
-                borders[2] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_LEFT)) {
-                borders[3] = border;
-            }
-            return borders;
         }
 
         private static BorderRadius[] GetBorderRadii(IRenderer renderer) {

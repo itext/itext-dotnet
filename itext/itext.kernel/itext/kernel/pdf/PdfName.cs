@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
@@ -273,6 +274,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BorderThickness = CreateDirectName("BorderThickness");
 
+        public static readonly iText.Kernel.Pdf.PdfName Both = CreateDirectName("Both");
+
         public static readonly iText.Kernel.Pdf.PdfName Bounds = CreateDirectName("Bounds");
 
         public static readonly iText.Kernel.Pdf.PdfName BS = CreateDirectName("BS");
@@ -376,6 +379,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName ColorSpace = CreateDirectName("ColorSpace");
 
         public static readonly iText.Kernel.Pdf.PdfName ColorTransform = CreateDirectName("ColorTransform");
+
+        public static readonly iText.Kernel.Pdf.PdfName Column = CreateDirectName("Column");
 
         public static readonly iText.Kernel.Pdf.PdfName Columns = CreateDirectName("Columns");
 
@@ -1354,6 +1359,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Rotate = CreateDirectName("Rotate");
 
+        public static readonly iText.Kernel.Pdf.PdfName Row = CreateDirectName("Row");
+
         public static readonly iText.Kernel.Pdf.PdfName Rows = CreateDirectName("Rows");
 
         public static readonly iText.Kernel.Pdf.PdfName RowSpan = CreateDirectName("RowSpan");
@@ -1835,17 +1842,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>Comparison between both values or, if one of the values is null, Comparison between contents. If one of the values and one of the contents are equal to null, generate values and compare those.
         ///     </returns>
         public virtual int CompareTo(iText.Kernel.Pdf.PdfName o) {
-            if (value != null && o.value != null) {
-                return string.CompareOrdinal(value, o.value);
-            }
-            else {
-                if (content != null && o.content != null) {
-                    return CompareContent(o);
-                }
-                else {
-                    return string.CompareOrdinal(GetValue(), o.GetValue());
-                }
-            }
+            return string.CompareOrdinal(GetValue(), o.GetValue());
         }
 
         public override bool Equals(Object o) {
@@ -1961,7 +1958,7 @@ namespace iText.Kernel.Pdf {
                             if (c < 16) {
                                 buf.Append('0');
                             }
-                            buf.Append(iText.IO.Util.JavaUtil.IntegerToHexString(c));
+                            buf.Append(JavaUtil.IntegerToHexString(c));
                         }
                         break;
                     }

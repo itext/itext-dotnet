@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -88,7 +89,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             try {
                 String errorID;
                 if (wmf.GetData() == null) {
-                    @is = iText.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
+                    @is = UrlUtil.OpenStream(wmf.GetUrl());
                     errorID = wmf.GetUrl().ToString();
                 }
                 else {
@@ -136,7 +137,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             Stream @is = null;
             try {
                 if (wmf.GetData() == null) {
-                    @is = iText.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
+                    @is = UrlUtil.OpenStream(wmf.GetUrl());
                 }
                 else {
                     @is = new MemoryStream(wmf.GetData());

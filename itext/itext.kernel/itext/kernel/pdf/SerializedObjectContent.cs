@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     internal class SerializedObjectContent {
@@ -54,7 +55,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object obj) {
-            return obj is iText.Kernel.Pdf.SerializedObjectContent && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
+            return obj is iText.Kernel.Pdf.SerializedObjectContent && GetHashCode() == obj.GetHashCode() && JavaUtil.ArraysEquals
                 (serializedContent, ((iText.Kernel.Pdf.SerializedObjectContent)obj).serializedContent);
         }
 

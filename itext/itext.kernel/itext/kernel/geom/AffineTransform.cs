@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
     public class AffineTransform {
@@ -667,6 +668,23 @@ namespace iText.Kernel.Geom {
         /// <exception cref="Java.Lang.CloneNotSupportedException"/>
         public virtual iText.Kernel.Geom.AffineTransform Clone() {
             return new iText.Kernel.Geom.AffineTransform(this);
+        }
+
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            iText.Kernel.Geom.AffineTransform that = (iText.Kernel.Geom.AffineTransform)o;
+            return JavaUtil.DoubleCompare(that.m00, m00) == 0 && JavaUtil.DoubleCompare(that.m10, m10) == 0 && JavaUtil.DoubleCompare
+                (that.m01, m01) == 0 && JavaUtil.DoubleCompare(that.m11, m11) == 0 && JavaUtil.DoubleCompare(that.m02, 
+                m02) == 0 && JavaUtil.DoubleCompare(that.m12, m12) == 0;
+        }
+
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode(m00, m10, m01, m11, m02, m12);
         }
     }
 }

@@ -275,7 +275,7 @@ namespace iText.Kernel.Font {
         public override void Flush() {
             EnsureUnderlyingObjectHasIndirectReference();
             if (((Type3Font)GetFontProgram()).GetNumberOfGlyphs() < 1) {
-                throw new PdfException("no.glyphs.defined.fo r.type3.font");
+                throw new PdfException("No glyphs defined for type3 font.");
             }
             PdfDictionary charProcs = new PdfDictionary();
             for (int i = 0; i < 256; i++) {

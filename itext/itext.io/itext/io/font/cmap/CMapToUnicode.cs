@@ -67,7 +67,7 @@ namespace iText.IO.Font.Cmap {
         public static iText.IO.Font.Cmap.CMapToUnicode GetIdentity() {
             iText.IO.Font.Cmap.CMapToUnicode uni = new iText.IO.Font.Cmap.CMapToUnicode();
             for (int i = 0; i < 65537; i++) {
-                uni.AddChar(i, TextUtil.ConvertFromUtf32(i));
+                uni.AddChar(i, iText.IO.Util.TextUtil.ConvertFromUtf32(i));
             }
             return uni;
         }

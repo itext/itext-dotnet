@@ -88,7 +88,7 @@ namespace iText.Barcodes {
             bars[bars.Length - 1] = 1;
             for (int k = 0; k < text.Length; ++k) {
                 int c = text[k] - '0';
-                System.Array.Copy(BARS[c], 0, bars, k * 5 + 1, 5);
+                Array.Copy(BARS[c], 0, bars, k * 5 + 1, 5);
             }
             return bars;
         }

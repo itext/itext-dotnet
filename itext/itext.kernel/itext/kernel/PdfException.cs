@@ -162,7 +162,10 @@ namespace iText.Kernel {
 
         public const String CannotRemoveTagBecauseItsParentIsFlushed = "Cannot remove tag, because its parent is flushed.";
 
+        [Obsolete]
         public const String CannotSetDataToPdfstreamWhichWasCreatedByInputStream = "Cannot set data to PdfStream which was created by InputStream.";
+
+        public const String CannotSetDataToPdfStreamWhichWasCreatedByInputStream = "Cannot set data to PdfStream which was created by InputStream.";
 
         public const String CannotSetEncryptedPayloadToDocumentOpenedInReadingMode = "Cannot set encrypted payload to a document opened in read only mode.";
 
@@ -193,6 +196,8 @@ namespace iText.Kernel {
         public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "Content stream must not invoke operators that specify colors or other color related parameters in the graphics state.";
 
         public const String DecodeParameterType1IsNotSupported = "Decode parameter type {0} is not supported.";
+
+        public const String DefaultAppearanceNotFound = "DefaultAppearance is required but not found";
 
         public const String DefaultcryptfilterNotFoundEncryption = "/DefaultCryptFilter not found (encryption).";
 

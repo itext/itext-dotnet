@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
@@ -69,25 +70,24 @@ namespace iText.Kernel.Pdf.Tagging {
 
         static StandardNamespaces() {
             // other namespaces
-            STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<String>(iText.IO.Util.JavaUtil.ArraysAsList(StandardRoles.DOCUMENT
-                , StandardRoles.PART, StandardRoles.DIV, StandardRoles.P, StandardRoles.H, StandardRoles.H1, StandardRoles
-                .H2, StandardRoles.H3, StandardRoles.H4, StandardRoles.H5, StandardRoles.H6, StandardRoles.LBL, StandardRoles
+            STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<String>(JavaUtil.ArraysAsList(StandardRoles.DOCUMENT, StandardRoles
+                .PART, StandardRoles.DIV, StandardRoles.P, StandardRoles.H, StandardRoles.H1, StandardRoles.H2, StandardRoles
+                .H3, StandardRoles.H4, StandardRoles.H5, StandardRoles.H6, StandardRoles.LBL, StandardRoles.SPAN, StandardRoles
+                .LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles.RUBY, StandardRoles.RB, StandardRoles.RT
+                , StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, StandardRoles.WP, StandardRoles.L, StandardRoles
+                .LI, StandardRoles.LBODY, StandardRoles.TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles.TD, StandardRoles
+                .THEAD, StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles.FIGURE, StandardRoles
+                .FORMULA, StandardRoles.SECT, StandardRoles.ART, StandardRoles.BLOCKQUOTE, StandardRoles.TOC, StandardRoles
+                .TOCI, StandardRoles.INDEX, StandardRoles.NONSTRUCT, StandardRoles.PRIVATE, StandardRoles.QUOTE, StandardRoles
+                .NOTE, StandardRoles.REFERENCE, StandardRoles.BIBENTRY, StandardRoles.CODE));
+            STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<String>(JavaUtil.ArraysAsList(StandardRoles.DOCUMENT, StandardRoles
+                .DOCUMENTFRAGMENT, StandardRoles.PART, StandardRoles.DIV, StandardRoles.ASIDE, StandardRoles.TITLE, StandardRoles
+                .SUB, StandardRoles.P, StandardRoles.H, StandardRoles.LBL, StandardRoles.EM, StandardRoles.STRONG, StandardRoles
                 .SPAN, StandardRoles.LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles.RUBY, StandardRoles.
                 RB, StandardRoles.RT, StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, StandardRoles.WP, StandardRoles
-                .L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles.TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles
-                .TD, StandardRoles.THEAD, StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles
-                .FIGURE, StandardRoles.FORMULA, StandardRoles.SECT, StandardRoles.ART, StandardRoles.BLOCKQUOTE, StandardRoles
-                .TOC, StandardRoles.TOCI, StandardRoles.INDEX, StandardRoles.NONSTRUCT, StandardRoles.PRIVATE, StandardRoles
-                .QUOTE, StandardRoles.NOTE, StandardRoles.REFERENCE, StandardRoles.BIBENTRY, StandardRoles.CODE));
-            STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<String>(iText.IO.Util.JavaUtil.ArraysAsList(StandardRoles.DOCUMENT
-                , StandardRoles.DOCUMENTFRAGMENT, StandardRoles.PART, StandardRoles.DIV, StandardRoles.ASIDE, StandardRoles
-                .TITLE, StandardRoles.SUB, StandardRoles.P, StandardRoles.H, StandardRoles.LBL, StandardRoles.EM, StandardRoles
-                .STRONG, StandardRoles.SPAN, StandardRoles.LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles
-                .RUBY, StandardRoles.RB, StandardRoles.RT, StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, 
-                StandardRoles.WP, StandardRoles.FENOTE, StandardRoles.L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles
-                .TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles.TD, StandardRoles.THEAD, StandardRoles.TBODY
-                , StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles.FIGURE, StandardRoles.FORMULA, StandardRoles
-                .ARTIFACT));
+                .FENOTE, StandardRoles.L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles.TABLE, StandardRoles.TR
+                , StandardRoles.TH, StandardRoles.TD, StandardRoles.THEAD, StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles
+                .CAPTION, StandardRoles.FIGURE, StandardRoles.FORMULA, StandardRoles.ARTIFACT));
         }
 
         // Hn, this type is handled in roleBelongsToStandardNamespace method
@@ -158,7 +158,7 @@ namespace iText.Kernel.Pdf.Tagging {
         public static bool IsHnRole(String role) {
             if (role.StartsWith("H") && role.Length > 1 && role[1] != '0') {
                 try {
-                    return System.Convert.ToInt32(role.JSubstring(1, role.Length)) > 0;
+                    return Convert.ToInt32(role.JSubstring(1, role.Length)) > 0;
                 }
                 catch (Exception) {
                 }

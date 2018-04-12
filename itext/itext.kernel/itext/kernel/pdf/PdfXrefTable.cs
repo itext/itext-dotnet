@@ -260,11 +260,9 @@ namespace iText.Kernel.Pdf {
                     xrefStream.Put(PdfName.Encrypt, crypto);
                 }
                 xrefStream.Put(PdfName.Size, new PdfNumber(this.Size()));
-                List<PdfObject> tmpArray = new List<PdfObject>(3);
-                tmpArray.Add(new PdfNumber(1));
-                tmpArray.Add(new PdfNumber(4));
-                tmpArray.Add(new PdfNumber(2));
-                xrefStream.Put(PdfName.W, new PdfArray(tmpArray));
+                int offsetSize = GetOffsetSize(Math.Max(startxref, Size()));
+                xrefStream.Put(PdfName.W, new PdfArray(JavaUtil.ArraysAsList((PdfObject)new PdfNumber(1), new PdfNumber(offsetSize
+                    ), new PdfNumber(2))));
                 xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
                 xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
                 PdfArray index = new PdfArray();
@@ -284,21 +282,19 @@ namespace iText.Kernel.Pdf {
                         PdfIndirectReference reference = xrefTable.Get(i);
                         if (reference.IsFree()) {
                             xrefStream.GetOutputStream().Write(0);
-                            System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
-                            xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
-                            xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
+                            xrefStream.GetOutputStream().Write(reference.GetOffset(), offsetSize);
+                            xrefStream.GetOutputStream().Write(reference.GetGenNumber(), 2);
                         }
                         else {
                             if (reference.GetObjStreamNumber() == 0) {
                                 xrefStream.GetOutputStream().Write(1);
-                                System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
-                                xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
-                                xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
+                                xrefStream.GetOutputStream().Write(reference.GetOffset(), offsetSize);
+                                xrefStream.GetOutputStream().Write(reference.GetGenNumber(), 2);
                             }
                             else {
                                 xrefStream.GetOutputStream().Write(2);
-                                xrefStream.GetOutputStream().Write(IntToBytes(reference.GetObjStreamNumber()));
-                                xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetIndex()));
+                                xrefStream.GetOutputStream().Write(reference.GetObjStreamNumber(), offsetSize);
+                                xrefStream.GetOutputStream().Write(reference.GetIndex(), 2);
                             }
                         }
                     }
@@ -359,6 +355,23 @@ namespace iText.Kernel.Pdf {
                 xref[i] = null;
             }
             count = 1;
+        }
+
+        /// <summary>Gets size of the offset.</summary>
+        /// <remarks>Gets size of the offset. Max size is 2^40, i.e. 1 Tb.</remarks>
+        private int GetOffsetSize(long startxref) {
+            System.Diagnostics.Debug.Assert(startxref >= 0 && startxref < (1L << 40));
+            //initial size = 5 bytes. It is 1 Tb. Shall be enough.
+            int size = 5;
+            long mask = unchecked((long)(0xff00000000L));
+            for (; size > 1; size--) {
+                if ((mask & startxref) != 0) {
+                    break;
+                }
+                // there is no need to use >>> because mask is positive
+                mask >>= 8;
+            }
+            return size;
         }
 
         /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
@@ -457,17 +470,8 @@ namespace iText.Kernel.Pdf {
 
         private void ExtendXref(int capacity) {
             PdfIndirectReference[] newXref = new PdfIndirectReference[capacity];
-            System.Array.Copy(xref, 0, newXref, 0, xref.Length);
+            Array.Copy(xref, 0, newXref, 0, xref.Length);
             xref = newXref;
-        }
-
-        private static byte[] ShortToBytes(int n) {
-            return new byte[] { (byte)((n >> 8) & 0xFF), (byte)(n & 0xFF) };
-        }
-
-        private static byte[] IntToBytes(int n) {
-            return new byte[] { (byte)((n >> 24) & 0xFF), (byte)((n >> 16) & 0xFF), (byte)((n >> 8) & 0xFF), (byte)(n 
-                & 0xFF) };
         }
     }
 }

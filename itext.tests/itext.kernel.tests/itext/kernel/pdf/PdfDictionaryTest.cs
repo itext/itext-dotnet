@@ -192,5 +192,66 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(dict.Values().Contains(dict.Get(new PdfName("3")).GetIndirectReference()));
             NUnit.Framework.Assert.IsTrue(dict.Values().Contains(dict.Get(new PdfName("4")).GetIndirectReference()));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TestPdfNamesFetching() {
+            byte[][] namesBytes = new byte[][] { new byte[] { 35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 
+                105, 102, 116, 95, 49 }, new byte[] { 35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 105, 102
+                , 116, 95, 50 }, new byte[] { 65, 114, 116, 105, 99, 108, 101 }, new byte[] { 66, 105, 108, 100, 117, 
+                110, 116, 101, 114, 115, 99, 104, 114, 105, 102, 116 }, new byte[] { 78, 111, 114, 109, 97, 108, 80, 97
+                , 114, 97, 103, 114, 97, 112, 104, 83, 116, 121, 108, 101 }, new byte[] { 83, 116, 111, 114, 121 }, new 
+                byte[] { 84, 79, 67, 45, 49 }, new byte[] { 84, 79, 67, 45, 50, 45, 50 }, new byte[] { 84, 79, 67, 45, 
+                72, 101, 97, 100 }, new byte[] { 84, 97, 98, 101, 108, 108, 101 }, new byte[] { 84, 97, 98, 101, 108, 
+                108, 101, 95, 72, 101, 97, 100 }, new byte[] { 84, 97, 98, 101, 108, 108, 101, 95, 102, 101, 116, 116 }
+                , new byte[] { 84, 101, 120, 116, 95, 73, 78, 70, 79 }, new byte[] { 84, 101, 120, 116, 95, 73, 110, 102
+                , 111, 95, 72, 101, 97, 100 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 
+                101, 114 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 101, 114, 45, 69, 114
+                , 115, 116, 122, 101, 105, 108, 101 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114
+                , 112, 101, 114, 95, 66, 97, 99, 107 }, new byte[] { 95, 78, 111, 95, 112, 97, 114, 97, 103, 114, 97, 
+                112, 104, 95, 115, 116, 121, 108, 101, 95 } };
+            // /#C3#9Cberschrift_1
+            // /#C3#9Cberschrift_2
+            // /Article
+            // /Bildunterschrift
+            // /NormalParagraphStyle
+            // /Story
+            // /TOC-1
+            // /TOC-2-2
+            // /TOC-Head
+            // /Tabelle
+            // /Tabelle_Head
+            // /Tabelle_fett
+            // /Text_INFO
+            // /Text_Info_Head
+            // /Textk#C3#B6rper
+            // /Textk#C3#B6rper-Erstzeile
+            // /Textk#C3#B6rper_Back
+            // /_No_paragraph_style_
+            bool[] haveValue = new bool[] { true, true, false, true, true, true, false, false, false, false, false, false
+                , false, false, false, false, false, false };
+            IList<PdfName> names = new List<PdfName>();
+            for (int i = 0; i < namesBytes.Length; i++) {
+                byte[] b = namesBytes[i];
+                PdfName n = new PdfName(b);
+                names.Add(n);
+                if (haveValue[i]) {
+                    n.GenerateValue();
+                }
+            }
+            PdfDictionary dict = new PdfDictionary();
+            foreach (PdfName name in names) {
+                dict.Put(name, new PdfName("dummy"));
+            }
+            PdfName expectedToContain = new PdfName("Article");
+            bool found = false;
+            foreach (PdfName pdfName in dict.KeySet()) {
+                found = pdfName.Equals(expectedToContain);
+                if (found) {
+                    break;
+                }
+            }
+            NUnit.Framework.Assert.IsTrue(found);
+            NUnit.Framework.Assert.IsTrue(dict.ContainsKey(expectedToContain));
+        }
     }
 }

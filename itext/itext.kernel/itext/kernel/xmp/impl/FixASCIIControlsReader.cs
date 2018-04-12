@@ -137,7 +137,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                     else {
                         if ('0' <= ch && ch <= '9') {
-                            control = iText.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                            control = JavaUtil.CharacterDigit(ch, 10);
                             digits = 1;
                             state = STATE_DIG1;
                         }
@@ -150,7 +150,7 @@ namespace iText.Kernel.XMP.Impl {
 
                 case STATE_DIG1: {
                     if ('0' <= ch && ch <= '9') {
-                        control = control * 10 + iText.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                        control = control * 10 + JavaUtil.CharacterDigit(ch, 10);
                         digits++;
                         if (digits <= 5) {
                             state = STATE_DIG1;
@@ -174,7 +174,7 @@ namespace iText.Kernel.XMP.Impl {
 
                 case STATE_HEX: {
                     if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F')) {
-                        control = control * 16 + iText.IO.Util.JavaUtil.CharacterDigit(ch, 16);
+                        control = control * 16 + JavaUtil.CharacterDigit(ch, 16);
                         digits++;
                         if (digits <= 4) {
                             state = STATE_HEX;

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Util;
 
 namespace iText.IO.Source {
     /// <summary>Class that is used to unify reading from random access files and arrays.</summary>
@@ -560,23 +561,23 @@ namespace iText.IO.Source {
         /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual float ReadFloat() {
-            return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
+            return JavaUtil.IntBitsToFloat(ReadInt());
         }
 
         /// <exception cref="System.IO.IOException"/>
         public float ReadFloatLE() {
-            return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
+            return JavaUtil.IntBitsToFloat(ReadIntLE());
         }
 
         /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual double ReadDouble() {
-            return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
+            return JavaUtil.LongBitsToDouble(ReadLong());
         }
 
         /// <exception cref="System.IO.IOException"/>
         public double ReadDoubleLE() {
-            return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
+            return JavaUtil.LongBitsToDouble(ReadLongLE());
         }
 
         /// <summary><inheritDoc/></summary>

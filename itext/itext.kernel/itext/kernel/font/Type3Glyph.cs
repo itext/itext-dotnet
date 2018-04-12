@@ -186,7 +186,7 @@ namespace iText.Kernel.Font {
         public override PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
             bool inlineImage) {
             if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff))) {
-                throw new PdfException("not.colorized.typed3.fonts.only.accept.mask.images");
+                throw new PdfException("Not colorized type3 fonts accept only mask images.");
             }
             return base.AddImage(image, a, b, c, d, e, f, inlineImage);
         }

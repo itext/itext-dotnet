@@ -159,8 +159,9 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual PdfImageXObject GetImage(PdfName name) {
-            PdfStream image = GetResource(PdfName.Image).GetAsStream(name);
-            return image != null ? new PdfImageXObject(image) : null;
+            PdfStream image = GetResource(PdfName.XObject).GetAsStream(name);
+            return image != null && PdfName.Image.Equals(image.GetAsName(PdfName.Subtype)) ? new PdfImageXObject(image
+                ) : null;
         }
 
         /// <summary>
@@ -216,8 +217,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual PdfFormXObject GetForm(PdfName name) {
-            PdfStream form = GetResource(PdfName.Form).GetAsStream(name);
-            return form != null ? new PdfFormXObject(form) : null;
+            PdfStream form = GetResource(PdfName.XObject).GetAsStream(name);
+            return form != null && PdfName.Form.Equals(form.GetAsName(PdfName.Subtype)) ? new PdfFormXObject(form) : null;
         }
 
         /// <summary>
@@ -613,11 +614,6 @@ namespace iText.Kernel.Pdf {
                 GetPdfObject().Put(resType, resourceCategory = new PdfDictionary());
             }
             resourceCategory.Put(resName, resource);
-            PdfDictionary resDictionary = (PdfDictionary)GetPdfObject().Get(resType);
-            if (resDictionary == null) {
-                GetPdfObject().Put(resType, resDictionary = new PdfDictionary());
-            }
-            resDictionary.Put(resName, resource);
         }
 
         internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {

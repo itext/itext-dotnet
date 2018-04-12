@@ -233,7 +233,7 @@ namespace iText.Kernel.XMP {
             value = value.ToLowerInvariant();
             try {
                 // First try interpretation as Integer (anything not 0 is true)
-                return System.Convert.ToInt32(value) != 0;
+                return Convert.ToInt32(value) != 0;
             }
             catch (FormatException) {
                 return "true".Equals(value) || "t".Equals(value) || "on".Equals(value) || "yes".Equals(value);
@@ -268,10 +268,10 @@ namespace iText.Kernel.XMP {
                     throw new XMPException("Empty convert-string", XMPError.BADVALUE);
                 }
                 if (rawValue.StartsWith("0x")) {
-                    return System.Convert.ToInt32(rawValue.Substring(2), 16);
+                    return Convert.ToInt32(rawValue.Substring(2), 16);
                 }
                 else {
-                    return System.Convert.ToInt32(rawValue);
+                    return Convert.ToInt32(rawValue);
                 }
             }
             catch (FormatException) {
@@ -300,10 +300,10 @@ namespace iText.Kernel.XMP {
                     throw new XMPException("Empty convert-string", XMPError.BADVALUE);
                 }
                 if (rawValue.StartsWith("0x")) {
-                    return System.Convert.ToInt64(rawValue.Substring(2), 16);
+                    return Convert.ToInt64(rawValue.Substring(2), 16);
                 }
                 else {
-                    return System.Convert.ToInt64(rawValue);
+                    return Convert.ToInt64(rawValue);
                 }
             }
             catch (FormatException) {
@@ -332,7 +332,7 @@ namespace iText.Kernel.XMP {
                     throw new XMPException("Empty convert-string", XMPError.BADVALUE);
                 }
                 else {
-                    return System.Double.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture);
+                    return Double.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             catch (FormatException) {

@@ -107,7 +107,7 @@ namespace iText.Layout.Renderer {
             if (lastPageSize == null) {
                 lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetTrimBox());
             }
-            return (currentArea = new RootLayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
+            return (currentArea = new RootLayoutArea(currentPageNumber, GetCurrentPageEffectiveArea(lastPageSize)));
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
@@ -157,6 +157,15 @@ namespace iText.Layout.Renderer {
                 lastPageSize = AddNewPage(customPageSize);
             }
             return lastPageSize;
+        }
+
+        private Rectangle GetCurrentPageEffectiveArea(PageSize pageSize) {
+            float leftMargin = (float)GetPropertyAsFloat(Property.MARGIN_LEFT);
+            float bottomMargin = (float)GetPropertyAsFloat(Property.MARGIN_BOTTOM);
+            float topMargin = (float)GetPropertyAsFloat(Property.MARGIN_TOP);
+            float rightMargin = (float)GetPropertyAsFloat(Property.MARGIN_RIGHT);
+            return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
+                () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
         private void MoveToNextPage() {

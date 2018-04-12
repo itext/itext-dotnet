@@ -116,7 +116,7 @@ namespace iText.Barcodes {
                 if (idx < 0) {
                     throw new ArgumentException("The character " + text[k] + " is illegal in code 39");
                 }
-                System.Array.Copy(BARS[idx], 0, bars, k * 10, 9);
+                Array.Copy(BARS[idx], 0, bars, k * 10, 9);
             }
             return bars;
         }

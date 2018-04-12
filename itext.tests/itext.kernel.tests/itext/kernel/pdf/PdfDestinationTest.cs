@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
@@ -94,7 +95,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest01.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
-            srcDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 2, 3), destDoc);
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
@@ -110,7 +111,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest02.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
-            srcDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1), destDoc);
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
@@ -126,7 +127,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest03.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
-            srcDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 2), destDoc);
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
@@ -142,7 +143,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest04.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
-            srcDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 3), destDoc);
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 3), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
@@ -158,7 +159,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest05.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
-            srcDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 2, 3, 1), destDoc);
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"

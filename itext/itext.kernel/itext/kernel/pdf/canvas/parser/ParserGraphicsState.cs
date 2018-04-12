@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
@@ -157,7 +158,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             IList<Point> segBasePts = segment.GetBasePoints();
             Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[segBasePts.Count]));
             if (segment is BezierCurve) {
-                newSegment = new BezierCurve(iText.IO.Util.JavaUtil.ArraysAsList(transformedPoints));
+                newSegment = new BezierCurve(JavaUtil.ArraysAsList(transformedPoints));
             }
             else {
                 newSegment = new Line(transformedPoints[0], transformedPoints[1]);
