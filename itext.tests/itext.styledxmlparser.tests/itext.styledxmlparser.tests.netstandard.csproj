@@ -37,7 +37,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="itext.snk" />
     <None Include="packages.config" />
   </ItemGroup>
