@@ -12,8 +12,6 @@ namespace iText.Svg.Dummy.Renderers.Impl {
     public class DummySvgNodeRenderer : ISvgNodeRenderer {
         internal ISvgNodeRenderer parent;
 
-        internal IList<ISvgNodeRenderer> children;
-
         internal String name;
 
         public DummySvgNodeRenderer()
@@ -22,7 +20,6 @@ namespace iText.Svg.Dummy.Renderers.Impl {
 
         public DummySvgNodeRenderer(String name) {
             this.name = name;
-            this.children = new List<ISvgNodeRenderer>();
         }
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
@@ -34,15 +31,7 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         }
 
         public virtual void Draw(SvgDrawContext context) {
-            System.Console.Out.WriteLine(name + ": Drawing in dummy node, children left: " + children.Count);
-        }
-
-        public virtual void AddChild(ISvgNodeRenderer child) {
-            children.Add(child);
-        }
-
-        public virtual IList<ISvgNodeRenderer> GetChildren() {
-            return children;
+            System.Console.Out.WriteLine(name + ": Drawing in dummy node");
         }
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
@@ -69,23 +58,7 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             //Name
             iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer
                 )o;
-            if (!this.name.Equals(otherDummy.name)) {
-                return false;
-            }
-            //children
-            if (!(this.children.IsEmpty() && otherDummy.children.IsEmpty())) {
-                if (this.children.Count != otherDummy.children.Count) {
-                    return false;
-                }
-                bool iterationResult = true;
-                for (int i = 0; i < this.children.Count; i++) {
-                    iterationResult &= this.children[i].Equals(otherDummy.GetChildren()[i]);
-                }
-                if (!iterationResult) {
-                    return false;
-                }
-            }
-            return true;
+            return this.name.Equals(otherDummy.name);
         }
     }
 }

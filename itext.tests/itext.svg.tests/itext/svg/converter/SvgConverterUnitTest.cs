@@ -169,7 +169,7 @@ namespace iText.Svg.Converter {
             INode svg = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), ""));
             DummySvgConverterProperties props = new DummySvgConverterProperties();
-            ISvgNodeRenderer node = SvgConverter.Process(svg, props);
+            IBranchSvgNodeRenderer node = (IBranchSvgNodeRenderer)SvgConverter.Process(svg, props);
             NUnit.Framework.Assert.IsTrue(node is DummySvgNodeRenderer);
             NUnit.Framework.Assert.AreEqual(0, node.GetChildren().Count);
             NUnit.Framework.Assert.IsNull(node.GetParent());
@@ -179,7 +179,7 @@ namespace iText.Svg.Converter {
         public virtual void ProcessNode() {
             INode svg = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), ""));
-            ISvgNodeRenderer node = SvgConverter.Process(svg);
+            IBranchSvgNodeRenderer node = (IBranchSvgNodeRenderer)SvgConverter.Process(svg);
             NUnit.Framework.Assert.IsTrue(node is SvgSvgNodeRenderer);
             NUnit.Framework.Assert.AreEqual(0, node.GetChildren().Count);
             NUnit.Framework.Assert.IsNull(node.GetParent());

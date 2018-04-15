@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -14,7 +15,9 @@ namespace iText.Svg.Renderers.Impl {
     /// Abstract class that will be the superclass for any element that can function
     /// as a parent.
     /// </summary>
-    public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer {
+    public class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
+        private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
+
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
         /// children and will iterate over all children in order to draw them.
@@ -182,6 +185,18 @@ namespace iText.Svg.Renderers.Impl {
                 context.RemoveCurrentViewPort();
             }
             context.PopCanvas();
+        }
+
+        public void AddChild(ISvgNodeRenderer child) {
+            // final method, in order to disallow adding null
+            if (child != null) {
+                children.Add(child);
+            }
+        }
+
+        public IList<ISvgNodeRenderer> GetChildren() {
+            // final method, in order to disallow modifying the List
+            return JavaCollectionsUtil.UnmodifiableList(children);
         }
     }
 }

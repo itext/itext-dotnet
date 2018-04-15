@@ -11,7 +11,13 @@ namespace iText.Svg.Dummy.Factories {
     /// </summary>
     public class DummySvgNodeFactory : ISvgNodeRendererFactory {
         public virtual ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {
-            ISvgNodeRenderer result = new DummySvgNodeRenderer(tag.Name());
+            ISvgNodeRenderer result;
+            if ("svg".Equals(tag.Name())) {
+                result = new DummyBranchSvgNodeRenderer(tag.Name());
+            }
+            else {
+                result = new DummySvgNodeRenderer(tag.Name());
+            }
             result.SetParent(parent);
             return result;
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -15,14 +14,12 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
-        private ISvgNodeRenderer parent;
+        private bool doFill = false;
 
-        private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
+        private ISvgNodeRenderer parent;
 
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
-
-        private bool doFill = false;
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
@@ -30,18 +27,6 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual ISvgNodeRenderer GetParent() {
             return parent;
-        }
-
-        public void AddChild(ISvgNodeRenderer child) {
-            // final method, in order to disallow adding null
-            if (child != null) {
-                children.Add(child);
-            }
-        }
-
-        public IList<ISvgNodeRenderer> GetChildren() {
-            // final method, in order to disallow modifying the List
-            return JavaCollectionsUtil.UnmodifiableList(children);
         }
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
@@ -111,7 +96,8 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        /// <returns>boolean checks if the drawn element can be filled</returns>
+        /// <summary>Method to see if a certain renderer can use fill.</summary>
+        /// <returns>true if the renderer can use fill</returns>
         protected internal virtual bool CanElementFill() {
             return true;
         }

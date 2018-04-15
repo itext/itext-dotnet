@@ -18,7 +18,7 @@ namespace iText.Svg.Css {
             ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            ISvgNodeRenderer nodeRenderer = processor.Process(root);
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)processor.Process(root);
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];
@@ -43,7 +43,7 @@ namespace iText.Svg.Css {
             ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            ISvgNodeRenderer nodeRenderer = processor.Process(root);
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)processor.Process(root);
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];

@@ -15,20 +15,25 @@ namespace iText.Svg {
                 return false;
             }
             //Nr of children
-            if (treeNodeOne.GetChildren().Count != treeNodeTwo.GetChildren().Count) {
-                return false;
+            if (treeNodeOne is IBranchSvgNodeRenderer && treeNodeTwo is IBranchSvgNodeRenderer) {
+                IBranchSvgNodeRenderer one = (IBranchSvgNodeRenderer)treeNodeOne;
+                IBranchSvgNodeRenderer two = (IBranchSvgNodeRenderer)treeNodeTwo;
+                if (one.GetChildren().Count != two.GetChildren().Count) {
+                    return false;
+                }
+                //Expect empty collection when no children are present
+                if (one.GetChildren().IsEmpty()) {
+                    return true;
+                }
+                //Iterate over children
+                bool iterationResult = true;
+                for (int i = 0; i < one.GetChildren().Count; i++) {
+                    iterationResult = iterationResult && CompareDummyRendererTreesRecursive(one.GetChildren()[i], two.GetChildren
+                        ()[i]);
+                }
+                return iterationResult;
             }
-            //Expect empty collection when no children are present
-            if (treeNodeOne.GetChildren().IsEmpty()) {
-                return true;
-            }
-            //Iterate over children
-            bool iterationResult = true;
-            for (int i = 0; i < treeNodeOne.GetChildren().Count; i++) {
-                iterationResult = iterationResult && CompareDummyRendererTreesRecursive(treeNodeOne.GetChildren()[i], treeNodeTwo
-                    .GetChildren()[i]);
-            }
-            return iterationResult;
+            return false;
         }
     }
 }

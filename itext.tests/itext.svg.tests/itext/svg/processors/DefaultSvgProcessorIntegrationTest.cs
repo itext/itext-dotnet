@@ -23,8 +23,8 @@ namespace iText.Svg.Processors {
             ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            ISvgNodeRenderer actual = processor.Process(root);
-            ISvgNodeRenderer expected = new SvgSvgNodeRenderer();
+            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)processor.Process(root);
+            IBranchSvgNodeRenderer expected = new SvgSvgNodeRenderer();
             ISvgNodeRenderer expectedEllipse = new EllipseSvgNodeRenderer();
             IDictionary<String, String> expectedEllipseAttributes = new Dictionary<String, String>();
             expectedEllipse.SetAttributesAndStyles(expectedEllipseAttributes);

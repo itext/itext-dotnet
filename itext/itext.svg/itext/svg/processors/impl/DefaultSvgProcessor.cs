@@ -133,8 +133,10 @@ namespace iText.Svg.Processors.Impl {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
                         renderer.SetAttributesAndStyles(cssResolver.ResolveStyles(node, cssContext));
-                        //TODO DEVSIX-1891
-                        processorState.Top().AddChild(renderer);
+                        // this check should be superfluous, but better safe than sorry
+                        if (processorState.Top() is IBranchSvgNodeRenderer) {
+                            ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
+                        }
                         processorState.Push(renderer);
                     }
                     foreach (INode childNode in element.ChildNodes()) {
