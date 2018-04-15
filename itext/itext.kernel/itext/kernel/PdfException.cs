@@ -485,6 +485,7 @@ namespace iText.Kernel {
 
         public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
+        [Obsolete]
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
 
         public const String UnsupportedXObjectType = "Unsupported XObject type.";

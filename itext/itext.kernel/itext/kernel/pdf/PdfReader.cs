@@ -48,6 +48,7 @@ using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
@@ -1191,6 +1192,10 @@ namespace iText.Kernel.Pdf {
             else {
                 if (PdfName.Standard.Equals(filter)) {
                     decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
+                }
+                else {
+                    throw new UnsupportedSecurityHandlerException(MessageFormatUtil.Format(UnsupportedSecurityHandlerException
+                        .UnsupportedSecurityHandler, filter));
                 }
             }
         }
