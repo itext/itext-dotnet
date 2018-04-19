@@ -88,14 +88,19 @@ namespace iText.Forms.Fields {
         public static readonly int FF_PASSWORD = MakeFieldFlag(14);
 
         /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const int DEFAULT_FONT_SIZE = 12;
 
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const int MIN_FONT_SIZE = 4;
 
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const int DA_FONT = 0;
 
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const int DA_SIZE = 1;
 
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const int DA_COLOR = 2;
 
         public const int ALIGN_LEFT = 0;
@@ -136,6 +141,7 @@ namespace iText.Forms.Fields {
 
         public static readonly int FF_NO_EXPORT = MakeFieldFlag(3);
 
+        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
         public const float X_OFFSET = 2;
 
         protected internal static String[] typeChars = new String[] { "4", "l", "8", "u", "n", "H" };
@@ -2771,27 +2777,31 @@ namespace iText.Forms.Fields {
                             }
                         }
                         else {
+                            String onStateName = value;
+                            if ("Off".Equals(onStateName)) {
+                                onStateName = "Yes";
+                            }
                             Rectangle rect = GetRect(GetPdfObject());
                             SetCheckType(checkType);
                             String pdfAVersion = pdfAConformanceLevel != null ? pdfAConformanceLevel.GetPart() : "";
                             switch (pdfAVersion) {
                                 case "1": {
-                                    DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), value, checkType);
+                                    DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
                                     break;
                                 }
 
                                 case "2": {
-                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), value, checkType);
+                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
                                     break;
                                 }
 
                                 case "3": {
-                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), value, checkType);
+                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
                                     break;
                                 }
 
                                 default: {
-                                    DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), value);
+                                    DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName);
                                     break;
                                 }
                             }
@@ -2817,18 +2827,35 @@ namespace iText.Forms.Fields {
                     fontSize = DEFAULT_FONT_SIZE;
                 }
                 else {
-                    float height = bBox.ToRectangle().GetHeight() - borderWidth * 2;
-                    int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-                    fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
-                    float baseWidth = localFont.GetWidth(value, 1);
-                    float offsetX = Math.Max(borderWidth + X_OFFSET, 1);
-                    if (baseWidth != 0) {
-                        fs = Math.Min(fs, (bBox.ToRectangle().GetWidth() - X_OFFSET * 2 * offsetX) / baseWidth);
-                    }
+                    fs = ApproximateFontSizeToFitBBox(localFont, bBox.ToRectangle(), value);
                 }
             }
             if (fs < MIN_FONT_SIZE) {
                 fs = MIN_FONT_SIZE;
+            }
+            return fs;
+        }
+
+        private float ApproximateFontSizeToFitBBox(PdfFont localFont, Rectangle bBox, String value) {
+            float fs;
+            float height = bBox.GetHeight() - borderWidth * 2;
+            int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
+            fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
+            float baseWidth = localFont.GetWidth(value, 1);
+            if (baseWidth != 0) {
+                float availableWidth = Math.Max(bBox.GetWidth() - borderWidth * 2, 0);
+                // This constant is taken based on what was the resultant padding in previous version of this algorithm in case border width was zero.
+                float absMaxPadding = 4f;
+                // relative value is quite big in order to preserve visible padding on small field sizes. This constant is taken arbitrary, based on visual similarity to Acrobat behaviour.
+                float relativePaddingForSmallSizes = 0.15f;
+                // with current constants, if availableWidth is less than ~26 points, padding will be made relative
+                if (availableWidth * relativePaddingForSmallSizes < absMaxPadding) {
+                    availableWidth -= availableWidth * relativePaddingForSmallSizes * 2;
+                }
+                else {
+                    availableWidth -= absMaxPadding * 2;
+                }
+                fs = Math.Min(fs, availableWidth / baseWidth);
             }
             return fs;
         }
@@ -3619,28 +3646,28 @@ namespace iText.Forms.Fields {
         /// <summary>Draws the appearance of a checkbox with a specified state value.</summary>
         /// <param name="width">the width of the checkbox to draw</param>
         /// <param name="height">the height of the checkbox to draw</param>
-        /// <param name="value">the state of the form field that will be drawn</param>
-        protected internal virtual void DrawCheckAppearance(float width, float height, String value) {
+        /// <param name="onStateName">the state of the form field that will be drawn</param>
+        protected internal virtual void DrawCheckAppearance(float width, float height, String onStateName) {
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
+            float fontSize = this.fontSize < 0 ? 0 : this.fontSize;
             DrawBorder(canvasOn, xObjectOn, width, height);
-            DrawCheckBox(canvasOn, width, height, (float)DEFAULT_FONT_SIZE, true);
+            DrawCheckBox(canvasOn, width, height, fontSize, true);
             PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             DrawBorder(canvasOff, xObjectOff, width, height);
-            DrawCheckBox(canvasOff, width, height, (float)DEFAULT_FONT_SIZE, false);
+            DrawCheckBox(canvasOff, width, height, fontSize, false);
             PdfWidgetAnnotation widget = GetWidgets()[0];
             xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
             xObjectOn.GetResources().AddFont(GetDocument(), GetFont());
-            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize <= 0 ? (float)DEFAULT_FONT_SIZE : fontSize
-                , color, xObjectOn.GetResources()));
+            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, xObjectOn.GetResources()));
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(value), xObjectOn.GetPdfObject());
+            normalAppearance.Put(new PdfName(onStateName), xObjectOn.GetPdfObject());
             normalAppearance.Put(new PdfName("Off"), xObjectOff.GetPdfObject());
             PdfDictionary mk = new PdfDictionary();
             mk.Put(PdfName.CA, new PdfString(text));
@@ -3785,6 +3812,9 @@ namespace iText.Forms.Fields {
                 return;
             }
             PdfFont ufont = GetFont();
+            if (fontSize <= 0) {
+                fontSize = ApproximateFontSizeToFitBBox(ufont, new Rectangle(width, height), text);
+            }
             // PdfFont gets all width in 1000 normalized units
             canvas.BeginText().SetFontAndSize(ufont, fontSize).ResetFillColorRgb().SetTextMatrix((width - ufont.GetWidth
                 (text, fontSize)) / 2, (height - ufont.GetAscent(text, fontSize)) / 2).ShowText(text).EndText();

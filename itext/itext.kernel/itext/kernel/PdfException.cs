@@ -261,6 +261,7 @@ namespace iText.Kernel {
 
         public const String FontEmbeddingIssue = "Font embedding issue.";
 
+        [Obsolete]
         public const String FontSizeIsTooSmall = "Font size is too small.";
 
         public const String FormXObjectMustHaveBbox = "Form XObject must have BBox.";
