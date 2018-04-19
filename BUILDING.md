@@ -1,0 +1,1 @@
+To build **iText 7 SVG Community**, you need to build the SVG solution.
