@@ -1,8 +1,3 @@
-/*
-    This file is part of the iText (R) project.
-    Copyright (c) 1998-2018 iText Group NV
-    Authors: iText Software.
-
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3
     as published by the Free Software Foundation with the addition of the
@@ -39,10 +34,3 @@
 
     For more information, please contact iText Software Corp. at this
     address: sales@itextpdf.com
- */
-namespace iText.Svg.Dummy.Renderers.Impl {
-    public class DummyArgumentedConstructorSvgNodeRenderer : DummySvgNodeRenderer {
-        public DummyArgumentedConstructorSvgNodeRenderer(int arg) {
-        }
-    }
-}
