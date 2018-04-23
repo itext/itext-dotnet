@@ -1,0 +1,1 @@
+To build **iText 7 Styled XML parser**, you need to build the solution.

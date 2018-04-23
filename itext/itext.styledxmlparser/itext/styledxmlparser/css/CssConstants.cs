@@ -1,0 +1,1074 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2018 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Collections.Generic;
+using iText.IO.Util;
+
+namespace iText.StyledXmlParser.Css {
+    /// <summary>
+    /// Class containing possible CSS property keys and values, pseudo element keys,
+    /// units of measurement, and so on.
+    /// </summary>
+    public class CssConstants {
+        /// <summary>The Constant BACKGROUND.</summary>
+        public const String BACKGROUND = "background";
+
+        /// <summary>The Constant BACKGROUND_ATTACHMENT.</summary>
+        public const String BACKGROUND_ATTACHMENT = "background-attachment";
+
+        /// <summary>The Constant BACKGROUND_BLEND_MODE.</summary>
+        public const String BACKGROUND_BLEND_MODE = "background-blend-mode";
+
+        /// <summary>The Constant BACKGROUND_CLIP.</summary>
+        public const String BACKGROUND_CLIP = "background-clip";
+
+        /// <summary>The Constant BACKGROUND_COLOR.</summary>
+        public const String BACKGROUND_COLOR = "background-color";
+
+        /// <summary>The Constant BACKGROUND_IMAGE.</summary>
+        public const String BACKGROUND_IMAGE = "background-image";
+
+        /// <summary>The Constant BACKGROUND_ORIGIN.</summary>
+        public const String BACKGROUND_ORIGIN = "background-origin";
+
+        /// <summary>The Constant BACKGROUND_POSITION.</summary>
+        public const String BACKGROUND_POSITION = "background-position";
+
+        /// <summary>The Constant BACKGROUND_REPEAT.</summary>
+        public const String BACKGROUND_REPEAT = "background-repeat";
+
+        /// <summary>The Constant BACKGROUND_SIZE.</summary>
+        public const String BACKGROUND_SIZE = "background-size";
+
+        /// <summary>The Constant BLEED.</summary>
+        public const String BLEED = "bleed";
+
+        /// <summary>The Constant BORDER.</summary>
+        public const String BORDER = "border";
+
+        /// <summary>The Constant BORDER_BOTTOM.</summary>
+        public const String BORDER_BOTTOM = "border-bottom";
+
+        /// <summary>The Constant BORDER_BOTTOM_COLOR.</summary>
+        public const String BORDER_BOTTOM_COLOR = "border-bottom-color";
+
+        /// <summary>The Constant BORDER_BOTTOM_LEFT_RADIUS.</summary>
+        public const String BORDER_BOTTOM_LEFT_RADIUS = "border-bottom-left-radius";
+
+        /// <summary>The Constant BORDER_BOTTOM_RIGHT_RADIUS.</summary>
+        public const String BORDER_BOTTOM_RIGHT_RADIUS = "border-bottom-right-radius";
+
+        /// <summary>The Constant BORDER_BOTTOM_STYLE.</summary>
+        public const String BORDER_BOTTOM_STYLE = "border-bottom-style";
+
+        /// <summary>The Constant BORDER_BOTTOM_WIDTH.</summary>
+        public const String BORDER_BOTTOM_WIDTH = "border-bottom-width";
+
+        /// <summary>The Constant BORDER_COLLAPSE.</summary>
+        public const String BORDER_COLLAPSE = "border-collapse";
+
+        /// <summary>The Constant BORDER_COLOR.</summary>
+        public const String BORDER_COLOR = "border-color";
+
+        /// <summary>The Constant BORDER_IMAGE.</summary>
+        public const String BORDER_IMAGE = "border-image";
+
+        /// <summary>The Constant BORDER_LEFT.</summary>
+        public const String BORDER_LEFT = "border-left";
+
+        /// <summary>The Constant BORDER_LEFT_COLOR.</summary>
+        public const String BORDER_LEFT_COLOR = "border-left-color";
+
+        /// <summary>The Constant BORDER_LEFT_STYLE.</summary>
+        public const String BORDER_LEFT_STYLE = "border-left-style";
+
+        /// <summary>The Constant BORDER_LEFT_WIDTH.</summary>
+        public const String BORDER_LEFT_WIDTH = "border-left-width";
+
+        /// <summary>The Constant BORDER_RADIUS.</summary>
+        public const String BORDER_RADIUS = "border-radius";
+
+        /// <summary>The Constant BORDER_RIGHT.</summary>
+        public const String BORDER_RIGHT = "border-right";
+
+        /// <summary>The Constant BORDER_RIGHT_COLOR.</summary>
+        public const String BORDER_RIGHT_COLOR = "border-right-color";
+
+        /// <summary>The Constant BORDER_RIGHT_STYLE.</summary>
+        public const String BORDER_RIGHT_STYLE = "border-right-style";
+
+        /// <summary>The Constant BORDER_RIGHT_WIDTH.</summary>
+        public const String BORDER_RIGHT_WIDTH = "border-right-width";
+
+        /// <summary>The Constant BORDER_SPACING.</summary>
+        public const String BORDER_SPACING = "border-spacing";
+
+        /// <summary>The Constant BORDER_STYLE.</summary>
+        public const String BORDER_STYLE = "border-style";
+
+        /// <summary>The Constant BORDER_TOP.</summary>
+        public const String BORDER_TOP = "border-top";
+
+        /// <summary>The Constant BORDER_TOP_COLOR.</summary>
+        public const String BORDER_TOP_COLOR = "border-top-color";
+
+        /// <summary>The Constant BORDER_TOP_LEFT_RADIUS.</summary>
+        public const String BORDER_TOP_LEFT_RADIUS = "border-top-left-radius";
+
+        /// <summary>The Constant BORDER_TOP_RIGHT_RADIUS.</summary>
+        public const String BORDER_TOP_RIGHT_RADIUS = "border-top-right-radius";
+
+        /// <summary>The Constant BORDER_TOP_STYLE.</summary>
+        public const String BORDER_TOP_STYLE = "border-top-style";
+
+        /// <summary>The Constant BORDER_TOP_WIDTH.</summary>
+        public const String BORDER_TOP_WIDTH = "border-top-width";
+
+        /// <summary>The Constant BORDER_WIDTH.</summary>
+        public const String BORDER_WIDTH = "border-width";
+
+        /// <summary>The Constant BOTH.</summary>
+        public const String BOTH = "both";
+
+        /// <summary>The Constant BOX_SHADOW.</summary>
+        public const String BOX_SHADOW = "box-shadow";
+
+        /// <summary>The Constant BOX_SIZING.</summary>
+        public const String BOX_SIZING = "box-sizing";
+
+        /// <summary>The Constant CAPTION_SIDE.</summary>
+        public const String CAPTION_SIDE = "caption-side";
+
+        /// <summary>The Constant CLEAR.</summary>
+        public const String CLEAR = "clear";
+
+        /// <summary>The Constant COLOR.</summary>
+        public const String COLOR = "color";
+
+        /// <summary>The Constant CONTENT.</summary>
+        public const String CONTENT = "content";
+
+        /// <summary>The Constant COUNTER_INCREMENT.</summary>
+        public const String COUNTER_INCREMENT = "counter-increment";
+
+        /// <summary>The Constant COUNTER_RESET.</summary>
+        public const String COUNTER_RESET = "counter-reset";
+
+        /// <summary>The Constant DIRECTION.</summary>
+        public const String DIRECTION = "direction";
+
+        /// <summary>The Constant DISPLAY.</summary>
+        public const String DISPLAY = "display";
+
+        /// <summary>The Constant EMPTY_CELLS.</summary>
+        public const String EMPTY_CELLS = "empty-cells";
+
+        /// <summary>The Constant FLOAT.</summary>
+        public const String FLOAT = "float";
+
+        /// <summary>The Constant FONT.</summary>
+        public const String FONT = "font";
+
+        /// <summary>The Constant FONT_FAMILY.</summary>
+        public const String FONT_FAMILY = "font-family";
+
+        /// <summary>The Constant FONT_FEATURE_SETTINGS.</summary>
+        public const String FONT_FEATURE_SETTINGS = "font-feature-settings";
+
+        /// <summary>The Constant FONT_KERNING.</summary>
+        public const String FONT_KERNING = "font-kerning";
+
+        /// <summary>The Constant FONT_LANGUAGE_OVERRIDE.</summary>
+        public const String FONT_LANGUAGE_OVERRIDE = "font-language-override";
+
+        /// <summary>The Constant FONT_SIZE.</summary>
+        public const String FONT_SIZE = "font-size";
+
+        /// <summary>The Constant FONT_SIZE_ADJUST.</summary>
+        public const String FONT_SIZE_ADJUST = "font-size-adjust";
+
+        /// <summary>The Constant FONT_STRETCH.</summary>
+        public const String FONT_STRETCH = "font-stretch";
+
+        /// <summary>The Constant FONT_STYLE.</summary>
+        public const String FONT_STYLE = "font-style";
+
+        /// <summary>The Constant FONT_SYNTHESIS.</summary>
+        public const String FONT_SYNTHESIS = "font-synthesis";
+
+        /// <summary>The Constant FONT_VARIANT.</summary>
+        public const String FONT_VARIANT = "font-variant";
+
+        /// <summary>The Constant FONT_VARIANT_ALTERNATES.</summary>
+        public const String FONT_VARIANT_ALTERNATES = "font-variant-alternates";
+
+        /// <summary>The Constant FONT_VARIANT_CAPS.</summary>
+        public const String FONT_VARIANT_CAPS = "font-variant-caps";
+
+        /// <summary>The Constant FONT_VARIANT_EAST_ASIAN.</summary>
+        public const String FONT_VARIANT_EAST_ASIAN = "font-variant-east-asian";
+
+        /// <summary>The Constant FONT_VARIANT_LIGATURES.</summary>
+        public const String FONT_VARIANT_LIGATURES = "font-variant-ligatures";
+
+        /// <summary>The Constant FONT_VARIANT_NUMERIC.</summary>
+        public const String FONT_VARIANT_NUMERIC = "font-variant-numeric";
+
+        /// <summary>The Constant FONT_VARIANT_POSITION.</summary>
+        public const String FONT_VARIANT_POSITION = "font-variant-position";
+
+        /// <summary>The Constant FONT_WEIGHT.</summary>
+        public const String FONT_WEIGHT = "font-weight";
+
+        /// <summary>The Constant HANGING_PUNCTUATION.</summary>
+        public const String HANGING_PUNCTUATION = "hanging-punctuation";
+
+        /// <summary>The Constant HEIGHT.</summary>
+        public const String HEIGHT = "height";
+
+        /// <summary>The Constant HYPHENS.</summary>
+        public const String HYPHENS = "hyphens";
+
+        /// <summary>The Constant LETTER_SPACING.</summary>
+        public const String LETTER_SPACING = "letter-spacing";
+
+        /// <summary>The Constant LINE_HEIGHT.</summary>
+        public const String LINE_HEIGHT = "line-height";
+
+        /// <summary>The Constant LIST_STYLE.</summary>
+        public const String LIST_STYLE = "list-style";
+
+        /// <summary>The Constant LIST_STYLE_IMAGE.</summary>
+        public const String LIST_STYLE_IMAGE = "list-style-image";
+
+        /// <summary>The Constant LIST_STYLE_POSITION.</summary>
+        public const String LIST_STYLE_POSITION = "list-style-position";
+
+        /// <summary>The Constant LIST_STYLE_TYPE.</summary>
+        public const String LIST_STYLE_TYPE = "list-style-type";
+
+        /// <summary>The Constant MARKS.</summary>
+        public const String MARKS = "marks";
+
+        /// <summary>The Constant MARGIN.</summary>
+        public const String MARGIN = "margin";
+
+        /// <summary>The Constant MARGIN_BOTTOM.</summary>
+        public const String MARGIN_BOTTOM = "margin-bottom";
+
+        /// <summary>The Constant MARGIN_LEFT.</summary>
+        public const String MARGIN_LEFT = "margin-left";
+
+        /// <summary>The Constant MARGIN_RIGHT.</summary>
+        public const String MARGIN_RIGHT = "margin-right";
+
+        /// <summary>The Constant MARGIN_TOP.</summary>
+        public const String MARGIN_TOP = "margin-top";
+
+        /// <summary>The Constant MAX_HEIGHT.</summary>
+        public const String MAX_HEIGHT = "max-height";
+
+        /// <summary>The Constant MIN_HEIGHT.</summary>
+        public const String MIN_HEIGHT = "min-height";
+
+        /// <summary>The Constant OPACITY.</summary>
+        public const String OPACITY = "opacity";
+
+        /// <summary>The Constant OUTLINE.</summary>
+        public const String OUTLINE = "outline";
+
+        /// <summary>The Constant OUTLINE_COLOR.</summary>
+        public const String OUTLINE_COLOR = "outline-color";
+
+        /// <summary>The Constant OUTLINE_OFFSET.</summary>
+        public const String OUTLINE_OFFSET = "outline-offset";
+
+        /// <summary>The Constant OUTLINE_STYLE.</summary>
+        public const String OUTLINE_STYLE = "outline-style";
+
+        /// <summary>The Constant OUTLINE_WIDTH.</summary>
+        public const String OUTLINE_WIDTH = "outline-width";
+
+        /// <summary>The Constant OVERFLOW.</summary>
+        public const String OVERFLOW = "overflow";
+
+        /// <summary>The Constant OVERFLOW_WRAP.</summary>
+        public const String OVERFLOW_WRAP = "overflow-wrap";
+
+        /// <summary>The Constant OVERFLOW_X.</summary>
+        public const String OVERFLOW_X = "overflow-x";
+
+        /// <summary>The Constant OVERFLOW_Y.</summary>
+        public const String OVERFLOW_Y = "overflow-y";
+
+        /// <summary>The Constant PADDING.</summary>
+        public const String PADDING = "padding";
+
+        /// <summary>The Constant PADDING_BOTTOM.</summary>
+        public const String PADDING_BOTTOM = "padding-bottom";
+
+        /// <summary>The Constant PADDING_LEFT.</summary>
+        public const String PADDING_LEFT = "padding-left";
+
+        /// <summary>The Constant PADDING_RIGHT.</summary>
+        public const String PADDING_RIGHT = "padding-right";
+
+        /// <summary>The Constant PADDING_TOP.</summary>
+        public const String PADDING_TOP = "padding-top";
+
+        /// <summary>The Constant PAGE_BREAK_AFTER.</summary>
+        public const String PAGE_BREAK_AFTER = "page-break-after";
+
+        /// <summary>The Constant PAGE_BREAK_BEFORE.</summary>
+        public const String PAGE_BREAK_BEFORE = "page-break-before";
+
+        /// <summary>The Constant PAGE_BREAK_INSIDE.</summary>
+        public const String PAGE_BREAK_INSIDE = "page-break-inside";
+
+        /// <summary>The Constant POSITION.</summary>
+        public const String POSITION = "position";
+
+        /// <summary>The Constant QUOTES.</summary>
+        public const String QUOTES = "quotes";
+
+        /// <summary>The Constant SIZE.</summary>
+        public const String SIZE = "size";
+
+        /// <summary>The Constant STYLE.</summary>
+        public const String STYLE = "style";
+
+        /// <summary>The Constant TAB_SIZE.</summary>
+        public const String TAB_SIZE = "tab-size";
+
+        /// <summary>The Constant TABLE_LAYOUT.</summary>
+        public const String TABLE_LAYOUT = "table-layout";
+
+        /// <summary>The Constant TEXT_ALIGN.</summary>
+        public const String TEXT_ALIGN = "text-align";
+
+        /// <summary>The Constant TEXT_ALIGN_LAST.</summary>
+        public const String TEXT_ALIGN_LAST = "text-align-last";
+
+        /// <summary>The Constant TEXT_COMBINE_UPRIGHT.</summary>
+        public const String TEXT_COMBINE_UPRIGHT = "text-combine-upright";
+
+        /// <summary>The Constant TEXT_DECORATION.</summary>
+        public const String TEXT_DECORATION = "text-decoration";
+
+        /// <summary>The Constant TEXT_INDENT.</summary>
+        public const String TEXT_INDENT = "text-indent";
+
+        /// <summary>The Constant TEXT_JUSTIFY.</summary>
+        public const String TEXT_JUSTIFY = "text-justify";
+
+        /// <summary>The Constant TEXT_ORIENTATION.</summary>
+        public const String TEXT_ORIENTATION = "text-orientation";
+
+        /// <summary>The Constant TEXT_SHADOW.</summary>
+        public const String TEXT_SHADOW = "text-shadow";
+
+        /// <summary>The Constant TEXT_TRANSFORM.</summary>
+        public const String TEXT_TRANSFORM = "text-transform";
+
+        /// <summary>The Constant TEXT_UNDERLINE_POSITION.</summary>
+        public const String TEXT_UNDERLINE_POSITION = "text-underline-position";
+
+        /// <summary>The Constant TRANSFORM.</summary>
+        public const String TRANSFORM = "transform";
+
+        /// <summary>The Constant UNICODE_BIDI.</summary>
+        public const String UNICODE_BIDI = "unicode-bidi";
+
+        /// <summary>The Constant VERTICAL_ALIGN.</summary>
+        public const String VERTICAL_ALIGN = "vertical-align";
+
+        /// <summary>The Constant VISIBILITY.</summary>
+        public const String VISIBLE = "visible";
+
+        /// <summary>The Constant VISIBILITY.</summary>
+        public const String VISIBILITY = "visibility";
+
+        /// <summary>The Constant WHITE_SPACE.</summary>
+        public const String WHITE_SPACE = "white-space";
+
+        /// <summary>The Constant WIDTH.</summary>
+        public const String WIDTH = "width";
+
+        /// <summary>The Constant MAX_WIDTH.</summary>
+        public const String MAX_WIDTH = "max-width";
+
+        /// <summary>The Constant MIN_WIDTH.</summary>
+        public const String MIN_WIDTH = "min-width";
+
+        /// <summary>The Constant WORDWRAP.</summary>
+        public const String WORDWRAP = "word-wrap";
+
+        /// <summary>The Constant WORD_BREAK.</summary>
+        public const String WORD_BREAK = "word-break";
+
+        /// <summary>The Constant WORD_SPACING.</summary>
+        public const String WORD_SPACING = "word-spacing";
+
+        /// <summary>The Constant WRITING_MODE.</summary>
+        public const String WRITING_MODE = "writing-mode";
+
+        /// <summary>The Constant ABSOLUTE.</summary>
+        public const String ABSOLUTE = "absolute";
+
+        /// <summary>The Constant ALWAYS.</summary>
+        public const String ALWAYS = "always";
+
+        /// <summary>The Constant ARMENIAN.</summary>
+        public const String ARMENIAN = "armenian";
+
+        /// <summary>The Constant AVOID.</summary>
+        public const String AVOID = "avoid";
+
+        /// <summary>The Constant AUTO.</summary>
+        public const String AUTO = "auto";
+
+        /// <summary>The Constant BLINK.</summary>
+        public const String BLINK = "blink";
+
+        /// <summary>The Constant BLOCK.</summary>
+        public const String BLOCK = "block";
+
+        /// <summary>The Constant BOLD.</summary>
+        public const String BOLD = "bold";
+
+        /// <summary>The Constant BOLDER.</summary>
+        public const String BOLDER = "bolder";
+
+        /// <summary>The Constant BORDER_BOX.</summary>
+        public const String BORDER_BOX = "border-box";
+
+        /// <summary>The Constant BOTTOM.</summary>
+        public const String BOTTOM = "bottom";
+
+        /// <summary>The Constant BREAK_WORD.</summary>
+        public const String BREAK_WORD = "break-word";
+
+        /// <summary>The Constant CAPITALIZE.</summary>
+        public const String CAPITALIZE = "capitalize";
+
+        /// <summary>The Constant CAPTION.</summary>
+        public const String CAPTION = "caption";
+
+        /// <summary>The Constant CENTER.</summary>
+        public const String CENTER = "center";
+
+        /// <summary>The Constant CIRCLE.</summary>
+        public const String CIRCLE = "circle";
+
+        /// <summary>The Constant CJK_IDEOGRAPHIC.</summary>
+        public const String CJK_IDEOGRAPHIC = "cjk-ideographic";
+
+        /// <summary>The Constant CLOSE_QUOTE.</summary>
+        public const String CLOSE_QUOTE = "close-quote";
+
+        /// <summary>The Constant COLLAPSE.</summary>
+        public const String COLLAPSE = "collapse";
+
+        /// <summary>The Constant CONTAIN.</summary>
+        public const String CONTAIN = "contain";
+
+        /// <summary>The Constant CONTENT_BOX.</summary>
+        public const String CONTENT_BOX = "content-box";
+
+        /// <summary>The Constant COVER.</summary>
+        public const String COVER = "cover";
+
+        /// <summary>The Constant CROP.</summary>
+        public const String CROP = "crop";
+
+        /// <summary>The Constant CROSS.</summary>
+        public const String CROSS = "cross";
+
+        /// <summary>The Constant CURRENTCOLOR.</summary>
+        public const String CURRENTCOLOR = "currentcolor";
+
+        /// <summary>The Constant DASHED.</summary>
+        public const String DASHED = "dashed";
+
+        /// <summary>The Constant DECIMAL.</summary>
+        public const String DECIMAL = "decimal";
+
+        /// <summary>The Constant DECIMAL_LEADING_ZERO.</summary>
+        public const String DECIMAL_LEADING_ZERO = "decimal-leading-zero";
+
+        /// <summary>The Constant DISC.</summary>
+        public const String DISC = "disc";
+
+        /// <summary>The Constant DOTTED.</summary>
+        public const String DOTTED = "dotted";
+
+        /// <summary>The Constant DOUBLE.</summary>
+        public const String DOUBLE = "double";
+
+        /// <summary>The Constant FIRST.</summary>
+        public const String FIRST = "first";
+
+        /// <summary>The Constant FIRST_EXCEPT.</summary>
+        public const String FIRST_EXCEPT = "first-except";
+
+        /// <summary>The Constant FIXED.</summary>
+        public const String FIXED = "fixed";
+
+        /// <summary>The Constant GEORGIAN.</summary>
+        public const String GEORGIAN = "georgian";
+
+        /// <summary>The Constant GROOVE.</summary>
+        public const String GROOVE = "groove";
+
+        /// <summary>The Constant HEBREW.</summary>
+        public const String HEBREW = "hebrew";
+
+        /// <summary>The Constant HIDDEN.</summary>
+        public const String HIDDEN = "hidden";
+
+        /// <summary>The Constant HIRAGANA.</summary>
+        public const String HIRAGANA = "hiragana";
+
+        /// <summary>The Constant HIRAGANA_IROHA.</summary>
+        public const String HIRAGANA_IROHA = "hiragana-iroha";
+
+        /// <summary>The Constant ICON.</summary>
+        public const String ICON = "icon";
+
+        /// <summary>The Constant INHERIT.</summary>
+        public const String INHERIT = "inherit";
+
+        /// <summary>The Constant INITIAL.</summary>
+        public const String INITIAL = "initial";
+
+        /// <summary>The Constant INLINE.</summary>
+        public const String INLINE = "inline";
+
+        /// <summary>The Constant INLINE_BLOCK.</summary>
+        public const String INLINE_BLOCK = "inline-block";
+
+        /// <summary>The Constant INLINE_TABLE.</summary>
+        public const String INLINE_TABLE = "inline-table";
+
+        /// <summary>The Constant INSET.</summary>
+        public const String INSET = "inset";
+
+        /// <summary>The Constant INSIDE.</summary>
+        public const String INSIDE = "inside";
+
+        /// <summary>The Constant INVERT.</summary>
+        public const String INVERT = "invert";
+
+        /// <summary>The Constant ITALIC.</summary>
+        public const String ITALIC = "italic";
+
+        /// <summary>The Constant JUSTIFY.</summary>
+        public const String JUSTIFY = "justify";
+
+        /// <summary>The Constant LANDSCAPE.</summary>
+        public const String LANDSCAPE = "landscape";
+
+        /// <summary>The Constant LARGE.</summary>
+        public const String LARGE = "large";
+
+        /// <summary>The Constant LARGER.</summary>
+        public const String LARGER = "larger";
+
+        /// <summary>The Constant LAST.</summary>
+        public const String LAST = "last";
+
+        /// <summary>The Constant LEFT.</summary>
+        public const String LEFT = "left";
+
+        /// <summary>The Constant LIGHTER.</summary>
+        public const String LIGHTER = "lighter";
+
+        /// <summary>The Constant LINE_THROUGH.</summary>
+        public const String LINE_THROUGH = "line-through";
+
+        /// <summary>The Constant LOCAL.</summary>
+        public const String LOCAL = "local";
+
+        /// <summary>The Constant LOWER_ALPHA.</summary>
+        public const String LOWER_ALPHA = "lower-alpha";
+
+        /// <summary>The Constant LOWER_GREEK.</summary>
+        public const String LOWER_GREEK = "lower-greek";
+
+        /// <summary>The Constant LOWER_LATIN.</summary>
+        public const String LOWER_LATIN = "lower-latin";
+
+        /// <summary>The Constant LOWER_ROMAN.</summary>
+        public const String LOWER_ROMAN = "lower-roman";
+
+        /// <summary>The Constant LOWERCASE.</summary>
+        public const String LOWERCASE = "lowercase";
+
+        /// <summary>The Constant LTR.</summary>
+        public const String LTR = "ltr";
+
+        /// <summary>The Constant MANUAL.</summary>
+        public const String MANUAL = "manual";
+
+        /// <summary>The Constant MATRIX.</summary>
+        public const String MATRIX = "matrix";
+
+        /// <summary>The Constant MEDIUM.</summary>
+        public const String MEDIUM = "medium";
+
+        /// <summary>The Constant MENU.</summary>
+        public const String MENU = "menu";
+
+        /// <summary>The Constant MESSAGE_BOX.</summary>
+        public const String MESSAGE_BOX = "message-box";
+
+        /// <summary>The Constant MIDDLE.</summary>
+        public const String MIDDLE = "middle";
+
+        /// <summary>The Constant NO_OPEN_QUOTE.</summary>
+        public const String NO_OPEN_QUOTE = "no-open-quote";
+
+        /// <summary>The Constant NO_CLOSE_QUOTE.</summary>
+        public const String NO_CLOSE_QUOTE = "no-close-quote";
+
+        /// <summary>The Constant NO_REPEAT.</summary>
+        public const String NO_REPEAT = "no-repeat";
+
+        /// <summary>The Constant NONE.</summary>
+        public const String NONE = "none";
+
+        /// <summary>The Constant NORMAL.</summary>
+        public const String NORMAL = "normal";
+
+        /// <summary>The Constant NOWRAP.</summary>
+        public const String NOWRAP = "nowrap";
+
+        /// <summary>The Constant OBLIQUE.</summary>
+        public const String OBLIQUE = "oblique";
+
+        /// <summary>The Constant OPEN_QUOTE.</summary>
+        public const String OPEN_QUOTE = "open-quote";
+
+        /// <summary>The Constant OUTSIDE.</summary>
+        public const String OUTSIDE = "outside";
+
+        /// <summary>The Constant OUTSET.</summary>
+        public const String OUTSET = "outset";
+
+        /// <summary>The Constant OVERLINE.</summary>
+        public const String OVERLINE = "overline";
+
+        /// <summary>The Constant PADDING_BOX.</summary>
+        public const String PADDING_BOX = "padding-box";
+
+        /// <summary>The Constant PAGE.</summary>
+        public const String PAGE = "page";
+
+        /// <summary>The Constant PAGES.</summary>
+        public const String PAGES = "pages";
+
+        /// <summary>The Constant PORTRAIT.</summary>
+        public const String PORTRAIT = "portrait";
+
+        /// <summary>The Constant PRE.</summary>
+        public const String PRE = "pre";
+
+        /// <summary>The Constant PRE_LINE.</summary>
+        public const String PRE_LINE = "pre-line";
+
+        /// <summary>The Constant PRE_WRAP.</summary>
+        public const String PRE_WRAP = "pre-wrap";
+
+        /// <summary>The Constant RELATIVE.</summary>
+        public const String RELATIVE = "relative";
+
+        /// <summary>The Constant REPEAT.</summary>
+        public const String REPEAT = "repeat";
+
+        /// <summary>The Constant REPEAT_X.</summary>
+        public const String REPEAT_X = "repeat-x";
+
+        /// <summary>The Constant REPEAT_Y.</summary>
+        public const String REPEAT_Y = "repeat-y";
+
+        /// <summary>The Constant RIDGE.</summary>
+        public const String RIDGE = "ridge";
+
+        /// <summary>The Constant RIGHT.</summary>
+        public const String RIGHT = "right";
+
+        /// <summary>The Constant ROTATE.</summary>
+        public const String ROTATE = "rotate";
+
+        /// <summary>The Constant RTL.</summary>
+        public const String RTL = "rtl";
+
+        /// <summary>The Constant SCALE.</summary>
+        public const String SCALE = "scale";
+
+        /// <summary>The Constant SCALE_X.</summary>
+        public const String SCALE_X = "scalex";
+
+        /// <summary>The Constant SCALE_Y.</summary>
+        public const String SCALE_Y = "scaley";
+
+        /// <summary>The Constant SCROLL.</summary>
+        public const String SCROLL = "scroll";
+
+        /// <summary>The Constant SEPARATE.</summary>
+        public const String SEPARATE = "separate";
+
+        /// <summary>The Constant SKEW.</summary>
+        public const String SKEW = "skew";
+
+        /// <summary>The Constant SKEW_X.</summary>
+        public const String SKEW_X = "skewx";
+
+        /// <summary>The Constant SKEW_Y.</summary>
+        public const String SKEW_Y = "skewy";
+
+        /// <summary>The Constant SMALL.</summary>
+        public const String SMALL = "small";
+
+        /// <summary>The Constant SMALL_CAPS.</summary>
+        public const String SMALL_CAPS = "small-caps";
+
+        /// <summary>The Constant SMALL_CAPTION.</summary>
+        public const String SMALL_CAPTION = "small-caption";
+
+        /// <summary>The Constant SMALLER.</summary>
+        public const String SMALLER = "smaller";
+
+        /// <summary>The Constant SOLID.</summary>
+        public const String SOLID = "solid";
+
+        /// <summary>The Constant SQUARE.</summary>
+        public const String SQUARE = "square";
+
+        /// <summary>The Constant START.</summary>
+        public const String START = "start";
+
+        /// <summary>The Constant STATIC.</summary>
+        public const String STATIC = "static";
+
+        /// <summary>The Constant STATUS_BAR.</summary>
+        public const String STATUS_BAR = "status-bar";
+
+        /// <summary>The Constant SUB.</summary>
+        public const String SUB = "sub";
+
+        /// <summary>The Constant SUPER.</summary>
+        public const String SUPER = "super";
+
+        /// <summary>The Constant TABLE.</summary>
+        public const String TABLE = "table";
+
+        /// <summary>The Constant TABLE_CELL.</summary>
+        public const String TABLE_CELL = "table-cell";
+
+        /// <summary>The Constant TABLE_ROW.</summary>
+        public const String TABLE_ROW = "table-row";
+
+        /// <summary>The Constant TEXT_BOTTOM.</summary>
+        public const String TEXT_BOTTOM = "text-bottom";
+
+        /// <summary>The Constant TEXT_TOP.</summary>
+        public const String TEXT_TOP = "text-top";
+
+        /// <summary>The Constant THICK.</summary>
+        public const String THICK = "thick";
+
+        /// <summary>The Constant THIN.</summary>
+        public const String THIN = "thin";
+
+        /// <summary>The Constant TOP.</summary>
+        public const String TOP = "top";
+
+        /// <summary>The Constant TRANSLATE.</summary>
+        public const String TRANSLATE = "translate";
+
+        /// <summary>The Constant TRANSLATE_X.</summary>
+        public const String TRANSLATE_X = "translatex";
+
+        /// <summary>The Constant TRANSLATE_Y.</summary>
+        public const String TRANSLATE_Y = "translatey";
+
+        /// <summary>The Constant TRANSPARENT.</summary>
+        public const String TRANSPARENT = "transparent";
+
+        /// <summary>The Constant UNDERLINE.</summary>
+        public const String UNDERLINE = "underline";
+
+        /// <summary>The Constant UPPER_ALPHA.</summary>
+        public const String UPPER_ALPHA = "upper-alpha";
+
+        /// <summary>The Constant UPPER_LATIN.</summary>
+        public const String UPPER_LATIN = "upper-latin";
+
+        /// <summary>The Constant UPPER_ROMAN.</summary>
+        public const String UPPER_ROMAN = "upper-roman";
+
+        /// <summary>The Constant UPPERCASE.</summary>
+        public const String UPPERCASE = "uppercase";
+
+        /// <summary>The Constant X_LARGE.</summary>
+        public const String X_LARGE = "x-large";
+
+        /// <summary>The Constant X_SMALL.</summary>
+        public const String X_SMALL = "x-small";
+
+        /// <summary>The Constant XX_LARGE.</summary>
+        public const String XX_LARGE = "xx-large";
+
+        /// <summary>The Constant XX_SMALL.</summary>
+        public const String XX_SMALL = "xx-small";
+
+        /// <summary>The Constant BACKGROUND_SIZE_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_SIZE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
+            (AUTO, COVER, CONTAIN));
+
+        /// <summary>The Constant BACKGROUND_ORIGIN_OR_CLIP_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_ORIGIN_OR_CLIP_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
+            (PADDING_BOX, BORDER_BOX, CONTENT_BOX));
+
+        /// <summary>The Constant BACKGROUND_REPEAT_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_REPEAT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
+            (REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y));
+
+        /// <summary>The Constant BACKGROUND_ATTACHMENT_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_ATTACHMENT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
+            (FIXED, SCROLL, LOCAL));
+
+        /// <summary>The Constant BACKGROUND_POSITION_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_POSITION_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
+            (LEFT, CENTER, BOTTOM, TOP, RIGHT));
+
+        /// <summary>The Constant BORDER_WIDTH_VALUES.</summary>
+        public static readonly ICollection<String> BORDER_WIDTH_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(new String[] { THIN, MEDIUM, THICK })));
+
+        /// <summary>The Constant BORDER_STYLE_VALUES.</summary>
+        public static readonly ICollection<String> BORDER_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(new String[] { NONE, HIDDEN, DOTTED, DASHED, SOLID, DOUBLE, GROOVE, RIDGE
+            , INSET, OUTSET })));
+
+        /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
+        public static readonly ICollection<String> FONT_ABSOLUTE_SIZE_KEYWORDS = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CssConstants.MEDIUM, CssConstants.XX_SMALL, CssConstants.X_SMALL
+            , CssConstants.SMALL, CssConstants.LARGE, CssConstants.X_LARGE, CssConstants.XX_LARGE)));
+
+        /// <summary>The Constant OVERFLOW_VALUES.</summary>
+        public static readonly ICollection<String> OVERFLOW_VALUES = new HashSet<String>(JavaUtil.ArraysAsList(new 
+            String[] { VISIBLE, HIDDEN }));
+
+        /// <summary>The Constant AFTER.</summary>
+        public const String AFTER = "after";
+
+        /// <summary>The Constant BEFORE.</summary>
+        public const String BEFORE = "before";
+
+        /// <summary>The Constant FIRST_LETTER.</summary>
+        public const String FIRST_LETTER = "first-letter";
+
+        /// <summary>The Constant FIRST_LINE.</summary>
+        public const String FIRST_LINE = "first-line";
+
+        /// <summary>The Constant SELECTION.</summary>
+        public const String SELECTION = "selection";
+
+        /// <summary>The Constant ACTIVE.</summary>
+        public const String ACTIVE = "active";
+
+        /// <summary>The Constant CHECKED.</summary>
+        public const String CHECKED = "checked";
+
+        /// <summary>The Constant DISABLED.</summary>
+        public const String DISABLED = "disabled";
+
+        /// <summary>The Constant EMPTY.</summary>
+        public const String EMPTY = "empty";
+
+        /// <summary>The Constant ENABLED.</summary>
+        public const String ENABLED = "enabled";
+
+        /// <summary>The Constant FIRST_CHILD.</summary>
+        public const String FIRST_CHILD = "first-child";
+
+        /// <summary>The Constant FIRST_OF_TYPE.</summary>
+        public const String FIRST_OF_TYPE = "first-of-type";
+
+        /// <summary>The Constant FOCUS.</summary>
+        public const String FOCUS = "focus";
+
+        /// <summary>The Constant HOVER.</summary>
+        public const String HOVER = "hover";
+
+        /// <summary>The Constant IN_RANGE.</summary>
+        public const String IN_RANGE = "in-range";
+
+        /// <summary>The Constant INVALID.</summary>
+        public const String INVALID = "invalid";
+
+        /// <summary>The Constant LANG.</summary>
+        public const String LANG = "lang";
+
+        /// <summary>The Constant LAST_CHILD.</summary>
+        public const String LAST_CHILD = "last-child";
+
+        /// <summary>The Constant LAST_OF_TYPE.</summary>
+        public const String LAST_OF_TYPE = "last-of-type";
+
+        /// <summary>The Constant LINK.</summary>
+        public const String LINK = "link";
+
+        /// <summary>The Constant NTH_CHILD.</summary>
+        public const String NTH_CHILD = "nth-child";
+
+        /// <summary>The Constant NOT.</summary>
+        public const String NOT = "not";
+
+        /// <summary>The Constant NTH_LAST_CHILD.</summary>
+        public const String NTH_LAST_CHILD = "nth-last-child";
+
+        /// <summary>The Constant NTH_LAST_OF_TYPE.</summary>
+        public const String NTH_LAST_OF_TYPE = "nth-last-of-type";
+
+        /// <summary>The Constant NTH_OF_TYPE.</summary>
+        public const String NTH_OF_TYPE = "nth-of-type";
+
+        /// <summary>The Constant ONLY_OF_TYPE.</summary>
+        public const String ONLY_OF_TYPE = "only-of-type";
+
+        /// <summary>The Constant ONLY_CHILD.</summary>
+        public const String ONLY_CHILD = "only-child";
+
+        /// <summary>The Constant OPTIONAL.</summary>
+        public const String OPTIONAL = "optional";
+
+        /// <summary>The Constant OUT_OF_RANGE.</summary>
+        public const String OUT_OF_RANGE = "out-of-range";
+
+        /// <summary>The Constant READ_ONLY.</summary>
+        public const String READ_ONLY = "read-only";
+
+        /// <summary>The Constant READ_WRITE.</summary>
+        public const String READ_WRITE = "read-write";
+
+        /// <summary>The Constant REQUIRED.</summary>
+        public const String REQUIRED = "required";
+
+        /// <summary>The Constant ROOT.</summary>
+        public const String ROOT = "root";
+
+        /// <summary>The Constant TARGET.</summary>
+        public const String TARGET = "target";
+
+        /// <summary>The Constant VALID.</summary>
+        public const String VALID = "valid";
+
+        /// <summary>The Constant VISITED.</summary>
+        public const String VISITED = "visited";
+
+        /// <summary>The Constant COUNTER.</summary>
+        public const String COUNTER = "counter";
+
+        /// <summary>The Constant COUNTERS.</summary>
+        public const String COUNTERS = "counters";
+
+        /// <summary>The Constant RUNNING.</summary>
+        public const String ELEMENT = "element";
+
+        /// <summary>The Constant RUNNING.</summary>
+        public const String RUNNING = "running";
+
+        /// <summary>The Constant CM.</summary>
+        public const String CM = "cm";
+
+        /// <summary>The Constant EM.</summary>
+        public const String EM = "em";
+
+        /// <summary>The Constant EX.</summary>
+        public const String EX = "ex";
+
+        /// <summary>The Constant IN.</summary>
+        public const String IN = "in";
+
+        /// <summary>The Constant MM.</summary>
+        public const String MM = "mm";
+
+        /// <summary>The Constant PC.</summary>
+        public const String PC = "pc";
+
+        /// <summary>The Constant PERCENTAGE.</summary>
+        public const String PERCENTAGE = "%";
+
+        /// <summary>The Constant PT.</summary>
+        public const String PT = "pt";
+
+        /// <summary>The Constant PX.</summary>
+        public const String PX = "px";
+
+        /// <summary>The Constant REM.</summary>
+        public const String REM = "rem";
+
+        /// <summary>The Constant Q.</summary>
+        public const String Q = "q";
+
+        /// <summary>The Constant DPI.</summary>
+        public const String DPI = "dpi";
+
+        /// <summary>The Constant DPCM.</summary>
+        public const String DPCM = "dpcm";
+
+        /// <summary>The Constant DPPX.</summary>
+        public const String DPPX = "dppx";
+        // properties
+        // property values
+        // properties possible values
+        // pseudo-elements
+        // pseudo-classes
+        // Functions
+        // units of measurement
+        // units of resolution
+    }
+}

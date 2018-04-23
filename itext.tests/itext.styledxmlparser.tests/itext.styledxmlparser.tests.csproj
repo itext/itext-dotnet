@@ -45,6 +45,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.pdftest\itext.pdftest.csproj">
+      <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
+      <Name>itext.pdftest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.io\itext.io.csproj">
+      <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
+      <Name>itext.io</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
       <Project>{8636f290-00df-403e-b841-e4bfd6d9ce7a}</Project>
       <Name>styled-xml-parser</Name>

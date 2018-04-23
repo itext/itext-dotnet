@@ -45,7 +45,19 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="itext\styledxmlparser\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StyledXmlParserExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-base.properties" />
+    <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-full.properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.io\itext.io.csproj">
+      <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
+      <Name>itext.io</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="itext.snk" />
