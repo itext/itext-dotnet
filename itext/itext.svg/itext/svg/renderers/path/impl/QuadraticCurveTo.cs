@@ -53,8 +53,9 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Draws a quadratic Bézier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw(PdfCanvas canvas) {
-            canvas.CurveTo(GetCoordinate(properties, SvgTagConstants.X1), GetCoordinate(properties, SvgTagConstants.Y1
-                ), GetCoordinate(properties, SvgTagConstants.X), GetCoordinate(properties, SvgTagConstants.Y));
+            canvas.CurveTo(GetCoordinate(properties, SvgConstants.Attributes.X1), GetCoordinate(properties, SvgConstants.Attributes
+                .Y1), GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
+                .Y));
         }
 
         public override void SetProperties(IDictionary<String, String> properties) {

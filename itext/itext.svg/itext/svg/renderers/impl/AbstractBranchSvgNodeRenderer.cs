@@ -87,8 +87,8 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 CleanUp(context);
                 AffineTransform transformation = new AffineTransform();
-                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgTagConstants.TRANSFORM)) {
-                    transformation = TransformUtils.ParseTransform(attributesAndStyles.Get(SvgTagConstants.TRANSFORM));
+                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.TRANSFORM)) {
+                    transformation = TransformUtils.ParseTransform(attributesAndStyles.Get(SvgConstants.Attributes.TRANSFORM));
                 }
                 // TODO DEVSIX-1891
                 float[] matrixValues = new float[6];
@@ -96,8 +96,8 @@ namespace iText.Svg.Renderers.Impl {
                 // TODO DEVSIX-1890
                 context.GetCurrentCanvas().AddXObject(xObject, matrixValues[0], matrixValues[1], matrixValues[2], matrixValues
                     [3], matrixValues[4], matrixValues[5]);
-                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgTagConstants.ID)) {
-                    context.AddNamedObject(attributesAndStyles.Get(SvgTagConstants.ID), xObject);
+                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
+                    context.AddNamedObject(attributesAndStyles.Get(SvgConstants.Attributes.ID), xObject);
                 }
             }
         }
@@ -106,8 +106,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">current svg draw context</param>
         private void ApplyViewBox(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
-                if (this.attributesAndStyles.ContainsKey(SvgTagConstants.VIEWBOX)) {
-                    String viewBoxValues = attributesAndStyles.Get(SvgTagConstants.VIEWBOX);
+                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
+                    String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
                     IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
                     float[] values = new float[valueStrings.Count];
                     for (int i = 0; i < values.Length; i++) {
@@ -141,11 +141,12 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>the transformation based on the preserveAspectRatio value</returns>
         private AffineTransform ProcessAspectRatio(SvgDrawContext context, float[] viewBoxValues) {
             AffineTransform transform = new AffineTransform();
-            if (this.attributesAndStyles.ContainsKey(SvgTagConstants.PRESERVE_ASPECT_RATIO)) {
+            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
                 Rectangle currentViewPort = context.GetCurrentViewPort();
-                String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgTagConstants.PRESERVE_ASPECT_RATIO);
+                String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                    );
                 IList<String> values = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
-                if (SvgTagConstants.DEFER.EqualsIgnoreCase(values[0])) {
+                if (SvgConstants.Values.DEFER.EqualsIgnoreCase(values[0])) {
                     values.JRemoveAt(0);
                 }
                 String align = values[0];
@@ -156,59 +157,59 @@ namespace iText.Svg.Renderers.Impl {
                 float midXPort = currentViewPort.GetX() + (currentViewPort.GetWidth() / 2);
                 float midYPort = currentViewPort.GetY() + (currentViewPort.GetHeight() / 2);
                 switch (align.ToLowerInvariant()) {
-                    case SvgTagConstants.NONE: {
+                    case SvgConstants.Values.NONE: {
                         break;
                     }
 
-                    case SvgTagConstants.XMIN_YMIN: {
+                    case SvgConstants.Values.XMIN_YMIN: {
                         x = -viewBoxValues[0];
                         y = -viewBoxValues[1];
                         break;
                     }
 
-                    case SvgTagConstants.XMIN_YMID: {
+                    case SvgConstants.Values.XMIN_YMID: {
                         x = -viewBoxValues[0];
                         y = midYPort - midYBox;
                         break;
                     }
 
-                    case SvgTagConstants.XMIN_YMAX: {
+                    case SvgConstants.Values.XMIN_YMAX: {
                         x = -viewBoxValues[0];
                         y = currentViewPort.GetHeight() - viewBoxValues[3];
                         break;
                     }
 
-                    case SvgTagConstants.XMID_YMIN: {
+                    case SvgConstants.Values.XMID_YMIN: {
                         x = midXPort - midXBox;
                         y = -viewBoxValues[1];
                         break;
                     }
 
-                    case SvgTagConstants.XMID_YMAX: {
+                    case SvgConstants.Values.XMID_YMAX: {
                         x = midXPort - midXBox;
                         y = currentViewPort.GetHeight() - viewBoxValues[3];
                         break;
                     }
 
-                    case SvgTagConstants.XMAX_YMIN: {
+                    case SvgConstants.Values.XMAX_YMIN: {
                         x = currentViewPort.GetWidth() - viewBoxValues[2];
                         y = -viewBoxValues[1];
                         break;
                     }
 
-                    case SvgTagConstants.XMAX_YMID: {
+                    case SvgConstants.Values.XMAX_YMID: {
                         x = currentViewPort.GetWidth() - viewBoxValues[2];
                         y = midYPort - midYBox;
                         break;
                     }
 
-                    case SvgTagConstants.XMAX_YMAX: {
+                    case SvgConstants.Values.XMAX_YMAX: {
                         x = currentViewPort.GetWidth() - viewBoxValues[2];
                         y = currentViewPort.GetHeight() - viewBoxValues[3];
                         break;
                     }
 
-                    case SvgTagConstants.DEFAULT_ASPECT_RATIO:
+                    case SvgConstants.Values.DEFAULT_ASPECT_RATIO:
                     default: {
                         x = midXPort - midXBox;
                         y = midYPort - midYBox;

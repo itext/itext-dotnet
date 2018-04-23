@@ -76,23 +76,23 @@ namespace iText.Svg.Renderers.Impl {
         protected internal virtual bool SetParameters() {
             cx = 0;
             cy = 0;
-            if (GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE) != null) {
-                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.CX) != null) {
+                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
             }
-            if (GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE) != null) {
-                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.CY) != null) {
+                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
             }
-            if (GetAttribute(SvgAttributeConstants.RX_ATTRIBUTE) != null && CssUtils.ParseAbsoluteLength(GetAttribute(
-                SvgAttributeConstants.RX_ATTRIBUTE)) > 0) {
-                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RX_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.RX) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
+                .RX)) > 0) {
+                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
             }
             else {
                 return false;
             }
             //No drawing if rx is absent
-            if (GetAttribute(SvgAttributeConstants.RY_ATTRIBUTE) != null && CssUtils.ParseAbsoluteLength(GetAttribute(
-                SvgAttributeConstants.RY_ATTRIBUTE)) > 0) {
-                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RY_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.RY) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
+                .RY)) > 0) {
+                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
             }
             else {
                 return false;

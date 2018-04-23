@@ -57,7 +57,7 @@ namespace iText.Svg.Renderers {
             ISvgNodeRenderer nodeRenderer = new _AbstractSvgNodeRenderer_68();
             // do nothing
             IDictionary<String, String> attributeMap = new Dictionary<String, String>();
-            attributeMap.Put(SvgTagConstants.TRANSFORM, "translate(10)");
+            attributeMap.Put(SvgConstants.Attributes.TRANSFORM, "translate(10)");
             nodeRenderer.SetAttributesAndStyles(attributeMap);
             SvgDrawContext context = new SvgDrawContext();
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));

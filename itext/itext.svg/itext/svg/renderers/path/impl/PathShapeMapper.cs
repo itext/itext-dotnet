@@ -58,11 +58,11 @@ namespace iText.Svg.Renderers.Path.Impl {
     public class PathShapeMapper : IPathShapeMapper {
         public virtual IDictionary<String, IPathShape> GetMapping() {
             IDictionary<String, IPathShape> result = new Dictionary<String, IPathShape>();
-            result.Put(SvgTagConstants.PATH_DATA_LINE_TO, new LineTo());
-            result.Put(SvgTagConstants.PATH_DATA_MOVE_TO, new MoveTo());
-            result.Put(SvgTagConstants.PATH_DATA_CURVE_TO, new CurveTo());
-            result.Put(SvgTagConstants.PATH_DATA_QUARD_CURVE_TO, new QuadraticCurveTo());
-            result.Put(SvgTagConstants.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO, new LineTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_MOVE_TO, new MoveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO, new CurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_QUARD_CURVE_TO, new QuadraticCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
             return result;
         }
     }

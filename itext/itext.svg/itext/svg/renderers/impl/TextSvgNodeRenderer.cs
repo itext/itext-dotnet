@@ -62,12 +62,12 @@ namespace iText.Svg.Renderers.Impl {
     /// </remarks>
     public class TextSvgNodeRenderer : AbstractSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgTagConstants.TEXT_CONTENT)
-                ) {
+            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
+                )) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                String xRawValue = this.attributesAndStyles.Get(SvgTagConstants.X);
-                String yRawValue = this.attributesAndStyles.Get(SvgTagConstants.Y);
-                String fontSizeRawValue = this.attributesAndStyles.Get(SvgTagConstants.FONT_SIZE);
+                String xRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.X);
+                String yRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.Y);
+                String fontSizeRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_SIZE);
                 IList<String> xValuesList = SvgCssUtils.SplitValueList(xRawValue);
                 IList<String> yValuesList = SvgCssUtils.SplitValueList(yRawValue);
                 float x = 0f;
@@ -93,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
                 //Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
                 currentCanvas.SetTextMatrix(1, 0, 0, -1, x, y);
                 currentCanvas.SetColor(ColorConstants.BLACK, true);
-                currentCanvas.ShowText(this.attributesAndStyles.Get(SvgTagConstants.TEXT_CONTENT));
+                currentCanvas.ShowText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
                 currentCanvas.EndText();
             }
         }

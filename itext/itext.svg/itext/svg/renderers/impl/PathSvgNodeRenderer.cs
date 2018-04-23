@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
                 //split att to {M , 100, 100}
                 String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, SPACE_CHAR);
                 if (pathProperties.Length > 0 && !pathProperties[0].Equals(SEPERATOR)) {
-                    if (pathProperties[0].EqualsIgnoreCase(SvgTagConstants.PATH_DATA_CLOSE_PATH)) {
+                    if (pathProperties[0].EqualsIgnoreCase(SvgConstants.Attributes.PATH_DATA_CLOSE_PATH)) {
                         continue;
                     }
                     else {
@@ -92,16 +92,16 @@ namespace iText.Svg.Renderers.Impl {
                                 IDictionary<String, String> coordinates = previousCommand.GetCoordinates();
                                 /*if the previous command was a C or S use its last control point*/
                                 if (((previousCommand is CurveTo) || (previousCommand is SmoothSCurveTo))) {
-                                    float reflectedX = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgTagConstants.X)) - CssUtils.ParseFloat
-                                        (coordinates.Get(SvgTagConstants.X2)));
-                                    float reflectedy = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgTagConstants.Y)) - CssUtils.ParseFloat
-                                        (coordinates.Get(SvgTagConstants.Y2)));
+                                    float reflectedX = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.X)) - CssUtils.
+                                        ParseFloat(coordinates.Get(SvgConstants.Attributes.X2)));
+                                    float reflectedy = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.Y)) - CssUtils.
+                                        ParseFloat(coordinates.Get(SvgConstants.Attributes.Y2)));
                                     startingControlPoint[0] = SvgCssUtils.ConvertFloatToString(reflectedX);
                                     startingControlPoint[1] = SvgCssUtils.ConvertFloatToString(reflectedy);
                                 }
                                 else {
-                                    startingControlPoint[0] = coordinates.Get(SvgTagConstants.X);
-                                    startingControlPoint[1] = coordinates.Get(SvgTagConstants.Y);
+                                    startingControlPoint[0] = coordinates.Get(SvgConstants.Attributes.X);
+                                    startingControlPoint[1] = coordinates.Get(SvgConstants.Attributes.Y);
                                 }
                             }
                             else {
@@ -132,7 +132,7 @@ namespace iText.Svg.Renderers.Impl {
 
         private ICollection<String> ParsePropertiesAndStyles() {
             StringBuilder result = new StringBuilder();
-            String attributes = attributesAndStyles.Get(SvgTagConstants.D);
+            String attributes = attributesAndStyles.Get(SvgConstants.Tags.D);
             String closePath = attributes.IndexOf('z') > 0 ? attributes.Substring(attributes.IndexOf('z')) : "".Trim();
             if (!closePath.Equals(SEPERATOR)) {
                 attributes = attributes.Replace(closePath, SEPERATOR).Trim();

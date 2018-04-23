@@ -85,7 +85,7 @@ namespace iText.Svg.Renderers.Impl {
         public void Draw(SvgDrawContext context) {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             if (this.attributesAndStyles != null) {
-                String transformString = this.attributesAndStyles.Get(SvgTagConstants.TRANSFORM);
+                String transformString = this.attributesAndStyles.Get(SvgConstants.Attributes.TRANSFORM);
                 if (transformString != null && !String.IsNullOrEmpty(transformString)) {
                     AffineTransform transformation = TransformUtils.ParseTransform(transformString);
                     currentCanvas.ConcatMatrix(transformation);
@@ -94,8 +94,8 @@ namespace iText.Svg.Renderers.Impl {
             PreDraw(context);
             DoDraw(context);
             PostDraw(context);
-            if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgTagConstants.ID)) {
-                context.AddNamedObject(attributesAndStyles.Get(SvgTagConstants.ID), this);
+            if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
+                context.AddNamedObject(attributesAndStyles.Get(SvgConstants.Attributes.ID), this);
             }
         }
 
@@ -110,8 +110,8 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
  {
                     // fill
-                    String fillRawValue = GetAttribute(SvgTagConstants.FILL);
-                    this.doFill = !SvgTagConstants.NONE.EqualsIgnoreCase(fillRawValue);
+                    String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
+                    this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
                     if (doFill && CanElementFill()) {
                         // todo RND-865 default style sheets
                         Color color = ColorConstants.BLACK;
@@ -123,11 +123,11 @@ namespace iText.Svg.Renderers.Impl {
                 }
  {
                     // stroke
-                    String strokeRawValue = GetAttribute(SvgTagConstants.STROKE);
+                    String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
                     DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
                     if (strokeRawValue != null && rgbColor != null) {
                         currentCanvas.SetStrokeColor(rgbColor);
-                        String strokeWidthRawValue = GetAttribute(SvgTagConstants.STROKE_WIDTH);
+                        String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                         float strokeWidth = 1f;
                         if (strokeWidthRawValue != null) {
                             strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
@@ -155,8 +155,8 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 // fill-rule
                 if (doFill && CanElementFill()) {
-                    String fillRuleRawValue = GetAttribute(SvgTagConstants.FILL_RULE);
-                    if (SvgTagConstants.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                    String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
+                    if (SvgConstants.Attributes.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
                         // TODO RND-878
                         currentCanvas.EoFill();
                     }
@@ -164,7 +164,7 @@ namespace iText.Svg.Renderers.Impl {
                         currentCanvas.Fill();
                     }
                 }
-                if (GetAttribute(SvgTagConstants.STROKE) != null) {
+                if (GetAttribute(SvgConstants.Attributes.STROKE) != null) {
                     currentCanvas.Stroke();
                 }
                 currentCanvas.ClosePath();

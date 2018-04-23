@@ -62,24 +62,24 @@ namespace iText.Svg.Renderers.Impl {
             cv.WriteLiteral("% rect\n");
             float x = 0.0f;
             float y = 0.0f;
-            if (GetAttribute(SvgAttributeConstants.X_ATTRIBUTE) != null) {
-                x = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.X_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.X) != null) {
+                x = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.X));
             }
-            if (GetAttribute(SvgAttributeConstants.Y_ATTRIBUTE) != null) {
-                y = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.Y_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.Y) != null) {
+                y = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
             }
-            float width = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.WIDTH_ATTRIBUTE));
-            float height = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.HEIGHT_ATTRIBUTE));
+            float width = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.WIDTH));
+            float height = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.HEIGHT));
             bool rxPresent = false;
             bool ryPresent = false;
             float rx = 0f;
             float ry = 0f;
-            if (attributesAndStyles.ContainsKey(SvgAttributeConstants.RX_ATTRIBUTE)) {
-                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RX_ATTRIBUTE));
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
+                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
                 rxPresent = true;
             }
-            if (attributesAndStyles.ContainsKey(SvgAttributeConstants.RY_ATTRIBUTE)) {
-                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.RY_ATTRIBUTE));
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RY)) {
+                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
                 ryPresent = true;
             }
             bool singleValuePresent = (rxPresent && !ryPresent) || (!rxPresent && ryPresent);

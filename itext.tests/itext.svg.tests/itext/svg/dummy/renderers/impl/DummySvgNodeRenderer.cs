@@ -80,7 +80,8 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         }
 
         public virtual String GetAttribute(String key) {
-            if (SvgTagConstants.WIDTH.EqualsIgnoreCase(key) || SvgTagConstants.HEIGHT.EqualsIgnoreCase(key)) {
+            if (SvgConstants.Attributes.WIDTH.EqualsIgnoreCase(key) || SvgConstants.Attributes.HEIGHT.EqualsIgnoreCase
+                (key)) {
                 return "10";
             }
             return "";

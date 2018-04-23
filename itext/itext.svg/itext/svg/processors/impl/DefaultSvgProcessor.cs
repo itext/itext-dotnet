@@ -103,7 +103,7 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(new DefaultSvgConverterProperties(root));
             }
             //Find root
-            IElementNode svgRoot = FindFirstElement(root, SvgTagConstants.SVG);
+            IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
@@ -225,7 +225,7 @@ namespace iText.Svg.Processors.Impl {
                 trimmedText = SvgTextUtil.TrimLeadingWhitespace(trimmedText);
                 //Trim trailing whitespace
                 trimmedText = SvgTextUtil.TrimTrailingWhitespace(trimmedText);
-                parentRenderer.SetAttribute(SvgTagConstants.TEXT_CONTENT, trimmedText);
+                parentRenderer.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, trimmedText);
             }
         }
 

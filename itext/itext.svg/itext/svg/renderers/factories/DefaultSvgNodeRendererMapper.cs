@@ -59,23 +59,23 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
-            result.Put(SvgTagConstants.LINE, typeof(LineSvgNodeRenderer));
-            result.Put(SvgTagConstants.SVG, typeof(SvgSvgNodeRenderer));
-            result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
-            result.Put(SvgTagConstants.RECT, typeof(RectangleSvgNodeRenderer));
-            result.Put(SvgTagConstants.PATH, typeof(PathSvgNodeRenderer));
-            result.Put(SvgTagConstants.POLYGON, typeof(PolygonSvgNodeRenderer));
-            result.Put(SvgTagConstants.POLYLINE, typeof(PolylineSvgNodeRenderer));
-            result.Put(SvgTagConstants.ELLIPSE, typeof(EllipseSvgNodeRenderer));
-            result.Put(SvgTagConstants.G, typeof(NoDrawOperationSvgNodeRenderer));
-            result.Put(SvgTagConstants.CIRCLE, typeof(CircleSvgNodeRenderer));
-            result.Put(SvgTagConstants.TEXT, typeof(TextSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.SVG, typeof(SvgSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.G, typeof(NoDrawOperationSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgNodeRenderer));
             return result;
         }
 
         public virtual ICollection<String> GetIgnoredTags() {
             ICollection<String> ignored = new HashSet<String>();
-            ignored.Add(SvgTagConstants.STYLE);
+            ignored.Add(SvgConstants.Tags.STYLE);
             return ignored;
         }
     }

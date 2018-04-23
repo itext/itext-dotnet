@@ -120,7 +120,7 @@ namespace iText.Svg.Css.Impl {
                 q.RemoveFirst();
                 if (currentNode is IElementNode) {
                     IElementNode headChildElement = (IElementNode)currentNode;
-                    if (headChildElement.Name().Equals(SvgTagConstants.STYLE)) {
+                    if (headChildElement.Name().Equals(SvgConstants.Attributes.STYLE)) {
                         //XML parser will parse style tag contents as text nodes
                         if (currentNode.ChildNodes().Count > 0 && (currentNode.ChildNodes()[0] is IDataNode || currentNode.ChildNodes
                             ()[0] is ITextNode)) {

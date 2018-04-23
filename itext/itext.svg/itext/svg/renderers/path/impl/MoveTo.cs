@@ -51,7 +51,8 @@ namespace iText.Svg.Renderers.Path.Impl {
         internal IDictionary<String, String> properties;
 
         public override void Draw(PdfCanvas canvas) {
-            canvas.MoveTo(GetCoordinate(properties, SvgTagConstants.X), GetCoordinate(properties, SvgTagConstants.Y));
+            canvas.MoveTo(GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
+                .Y));
         }
 
         public override void SetProperties(IDictionary<String, String> properties) {

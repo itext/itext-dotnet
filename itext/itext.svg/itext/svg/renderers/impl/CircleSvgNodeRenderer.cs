@@ -52,15 +52,15 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override bool SetParameters() {
             cx = 0;
             cy = 0;
-            if (GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE) != null) {
-                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CX_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.CX) != null) {
+                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
             }
-            if (GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE) != null) {
-                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.CY_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.CY) != null) {
+                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
             }
-            if (GetAttribute(SvgAttributeConstants.R_ATTRIBUTE) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants
-                .R_ATTRIBUTE)) > 0) {
-                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgAttributeConstants.R_ATTRIBUTE));
+            if (GetAttribute(SvgConstants.Attributes.R) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
+                .R)) > 0) {
+                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.R));
                 ry = rx;
             }
             else {

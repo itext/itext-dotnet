@@ -62,17 +62,17 @@ namespace iText.Svg.Renderers.Impl {
                     float y1 = 0f;
                     float x2 = 0f;
                     float y2 = 0f;
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.X1)) {
-                        x1 = GetAttribute(attributesAndStyles, SvgTagConstants.X1);
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
+                        x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.Y1)) {
-                        y1 = GetAttribute(attributesAndStyles, SvgTagConstants.Y1);
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
+                        y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.X2)) {
-                        x2 = GetAttribute(attributesAndStyles, SvgTagConstants.X2);
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
+                        x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.Y2)) {
-                        y2 = GetAttribute(attributesAndStyles, SvgTagConstants.Y2);
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
+                        y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
                     }
                     canvas.MoveTo(x1, y1).LineTo(x2, y2);
                 }

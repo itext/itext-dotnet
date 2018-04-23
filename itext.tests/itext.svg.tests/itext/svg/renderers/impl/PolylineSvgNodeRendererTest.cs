@@ -75,7 +75,7 @@ namespace iText.Svg.Renderers.Impl {
             doc.AddNewPage();
             ISvgNodeRenderer root = new PolylineSvgNodeRenderer();
             IDictionary<String, String> polyLineAttributes = new Dictionary<String, String>();
-            polyLineAttributes.Put(SvgTagConstants.POINTS, "0,40 40,40 40,80 80,80 80,120 120,120 120,160");
+            polyLineAttributes.Put(SvgConstants.Attributes.POINTS, "0,40 40,40 40,80 80,80 80,120 120,120 120,160");
             root.SetAttributesAndStyles(polyLineAttributes);
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
@@ -93,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
                 doc.AddNewPage();
                 ISvgNodeRenderer root = new PolylineSvgNodeRenderer();
                 IDictionary<String, String> polyLineAttributes = new Dictionary<String, String>();
-                polyLineAttributes.Put(SvgTagConstants.POINTS, "0,0 notAnum,alsoNotANum");
+                polyLineAttributes.Put(SvgConstants.Attributes.POINTS, "0,0 notAnum,alsoNotANum");
                 root.SetAttributesAndStyles(polyLineAttributes);
                 SvgDrawContext context = new SvgDrawContext();
                 PdfCanvas cv = new PdfCanvas(doc, 1);
@@ -111,7 +111,7 @@ namespace iText.Svg.Renderers.Impl {
                 doc.AddNewPage();
                 ISvgNodeRenderer root = new PolylineSvgNodeRenderer();
                 IDictionary<String, String> polyLineAttributes = new Dictionary<String, String>();
-                polyLineAttributes.Put(SvgTagConstants.POINTS, "0,0 100,100 5, 20,30");
+                polyLineAttributes.Put(SvgConstants.Attributes.POINTS, "0,0 100,100 5, 20,30");
                 root.SetAttributesAndStyles(polyLineAttributes);
                 SvgDrawContext context = new SvgDrawContext();
                 PdfCanvas cv = new PdfCanvas(doc, 1);
@@ -149,7 +149,7 @@ namespace iText.Svg.Renderers.Impl {
             doc.AddNewPage();
             ISvgNodeRenderer root = new PolylineSvgNodeRenderer();
             IDictionary<String, String> polyLineAttributes = new Dictionary<String, String>();
-            polyLineAttributes.Put(SvgTagConstants.POINTS, "0,0 100,100 200,200 300,300");
+            polyLineAttributes.Put(SvgConstants.Attributes.POINTS, "0,0 100,100 200,200 300,300");
             root.SetAttributesAndStyles(polyLineAttributes);
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);

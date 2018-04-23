@@ -122,17 +122,17 @@ namespace iText.Svg.Renderers.Impl {
             // default should be parent heigth if not outermost
             if (attributesAndStyles != null) {
                 if (!outermost) {
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.X)) {
-                        portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgTagConstants.X));
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
+                        portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.Y)) {
-                        portY = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgTagConstants.Y));
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
+                        portY = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.WIDTH)) {
-                        portWidth = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgTagConstants.WIDTH));
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
+                        portWidth = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH));
                     }
-                    if (attributesAndStyles.ContainsKey(SvgTagConstants.HEIGHT)) {
-                        portHeight = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgTagConstants.HEIGHT));
+                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
+                        portHeight = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT));
                     }
                 }
             }
