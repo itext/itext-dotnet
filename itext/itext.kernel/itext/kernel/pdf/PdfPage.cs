@@ -1625,7 +1625,7 @@ namespace iText.Kernel.Pdf {
                 PdfArray cropBox = (PdfArray)GetInheritedValue(PdfName.CropBox, PdfObject.ARRAY);
                 //crop box is optional, we shall not set default value.
                 if (cropBox != null) {
-                    copyPdfPage.Put(PdfName.CropBox, cropBox);
+                    copyPdfPage.Put(PdfName.CropBox, cropBox.CopyTo(pdfDocument));
                 }
             }
             if (copyPdfPage.GetPdfObject().Get(PdfName.Rotate) == null) {
@@ -1633,7 +1633,7 @@ namespace iText.Kernel.Pdf {
                 PdfNumber rotate = (PdfNumber)GetInheritedValue(PdfName.Rotate, PdfObject.NUMBER);
                 //rotate is optional, we shall not set default value.
                 if (rotate != null) {
-                    copyPdfPage.Put(PdfName.Rotate, rotate);
+                    copyPdfPage.Put(PdfName.Rotate, rotate.CopyTo(pdfDocument));
                 }
             }
         }

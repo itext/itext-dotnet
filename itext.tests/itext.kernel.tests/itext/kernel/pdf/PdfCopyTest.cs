@@ -49,11 +49,11 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfCopyTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfCopyTest/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfCopyTest/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfCopyTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -210,6 +210,22 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copySamePageWithAnnotationsSeveralTimes.pdf"
                 , sourceFolder + "cmp_copySamePageWithAnnotationsSeveralTimes.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CopyIndirectInheritablePageEntriesTest01() {
+            String src = sourceFolder + "indirectPageProps.pdf";
+            String filename = "copyIndirectInheritablePageEntriesTest01.pdf";
+            String dest = destinationFolder + filename;
+            String cmp = sourceFolder + "cmp_" + filename;
+            PdfDocument outputDoc = new PdfDocument(new PdfWriter(dest));
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(src));
+            sourceDoc.CopyPagesTo(1, 1, outputDoc);
+            sourceDoc.Close();
+            outputDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
     }
 }
