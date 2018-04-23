@@ -91,11 +91,9 @@ namespace iText.Svg.Renderers.Impl {
                     throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
                 }
                 //Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
-                currentCanvas.SaveState();
                 currentCanvas.SetTextMatrix(1, 0, 0, -1, x, y);
                 currentCanvas.SetColor(ColorConstants.BLACK, true);
                 currentCanvas.ShowText(this.attributesAndStyles.Get(SvgTagConstants.TEXT_CONTENT));
-                currentCanvas.RestoreState();
                 currentCanvas.EndText();
             }
         }

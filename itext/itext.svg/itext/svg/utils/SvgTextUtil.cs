@@ -44,11 +44,17 @@ using System;
 
 namespace iText.Svg.Utils {
     /// <summary>Class containing utility methods for text operations in the context of SVG processing</summary>
-    public class SvgTextUtil {
+    public sealed class SvgTextUtil {
+        private SvgTextUtil() {
+        }
+
         /// <summary>Trim all the leading whitespace characters from the passed string</summary>
         /// <param name="toTrim">string to trim</param>
         /// <returns>string with all leading whitespace characters removed</returns>
         public static String TrimLeadingWhitespace(String toTrim) {
+            if (toTrim == null) {
+                return "";
+            }
             int current = 0;
             int end = toTrim.Length;
             while (current < end) {
@@ -68,6 +74,9 @@ namespace iText.Svg.Utils {
         /// <param name="toTrim">string to trom</param>
         /// <returns>string with al trailing whitespace characters removed</returns>
         public static String TrimTrailingWhitespace(String toTrim) {
+            if (toTrim == null) {
+                return "";
+            }
             int end = toTrim.Length;
             if (end > 0) {
                 int current = end - 1;
