@@ -171,5 +171,33 @@ namespace iText.Svg.Utils {
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.UNKNOWN_TRANSFORMATION_TYPE));
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TrailingWhiteSpace() {
+            AffineTransform actual = TransformUtils.ParseTransform("translate(1) translate(2) ");
+            AffineTransform expected = AffineTransform.GetTranslateInstance(2.25, 0);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LeadingWhiteSpace() {
+            AffineTransform actual = TransformUtils.ParseTransform("   translate(1) translate(2)");
+            AffineTransform expected = AffineTransform.GetTranslateInstance(2.25, 0);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MiddleWhiteSpace() {
+            AffineTransform actual = TransformUtils.ParseTransform("translate(1)     translate(2)");
+            AffineTransform expected = AffineTransform.GetTranslateInstance(2.25, 0);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MixedWhiteSpace() {
+            AffineTransform actual = TransformUtils.ParseTransform("   translate(1)     translate(2)   ");
+            AffineTransform expected = AffineTransform.GetTranslateInstance(2.25, 0);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

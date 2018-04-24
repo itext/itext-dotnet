@@ -157,7 +157,10 @@ namespace iText.Svg.Utils {
             List<String> list = new List<String>();
             StringTokenizer tokenizer = new StringTokenizer(transform, ")", false);
             while (tokenizer.HasMoreTokens()) {
-                list.Add(tokenizer.NextToken().Trim() + ")");
+                String trim = tokenizer.NextToken().Trim();
+                if (trim != null && !String.IsNullOrEmpty(trim)) {
+                    list.Add(trim + ")");
+                }
             }
             return list;
         }
