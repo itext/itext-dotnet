@@ -76,6 +76,18 @@ namespace iText.Layout {
             TestHyphenateResult("de", "Ann\u00ADuit\u00ADätendarl\u00ADehen", new int[] { 3, 7, 16 });
         }
 
+        [NUnit.Framework.Test]
+        public virtual void StackoverflowTestDe() {
+            //https://stackoverflow.com/
+            TestHyphenateResult("de", "https://stackoverflow.com/", new int[] { 3, 14, 17 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StackoverflowTestEn() {
+            //https://stackoverflow.com/
+            TestHyphenateResult("en", "https://stackoverflow.com/", new int[] { 13, 17 });
+        }
+
         private void TestHyphenateResult(String lang, String testWorld, int[] expectedHyphenatePoints) {
             String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
             lang = parts[0];

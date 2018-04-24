@@ -351,8 +351,9 @@ namespace iText.Layout.Renderer {
                                     for (int i = hyph.Length() - 1; i >= 0; i--) {
                                         String pre = hyph.GetPreHyphenText(i);
                                         String pos = hyph.GetPostHyphenText(i);
-                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(pre + hyphenationConfig.
-                                            GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing, wordSpacing);
+                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
+                                            , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
+                                            , wordSpacing);
                                         if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
                                             <= layoutBox.GetWidth()) {
                                             hyphenationApplied = true;

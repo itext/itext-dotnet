@@ -46,6 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Hyphenation;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
@@ -78,6 +79,57 @@ namespace iText.Layout {
             document.Add(new Paragraph("5                                 \"Annuitätendarlehen\""));
             document.Add(new Paragraph("6                                      Annuitätendarlehen"));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void UriTest01() {
+            String outFileName = destinationFolder + "uriTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_uriTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc, new PageSize(140, 500));
+            Hyphenator hyphenator = new Hyphenator("en", "en", 3, 3);
+            HyphenationConfig hyphenationConfig = new HyphenationConfig(hyphenator);
+            document.SetHyphenation(hyphenationConfig);
+            Paragraph p = new Paragraph("https://stackoverflow.com/");
+            document.Add(p);
+            p = new Paragraph("http://stackoverflow.com/");
+            document.Add(p);
+            p = new Paragraph("m://iiiiiiii.com/");
+            document.Add(p);
+            document.Add(new AreaBreak());
+            p = new Paragraph("https://stackoverflow.com/");
+            p.SetHyphenation(null);
+            document.Add(p);
+            p = new Paragraph("http://stackoverflow.com/");
+            p.SetHyphenation(null);
+            document.Add(p);
+            p = new Paragraph("m://iiiiiiii.com/");
+            p.SetHyphenation(null);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WidthTest01() {
+            String outFileName = destinationFolder + "widthTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_widthTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Text text = new Text("Hier ein link https://stackoverflow " + "\n" + " (Sperrvermerk) (Sperrvermerk)" + "\n"
+                 + "„Sperrvermerk“ „Sperrvermerk“" + "\n" + "Der Sperrvermerk Sperrvermerk" + "\n" + "correct Sperr|ver|merk"
+                );
+            Paragraph paragraph = new Paragraph(text);
+            paragraph.SetWidth(150);
+            paragraph.SetTextAlignment(TextAlignment.JUSTIFIED);
+            paragraph.SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
+            doc.Add(paragraph);
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
