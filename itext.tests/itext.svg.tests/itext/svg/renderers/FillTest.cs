@@ -41,11 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class FillTest {
+    public class FillTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/FillTest/";
 
@@ -61,22 +60,35 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalRectangleFillTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleNormalRectangleFillTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill"
-                );
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoRectangleFillColorTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EoFillTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EoFillStrokeTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
         }
     }
 }

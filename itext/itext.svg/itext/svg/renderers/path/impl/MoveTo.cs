@@ -48,15 +48,9 @@ using iText.Svg;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements moveTo(M) attribute of SVG's path element</summary>
     public class MoveTo : AbstractPathShape {
-        internal IDictionary<String, String> properties;
-
         public override void Draw(PdfCanvas canvas) {
             canvas.MoveTo(GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
                 .Y));
-        }
-
-        public override void SetProperties(IDictionary<String, String> properties) {
-            this.properties = properties;
         }
 
         public override void SetCoordinates(String[] coordinates) {
@@ -64,10 +58,6 @@ namespace iText.Svg.Renderers.Path.Impl {
             map.Put("x", coordinates.Length > 0 && !String.IsNullOrEmpty(coordinates[0]) ? coordinates[0] : "0");
             map.Put("y", coordinates.Length > 1 && !String.IsNullOrEmpty(coordinates[1]) ? coordinates[1] : "0");
             SetProperties(map);
-        }
-
-        public override IDictionary<String, String> GetCoordinates() {
-            return properties;
         }
     }
 }

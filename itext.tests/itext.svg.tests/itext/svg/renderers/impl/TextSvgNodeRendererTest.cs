@@ -41,10 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class TextSvgNodeRendererTest {
+    public class TextSvgNodeRendererTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/TextNodeRendererTest/";
 
@@ -60,28 +61,28 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TooLongTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesNewlineTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines_newline");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines_newline");
         }
     }
 }

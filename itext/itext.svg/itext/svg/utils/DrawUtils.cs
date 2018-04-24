@@ -49,6 +49,9 @@ namespace iText.Svg.Utils {
     /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
     /// </summary>
     public class DrawUtils {
+        private DrawUtils() {
+        }
+
         /// <summary>
         /// Draw an arc on the passed canvas,
         /// enclosed by the rectangle for which two opposite corners are specified.
@@ -67,13 +70,12 @@ namespace iText.Svg.Utils {
         /// <param name="cv">canvas to paint on</param>
         public static void Arc(float x1, float y1, float x2, float y2, float startAng, float extent, PdfCanvas cv) {
             IList<double[]> ar = PdfCanvas.BezierArc(x1, y1, x2, y2, startAng, extent);
-            if (ar.IsEmpty()) {
-                return;
-            }
-            double[] pt;
-            for (int k = 0; k < ar.Count; ++k) {
-                pt = ar[k];
-                cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
+            if (!ar.IsEmpty()) {
+                double[] pt;
+                for (int k = 0; k < ar.Count; ++k) {
+                    pt = ar[k];
+                    cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
+                }
             }
         }
     }

@@ -67,7 +67,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
             result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.G, typeof(NoDrawOperationSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.G, typeof(BranchSvgNodeRenderer));
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgNodeRenderer));
             return result;

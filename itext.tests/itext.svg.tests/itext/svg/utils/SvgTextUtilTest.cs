@@ -157,5 +157,19 @@ namespace iText.Svg.Utils {
             String expected = " to trim \n";
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimNullLeadingTest() {
+            String expected = "";
+            String actual = SvgTextUtil.TrimLeadingWhitespace(null);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimNullTrailingTest() {
+            String expected = "";
+            String actual = SvgTextUtil.TrimTrailingWhitespace(null);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

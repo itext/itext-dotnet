@@ -50,6 +50,9 @@ namespace iText.Svg.Renderers.Path {
     /// objects.
     /// </summary>
     public class DefaultSvgPathShapeFactory {
+        private DefaultSvgPathShapeFactory() {
+        }
+
         /// <summary>
         /// Creates a configured
         /// <see cref="IPathShape"/>

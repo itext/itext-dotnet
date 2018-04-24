@@ -174,6 +174,26 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetAttributeTest() {
+            float expected = 0.75f;
+            LineSvgNodeRenderer lineSvgNodeRenderer = new LineSvgNodeRenderer();
+            IDictionary<String, String> attributes = new Dictionary<String, String>();
+            attributes.Put("key", "1.0");
+            float actual = lineSvgNodeRenderer.GetAttribute(attributes, "key");
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNotPresentAttributeTest() {
+            float expected = 0f;
+            LineSvgNodeRenderer lineSvgNodeRenderer = new LineSvgNodeRenderer();
+            IDictionary<String, String> attributes = new Dictionary<String, String>();
+            attributes.Put("key", "1.0");
+            float actual = lineSvgNodeRenderer.GetAttribute(attributes, "notHere");
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
         //TODO(RND-823) We'll need an integration test with the entire (not yet created) pipeline as well
     }
 }

@@ -46,6 +46,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Impl;
 
@@ -157,7 +158,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void AddISvgNodeRender() {
             String name = "expected";
-            ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+            ISvgNodeRenderer expected = new BranchSvgNodeRenderer();
             this.context.AddNamedObject(name, expected);
             Object actual = this.context.GetNamedObject(name);
             NUnit.Framework.Assert.AreEqual(expected, actual);
@@ -176,7 +177,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void AddNamedObjectWithNullName() {
             NUnit.Framework.Assert.That(() =>  {
-                ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+                ISvgNodeRenderer expected = new DummySvgNodeRenderer();
                 this.context.AddNamedObject(null, expected);
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
@@ -186,11 +187,29 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void AddNamedObjectWithEmptyName() {
             NUnit.Framework.Assert.That(() =>  {
-                ISvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
+                ISvgNodeRenderer expected = new DummySvgNodeRenderer();
                 this.context.AddNamedObject("", expected);
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNamedRenderer() {
+            ISvgNodeRenderer expected = new DummySvgNodeRenderer();
+            String dummyName = "dummy";
+            this.context.AddNamedObject(dummyName, expected);
+            Object actual = this.context.GetNamedObject(dummyName);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNamedXObject() {
+            PdfFormXObject expected = new PdfFormXObject(new Rectangle(0, 0));
+            String dummyName = "dummy";
+            this.context.AddNamedObject(dummyName, expected);
+            Object actual = this.context.GetNamedObject(dummyName);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

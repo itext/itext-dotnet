@@ -47,6 +47,8 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg;
 using iText.Svg.Converter;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -154,6 +156,18 @@ namespace iText.Svg.Renderers.Impl {
             context.AddViewPort(renderer.CalculateViewPort(context));
             AffineTransform actual = renderer.CalculateTransformation(context);
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewportWithSpecificXYTest() {
+            SvgSvgNodeRenderer svgNodeRenderer = new SvgSvgNodeRenderer();
+            svgNodeRenderer.SetAttribute(SvgConstants.Attributes.X, "3");
+            svgNodeRenderer.SetAttribute(SvgConstants.Attributes.Y, "5");
+            IList<float> floats = svgNodeRenderer.SetViewPort();
+            float? expectedX = CssUtils.ParseAbsoluteLength("3");
+            float? expectedY = CssUtils.ParseAbsoluteLength("5");
+            NUnit.Framework.Assert.AreEqual(expectedX, floats[0]);
+            NUnit.Framework.Assert.AreEqual(expectedY, floats[1]);
         }
     }
 }

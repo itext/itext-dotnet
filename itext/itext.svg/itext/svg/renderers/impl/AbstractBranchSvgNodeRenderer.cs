@@ -86,16 +86,8 @@ namespace iText.Svg.Renderers.Impl {
                     newCanvas.RestoreState();
                 }
                 CleanUp(context);
-                AffineTransform transformation = new AffineTransform();
-                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.TRANSFORM)) {
-                    transformation = TransformUtils.ParseTransform(attributesAndStyles.Get(SvgConstants.Attributes.TRANSFORM));
-                }
-                // TODO DEVSIX-1891
-                float[] matrixValues = new float[6];
-                transformation.GetMatrix(matrixValues);
-                // TODO DEVSIX-1890
-                context.GetCurrentCanvas().AddXObject(xObject, matrixValues[0], matrixValues[1], matrixValues[2], matrixValues
-                    [3], matrixValues[4], matrixValues[5]);
+                context.GetCurrentCanvas().AddXObject(xObject, 0, 0);
+                // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
                 if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
                     context.AddNamedObject(attributesAndStyles.Get(SvgConstants.Attributes.ID), xObject);
                 }

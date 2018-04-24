@@ -89,7 +89,7 @@ namespace iText.Svg.Converter {
             PdfFormXObject form = SvgConverter.ConvertToXObject("<svg width='100pt' height='100pt' />", doc);
             new PdfCanvas(doc.GetPage(1)).AddXObject(form, new Rectangle(100, 100, 100, 100));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 

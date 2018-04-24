@@ -41,11 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class StrokeTest {
+    public class StrokeTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/StrokeTest/";
 
@@ -61,21 +60,21 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalLineStrokeTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeWidthTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
         }
     }
 }

@@ -126,13 +126,14 @@ namespace iText.Svg.Css.Impl {
                             ()[0] is ITextNode)) {
                             String styleData;
                             if (currentNode.ChildNodes()[0] is IDataNode) {
+                                // TODO (RND-865)
                                 styleData = ((IDataNode)currentNode.ChildNodes()[0]).GetWholeData();
                             }
                             else {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO(RND-863): mediaquery wrap
+                            //TODO(RND-863): media query wrap
                             //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             internalStyleSheet.AppendCssStyleSheet(styleSheet);
                         }

@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -56,29 +55,24 @@ namespace iText.Svg.Renderers.Impl {
     public class LineSvgNodeRenderer : AbstractSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
-            try {
-                if (attributesAndStyles.Count > 0) {
-                    float x1 = 0f;
-                    float y1 = 0f;
-                    float x2 = 0f;
-                    float y2 = 0f;
-                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
-                        x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
-                    }
-                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
-                        y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
-                    }
-                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
-                        x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
-                    }
-                    if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
-                        y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
-                    }
-                    canvas.MoveTo(x1, y1).LineTo(x2, y2);
+            if (attributesAndStyles.Count > 0) {
+                float x1 = 0f;
+                float y1 = 0f;
+                float x2 = 0f;
+                float y2 = 0f;
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
+                    x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
                 }
-            }
-            catch (FormatException e) {
-                throw new SvgProcessingException(SvgLogMessageConstant.FLOAT_PARSING_NAN, e);
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
+                    y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
+                    x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
+                    y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
+                }
+                canvas.MoveTo(x1, y1).LineTo(x2, y2);
             }
         }
 
@@ -86,7 +80,7 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        private float GetAttribute(IDictionary<String, String> attributes, String key) {
+        internal virtual float GetAttribute(IDictionary<String, String> attributes, String key) {
             String value = attributes.Get(key);
             if (value != null && !String.IsNullOrEmpty(value)) {
                 return CssUtils.ParseAbsoluteLength(attributes.Get(key));

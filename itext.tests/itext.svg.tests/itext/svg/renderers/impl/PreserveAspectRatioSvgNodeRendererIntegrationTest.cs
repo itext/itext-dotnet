@@ -41,10 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PreserveAspectRatioSvgNodeRendererIntegrationTest {
+    public class PreserveAspectRatioSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/RootSvgNodeRendererTest/aspectratio/";
 
@@ -60,7 +61,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XMinYMinTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "xminymin");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "xminymin");
         }
         // TODO RND-876
     }

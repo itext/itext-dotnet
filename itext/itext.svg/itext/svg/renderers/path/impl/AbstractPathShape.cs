@@ -44,28 +44,43 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Path;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>This class handles common behaviour in IPathShape implementations</summary>
     public abstract class AbstractPathShape : IPathShape {
+        /// <summary>The properties of this shape.</summary>
+        protected internal IDictionary<String, String> properties;
+
+        /// <summary>Get a coordinate based on a key value.</summary>
+        /// <param name="attributes">map containing the attributes of the shape</param>
+        /// <param name="key">key of the coordinate</param>
+        /// <returns>coordinate associated with the key</returns>
         public virtual float GetCoordinate(IDictionary<String, String> attributes, String key) {
-            String value = "";
-            if (attributes != null) {
-                value = attributes.Get(key);
+            String value;
+            if (attributes == null) {
+                throw new SvgProcessingException(SvgLogMessageConstant.ATTRIBUTES_NULL);
             }
+            value = attributes.Get(key);
             if (value != null && !String.IsNullOrEmpty(value)) {
                 return CssUtils.ParseAbsoluteLength(value);
             }
-            return 0;
+            else {
+                throw new SvgProcessingException(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT);
+            }
+        }
+
+        public virtual void SetProperties(IDictionary<String, String> properties) {
+            this.properties = properties;
+        }
+
+        public virtual IDictionary<String, String> GetCoordinates() {
+            return properties;
         }
 
         public abstract void Draw(PdfCanvas arg1);
 
-        public abstract IDictionary<String, String> GetCoordinates();
-
         public abstract void SetCoordinates(String[] arg1);
-
-        public abstract void SetProperties(IDictionary<String, String> arg1);
     }
 }

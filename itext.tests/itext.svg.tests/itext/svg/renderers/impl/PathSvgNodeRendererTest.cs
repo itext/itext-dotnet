@@ -50,10 +50,11 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Svg.Renderers.Path.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PathSvgNodeRendererTest {
+    public class PathSvgNodeRendererTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PathSvgNodeRendererTest/";
 
@@ -249,7 +250,36 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveComplexTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(sourceFolder, destinationFolder, "curves");
+            ConvertAndCompare(sourceFolder, destinationFolder, "curves");
+        }
+
+        public virtual void GetCoordinateNullAttributesTest() {
+            AbstractPathShape pathShape = new _AbstractPathShape_277();
+            float expected = 0f;
+            float actual = pathShape.GetCoordinate(null, "");
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
+
+        private sealed class _AbstractPathShape_277 : AbstractPathShape {
+            public _AbstractPathShape_277() {
+            }
+
+            public override void Draw(PdfCanvas canvas) {
+            }
+
+            public override void SetProperties(IDictionary<String, String> properties) {
+            }
+
+            public override void SetCoordinates(String[] coordinates) {
+            }
+
+            public override IDictionary<String, String> GetCoordinates() {
+                return null;
+            }
+
+            public override float GetCoordinate(IDictionary<String, String> attributes, String key) {
+                return base.GetCoordinate(attributes, key);
+            }
         }
     }
 }

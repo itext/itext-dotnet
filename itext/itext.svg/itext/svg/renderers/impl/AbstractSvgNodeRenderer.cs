@@ -56,12 +56,14 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
-        private bool doFill = false;
-
         private ISvgNodeRenderer parent;
 
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
+
+        private bool doFill = false;
+
+        private bool doStroke = false;
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
@@ -124,15 +126,18 @@ namespace iText.Svg.Renderers.Impl {
  {
                     // stroke
                     String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
-                    DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
-                    if (strokeRawValue != null && rgbColor != null) {
-                        currentCanvas.SetStrokeColor(rgbColor);
-                        String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                        float strokeWidth = 1f;
-                        if (strokeWidthRawValue != null) {
-                            strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                    if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
+                        DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
+                        if (strokeRawValue != null && rgbColor != null) {
+                            currentCanvas.SetStrokeColor(rgbColor);
+                            String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
+                            float strokeWidth = 1f;
+                            if (strokeWidthRawValue != null) {
+                                strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                            }
+                            currentCanvas.SetLineWidth(strokeWidth);
+                            doStroke = true;
                         }
-                        currentCanvas.SetLineWidth(strokeWidth);
                     }
                 }
             }
@@ -158,14 +163,26 @@ namespace iText.Svg.Renderers.Impl {
                     String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
                     if (SvgConstants.Attributes.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
                         // TODO RND-878
-                        currentCanvas.EoFill();
+                        if (doStroke) {
+                            currentCanvas.EoFillStroke();
+                        }
+                        else {
+                            currentCanvas.EoFill();
+                        }
                     }
                     else {
-                        currentCanvas.Fill();
+                        if (doStroke) {
+                            currentCanvas.FillStroke();
+                        }
+                        else {
+                            currentCanvas.Fill();
+                        }
                     }
                 }
-                if (GetAttribute(SvgConstants.Attributes.STROKE) != null) {
-                    currentCanvas.Stroke();
+                else {
+                    if (doStroke) {
+                        currentCanvas.Stroke();
+                    }
                 }
                 currentCanvas.ClosePath();
             }
@@ -180,6 +197,9 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public virtual void SetAttribute(String key, String value) {
+            if (this.attributesAndStyles == null) {
+                this.attributesAndStyles = new Dictionary<String, String>();
+            }
             this.attributesAndStyles.Put(key, value);
         }
     }

@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -102,14 +103,26 @@ namespace iText.Svg.Renderers.Impl {
             float portHeight = 0f;
             if (outermost) {
                 PdfStream contentStream = context.GetCurrentCanvas().GetContentStream();
-                if (!contentStream.ContainsKey(PdfName.BBox)) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.ROOT_SVG_NO_BBOX);
+                PdfArray bboxArray;
+                if (contentStream.ContainsKey(PdfName.BBox)) {
+                    bboxArray = contentStream.GetAsArray(PdfName.BBox);
+                    portX = bboxArray.GetAsNumber(0).FloatValue();
+                    portY = bboxArray.GetAsNumber(1).FloatValue();
+                    portWidth = bboxArray.GetAsNumber(2).FloatValue() - portX;
+                    portHeight = bboxArray.GetAsNumber(3).FloatValue() - portY;
                 }
-                PdfArray bboxArray = contentStream.GetAsArray(PdfName.BBox);
-                portX = bboxArray.GetAsNumber(0).FloatValue();
-                portY = bboxArray.GetAsNumber(1).FloatValue();
-                portWidth = bboxArray.GetAsNumber(2).FloatValue() - portX;
-                portHeight = bboxArray.GetAsNumber(3).FloatValue() - portY;
+                else {
+                    IList<float> viewPortValues = SetViewPort();
+                    if (viewPortValues.Count != 4) {
+                        throw new SvgProcessingException(SvgLogMessageConstant.ROOT_SVG_NO_BBOX);
+                    }
+                    else {
+                        portX = viewPortValues[0];
+                        portY = viewPortValues[1];
+                        portWidth = viewPortValues[2];
+                        portHeight = viewPortValues[3];
+                    }
+                }
             }
             else {
                 // set default values to parent viewport in the case of a nested svg tag
@@ -137,6 +150,35 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             return new Rectangle(portX, portY, portWidth, portHeight);
+        }
+
+        internal virtual IList<float> SetViewPort() {
+            IList<float> output = new List<float>();
+            if (attributesAndStyles != null) {
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
+                    output.Add(CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X)));
+                }
+                else {
+                    output.Add(0f);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
+                    output.Add(CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y)));
+                }
+                else {
+                    output.Add(0f);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
+                    output.Add(CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH)));
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
+                    output.Add(CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT)));
+                }
+            }
+            return output;
+        }
+
+        protected internal override bool CanElementFill() {
+            return false;
         }
     }
 }

@@ -48,6 +48,10 @@ namespace iText.Svg.Exceptions {
         private SvgLogMessageConstant() {
         }
 
+        public const String ATTRIBUTES_NULL = "The attributes of this element are null.";
+
+        public const String COORDINATE_VALUE_ABSENT = "The coordinate value is empty or null.";
+
         public const String COULDNOTINSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
         public const String FLOAT_PARSING_NAN = "The passed value is not a number.";

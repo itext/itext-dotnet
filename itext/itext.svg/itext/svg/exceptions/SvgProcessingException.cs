@@ -62,11 +62,5 @@ namespace iText.Svg.Exceptions {
         public SvgProcessingException(String message, Exception cause)
             : base(message, cause) {
         }
-
-        /// <summary>Creates a new SvgProcessingException instance.</summary>
-        /// <param name="cause">the nested exception</param>
-        public SvgProcessingException(Exception cause)
-            : base(cause) {
-        }
     }
 }

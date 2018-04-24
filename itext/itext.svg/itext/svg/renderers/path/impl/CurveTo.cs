@@ -48,17 +48,11 @@ using iText.Svg;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements curveTo(L) attribute of SVG's path element</summary>
     public class CurveTo : AbstractPathShape {
-        internal IDictionary<String, String> properties;
-
         public override void Draw(PdfCanvas canvas) {
             canvas.CurveTo(GetCoordinate(properties, SvgConstants.Attributes.X1), GetCoordinate(properties, SvgConstants.Attributes
                 .Y1), GetCoordinate(properties, SvgConstants.Attributes.X2), GetCoordinate(properties, SvgConstants.Attributes
                 .Y2), GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
                 .Y));
-        }
-
-        public override void SetProperties(IDictionary<String, String> properties) {
-            this.properties = properties;
         }
 
         public override void SetCoordinates(String[] coordinates) {
@@ -70,10 +64,6 @@ namespace iText.Svg.Renderers.Path.Impl {
             map.Put("x", coordinates.Length > 4 && !String.IsNullOrEmpty(coordinates[4]) ? coordinates[4] : "0");
             map.Put("y", coordinates.Length > 5 && !String.IsNullOrEmpty(coordinates[5]) ? coordinates[5] : "0");
             SetProperties(map);
-        }
-
-        public override IDictionary<String, String> GetCoordinates() {
-            return properties;
         }
     }
 }

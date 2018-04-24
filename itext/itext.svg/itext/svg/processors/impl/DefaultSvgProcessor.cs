@@ -100,7 +100,8 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(converterProps);
             }
             else {
-                PerformSetup(new DefaultSvgConverterProperties(root));
+                this.defaultProps = new DefaultSvgConverterProperties(root);
+                PerformSetup(this.defaultProps);
             }
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
@@ -122,14 +123,8 @@ namespace iText.Svg.Processors.Impl {
             if (converterProps.GetCssResolver() != null) {
                 cssResolver = converterProps.GetCssResolver();
             }
-            else {
-                cssResolver = defaultProps.GetCssResolver();
-            }
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
-            }
-            else {
-                rendererFactory = defaultProps.GetRendererFactory();
             }
             cssContext = new SvgCssContext();
         }
@@ -235,7 +230,7 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="node">root-node to start with</param>
         /// <param name="tagName">name of the tag that needs to be fonund</param>
         /// <returns>IElementNode</returns>
-        private static IElementNode FindFirstElement(INode node, String tagName) {
+        internal virtual IElementNode FindFirstElement(INode node, String tagName) {
             LinkedList<INode> q = new LinkedList<INode>();
             q.Add(node);
             while (!q.IsEmpty()) {

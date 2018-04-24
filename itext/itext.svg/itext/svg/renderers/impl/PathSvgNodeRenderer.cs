@@ -105,6 +105,7 @@ namespace iText.Svg.Renderers.Impl {
                                 }
                             }
                             else {
+                                // TODO RND-951
                                 startingControlPoint[0] = pathProperties[1];
                                 startingControlPoint[1] = pathProperties[2];
                             }

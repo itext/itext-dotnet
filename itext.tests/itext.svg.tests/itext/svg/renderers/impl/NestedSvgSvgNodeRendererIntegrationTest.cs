@@ -41,10 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class NestedSvgSvgNodeRendererIntegrationTest {
+    public class NestedSvgSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/RootSvgNodeRendererTest/nested/";
 
@@ -60,28 +61,28 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleNestedSvgTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "singleNested");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "singleNested");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DoubleNestedSvgTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "doubleNested");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "doubleNested");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoNestedSvgTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "twoNested");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "twoNested");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EmptySvgTest() {
-            SvgNodeRendererTestUtility.ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "empty");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "empty");
         }
     }
 }
