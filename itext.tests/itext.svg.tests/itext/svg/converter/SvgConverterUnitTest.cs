@@ -222,7 +222,7 @@ namespace iText.Svg.Converter {
             INode svg = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), ""));
             IBranchSvgNodeRenderer node = (IBranchSvgNodeRenderer)SvgConverter.Process(svg);
-            NUnit.Framework.Assert.IsTrue(node is SvgSvgNodeRenderer);
+            NUnit.Framework.Assert.IsTrue(node is SvgTagSvgNodeRenderer);
             NUnit.Framework.Assert.AreEqual(0, node.GetChildren().Count);
             NUnit.Framework.Assert.IsNull(node.GetParent());
         }

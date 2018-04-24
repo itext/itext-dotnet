@@ -62,6 +62,7 @@ namespace iText.Svg.Renderers.Impl {
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();
+            cv.WriteLiteral("% ellipse\n");
             if (SetParameters()) {
                 cv.MoveTo(cx + rx, cy);
                 DrawUtils.Arc(cx - rx, cy - ry, cx + rx, cy + ry, 0, 360, cv);

@@ -60,7 +60,7 @@ namespace iText.Svg.Renderers.Factories {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
             result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.SVG, typeof(SvgSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));

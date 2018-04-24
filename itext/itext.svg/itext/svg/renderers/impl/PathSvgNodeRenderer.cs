@@ -66,6 +66,7 @@ namespace iText.Svg.Renderers.Impl {
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
+            canvas.WriteLiteral("% path\n");
             foreach (IPathShape item in GetShapes()) {
                 item.Draw(canvas);
             }

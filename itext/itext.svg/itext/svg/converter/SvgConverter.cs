@@ -54,6 +54,7 @@ using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Converter {
     /// <summary>
@@ -446,7 +447,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
         /// .
         /// </remarks>
-        /// <param name="rootRenderer">
+        /// <param name="svgRootRenderer">
         /// the
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
         /// instance that contains
@@ -464,16 +465,17 @@ namespace iText.Svg.Converter {
         /// containing the PDF instructions
         /// corresponding to the passed node renderer tree.
         /// </returns>
-        public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer rootRenderer, PdfDocument document) {
-            CheckNull(rootRenderer);
+        public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer svgRootRenderer, PdfDocument document) {
+            CheckNull(svgRootRenderer);
             CheckNull(document);
-            float width = CssUtils.ParseAbsoluteLength(rootRenderer.GetAttribute(AttributeConstants.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(rootRenderer.GetAttribute(AttributeConstants.HEIGHT));
+            float width = CssUtils.ParseAbsoluteLength(svgRootRenderer.GetAttribute(AttributeConstants.WIDTH));
+            float height = CssUtils.ParseAbsoluteLength(svgRootRenderer.GetAttribute(AttributeConstants.HEIGHT));
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             SvgDrawContext context = new SvgDrawContext();
             context.PushCanvas(canvas);
-            rootRenderer.Draw(context);
+            ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(svgRootRenderer);
+            root.Draw(context);
             return pdfForm;
         }
 

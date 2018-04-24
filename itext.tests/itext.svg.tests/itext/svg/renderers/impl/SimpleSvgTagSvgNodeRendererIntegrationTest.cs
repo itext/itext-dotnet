@@ -48,7 +48,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class SimpleSvgSvgNodeRendererIntegrationTest : SvgIntegrationTest {
+    public class SimpleSvgTagSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/RootSvgNodeRendererTest/svg/";
 
@@ -151,14 +151,22 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InvalidX() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
+            }
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
+;
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InvalidY() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
+            }
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
+;
         }
 
         /// <exception cref="System.IO.IOException"/>

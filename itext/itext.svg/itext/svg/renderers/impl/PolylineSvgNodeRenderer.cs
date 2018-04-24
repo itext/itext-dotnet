@@ -103,6 +103,7 @@ namespace iText.Svg.Renderers.Impl {
                 .Get(SvgConstants.Attributes.POINTS) : null;
             SetPoints(pointsAttribute);
             PdfCanvas canvas = context.GetCurrentCanvas();
+            canvas.WriteLiteral("% polyline\n");
             if (points.Count > 1) {
                 Point currentPoint = points[0];
                 canvas.MoveTo(currentPoint.GetX(), currentPoint.GetY());

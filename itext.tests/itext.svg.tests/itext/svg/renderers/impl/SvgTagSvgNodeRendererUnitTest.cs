@@ -47,14 +47,13 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
-using iText.StyledXmlParser.Css.Util;
-using iText.Svg;
 using iText.Svg.Converter;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
-    public class SvgSvgNodeRendererUnitTest {
+    public class SvgTagSvgNodeRendererUnitTest {
+        [NUnit.Framework.Ignore("RND-877, move to PdfRootSvgNodeRenderer")]
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportTest() {
             Rectangle expected = new Rectangle(0, 0, 600, 600);
@@ -65,11 +64,12 @@ namespace iText.Svg.Renderers.Impl {
             PdfFormXObject pdfForm = new PdfFormXObject(expected);
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
-            SvgSvgNodeRenderer renderer = new SvgSvgNodeRenderer();
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             Rectangle actual = renderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
+        [NUnit.Framework.Ignore("RND-877, move to PdfRootSvgNodeRenderer")]
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportWithDifferentXYTest() {
             Rectangle expected = new Rectangle(10, 20, 600, 600);
@@ -80,7 +80,7 @@ namespace iText.Svg.Renderers.Impl {
             PdfFormXObject pdfForm = new PdfFormXObject(expected);
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
-            SvgSvgNodeRenderer renderer = new SvgSvgNodeRenderer();
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             Rectangle actual = renderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
@@ -96,13 +96,14 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
             context.AddViewPort(expected);
-            SvgSvgNodeRenderer parent = new SvgSvgNodeRenderer();
-            SvgSvgNodeRenderer renderer = new SvgSvgNodeRenderer();
+            SvgTagSvgNodeRenderer parent = new SvgTagSvgNodeRenderer();
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             renderer.SetParent(parent);
             Rectangle actual = renderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
+        [NUnit.Framework.Ignore("RND-877, move to PdfRootSvgNodeRenderer")]
         [NUnit.Framework.Test]
         public virtual void CalculateNestedViewportDifferentFromParentTest() {
             Rectangle expected = new Rectangle(0, 0, 500, 500);
@@ -114,8 +115,8 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
             context.AddViewPort(expected);
-            SvgSvgNodeRenderer parent = new SvgSvgNodeRenderer();
-            SvgSvgNodeRenderer renderer = new SvgSvgNodeRenderer();
+            SvgTagSvgNodeRenderer parent = new SvgTagSvgNodeRenderer();
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             IDictionary<String, String> styles = new Dictionary<String, String>();
             styles.Put("width", "500");
             styles.Put("height", "500");
@@ -125,6 +126,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
+        [NUnit.Framework.Ignore("RND-877, move to PdfRootSvgNodeRenderer")]
         [NUnit.Framework.Test]
         public virtual void NoBoundingBoxOnXObjectTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -142,6 +144,7 @@ namespace iText.Svg.Renderers.Impl {
 ;
         }
 
+        [NUnit.Framework.Ignore("RND-877, move to PdfRootSvgNodeRenderer")]
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostTransformation() {
             AffineTransform expected = new AffineTransform(0.75d, 0d, 0d, -0.75d, 0d, 450d);
@@ -152,22 +155,10 @@ namespace iText.Svg.Renderers.Impl {
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, 600, 600));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
-            SvgSvgNodeRenderer renderer = new SvgSvgNodeRenderer();
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             context.AddViewPort(renderer.CalculateViewPort(context));
             AffineTransform actual = renderer.CalculateTransformation(context);
             NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ViewportWithSpecificXYTest() {
-            SvgSvgNodeRenderer svgNodeRenderer = new SvgSvgNodeRenderer();
-            svgNodeRenderer.SetAttribute(SvgConstants.Attributes.X, "3");
-            svgNodeRenderer.SetAttribute(SvgConstants.Attributes.Y, "5");
-            IList<float> floats = svgNodeRenderer.SetViewPort();
-            float? expectedX = CssUtils.ParseAbsoluteLength("3");
-            float? expectedY = CssUtils.ParseAbsoluteLength("5");
-            NUnit.Framework.Assert.AreEqual(expectedX, floats[0]);
-            NUnit.Framework.Assert.AreEqual(expectedY, floats[1]);
         }
     }
 }

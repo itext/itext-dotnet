@@ -55,6 +55,7 @@ namespace iText.Svg.Renderers.Impl {
     public class LineSvgNodeRenderer : AbstractSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
+            canvas.WriteLiteral("% line\n");
             if (attributesAndStyles.Count > 0) {
                 float x1 = 0f;
                 float y1 = 0f;
