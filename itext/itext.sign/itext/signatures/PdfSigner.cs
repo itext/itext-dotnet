@@ -622,7 +622,7 @@ namespace iText.Signatures {
                     (fieldName);
             }
             PdfArray b = signature.GetByteRange();
-            long[] gaps = SignatureUtil.AsLongArray(b);
+            long[] gaps = b.ToLongArray();
             if (b.Size() != 4 || gaps[0] != 0) {
                 throw new ArgumentException("Single exclusion space supported");
             }
