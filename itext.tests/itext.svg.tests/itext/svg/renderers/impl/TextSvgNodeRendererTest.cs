@@ -117,28 +117,28 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTranslateTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_Translate");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_translate");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldRotateTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_Rotate");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_rotate");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewXTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_SkewX");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_SkewY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewY");
         }
 
         /// <exception cref="System.IO.IOException"/>
