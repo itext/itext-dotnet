@@ -74,10 +74,11 @@ namespace iText.Svg.Renderers.Impl {
                 PdfStream stream = new PdfStream();
                 stream.Put(PdfName.Type, PdfName.XObject);
                 stream.Put(PdfName.Subtype, PdfName.Form);
-                stream.Put(PdfName.BBox, new PdfArray(context.GetCurrentViewPort()));
                 PdfFormXObject xObject = (PdfFormXObject)PdfXObject.MakeXObject(stream);
                 PdfCanvas newCanvas = new PdfCanvas(xObject, context.GetCurrentCanvas().GetDocument());
                 ApplyViewBox(context);
+                //Bounding box needs to be written after viewbox calculations to account for pdf syntax interaction
+                stream.Put(PdfName.BBox, new PdfArray(context.GetCurrentViewPort()));
                 context.PushCanvas(newCanvas);
                 ApplyViewport(context);
                 foreach (ISvgNodeRenderer child in GetChildren()) {
@@ -99,6 +100,7 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyViewBox(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
+                    //Parse aspect ratio related stuff
                     String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
                     IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
                     float[] values = new float[valueStrings.Count];
@@ -109,21 +111,36 @@ namespace iText.Svg.Renderers.Impl {
                     float scaleWidth = currentViewPort.GetWidth() / values[2];
                     float scaleHeight = currentViewPort.GetHeight() / values[3];
                     AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
-                    context.GetCurrentCanvas().ConcatMatrix(scale);
+                    if (!scale.IsIdentity()) {
+                        context.GetCurrentCanvas().ConcatMatrix(scale);
+                        //Inverse scaling needs to be applied to viewport dimensions
+                        context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth);
+                        context.GetCurrentViewPort().SetX(currentViewPort.GetX() / scaleWidth);
+                        context.GetCurrentViewPort().SetHeight(currentViewPort.GetHeight() / scaleHeight);
+                        context.GetCurrentViewPort().SetY(currentViewPort.GetY() / scaleHeight);
+                    }
                     AffineTransform transform = ProcessAspectRatio(context, values);
-                    context.GetCurrentCanvas().ConcatMatrix(transform);
+                    if (!transform.IsIdentity()) {
+                        //TODO (RND-876)
+                        context.GetCurrentCanvas().WriteLiteral("% applying viewbox asect ratio correction (not correct) \n");
+                    }
                 }
             }
         }
 
+        //context.getCurrentCanvas().concatMatrix(transform);
         /// <summary>Applies a clipping operation based on the view port.</summary>
         /// <param name="context">the svg draw context</param>
         private void ApplyViewport(SvgDrawContext context) {
-            if (GetParent() != null) {
+            if (GetParent() != null && GetParent() is AbstractSvgNodeRenderer) {
+                AbstractSvgNodeRenderer parent = (AbstractSvgNodeRenderer)GetParent();
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 currentCanvas.Rectangle(context.GetCurrentViewPort());
                 currentCanvas.Clip();
                 currentCanvas.NewPath();
+                if (parent.CanConstructViewPort()) {
+                    currentCanvas.ConcatMatrix(parent.CalculateViewPortTranslation(context));
+                }
             }
         }
 

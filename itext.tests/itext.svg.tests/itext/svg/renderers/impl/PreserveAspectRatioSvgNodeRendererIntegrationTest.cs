@@ -59,10 +59,51 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("RND-876")]
         [NUnit.Framework.Test]
         public virtual void XMinYMinTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "xminymin");
         }
-        // TODO RND-876
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("RND-876")]
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxScalingTestPreserveAspect_Default_All() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_PreserveAspectRatio_Default_all"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxScalingTestDoNotPreserveAspect_Min() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_min"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxScalingTestDoNotPreserveAspect_All() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_all"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxScalingTestDoNotPreserveAspect_MetricDimensions_Min() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_min"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxScalingTestDoNotPreserveAspect_MetricDimensions_All() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_all"
+                );
+        }
     }
 }

@@ -50,7 +50,6 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
-using iText.Svg.Renderers.Path.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
@@ -251,35 +250,6 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveComplexTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "curves");
-        }
-
-        public virtual void GetCoordinateNullAttributesTest() {
-            AbstractPathShape pathShape = new _AbstractPathShape_277();
-            float expected = 0f;
-            float actual = pathShape.GetCoordinate(null, "");
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
-        }
-
-        private sealed class _AbstractPathShape_277 : AbstractPathShape {
-            public _AbstractPathShape_277() {
-            }
-
-            public override void Draw(PdfCanvas canvas) {
-            }
-
-            public override void SetProperties(IDictionary<String, String> properties) {
-            }
-
-            public override void SetCoordinates(String[] coordinates) {
-            }
-
-            public override IDictionary<String, String> GetCoordinates() {
-                return null;
-            }
-
-            public override float GetCoordinate(IDictionary<String, String> attributes, String key) {
-                return base.GetCoordinate(attributes, key);
-            }
         }
     }
 }

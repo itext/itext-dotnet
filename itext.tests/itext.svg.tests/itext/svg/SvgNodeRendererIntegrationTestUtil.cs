@@ -46,10 +46,10 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Svg.Converter;
 
-namespace iText.Svg.Renderers {
-    public class SvgIntegrationTest {
+namespace iText.Svg {
+    public class SvgNodeRendererIntegrationTestUtil {
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Convert(Stream svg, Stream pdfOutputStream) {
+        public static void Convert(Stream svg, Stream pdfOutputStream) {
             PdfDocument doc = new PdfDocument(new PdfWriter(pdfOutputStream, new WriterProperties().SetCompressionLevel
                 (0)));
             doc.AddNewPage();
@@ -58,27 +58,16 @@ namespace iText.Svg.Renderers {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream) {
+        public static void ConvertToSinglePage(Stream svg, Stream pdfOutputStream) {
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
             SvgConverter.CreatePdf(svg, pdfOutputStream, writerprops);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompare(String src, String dest, String fileName) {
+        public static void ConvertAndCompare(String src, String dest, String fileName) {
             Convert(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(dest + fileName
                  + ".pdf", FileMode.Create));
-            CompareTool compareTool = new CompareTool();
-            String compareResult = compareTool.CompareVisually(dest + fileName + ".pdf", src + "cmp_" + fileName + ".pdf"
-                , dest, "diff_");
-            NUnit.Framework.Assert.IsNull(compareResult);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
-            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (dest + fileName + ".pdf", FileMode.Create));
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(dest + fileName + ".pdf", src + "cmp_" + fileName + ".pdf"
                 , dest, "diff_");
@@ -87,9 +76,9 @@ namespace iText.Svg.Renderers {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareStructurally(String src, String dest, String fileName) {
-            Convert(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(dest + fileName
-                 + ".pdf", FileMode.Create));
+        public static void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
+            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
+                (dest + fileName + ".pdf", FileMode.Create));
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(dest + fileName + ".pdf", src + "cmp_" + fileName + ".pdf"
                 , dest, "diff_");

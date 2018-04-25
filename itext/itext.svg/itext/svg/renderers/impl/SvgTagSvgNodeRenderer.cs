@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -54,19 +53,11 @@ namespace iText.Svg.Renderers.Impl {
     public class SvgTagSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             context.AddViewPort(this.CalculateViewPort(context));
-            PdfCanvas currentCanvas = context.GetCurrentCanvas();
-            currentCanvas.ConcatMatrix(this.CalculateTransformation(context));
             base.DoDraw(context);
         }
 
-        /// <summary>Calculate the transformation based on the context.</summary>
-        /// <param name="context">the SVG draw context</param>
-        /// <returns>the transformation that needs to be applied to this renderer</returns>
-        internal virtual AffineTransform CalculateTransformation(SvgDrawContext context) {
-            Rectangle viewPort = context.GetCurrentViewPort();
-            AffineTransform transform;
-            transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());
-            return transform;
+        public override bool CanConstructViewPort() {
+            return true;
         }
 
         /// <summary>Calculate the viewport based on the context.</summary>
@@ -84,7 +75,7 @@ namespace iText.Svg.Renderers.Impl {
             portWidth = currentViewPort.GetWidth();
             // default should be parent portWidth if not outermost
             portHeight = currentViewPort.GetHeight();
-            // default should be parent heigth if not outermost
+            // default should be parent height if not outermost
             if (attributesAndStyles != null) {
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
                     portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));

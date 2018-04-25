@@ -48,10 +48,11 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Converter {
-    public class SvgConverterIntegrationTest {
+    public class SvgConverterIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/converter/SvgConverterTest/";
 
@@ -109,6 +110,25 @@ namespace iText.Svg.Converter {
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
 ;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SinglePageHelloWorldTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "hello_world");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TwoArgTest() {
+            String name = "hello_world";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            FileStream fos = new FileStream(destinationFolder + name + ".pdf", FileMode.Create);
+            SvgConverter.CreatePdf(fis, fos);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + name + ".pdf", destinationFolder
+                 + name + ".pdf", destinationFolder, "diff_"));
         }
     }
 }

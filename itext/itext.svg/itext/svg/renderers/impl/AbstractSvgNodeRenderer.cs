@@ -90,7 +90,9 @@ namespace iText.Svg.Renderers.Impl {
                 String transformString = this.attributesAndStyles.Get(SvgConstants.Attributes.TRANSFORM);
                 if (transformString != null && !String.IsNullOrEmpty(transformString)) {
                     AffineTransform transformation = TransformUtils.ParseTransform(transformString);
-                    currentCanvas.ConcatMatrix(transformation);
+                    if (!transformation.IsIdentity()) {
+                        currentCanvas.ConcatMatrix(transformation);
+                    }
                 }
             }
             PreDraw(context);
@@ -147,6 +149,24 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>true if the renderer can use fill</returns>
         protected internal virtual bool CanElementFill() {
             return true;
+        }
+
+        /// <summary>Method to see if the renderer can create a viewport</summary>
+        /// <returns>true if the renderer can construct a viewport</returns>
+        public virtual bool CanConstructViewPort() {
+            return false;
+        }
+
+        /// <summary>Calculate the transformation for the viewport based on the context.</summary>
+        /// <remarks>Calculate the transformation for the viewport based on the context. Only used by elements that can create viewports
+        ///     </remarks>
+        /// <param name="context">the SVG draw context</param>
+        /// <returns>the transformation that needs to be applied to this renderer</returns>
+        internal virtual AffineTransform CalculateViewPortTranslation(SvgDrawContext context) {
+            Rectangle viewPort = context.GetCurrentViewPort();
+            AffineTransform transform;
+            transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());
+            return transform;
         }
 
         /// <summary>Operations to be performed after drawing the element.</summary>
