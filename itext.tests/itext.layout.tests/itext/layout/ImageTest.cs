@@ -534,6 +534,24 @@ namespace iText.Layout {
                 "diff_"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest23() {
+            String outFileName = destinationFolder + "imageTest23.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest23.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "encoded_tiff.tiff"
+                ));
+            image.ScaleToFit(500, 500);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
