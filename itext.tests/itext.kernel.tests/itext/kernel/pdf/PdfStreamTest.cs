@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -75,6 +76,22 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
                 ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void RunLengthEncodingTest01() {
+            String srcFile = sourceFolder + "runLengthEncodedImages.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile));
+            PdfImageXObject im1 = document.GetPage(1).GetResources().GetImage(new PdfName("Im1"));
+            PdfImageXObject im2 = document.GetPage(1).GetResources().GetImage(new PdfName("Im2"));
+            byte[] imgBytes1 = im1.GetImageBytes();
+            byte[] imgBytes2 = im2.GetImageBytes();
+            document.Close();
+            byte[] cmpImgBytes1 = ReadFile(sourceFolder + "cmp_img1.jpg");
+            byte[] cmpImgBytes2 = ReadFile(sourceFolder + "cmp_img2.jpg");
+            NUnit.Framework.Assert.AreEqual(imgBytes1, cmpImgBytes1);
+            NUnit.Framework.Assert.AreEqual(imgBytes2, cmpImgBytes2);
         }
     }
 }
