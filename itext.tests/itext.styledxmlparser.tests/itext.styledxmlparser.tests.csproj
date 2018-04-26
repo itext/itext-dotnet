@@ -57,6 +57,10 @@
       <Project>{8636f290-00df-403e-b841-e4bfd6d9ce7a}</Project>
       <Name>styled-xml-parser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.kernel\itext.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itext.kernel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="itext.snk" />
