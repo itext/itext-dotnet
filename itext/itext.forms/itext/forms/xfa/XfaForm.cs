@@ -318,9 +318,8 @@ namespace iText.Forms.Xfa
 		/// <returns>the complete name or <CODE>null</CODE> if not found</returns>
 		public virtual String FindFieldName(String name)
 		{
-            if (acroFieldsSom == null && xfaPresent)
+            if (acroFieldsSom != null && xfaPresent)
 			{
-				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName
 					().Get(name) : acroFieldsSom.InverseSearchGlobal(new List<string>(new Stack<string>(Xml2Som.SplitParts(name))));
 			}
@@ -748,6 +747,7 @@ namespace iText.Forms.Xfa
 				datasetsNode = (XElement)xfaNodes["datasets"];
                 XElement dataNode = FindDataNode(datasetsNode);
                 datasetsSom = new Xml2SomDatasets(dataNode != null ? dataNode : datasetsNode.FirstNode);
+				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 			}
 			if (datasetsNode == null)
 			{
