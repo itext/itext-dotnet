@@ -318,10 +318,23 @@ namespace iText.Forms.Xfa
 		/// <returns>the complete name or <CODE>null</CODE> if not found</returns>
 		public virtual String FindFieldName(String name)
 		{
+            if (acroFieldsSom == null && xfaPresent && datasetsSom != null)
+            {
+                IDictionary<String, XNode> name2Node = datasetsSom.GetName2Node();
+                ICollection<String> keys = name2Node.Keys;
+                acroFieldsSom = new AcroFieldsSearch(keys);
+            }
+
             if (acroFieldsSom != null && xfaPresent)
 			{
-				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName
-					().Get(name) : acroFieldsSom.InverseSearchGlobal(new List<string>(new Stack<string>(Xml2Som.SplitParts(name))));
+                List<string> parts = new List<string>(new Stack<string>(Xml2Som.SplitParts(name)));
+
+                bool containsKey = acroFieldsSom.GetAcroShort2LongName().ContainsKey(name);
+
+                string inverse = acroFieldsSom.InverseSearchGlobal(parts);
+                string normal = acroFieldsSom.GetAcroShort2LongName().Get(name);
+
+                return containsKey ? normal : inverse;
 			}
 			return null;
 		}
@@ -747,7 +760,6 @@ namespace iText.Forms.Xfa
 				datasetsNode = (XElement)xfaNodes["datasets"];
                 XElement dataNode = FindDataNode(datasetsNode);
                 datasetsSom = new Xml2SomDatasets(dataNode != null ? dataNode : datasetsNode.FirstNode);
-				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 			}
 			if (datasetsNode == null)
 			{

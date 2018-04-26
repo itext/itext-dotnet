@@ -115,5 +115,28 @@ namespace iText.Forms.Xfa {
             // Test that exception is not thrown
             PdfAcroForm.GetAcroForm(pdfDocument, true);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FindFieldName() {
+            String inFileName = sourceFolder + "TextField1.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            XfaForm xfaForm = acroForm.GetXfaForm();
+            xfaForm.FindFieldName("TextField1");
+            String secondRun = xfaForm.FindFieldName("TextField1");
+            NUnit.Framework.Assert.IsNotNull(secondRun);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FindFieldNameWithoutDataSet() {
+            String inFileName = sourceFolder + "TextField1_empty.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            XfaForm xfaForm = acroForm.GetXfaForm();
+            String name = xfaForm.FindFieldName("TextField1");
+            NUnit.Framework.Assert.IsNull(name);
+        }
     }
 }
