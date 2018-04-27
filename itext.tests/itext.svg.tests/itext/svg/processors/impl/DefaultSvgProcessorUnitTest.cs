@@ -185,7 +185,7 @@ namespace iText.Svg.Processors.Impl {
 ;
         }
 
-        [NUnit.Framework.Ignore("TODO: Decide on default behaviour. Blocked by RND-799\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestNoPassedProperties() {
             //Setup nodes
@@ -208,7 +208,7 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
-        [NUnit.Framework.Ignore("TODO: Decide on default behaviour. Blocked by RND-799\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestPassedPropertiesNull() {
             //Setup nodes
@@ -231,7 +231,7 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
-        [NUnit.Framework.Ignore("TODO: Decide on default behaviour. Blocked by RND-799\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestPassedPropertiesReturnNullValues() {
             //Setup nodes
