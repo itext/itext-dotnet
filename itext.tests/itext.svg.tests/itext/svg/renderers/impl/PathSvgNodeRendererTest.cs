@@ -196,7 +196,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag);
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
@@ -216,7 +216,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag);
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
@@ -236,7 +236,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag);
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext();
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);

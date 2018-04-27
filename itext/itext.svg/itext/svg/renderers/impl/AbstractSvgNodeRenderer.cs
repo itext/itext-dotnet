@@ -98,9 +98,6 @@ namespace iText.Svg.Renderers.Impl {
             PreDraw(context);
             DoDraw(context);
             PostDraw(context);
-            if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
-                context.AddNamedObject(attributesAndStyles.Get(SvgConstants.Attributes.ID), this);
-            }
         }
 
         /// <summary>Operations to perform before drawing an element.</summary>

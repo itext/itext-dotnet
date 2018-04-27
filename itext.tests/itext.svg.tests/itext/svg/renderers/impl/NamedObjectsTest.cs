@@ -5,6 +5,8 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Converter;
+using iText.Svg.Processors;
+using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -22,14 +24,16 @@ namespace iText.Svg.Renderers.Impl {
             INode parsedSvg = SvgConverter.Parse(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/NamedObjectsTest/names.svg", FileMode.Open
                 , FileAccess.Read));
-            ISvgNodeRenderer process = SvgConverter.Process(parsedSvg);
+            ISvgProcessor processor = new DefaultSvgProcessor();
+            ISvgProcessorResult result = processor.Process(parsedSvg);
+            ISvgNodeRenderer process = result.GetRootRenderer();
             SvgDrawContext drawContext = new SvgDrawContext();
             ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(process);
             drawContext.PushCanvas(canvas);
             root.Draw(drawContext);
             doc.Close();
             NUnit.Framework.Assert.IsTrue(drawContext.GetNamedObject("name_svg") is PdfFormXObject);
-            NUnit.Framework.Assert.IsTrue(drawContext.GetNamedObject("name_rect") is RectangleSvgNodeRenderer);
+            NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_rect") is RectangleSvgNodeRenderer);
         }
     }
 }

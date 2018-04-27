@@ -65,7 +65,7 @@ namespace iText.Svg.Processors {
             ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)processor.Process(root);
+            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)processor.Process(root).GetRootRenderer();
             IBranchSvgNodeRenderer expected = new SvgTagSvgNodeRenderer();
             ISvgNodeRenderer expectedEllipse = new EllipseSvgNodeRenderer();
             IDictionary<String, String> expectedEllipseAttributes = new Dictionary<String, String>();
@@ -74,8 +74,23 @@ namespace iText.Svg.Processors {
             //1 child
             NUnit.Framework.Assert.AreEqual(expected.GetChildren().Count, actual.GetChildren().Count);
         }
+
         //Attribute comparison
         //TODO(RND-868) : Replace above check with the following
         //Assert.assertEquals(expected,actual);
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NamedObjectRectangleTest() {
+            String svgFile = sourceFolder + "namedObjectRectangleTest.svg";
+            Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
+            ISvgProcessor processor = new DefaultSvgProcessor();
+            JsoupXmlParser xmlParser = new JsoupXmlParser();
+            IDocumentNode root = xmlParser.Parse(svg, null);
+            ISvgProcessorResult processorResult = processor.Process(root);
+            IDictionary<String, ISvgNodeRenderer> acutal = processorResult.GetNamedObjects();
+            NUnit.Framework.Assert.AreEqual(1, acutal.Count);
+            NUnit.Framework.Assert.IsTrue(acutal.ContainsKey("MyRect"));
+        }
     }
 }

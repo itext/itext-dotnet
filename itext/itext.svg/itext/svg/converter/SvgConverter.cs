@@ -295,7 +295,7 @@ namespace iText.Svg.Converter {
                 pdfDocument = new PdfDocument(new PdfWriter(pdfDest));
             }
             //process
-            ISvgNodeRenderer topSvgRenderer = Process(Parse(svgStream, props), props);
+            ISvgNodeRenderer topSvgRenderer = Process(Parse(svgStream, props), props).GetRootRenderer();
             //Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
@@ -350,7 +350,7 @@ namespace iText.Svg.Converter {
         /// corresponding to the passed SVG content
         /// </returns>
         public static PdfFormXObject ConvertToXObject(String content, PdfDocument document) {
-            return ConvertToXObject(Process(Parse(content)), document);
+            return ConvertToXObject(Process(Parse(content)).GetRootRenderer(), document);
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static PdfFormXObject ConvertToXObject(String content, PdfDocument document, ISvgConverterProperties
              props) {
-            return ConvertToXObject(Process(Parse(content), props), document);
+            return ConvertToXObject(Process(Parse(content), props).GetRootRenderer(), document);
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace iText.Svg.Converter {
         /// corresponding to the passed SVG content
         /// </returns>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document) {
-            return ConvertToXObject(Process(Parse(stream)), document);
+            return ConvertToXObject(Process(Parse(stream)).GetRootRenderer(), document);
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document, ISvgConverterProperties
              props) {
-            return ConvertToXObject(Process(Parse(stream, props), props), document);
+            return ConvertToXObject(Process(Parse(stream, props), props).GetRootRenderer(), document);
         }
 
         /*
@@ -552,8 +552,10 @@ namespace iText.Svg.Converter {
         /// </summary>
         /// <param name="root">the XML DOM tree</param>
         /// <returns>a node renderer tree corresponding to the passed XML DOM tree</returns>
-        public static ISvgNodeRenderer Process(INode root) {
-            return Process(root, null);
+        public static ISvgProcessorResult Process(INode root) {
+            CheckNull(root);
+            ISvgProcessor processor = new DefaultSvgProcessor();
+            return processor.Process(root);
         }
 
         /// <summary>
@@ -565,7 +567,7 @@ namespace iText.Svg.Converter {
         /// <param name="root">the XML DOM tree</param>
         /// <param name="props">a container for extra properties that customize the behavior</param>
         /// <returns>a node renderer tree corresponding to the passed XML DOM tree</returns>
-        public static ISvgNodeRenderer Process(INode root, ISvgConverterProperties props) {
+        public static ISvgProcessorResult Process(INode root, ISvgConverterProperties props) {
             CheckNull(root);
             ISvgProcessor processor = new DefaultSvgProcessor();
             if (props == null) {

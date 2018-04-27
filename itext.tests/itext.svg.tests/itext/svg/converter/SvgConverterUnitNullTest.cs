@@ -322,7 +322,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectDocWithRendererNullTest() {
             NUnit.Framework.Assert.That(() =>  {
-                ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is));
+                ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is)).GetRootRenderer();
                 SvgConverter.ConvertToXObject(renderer, null);
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());

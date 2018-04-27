@@ -80,18 +80,20 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgConverterProperties defaultProps;
 
+        private IDictionary<String, ISvgNodeRenderer> namedObjects;
+
         /// <summary>Instantiates a DefaultSvgProcessor object.</summary>
         public DefaultSvgProcessor() {
         }
 
         //Processor context
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
-        public virtual ISvgNodeRenderer Process(INode root) {
+        public virtual ISvgProcessorResult Process(INode root) {
             return Process(root, new DefaultSvgConverterProperties(root));
         }
 
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
-        public virtual ISvgNodeRenderer Process(INode root, ISvgConverterProperties converterProps) {
+        public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
             }
@@ -109,7 +111,7 @@ namespace iText.Svg.Processors.Impl {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
-                return rootSvgRenderer;
+                return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer);
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
@@ -126,6 +128,7 @@ namespace iText.Svg.Processors.Impl {
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
             }
+            namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             cssContext = new SvgCssContext();
         }
 
@@ -170,6 +173,10 @@ namespace iText.Svg.Processors.Impl {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
                         renderer.SetAttributesAndStyles(cssResolver.ResolveStyles(node, cssContext));
+                        String attribute = renderer.GetAttribute(SvgConstants.Attributes.ID);
+                        if (attribute != null) {
+                            namedObjects.Put(attribute, renderer);
+                        }
                         // this check should be superfluous, but better safe than sorry
                         if (processorState.Top() is IBranchSvgNodeRenderer) {
                             ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
