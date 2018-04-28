@@ -46,6 +46,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 
 namespace iText.Svg.Css {
@@ -67,7 +68,7 @@ namespace iText.Svg.Css {
                 ));
             ICssContext cssContext = new SvgCssContext();
             INode circle = new JsoupElementNode(jsoupCircle);
-            ICssResolver resolver = new DefaultSvgStyleResolver(circle);
+            ICssResolver resolver = new DefaultSvgStyleResolver(circle, new ResourceResolver(""));
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("id", "circle1");
@@ -91,7 +92,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("ellipse"), "");
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
-            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle);
+            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, new ResourceResolver(""));
             ICssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();

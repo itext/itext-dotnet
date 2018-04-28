@@ -42,12 +42,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Common.Logging;
+using iText.IO.Util;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default CSS resolver implementation.</summary>
@@ -60,9 +65,9 @@ namespace iText.Svg.Css.Impl {
         /// will collect the css declarations from the provided node.
         /// </remarks>
         /// <param name="rootNode">node to collect css from</param>
-        public DefaultSvgStyleResolver(INode rootNode) {
+        public DefaultSvgStyleResolver(INode rootNode, ResourceResolver resourceResolver) {
             internalStyleSheet = new CssStyleSheet();
-            CollectCssDeclarations(rootNode);
+            CollectCssDeclarations(rootNode, resourceResolver);
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
@@ -109,7 +114,7 @@ namespace iText.Svg.Css.Impl {
             return parsed;
         }
 
-        private void CollectCssDeclarations(INode rootNode) {
+        private void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
             internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
@@ -138,8 +143,23 @@ namespace iText.Svg.Css.Impl {
                             internalStyleSheet.AppendCssStyleSheet(styleSheet);
                         }
                     }
+                    else {
+                        if (SvgCssUtils.IsStyleSheetLink(headChildElement)) {
+                            String styleSheetUri = headChildElement.GetAttribute(AttributeConstants.HREF);
+                            try {
+                                Stream stream = resourceResolver.RetrieveStyleSheet(styleSheetUri);
+                                byte[] bytes = StreamUtil.InputStreamToArray(stream);
+                                CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new MemoryStream(bytes), resourceResolver.ResolveAgainstBaseUri
+                                    (styleSheetUri).ToExternalForm());
+                                internalStyleSheet.AppendCssStyleSheet(styleSheet);
+                            }
+                            catch (Exception exc) {
+                                ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
+                                logger.Error(LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
+                            }
+                        }
+                    }
                 }
-                //TODO(RND-864): resolution of external style sheets via the link tag
                 foreach (INode child in currentNode.ChildNodes()) {
                     if (child is IElementNode) {
                         q.Add(child);

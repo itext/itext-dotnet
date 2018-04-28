@@ -82,5 +82,17 @@ namespace iText.Svg.Utils {
         {
             return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
         }
+
+        /// <summary>
+        /// Checks if an
+        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
+        /// represents a style sheet link.
+        /// </summary>
+        /// <param name="headChildElement">the head child element</param>
+        /// <returns>true, if the element node represents a style sheet link</returns>
+        public static bool IsStyleSheetLink(IElementNode headChildElement) {
+            return headChildElement.Name().Equals(TagConstants.LINK) && AttributeConstants.STYLESHEET.Equals(headChildElement
+                .GetAttribute(AttributeConstants.REL));
+        }
     }
 }

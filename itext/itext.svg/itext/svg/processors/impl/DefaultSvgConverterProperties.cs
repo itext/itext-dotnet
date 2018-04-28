@@ -44,6 +44,7 @@ using System;
 using System.Text;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
@@ -65,7 +66,7 @@ namespace iText.Svg.Processors.Impl {
         ///     </remarks>
         /// <param name="root">the root tag of the SVG image</param>
         public DefaultSvgConverterProperties(INode root) {
-            cssResolver = new DefaultSvgStyleResolver(root);
+            cssResolver = new DefaultSvgStyleResolver(root, new ResourceResolver(""));
             rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 
