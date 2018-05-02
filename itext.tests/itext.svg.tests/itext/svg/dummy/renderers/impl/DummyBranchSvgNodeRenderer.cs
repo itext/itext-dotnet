@@ -40,17 +40,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 using System;
 using System.Collections.Generic;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Dummy.Renderers.Impl {
-    /// <author>BenoîtLagae</author>
     public class DummyBranchSvgNodeRenderer : DummySvgNodeRenderer, IBranchSvgNodeRenderer {
         internal IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
@@ -95,6 +89,5 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             }
             return true;
         }
-        //*/
     }
 }
