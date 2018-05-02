@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Svg.Exceptions;
+using iText.StyledXmlParser;
+using iText.StyledXmlParser.Node;
 
 namespace iText.Svg.Utils {
     /// <summary>Utility class that facilitates parsing values from CSS.</summary>
