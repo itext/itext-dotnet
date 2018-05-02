@@ -41,9 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Hyphenation;
 using iText.Layout.Properties;
@@ -127,6 +129,24 @@ namespace iText.Layout {
             Paragraph paragraph = new Paragraph(text);
             paragraph.SetWidth(150);
             paragraph.SetTextAlignment(TextAlignment.JUSTIFIED);
+            paragraph.SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WidthTest02() {
+            String outFileName = destinationFolder + "widthTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_widthTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Text text = new Text("Der/Die Depot-/Kontoinhaber muss/m\u00FCssen sich im Klaren dar\u00FCber sein.");
+            Paragraph paragraph = new Paragraph(text);
+            paragraph.SetWidth(210);
+            paragraph.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
             paragraph.SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
             doc.Add(paragraph);
             doc.Close();
