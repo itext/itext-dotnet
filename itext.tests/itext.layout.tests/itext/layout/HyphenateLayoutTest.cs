@@ -153,5 +153,33 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WidthTest03() {
+            String outFileName = destinationFolder + "widthTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_widthTest03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            String s = "";
+            s = s + "Hier ein Link: https://stackoverflow" + "\n";
+            s = s + "(Sperrvermerk) (Sperrvermerk)" + "\n";
+            s = s + "„Sperrvermerk“ „Sperrvermerk“" + "\n";
+            s = s + "\"Sperrvermerk\" \"Sperrvermerk\"" + "\n";
+            s = s + "'Sperrvermerk' 'Sperrvermerk'" + "\n";
+            s = s + "Der Sperrvermerk Sperrvermerk" + "\n";
+            s = s + "correct Sperr|ver|merk" + "\n";
+            s = s + "Leistung Leistungen Leistung leisten" + "\n";
+            s = s + "correct Leis|tung" + "\n";
+            s = s + "Einmalig Einmalig Einmalig Einmalig" + "\n";
+            s = s + "(Einmalig) (Einmalig) (Einmalig)" + "\n";
+            s = s + "muss/müssen muss/müssen muss/müssen" + "\n";
+            Paragraph p = new Paragraph(s).SetWidth(150).SetTextAlignment(TextAlignment.JUSTIFIED).SetBorderRight(new 
+                SolidBorder(1)).SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
