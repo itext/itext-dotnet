@@ -73,12 +73,12 @@ namespace iText.IO.Font.Woff2.W3c {
         }
 
         private String GetDestinationFolder() {
-            String localPackage = GetLocalPackage();
+            String localPackage = GetLocalPackage().ToLowerInvariant();
             return baseDestinationFolder + localPackage + Path.DirectorySeparatorChar + GetTestClassName() + Path.DirectorySeparatorChar;
         }
 
         private String GetSourceFolder() {
-            String localPackage = GetLocalPackage();
+            String localPackage = GetLocalPackage().ToLowerInvariant();
             return baseSourceFolder + localPackage + Path.DirectorySeparatorChar;
         }
 
