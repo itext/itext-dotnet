@@ -97,7 +97,8 @@ namespace iText.Test.Runners
                         || results.Equals(ResultState.SetUpError)
                         || results.Equals(ResultState.SetUpFailure)
                         || results.Equals(ResultState.TearDownError)
-                        || results.Equals(ResultState.ChildFailure))
+                        || results.Equals(ResultState.ChildFailure)
+                        || results.Equals(ResultState.Cancelled))
                     {
                         Console.WriteLine("Test Failed on attempt #" + (failedAttempts + 1));
                         failedAttempts++;
