@@ -1467,6 +1467,10 @@ namespace iText.Layout.Renderer {
                 if (child is iText.Layout.Renderer.AbstractRenderer) {
                     float? lastYLine = ((iText.Layout.Renderer.AbstractRenderer)child).GetLastYLineRecursively();
                     if (lastYLine != null) {
+                        float? rise = this.GetProperty<float?>(Property.VALIGN_INLINE);
+                        if (rise != null) {
+                            lastYLine -= rise;
+                        }
                         return lastYLine;
                     }
                 }

@@ -104,6 +104,8 @@ namespace iText.Layout.Properties {
 
         public const int BORDER_TOP_RIGHT_RADIUS = 111;
 
+        public const int VALIGN_INLINE = 117;
+
         public const int BOTTOM = 14;
 
         public const int BOX_SIZING = 105;

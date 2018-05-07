@@ -348,9 +348,17 @@ namespace iText.Layout.Renderer {
                 else {
                     if (isInlineBlockChild && childResult.GetStatus() != LayoutResult.NOTHING) {
                         if (childRenderer is AbstractRenderer) {
+                            // childRenderer.getOccupiedArea().getBBox().getHeight() > 20 && childRenderer.getOccupiedArea().getBBox().getHeight() < 25 && childRenderer.getOccupiedArea().getBBox().getBottom() < 1000
                             float? yLine = ((AbstractRenderer)childRenderer).GetLastYLineRecursively();
                             if (yLine == null) {
-                                childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                                float? rise = childRenderer.GetProperty<float?>(Property.VALIGN_INLINE);
+                                if (rise != null) {
+                                    childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight() + rise;
+                                    childDescent = -rise;
+                                }
+                                else {
+                                    childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                                }
                             }
                             else {
                                 childAscent = childRenderer.GetOccupiedArea().GetBBox().GetTop() - (float)yLine;
@@ -358,7 +366,14 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         else {
-                            childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                            float? rise = childRenderer.GetProperty<float?>(Property.VALIGN_INLINE);
+                            if (rise != null) {
+                                childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight() + rise;
+                                childDescent = -rise;
+                            }
+                            else {
+                                childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                            }
                         }
                     }
                 }
@@ -856,8 +871,13 @@ namespace iText.Layout.Renderer {
                 else {
                     float? yLine = IsInlineBlockChild(renderer) && renderer is AbstractRenderer ? ((AbstractRenderer)renderer)
                         .GetLastYLineRecursively() : null;
-                    renderer.Move(0, actualYLine - (yLine == null ? renderer.GetOccupiedArea().GetBBox().GetBottom() : (float)
-                        yLine));
+                    float yAdj = 0;
+                    float? rise = renderer.GetProperty<float?>(Property.VALIGN_INLINE);
+                    if (rise != null) {
+                        yAdj = rise;
+                    }
+                    renderer.Move(0, actualYLine - (yLine == null ? renderer.GetOccupiedArea().GetBBox().GetBottom() + yAdj : 
+                        (float)yLine));
                 }
             }
             return this;
