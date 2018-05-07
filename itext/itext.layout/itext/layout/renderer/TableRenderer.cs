@@ -1318,14 +1318,24 @@ namespace iText.Layout.Renderer {
             return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in next major release (iText 7.2). The aim of this method overriding here is achieved by overriding AllowLastYLineRecursiveExtraction() method."
-            )]
         protected internal override float? GetLastYLineRecursively() {
+            if (!AllowLastYLineRecursiveExtraction()) {
+                return null;
+            }
+            for (int i = 0; i < childRenderers.Count; i++) {
+                IRenderer child = childRenderers[i];
+                if (child is AbstractRenderer) {
+                    float? lastYLine = ((AbstractRenderer)child).GetLastYLineRecursively();
+                    if (lastYLine != null) {
+                        return lastYLine;
+                    }
+                }
+            }
             return null;
         }
 
         protected internal override bool AllowLastYLineRecursiveExtraction() {
-            return false;
+            return true;
         }
 
         private void InitializeTableLayoutBorders() {
