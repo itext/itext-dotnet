@@ -96,6 +96,8 @@ namespace iText.Layout.Renderer {
         private static IDictionary<TypographyUtils.TypographyMethodSignature, MemberInfo> cachedMethods = new Dictionary
             <TypographyUtils.TypographyMethodSignature, MemberInfo>();
 
+        private const String typographyNotFoundException = "Cannot find pdfCalligraph module, which was implicitly required by one of the layout properties";
+
         static TypographyUtils() {
             bool moduleFound = false;
             try {
@@ -117,6 +119,7 @@ namespace iText.Layout.Renderer {
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
@@ -127,6 +130,7 @@ namespace iText.Layout.Renderer {
         //            Shaper.applyOtfScript((TrueTypeFont)fontProgram, text, script);
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
@@ -137,6 +141,7 @@ namespace iText.Layout.Renderer {
         //            Shaper.applyKerning(fontProgram, text);
         internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 byte direction;
@@ -180,6 +185,7 @@ namespace iText.Layout.Renderer {
         internal static int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 if (levels == null) {
@@ -227,6 +233,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts() {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
                 return null;
             }
             else {
