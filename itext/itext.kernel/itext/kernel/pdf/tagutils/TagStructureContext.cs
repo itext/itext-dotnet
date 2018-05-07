@@ -284,7 +284,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </param>
         /// <returns>
         /// 
-        /// <see>PdfNamespace) wrapper over either already existing namespace object or over the new one.</see>
+        /// <see>PdfNamespace)</see>
+        /// wrapper over either already existing namespace object or over the new one.
         /// </returns>
         public virtual PdfNamespace FetchNamespace(String namespaceName) {
             PdfNamespace ns = nameToNamespace.Get(namespaceName);
