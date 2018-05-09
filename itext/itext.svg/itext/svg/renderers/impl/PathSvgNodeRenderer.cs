@@ -134,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
 
         private ICollection<String> ParsePropertiesAndStyles() {
             StringBuilder result = new StringBuilder();
-            String attributes = attributesAndStyles.Get(SvgConstants.Tags.D);
+            String attributes = attributesAndStyles.Get(SvgConstants.Attributes.D);
             String closePath = attributes.IndexOf('z') > 0 ? attributes.Substring(attributes.IndexOf('z')) : "".Trim();
             if (!closePath.Equals(SEPERATOR)) {
                 attributes = attributes.Replace(closePath, SEPERATOR).Trim();

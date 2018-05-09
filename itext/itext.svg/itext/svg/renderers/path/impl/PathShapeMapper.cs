@@ -61,7 +61,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO, new LineTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_MOVE_TO, new MoveTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO, new CurveTo());
-            result.Put(SvgConstants.Attributes.PATH_DATA_QUARD_CURVE_TO, new QuadraticCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_QUAD_CURVE_TO, new QuadraticCurveTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
             return result;
         }

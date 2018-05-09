@@ -178,7 +178,7 @@ namespace iText.Svg.Renderers.Impl {
                 // fill-rule
                 if (doFill && CanElementFill()) {
                     String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                    if (SvgConstants.Attributes.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                    if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
                         // TODO RND-878
                         if (doStroke) {
                             currentCanvas.EoFillStroke();

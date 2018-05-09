@@ -65,6 +65,7 @@ namespace iText.Svg.Css.Impl {
         /// will collect the css declarations from the provided node.
         /// </remarks>
         /// <param name="rootNode">node to collect css from</param>
+        /// <param name="resourceResolver">resolver of resources</param>
         public DefaultSvgStyleResolver(INode rootNode, ResourceResolver resourceResolver) {
             internalStyleSheet = new CssStyleSheet();
             CollectCssDeclarations(rootNode, resourceResolver);
@@ -114,7 +115,7 @@ namespace iText.Svg.Css.Impl {
             return parsed;
         }
 
-        private void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
+        public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
             internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
