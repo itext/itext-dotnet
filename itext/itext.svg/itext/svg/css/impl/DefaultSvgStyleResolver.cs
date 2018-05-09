@@ -60,15 +60,8 @@ namespace iText.Svg.Css.Impl {
         private CssStyleSheet internalStyleSheet;
 
         /// <summary>Creates a DefaultSvgStyleResolver.</summary>
-        /// <remarks>
-        /// Creates a DefaultSvgStyleResolver. This constructor will instantiate its internal style sheet and it
-        /// will collect the css declarations from the provided node.
-        /// </remarks>
-        /// <param name="rootNode">node to collect css from</param>
-        /// <param name="resourceResolver">resolver of resources</param>
-        public DefaultSvgStyleResolver(INode rootNode, ResourceResolver resourceResolver) {
-            internalStyleSheet = new CssStyleSheet();
-            CollectCssDeclarations(rootNode, resourceResolver);
+        public DefaultSvgStyleResolver() {
+            this.internalStyleSheet = new CssStyleSheet();
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
@@ -93,30 +86,8 @@ namespace iText.Svg.Css.Impl {
             return styles;
         }
 
-        private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
-            //Style attribute needs to be parsed further
-            if (attr.GetKey().Equals(AttributeConstants.STYLE)) {
-                IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
-                foreach (KeyValuePair<String, String> style in parsed) {
-                    styles.Put(style.Key, style.Value);
-                }
-            }
-            else {
-                styles.Put(attr.GetKey(), attr.GetValue());
-            }
-        }
-
-        private IDictionary<String, String> ParseStylesFromStyleAttribute(String style) {
-            IDictionary<String, String> parsed = new Dictionary<String, String>();
-            IList<CssDeclaration> declarations = CssRuleSetParser.ParsePropertyDeclarations(style);
-            foreach (CssDeclaration declaration in declarations) {
-                parsed.Put(declaration.GetProperty(), declaration.GetExpression());
-            }
-            return parsed;
-        }
-
         public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
-            internalStyleSheet = new CssStyleSheet();
+            this.internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
                 q.Add(rootNode);
@@ -141,7 +112,7 @@ namespace iText.Svg.Css.Impl {
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
                             //TODO(RND-863): media query wrap
                             //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
-                            internalStyleSheet.AppendCssStyleSheet(styleSheet);
+                            this.internalStyleSheet.AppendCssStyleSheet(styleSheet);
                         }
                     }
                     else {
@@ -152,7 +123,7 @@ namespace iText.Svg.Css.Impl {
                                 byte[] bytes = StreamUtil.InputStreamToArray(stream);
                                 CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new MemoryStream(bytes), resourceResolver.ResolveAgainstBaseUri
                                     (styleSheetUri).ToExternalForm());
-                                internalStyleSheet.AppendCssStyleSheet(styleSheet);
+                                this.internalStyleSheet.AppendCssStyleSheet(styleSheet);
                             }
                             catch (Exception exc) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
@@ -167,6 +138,28 @@ namespace iText.Svg.Css.Impl {
                     }
                 }
             }
+        }
+
+        private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
+            //Style attribute needs to be parsed further
+            if (attr.GetKey().Equals(AttributeConstants.STYLE)) {
+                IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
+                foreach (KeyValuePair<String, String> style in parsed) {
+                    styles.Put(style.Key, style.Value);
+                }
+            }
+            else {
+                styles.Put(attr.GetKey(), attr.GetValue());
+            }
+        }
+
+        private IDictionary<String, String> ParseStylesFromStyleAttribute(String style) {
+            IDictionary<String, String> parsed = new Dictionary<String, String>();
+            IList<CssDeclaration> declarations = CssRuleSetParser.ParsePropertyDeclarations(style);
+            foreach (CssDeclaration declaration in declarations) {
+                parsed.Put(declaration.GetProperty(), declaration.GetExpression());
+            }
+            return parsed;
         }
     }
 }

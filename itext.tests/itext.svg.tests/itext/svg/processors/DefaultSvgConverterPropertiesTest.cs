@@ -7,7 +7,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void GetCharsetNameRegressionTest() {
             String expected = Encoding.UTF8.Name();
-            String actual = new DefaultSvgConverterProperties(null).GetCharset();
+            String actual = new DefaultSvgConverterProperties().GetCharset();
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

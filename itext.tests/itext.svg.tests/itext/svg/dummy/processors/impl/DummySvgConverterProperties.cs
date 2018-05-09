@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Css.Impl;
 using iText.Svg.Dummy.Factories;
 using iText.Svg.Processors;
@@ -53,9 +54,12 @@ namespace iText.Svg.Dummy.Processors.Impl {
 
         internal ISvgNodeRendererFactory rendererFactory;
 
+        internal ResourceResolver resourceResolver;
+
         public DummySvgConverterProperties() {
             cssResolver = new DummyCssResolver();
             rendererFactory = new DummySvgNodeFactory();
+            resourceResolver = new ResourceResolver("");
         }
 
         public virtual ICssResolver GetCssResolver() {
@@ -68,6 +72,10 @@ namespace iText.Svg.Dummy.Processors.Impl {
 
         public virtual String GetCharset() {
             return null;
+        }
+
+        public virtual ResourceResolver GetResourceResolver() {
+            return this.resourceResolver;
         }
     }
 }

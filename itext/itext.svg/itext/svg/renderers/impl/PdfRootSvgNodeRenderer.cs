@@ -11,6 +11,12 @@ namespace iText.Svg.Renderers.Impl {
     public class PdfRootSvgNodeRenderer : ISvgNodeRenderer {
         internal ISvgNodeRenderer subTreeRoot;
 
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfRootSvgNodeRenderer"/>
+        /// instance.
+        /// </summary>
+        /// <param name="subTreeRoot">root of the subtree</param>
         public PdfRootSvgNodeRenderer(ISvgNodeRenderer subTreeRoot) {
             this.subTreeRoot = subTreeRoot;
             subTreeRoot.SetParent(this);
@@ -19,7 +25,9 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SetParent(ISvgNodeRenderer parent) {
         }
 
+        // TODO RND-986
         public virtual ISvgNodeRenderer GetParent() {
+            // TODO RND-986
             return null;
         }
 

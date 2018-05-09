@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors;
@@ -57,6 +56,8 @@ namespace iText.Svg.Processors.Impl {
     /// <see cref="DefaultSvgProcessor"/>
     /// </summary>
     public class DefaultSvgConverterProperties : ISvgConverterProperties {
+        private ResourceResolver resourceResolver;
+
         private ICssResolver cssResolver;
 
         private ISvgNodeRendererFactory rendererFactory;
@@ -64,23 +65,27 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Creates a DefaultSvgConverterProperties object.</summary>
         /// <remarks>Creates a DefaultSvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
         ///     </remarks>
-        /// <param name="root">the root tag of the SVG image</param>
-        public DefaultSvgConverterProperties(INode root) {
-            cssResolver = new DefaultSvgStyleResolver(root, new ResourceResolver(""));
-            rendererFactory = new DefaultSvgNodeRendererFactory();
+        public DefaultSvgConverterProperties() {
+            this.rendererFactory = new DefaultSvgNodeRendererFactory();
+            this.cssResolver = new DefaultSvgStyleResolver();
+            this.resourceResolver = new ResourceResolver("");
         }
 
         public virtual ICssResolver GetCssResolver() {
-            return cssResolver;
+            return this.cssResolver;
         }
 
         public virtual ISvgNodeRendererFactory GetRendererFactory() {
-            return rendererFactory;
+            return this.rendererFactory;
         }
 
         public virtual String GetCharset() {
             // may also return null, but null will always default to UTF-8 in JSoup
             return Encoding.UTF8.Name();
+        }
+
+        public virtual ResourceResolver GetResourceResolver() {
+            return this.resourceResolver;
         }
     }
 }

@@ -44,6 +44,7 @@ using System;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
@@ -247,7 +248,7 @@ namespace iText.Svg.Processors.Impl {
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new _ISvgConverterProperties_251();
+            ISvgConverterProperties convProps = new _ISvgConverterProperties_253();
             ISvgNodeRenderer rootActual = processor.Process(root, convProps).GetRootRenderer();
             //setup expected
             ISvgNodeRenderer rootExpected = null;
@@ -255,8 +256,8 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
-        private sealed class _ISvgConverterProperties_251 : ISvgConverterProperties {
-            public _ISvgConverterProperties_251() {
+        private sealed class _ISvgConverterProperties_253 : ISvgConverterProperties {
+            public _ISvgConverterProperties_253() {
             }
 
             public ICssResolver GetCssResolver() {
@@ -270,6 +271,10 @@ namespace iText.Svg.Processors.Impl {
             public String GetCharset() {
                 return null;
             }
+
+            public ResourceResolver GetResourceResolver() {
+                return null;
+            }
         }
 
         [NUnit.Framework.Test]
@@ -277,6 +282,18 @@ namespace iText.Svg.Processors.Impl {
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IElementNode actual = processor.FindFirstElement(null, "name");
             NUnit.Framework.Assert.IsNull(actual);
+        }
+
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("RND-868")]
+        public virtual void ProcessWithNullPropertiesTest() {
+            DefaultSvgProcessor processor = new DefaultSvgProcessor();
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("svg"), "");
+            INode root = new JsoupElementNode(jsoupSVGRoot);
+            ISvgProcessorResult actual = processor.Process(root, null);
+            ISvgProcessorResult expected = processor.Process(root);
+            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer(), actual.GetRootRenderer());
         }
     }
 }

@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Processors {
@@ -93,5 +94,9 @@ namespace iText.Svg.Processors {
         /// used for decoding
         /// </returns>
         String GetCharset();
+
+        /// <summary>Gets the provided ResourceResolver.</summary>
+        /// <returns>resourceResolver specified by the user</returns>
+        ResourceResolver GetResourceResolver();
     }
 }

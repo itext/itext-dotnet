@@ -89,7 +89,7 @@ namespace iText.Svg.Processors.Impl {
         //Processor context
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgProcessorResult Process(INode root) {
-            return Process(root, new DefaultSvgConverterProperties(root));
+            return Process(root, new DefaultSvgConverterProperties());
         }
 
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
@@ -102,14 +102,14 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(converterProps);
             }
             else {
-                this.defaultProps = new DefaultSvgConverterProperties(root);
+                this.defaultProps = new DefaultSvgConverterProperties();
                 PerformSetup(this.defaultProps);
             }
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
                 //Iterate over children
-                ExecuteDepthFirstTraversal(svgRoot);
+                ExecuteDepthFirstTraversal(svgRoot, converterProps);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
                 return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer);
             }
@@ -135,12 +135,14 @@ namespace iText.Svg.Processors.Impl {
         //TODO(RND-865): resolve/initialize CSS context
         /// <summary>Start the depth-first traversal of the INode tree, pushing the results on the stack</summary>
         /// <param name="startingNode">node to start on</param>
-        private void ExecuteDepthFirstTraversal(INode startingNode) {
+        private void ExecuteDepthFirstTraversal(INode startingNode, ISvgConverterProperties converterProperties) {
             //Create and push rootNode
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                startingRenderer.SetAttributesAndStyles(cssResolver.ResolveStyles(startingNode, cssContext));
+                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver());
+                IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
+                startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);
                 foreach (INode rootChild in startingNode.ChildNodes()) {
                     Visit(rootChild);
