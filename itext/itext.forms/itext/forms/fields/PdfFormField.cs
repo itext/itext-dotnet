@@ -2290,7 +2290,11 @@ namespace iText.Forms.Fields {
         /// </summary>
         /// <returns>the current justification attribute</returns>
         public virtual int? GetJustification() {
-            return GetPdfObject().GetAsInt(PdfName.Q);
+            int? justification = GetPdfObject().GetAsInt(PdfName.Q);
+            if (justification == null && GetParent() != null) {
+                justification = GetParent().GetAsInt(PdfName.Q);
+            }
+            return justification;
         }
 
         /// <summary>
