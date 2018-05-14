@@ -100,9 +100,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual void UriResolverTest03() {
             UriResolver resolver = new UriResolver("/test/folder/index.html");
             String rootFolder = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToExternalForm();
-            if (rootFolder == "file:///") {
-                rootFolder = "file://";
-            }
             NUnit.Framework.Assert.AreEqual(rootFolder + "test/folder/index.html", resolver.GetBaseUri());
             NUnit.Framework.Assert.AreEqual(rootFolder + "test/folder/innerTest", resolver.ResolveAgainstBaseUri("innerTest"
                 ).ToExternalForm());
@@ -133,9 +130,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual void UriResolverTest05() {
             UriResolver resolver = new UriResolver("/../test/folder/index.html");
             String rootFolder = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToExternalForm();
-            if (rootFolder == "file:///") {
-                rootFolder = "file://";
-            }
             NUnit.Framework.Assert.AreEqual(rootFolder + "test/folder/index.html", resolver.GetBaseUri());
             NUnit.Framework.Assert.AreEqual(rootFolder + "test/folder/innerTest", resolver.ResolveAgainstBaseUri("innerTest"
                 ).ToExternalForm());
@@ -354,7 +348,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [NUnit.Framework.Test]
         public virtual void UriResolverTest14() {
             UriResolver resolver = new UriResolver("base/uri/index.html");
-            String runFolder = new Uri(Path.GetFullPath(Directory.GetCurrentDirectory() + "/")).ToExternalForm();
+            String runFolder = new Uri(Path.GetFullPath(Directory.GetCurrentDirectory() )).ToExternalForm() + "/";
             NUnit.Framework.Assert.AreEqual(runFolder + "base/uri/index.html", resolver.GetBaseUri());
             NUnit.Framework.Assert.AreEqual("file:///c:/test/folder/img.txt", resolver.ResolveAgainstBaseUri("file:/c:/test/folder/img.txt"
                 ).ToExternalForm());
@@ -419,8 +413,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 ("//folder2/innerTest2").ToExternalForm());
         }
 
-        //TODO: RND-1019 this test should fail in .Net version when RND-1019 is resolved this method produces a behavior that is not consistant in java vs .Net
-        // the whitespace characters are
+        //TODO: RND-1019 this test should fail in .Net version after RND-1019 is resolved.
         [NUnit.Framework.Test]
         public virtual void UriResolverTest16B() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToString();
