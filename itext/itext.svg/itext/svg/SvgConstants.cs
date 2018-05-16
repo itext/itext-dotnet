@@ -391,6 +391,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the second x coordinate value of a line.</summary>
             public const String X2 = "x2";
 
+            /// <summary>Attribute defining image source.</summary>
+            public const String XLINK_HREF = "xlink:href";
+
             /// <summary>Attribute defining the y value of an element.</summary>
             public const String Y = "y";
 

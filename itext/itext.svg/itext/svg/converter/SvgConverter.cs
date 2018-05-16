@@ -306,7 +306,7 @@ namespace iText.Svg.Converter {
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas pageCanvas = new PdfCanvas(page);
             //Add to the first page
-            PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument);
+            PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, props);
             //Draw
             Draw(xObject, pageCanvas);
             pdfDocument.Close();
@@ -479,7 +479,7 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document, ISvgConverterProperties
              props) {
-            return ConvertToXObject(Process(Parse(stream, props), props).GetRootRenderer(), document);
+            return ConvertToXObject(Process(Parse(stream, props), props).GetRootRenderer(), document, props);
         }
 
         /*
@@ -531,6 +531,53 @@ namespace iText.Svg.Converter {
         /// corresponding to the passed node renderer tree.
         /// </returns>
         public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer topSvgRenderer, PdfDocument document) {
+            return ConvertToXObject(topSvgRenderer, document, new DefaultSvgConverterProperties());
+        }
+
+        /// <summary>
+        /// This method draws a NodeRenderer tree to a canvas that is tied to the
+        /// passed document.
+        /// </summary>
+        /// <remarks>
+        /// This method draws a NodeRenderer tree to a canvas that is tied to the
+        /// passed document.
+        /// This method (or its overloads) is the best method to use if you want to
+        /// reuse the same SVG image multiple times on the same
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// If you want to reuse this object on other
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instances,
+        /// please either use any of the
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// overloads in this same
+        /// class and convert its result to an XObject with
+        /// this method, or look into
+        /// using
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// </remarks>
+        /// <param name="topSvgRenderer">
+        /// the
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// instance that contains
+        /// the renderer tree
+        /// </param>
+        /// <param name="document">the document that the returned</param>
+        /// <param name="properties">
+        /// the converter properties
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// can be drawn on (on any given page
+        /// coordinates)
+        /// </param>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// containing the PDF instructions
+        /// corresponding to the passed node renderer tree.
+        /// </returns>
+        public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer topSvgRenderer, PdfDocument document, ISvgConverterProperties
+             properties) {
             CheckNull(topSvgRenderer);
             CheckNull(document);
             float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.WIDTH));
@@ -538,6 +585,10 @@ namespace iText.Svg.Converter {
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             SvgDrawContext context = new SvgDrawContext();
+            if (properties == null) {
+                properties = new DefaultSvgConverterProperties();
+            }
+            context.SetResourceResolver(properties.GetResourceResolver());
             context.PushCanvas(canvas);
             ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(topSvgRenderer);
             root.Draw(context);

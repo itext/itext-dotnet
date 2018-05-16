@@ -45,6 +45,7 @@ using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Svg.Converter;
+using iText.Svg.Processors;
 
 namespace iText.Svg.Renderers {
     public class SvgIntegrationTest {
@@ -64,6 +65,13 @@ namespace iText.Svg.Renderers {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream, ISvgConverterProperties properties
+            ) {
+            WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
+            SvgConverter.CreatePdf(svg, properties, pdfOutputStream, writerprops);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void ConvertAndCompare(String src, String dest, String fileName) {
             Convert(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(dest + fileName
@@ -79,6 +87,18 @@ namespace iText.Svg.Renderers {
         public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
             ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
                 (dest + fileName + ".pdf", FileMode.Create));
+            CompareTool compareTool = new CompareTool();
+            String compareResult = compareTool.CompareByContent(dest + fileName + ".pdf", src + "cmp_" + fileName + ".pdf"
+                , dest, "diff_");
+            NUnit.Framework.Assert.IsNull(compareResult);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName, ISvgConverterProperties
+             properties) {
+            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
+                (dest + fileName + ".pdf", FileMode.Create), properties);
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(dest + fileName + ".pdf", src + "cmp_" + fileName + ".pdf"
                 , dest, "diff_");

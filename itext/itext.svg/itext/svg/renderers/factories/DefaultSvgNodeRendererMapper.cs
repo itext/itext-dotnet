@@ -59,22 +59,75 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
-            result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.G, typeof(BranchSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.IMAGE, typeof(ImageSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
             result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.G, typeof(BranchSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgNodeRenderer));
             return result;
         }
 
         public virtual ICollection<String> GetIgnoredTags() {
             ICollection<String> ignored = new HashSet<String>();
+            // Not supported tags as of yet
+            ignored.Add(SvgConstants.Tags.A);
+            ignored.Add(SvgConstants.Tags.ALT_GLYPH);
+            ignored.Add(SvgConstants.Tags.ALT_GLYPH_DEF);
+            ignored.Add(SvgConstants.Tags.ALT_GLYPH_ITEM);
+            ignored.Add(SvgConstants.Tags.CLIP_PATH);
+            ignored.Add(SvgConstants.Tags.COLOR_PROFILE);
+            ignored.Add(SvgConstants.Tags.DEFS);
+            ignored.Add(SvgConstants.Tags.DESC);
+            ignored.Add(SvgConstants.Tags.FE_BLEND);
+            ignored.Add(SvgConstants.Tags.FE_COLOR_MATRIX);
+            ignored.Add(SvgConstants.Tags.FE_COMPONENT_TRANSFER);
+            ignored.Add(SvgConstants.Tags.FE_COMPOSITE);
+            ignored.Add(SvgConstants.Tags.FE_COMVOLVE_MATRIX);
+            ignored.Add(SvgConstants.Tags.FE_DIFFUSE_LIGHTING);
+            ignored.Add(SvgConstants.Tags.FE_DISPLACEMENT_MAP);
+            ignored.Add(SvgConstants.Tags.FE_DISTANT_LIGHT);
+            ignored.Add(SvgConstants.Tags.FE_FLOOD);
+            ignored.Add(SvgConstants.Tags.FE_FUNC_A);
+            ignored.Add(SvgConstants.Tags.FE_FUNC_B);
+            ignored.Add(SvgConstants.Tags.FE_FUNC_G);
+            ignored.Add(SvgConstants.Tags.FE_FUNC_R);
+            ignored.Add(SvgConstants.Tags.FE_GAUSSIAN_BLUR);
+            ignored.Add(SvgConstants.Tags.FE_IMAGE);
+            ignored.Add(SvgConstants.Tags.FE_MERGE);
+            ignored.Add(SvgConstants.Tags.FE_MERGE_NODE);
+            ignored.Add(SvgConstants.Tags.FE_MORPHOLOGY);
+            ignored.Add(SvgConstants.Tags.FE_OFFSET);
+            ignored.Add(SvgConstants.Tags.FE_POINT_LIGHT);
+            ignored.Add(SvgConstants.Tags.FE_SPECULAR_LIGHTING);
+            ignored.Add(SvgConstants.Tags.FE_SPOTLIGHT);
+            ignored.Add(SvgConstants.Tags.FE_TILE);
+            ignored.Add(SvgConstants.Tags.FE_TURBULENCE);
+            ignored.Add(SvgConstants.Tags.FILTER);
+            ignored.Add(SvgConstants.Tags.FONT);
+            ignored.Add(SvgConstants.Tags.FONT_FACE);
+            ignored.Add(SvgConstants.Tags.FONT_FACE_FORMAT);
+            ignored.Add(SvgConstants.Tags.FONT_FACE_NAME);
+            ignored.Add(SvgConstants.Tags.FONT_FACE_SRC);
+            ignored.Add(SvgConstants.Tags.FONT_FACE_URI);
+            ignored.Add(SvgConstants.Tags.FOREIGN_OBJECT);
+            ignored.Add(SvgConstants.Tags.GLYPH);
+            ignored.Add(SvgConstants.Tags.GLYPH_REF);
+            ignored.Add(SvgConstants.Tags.HKERN);
+            ignored.Add(SvgConstants.Tags.LINEAR_GRADIENT);
+            ignored.Add(SvgConstants.Tags.MARKER);
+            ignored.Add(SvgConstants.Tags.MASK);
+            ignored.Add(SvgConstants.Tags.METADATA);
+            ignored.Add(SvgConstants.Tags.MISSING_GLYPH);
+            ignored.Add(SvgConstants.Tags.PATTERN);
+            ignored.Add(SvgConstants.Tags.RADIAL_GRADIENT);
+            ignored.Add(SvgConstants.Tags.STOP);
             ignored.Add(SvgConstants.Tags.STYLE);
             return ignored;
         }

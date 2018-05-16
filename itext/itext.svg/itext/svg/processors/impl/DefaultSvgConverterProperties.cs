@@ -87,5 +87,11 @@ namespace iText.Svg.Processors.Impl {
         public virtual ResourceResolver GetResourceResolver() {
             return this.resourceResolver;
         }
+
+        public virtual iText.Svg.Processors.Impl.DefaultSvgConverterProperties SetResourceResolver(ResourceResolver
+             resourceResolver) {
+            this.resourceResolver = resourceResolver;
+            return this;
+        }
     }
 }

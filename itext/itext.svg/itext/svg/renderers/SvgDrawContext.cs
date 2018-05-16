@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers {
@@ -60,6 +61,8 @@ namespace iText.Svg.Renderers {
         private readonly Stack<PdfCanvas> canvases = new Stack<PdfCanvas>();
 
         private readonly Stack<Rectangle> viewports = new Stack<Rectangle>();
+
+        private ResourceResolver resourceResolver;
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
@@ -138,6 +141,14 @@ namespace iText.Svg.Renderers {
         /// <returns>the referenced object</returns>
         public virtual Object GetNamedObject(String name) {
             return this.namedObjects.Get(name);
+        }
+
+        public virtual void SetResourceResolver(ResourceResolver resourceResolver) {
+            this.resourceResolver = resourceResolver;
+        }
+
+        public virtual ResourceResolver GetResourceResolver() {
+            return resourceResolver;
         }
     }
 }
