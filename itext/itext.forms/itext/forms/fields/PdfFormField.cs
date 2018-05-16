@@ -3484,11 +3484,14 @@ namespace iText.Forms.Fields {
             SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
             float width = rect.GetWidth();
             float height = rect.GetHeight();
-            IList<String> strings = font.SplitString(value, fontSize, width - 6);
+            float widthBorder = 6.0f;
+            float heightBorder = 2.0f;
+            IList<String> strings = font.SplitString(value, fontSize, width - widthBorder);
             DrawBorder(canvas, appearance, width, height);
-            canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - 6, height - 6).Clip().NewPath();
+            canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - widthBorder, height - heightBorder).Clip().
+                NewPath();
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
-                Max(0, width - 6), Math.Max(0, height - 2)));
+                Max(0, width - widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             for (int index = 0; index < strings.Count; index++) {
                 bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);

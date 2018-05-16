@@ -174,5 +174,20 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultiLineFormFieldClippingTest() {
+            String src = sourceFolder + "multiLineFormFieldClippingTest.pdf";
+            String dest = destinationFolder + "multiLineFormFieldClippingTest_flattened.pdf";
+            String cmp = sourceFolder + "cmp_multiLineFormFieldClippingTest_flattened.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            form.GetField("Text1").SetValue("Tall letters: T I J L R E F");
+            form.FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
     }
 }
