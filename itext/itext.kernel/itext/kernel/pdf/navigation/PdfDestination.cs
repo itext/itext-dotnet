@@ -67,7 +67,21 @@ namespace iText.Kernel.Pdf.Navigation {
                 }
                 else {
                     if (pdfObject.GetObjectType() == PdfObject.ARRAY) {
-                        return new PdfExplicitDestination((PdfArray)pdfObject);
+                        PdfArray destArray = (PdfArray)pdfObject;
+                        if (destArray.Size() == 0) {
+                            throw new ArgumentException();
+                        }
+                        else {
+                            PdfObject firstObj = destArray.Get(0);
+                            // In case of explicit destination for remote go-to action this is a page number
+                            if (firstObj.IsNumber()) {
+                                return new PdfExplicitRemoteGoToDestination(destArray);
+                            }
+                            else {
+                                // In case of explicit destination for not remote go-to action this is a page dictionary
+                                return new PdfExplicitDestination(destArray);
+                            }
+                        }
                     }
                     else {
                         throw new NotSupportedException();

@@ -1263,6 +1263,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddNamedDestination(String key, PdfObject value) {
             CheckClosingStatus();
+            if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
+                LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                    );
+            }
             catalog.AddNamedDestination(key, value);
         }
 
