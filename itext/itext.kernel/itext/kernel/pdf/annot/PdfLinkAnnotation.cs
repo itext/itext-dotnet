@@ -86,6 +86,10 @@ namespace iText.Kernel.Pdf.Annot {
                 GetPdfObject().Remove(PdfName.A);
                 logger.Warn(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET);
             }
+            if (destination.IsArray() && ((PdfArray)destination).Get(0).IsNumber()) {
+                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                    );
+            }
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination);
         }
 

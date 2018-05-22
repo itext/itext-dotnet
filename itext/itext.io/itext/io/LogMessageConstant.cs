@@ -92,6 +92,8 @@ namespace iText.IO {
 
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
+        public const String EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED = "No destination in the target was specified for action. Destination entry is mandatory for embedded go-to actions.";
+
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
 
         public const String DOCFONT_HAS_ILLEGAL_DIFFERENCES = "Document Font has illegal differences array. Entry {0} references a glyph ID over 255 and will be ignored.";
@@ -167,6 +169,8 @@ namespace iText.IO {
         public const String INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED = "Inline block element does not fit into parent element and will be clipped";
 
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
+
+        public const String INVALID_DESTINATION_TYPE = "When destination's not associated with a Remote or Embedded Go-To action, it shall specify page dictionary instead of page number. Otherwise destination might be considered invalid";
 
         public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R";
 
