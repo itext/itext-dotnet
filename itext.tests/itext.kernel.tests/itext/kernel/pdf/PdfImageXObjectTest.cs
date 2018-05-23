@@ -41,13 +41,25 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO.Image;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
     public class PdfImageXObjectTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfImageXObjectTest/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/kernel/parser/PdfImageXObjectTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateOrClearDestinationFolder(destinationFolder);
+        }
 
         /// <exception cref="System.Exception"/>
         private void TestFile(String filename, int page, String objectid) {
@@ -111,6 +123,22 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void Testjbig2Filters() {
             TestFile("jbig2decode.pdf", 1, "2");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CreateDictionaryFromMapIntArrayTest() {
+            String filename = destinationFolder + "createDictionaryFromMapIntArrayTest.pdf";
+            String cmpfile = sourceFolder + "cmp_createDictionaryFromMapIntArrayTest.pdf";
+            String image = sourceFolder + "image.png";
+            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.AddNewPage();
+            new PdfCanvas(pdfDocument.GetFirstPage()).AddImage(ImageDataFactory.Create(image), 50, 50, 100, false);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpfile, destinationFolder, "diff_"
+                ));
         }
     }
 }
