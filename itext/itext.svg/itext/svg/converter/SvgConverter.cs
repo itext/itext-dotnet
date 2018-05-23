@@ -46,6 +46,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
@@ -85,8 +86,25 @@ namespace iText.Svg.Converter {
         /// </param>
         /// <param name="pageNo">the page to draw on</param>
         public static void DrawOnDocument(String content, PdfDocument document, int pageNo) {
+            DrawOnDocument(content, document, pageNo, 0, 0);
+        }
+
+        /// <summary>
+        /// Draws a String containing valid SVG to a document, on a given page
+        /// number.
+        /// </summary>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="pageNo">the page to draw on</param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        public static void DrawOnDocument(String content, PdfDocument document, int pageNo, float x, float y) {
             CheckNull(document);
-            DrawOnPage(content, document.GetPage(pageNo));
+            DrawOnPage(content, document.GetPage(pageNo), x, y);
         }
 
         /// <summary>
@@ -103,8 +121,27 @@ namespace iText.Svg.Converter {
         /// <param name="props">a container for extra properties that customize the behavior</param>
         public static void DrawOnDocument(String content, PdfDocument document, int pageNo, ISvgConverterProperties
              props) {
+            DrawOnDocument(content, document, pageNo, 0, 0, props);
+        }
+
+        /// <summary>
+        /// Draws a String containing valid SVG to a document, on a given page
+        /// number.
+        /// </summary>
+        /// <param name="content">the Stream object containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="pageNo">the page to draw on</param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        public static void DrawOnDocument(String content, PdfDocument document, int pageNo, float x, float y, ISvgConverterProperties
+             props) {
             CheckNull(document);
-            DrawOnPage(content, document.GetPage(pageNo), props);
+            DrawOnPage(content, document.GetPage(pageNo), x, y, props);
         }
 
         /// <summary>
@@ -120,8 +157,26 @@ namespace iText.Svg.Converter {
         /// <param name="pageNo">the page to draw on</param>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnDocument(Stream stream, PdfDocument document, int pageNo) {
+            DrawOnDocument(stream, document, pageNo, 0, 0);
+        }
+
+        /// <summary>
+        /// Draws a Stream containing valid SVG to a document, on a given page
+        /// number.
+        /// </summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="pageNo">the page to draw on</param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnDocument(Stream stream, PdfDocument document, int pageNo, float x, float y) {
             CheckNull(document);
-            DrawOnPage(stream, document.GetPage(pageNo));
+            DrawOnPage(stream, document.GetPage(pageNo), x, y);
         }
 
         /// <summary>
@@ -139,8 +194,28 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnDocument(Stream stream, PdfDocument document, int pageNo, ISvgConverterProperties
              props) {
+            DrawOnDocument(stream, document, pageNo, 0, 0, props);
+        }
+
+        /// <summary>
+        /// Draws a Stream containing valid SVG to a document, on a given page
+        /// number.
+        /// </summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="pageNo">the page to draw on</param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnDocument(Stream stream, PdfDocument document, int pageNo, float x, float y, ISvgConverterProperties
+             props) {
             CheckNull(document);
-            DrawOnPage(stream, document.GetPage(pageNo), props);
+            DrawOnPage(stream, document.GetPage(pageNo), x, y, props);
         }
 
         /// <summary>Draws a String containing valid SVG to a given page</summary>
@@ -151,8 +226,21 @@ namespace iText.Svg.Converter {
         /// instance to draw on
         /// </param>
         public static void DrawOnPage(String content, PdfPage page) {
+            DrawOnPage(content, page, 0, 0);
+        }
+
+        /// <summary>Draws a String containing valid SVG to a given page</summary>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        public static void DrawOnPage(String content, PdfPage page, float x, float y) {
             CheckNull(page);
-            DrawOnCanvas(content, new PdfCanvas(page));
+            DrawOnCanvas(content, new PdfCanvas(page), x, y);
         }
 
         /// <summary>Draws a String containing valid SVG to a given page</summary>
@@ -164,8 +252,23 @@ namespace iText.Svg.Converter {
         /// </param>
         /// <param name="props">a container for extra properties that customize the behavior</param>
         public static void DrawOnPage(String content, PdfPage page, ISvgConverterProperties props) {
+            DrawOnPage(content, page, 0, 0, props);
+        }
+
+        /// <summary>Draws a String containing valid SVG to a given page</summary>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        public static void DrawOnPage(String content, PdfPage page, float x, float y, ISvgConverterProperties props
+            ) {
             CheckNull(page);
-            DrawOnCanvas(content, new PdfCanvas(page), props);
+            DrawOnCanvas(content, new PdfCanvas(page), x, y, props);
         }
 
         /// <summary>Draws a Stream containing valid SVG to a given page</summary>
@@ -177,8 +280,22 @@ namespace iText.Svg.Converter {
         /// </param>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnPage(Stream stream, PdfPage page) {
+            DrawOnPage(stream, page, 0, 0);
+        }
+
+        /// <summary>Draws a Stream containing valid SVG to a given page, at a given location</summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnPage(Stream stream, PdfPage page, float x, float y) {
             CheckNull(page);
-            DrawOnCanvas(stream, new PdfCanvas(page));
+            DrawOnCanvas(stream, new PdfCanvas(page), x, y);
         }
 
         /// <summary>Draws a Stream containing valid SVG to a given page</summary>
@@ -191,8 +308,24 @@ namespace iText.Svg.Converter {
         /// <param name="props">a container for extra properties that customize the behavior</param>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnPage(Stream stream, PdfPage page, ISvgConverterProperties props) {
+            DrawOnPage(stream, page, 0, 0, props);
+        }
+
+        /// <summary>Draws a Stream containing valid SVG to a given page</summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnPage(Stream stream, PdfPage page, float x, float y, ISvgConverterProperties props
+            ) {
             CheckNull(page);
-            DrawOnCanvas(stream, new PdfCanvas(page), props);
+            DrawOnCanvas(stream, new PdfCanvas(page), x, y, props);
         }
 
         /// <summary>Draws a String containing valid SVG to a pre-made canvas object</summary>
@@ -203,8 +336,21 @@ namespace iText.Svg.Converter {
         /// instance to draw on
         /// </param>
         public static void DrawOnCanvas(String content, PdfCanvas canvas) {
+            DrawOnCanvas(content, canvas, 0, 0);
+        }
+
+        /// <summary>Draws a String containing valid SVG to a pre-made canvas object</summary>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        public static void DrawOnCanvas(String content, PdfCanvas canvas, float x, float y) {
             CheckNull(canvas);
-            Draw(ConvertToXObject(content, canvas.GetDocument()), canvas);
+            Draw(ConvertToXObject(content, canvas.GetDocument()), canvas, x, y);
         }
 
         /// <summary>Draws a String containing valid SVG to a pre-made canvas object</summary>
@@ -216,11 +362,26 @@ namespace iText.Svg.Converter {
         /// </param>
         /// <param name="props">a container for extra properties that customize the behavior</param>
         public static void DrawOnCanvas(String content, PdfCanvas canvas, ISvgConverterProperties props) {
-            CheckNull(canvas);
-            Draw(ConvertToXObject(content, canvas.GetDocument(), props), canvas);
+            DrawOnCanvas(content, canvas, 0, 0, props);
         }
 
-        /// <summary>Draws a String containing valid SVG to a pre-made canvas object</summary>
+        /// <summary>draws a String containing valid SVG to a pre-made canvas object, at a specified location</summary>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        public static void DrawOnCanvas(String content, PdfCanvas canvas, float x, float y, ISvgConverterProperties
+             props) {
+            CheckNull(canvas);
+            Draw(ConvertToXObject(content, canvas.GetDocument(), props), canvas, x, y);
+        }
+
+        /// <summary>Draws a Stream containing valid SVG to a pre-made canvas object</summary>
         /// <param name="stream">the Stream object containing valid SVG content</param>
         /// <param name="canvas">
         /// the
@@ -229,11 +390,25 @@ namespace iText.Svg.Converter {
         /// </param>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnCanvas(Stream stream, PdfCanvas canvas) {
-            CheckNull(canvas);
-            Draw(ConvertToXObject(stream, canvas.GetDocument()), canvas);
+            DrawOnCanvas(stream, canvas, 0, 0);
         }
 
-        /// <summary>Draws a String containing valid SVG to a pre-made canvas object</summary>
+        /// <summary>Draws a Stream containing valid SVG to a pre-made canvas object, to a specified location</summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnCanvas(Stream stream, PdfCanvas canvas, float x, float y) {
+            CheckNull(canvas);
+            Draw(ConvertToXObject(stream, canvas.GetDocument()), canvas, x, y);
+        }
+
+        /// <summary>Draws a Stream containing valid SVG to a pre-made canvas object</summary>
         /// <param name="stream">the Stream object containing valid SVG content</param>
         /// <param name="canvas">
         /// the
@@ -243,8 +418,25 @@ namespace iText.Svg.Converter {
         /// <param name="props">a container for extra properties that customize the behavior</param>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static void DrawOnCanvas(Stream stream, PdfCanvas canvas, ISvgConverterProperties props) {
+            DrawOnCanvas(stream, canvas, 0, 0, props);
+        }
+
+        /// <summary>Draws a String containing valid SVG to a pre-made canvas object, at a specified position on the canvas
+        ///     </summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="x">x-coordinate of the location to draw at</param>
+        /// <param name="y">y-coordinate of the location to draw at</param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static void DrawOnCanvas(Stream stream, PdfCanvas canvas, float x, float y, ISvgConverterProperties
+             props) {
             CheckNull(canvas);
-            Draw(ConvertToXObject(stream, canvas.GetDocument(), props), canvas);
+            Draw(ConvertToXObject(stream, canvas.GetDocument(), props), canvas, x, y);
         }
 
         /// <summary>Create a single page pdf containing the SVG on its page using the default processing and drawing logic
@@ -271,18 +463,19 @@ namespace iText.Svg.Converter {
         /// <param name="svgStream">inputstream containing the SVG</param>
         /// <param name="props">Svg Converter properties to change default behaviour</param>
         /// <param name="pdfDest">PDF destination outputStream</param>
+        /// <param name="svgStream">inputstream containing the SVG</param>
+        /// <param name="props">Svg Converter properties to change default behaviour</param>
+        /// <param name="pdfDest">PDF destination outputStream</param>
+        /// <param name="writerprops">writerproperties for the pdf document</param>
         /// <exception cref="System.IO.IOException">
         /// when the one of the streams cannot be read correctly
         /// public static void createPdf(InputStream svgStream,ISvgConverterProperties props, OutputStream pdfDest) throws IOException {
         /// createPdf(svgStream,props,pdfDest,null);
         /// }
+        /// <p>
         /// /
         /// Create a single page pdf containing the SVG on its page using the default processing and drawing logic
         /// </exception>
-        /// <param name="svgStream">inputstream containing the SVG</param>
-        /// <param name="props">Svg Converter properties to change default behaviour</param>
-        /// <param name="pdfDest">PDF destination outputStream</param>
-        /// <param name="writerprops">writerproperties for the pdf document</param>
         /// <exception cref="System.IO.IOException">when the one of the streams cannot be read correctly</exception>
         public static void CreatePdf(Stream svgStream, ISvgConverterProperties props, Stream pdfDest, WriterProperties
              writerprops) {
@@ -320,10 +513,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -361,10 +556,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -404,10 +601,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -427,13 +626,13 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instance to draw on
         /// </param>
-        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// containing the PDF instructions
         /// corresponding to the passed SVG content
         /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document) {
             return ConvertToXObject(Process(Parse(stream)).GetRootRenderer(), document);
         }
@@ -446,10 +645,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -470,16 +671,105 @@ namespace iText.Svg.Converter {
         /// instance to draw on
         /// </param>
         /// <param name="props">a container for extra properties that customize the behavior</param>
-        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// containing the PDF instructions
         /// corresponding to the passed SVG content
         /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document, ISvgConverterProperties
              props) {
             return ConvertToXObject(Process(Parse(stream, props), props).GetRootRenderer(), document, props);
+        }
+
+        /// <summary>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// . This method does NOT manipulate the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// in any way.
+        /// <p>
+        /// This method (or its overloads) is the best method to use if you want to
+        /// reuse the same SVG image multiple times on the same
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// <p>
+        /// If you want to reuse this object on other
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instances,
+        /// please either use any of the
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// overloads in this same
+        /// class and convert its result to an XObject with
+        /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
+        /// , or look into
+        /// using
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// </summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Element.Image">Image</see>
+        /// containing the PDF instructions
+        /// corresponding to the passed SVG content
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static Image ConvertToImage(Stream stream, PdfDocument document) {
+            return new Image(ConvertToXObject(stream, document));
+        }
+
+        /// <summary>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Layout.Element.Image">image</see>
+        /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// . This method does NOT manipulate the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// in any way.
+        /// <p>
+        /// This method (or its overloads) is the best method to use if you want to
+        /// reuse the same SVG image multiple times on the same
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// <p>
+        /// If you want to reuse this object on other
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instances,
+        /// please either use any of the
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// overloads in this same
+        /// class and convert its result to an XObject with
+        /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
+        /// , or look into
+        /// using
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// </summary>
+        /// <param name="stream">the Stream object containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <param name="props">a container for extra properties that customize the behavior</param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Element.Image">Image</see>
+        /// containing the PDF instructions
+        /// corresponding to the passed SVG content
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static Image ConvertToImage(Stream stream, PdfDocument document, ISvgConverterProperties props) {
+            return new Image(ConvertToXObject(stream, document, props));
         }
 
         /*
@@ -489,6 +779,13 @@ namespace iText.Svg.Converter {
             canvas.AddXObject(pdfForm, 0, 0);
         }
 
+        /*
+        * This method is kept private, because there is little purpose in exposing it.
+        */
+        private static void Draw(PdfFormXObject pdfForm, PdfCanvas canvas, float x, float y) {
+            canvas.AddXObject(pdfForm, x, y);
+        }
+
         /// <summary>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
         /// passed document.
@@ -496,10 +793,12 @@ namespace iText.Svg.Converter {
         /// <remarks>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
         /// passed document.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -653,8 +952,8 @@ namespace iText.Svg.Converter {
         /// .
         /// </remarks>
         /// <param name="stream">the Stream object containing valid SVG content</param>
-        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         /// <returns>an XML DOM tree corresponding to the passed String input</returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static INode Parse(Stream stream) {
             CheckNull(stream);
             return Parse(stream, null);
@@ -677,8 +976,8 @@ namespace iText.Svg.Converter {
         /// </remarks>
         /// <param name="stream">the Stream object containing valid SVG content</param>
         /// <param name="props">a container for extra properties that customize the behavior</param>
-        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         /// <returns>an XML DOM tree corresponding to the passed String input</returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static INode Parse(Stream stream, ISvgConverterProperties props) {
             CheckNull(stream);
             // props is allowed to be null

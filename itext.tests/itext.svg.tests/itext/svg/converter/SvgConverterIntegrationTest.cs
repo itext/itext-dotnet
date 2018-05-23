@@ -47,7 +47,11 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Svg.Exceptions;
+using iText.Svg.Processors;
+using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -58,6 +62,14 @@ namespace iText.Svg.Converter {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/converter/SvgConverterTest/";
+
+        public const String ECLIPSESVGSTRING = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + 
+            "<svg\n" + "   xmlns=\"http://www.w3.org/2000/svg\"\n" + "   width=\"200pt\"\n" + "   height=\"200pt\"\n"
+             + "   viewBox=\"0 0 100 100\"\n" + "   version=\"1.1\">\n" + "    <circle\n" + "       style=\"opacity:1;fill:none;fill-opacity:1;stroke:#ffcc00;stroke-width:4.13364887;stroke-miterlimit:4;stroke-opacity:1\"\n"
+             + "       cx=\"35.277779\"\n" + "       cy=\"35.277779\"\n" + "       r=\"33.210953\" />\n" + "    <circle\n"
+             + "       style=\"opacity:1;fill:#ffcc00;fill-opacity:1;stroke:#ffcc00;stroke-width:1.42177439;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1\"\n"
+             + "       id=\"path923\"\n" + "       cx=\"35.277779\"\n" + "       cy=\"35.277779\"\n" + "       r=\"16.928001\" />\n"
+             + "</svg>\n";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -127,8 +139,351 @@ namespace iText.Svg.Converter {
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             FileStream fos = new FileStream(destinationFolder + name + ".pdf", FileMode.Create);
             SvgConverter.CreatePdf(fis, fos);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + name + ".pdf", destinationFolder
-                 + name + ".pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + name + ".pdf", sourceFolder
+                 + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionX() {
+            String name = "eclipse";
+            int x = 50;
+            int y = 0;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionY() {
+            String name = "eclipse";
+            int x = 0;
+            int y = 100;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionXY() {
+            String name = "eclipse";
+            int x = 50;
+            int y = 100;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionNegativeX() {
+            String name = "eclipse";
+            int x = -50;
+            int y = 0;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionNegativeY() {
+            String name = "eclipse";
+            int x = 0;
+            int y = -100;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionNegativeXY() {
+            String name = "eclipse";
+            int x = -50;
+            int y = -100;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnSpecifiedPositionPartialOnPage() {
+            String name = "eclipse";
+            int x = -50;
+            int y = -50;
+            String destName = name + "_" + x + "_" + y;
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectStringPdfDocumentConverterProps() {
+            String name = "eclipse";
+            String destName = "CTXO_" + name + "_StringDocProps";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            PdfXObject xObj = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc, props);
+            PdfCanvas canv = new PdfCanvas(page);
+            canv.AddXObject(xObj, 0, 0);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToXObjectStreamPdfDocumentConverterProps() {
+            String name = "eclipse";
+            String destName = "CTXO_" + name + "_StreamDocProps";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            PdfXObject xObj = SvgConverter.ConvertToXObject(fis, doc, props);
+            PdfCanvas canv = new PdfCanvas(page);
+            canv.AddXObject(xObj, 0, 0);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToImageStreamDocument() {
+            String name = "eclipse";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            String destName = "CTI_" + name + "_StreamDocument";
+            FileStream fos = new FileStream(destinationFolder + destName + ".pdf", FileMode.Create);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos, new WriterProperties().SetCompressionLevel(0)
+                ));
+            Image image = SvgConverter.ConvertToImage(fis, pdfDocument);
+            Document doc = new Document(pdfDocument);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertToImageStreamDocumentConverterProperties() {
+            String name = "eclipse";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            String destName = "CTI_" + name + "_StreamDocumentProps";
+            FileStream fos = new FileStream(destinationFolder + destName + ".pdf", FileMode.Create);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos, new WriterProperties().SetCompressionLevel(0)
+                ));
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            Image image = SvgConverter.ConvertToImage(fis, pdfDocument, props);
+            Document doc = new Document(pdfDocument);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStringPage() {
+            String name = "eclipse";
+            String destName = "DOP_" + name + "_StringPdfPage";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStringPageConverterProps() {
+            String name = "eclipse";
+            String destName = "DOP_" + name + "_StringPdfPageConverterProps";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStreamPage() {
+            String name = "eclipse";
+            String destName = "DOP_" + name + "_StreamPdfPage";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            SvgConverter.DrawOnPage(fis, page);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnPageStreamPageConverterProperties() {
+            String name = "eclipse";
+            String destName = "DOP_" + name + "_StreamPdfPageConverterProperties";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfPage page = doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnPage(fis, page, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentStringPdfDocumentInt() {
+            String name = "eclipse";
+            String destName = "DOD_" + name + "_StringPdfDocumentInt";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            doc.AddNewPage();
+            SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentStringPdfDocumentIntConverterProperties() {
+            String name = "eclipse";
+            String destName = "DOD_" + name + "_StringPdfDocumentIntProps";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnDocument(fis, doc, 1, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnDocumentStreamPdfDocumentIntConverterProperties() {
+            String name = "eclipse";
+            String destName = "DOD_" + name + "_StreamPdfDocumentIntProps";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            doc.AddNewPage();
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStringPdfCanvasConverter() {
+            String name = "eclipse";
+            String destName = "DOC_" + name + "_StringCanvas";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStringPdfCanvasConverterProps() {
+            String name = "eclipse";
+            String destName = "DOC_" + name + "_StringCanvasProps";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStreamPdfCanvas() {
+            String name = "eclipse";
+            String destName = "DOC_" + name + "_StreamCanvas";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            SvgConverter.DrawOnCanvas(fis, canvas);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DrawOnCanvasStreamPdfCanvasConverterProps() {
+            String name = "eclipse";
+            String destName = "DOC_" + name + "_StreamCanvasProps";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            SvgConverter.DrawOnCanvas(fis, canvas, props);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+                 + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static void DrawOnSpecifiedPositionDocument(Stream svg, String dest, int x, int y) {
+            PdfDocument document = new PdfDocument(new PdfWriter(dest, new WriterProperties().SetCompressionLevel(0)));
+            document.AddNewPage();
+            SvgConverter.DrawOnDocument(svg, document, 1, x, y);
+            document.Close();
         }
     }
 }

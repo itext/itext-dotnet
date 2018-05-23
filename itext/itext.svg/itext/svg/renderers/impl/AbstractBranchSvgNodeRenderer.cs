@@ -122,7 +122,7 @@ namespace iText.Svg.Renderers.Impl {
                     AffineTransform transform = ProcessAspectRatio(context, values);
                     if (!transform.IsIdentity()) {
                         //TODO (RND-876)
-                        context.GetCurrentCanvas().WriteLiteral("% applying viewbox asect ratio correction (not correct) \n");
+                        context.GetCurrentCanvas().WriteLiteral("% applying viewbox aspect ratio correction (not correct) \n");
                     }
                 }
             }

@@ -49,6 +49,7 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
@@ -291,6 +292,15 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             // Does not throw an exception, but produces gibberish output that gets fed into a Text element, which is not a JsoupElementNode
             NUnit.Framework.Assert.IsFalse(actual.ChildNodes()[0] is JsoupElementNode);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckNullTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                SvgConverter.DrawOnDocument("test", null, 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL));
+;
         }
     }
 }
