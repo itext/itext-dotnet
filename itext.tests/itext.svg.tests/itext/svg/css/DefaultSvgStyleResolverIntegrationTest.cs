@@ -110,15 +110,5 @@ namespace iText.Svg.Css {
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
-
-        //TODO (RND-918)
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore]
-        public virtual void ExternalStyleSheetTest() {
-            String name = "externalStyleSheetTest";
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, name);
-        }
     }
 }
