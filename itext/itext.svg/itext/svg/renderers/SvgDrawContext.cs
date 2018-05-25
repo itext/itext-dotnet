@@ -56,7 +56,8 @@ namespace iText.Svg.Renderers {
     /// represent all levels of XObjects that are added to the root canvas.
     /// </summary>
     public class SvgDrawContext {
-        private readonly IDictionary<String, Object> namedObjects = new Dictionary<String, Object>();
+        private readonly IDictionary<String, ISvgNodeRenderer> namedObjects = new Dictionary<String, ISvgNodeRenderer
+            >();
 
         private readonly Stack<PdfCanvas> canvases = new Stack<PdfCanvas>();
 
@@ -123,7 +124,7 @@ namespace iText.Svg.Renderers {
         ///     </remarks>
         /// <param name="name">name of the object</param>
         /// <param name="namedObject">object to be referenced</param>
-        public virtual void AddNamedObject(String name, Object namedObject) {
+        public virtual void AddNamedObject(String name, ISvgNodeRenderer namedObject) {
             if (namedObject == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.NAMED_OBJECT_NULL);
             }
@@ -132,6 +133,16 @@ namespace iText.Svg.Renderers {
             }
             if (!this.namedObjects.ContainsKey(name) || namedObject is PdfFormXObject) {
                 this.namedObjects.Put(name, namedObject);
+            }
+        }
+
+        /// <summary>* Adds a number of named object to the draw context.</summary>
+        /// <remarks>* Adds a number of named object to the draw context. These objects can then be referenced from a different tag.
+        ///     </remarks>
+        /// <param name="objectsToAdd">Map containing the named objects keyed to their ID strings</param>
+        public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> objectsToAdd) {
+            foreach (KeyValuePair<String, ISvgNodeRenderer> no in objectsToAdd) {
+                AddNamedObject(no.Key, no.Value);
             }
         }
 

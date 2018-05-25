@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -53,6 +54,7 @@ using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Converter {
@@ -484,6 +486,44 @@ namespace iText.Svg.Converter {
             document.AddNewPage();
             SvgConverter.DrawOnDocument(svg, document, 1, x, y);
             document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseAndProcessSuccessTest() {
+            String name = "minimal";
+            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();
+            RectangleSvgNodeRenderer rect = new RectangleSvgNodeRenderer();
+            rect.SetAttribute("fill", "none");
+            rect.SetAttribute("stroke", "black");
+            rect.SetAttribute("width", "500");
+            rect.SetAttribute("height", "400");
+            ISvgNodeRenderer root = new SvgTagSvgNodeRenderer();
+            root.SetAttribute("xmlns", "http://www.w3.org/2000/svg");
+            root.SetAttribute("version", "1.1");
+            root.SetAttribute("width", "500");
+            root.SetAttribute("height", "400");
+            ISvgProcessorResult expected = new DefaultSvgProcessorResult(map, root);
+            ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
+            //TODO(RND-868): remove below checks
+            NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());
+            NUnit.Framework.Assert.AreEqual(0, actual.GetNamedObjects().Count);
+            NUnit.Framework.Assert.AreEqual("500", actual.GetRootRenderer().GetAttribute("width"));
+        }
+
+        //TODO(RND-868): Switch test over to this logic
+        //Assert.assertEquals(expected,actual);
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseAndProcessIOExceptionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String name = "notFound";
+                FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+                ISvgProcessorResult result = SvgConverter.ParseAndProcess(fis);
+            }
+            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>());
+;
         }
     }
 }

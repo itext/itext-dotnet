@@ -32,7 +32,6 @@ namespace iText.Svg.Renderers.Impl {
             drawContext.PushCanvas(canvas);
             root.Draw(drawContext);
             doc.Close();
-            NUnit.Framework.Assert.IsTrue(drawContext.GetNamedObject("name_svg") is PdfFormXObject);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_rect") is RectangleSvgNodeRenderer);
         }
     }

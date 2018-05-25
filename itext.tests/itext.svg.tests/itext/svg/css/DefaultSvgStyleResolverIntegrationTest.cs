@@ -47,9 +47,21 @@ using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Css {
-    public class DefaultSvgStyleResolverIntegrationTest {
+    public class DefaultSvgStyleResolverIntegrationTest : SvgIntegrationTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/DefaultSvgStyleResolver/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/svg/css/DefaultSvgStyleResolver/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            ITextTest.CreateDestinationFolder(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void RedCirleTest() {
             String svg = "<svg\n" + "   width=\"210mm\"\n" + "   height=\"297mm\"\n" + "   viewBox=\"0 0 210 297\"\n" 
@@ -97,6 +109,16 @@ namespace iText.Svg.Css {
             expected.Put("stroke", "#da0000");
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        //TODO (RND-918)
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore]
+        public virtual void ExternalStyleSheetTest() {
+            String name = "externalStyleSheetTest";
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, name);
         }
     }
 }

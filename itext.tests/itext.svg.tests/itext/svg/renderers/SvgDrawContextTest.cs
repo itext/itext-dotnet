@@ -41,11 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Xobject;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Impl;
@@ -147,15 +146,6 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void AddPdfFormXObject() {
-            String name = "expected";
-            PdfFormXObject expected = new PdfFormXObject(new Rectangle(0, 0, 0, 0));
-            this.context.AddNamedObject(name, expected);
-            Object actual = this.context.GetNamedObject(name);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void AddISvgNodeRender() {
             String name = "expected";
             ISvgNodeRenderer expected = new BranchSvgNodeRenderer();
@@ -204,12 +194,35 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void AddNamedXObject() {
-            PdfFormXObject expected = new PdfFormXObject(new Rectangle(0, 0));
-            String dummyName = "dummy";
-            this.context.AddNamedObject(dummyName, expected);
-            Object actual = this.context.GetNamedObject(dummyName);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+        public virtual void AddNamedObjects() {
+            ISvgNodeRenderer expectedOne = new DummySvgNodeRenderer();
+            ISvgNodeRenderer expectedTwo = new DummySvgNodeRenderer();
+            ISvgNodeRenderer expectedThree = new DummySvgNodeRenderer();
+            String dummyNameOne = "Ed";
+            String dummyNameTwo = "Edd";
+            String dummyNameThree = "Eddy";
+            IDictionary<String, ISvgNodeRenderer> toAdd = new Dictionary<String, ISvgNodeRenderer>();
+            toAdd.Put(dummyNameOne, expectedOne);
+            toAdd.Put(dummyNameTwo, expectedTwo);
+            toAdd.Put(dummyNameThree, expectedThree);
+            this.context.AddNamedObjects(toAdd);
+            Object actualThree = this.context.GetNamedObject(dummyNameThree);
+            Object actualTwo = this.context.GetNamedObject(dummyNameTwo);
+            Object actualOne = this.context.GetNamedObject(dummyNameOne);
+            NUnit.Framework.Assert.AreEqual(expectedOne, actualOne);
+            NUnit.Framework.Assert.AreEqual(expectedTwo, actualTwo);
+            NUnit.Framework.Assert.AreEqual(expectedThree, actualThree);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNamedObjectAndTryToAddDuplicate() {
+            ISvgNodeRenderer expectedOne = new DummySvgNodeRenderer();
+            ISvgNodeRenderer expectedTwo = new DummySvgNodeRenderer();
+            String dummyName = "Ed";
+            context.AddNamedObject(dummyName, expectedOne);
+            context.AddNamedObject(dummyName, expectedTwo);
+            Object actual = context.GetNamedObject(dummyName);
+            NUnit.Framework.Assert.AreEqual(expectedOne, actual);
         }
     }
 }

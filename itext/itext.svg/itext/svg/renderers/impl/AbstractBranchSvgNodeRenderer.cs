@@ -88,13 +88,10 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 CleanUp(context);
                 context.GetCurrentCanvas().AddXObject(xObject, 0, 0);
-                // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
-                if (attributesAndStyles != null && attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
-                    context.AddNamedObject(attributesAndStyles.Get(SvgConstants.Attributes.ID), xObject);
-                }
             }
         }
 
+        // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         private void ApplyViewBox(SvgDrawContext context) {

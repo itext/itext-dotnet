@@ -65,6 +65,8 @@ namespace iText.Svg.Converter {
     /// processing and drawing operations.
     /// </summary>
     public sealed class SvgConverter {
+        public const String DEFAULT_CHARSET = "UTF-8";
+
         private SvgConverter() {
         }
 
@@ -840,10 +842,12 @@ namespace iText.Svg.Converter {
         /// <remarks>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
         /// passed document.
+        /// <p>
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
+        /// <p>
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -892,6 +896,85 @@ namespace iText.Svg.Converter {
             ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(topSvgRenderer);
             root.Draw(context);
             return pdfForm;
+        }
+
+        /// <summary>
+        /// Parse and process an Inputstream containing an SVG, using the default Svg processor (
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
+        /// )
+        /// The parsing of the stream is done using UTF-8 as the default charset.
+        /// The properties used by the processor are the
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgConverterProperties"/>
+        /// </summary>
+        /// <param name="svgStream">Input stream containing the SVG to parse and process</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Processors.ISvgProcessorResult"/>
+        /// containing the root renderer and metadata of the svg
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static ISvgProcessorResult ParseAndProcess(Stream svgStream) {
+            return ParseAndProcess(svgStream, DEFAULT_CHARSET, new DefaultSvgConverterProperties());
+        }
+
+        /// <summary>
+        /// Parse and process an Inputstream containing an SVG, using the default Svg processor (
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
+        /// )
+        /// The properties used by the processor are the
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgConverterProperties"/>
+        /// *
+        /// </summary>
+        /// <param name="svgStream">Input stream containing the SVG to parse and process</param>
+        /// <param name="charset">character set used by the parser</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Processors.ISvgProcessorResult"/>
+        /// containing the root renderer and metadata of the svg
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static ISvgProcessorResult ParseAndProcess(Stream svgStream, String charset) {
+            return ParseAndProcess(svgStream, charset, new DefaultSvgConverterProperties());
+        }
+
+        /// <summary>
+        /// Parse and process an Inputstream containing an SVG, using the default Svg processor (
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
+        /// )
+        /// The parsing of the stream is done using UTF-8 as the default charset
+        /// </summary>
+        /// <param name="svgStream">Input stream containing the SVG to parse and process</param>
+        /// <param name="props">Converterproperties used by the processor</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Processors.ISvgProcessorResult"/>
+        /// containing the root renderer and metadata of the svg
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static ISvgProcessorResult ParseAndProcess(Stream svgStream, ISvgConverterProperties props) {
+            return ParseAndProcess(svgStream, DEFAULT_CHARSET, props);
+        }
+
+        /// <summary>
+        /// Parse and process an Inputstream containing an SVG, using the default Svg processor (
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
+        /// )
+        /// </summary>
+        /// <param name="svgStream">Input stream containing the SVG to parse and process</param>
+        /// <param name="charset">character set used by the parser</param>
+        /// <param name="props">Converterproperties used by the processor</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Processors.ISvgProcessorResult"/>
+        /// containing the root renderer and metadata of the svg
+        /// </returns>
+        /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
+        public static ISvgProcessorResult ParseAndProcess(Stream svgStream, String charset, ISvgConverterProperties
+             props) {
+            IHtmlParser parser = new JsoupXmlParser();
+            INode nodeTree = parser.Parse(svgStream, charset);
+            ISvgProcessor processor = new DefaultSvgProcessor();
+            return processor.Process(nodeTree, props);
         }
 
         /// <summary>

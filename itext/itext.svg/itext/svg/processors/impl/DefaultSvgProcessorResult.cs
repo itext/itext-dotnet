@@ -27,5 +27,20 @@ namespace iText.Svg.Processors.Impl {
         public virtual ISvgNodeRenderer GetRootRenderer() {
             return root;
         }
+
+        public override bool Equals(Object o) {
+            if (o == null || (!o.GetType().Equals(this.GetType()))) {
+                return false;
+            }
+            iText.Svg.Processors.Impl.DefaultSvgProcessorResult otherResult = (iText.Svg.Processors.Impl.DefaultSvgProcessorResult
+                )o;
+            return otherResult.GetNamedObjects().Equals(this.GetNamedObjects()) && otherResult.GetRootRenderer().Equals
+                (this.GetRootRenderer());
+        }
+
+        public override int GetHashCode() {
+            int hash = GetNamedObjects().GetHashCode() + 42 * GetRootRenderer().GetHashCode();
+            return hash;
+        }
     }
 }
