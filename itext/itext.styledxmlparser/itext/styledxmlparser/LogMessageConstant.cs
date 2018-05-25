@@ -45,6 +45,9 @@ using System;
 namespace iText.StyledXmlParser {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class LogMessageConstant {
+        /// <summary>The Constant ERROR_PARSING_COULD_NOT_MAP_NODE</summary>
+        public const String ERROR_PARSING_COULD_NOT_MAP_NODE = "Could not map node type: {0}";
+
         /// <summary>The Constant ERROR_PARSING_CSS_SELECTOR.</summary>
         public const String ERROR_PARSING_CSS_SELECTOR = "Error while parsing css selector: {0}";
 

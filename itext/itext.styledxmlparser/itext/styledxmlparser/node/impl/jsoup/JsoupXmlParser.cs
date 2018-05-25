@@ -123,7 +123,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 if (jsoupNode is Comment) {
                                 }
                                 else {
-                                    logger.Error(MessageFormatUtil.Format("Could not map node type: {0}", jsoupNode.GetType()));
+                                    logger.Error(MessageFormatUtil.Format(LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE, jsoupNode.GetType
+                                        ()));
                                 }
                             }
                         }

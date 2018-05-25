@@ -92,6 +92,9 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant CONTENT.</summary>
         public const String CONTENT = "content";
 
+        /// <summary>The Constant DATA</summary>
+        public const String DATA = "data";
+
         /// <summary>The Constant DESCRIPTION.</summary>
         public const String DESCRIPTION = "description";
 
@@ -239,9 +242,21 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant start</summary>
         public const String START = "start";
 
+        public const String PLACEHOLDER = "placeholder";
+
         /// <summary>The Constant PARENT_TABLE_BORDER.</summary>
         public const String PARENT_TABLE_BORDER = "parenttableborder";
-        // attribute values
-        // iText custom attributes
+
+        public sealed class ObjectTypes {
+            public const String SVGIMAGE = "image/svg+xml";
+
+            internal ObjectTypes(AttributeConstants _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly AttributeConstants _enclosing;
+            // attribute values
+            // iText custom attributes
+        }
     }
 }
