@@ -46,6 +46,7 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -795,6 +796,33 @@ namespace iText.Layout {
             image.DeleteOwnProperty(Property.MAX_HEIGHT);
             doc.Add(image.SetMaxHeight(30));
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PrecisionTest01() {
+            String outFileName = destinationFolder + "precisionTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_precisionTest01.pdf";
+            String imageFileName = sourceFolder + "LOGO_PDF_77.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas currentPdfCanvas = new PdfCanvas(page);
+            Rectangle rc = new Rectangle(56.6929131f, 649.13385f, 481.889771f, 136.062988f);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(currentPdfCanvas, pdfDoc, rc);
+            Table table = new Table(UnitValue.CreatePointArray(new float[] { 158f }));
+            table.SetTextAlignment(TextAlignment.LEFT);
+            iText.Layout.Element.Image logoImage = new iText.Layout.Element.Image(ImageDataFactory.Create(imageFileName
+                ));
+            Paragraph p = new Paragraph().Add(logoImage.SetAutoScale(true));
+            Cell cell = new Cell();
+            cell.SetKeepTogether(true);
+            cell.Add(p);
+            table.AddCell(cell.SetHeight(85.03937f).SetVerticalAlignment(VerticalAlignment.TOP).SetPadding(0));
+            canvas.Add(table);
+            pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
