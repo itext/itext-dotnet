@@ -54,6 +54,10 @@ namespace iText.Svg.Exceptions {
 
         public const String COULDNOTINSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
+        public const String ERROR_CLOSING_CSS_STREAM = "An error occured when trying to close the InputStream of the default CSS.";
+
+        public const String ERROR_INITIALIZING_DEFAULT_CSS = "Error loading the default CSS. Initializing an empty style sheet.";
+
         public const String FLOAT_PARSING_NAN = "The passed value is not a number.";
 
         public const String FONT_NOT_FOUND = "The font wasn't found.";
@@ -69,6 +73,8 @@ namespace iText.Svg.Exceptions {
         public const String NAMED_OBJECT_NULL = "A named object can't be null.";
 
         public const String NOROOT = "No root found";
+
+        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 
@@ -87,7 +93,5 @@ namespace iText.Svg.Exceptions {
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
-
-        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
     }
 }

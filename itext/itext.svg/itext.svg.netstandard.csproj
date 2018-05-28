@@ -32,6 +32,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <ItemGroup>  
+    <EmbeddedResource Include="resources\default.css">
+      <LogicalName>iText.Svg.default.css</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\itextcore\itext\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\..\..\itextcore\itext\itext.kernel\itext.kernel.netstandard.csproj" />

@@ -315,8 +315,14 @@ namespace iText.Svg {
             /// <summary>Attribute defining the fill color.</summary>
             public const String FILL = "fill";
 
+            /// <summary>Attribute defining the fill opacity.</summary>
+            public const String FILL_OPACITY = "fill-opacity";
+
             /// <summary>Attribute defining the fill rule.</summary>
             public const String FILL_RULE = "fill-rule";
+
+            /// <summary>Attribute defining the font family.</summary>
+            public const String FONT_FAMILY = "font-family";
 
             /// <summary>Attribute defining the font size.</summary>
             public const String FONT_SIZE = "font-size";
@@ -364,6 +370,21 @@ namespace iText.Svg {
             /// <summary>Attribute defining the stroke color.</summary>
             public const String STROKE = "stroke";
 
+            /// <summary>Attribute defining the stroke dash offset.</summary>
+            public const String STROKE_DASHARRAY = "stroke-dasharray";
+
+            /// <summary>Attribute defining the stroke dash offset.</summary>
+            public const String STROKE_DASHOFFSET = "stroke-dashoffset";
+
+            /// <summary>Attribute defining the stroke linecap.</summary>
+            public const String STROKE_LINECAP = "stroke-linecap";
+
+            /// <summary>Attribute defining the stroke miterlimit.</summary>
+            public const String STROKE_MITERLIMIT = "stroke-miterlimit";
+
+            /// <summary>Attribute defingin the stroke opacity.</summary>
+            public const String STROKE_OPACITY = "stroke-opacity";
+
             /// <summary>Attribute defining the stroke width.</summary>
             public const String STROKE_WIDTH = "stroke-width";
 
@@ -406,6 +427,9 @@ namespace iText.Svg {
 
         /// <summary>Class containing the constants for values appearing in SVG tags and attributes</summary>
         public sealed class Values {
+            /// <summary>Value representing the default value for the stroke linecap.</summary>
+            public const String BUTT = "butt";
+
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
             public const String DEFAULT_ASPECT_RATIO = "xmidymid";
 
@@ -414,6 +438,9 @@ namespace iText.Svg {
 
             /// <summary>Value representing the fill rule "even odd".</summary>
             public const String FILL_RULE_EVEN_ODD = "evenodd";
+
+            /// <summary>Value representing the fill rule "nonzero".</summary>
+            public const String FILL_RULE_NONZERO = "nonzero";
 
             /// <summary>Value representing the "none" value".</summary>
             public const String NONE = "none";

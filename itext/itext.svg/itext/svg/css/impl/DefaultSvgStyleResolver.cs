@@ -52,6 +52,7 @@ using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
@@ -59,15 +60,40 @@ namespace iText.Svg.Css.Impl {
     public class DefaultSvgStyleResolver : ICssResolver {
         private CssStyleSheet internalStyleSheet;
 
+        private ILog logger;
+
+        private const String DEFAULT_CSS_PATH = "iText.Svg.default.css";
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="DefaultSvgStyleResolver"/>
+        /// with a given default CSS.
+        /// </summary>
+        /// <param name="defaultCssStream">the default CSS</param>
+        public DefaultSvgStyleResolver(Stream defaultCssStream) {
+            this.logger = LogManager.GetLogger(this.GetType());
+            try {
+                this.internalStyleSheet = CssStyleSheetParser.Parse(defaultCssStream);
+            }
+            catch (System.IO.IOException) {
+                this.logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
+                this.internalStyleSheet = new CssStyleSheet();
+            }
+            try {
+                defaultCssStream.Dispose();
+            }
+            catch (System.IO.IOException e) {
+                throw new SvgProcessingException(SvgLogMessageConstant.ERROR_CLOSING_CSS_STREAM, e);
+            }
+        }
+
         /// <summary>Creates a DefaultSvgStyleResolver.</summary>
-        public DefaultSvgStyleResolver() {
-            this.internalStyleSheet = new CssStyleSheet();
+        public DefaultSvgStyleResolver()
+            : this(ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH)) {
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
-            //Load in defaults
-            //TODO (RND-865): Figure out if defaults are necessary
             //Load in from collected style sheets
             IList<CssDeclaration> styleSheetDeclarations = internalStyleSheet.GetCssDeclarations(node, MediaDeviceDescription
                 .CreateDefault());
@@ -87,7 +113,6 @@ namespace iText.Svg.Css.Impl {
         }
 
         public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
-            this.internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
                 q.Add(rootNode);
