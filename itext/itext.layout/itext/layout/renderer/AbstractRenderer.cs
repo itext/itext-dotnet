@@ -1742,9 +1742,10 @@ namespace iText.Layout.Renderer {
                 if (enlargeOccupiedAreaOnHeightWasClipped) {
                     float? maxHeight = RetrieveMaxHeight();
                     splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - usedHeight).SetHeight((float)maxHeight);
+                    usedHeight = (float)maxHeight;
                 }
             }
-            if (overflowRenderer == null) {
+            if (overflowRenderer == null || IsKeepTogether()) {
                 return;
             }
             // Update height related properties on split or overflow

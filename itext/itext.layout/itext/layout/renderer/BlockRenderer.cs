@@ -290,12 +290,12 @@ namespace iText.Layout.Renderer {
                                 if (IsRelativePosition() && positionedRenderers.Count > 0) {
                                     overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
                                 }
+                                UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                                 if (keepTogether) {
                                     splitRenderer = null;
                                     overflowRenderer.childRenderers.Clear();
                                     overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
                                 }
-                                UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                                 CorrectFixedLayout(layoutBox);
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
