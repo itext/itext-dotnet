@@ -109,6 +109,6 @@ namespace iText.Svg.Css {
             expected.Put("stroke", "#da0000");
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
-        }        
+        }
     }
 }
