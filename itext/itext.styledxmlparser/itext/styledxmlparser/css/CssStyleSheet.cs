@@ -160,7 +160,8 @@ namespace iText.StyledXmlParser.Css {
             }
             else {
                 ILog logger = LogManager.GetLogger(typeof(ICssResolver));
-                logger.Warn(MessageFormatUtil.Format(LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, cssDeclaration));
+                logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , cssDeclaration));
             }
         }
     }

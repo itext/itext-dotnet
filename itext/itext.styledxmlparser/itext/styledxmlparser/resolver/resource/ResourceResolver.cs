@@ -47,7 +47,6 @@ using iText.IO.Codec;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
-using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>Utilities class to resolve resources.</summary>
@@ -132,8 +131,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
             catch (Exception e) {
                 ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
-                logger.Error(MessageFormatUtil.Format(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI, uriResolver
-                    .GetBaseUri(), src), e);
+                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), e);
                 return null;
             }
         }
@@ -176,8 +175,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
             catch (Exception e) {
                 ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
-                logger.Error(MessageFormatUtil.Format(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, uriResolver
-                    .GetBaseUri(), src), e);
+                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), e);
                 return null;
             }
         }

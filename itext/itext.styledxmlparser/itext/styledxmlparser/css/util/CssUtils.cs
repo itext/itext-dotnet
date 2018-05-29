@@ -44,7 +44,6 @@ using System;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
 
@@ -153,7 +152,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (length == null) {
                     length = "null";
                 }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(LogMessageConstant.NAN, length));
+                throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
+                    length));
             }
             float f = float.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
             String unit = length.Substring(pos);
@@ -196,8 +196,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils));
-            logger.Error(MessageFormatUtil.Format(LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, unit.Equals
-                ("") ? defaultMetric : unit));
+            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+                , unit.Equals("") ? defaultMetric : unit));
             return f;
         }
 

@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
 
@@ -54,7 +53,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 String value = "Definitely not a number";
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "Definitely not a number")));
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "Definitely not a number")));
 ;
         }
 
@@ -64,7 +63,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 String value = null;
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "null")));
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
 ;
         }
 

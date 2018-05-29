@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 
@@ -95,8 +94,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 foreach (String prop in props) {
                     if (CssConstants.INHERIT.Equals(prop) || CssConstants.INITIAL.Equals(prop)) {
                         ILog logger = LogManager.GetLogger(typeof(AbstractBoxShorthandResolver));
-                        logger.Warn(MessageFormatUtil.Format(LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, shorthandExpression
-                            ));
+                        logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , shorthandExpression));
                         return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                     }
                 }
