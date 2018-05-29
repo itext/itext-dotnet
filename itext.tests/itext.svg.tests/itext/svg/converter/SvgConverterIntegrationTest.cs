@@ -50,6 +50,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Svg.Dummy.Sdk;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
@@ -518,8 +519,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessIOExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {
-                String name = "notFound";
-                FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+                Stream fis = new ExceptionInputStream();
                 ISvgProcessorResult result = SvgConverter.ParseAndProcess(fis);
             }
             , NUnit.Framework.Throws.TypeOf<System.IO.IOException>());
