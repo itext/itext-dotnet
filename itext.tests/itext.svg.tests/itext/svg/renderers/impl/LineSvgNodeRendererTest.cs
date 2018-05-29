@@ -47,7 +47,6 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -127,14 +126,14 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(cv);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "notAnum")));
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "notAnum")));
 ;
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void InvalidAttributeTest02() {
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");

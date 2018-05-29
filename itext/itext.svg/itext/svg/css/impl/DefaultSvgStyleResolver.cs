@@ -152,7 +152,7 @@ namespace iText.Svg.Css.Impl {
                             }
                             catch (Exception exc) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
-                                logger.Error(LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
+                                logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
                             }
                         }
                     }

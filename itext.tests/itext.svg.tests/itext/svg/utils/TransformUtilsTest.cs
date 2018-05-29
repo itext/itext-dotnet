@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using iText.IO.Util;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Exceptions;
 
@@ -80,7 +79,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix(a b c d e f)");
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(LogMessageConstant.NAN, "a")));
+            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "a")));
 ;
         }
 
