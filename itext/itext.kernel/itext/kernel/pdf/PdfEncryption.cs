@@ -64,7 +64,7 @@ namespace iText.Kernel.Pdf {
 
         private const int AES_256 = 5;
 
-        private static long seq = SystemUtil.GetSystemTimeTicks();
+        private static long seq = SystemUtil.GetTimeBasedSeed();
 
         private int cryptoMode;
 
@@ -319,7 +319,7 @@ namespace iText.Kernel.Pdf {
             catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
-            long time = SystemUtil.GetSystemTimeTicks();
+            long time = SystemUtil.GetTimeBasedSeed();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
             return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));

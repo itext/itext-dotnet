@@ -183,7 +183,7 @@ namespace iText.Signatures {
                 tsqGenerator.SetReqPolicy(tsaReqPolicy);
             }
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetSystemTimeTicks());
+            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetTimeBasedSeed());
             TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest
                 (digestAlgorithm)), imprint, nonce);
             byte[] requestBytes = request.GetEncoded();
