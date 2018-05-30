@@ -175,5 +175,22 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode07Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: update test after DEVSIX-1845
+                BarcodeDataMatrix bc = new BarcodeDataMatrix();
+                bc.SetOptions(BarcodeDataMatrix.DM_AUTO);
+                bc.SetWidth(10);
+                bc.SetHeight(10);
+                String aCode = "aBCdeFG12";
+                //exception
+                int result = bc.SetCode(aCode);
+                NUnit.Framework.Assert.AreEqual(result, BarcodeDataMatrix.DM_ERROR_TEXT_TOO_BIG);
+            }
+            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+;
+        }
     }
 }
