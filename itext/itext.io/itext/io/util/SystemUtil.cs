@@ -58,8 +58,8 @@ namespace iText.IO.Util {
             return DateTime.Now.Ticks / 10000 + Environment.TickCount;
         }
 
-        public static long GetTimeBasedSeed() {
-            return DateTime.Now.Ticks + Environment.TickCount;
+        public static int GetTimeBasedSeed() {
+            return unchecked((int)DateTime.Now.Ticks) + Environment.TickCount;
         }
 
         /// <summary>
