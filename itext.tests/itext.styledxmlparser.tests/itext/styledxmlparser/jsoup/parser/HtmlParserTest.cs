@@ -1013,11 +1013,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 longBody.Append(i).Append("<br>");
             }
             // Act
-            long start = SystemUtil.GetSystemTimeTicks();
+            long start = SystemUtil.GetRelativeTimeMillis();
             Document doc = iText.StyledXmlParser.Jsoup.Parser.Parser.ParseBodyFragment(longBody.ToString(), "");
             // Assert
             NUnit.Framework.Assert.AreEqual(50000, doc.Body().ChildNodeSize());
-            NUnit.Framework.Assert.IsTrue(SystemUtil.GetSystemTimeTicks() - start < 1000);
+            NUnit.Framework.Assert.IsTrue(SystemUtil.GetRelativeTimeMillis() - start < 1000);
         }
 
         /// <exception cref="System.IO.IOException"/>
