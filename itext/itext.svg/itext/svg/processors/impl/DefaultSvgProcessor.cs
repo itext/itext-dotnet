@@ -109,6 +109,9 @@ namespace iText.Svg.Processors.Impl {
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
                 //Iterate over children
+                if (converterProps == null) {
+                    converterProps = this.defaultProps;
+                }
                 ExecuteDepthFirstTraversal(svgRoot, converterProps);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
                 return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer);

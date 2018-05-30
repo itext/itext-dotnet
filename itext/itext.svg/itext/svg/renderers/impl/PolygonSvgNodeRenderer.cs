@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 
 namespace iText.Svg.Renderers.Impl {
@@ -72,7 +73,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             Point start = points[0];
             Point end = points[points.Count - 1];
-            if (start.x != end.x && start.y != end.y) {
+            if (JavaUtil.DoubleCompare(start.x, end.x) != 0 && JavaUtil.DoubleCompare(start.y, end.y) != 0) {
                 points.Add(new Point(start.x, start.y));
             }
         }
