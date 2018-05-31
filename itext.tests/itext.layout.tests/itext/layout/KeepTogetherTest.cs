@@ -449,5 +449,27 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FixedHeightOverflowTest01() {
+            String cmpFileName = sourceFolder + "cmp_fixedHeightOverflowTest01.pdf";
+            String outFile = destinationFolder + "fixedHeightOverflowTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.SetDefaultPageSize(PageSize.A4);
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("first string"));
+            int divHeight = 1000;
+            // specifying height definitely bigger than page height
+            // test keep-together processing on height-only overflow for blocks
+            Div div = new Div().SetHeight(divHeight).SetBorder(new SolidBorder(3));
+            div.SetKeepTogether(true);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
     }
 }
