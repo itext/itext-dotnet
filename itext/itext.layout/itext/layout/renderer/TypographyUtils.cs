@@ -108,13 +108,22 @@ namespace iText.Layout.Renderer {
             }
             catch (TypeLoadException) {
             }
-            TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
+            ICollection<UnicodeScript> supportedScripts = null;
             if (moduleFound) {
-                SUPPORTED_SCRIPTS = GetSupportedScripts();
+                try {
+                    supportedScripts = (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS
+                        , new Type[] {  });
+                }
+                catch (Exception e) {
+                    supportedScripts = null;
+                    moduleFound = false;
+                    cachedClasses.Clear();
+                    cachedMethods.Clear();
+                    logger.Error(e.Message);
+                }
             }
-            else {
-                SUPPORTED_SCRIPTS = null;
-            }
+            TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
+            SUPPORTED_SCRIPTS = supportedScripts;
         }
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script) {
@@ -237,17 +246,10 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             else {
-                if (SUPPORTED_SCRIPTS != null) {
-                    return SUPPORTED_SCRIPTS;
-                }
-                else {
-                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, new Type
-                        [] {  });
-                }
+                return SUPPORTED_SCRIPTS;
             }
         }
 
-        //            return (Collection<Character.UnicodeScript>) Shaper.getSupportedScripts();
         internal static bool IsTypographyModuleInitialized() {
             return TYPOGRAPHY_MODULE_INITIALIZED;
         }
