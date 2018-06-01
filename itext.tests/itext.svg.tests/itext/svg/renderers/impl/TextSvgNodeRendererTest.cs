@@ -61,91 +61,91 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TooLongTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesNewlineTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines_newline");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines_newline");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleUpXTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpX");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleUpYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpY");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleDownXTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownX");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleDownYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownY");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTranslateTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_translate");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_translate");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldRotateTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_rotate");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_rotate");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewXTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewX");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewY");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSCombinedTransformationsTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_combinedTransformations");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_combinedTransformations");
         }
     }
 }

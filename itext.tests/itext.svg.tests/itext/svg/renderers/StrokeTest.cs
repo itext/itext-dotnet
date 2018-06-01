@@ -60,21 +60,21 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalLineStrokeTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeWidthTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
         }
     }
 }

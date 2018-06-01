@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
 
@@ -131,7 +130,7 @@ namespace iText.Svg.Renderers {
             if (name == null || String.IsNullOrEmpty(name)) {
                 throw new SvgProcessingException(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY);
             }
-            if (!this.namedObjects.ContainsKey(name) || namedObject is PdfFormXObject) {
+            if (!this.namedObjects.ContainsKey(name)) {
                 this.namedObjects.Put(name, namedObject);
             }
         }
@@ -141,23 +140,25 @@ namespace iText.Svg.Renderers {
         ///     </remarks>
         /// <param name="objectsToAdd">Map containing the named objects keyed to their ID strings</param>
         public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> objectsToAdd) {
-            foreach (KeyValuePair<String, ISvgNodeRenderer> no in objectsToAdd) {
-                AddNamedObject(no.Key, no.Value);
-            }
+            this.namedObjects.AddAll(objectsToAdd);
         }
 
         /// <summary>Get a named object based on its name.</summary>
         /// <remarks>Get a named object based on its name. If the name isn't listed, this method will return null.</remarks>
         /// <param name="name">name of the object you want to reference</param>
         /// <returns>the referenced object</returns>
-        public virtual Object GetNamedObject(String name) {
+        public virtual ISvgNodeRenderer GetNamedObject(String name) {
             return this.namedObjects.Get(name);
         }
 
+        /// <summary>Sets the ResourceResolver.</summary>
+        /// <param name="resourceResolver">resource resolver to be used during drawing operations</param>
         public virtual void SetResourceResolver(ResourceResolver resourceResolver) {
             this.resourceResolver = resourceResolver;
         }
 
+        /// <summary>Gets the ResourceResolver to be used during the drawing operations.</summary>
+        /// <returns>resource resolver instance</returns>
         public virtual ResourceResolver GetResourceResolver() {
             return resourceResolver;
         }

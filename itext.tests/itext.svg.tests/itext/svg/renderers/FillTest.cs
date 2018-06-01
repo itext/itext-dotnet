@@ -60,35 +60,35 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalRectangleFillTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleNormalRectangleFillTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoRectangleFillColorTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillStrokeTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
         }
     }
 }

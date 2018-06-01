@@ -249,7 +249,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveComplexTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "curves");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "curves");
         }
     }
 }

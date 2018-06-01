@@ -46,6 +46,7 @@ using Common.Logging;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers.Factories {
     /// <summary>
@@ -110,7 +111,7 @@ namespace iText.Svg.Renderers.Factories {
                 throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
                     ));
             }
-            if (parent != null) {
+            if (parent != null && !(parent is NoDrawOperationSvgNodeRenderer)) {
                 result.SetParent(parent);
             }
             return result;

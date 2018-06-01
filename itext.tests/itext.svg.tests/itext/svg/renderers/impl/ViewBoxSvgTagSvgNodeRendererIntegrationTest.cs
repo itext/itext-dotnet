@@ -61,28 +61,28 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBox50() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_50");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_50");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBox100() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBox200() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBox400() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400");
         }
     }
 }

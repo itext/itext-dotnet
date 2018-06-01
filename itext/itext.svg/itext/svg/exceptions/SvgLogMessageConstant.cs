@@ -54,6 +54,8 @@ namespace iText.Svg.Exceptions {
 
         public const String COULDNOTINSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
+        public const String DRAW_NO_DRAW = "Can't draw a NoDrawOperationSvgNodeRenderer.";
+
         public const String ERROR_CLOSING_CSS_STREAM = "An error occured when trying to close the InputStream of the default CSS.";
 
         public const String ERROR_INITIALIZING_DEFAULT_CSS = "Error loading the default CSS. Initializing an empty style sheet.";

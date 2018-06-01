@@ -62,7 +62,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipseTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipse");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipse");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxCyAbsent");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseCxCyAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxAbsent");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseCxAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -86,7 +86,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxNegative");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseCxNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -94,7 +94,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCyNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyNegative");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseCyNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -102,7 +102,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyAbsent");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseCyAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -110,7 +110,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRxAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxAbsent");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseRxAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -118,7 +118,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyAbsent");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseRyAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -126,7 +126,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRxNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxNegative");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseRxNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -134,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRyNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyNegative");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseRyNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -142,7 +142,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseTranslatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseTranslated");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseTranslated");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -150,7 +150,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRotatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRotated");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseRotated");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -158,7 +158,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledUpTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledUp");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseScaledUp");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -166,7 +166,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledDownTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledDown");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseScaledDown");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -174,7 +174,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledXYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledXY");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseScaledXY");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -182,7 +182,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseSkewXTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewX");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseSkewX");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -190,7 +190,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseSkewYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewY");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "ellipseSkewY");
         }
     }
 }

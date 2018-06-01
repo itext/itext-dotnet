@@ -182,8 +182,8 @@ namespace iText.Svg.Processors.Impl {
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);
                         }
-                        // this check should be superfluous, but better safe than sorry
-                        if (processorState.Top() is IBranchSvgNodeRenderer) {
+                        // don't add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
+                        if (processorState.Top() is IBranchSvgNodeRenderer && !(renderer is NoDrawOperationSvgNodeRenderer)) {
                             ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
                         }
                         processorState.Push(renderer);

@@ -63,7 +63,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EverythingPresentAndValidTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "everythingPresentAndValid");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "everythingPresentAndValid");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -71,7 +71,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void AbsentEverything() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentEverything");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentEverything");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
 ;
@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void AbsentHeight() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
 ;
@@ -93,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void AbsentWidth() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
 ;
@@ -104,7 +104,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void AbsentWidthAndHeight() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
 ;
@@ -114,14 +114,14 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AbsentX() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentX");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AbsentY() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentY");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -129,7 +129,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void InvalidHeight() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidHeight");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidHeight");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")));
 ;
@@ -140,7 +140,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void InvalidWidth() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidWidth");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidWidth");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")));
 ;
@@ -151,7 +151,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void InvalidX() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
 ;
@@ -162,7 +162,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void InvalidY() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
+                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
             }
             , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
 ;
@@ -172,49 +172,49 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeEverything() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeEverything");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeEverything");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeHeight() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeHeight");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeHeight");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeWidth() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeWidth");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeWidth");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeWidthAndHeight() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeWidthAndHeight");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeWidthAndHeight");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeX() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeX");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeXY() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeXY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeXY");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeY() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeY");
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeY");
         }
     }
 }

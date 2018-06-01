@@ -61,91 +61,92 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicRectangleRxRyZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicRectangleRxRyZero");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicRectangleRxRyZero");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRectangleRyZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRyZero");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRyZero");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRectangleRxZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRxZero");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRxZero");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRxRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRxRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicCircularRoundedRxRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRyRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRyRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicCircularRoundedRyRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalRoundedRectangleXTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleX");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleX");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalRoundedRectangleYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleY");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleY");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalWidthCappedRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalWidthCappedRoundedRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalWidthCappedRoundedRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalHeightCappedRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalHeightCappedRoundedRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalHeightCappedRoundedRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeWidthRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeWidthRoundedRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalNegativeWidthRoundedRectangle");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeHeightRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeHeightRoundedRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicEllipticalNegativeHeightRoundedRectangle"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ComplexRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "complexRectangle");
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "complexRectangle");
         }
     }
 }
