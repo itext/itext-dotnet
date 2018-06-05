@@ -175,7 +175,7 @@ namespace iText.IO.Util {
             return result;
         }
 
-        public static String ArraysToString(char[] a) {
+        public static String ArraysToString<T>(T[] a) {
             if (a == null)
                 return "null";
             if (a.Length == 0)
