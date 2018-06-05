@@ -67,7 +67,7 @@ namespace iText.IO.Util {
             int[] array = new int[collection.Count];
             int k = 0;
             foreach (int? key in collection) {
-                array[k++] = (int) key;
+                array[k++] = (int)key;
             }
             return array;
         }
@@ -104,7 +104,7 @@ namespace iText.IO.Util {
         }
 
         public static int[] CloneArray(int[] src) {
-            return (int[]) src.Clone();
+            return (int[])src.Clone();
         }
     }
 }
