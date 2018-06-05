@@ -1784,7 +1784,7 @@ namespace iText.Kernel.Pdf {
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
-                            trailer.Put(PdfName.ID, reader.trailer.GetAsArray(PdfName.ID));
+                            trailer.Put(PdfName.ID, reader.trailer.Get(PdfName.ID));
                         }
                     }
                 }
