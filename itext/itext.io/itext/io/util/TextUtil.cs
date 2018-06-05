@@ -161,7 +161,7 @@ namespace iText.IO.Util {
                     pos++;
                 }
             }
-            return ArrayUtil.ToArray(charCodes);
+            return ArrayUtil.ToIntArray(charCodes);
         }
 
         /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).</summary>
