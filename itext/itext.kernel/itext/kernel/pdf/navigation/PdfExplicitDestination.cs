@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Navigation {
     /// This class shall be used for creation of destinations, associated with outline items, annotations
     /// or actions within current document.
     /// If you need to create a destination, associated with an object in another PDF
-    /// (e.g. Remote Go-To actions oe Embedded Go-To actions), you should use
+    /// (e.g. Remote Go-To actions or Embedded Go-To actions), you should use
     /// <see cref="PdfExplicitRemoteGoToDestination"/>
     /// class instead.
     /// Note that despite methods with integer value for page parameter are deprecated in this class,
