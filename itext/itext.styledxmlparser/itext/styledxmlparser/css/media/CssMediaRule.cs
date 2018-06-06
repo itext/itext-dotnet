@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,26 +43,55 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve.Shorthand.Impl;
+using iText.StyledXmlParser.Node;
 
-namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    /// <summary>A factory for creating ShorthandResolver objects.</summary>
-    public class ShorthandResolverFactory {
-        /// <summary>The map of shorthand resolvers.</summary>
-        private static readonly IDictionary<String, IShorthandResolver> shorthandResolvers;
+namespace iText.StyledXmlParser.Css.Media {
+    /// <summary>
+    /// The
+    /// <see cref="iText.StyledXmlParser.Css.CssNestedAtRule"/>
+    /// implementation for media rules.
+    /// </summary>
+    public class CssMediaRule : CssNestedAtRule {
+        /// <summary>The media queries.</summary>
+        private IList<MediaQuery> mediaQueries;
 
-        static ShorthandResolverFactory() {
-            shorthandResolvers = new Dictionary<String, IShorthandResolver>();
-            shorthandResolvers.Put(CssConstants.BORDER, new BorderShorthandResolver());
-            shorthandResolvers.Put(CssConstants.FONT, new FontShorthandResolver());
+        /// <summary>
+        /// Creates a
+        /// <see cref="CssMediaRule"/>
+        /// .
+        /// </summary>
+        /// <param name="ruleParameters">the rule parameters</param>
+        public CssMediaRule(String ruleParameters)
+            : base(CssRuleName.MEDIA, ruleParameters) {
+            mediaQueries = MediaQueryParser.ParseMediaQueries(ruleParameters);
         }
 
-        // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers
-        /// <summary>Gets a shorthand resolver.</summary>
-        /// <param name="shorthandProperty">the property</param>
-        /// <returns>the shorthand resolver</returns>
-        public static IShorthandResolver GetShorthandResolver(String shorthandProperty) {
-            return shorthandResolvers.Get(shorthandProperty);
+        /* (non-Javadoc)
+        * @see com.itextpdf.html2pdf.css.CssNestedAtRule#getCssRuleSets(com.itextpdf.html2pdf.html.node.INode, com.itextpdf.html2pdf.css.media.MediaDeviceDescription)
+        */
+        public override IList<CssRuleSet> GetCssRuleSets(INode element, MediaDeviceDescription deviceDescription) {
+            IList<CssRuleSet> result = new List<CssRuleSet>();
+            foreach (MediaQuery mediaQuery in mediaQueries) {
+                if (mediaQuery.Matches(deviceDescription)) {
+                    foreach (CssStatement childStatement in body) {
+                        result.AddAll(childStatement.GetCssRuleSets(element, deviceDescription));
+                    }
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>Tries to match a media device.</summary>
+        /// <param name="deviceDescription">the device description</param>
+        /// <returns>true, if successful</returns>
+        public virtual bool MatchMediaDevice(MediaDeviceDescription deviceDescription) {
+            foreach (MediaQuery mediaQuery in mediaQueries) {
+                if (mediaQuery.Matches(deviceDescription)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

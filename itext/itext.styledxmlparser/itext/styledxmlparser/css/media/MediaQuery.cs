@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,27 +42,56 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve.Shorthand.Impl;
 
-namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    /// <summary>A factory for creating ShorthandResolver objects.</summary>
-    public class ShorthandResolverFactory {
-        /// <summary>The map of shorthand resolvers.</summary>
-        private static readonly IDictionary<String, IShorthandResolver> shorthandResolvers;
+namespace iText.StyledXmlParser.Css.Media {
+    /// <summary>Class that bundles all the media query properties.</summary>
+    public class MediaQuery {
+        /// <summary>The logical "only" value.</summary>
+        private bool only;
 
-        static ShorthandResolverFactory() {
-            shorthandResolvers = new Dictionary<String, IShorthandResolver>();
-            shorthandResolvers.Put(CssConstants.BORDER, new BorderShorthandResolver());
-            shorthandResolvers.Put(CssConstants.FONT, new FontShorthandResolver());
+        /// <summary>The logical "not" value.</summary>
+        private bool not;
+
+        /// <summary>The type.</summary>
+        private String type;
+
+        /// <summary>The expressions.</summary>
+        private IList<MediaExpression> expressions;
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="MediaQuery"/>
+        /// instance.
+        /// </summary>
+        /// <param name="type">the type</param>
+        /// <param name="expressions">the expressions</param>
+        /// <param name="only">logical "only" value</param>
+        /// <param name="not">logical "not" value</param>
+        internal MediaQuery(String type, IList<MediaExpression> expressions, bool only, bool not) {
+            this.type = type;
+            this.expressions = expressions;
+            this.only = only;
+            this.not = not;
         }
 
-        // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers
-        /// <summary>Gets a shorthand resolver.</summary>
-        /// <param name="shorthandProperty">the property</param>
-        /// <returns>the shorthand resolver</returns>
-        public static IShorthandResolver GetShorthandResolver(String shorthandProperty) {
-            return shorthandResolvers.Get(shorthandProperty);
+        /// <summary>Tries to match a device description with the media query.</summary>
+        /// <param name="deviceDescription">the device description</param>
+        /// <returns>true, if successful</returns>
+        public virtual bool Matches(MediaDeviceDescription deviceDescription) {
+            bool typeMatches = type == null || MediaType.ALL.Equals(type) || Object.Equals(type, deviceDescription.GetType
+                ());
+            bool matchesExpressions = true;
+            foreach (MediaExpression expression in expressions) {
+                if (!expression.Matches(deviceDescription)) {
+                    matchesExpressions = false;
+                    break;
+                }
+            }
+            bool expressionResult = typeMatches && matchesExpressions;
+            if (not) {
+                expressionResult = !expressionResult;
+            }
+            return expressionResult;
         }
     }
 }

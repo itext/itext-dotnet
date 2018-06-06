@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,28 +41,31 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve.Shorthand.Impl;
 
-namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    /// <summary>A factory for creating ShorthandResolver objects.</summary>
-    public class ShorthandResolverFactory {
-        /// <summary>The map of shorthand resolvers.</summary>
-        private static readonly IDictionary<String, IShorthandResolver> shorthandResolvers;
-
-        static ShorthandResolverFactory() {
-            shorthandResolvers = new Dictionary<String, IShorthandResolver>();
-            shorthandResolvers.Put(CssConstants.BORDER, new BorderShorthandResolver());
-            shorthandResolvers.Put(CssConstants.FONT, new FontShorthandResolver());
+namespace iText.StyledXmlParser.Css.Media {
+    /// <summary>Class that bundles a series of media rule constants.</summary>
+    public sealed class MediaRuleConstants {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="MediaRuleConstants"/>
+        /// instance.
+        /// </summary>
+        private MediaRuleConstants() {
         }
 
-        // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers
-        /// <summary>Gets a shorthand resolver.</summary>
-        /// <param name="shorthandProperty">the property</param>
-        /// <returns>the shorthand resolver</returns>
-        public static IShorthandResolver GetShorthandResolver(String shorthandProperty) {
-            return shorthandResolvers.Get(shorthandProperty);
-        }
+        /// <summary>The Constant AND.</summary>
+        public const String AND = "and";
+
+        /// <summary>The Constant MIN.</summary>
+        public const String MIN = "min";
+
+        /// <summary>The Constant MAX.</summary>
+        public const String MAX = "max";
+
+        /// <summary>The Constant NOT.</summary>
+        public const String NOT = "not";
+
+        /// <summary>The Constant ONLY.</summary>
+        public const String ONLY = "only";
     }
 }

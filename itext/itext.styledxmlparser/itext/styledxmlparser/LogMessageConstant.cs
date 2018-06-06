@@ -77,6 +77,8 @@ namespace iText.StyledXmlParser {
 
         public const String UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE = "Unable to process external css file";
 
+        public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
+
         /// <summary>Instantiates a new log message constant.</summary>
         private LogMessageConstant() {
         }

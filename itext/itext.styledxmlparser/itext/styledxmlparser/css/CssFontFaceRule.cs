@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,27 +42,49 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve.Shorthand.Impl;
+using System.Text;
+using iText.IO.Util;
 
-namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    /// <summary>A factory for creating ShorthandResolver objects.</summary>
-    public class ShorthandResolverFactory {
-        /// <summary>The map of shorthand resolvers.</summary>
-        private static readonly IDictionary<String, IShorthandResolver> shorthandResolvers;
+namespace iText.StyledXmlParser.Css {
+    /// <summary>Class to store a CSS font face At rule.</summary>
+    public class CssFontFaceRule : CssNestedAtRule {
+        /// <summary>Properties in the form of a list of CSS declarations.</summary>
+        private IList<CssDeclaration> properties;
 
-        static ShorthandResolverFactory() {
-            shorthandResolvers = new Dictionary<String, IShorthandResolver>();
-            shorthandResolvers.Put(CssConstants.BORDER, new BorderShorthandResolver());
-            shorthandResolvers.Put(CssConstants.FONT, new FontShorthandResolver());
+        /// <summary>Instantiates a new CSS font face rule.</summary>
+        /// <param name="ruleParameters">the rule parameters</param>
+        public CssFontFaceRule(String ruleParameters)
+            : base(CssRuleName.FONT_FACE, ruleParameters) {
         }
 
-        // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers
-        /// <summary>Gets a shorthand resolver.</summary>
-        /// <param name="shorthandProperty">the property</param>
-        /// <returns>the shorthand resolver</returns>
-        public static IShorthandResolver GetShorthandResolver(String shorthandProperty) {
-            return shorthandResolvers.Get(shorthandProperty);
+        /// <summary>Gets the properties.</summary>
+        /// <returns>the properties</returns>
+        public virtual IList<CssDeclaration> GetProperties() {
+            return properties;
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.html2pdf.css.CssNestedAtRule#addBodyCssDeclarations(java.util.List)
+        */
+        public override void AddBodyCssDeclarations(IList<CssDeclaration> cssDeclarations) {
+            properties = cssDeclarations;
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.html2pdf.css.CssNestedAtRule#toString()
+        */
+        public override String ToString() {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(MessageFormatUtil.Format("@{0} ", ruleName));
+            sb.Append("{");
+            sb.Append("\n");
+            foreach (CssDeclaration declaration in properties) {
+                sb.Append("    ");
+                sb.Append(declaration);
+                sb.Append("\n");
+            }
+            sb.Append("}");
+            return sb.ToString();
         }
     }
 }
