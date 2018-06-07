@@ -207,6 +207,7 @@ namespace iText.Layout.Renderer {
             bool ignoreNewLineSymbol = false;
             // true when \r\n are found
             bool crlf = false;
+            HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(Property.HYPHENATION);
             // For example, if a first character is a RTL mark (U+200F), and the second is a newline, we need to break anyway
             int firstPrintPos = currentTextPos;
             while (firstPrintPos < text.end && NoPrint(text.Get(firstPrintPos))) {
@@ -228,6 +229,10 @@ namespace iText.Layout.Renderer {
                 float nonBreakablePartMaxDescender = 0;
                 float nonBreakablePartMaxHeight = 0;
                 int firstCharacterWhichExceedsAllowedWidth = -1;
+                float nonBreakingHyphenRelatedChunkWidth = 0;
+                int nonBreakingHyphenRelatedChunkStart = -1;
+                float beforeNonBreakingHyphenRelatedChunkMaxAscender = 0;
+                float beforeNonBreakingHyphenRelatedChunkMaxDescender = 0;
                 for (int ind = currentTextPos; ind < text.end; ind++) {
                     if (iText.IO.Util.TextUtil.IsNewLine(text.Get(ind))) {
                         wordBreakGlyphAtLineEnding = text.Get(ind);
@@ -281,6 +286,20 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
+                    if (null != hyphenationConfig) {
+                        if (GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind)) {
+                            if (-1 == nonBreakingHyphenRelatedChunkStart) {
+                                beforeNonBreakingHyphenRelatedChunkMaxAscender = nonBreakablePartMaxAscender;
+                                beforeNonBreakingHyphenRelatedChunkMaxDescender = nonBreakablePartMaxDescender;
+                                nonBreakingHyphenRelatedChunkStart = ind;
+                            }
+                            nonBreakingHyphenRelatedChunkWidth += glyphWidth + xAdvance;
+                        }
+                        else {
+                            nonBreakingHyphenRelatedChunkStart = -1;
+                            nonBreakingHyphenRelatedChunkWidth = 0;
+                        }
+                    }
                     if (firstCharacterWhichExceedsAllowedWidth == -1) {
                         nonBreakablePartWidthWhichDoesNotExceedAllowedWidth += glyphWidth + xAdvance;
                     }
@@ -290,7 +309,9 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
-                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
+                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth() && (0 ==
+                         nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
+                        (text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
                             // we will have to split the word anyway.
@@ -340,49 +361,62 @@ namespace iText.Layout.Renderer {
                         // cannot fit a word as a whole
                         bool wordSplit = false;
                         bool hyphenationApplied = false;
-                        HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(Property.HYPHENATION);
                         if (hyphenationConfig != null) {
-                            int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math.Max(currentTextPos, firstCharacterWhichExceedsAllowedWidth
-                                 - 1));
-                            if (wordBounds != null) {
-                                String word = text.ToUnicodeString(wordBounds[0], wordBounds[1]);
-                                iText.Layout.Hyphenation.Hyphenation hyph = hyphenationConfig.Hyphenate(word);
-                                if (hyph != null) {
-                                    for (int i = hyph.Length() - 1; i >= 0; i--) {
-                                        String pre = hyph.GetPreHyphenText(i);
-                                        String pos = hyph.GetPostHyphenText(i);
-                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
-                                            , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
-                                            , wordSpacing);
-                                        if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
-                                            <= layoutBox.GetWidth()) {
-                                            hyphenationApplied = true;
-                                            if (line.start == -1) {
-                                                line.start = currentTextPos;
+                            if (-1 == nonBreakingHyphenRelatedChunkStart) {
+                                int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math.Max(currentTextPos, firstCharacterWhichExceedsAllowedWidth
+                                     - 1));
+                                if (wordBounds != null) {
+                                    String word = text.ToUnicodeString(wordBounds[0], wordBounds[1]);
+                                    iText.Layout.Hyphenation.Hyphenation hyph = hyphenationConfig.Hyphenate(word);
+                                    if (hyph != null) {
+                                        for (int i = hyph.Length() - 1; i >= 0; i--) {
+                                            String pre = hyph.GetPreHyphenText(i);
+                                            String pos = hyph.GetPostHyphenText(i);
+                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
+                                                , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
+                                                , wordSpacing);
+                                            if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
+                                                <= layoutBox.GetWidth()) {
+                                                hyphenationApplied = true;
+                                                if (line.start == -1) {
+                                                    line.start = currentTextPos;
+                                                }
+                                                line.end = Math.Max(line.end, wordBounds[0] + pre.Length);
+                                                GlyphLine lineCopy = line.Copy(line.start, line.end);
+                                                lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
+                                                lineCopy.end++;
+                                                line = lineCopy;
+                                                // TODO these values are based on whole word. recalculate properly based on hyphenated part
+                                                currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
+                                                currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
+                                                currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
+                                                currentLineWidth += currentHyphenationChoicePreTextWidth;
+                                                widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                    );
+                                                widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                    );
+                                                currentTextPos = wordBounds[0] + pre.Length;
+                                                break;
                                             }
-                                            line.end = Math.Max(line.end, wordBounds[0] + pre.Length);
-                                            GlyphLine lineCopy = line.Copy(line.start, line.end);
-                                            lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
-                                            lineCopy.end++;
-                                            line = lineCopy;
-                                            // TODO these values are based on whole word. recalculate properly based on hyphenated part
-                                            currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
-                                            currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
-                                            currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
-                                            currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                );
-                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                );
-                                            currentTextPos = wordBounds[0] + pre.Length;
-                                            break;
                                         }
                                     }
                                 }
                             }
+                            else {
+                                if (text.start == nonBreakingHyphenRelatedChunkStart) {
+                                    nonBreakingHyphenRelatedChunkWidth = 0;
+                                    firstCharacterWhichExceedsAllowedWidth = previousCharPos + 1;
+                                }
+                                else {
+                                    firstCharacterWhichExceedsAllowedWidth = nonBreakingHyphenRelatedChunkStart;
+                                    nonBreakablePartFullWidth -= nonBreakingHyphenRelatedChunkWidth;
+                                    nonBreakablePartMaxAscender = beforeNonBreakingHyphenRelatedChunkMaxAscender;
+                                    nonBreakablePartMaxDescender = beforeNonBreakingHyphenRelatedChunkMaxDescender;
+                                }
+                            }
                         }
-                        if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || (forcePartialSplitOnFirstChar
-                            )) {
+                        if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar
+                             || -1 != nonBreakingHyphenRelatedChunkStart) {
                             // if the word is too long for a single line we will have to split it
                             if (line.start == -1) {
                                 line.start = currentTextPos;
@@ -676,7 +710,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_713();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_742();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -741,8 +775,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_713 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_713() {
+        private sealed class _IGlyphLineFilter_742 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_742() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1200,6 +1234,12 @@ namespace iText.Layout.Renderer {
             return iText.IO.Util.TextUtil.IsNonPrintable(c);
         }
 
+        private static bool GlyphBelongsToNonBreakingHyphenRelatedChunk(GlyphLine text, int ind) {
+            return iText.IO.Util.TextUtil.IsNonBreakingHyphen(text.Get(ind)) || (ind + 1 < text.end && iText.IO.Util.TextUtil
+                .IsNonBreakingHyphen(text.Get(ind + 1))) || ind - 1 >= text.start && iText.IO.Util.TextUtil.IsNonBreakingHyphen
+                (text.Get(ind - 1));
+        }
+
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing
             ) {
             if (hScale == null) {
@@ -1257,10 +1297,10 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode
-                () || '\u00a0' == g.GetUnicode() || '\u2011' == g.GetUnicode();
+            return char.IsLetter((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode();
         }
 
+        // soft hyphen
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
                 try {

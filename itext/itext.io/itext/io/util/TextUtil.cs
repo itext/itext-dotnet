@@ -281,6 +281,11 @@ namespace iText.IO.Util {
             return IsWhiteSpace(glyph.GetUnicode());
         }
 
+        public static bool IsNonBreakingHyphen(Glyph glyph)
+        {
+            return '\u2011' == glyph.GetUnicode();
+        }
+
         /// <summary>
         /// Determines if represented Glyph is ' ' (SPACE) character.
         /// </summary>

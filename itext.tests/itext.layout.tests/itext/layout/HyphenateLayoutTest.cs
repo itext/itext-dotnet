@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -58,6 +60,9 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/HyphenateLayoutTest/";
+
+        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -177,6 +182,90 @@ namespace iText.Layout {
             Paragraph p = new Paragraph(s).SetWidth(150).SetTextAlignment(TextAlignment.JUSTIFIED).SetBorderRight(new 
                 SolidBorder(1)).SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
             doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest01() {
+            String outFileName = destinationFolder + "nonBreakingHyphenTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenTest01.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            Text text = new Text("Dies ist ein Satz in deutscher Sprache. An hm kann man sehen, ob alle Buchstaben da sind. Und der Umbruch? 99\u2011Tage-Kaiser.\n"
+                 + "Dies ist ein Satz in deutscher Sprache. An hm kann man sehen, ob alle Buchstaben da sind. Und der Umbruch? 99\u2011Days-Kaiser.\n"
+                 + "Dies ist ein Satz in deutscher Sprache. An hm kann man sehen, ob alle Buchstaben da sind. Und der Umbruch? 99\u2011Frage-Kaiser.\n"
+                );
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, true);
+            text.SetFont(font);
+            text.SetFontSize(10);
+            Paragraph paragraph = new Paragraph(text);
+            paragraph.SetHyphenation(new HyphenationConfig("de", "DE", 2, 2));
+            document.Add(paragraph);
+            document.Close();
+            pdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest02() {
+            String outFileName = destinationFolder + "nonBreakingHyphenTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenTest02.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            Div div = new Div();
+            div.SetHyphenation(new HyphenationConfig("en", "EN", 2, 2));
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, true);
+            div.SetFont(font);
+            div.SetFontSize(12);
+            Text text = new Text("Hyphen hyphen hyphen hyphen hyphen hyphen hyphen hyphen hyphen hyphen hyphen ");
+            Paragraph paragraph1 = new Paragraph().Add(text).Add("non\u2011breaking");
+            div.Add(paragraph1);
+            Paragraph paragraph2 = new Paragraph().Add(text).Add("non\u2010breaking");
+            div.Add(paragraph2);
+            document.Add(div);
+            document.Close();
+            pdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HyphenSymbolTest01() {
+            String outFileName = destinationFolder + "hyphenSymbolTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_hyphenSymbolTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, true);
+            Style style = new Style();
+            style.SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
+            style.SetHyphenation(new HyphenationConfig("en", "EN", 2, 2));
+            style.SetFont(font);
+            style.SetBackgroundColor(ColorConstants.RED);
+            doc.Add(new Paragraph("tre\u2011").SetWidth(19).AddStyle(style));
+            doc.Add(new Paragraph("tre\u2011\u2011").SetWidth(19).AddStyle(style));
+            doc.Add(new Paragraph("r\u2011\u2011m").SetWidth(19).AddStyle(style));
+            doc.Add(new Paragraph("r\u2011\u2011\u2011\u2011\u2011\u2011mmma").SetWidth(19).AddStyle(style));
+            style.SetBackgroundColor(ColorConstants.BLUE);
+            doc.Add(new Paragraph("tre\u2011\u2011").SetWidth(22).AddStyle(style));
+            doc.Add(new Paragraph("tre\u2011\u2011m").SetWidth(22).AddStyle(style));
+            doc.Add(new Paragraph("\n\n\n"));
+            style.SetBackgroundColor(ColorConstants.GREEN);
+            doc.Add(new Paragraph("e\u2011\u2011m\u2011ma").SetWidth(20).AddStyle(style));
+            doc.Add(new Paragraph("tre\u2011\u2011m\u2011ma").SetWidth(20).AddStyle(style));
+            doc.Add(new Paragraph("tre\u2011\u2011m\u2011ma").SetWidth(35).AddStyle(style));
+            doc.Add(new Paragraph("tre\u2011\u2011m\u2011ma").SetWidth(40).AddStyle(style));
+            style.SetBackgroundColor(ColorConstants.YELLOW);
+            doc.Add(new Paragraph("ar\u2011ma").SetWidth(22).AddStyle(style));
+            doc.Add(new Paragraph("ar\u2011ma").SetWidth(15).AddStyle(style));
+            doc.Add(new Paragraph("ar\u2011").SetWidth(14).AddStyle(style));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

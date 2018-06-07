@@ -88,6 +88,32 @@ namespace iText.Layout {
             TestHyphenateResult("en", "https://stackoverflow.com/", new int[] { 13, 17 });
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest01() {
+            //99\u2011verheiratet
+            TestHyphenateResult("de", "999\u2011verheiratet", new int[] { 3, 6, 8 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest02() {
+            //honorificabilitudinitatibus
+            TestHyphenateResult("en", "honorificabilitudinitatibus", new int[] { 3, 5, 6, 9, 11, 13, 15, 19, 21, 22, 24
+                 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest02A() {
+            //honorificabil\u2011itudinitatibus
+            TestHyphenateResult("en", "honorificabil\u2011itudinitatibus", new int[] { 3, 5, 6, 9, 11, 20, 22, 23, 25 }
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NumberTest01() {
+            //123456789
+            TestHyphenateResult("en", "123456789", null);
+        }
+
         private void TestHyphenateResult(String lang, String testWorld, int[] expectedHyphenatePoints) {
             String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
             lang = parts[0];
