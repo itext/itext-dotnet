@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.Svg;
@@ -67,9 +66,6 @@ namespace iText.Svg.Processors.Impl {
     /// with the same structure.
     /// </summary>
     public class DefaultSvgProcessor : ISvgProcessor {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Processors.Impl.DefaultSvgProcessor
-            ));
-
         private ProcessorState processorState;
 
         private ICssResolver cssResolver;
@@ -82,14 +78,19 @@ namespace iText.Svg.Processors.Impl {
 
         private IDictionary<String, ISvgNodeRenderer> namedObjects;
 
+        private ProcessorContext context;
+
         /// <summary>Instantiates a DefaultSvgProcessor object.</summary>
         public DefaultSvgProcessor() {
         }
 
         //Processor context
+        //Processor context
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgProcessorResult Process(INode root) {
-            return Process(root, new DefaultSvgConverterProperties());
+            ISvgConverterProperties properties = root != null ? new DefaultSvgConverterProperties(root) : new DefaultSvgConverterProperties
+                ();
+            return Process(root, properties);
         }
 
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
@@ -102,7 +103,7 @@ namespace iText.Svg.Processors.Impl {
                 PerformSetup(converterProps);
             }
             else {
-                this.defaultProps = new DefaultSvgConverterProperties();
+                this.defaultProps = new DefaultSvgConverterProperties(root);
                 PerformSetup(this.defaultProps);
             }
             //Find root
@@ -131,6 +132,8 @@ namespace iText.Svg.Processors.Impl {
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
             }
+            context = new ProcessorContext(converterProps);
+            new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             cssContext = new SvgCssContext();
         }

@@ -53,6 +53,7 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Processors.Impl;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
@@ -63,6 +64,12 @@ namespace iText.Svg.Css.Impl {
         private ILog logger;
 
         private const String DEFAULT_CSS_PATH = "iText.Svg.default.css";
+
+        /// <summary>The device description.</summary>
+        private MediaDeviceDescription deviceDescription;
+
+        /// <summary>The list of fonts.</summary>
+        private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
 
         /// <summary>
         /// Creates a
@@ -92,6 +99,20 @@ namespace iText.Svg.Css.Impl {
             : this(ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH)) {
         }
 
+        /// <summary>Creates a DefaultSvgStyleResolver.</summary>
+        /// <remarks>
+        /// Creates a DefaultSvgStyleResolver. This constructor will instantiate its internal style sheet and it
+        /// will collect the css declarations from the provided node.
+        /// </remarks>
+        /// <param name="rootNode">node to collect css from</param>
+        /// <param name="context">the processor context</param>
+        public DefaultSvgStyleResolver(INode rootNode, ProcessorContext context) {
+            this.deviceDescription = context.GetDeviceDescription();
+            internalStyleSheet = new CssStyleSheet();
+            CollectCssDeclarations(rootNode, context.GetResourceResolver());
+            CollectFonts();
+        }
+
         public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             //Load in from collected style sheets
@@ -113,6 +134,7 @@ namespace iText.Svg.Css.Impl {
         }
 
         public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
+            this.internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
                 q.Add(rootNode);
@@ -160,6 +182,42 @@ namespace iText.Svg.Css.Impl {
                 foreach (INode child in currentNode.ChildNodes()) {
                     if (child is IElementNode) {
                         q.Add(child);
+                    }
+                }
+            }
+        }
+
+        /// <summary>Gets the list of fonts.</summary>
+        /// <returns>
+        /// the list of
+        /// <see cref="iText.StyledXmlParser.Css.CssFontFaceRule"/>
+        /// instances
+        /// </returns>
+        public virtual IList<CssFontFaceRule> GetFonts() {
+            return fonts;
+        }
+
+        /// <summary>Collects fonts from the style sheet.</summary>
+        private void CollectFonts() {
+            foreach (CssStatement cssStatement in internalStyleSheet.GetStatements()) {
+                CollectFonts(cssStatement);
+            }
+        }
+
+        /// <summary>
+        /// Collects fonts from a
+        /// <see cref="iText.StyledXmlParser.Css.CssStatement"/>
+        /// .
+        /// </summary>
+        /// <param name="cssStatement">the CSS statement</param>
+        private void CollectFonts(CssStatement cssStatement) {
+            if (cssStatement is CssFontFaceRule) {
+                fonts.Add((CssFontFaceRule)cssStatement);
+            }
+            else {
+                if (cssStatement is CssMediaRule && ((CssMediaRule)cssStatement).MatchMediaDevice(deviceDescription)) {
+                    foreach (CssStatement cssSubStatement in ((CssMediaRule)cssStatement).GetStatements()) {
+                        CollectFonts(cssSubStatement);
                     }
                 }
             }

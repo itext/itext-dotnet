@@ -42,7 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors;
@@ -56,6 +59,15 @@ namespace iText.Svg.Processors.Impl {
     /// <see cref="DefaultSvgProcessor"/>
     /// </summary>
     public class DefaultSvgConverterProperties : ISvgConverterProperties {
+        /// <summary>The media device description.</summary>
+        private MediaDeviceDescription mediaDeviceDescription;
+
+        /// <summary>The font provider.</summary>
+        private FontProvider fontProvider;
+
+        /// <summary>The base URI.</summary>
+        private String baseUri;
+
         private ResourceResolver resourceResolver;
 
         private ICssResolver cssResolver;
@@ -71,6 +83,22 @@ namespace iText.Svg.Processors.Impl {
             this.resourceResolver = new ResourceResolver("");
         }
 
+        /// <summary>Creates a DefaultSvgConverterProperties object.</summary>
+        /// <remarks>Creates a DefaultSvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
+        ///     </remarks>
+        /// <param name="root">the root tag of the SVG image</param>
+        public DefaultSvgConverterProperties(INode root) {
+            this.cssResolver = new DefaultSvgStyleResolver(root, new ProcessorContext(this));
+            this.rendererFactory = new DefaultSvgNodeRendererFactory();
+            this.resourceResolver = new ResourceResolver("");
+            PerformSetup(this);
+        }
+
+        public virtual ISvgConverterProperties SetFontProvider(FontProvider fontProvider) {
+            this.fontProvider = fontProvider;
+            return this;
+        }
+
         public virtual ICssResolver GetCssResolver() {
             return this.cssResolver;
         }
@@ -82,6 +110,53 @@ namespace iText.Svg.Processors.Impl {
         public virtual String GetCharset() {
             // may also return null, but null will always default to UTF-8 in JSoup
             return Encoding.UTF8.Name();
+        }
+
+        /// <summary>Gets the base URI.</summary>
+        /// <returns>the base URI</returns>
+        public virtual String GetBaseUri() {
+            return baseUri;
+        }
+
+        /// <summary>Gets the font provider.</summary>
+        /// <returns>the font provider</returns>
+        public virtual FontProvider GetFontProvider() {
+            return fontProvider;
+        }
+
+        /// <summary>Gets the media device description.</summary>
+        /// <returns>the media device description</returns>
+        public virtual MediaDeviceDescription GetMediaDeviceDescription() {
+            return mediaDeviceDescription;
+        }
+
+        /// <summary>Sets the media device description.</summary>
+        /// <param name="mediaDeviceDescription">the media device description</param>
+        /// <returns>the ConverterProperties instance</returns>
+        public virtual ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription
+            ) {
+            this.mediaDeviceDescription = mediaDeviceDescription;
+            return this;
+        }
+
+        /// <summary>Sets the base URI.</summary>
+        /// <param name="baseUri">the base URI</param>
+        /// <returns>the ConverterProperties instance</returns>
+        public virtual ISvgConverterProperties SetBaseUri(String baseUri) {
+            this.baseUri = baseUri;
+            return this;
+        }
+
+        /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
+        /// <param name="converterProperties">that contains configuration properties and operations</param>
+        private void PerformSetup(ISvgConverterProperties converterProperties) {
+            this.mediaDeviceDescription = converterProperties.GetMediaDeviceDescription();
+            this.fontProvider = converterProperties.GetFontProvider();
+            this.baseUri = converterProperties.GetBaseUri();
+            this.baseUri = converterProperties.GetBaseUri();
+            this.cssResolver = converterProperties.GetCssResolver();
+            this.fontProvider = converterProperties.GetFontProvider();
+            this.mediaDeviceDescription = converterProperties.GetMediaDeviceDescription();
         }
 
         public virtual ResourceResolver GetResourceResolver() {

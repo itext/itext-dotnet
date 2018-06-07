@@ -248,7 +248,7 @@ namespace iText.Svg.Processors.Impl {
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new _ISvgConverterProperties_253();
+            ISvgConverterProperties convProps = new _DefaultSvgConverterProperties_252(root);
             ISvgNodeRenderer rootActual = processor.Process(root, convProps).GetRootRenderer();
             //setup expected
             ISvgNodeRenderer rootExpected = null;
@@ -256,23 +256,24 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
         }
 
-        private sealed class _ISvgConverterProperties_253 : ISvgConverterProperties {
-            public _ISvgConverterProperties_253() {
+        private sealed class _DefaultSvgConverterProperties_252 : DefaultSvgConverterProperties {
+            public _DefaultSvgConverterProperties_252(INode baseArg1)
+                : base(baseArg1) {
             }
 
-            public ICssResolver GetCssResolver() {
+            public override ICssResolver GetCssResolver() {
                 return null;
             }
 
-            public ISvgNodeRendererFactory GetRendererFactory() {
+            public override ISvgNodeRendererFactory GetRendererFactory() {
                 return null;
             }
 
-            public String GetCharset() {
+            public override String GetCharset() {
                 return null;
             }
 
-            public ResourceResolver GetResourceResolver() {
+            public override ResourceResolver GetResourceResolver() {
                 return null;
             }
         }

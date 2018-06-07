@@ -46,8 +46,8 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
+using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Css {
     public class DefaultSvgStyleResolverTest {
@@ -68,8 +68,8 @@ namespace iText.Svg.Css {
                 ));
             ICssContext cssContext = new SvgCssContext();
             INode circle = new JsoupElementNode(jsoupCircle);
-            ICssResolver resolver = new DefaultSvgStyleResolver();
-            resolver.CollectCssDeclarations(circle, new ResourceResolver(""));
+            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(circle));
+            ICssResolver resolver = new DefaultSvgStyleResolver(circle, context);
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("id", "circle1");
@@ -93,8 +93,8 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("ellipse"), "");
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
-            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver();
-            resolver.CollectCssDeclarations(jSoupStyle, new ResourceResolver(""));
+            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
+            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
             ICssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
@@ -102,6 +102,21 @@ namespace iText.Svg.Css {
             expected.Put("stroke", "#da0000");
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontsResolverTagTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode("\n" + "\t@font-face{\n" + "\t\tfont-family:Courier;\n" + "\t\tsrc:url(#Super Sans);\n"
+                 + "\t}\n" + "  ", "");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
+            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
+            IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
+            NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
+            NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);
         }
     }
 }

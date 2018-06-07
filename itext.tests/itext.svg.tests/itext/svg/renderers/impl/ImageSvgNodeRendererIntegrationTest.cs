@@ -1,4 +1,6 @@
 using System;
+using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -22,7 +24,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.SetUp]
         public virtual void Before() {
             ResourceResolver resourceResolver = new ResourceResolver(sourceFolder);
-            properties = new DefaultSvgConverterProperties();
+            properties = new DefaultSvgConverterProperties(new JsoupDocumentNode(new Document("")));
             properties.SetResourceResolver(resourceResolver);
         }
 

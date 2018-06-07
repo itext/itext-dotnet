@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers.Factories;
 
@@ -75,6 +77,10 @@ namespace iText.Svg.Processors {
         /// </returns>
         ISvgNodeRendererFactory GetRendererFactory();
 
+        /// <summary>Gets the font provider.</summary>
+        /// <returns>the font provider</returns>
+        FontProvider GetFontProvider();
+
         /// <summary>Get the name of the Charset to be used when decoding an InputStream.</summary>
         /// <remarks>
         /// Get the name of the Charset to be used when decoding an InputStream. This
@@ -82,6 +88,7 @@ namespace iText.Svg.Processors {
         /// <c>UTF-8</c>
         /// will
         /// be used (by JSoup).
+        /// <p>
         /// Please be aware that this method is NOT used when handling a
         /// <c>String</c>
         /// variable in the
@@ -95,8 +102,40 @@ namespace iText.Svg.Processors {
         /// </returns>
         String GetCharset();
 
+        /// <summary>Gets the base URI.</summary>
+        /// <returns>the base URI</returns>
+        String GetBaseUri();
+
+        /// <summary>Sets the base URI.</summary>
+        /// <param name="baseUri">the base URI</param>
+        /// <returns>the ConverterProperties instance</returns>
+        ISvgConverterProperties SetBaseUri(String baseUri);
+
+        /// <summary>Gets the media device description.</summary>
+        /// <returns>the media device description</returns>
+        MediaDeviceDescription GetMediaDeviceDescription();
+
+        /// <summary>Sets the media device description.</summary>
+        /// <param name="mediaDeviceDescription">the media device description</param>
+        /// <returns>the ConverterProperties instance</returns>
+        ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription);
+
         /// <summary>Gets the provided ResourceResolver.</summary>
         /// <returns>resourceResolver specified by the user</returns>
         ResourceResolver GetResourceResolver();
+
+        /// <summary>Sets the font provider.</summary>
+        /// <remarks>
+        /// Sets the font provider. Please note that
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// instances cannot be reused across several documents
+        /// and thus as soon as you set this property, this
+        /// <see cref="ISvgConverterProperties"/>
+        /// instance becomes only useful for a single
+        /// HTML conversion.
+        /// </remarks>
+        /// <param name="fontProvider">the font provider</param>
+        /// <returns>the ISvgConverterProperties instance</returns>
+        ISvgConverterProperties SetFontProvider(FontProvider fontProvider);
     }
 }

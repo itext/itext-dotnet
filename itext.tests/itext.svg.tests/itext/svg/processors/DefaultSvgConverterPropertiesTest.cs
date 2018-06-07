@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Processors {
@@ -7,7 +8,10 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void GetCharsetNameRegressionTest() {
             String expected = Encoding.UTF8.Name();
-            String actual = new DefaultSvgConverterProperties().GetCharset();
+            iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("ellipse"), "");
+            JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
+            String actual = new DefaultSvgConverterProperties(jSoupEllipse).GetCharset();
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

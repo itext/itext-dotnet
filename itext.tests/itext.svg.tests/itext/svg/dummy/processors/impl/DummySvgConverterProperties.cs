@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Css.Impl;
 using iText.Svg.Dummy.Factories;
@@ -54,11 +56,17 @@ namespace iText.Svg.Dummy.Processors.Impl {
 
         internal ISvgNodeRendererFactory rendererFactory;
 
+        internal String baseUri;
+
+        internal MediaDeviceDescription mediaDeviceDescription;
+
         internal ResourceResolver resourceResolver;
 
         public DummySvgConverterProperties() {
             cssResolver = new DummyCssResolver();
             rendererFactory = new DummySvgNodeFactory();
+            mediaDeviceDescription = new MediaDeviceDescription("");
+            baseUri = "";
             resourceResolver = new ResourceResolver("");
         }
 
@@ -70,12 +78,37 @@ namespace iText.Svg.Dummy.Processors.Impl {
             return rendererFactory;
         }
 
+        public virtual FontProvider GetFontProvider() {
+            return null;
+        }
+
         public virtual String GetCharset() {
             return null;
         }
 
+        public virtual String GetBaseUri() {
+            return baseUri;
+        }
+
+        public virtual ISvgConverterProperties SetBaseUri(String baseUri) {
+            return this;
+        }
+
+        public virtual MediaDeviceDescription GetMediaDeviceDescription() {
+            return mediaDeviceDescription;
+        }
+
+        public virtual ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription
+            ) {
+            return this;
+        }
+
         public virtual ResourceResolver GetResourceResolver() {
             return this.resourceResolver;
+        }
+
+        public virtual ISvgConverterProperties SetFontProvider(FontProvider fontProvider) {
+            return this;
         }
     }
 }

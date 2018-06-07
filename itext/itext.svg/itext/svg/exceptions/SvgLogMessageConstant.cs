@@ -95,5 +95,13 @@ namespace iText.Svg.Exceptions {
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+
+        public const String UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI = "Unable to retrieve stream with given base URI ({0}) and source path ({1})";
+
+        /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
+        public const String FONT_PROVIDER_CONTAINS_ZERO_FONTS = "Font Provider contains zero fonts. At least one font shall be present";
+
+        /// <summary>The Constant UNABLE_TO_RETRIEVE_FONT.</summary>
+        public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
     }
 }
