@@ -109,24 +109,36 @@ namespace iText.Layout.Font {
             : this(new FontSet()) {
         }
 
+        public virtual bool AddFont(FontProgram fontProgram, String encoding, Range unicodeRange) {
+            return fontSet.AddFont(fontProgram, encoding, null, unicodeRange);
+        }
+
         public virtual bool AddFont(FontProgram fontProgram, String encoding) {
-            return fontSet.AddFont(fontProgram, encoding);
+            return AddFont(fontProgram, encoding, null);
+        }
+
+        public virtual bool AddFont(FontProgram fontProgram) {
+            return AddFont(fontProgram, GetDefaultEncoding(fontProgram));
+        }
+
+        public virtual bool AddFont(String fontPath, String encoding, Range unicodeRange) {
+            return fontSet.AddFont(fontPath, encoding, null, unicodeRange);
         }
 
         public virtual bool AddFont(String fontPath, String encoding) {
-            return fontSet.AddFont(fontPath, encoding, null);
-        }
-
-        public virtual bool AddFont(byte[] fontData, String encoding) {
-            return fontSet.AddFont(fontData, encoding, null);
+            return AddFont(fontPath, encoding, null);
         }
 
         public virtual bool AddFont(String fontPath) {
             return AddFont(fontPath, null);
         }
 
-        public virtual bool AddFont(FontProgram fontProgram) {
-            return AddFont(fontProgram, GetDefaultEncoding(fontProgram));
+        public virtual bool AddFont(byte[] fontData, String encoding, Range unicodeRange) {
+            return fontSet.AddFont(fontData, encoding, null, unicodeRange);
+        }
+
+        public virtual bool AddFont(byte[] fontData, String encoding) {
+            return AddFont(fontData, encoding, null);
         }
 
         public virtual bool AddFont(byte[] fontData) {

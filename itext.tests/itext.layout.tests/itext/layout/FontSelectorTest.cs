@@ -268,6 +268,80 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CyrillicAndLatinWithUnicodeRange() {
+            String outFileName = destinationFolder + "cyrillicAndLatinWithUnicodeRange.pdf";
+            String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinWithUnicodeRange.pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", null, "FontAlias"
+                , new RangeBuilder(0, 255).Create()));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", null, "FontAlias", new 
+                RangeBuilder(1024, 1279).Create()));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 2);
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "FontAlias");
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DuplicateFontWithUnicodeRange() {
+            //In the result pdf will be two equal fonts but with different subsets
+            String outFileName = destinationFolder + "duplicateFontWithUnicodeRange.pdf";
+            String cmpFileName = sourceFolder + "cmp_duplicateFontWithUnicodeRange.pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", null, "FontAlias"
+                , new RangeBuilder(0, 255).Create()));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", null, "FontAlias"
+                , new RangeBuilder(1024, 1279).Create()));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 2);
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "FontAlias");
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SingleFontWithUnicodeRange() {
+            //In the result pdf will be two equal fonts but with different subsets
+            String outFileName = destinationFolder + "singleFontWithUnicodeRange.pdf";
+            String cmpFileName = sourceFolder + "cmp_singleFontWithUnicodeRange.pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", null, "FontAlias"
+                ));
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", null, "FontAlias"
+                ));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 1);
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "FontAlias");
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private static FontInfo GetFirst(ICollection<FontInfo> fonts) {
             if (fonts.Count != 1) {
                 return null;
