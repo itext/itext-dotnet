@@ -81,8 +81,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -101,8 +104,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -121,8 +127,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -141,8 +150,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -161,8 +173,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -181,8 +196,11 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (result != null && !result.Contains("No visual differences")) {
+                NUnit.Framework.Assert.Fail(result);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>

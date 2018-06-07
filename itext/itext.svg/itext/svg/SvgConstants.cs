@@ -331,6 +331,9 @@ namespace iText.Svg {
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
             public const String HEIGHT = "height";
 
+            /// <summary>Attribute defining the href value.</summary>
+            public const String HREF = "href";
+
             /// <summary>Attribute defining the unique id of an element.</summary>
             public const String ID = "id";
 

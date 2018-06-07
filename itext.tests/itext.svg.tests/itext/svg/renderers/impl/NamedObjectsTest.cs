@@ -14,6 +14,7 @@ namespace iText.Svg.Renderers.Impl {
                 , FileAccess.Read));
             ISvgProcessor processor = new DefaultSvgProcessor();
             ISvgProcessorResult result = processor.Process(parsedSvg);
+            NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_svg") is SvgTagSvgNodeRenderer);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_rect") is RectangleSvgNodeRenderer);
         }
     }

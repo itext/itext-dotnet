@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             root.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
@@ -139,7 +139,7 @@ namespace iText.Svg.Renderers.Impl {
             doc.Close();
             int numPoints = ((PolylineSvgNodeRenderer)root).GetPoints().Count;
             NUnit.Framework.Assert.AreEqual(numPoints, 0);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 

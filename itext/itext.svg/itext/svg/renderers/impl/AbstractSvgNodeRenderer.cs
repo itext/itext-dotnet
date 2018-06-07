@@ -114,7 +114,6 @@ namespace iText.Svg.Renderers.Impl {
                     String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
                     this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
                     if (doFill && CanElementFill()) {
-                        // todo RND-865 default style sheets
                         Color color = ColorConstants.BLACK;
                         if (fillRawValue != null) {
                             color = WebColors.GetRGBColor(fillRawValue);

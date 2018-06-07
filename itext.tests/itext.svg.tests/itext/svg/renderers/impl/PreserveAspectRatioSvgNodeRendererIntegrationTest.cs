@@ -70,7 +70,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Ignore("RND-876")]
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestPreserveAspect_Default_All() {
-            ConvertAndCompareSinglePageStructurally(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_PreserveAspectRatio_Default_all"
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_PreserveAspectRatio_Default_all"
                 );
         }
 
@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspect_Min() {
-            ConvertAndCompareSinglePageStructurally(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_min"
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_min"
                 );
         }
 
@@ -86,7 +86,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspect_All() {
-            ConvertAndCompareSinglePageStructurally(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_all"
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_all"
                 );
         }
 
@@ -94,7 +94,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspect_MetricDimensions_Min() {
-            ConvertAndCompareSinglePageStructurally(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_min"
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_min"
                 );
         }
 
@@ -102,7 +102,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspect_MetricDimensions_All() {
-            ConvertAndCompareSinglePageStructurally(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_all"
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_scaling_DoNotPreserveAspectRatio_MetricDimensions_all"
                 );
         }
     }

@@ -135,14 +135,6 @@ namespace iText.Svg.Renderers {
             }
         }
 
-        /// <summary>* Adds a number of named object to the draw context.</summary>
-        /// <remarks>* Adds a number of named object to the draw context. These objects can then be referenced from a different tag.
-        ///     </remarks>
-        /// <param name="objectsToAdd">Map containing the named objects keyed to their ID strings</param>
-        public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> objectsToAdd) {
-            this.namedObjects.AddAll(objectsToAdd);
-        }
-
         /// <summary>Get a named object based on its name.</summary>
         /// <remarks>Get a named object based on its name. If the name isn't listed, this method will return null.</remarks>
         /// <param name="name">name of the object you want to reference</param>
@@ -161,6 +153,14 @@ namespace iText.Svg.Renderers {
         /// <returns>resource resolver instance</returns>
         public virtual ResourceResolver GetResourceResolver() {
             return resourceResolver;
+        }
+
+        /// <summary>* Adds a number of named object to the draw context.</summary>
+        /// <remarks>* Adds a number of named object to the draw context. These objects can then be referenced from a different tag.
+        ///     </remarks>
+        /// <param name="namedObjects">Map containing the named objects keyed to their ID strings</param>
+        public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> namedObjects) {
+            this.namedObjects.AddAll(namedObjects);
         }
     }
 }

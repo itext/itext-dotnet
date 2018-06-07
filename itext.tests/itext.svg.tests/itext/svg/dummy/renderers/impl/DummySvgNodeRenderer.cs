@@ -56,6 +56,8 @@ namespace iText.Svg.Dummy.Renderers.Impl {
 
         internal String name;
 
+        internal bool drawn = false;
+
         public DummySvgNodeRenderer()
             : this("dummy") {
         }
@@ -74,6 +76,7 @@ namespace iText.Svg.Dummy.Renderers.Impl {
 
         public virtual void Draw(SvgDrawContext context) {
             System.Console.Out.WriteLine(name + ": Drawing in dummy node");
+            this.drawn = true;
         }
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
@@ -102,6 +105,10 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer
                 )o;
             return this.name.Equals(otherDummy.name);
+        }
+
+        public virtual bool IsDrawn() {
+            return this.drawn;
         }
     }
 }

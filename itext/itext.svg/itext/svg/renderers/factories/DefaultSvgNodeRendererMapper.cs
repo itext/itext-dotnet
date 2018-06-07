@@ -71,6 +71,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.USE, typeof(UseSvgNodeRenderer));
             return result;
         }
 

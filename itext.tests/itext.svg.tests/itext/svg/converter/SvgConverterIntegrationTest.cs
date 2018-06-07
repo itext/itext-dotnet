@@ -131,7 +131,7 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SinglePageHelloWorldTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "hello_world");
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "hello_world");
         }
 
         /// <exception cref="System.IO.IOException"/>

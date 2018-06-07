@@ -32,21 +32,21 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImage", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImage", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithRectangleTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "imageWithRectangle", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "imageWithRectangle", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithMultipleShapesTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "imageWithMultipleShapes", properties
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "imageWithMultipleShapes", properties
                 );
         }
 
@@ -54,66 +54,64 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageXYTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "imageXY", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "imageXY", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleImagesTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "multipleImages", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "multipleImages", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonSquareImageTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "nonSquareImage", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "nonSquareImage", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageTranslateTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImageTranslate", properties
-                );
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImageTranslate", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageRotateTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImageRotate", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImageRotate", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleUpTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImageScaleUp", properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImageScaleUp", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleDownTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImageScaleDown", properties
-                );
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImageScaleDown", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageMultipleTransformationsTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "singleImageMultipleTransformations"
-                , properties);
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "singleImageMultipleTransformations", 
+                properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoImagesWithTransformationsTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "twoImagesWithTransformations", properties
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "twoImagesWithTransformations", properties
                 );
         }
 
@@ -122,8 +120,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("RND-876")]
         public virtual void DifferentDimensionsTest() {
-            ConvertAndCompareSinglePageStructurally(sourceFolder, destinationFolder, "differentDimensions", properties
-                );
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "differentDimensions", properties);
         }
     }
 }

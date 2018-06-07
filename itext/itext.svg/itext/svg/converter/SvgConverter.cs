@@ -65,6 +65,7 @@ namespace iText.Svg.Converter {
     /// processing and drawing operations.
     /// </summary>
     public sealed class SvgConverter {
+        /// <summary>The default charset that is used during SVG conversion.</summary>
         public const String DEFAULT_CHARSET = "UTF-8";
 
         private SvgConverter() {
@@ -465,9 +466,6 @@ namespace iText.Svg.Converter {
         /// <param name="svgStream">inputstream containing the SVG</param>
         /// <param name="props">Svg Converter properties to change default behaviour</param>
         /// <param name="pdfDest">PDF destination outputStream</param>
-        /// <param name="svgStream">inputstream containing the SVG</param>
-        /// <param name="props">Svg Converter properties to change default behaviour</param>
-        /// <param name="pdfDest">PDF destination outputStream</param>
         /// <param name="writerprops">writerproperties for the pdf document</param>
         /// <exception cref="System.IO.IOException">
         /// when the one of the streams cannot be read correctly
@@ -490,7 +488,10 @@ namespace iText.Svg.Converter {
                 pdfDocument = new PdfDocument(new PdfWriter(pdfDest));
             }
             //process
-            ISvgNodeRenderer topSvgRenderer = Process(Parse(svgStream, props), props).GetRootRenderer();
+            ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
+            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
+            SvgDrawContext drawContext = new SvgDrawContext();
+            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             //Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
@@ -501,7 +502,7 @@ namespace iText.Svg.Converter {
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas pageCanvas = new PdfCanvas(page);
             //Add to the first page
-            PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, props);
+            PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, props, drawContext);
             //Draw
             Draw(xObject, pageCanvas);
             pdfDocument.Close();
@@ -592,7 +593,10 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static PdfFormXObject ConvertToXObject(String content, PdfDocument document, ISvgConverterProperties
              props) {
-            return ConvertToXObject(Process(Parse(content), props).GetRootRenderer(), document);
+            ISvgProcessorResult processorResult = Process(Parse(content), props);
+            SvgDrawContext drawContext = new SvgDrawContext();
+            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
+            return ConvertToXObject(processorResult.GetRootRenderer(), document, props, drawContext);
         }
 
         /// <summary>
@@ -636,7 +640,11 @@ namespace iText.Svg.Converter {
         /// </returns>
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document) {
-            return ConvertToXObject(Process(Parse(stream)).GetRootRenderer(), document);
+            ISvgProcessorResult processorResult = Process(Parse(stream));
+            SvgDrawContext drawContext = new SvgDrawContext();
+            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
+            return ConvertToXObject(processorResult.GetRootRenderer(), document, new DefaultSvgConverterProperties(), 
+                drawContext);
         }
 
         /// <summary>
@@ -682,7 +690,10 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static PdfFormXObject ConvertToXObject(Stream stream, PdfDocument document, ISvgConverterProperties
              props) {
-            return ConvertToXObject(Process(Parse(stream, props), props).GetRootRenderer(), document, props);
+            ISvgProcessorResult processorResult = Process(Parse(stream, props), props);
+            SvgDrawContext drawContext = new SvgDrawContext();
+            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
+            return ConvertToXObject(processorResult.GetRootRenderer(), document, props, drawContext);
         }
 
         /// <summary>
@@ -867,6 +878,62 @@ namespace iText.Svg.Converter {
         /// the renderer tree
         /// </param>
         /// <param name="document">the document that the returned</param>
+        /// <param name="properties">the converter properties</param>
+        /// <param name="context">the SvgDrawContext</param>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// containing the PDF instructions
+        /// corresponding to the passed node renderer tree.
+        /// </returns>
+        private static PdfFormXObject ConvertToXObject(ISvgNodeRenderer topSvgRenderer, PdfDocument document, ISvgConverterProperties
+             properties, SvgDrawContext context) {
+            CheckNull(topSvgRenderer);
+            CheckNull(document);
+            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.WIDTH));
+            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.HEIGHT));
+            PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            PdfCanvas canvas = new PdfCanvas(pdfForm, document);
+            if (properties == null) {
+                properties = new DefaultSvgConverterProperties();
+            }
+            context.SetResourceResolver(properties.GetResourceResolver());
+            context.PushCanvas(canvas);
+            ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(topSvgRenderer);
+            root.Draw(context);
+            return pdfForm;
+        }
+
+        /// <summary>
+        /// This method draws a NodeRenderer tree to a canvas that is tied to the
+        /// passed document.
+        /// </summary>
+        /// <remarks>
+        /// This method draws a NodeRenderer tree to a canvas that is tied to the
+        /// passed document.
+        /// This method (or its overloads) is the best method to use if you want to
+        /// reuse the same SVG image multiple times on the same
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// If you want to reuse this object on other
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instances,
+        /// please either use any of the
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// overloads in this same
+        /// class and convert its result to an XObject with
+        /// this method, or look into
+        /// using
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// </remarks>
+        /// <param name="topSvgRenderer">
+        /// the
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// instance that contains
+        /// the renderer tree
+        /// </param>
+        /// <param name="document">the document that the returned</param>
         /// <param name="properties">
         /// the converter properties
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
@@ -881,21 +948,7 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer topSvgRenderer, PdfDocument document, ISvgConverterProperties
              properties) {
-            CheckNull(topSvgRenderer);
-            CheckNull(document);
-            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.HEIGHT));
-            PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            PdfCanvas canvas = new PdfCanvas(pdfForm, document);
-            SvgDrawContext context = new SvgDrawContext();
-            if (properties == null) {
-                properties = new DefaultSvgConverterProperties();
-            }
-            context.SetResourceResolver(properties.GetResourceResolver());
-            context.PushCanvas(canvas);
-            ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(topSvgRenderer);
-            root.Draw(context);
-            return pdfForm;
+            return ConvertToXObject(topSvgRenderer, document, properties, new SvgDrawContext());
         }
 
         /// <summary>
