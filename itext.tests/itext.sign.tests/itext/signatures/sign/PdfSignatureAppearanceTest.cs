@@ -47,8 +47,10 @@ using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Image;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -193,6 +195,27 @@ namespace iText.Signatures.Sign {
             float foundFontSize = float.Parse(fontSize, System.Globalization.CultureInfo.InvariantCulture);
             NUnit.Framework.Assert.IsTrue(Math.Abs(foundFontSize - expectedFontSize) < 0.1 * expectedFontSize, MessageFormatUtil
                 .Format("Font size: exptected {0}, found {1}", expectedFontSize, fontSize));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FontColorTest01() {
+            String fileName = "fontColorTest01.pdf";
+            String dest = destinationFolder + fileName;
+            Rectangle rect = new Rectangle(36, 648, 100, 50);
+            String src = sourceFolder + "simpleDocument.pdf";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), false);
+            // Creating the appearance
+            signer.GetSignatureAppearance().SetLayer2FontColor(ColorConstants.RED).SetLayer2Text("Verified and signed by me."
+                ).SetPageRect(rect);
+            signer.SetFieldName("Signature1");
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                , "diff_"));
         }
     }
 }
