@@ -43,18 +43,36 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel.Log {
-    /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
-    /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
-        }
+namespace iText.Kernel.Counter {
+    public class NamespaceConstant {
+        public const String ITEXT = "iText";
+
+        //Core
+        public const String CORE_IO = ITEXT + ".IO";
+
+        public const String CORE_KERNEL = ITEXT + ".Kernel";
+
+        public const String CORE_LAYOUT = ITEXT + ".Layout";
+
+        public const String CORE_BARCODES = ITEXT + ".Barcodes";
+
+        public const String CORE_PDFA = ITEXT + ".Pdfa";
+
+        public const String CORE_SIGN = ITEXT + ".Signatures";
+
+        public const String CORE_FORMS = ITEXT + ".Forms";
+
+        public const String CORE_SXP = ITEXT + ".StyledXmlParser";
+
+        public const String CORE_SVG = ITEXT + ".Svg";
+
+        //Addons
+        public const String PDF_DEBUG = ITEXT + ".PdfDebug";
+
+        public const String PDF_HTML = ITEXT + ".Html2pdf";
+
+        public const String PDF_INVOICE = ITEXT + ".Zugferd";
+
+        public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
     }
 }

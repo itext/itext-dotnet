@@ -1,0 +1,255 @@
+/*
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2018 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using iText.IO.Util;
+using iText.Kernel.Counter.Context;
+
+namespace iText.Kernel.Counter {
+    /// <summary>The class that retrieves context of its invocation.</summary>
+    public class ContextManager {
+        private static readonly iText.Kernel.Counter.ContextManager instance = new iText.Kernel.Counter.ContextManager
+            ();
+
+        private readonly IDictionary<String, IContext> contextMappings = new ConcurrentDictionary<String, IContext
+            >();
+
+        private ContextManager() {
+            RegisterGenericContext(JavaUtil.ArraysAsList(NamespaceConstant.CORE_IO, NamespaceConstant.CORE_KERNEL, NamespaceConstant
+                .CORE_LAYOUT, NamespaceConstant.CORE_BARCODES, NamespaceConstant.CORE_PDFA, NamespaceConstant.CORE_SIGN
+                , NamespaceConstant.CORE_FORMS, NamespaceConstant.CORE_SXP, NamespaceConstant.CORE_SVG), JavaCollectionsUtil
+                .SingletonList(NamespaceConstant.ITEXT));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil
+                .SingletonList(NamespaceConstant.PDF_DEBUG));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil.
+                SingletonList(NamespaceConstant.PDF_HTML));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), JavaCollectionsUtil
+                .SingletonList(NamespaceConstant.PDF_INVOICE));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
+                .SingletonList(NamespaceConstant.PDF_SWEEP));
+        }
+
+        /// <summary>Gets the singelton instance of this class</summary>
+        /// <returns>
+        /// the
+        /// <see cref="ContextManager"/>
+        /// instance
+        /// </returns>
+        public static iText.Kernel.Counter.ContextManager GetInstance() {
+            return instance;
+        }
+
+        /// <summary>
+        /// Gets the top
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// based on the stack trace.
+        /// For example if the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// was created inside pdfHtml,
+        /// and the pdfHtml was called directly,
+        /// then calling this method from
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// will retrieve pdfHtml context.
+        /// </summary>
+        /// <returns>
+        /// the top
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// instance, or
+        /// <see langword="null"/>
+        /// if the context is unknown
+        /// </returns>
+        public virtual IContext GetTopContext() {
+            return GetTopContext(null);
+        }
+
+        /// <summary>
+        /// Gets the top
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// based on the stack trace.
+        /// For example if the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// was created inside pdfHtml,
+        /// and the pdfHtml was called directly,
+        /// then calling this method from
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// will retrieve pdfHtml context.
+        /// </summary>
+        /// <param name="stop">
+        /// if this class is encountered during stack trace analysis,
+        /// then the process is stopped and
+        /// <see langword="null"/>
+        /// is returned
+        /// </param>
+        /// <returns>
+        /// the top
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// instance, or
+        /// <see langword="null"/>
+        /// if the context is unknown or
+        /// <paramref name="stop"/>
+        /// is encountered
+        /// </returns>
+        public virtual IContext GetTopContext(Type stop) {
+            return GetNamespaceMapping(GetTopRecognisedNamespace(stop));
+        }
+
+        /// <summary>Gets the top recognised namespace based on the stack trace.</summary>
+        /// <remarks>
+        /// Gets the top recognised namespace based on the stack trace.
+        /// For example if the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// was created inside pdfHtml,
+        /// and the pdfHtml was called directly,
+        /// then calling this method from
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// will retrieve pdfHtml namespace.
+        /// </remarks>
+        /// <returns>
+        /// the top recognised namespace, or
+        /// <see langword="null"/>
+        /// if it is unrecognised
+        /// </returns>
+        public virtual String GetTopRecognisedNamespace() {
+            return GetTopRecognisedNamespace(null);
+        }
+
+        /// <summary>Gets the top recognised namespace based on the stack trace.</summary>
+        /// <remarks>
+        /// Gets the top recognised namespace based on the stack trace.
+        /// For example if the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// was created inside pdfHtml,
+        /// and the pdfHtml was called directly,
+        /// then calling this method from
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// will retrieve pdfHtml namespace.
+        /// </remarks>
+        /// <param name="stop">
+        /// if this class is encountered during stack trace analysis,
+        /// then the process is stopped and
+        /// <see langword="null"/>
+        /// is returned
+        /// </param>
+        /// <returns>
+        /// the top recognised namespace, or
+        /// <see langword="null"/>
+        /// if the context is unknown
+        /// </returns>
+        public virtual String GetTopRecognisedNamespace(Type stop) {
+            if (stop == null) {
+                stop = GetType();
+            }
+            String result;
+#if NETSTANDARD1_6
+            String[] stackTrace = Environment.StackTrace.Split(new char[] {'\n', '\r'});
+            for (int i = stackTrace.Length - 1; i >= 0; --i) {
+                String fullClassName = null;
+                foreach (Match match in Regex.Matches(stackTrace[i], @"   at ([^\.]+(?:\.[^\.]+)*)\.([^\.]+)\(.*")) {
+                    fullClassName = match.Groups[1].Value;
+                    break;
+                }
+                if (fullClassName != null) {
+                    if (fullClassName.Equals(stop.FullName)) {
+                        return null;
+                    }
+                    result = GetRecognisedNamespace(fullClassName);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+#else
+            StackTrace stackTrace = new StackTrace();
+            Type declaringType;
+            String declaringTypeFullName;
+            for (int i = stackTrace.FrameCount - 1; i >= 0; --i) {
+                declaringType = stackTrace.GetFrame(i).GetMethod().DeclaringType;
+                declaringTypeFullName = declaringType != null ? declaringType.FullName : null;
+                if (stop.FullName != null && stop.FullName.Equals(declaringTypeFullName)) {
+                    return null;
+                }
+                result = GetRecognisedNamespace(declaringTypeFullName);
+                if (result != null) {
+                    return result;
+                }
+            }
+#endif
+            return null;
+        }
+
+        private String GetRecognisedNamespace(String className) {
+            if (className != null) {
+                foreach (String @namespace in contextMappings.Keys) {
+                    //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
+                    if (className.ToLowerInvariant().StartsWith(@namespace)) {
+                        return @namespace;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private IContext GetNamespaceMapping(String @namespace) {
+            if (@namespace != null) {
+                return contextMappings.Get(@namespace);
+            }
+            return null;
+        }
+
+        private void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> eventIds) {
+            GenericContext context = new GenericContext(eventIds);
+            foreach (String @namespace in namespaces) {
+                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
+                RegisterContext(@namespace.ToLowerInvariant(), context);
+            }
+        }
+
+        private void RegisterContext(String @namespace, IContext context) {
+            contextMappings.Put(@namespace, context);
+        }
+    }
+}

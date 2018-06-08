@@ -257,7 +257,7 @@ internal static class KernelExtensions {
         return collection.Count == 0;
     }
 
-    public static bool IsEmpty(this ICollection collection) {
+    public static bool IsEmpty<T>(this Stack<T> collection) {
         return collection.Count == 0;
     }
 
@@ -342,6 +342,12 @@ internal static class KernelExtensions {
     public static bool CanExecute(this FileInfo fileInfo)
     {
         return fileInfo.Exists;
+    }
+
+    public static T PollFirst<T>(this LinkedList<T> list) {
+        T result = list.First.Value;
+        list.RemoveFirst();
+        return result;
     }
 
     /// <summary>

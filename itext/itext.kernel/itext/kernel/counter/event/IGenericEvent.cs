@@ -43,18 +43,20 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter.Event {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// Generic
+    /// <see cref="IEvent"/>
+    /// that has additional id, that should help during events filtering.
+    /// The common practice is to return the namespace as id.
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
-        }
+    public interface IGenericEvent : IEvent {
+        /// <summary>The id that uniquely identifies event origin.</summary>
+        /// <remarks>
+        /// The id that uniquely identifies event origin.
+        /// The common practice is to return the namespace as id.
+        /// </remarks>
+        /// <returns>event's origin id.</returns>
+        String GetOriginId();
     }
 }

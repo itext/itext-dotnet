@@ -48,6 +48,8 @@ namespace iText.Kernel.Log {
     /// <see cref="ICounterFactory"/>
     /// implementation that always returns counter instance passed to it in constructor
     /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.SimpleEventCounterFactory instead."
+        )]
     public class SimpleCounterFactory : ICounterFactory {
         private ICounter counter;
 

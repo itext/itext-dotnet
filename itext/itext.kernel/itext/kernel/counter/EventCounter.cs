@@ -41,29 +41,73 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Kernel.Counter.Context;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
-    /// Interface that can be implemented if you want to count the number of documents
+    /// Class that can be extended if you want to count iText events, for example the number of documents
     /// that are being processed by iText.
     /// </summary>
     /// <remarks>
-    /// Interface that can be implemented if you want to count the number of documents
+    /// Class that can be extended if you want to count iText events, for example the number of documents
     /// that are being processed by iText.
     /// <p>
     /// Implementers may use this method to record actual system usage for licensing purposes
-    /// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
+    /// (e.g. count the number of documents or the volume in bytes in the context of a SaaS license).
     /// </remarks>
-    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounter instead."
-        )]
-    public interface ICounter {
-        /// <summary>This method gets triggered if a document is read.</summary>
-        /// <param name="size">the length of the document that was read</param>
-        void OnDocumentRead(long size);
+    public abstract class EventCounter {
+        private readonly IContext fallback;
 
-        /// <summary>This method gets triggered if a document is written.</summary>
-        /// <param name="size">the length of the document that was written</param>
-        void OnDocumentWritten(long size);
+        /// <summary>
+        /// Creates instance of this class that allows all events from unknown
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// .
+        /// </summary>
+        public EventCounter()
+            : this(UnknownContext.PERMISSIVE) {
+        }
+
+        /// <summary>
+        /// Creates instance of this class with custom fallback
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// .
+        /// </summary>
+        /// <param name="fallback">
+        /// the
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// that will be used in case the event context is unknown
+        /// </param>
+        public EventCounter(IContext fallback) {
+            this.fallback = fallback;
+        }
+
+        /// <summary>Entry point for event processing.</summary>
+        /// <remarks>Entry point for event processing. Some events may be discarded based on the event context.</remarks>
+        /// <param name="event">
+        /// 
+        /// <see cref="iText.Kernel.Counter.Event.IEvent"/>
+        /// to count
+        /// </param>
+        /// <param name="context">
+        /// event's
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// </param>
+        public void OnEvent(IEvent @event, IContext context) {
+            if (context == null) {
+                context = fallback;
+            }
+            if (context.Allow(@event)) {
+                Process(@event);
+            }
+        }
+
+        /// <summary>The method that should be overridden for actual event processing</summary>
+        /// <param name="event">
+        /// 
+        /// <see cref="iText.Kernel.Counter.Event.IEvent"/>
+        /// to count
+        /// </param>
+        protected internal abstract void Process(IEvent @event);
     }
 }

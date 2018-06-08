@@ -43,18 +43,20 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// <see cref="IEventCounterFactory"/>
+    /// implementation that always returns counter instance passed to it in constructor
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
+    public class SimpleEventCounterFactory : IEventCounterFactory {
+        private EventCounter counter;
+
+        public SimpleEventCounterFactory(EventCounter counter) {
+            this.counter = counter;
+        }
+
+        public virtual EventCounter GetCounter(Type cls) {
+            return counter;
         }
     }
 }

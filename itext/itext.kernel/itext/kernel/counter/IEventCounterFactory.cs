@@ -43,18 +43,27 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// Factory that can be registered in
+    /// <see cref="EventCounterHandler"/>
+    /// and creates a counter for every reader or writer class.
+    /// <br/>
+    /// You can implement your own counter factory and register it like this:
+    /// <code>EventCounterManager.getInstance().registerCounter(new SystemOutEventCounterFactory());</code>
+    /// <br/>
+    /// <see cref="SystemOutEventCounterFactory"/>
+    /// is just an example of
+    /// <see cref="IEventCounterFactory"/>
+    /// implementation.
+    /// It creates
+    /// <see cref="SystemOutEventCounter"/>
+    /// that writes info about files being read and written to the
+    /// <see cref="System.Console.Out"/>
+    /// <p>
+    /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
-        }
+    public interface IEventCounterFactory {
+        EventCounter GetCounter(Type cls);
     }
 }

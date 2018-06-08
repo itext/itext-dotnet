@@ -41,20 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
-    /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
-    /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
-        }
+namespace iText.Kernel.Counter.Context {
+    /// <summary>The class that determines weather event should be processed or not.</summary>
+    /// <remarks>
+    /// The class that determines weather event should be processed or not.
+    /// Is calculated by the
+    /// <see cref="iText.Kernel.Counter.ContextManager"/>
+    /// </remarks>
+    public interface IContext {
+        bool Allow(IEvent @event);
     }
 }

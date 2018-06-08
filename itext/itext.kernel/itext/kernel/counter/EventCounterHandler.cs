@@ -42,88 +42,105 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using iText.Kernel.Counter.Context;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
     /// Manager that works with
-    /// <see cref="ICounterFactory"/>
+    /// <see cref="IEventCounterFactory"/>
     /// . Create
-    /// <see cref="ICounter"/>
+    /// <see cref="EventCounter"/>
     /// for each registered
-    /// <see cref="ICounterFactory"/>
-    /// and send corresponding events on document read and write.
+    /// <see cref="IEventCounterFactory"/>
+    /// and send corresponding events when calling
+    /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, System.Type{T})"/>
+    /// method.
     /// <br/>
     /// You can implement your own
-    /// <see cref="ICounterFactory"/>
+    /// <see cref="IEventCounterFactory"/>
     /// and register them with
-    /// <see cref="Register(ICounterFactory)"/>
+    /// <see cref="Register(IEventCounterFactory)"/>
     /// Or implement
-    /// <see cref="ICounter"/>
+    /// <see cref="EventCounter"/>
     /// and register it with
-    /// <see cref="SimpleCounterFactory"/>
+    /// <see cref="SimpleEventCounterFactory"/>
     /// like this:
-    /// <code>CounterManager.getInstance().register(new SimpleCounterFactory(new SystemOutCounter());</code>
-    /// <see cref="SystemOutCounter"/>
+    /// <code>EventCounterManager.getInstance().register(new SimpleEventCounterFactory(new SystemOutEventCounter());</code>
+    /// <see cref="SystemOutEventCounter"/>
     /// is just an example of a
-    /// <see cref="ICounter"/>
+    /// <see cref="EventCounter"/>
     /// implementation.
     /// <p>
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounterHandler instead."
-        )]
-    public class CounterManager {
+    public class EventCounterHandler {
         /// <summary>The singleton instance.</summary>
-        private static iText.Kernel.Log.CounterManager instance = new iText.Kernel.Log.CounterManager();
+        private static readonly iText.Kernel.Counter.EventCounterHandler instance = new iText.Kernel.Counter.EventCounterHandler
+            ();
 
         /// <summary>All registered factories.</summary>
-        private ICollection<ICounterFactory> factories = new HashSet<ICounterFactory>();
+        private IDictionary<IEventCounterFactory, bool?> factories = new ConcurrentDictionary<IEventCounterFactory
+            , bool?>();
 
-        private CounterManager() {
+        private EventCounterHandler() {
+            Register(new SimpleEventCounterFactory(new DefaultEventCounter()));
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>
-        public static iText.Kernel.Log.CounterManager GetInstance() {
+        public static iText.Kernel.Counter.EventCounterHandler GetInstance() {
             return instance;
         }
 
-        /// <summary>Returns a list of registered counters for specific class.</summary>
-        public virtual IList<ICounter> GetCounters(Type cls) {
-            List<ICounter> result = new List<ICounter>();
-            foreach (ICounterFactory factory in factories) {
-                ICounter counter = factory.GetCounter(cls);
+        /// <summary>
+        /// Triggers all registered
+        /// <see cref="IEventCounterFactory"/>
+        /// to produce
+        /// <see cref="EventCounter"/>
+        /// instance
+        /// and count the event.
+        /// </summary>
+        public virtual void OnEvent(IEvent @event, Type caller) {
+            IContext context = null;
+            bool contextInitialized = false;
+            foreach (IEventCounterFactory factory in factories.Keys) {
+                EventCounter counter = factory.GetCounter(caller);
                 if (counter != null) {
-                    result.Add(counter);
+                    if (!contextInitialized) {
+                        context = ContextManager.GetInstance().GetTopContext(GetType());
+                        contextInitialized = true;
+                    }
+                    counter.OnEvent(@event, context);
                 }
             }
-            return result;
         }
 
         /// <summary>
         /// Register new
-        /// <see cref="ICounterFactory"/>
+        /// <see cref="IEventCounterFactory"/>
         /// . Does nothing if same factory was already registered.
         /// </summary>
         /// <param name="factory">
         /// 
-        /// <see cref="ICounterFactory"/>
+        /// <see cref="IEventCounterFactory"/>
         /// to be registered
         /// </param>
-        public virtual void Register(ICounterFactory factory) {
+        public virtual void Register(IEventCounterFactory factory) {
             if (factory != null) {
-                factories.Add(factory);
+                factories.Put(factory, true);
             }
         }
 
         /// <summary>
         /// Unregister specified
-        /// <see cref="ICounterFactory"/>
+        /// <see cref="IEventCounterFactory"/>
         /// . Does nothing if this factory wasn't registered first.
         /// </summary>
         /// <param name="factory">
         /// 
-        /// <see cref="ICounterFactory"/>
+        /// <see cref="IEventCounterFactory"/>
         /// to be unregistered
         /// </param>
         /// <returns>
@@ -131,9 +148,9 @@ namespace iText.Kernel.Log {
         /// <see langword="true"/>
         /// if specified factory was registered first
         /// </returns>
-        public virtual bool Unregister(ICounterFactory factory) {
+        public virtual bool Unregister(IEventCounterFactory factory) {
             if (factory != null) {
-                return factories.Remove(factory);
+                return factories.JRemove(factory) != null;
             }
             return false;
         }

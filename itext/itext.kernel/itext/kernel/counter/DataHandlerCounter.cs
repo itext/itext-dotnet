@@ -41,20 +41,36 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Kernel.Counter.Context;
+using iText.Kernel.Counter.Data;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// Counter based on
+    /// <see cref="iText.Kernel.Counter.Data.EventDataHandler{T, V}"/>
+    /// .
+    /// Registers shutdown hook and thread for triggering event processing after wait time
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
+    /// 
+    /// 
+    public class DataHandlerCounter<T, V> : EventCounter
+        where V : EventData<T> {
+        private readonly EventDataHandler<T, V> dataHandler;
+
+        public DataHandlerCounter(EventDataHandler<T, V> dataHandler)
+            : this(dataHandler, UnknownContext.PERMISSIVE) {
+        }
+
+        public DataHandlerCounter(EventDataHandler<T, V> dataHandler, IContext fallback)
+            : base(fallback) {
+            this.dataHandler = dataHandler;
+            EventDataHandlerUtil.RegisterProcessAllShutdownHook<T, V>(dataHandler);
+            EventDataHandlerUtil.RegisterTimedProcessing<T, V>(dataHandler);
+        }
+
+        protected internal override void Process(IEvent @event) {
+            dataHandler.Register(@event);
         }
     }
 }

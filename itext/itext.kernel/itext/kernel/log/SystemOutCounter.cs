@@ -51,6 +51,8 @@ namespace iText.Kernel.Log {
     /// implementation that outputs information about read and written documents to
     /// <see cref="System.Console.Out"/>
     /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounter instead."
+        )]
     public class SystemOutCounter : ICounter {
         /// <summary>
         /// The name of the class for which the ICounter was created

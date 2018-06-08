@@ -44,25 +44,30 @@ address: sales@itextpdf.com
 using System;
 using Common.Logging;
 using iText.IO.Codec;
+using iText.IO.Util;
+using iText.Kernel.Counter.Context;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter {
     /// <summary>
     /// Default implementation of the
-    /// <see cref="ICounter"/>
+    /// <see cref="EventCounter"/>
     /// interface that essentially doesn't do anything.
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.DefaultEventCounter instead."
-        )]
-    public class DefaultCounter : ICounter {
-        private volatile int count = 0;
+    public class DefaultEventCounter : EventCounter {
+        private static readonly int[] REPEAT = new int[] { 10000, 5000, 1000 };
+
+        private readonly AtomicLong count = new AtomicLong();
 
         private int level = 0;
 
-        private readonly int[] repeat = new int[] { 10000, 5000, 1000 };
-
-        private int repeat_level = 10000;
+        private int repeatLevel = 10000;
 
         private ILog logger;
+
+        public DefaultEventCounter()
+            : base(UnknownContext.RESTRICTIVE) {
+        }
 
         private static byte[] message_1 = Convert.FromBase64String("DQoNCllvdSBhcmUgdXNpbmcgaVRleHQgdW5kZXIgdGhlIEFHUEwuDQoNCklmIHR"
              + "oaXMgaXMgeW91ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG" + "93biBzb3VyY2UgY29kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4NClBsZWFzZSBsZ"
@@ -82,16 +87,8 @@ namespace iText.Kernel.Log {
              + "gaW50ZW50aW9uLCBwbGVhc2UgY29udGFjdCB1cyBieSBmaWxsaW5nIG91dCB0aGlz" + "IGZvcm06IGh0dHA6Ly9pdGV4dHBkZi5jb20vc2FsZXMgb3IgYnkgY29udGFjdGluZ"
              + "yBvdXIgc2FsZXMgZGVwYXJ0bWVudC4=");
 
-        public virtual void OnDocumentRead(long size) {
-            PlusOne();
-        }
-
-        public virtual void OnDocumentWritten(long size) {
-            PlusOne();
-        }
-
-        private void PlusOne() {
-            if (++count > repeat_level) {
+        protected internal override void Process(IEvent @event) {
+            if (count.IncrementAndGet() > repeatLevel) {
                 if (iText.Kernel.Version.IsAGPLVersion() || iText.Kernel.Version.IsExpired()) {
                     String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1);
                     if (iText.Kernel.Version.IsExpired()) {
@@ -99,17 +96,17 @@ namespace iText.Kernel.Log {
                     }
                     level++;
                     if (level == 1) {
-                        repeat_level = repeat[1];
+                        repeatLevel = REPEAT[1];
                     }
                     else {
-                        repeat_level = repeat[2];
+                        repeatLevel = REPEAT[2];
                     }
                     if (logger == null) {
                         logger = LogManager.GetLogger(this.GetType());
                     }
                     logger.Info(message);
                 }
-                count = 0;
+                count.Set(0);
             }
         }
     }

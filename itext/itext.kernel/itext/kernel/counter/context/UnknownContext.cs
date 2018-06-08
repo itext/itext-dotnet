@@ -41,20 +41,36 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter.Context {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// The fallback
+    /// <see cref="IContext"/>
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
+    public class UnknownContext : IContext {
+        /// <summary>
+        /// The
+        /// <see cref="IContext"/>
+        /// that forbids all events
+        /// </summary>
+        public static readonly IContext RESTRICTIVE = new iText.Kernel.Counter.Context.UnknownContext(false);
+
+        /// <summary>
+        /// The
+        /// <see cref="IContext"/>
+        /// that allows all events
+        /// </summary>
+        public static readonly IContext PERMISSIVE = new iText.Kernel.Counter.Context.UnknownContext(true);
+
+        private readonly bool allowEvents;
+
+        public UnknownContext(bool allowEvents) {
+            this.allowEvents = allowEvents;
+        }
+
+        public virtual bool Allow(IEvent @event) {
+            return allowEvents;
         }
     }
 }

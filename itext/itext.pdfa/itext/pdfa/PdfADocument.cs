@@ -278,6 +278,7 @@ namespace iText.Pdfa {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
+        [Obsolete]
         protected override IList<ICounter> GetCounters() {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Pdfa.PdfADocument));
         }

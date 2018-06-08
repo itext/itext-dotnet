@@ -42,19 +42,28 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Log {
+namespace iText.Kernel.Counter.Context {
     /// <summary>
-    /// <see cref="ICounterFactory"/>
-    /// implementation that creates new
-    /// <see cref="SystemOutCounter"/>
-    /// on each call.
+    /// Generic context that allows
+    /// <see cref="iText.Kernel.Counter.Event.IGenericEvent"/>
+    /// based on the whitelist of supported IDs
     /// </summary>
-    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
-        )]
-    public class SystemOutCounterFactory : ICounterFactory {
-        public virtual ICounter GetCounter(Type cls) {
-            return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();
+    public class GenericContext : IContext {
+        private readonly ICollection<String> supported;
+
+        public GenericContext(ICollection<String> supported) {
+            this.supported = new HashSet<String>();
+            this.supported.AddAll(supported);
+        }
+
+        public virtual bool Allow(IEvent @event) {
+            if (@event is IGenericEvent) {
+                return supported.Contains(((IGenericEvent)@event).GetOriginId());
+            }
+            return false;
         }
     }
 }

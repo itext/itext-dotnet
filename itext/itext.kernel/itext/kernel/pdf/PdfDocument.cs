@@ -48,6 +48,8 @@ using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Counter;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Crypto;
 using iText.Kernel.Events;
 using iText.Kernel.Font;
@@ -1784,6 +1786,7 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
             try {
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, GetType());
                 if (reader != null) {
                     reader.pdfDocument = this;
                     reader.ReadPdf();
@@ -2050,6 +2053,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Log.ICounter"/>
         /// instances.
         /// </returns>
+        [Obsolete]
         protected internal virtual IList<ICounter> GetCounters() {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }

@@ -260,7 +260,13 @@ namespace iText.IO {
 
         public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
 
+        public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
+
+        public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in unexpected way";
+
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
+
+        public const String UNEXPECTED_EVENT_HANDLER_SERVICE_THREAD_EXCEPTION = "Unexpected exception encountered in service thread. Shutting it down.";
 
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";
 
