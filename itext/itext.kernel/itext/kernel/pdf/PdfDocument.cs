@@ -1783,6 +1783,7 @@ namespace iText.Kernel.Pdf {
         /// <see langword="null"/>
         /// otherwise
         /// </param>
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
             try {
