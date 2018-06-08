@@ -57,6 +57,7 @@ using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Pdfa;
 
 namespace iText.Signatures {
     /// <summary>Takes care of the cryptographic options and appearances that form a signature.</summary>
@@ -165,11 +166,11 @@ namespace iText.Signatures {
             }
             if (path == null) {
                 temporaryOS = new MemoryStream();
-                document = new PdfDocument(reader, new PdfWriter(temporaryOS), properties);
+                document = InitDocument(reader, new PdfWriter(temporaryOS), properties);
             }
             else {
                 this.tempFile = FileUtil.CreateTempFile(path);
-                document = new PdfDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), properties);
+                document = InitDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), properties);
             }
             originalOS = outputStream;
             signDate = DateTimeUtil.GetCurrentTime();
@@ -177,6 +178,17 @@ namespace iText.Signatures {
             appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             appearance.SetSignDate(signDate);
             closed = false;
+        }
+
+        protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
+             properties) {
+            PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
+            if (null == conformanceLevel) {
+                return new PdfDocument(reader, writer, properties);
+            }
+            else {
+                return new PdfADocument(reader, writer, properties);
+            }
         }
 
         /// <summary>Gets the signature date.</summary>
