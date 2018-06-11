@@ -530,52 +530,68 @@ namespace iText.Layout.Renderer {
             if (!otfFeaturesApplied && TypographyUtils.IsTypographyModuleInitialized() && text.start < text.end) {
                 if (HasOtfFont()) {
                     Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
-                    if (script == null) {
-                        ICollection<UnicodeScript> supportedScripts = null;
-                        if (typographyConfig != null) {
-                            supportedScripts = TypographyUtils.GetSupportedScripts(typographyConfig);
-                        }
-                        if (supportedScripts == null) {
-                            supportedScripts = TypographyUtils.GetSupportedScripts();
-                        }
-                        // Try to autodetect complex script.
-                        IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, int?>();
+                    ICollection<UnicodeScript> supportedScripts = null;
+                    if (typographyConfig != null) {
+                        supportedScripts = TypographyUtils.GetSupportedScripts(typographyConfig);
+                    }
+                    if (supportedScripts == null) {
+                        supportedScripts = TypographyUtils.GetSupportedScripts();
+                    }
+                    IList<TextRenderer.ScriptRange> scriptsRanges = new List<TextRenderer.ScriptRange>();
+                    if (script != null) {
+                        scriptsRanges.Add(new TextRenderer.ScriptRange(script, text.end));
+                    }
+                    else {
+                        // Try to autodetect script.
+                        TextRenderer.ScriptRange currRange = new TextRenderer.ScriptRange(null, text.end);
+                        scriptsRanges.Add(currRange);
                         for (int i = text.start; i < text.end; i++) {
                             int unicode = text.Get(i).GetUnicode();
                             if (unicode > -1) {
                                 UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
-                                if (scriptFrequency.ContainsKey(glyphScript)) {
-                                    scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
+                                if (UnicodeScript.COMMON.Equals(glyphScript) || UnicodeScript.UNKNOWN.Equals(glyphScript) || UnicodeScript
+                                    .INHERITED.Equals(glyphScript)) {
+                                    continue;
                                 }
-                                else {
-                                    scriptFrequency.Put(glyphScript, 1);
+                                if (glyphScript != currRange.script) {
+                                    if (currRange.script == null) {
+                                        currRange.script = glyphScript;
+                                    }
+                                    else {
+                                        currRange.rangeEnd = i;
+                                        currRange = new TextRenderer.ScriptRange(glyphScript, text.end);
+                                        scriptsRanges.Add(currRange);
+                                    }
                                 }
-                            }
-                        }
-                        int? max = 0;
-                        KeyValuePair<UnicodeScript, int?>? selectedEntry = null;
-                        foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
-                            UnicodeScript? entryScript = entry.Key;
-                            if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript
-                                ) && !UnicodeScript.INHERITED.Equals(entryScript)) {
-                                max = entry.Value;
-                                selectedEntry = entry;
-                            }
-                        }
-                        if (selectedEntry != null) {
-                            UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
-                            if ((selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW) && parent is LineRenderer
-                                ) {
-                                SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
-                            }
-                            if (supportedScripts != null && supportedScripts.Contains(selectScript)) {
-                                script = selectScript;
                             }
                         }
                     }
-                    if (script != null) {
-                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script, typographyConfig);
+                    int delta = 0;
+                    int origTextStart = text.start;
+                    int origTextEnd = text.end;
+                    int shapingRangeStart = text.start;
+                    foreach (TextRenderer.ScriptRange scriptsRange in scriptsRanges) {
+                        if (scriptsRange.script == null || !supportedScripts.Contains(EnumUtil.ThrowIfNull(scriptsRange.script))) {
+                            continue;
+                        }
+                        scriptsRange.rangeEnd += delta;
+                        text.start = shapingRangeStart;
+                        text.end = scriptsRange.rangeEnd;
+                        if ((scriptsRange.script == UnicodeScript.ARABIC || scriptsRange.script == UnicodeScript.HEBREW) && parent
+                             is LineRenderer) {
+                            // It's safe to set here BASE_DIRECTION to TextRenderer without additional checks, because
+                            // by convention this property makes sense only if it's applied to LineRenderer or it's
+                            // parents (Paragraph or above).
+                            // Only if it's not found there first, LineRenderer tries to fetch autodetected BaseDirection
+                            // from text renderers (see LineRenderer#applyOtf).
+                            SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
+                        }
+                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig);
+                        delta += text.end - scriptsRange.rangeEnd;
+                        scriptsRange.rangeEnd = shapingRangeStart = text.end;
                     }
+                    text.start = origTextStart;
+                    text.end = origTextEnd + delta;
                 }
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
@@ -719,7 +735,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_752();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_769();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -784,8 +800,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_752 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_752() {
+        private sealed class _IGlyphLineFilter_769 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_769() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1472,6 +1488,17 @@ namespace iText.Layout.Renderer {
             
             object IEnumerator.Current {
                 get { return Current; }
+            }
+        }
+
+        private class ScriptRange {
+            internal UnicodeScript? script;
+
+            internal int rangeEnd;
+
+            internal ScriptRange(UnicodeScript? script, int rangeEnd) {
+                this.script = script;
+                this.rangeEnd = rangeEnd;
             }
         }
     }
