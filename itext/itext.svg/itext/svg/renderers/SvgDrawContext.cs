@@ -62,6 +62,8 @@ namespace iText.Svg.Renderers {
 
         private readonly Stack<Rectangle> viewports = new Stack<Rectangle>();
 
+        private readonly Stack<String> useIds = new Stack<String>();
+
         private ResourceResolver resourceResolver;
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
@@ -161,6 +163,25 @@ namespace iText.Svg.Renderers {
         /// <param name="namedObjects">Map containing the named objects keyed to their ID strings</param>
         public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> namedObjects) {
             this.namedObjects.AddAll(namedObjects);
+        }
+
+        /// <summary>Returns true when this id has been used before</summary>
+        /// <param name="elementId">element id to check</param>
+        /// <returns>true if id has been encountered before through a use element</returns>
+        public virtual bool IsIdUsedByUseTagBefore(String elementId) {
+            return this.useIds.Contains(elementId);
+        }
+
+        /// <summary>Adds an ID that has been referenced by a use element.</summary>
+        /// <param name="elementId">referenced element ID</param>
+        public virtual void AddUsedId(String elementId) {
+            this.useIds.Push(elementId);
+        }
+
+        /// <summary>Removes an ID that has been referenced by a use element.</summary>
+        /// <param name="elementId">referenced element ID</param>
+        public virtual void RemoveUsedId(String elementId) {
+            this.useIds.Pop();
         }
     }
 }

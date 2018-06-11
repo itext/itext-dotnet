@@ -45,6 +45,7 @@ using System.Collections.Generic;
 
 namespace iText.Svg.Utils {
     public class SvgCssUtilsTest {
+        [NUnit.Framework.Test]
         public virtual void CommaSplitValueTest() {
             String input = "a,b,c,d";
             IList<String> expected = new List<String>();
@@ -52,6 +53,20 @@ namespace iText.Svg.Utils {
             expected.Add("b");
             expected.Add("c");
             expected.Add("d");
+            IList<String> actual = SvgCssUtils.SplitValueList(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LeadingAndTrailingWhiteSpaceTest() {
+            String input = "          -140.465,-116.438 -163.725,-103.028 -259.805,-47.618         ";
+            IList<String> expected = new List<String>();
+            expected.Add("-140.465");
+            expected.Add("-116.438");
+            expected.Add("-163.725");
+            expected.Add("-103.028");
+            expected.Add("-259.805");
+            expected.Add("-47.618");
             IList<String> actual = SvgCssUtils.SplitValueList(input);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

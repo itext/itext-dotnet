@@ -84,5 +84,12 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void EmptySvgTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "empty");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TranslatedSvgTest() {
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "translated");
+        }
     }
 }

@@ -15,27 +15,30 @@ namespace iText.Svg.Renderers.Impl {
                 if (elementToReUse == null) {
                     elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
                 }
-                if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse)) {
-                    ISvgNodeRenderer namedObject = context.GetNamedObject(NormalizeName(elementToReUse));
-                    if (namedObject != null) {
-                        PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                        float x = 0f;
-                        float y = 0f;
-                        if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                            x = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X));
+                if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
+                    String normalizedName = NormalizeName(elementToReUse);
+                    if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
+                        ISvgNodeRenderer namedObject = context.GetNamedObject(normalizedName);
+                        if (namedObject != null) {
+                            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                            float x = 0f;
+                            float y = 0f;
+                            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
+                                x = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X));
+                            }
+                            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
+                                y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                            }
+                            if (x != 0 || y != 0) {
+                                AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
+                                currentCanvas.ConcatMatrix(translation);
+                            }
+                            // setting the parent of the referenced element to this instance
+                            namedObject.SetParent(this);
+                            namedObject.Draw(context);
+                            // unsetting the parent of the referenced element
+                            namedObject.SetParent(null);
                         }
-                        if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                            y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
-                        }
-                        if (x != 0 || y != 0) {
-                            AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
-                            currentCanvas.ConcatMatrix(translation);
-                        }
-                        // setting the parent of the referenced element to this instance
-                        namedObject.SetParent(this);
-                        namedObject.Draw(context);
-                        // unsetting the parent of the referenced element
-                        namedObject.SetParent(null);
                     }
                 }
             }
@@ -47,6 +50,10 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>filtered value</returns>
         private String NormalizeName(String name) {
             return name.Replace("#", "").Trim();
+        }
+
+        private bool IsValidHref(String name) {
+            return name.StartsWith("#");
         }
     }
 }

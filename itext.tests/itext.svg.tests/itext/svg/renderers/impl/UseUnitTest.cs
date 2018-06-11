@@ -16,7 +16,7 @@ namespace iText.Svg.Renderers.Impl {
             PdfPage page = pdfDocument.AddNewPage();
             context.PushCanvas(new PdfCanvas(page));
             ISvgNodeRenderer use = new UseSvgNodeRenderer();
-            use.SetAttribute(SvgConstants.Attributes.HREF, "dummy");
+            use.SetAttribute(SvgConstants.Attributes.HREF, "#dummy");
             use.Draw(context);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsTrue(renderer.IsDrawn());

@@ -62,6 +62,7 @@ namespace iText.Svg.Utils {
         public static IList<String> SplitValueList(String value) {
             IList<String> result = new List<String>();
             if (value != null && value.Length > 0) {
+                value = value.Trim();
                 String[] list = iText.IO.Util.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
                 result.AddAll(JavaUtil.ArraysAsList(list));
             }

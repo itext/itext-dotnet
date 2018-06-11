@@ -53,6 +53,7 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;rect&gt; tag.
     /// </summary>
     public class RectangleSvgNodeRenderer : AbstractSvgNodeRenderer {
+        /// <summary>Constructs a RectangleSvgNodeRenderer.</summary>
         public RectangleSvgNodeRenderer() {
             attributesAndStyles = new Dictionary<String, String>();
         }

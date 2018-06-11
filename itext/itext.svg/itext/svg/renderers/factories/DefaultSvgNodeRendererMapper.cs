@@ -62,7 +62,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.DEFS, typeof(NoDrawOperationSvgNodeRenderer));
             result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.G, typeof(BranchSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.G, typeof(GroupSvgNodeRenderer));
             result.Put(SvgConstants.Tags.IMAGE, typeof(ImageSvgNodeRenderer));
             result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
             result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
@@ -129,6 +129,7 @@ namespace iText.Svg.Renderers.Factories {
             ignored.Add(SvgConstants.Tags.RADIAL_GRADIENT);
             ignored.Add(SvgConstants.Tags.STOP);
             ignored.Add(SvgConstants.Tags.STYLE);
+            ignored.Add(SvgConstants.Tags.TITLE);
             return ignored;
         }
     }

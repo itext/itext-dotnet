@@ -40,15 +40,21 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Pdf.Canvas;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>This renderer represents a branch in an SVG tree.</summary>
     /// <remarks>This renderer represents a branch in an SVG tree. It doesn't do anything aside from calling the superclass doDraw.
     ///     </remarks>
-    public class BranchSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+    public class GroupSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
-            base.DoDraw(context);
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            foreach (ISvgNodeRenderer child in GetChildren()) {
+                currentCanvas.SaveState();
+                child.Draw(context);
+                currentCanvas.RestoreState();
+            }
         }
     }
 }

@@ -94,10 +94,16 @@ namespace iText.Svg.Renderers.Impl {
                         currentCanvas.ConcatMatrix(transformation);
                     }
                 }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
+                    context.AddUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
+                }
             }
             PreDraw(context);
             DoDraw(context);
             PostDraw(context);
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
+                context.RemoveUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
+            }
         }
 
         /// <summary>Operations to perform before drawing an element.</summary>

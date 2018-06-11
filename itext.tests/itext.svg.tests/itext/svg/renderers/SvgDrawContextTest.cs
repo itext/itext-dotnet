@@ -148,7 +148,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void AddISvgNodeRender() {
             String name = "expected";
-            ISvgNodeRenderer expected = new BranchSvgNodeRenderer();
+            ISvgNodeRenderer expected = new GroupSvgNodeRenderer();
             this.context.AddNamedObject(name, expected);
             Object actual = this.context.GetNamedObject(name);
             NUnit.Framework.Assert.AreEqual(expected, actual);
