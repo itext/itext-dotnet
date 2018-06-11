@@ -313,6 +313,8 @@ namespace iText.Layout.Properties {
 
         public const int TRANSFORM = 53;
 
+        public const int TYPOGRAPHY_CONFIG = 117;
+
         public const int UNDERLINE = 74;
 
         public const int VERTICAL_ALIGNMENT = 75;
@@ -335,7 +337,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 108;
+        private const int MAX_INHERITED_PROPERTY_ID = 117;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -369,6 +371,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TAGGING_HELPER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TYPOGRAPHY_CONFIG] = true;
         }
 
         /// <summary>

@@ -92,8 +92,6 @@ namespace iText.IO {
 
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
-        public const String EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED = "No destination in the target was specified for action. Destination entry is mandatory for embedded go-to actions.";
-
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
 
         public const String DOCFONT_HAS_ILLEGAL_DIFFERENCES = "Document Font has illegal differences array. Entry {0} references a glyph ID over 255 and will be ignored.";
@@ -105,6 +103,8 @@ namespace iText.IO {
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
+
+        public const String EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED = "No destination in the target was specified for action. Destination entry is mandatory for embedded go-to actions.";
 
         public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
 
@@ -143,20 +143,20 @@ namespace iText.IO {
 
         public const String IMAGE_HAS_AMBIGUOUS_SCALE = "The image cannot be auto scaled and scaled by a certain parameter simultaneously";
 
-        public const String IMAGE_HAS_JBIG2DECODE_FILTER = "Image cannot be inline if it has JBIG2Decode filter. It will be added as an ImageXObject";
-
-        public const String IMAGE_HAS_JPXDECODE_FILTER = "Image cannot be inline if it has JPXDecode filter. It will be added as an ImageXObject";
+        public const String IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
+             = "Image has icc profile with incompatible number of color components compared to base color space in image indexed color space. The icc profile will be ignored.";
 
         public const String IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
              = "Image has icc profile with incompatible number of color components compared to image color space. The icc profile will be ignored.";
-
-        public const String IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
-             = "Image has icc profile with incompatible number of color components compared to base color space in image indexed color space. The icc profile will be ignored.";
 
         public const String IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
              = "Image has incorrect or unsupported base color space in indexed color space, it will be overridden by one based on embedded icc profile.";
 
         public const String IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE = "Image has incorrect or unsupported color space, that will be overridden by one based on embedded icc profile.";
+
+        public const String IMAGE_HAS_JBIG2DECODE_FILTER = "Image cannot be inline if it has JBIG2Decode filter. It will be added as an ImageXObject";
+
+        public const String IMAGE_HAS_JPXDECODE_FILTER = "Image cannot be inline if it has JPXDecode filter. It will be added as an ImageXObject";
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
@@ -242,6 +242,8 @@ namespace iText.IO {
 
         public const String START_MARKER_MISSING_IN_PFB_FILE = "Start marker is missing in the pfb file";
 
+        public const String STDSCRIPTCONFIG_DESIGNED_ONLY_FOR_STD_SCRIPTS = "StandardScriptConfig class is designed for only standard scripts, otherwise it might be incompatible.";
+
         public const String STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION = "Structure destinations shall specify structure element ID in remote go-to actions. Structure element has been replaced with its ID in the structure destination";
 
         public const String SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100 = "Sum of table columns is greater than 100%.";
@@ -254,11 +256,11 @@ namespace iText.IO {
 
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
+        public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
+
         public const String TYPE3_FONT_CANNOT_BE_ADDED = "Type 3 font cannot be added to FontSet. Custom FontProvider class may be created for this purpose.";
 
         public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
-
-        public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
 
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 

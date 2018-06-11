@@ -95,6 +95,10 @@ namespace iText.IO.Util {
             return new UnmodifiableSet<T>(set);
         }
 
+        public static ISet<T> Singleton<T>(T o) {
+            return new SingletonSet<T>(o);
+        }
+
         public static IList<T> SingletonList<T>(T o) {
             return new SingletonList<T>(o);
         }

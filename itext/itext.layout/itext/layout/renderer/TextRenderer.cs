@@ -527,46 +527,55 @@ namespace iText.Layout.Renderer {
         public virtual void ApplyOtf() {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
-            if (!otfFeaturesApplied) {
-                if (script == null && TypographyUtils.IsTypographyModuleInitialized()) {
-                    // Try to autodetect complex script.
-                    ICollection<UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts();
-                    IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, int?>();
-                    for (int i = text.start; i < text.end; i++) {
-                        int unicode = text.Get(i).GetUnicode();
-                        if (unicode > -1) {
-                            UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
-                            if (scriptFrequency.ContainsKey(glyphScript)) {
-                                scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
+            if (!otfFeaturesApplied && TypographyUtils.IsTypographyModuleInitialized() && text.start < text.end) {
+                if (HasOtfFont()) {
+                    Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
+                    if (script == null) {
+                        ICollection<UnicodeScript> supportedScripts = null;
+                        if (typographyConfig != null) {
+                            supportedScripts = TypographyUtils.GetSupportedScripts(typographyConfig);
+                        }
+                        if (supportedScripts == null) {
+                            supportedScripts = TypographyUtils.GetSupportedScripts();
+                        }
+                        // Try to autodetect complex script.
+                        IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, int?>();
+                        for (int i = text.start; i < text.end; i++) {
+                            int unicode = text.Get(i).GetUnicode();
+                            if (unicode > -1) {
+                                UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
+                                if (scriptFrequency.ContainsKey(glyphScript)) {
+                                    scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
+                                }
+                                else {
+                                    scriptFrequency.Put(glyphScript, 1);
+                                }
                             }
-                            else {
-                                scriptFrequency.Put(glyphScript, 1);
+                        }
+                        int? max = 0;
+                        KeyValuePair<UnicodeScript, int?>? selectedEntry = null;
+                        foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
+                            UnicodeScript? entryScript = entry.Key;
+                            if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript
+                                ) && !UnicodeScript.INHERITED.Equals(entryScript)) {
+                                max = entry.Value;
+                                selectedEntry = entry;
+                            }
+                        }
+                        if (selectedEntry != null) {
+                            UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
+                            if ((selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW) && parent is LineRenderer
+                                ) {
+                                SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
+                            }
+                            if (supportedScripts != null && supportedScripts.Contains(selectScript)) {
+                                script = selectScript;
                             }
                         }
                     }
-                    int? max = 0;
-                    KeyValuePair<UnicodeScript, int?>? selectedEntry = null;
-                    foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
-                        UnicodeScript? entryScript = entry.Key;
-                        if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript
-                            ) && !UnicodeScript.INHERITED.Equals(entryScript)) {
-                            max = entry.Value;
-                            selectedEntry = entry;
-                        }
+                    if (script != null) {
+                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script, typographyConfig);
                     }
-                    if (selectedEntry != null) {
-                        UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
-                        if ((selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW) && parent is LineRenderer
-                            ) {
-                            SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
-                        }
-                        if (supportedScripts != null && supportedScripts.Contains(selectScript)) {
-                            script = selectScript;
-                        }
-                    }
-                }
-                if (HasOtfFont() && script != null) {
-                    TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
                 }
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
@@ -710,7 +719,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_742();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_752();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -775,8 +784,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_742 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_742() {
+        private sealed class _IGlyphLineFilter_752 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_752() {
             }
 
             public bool Accept(Glyph glyph) {
