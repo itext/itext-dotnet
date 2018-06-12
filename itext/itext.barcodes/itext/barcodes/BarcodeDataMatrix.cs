@@ -1331,40 +1331,41 @@ namespace iText.Barcodes {
                 f[4][0] = X12Encodation(text, textOffset, 1, dataDynamic[4], dataOffset, dataSize, 0, -1, dataOffset);
                 f[5][0] = EdifactEncodation(text, textOffset, 1, dataDynamic[5], dataOffset, dataSize, 0, -1, dataOffset, 
                     sizeFixed);
-                int[] dataNewOffset = new int[6];
                 for (int i = 1; i < textSize; i++) {
                     int[] tempForMin = new int[6];
-                    for (int k = 0; k < 6; k++) {
-                        dataNewOffset[k] = f[k][i - 1] >= 0 ? f[k][i - 1] : int.MaxValue;
-                    }
                     for (int currEnc = 0; currEnc < 6; currEnc++) {
                         byte[][] dataDynamicInner = new byte[][] { new byte[data.Length], new byte[data.Length], new byte[data.Length
                             ], new byte[data.Length], new byte[data.Length], new byte[data.Length] };
                         for (int prevEnc = 0; prevEnc < 6; prevEnc++) {
                             Array.Copy(dataDynamic[prevEnc], 0, dataDynamicInner[prevEnc], 0, data.Length);
-                            if (currEnc == 0) {
-                                tempForMin[prevEnc] = AsciiEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
+                            if (f[prevEnc][i - 1] < 0) {
+                                tempForMin[prevEnc] = -1;
                             }
-                            if (currEnc == 1) {
-                                tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset
-                                    [prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], true, i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 2) {
-                                tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset
-                                    [prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], false, i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 3) {
-                                tempForMin[prevEnc] = B256Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 4) {
-                                tempForMin[prevEnc] = X12Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 5) {
-                                tempForMin[prevEnc] = EdifactEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[
-                                    prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset, sizeFixed);
+                            else {
+                                if (currEnc == 0) {
+                                    tempForMin[prevEnc] = AsciiEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1
+                                        ] + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 1) {
+                                    tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i
+                                         - 1] + dataOffset, dataSize - f[prevEnc][i - 1], true, i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 2) {
+                                    tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i
+                                         - 1] + dataOffset, dataSize - f[prevEnc][i - 1], false, i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 3) {
+                                    tempForMin[prevEnc] = B256Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1]
+                                         + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 4) {
+                                    tempForMin[prevEnc] = X12Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1] 
+                                        + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 5) {
+                                    tempForMin[prevEnc] = EdifactEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i -
+                                         1] + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset, sizeFixed);
+                                }
                             }
                         }
                         SolveFAndSwitchMode(tempForMin, currEnc, i);
