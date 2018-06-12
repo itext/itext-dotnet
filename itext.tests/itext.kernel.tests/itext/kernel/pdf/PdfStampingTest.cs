@@ -44,6 +44,10 @@ using System;
 using System.IO;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Events;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Test;
 
@@ -1206,6 +1210,46 @@ namespace iText.Kernel.Pdf {
             else {
                 VerifyPdfPagesCount(kids);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StampingStreamNoEndingWhitespace01() {
+            //TODO: DEVSIX-2007
+            System.Console.Out.WriteLine(destinationFolder);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                ), new PdfWriter(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf", new WriterProperties().
+                SetCompressionLevel(0)));
+            PdfDocument pdfDocInput = new PdfDocument(new PdfReader(sourceFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                ));
+            PdfDocument pdfDocOutput = new PdfDocument(new PdfWriter(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                , new WriterProperties().SetCompressionLevel(0)));
+            pdfDocOutput.AddEventHandler(PdfDocumentEvent.END_PAGE, new _T144523969(this));
+            pdfDocInput.CopyPagesTo(1, pdfDocInput.GetNumberOfPages(), pdfDocOutput);
+            pdfDocInput.Close();
+            pdfDocOutput.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                , sourceFolder + "cmp_stampingStreamNoEndingWhitespace01.pdf", destinationFolder, "diff_"));
+        }
+
+        internal class _T144523969 : IEventHandler {
+            public virtual void HandleEvent(Event @event) {
+                PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
+                PdfPage page = pdfEvent.GetPage();
+                PdfCanvas pdfCanvas = new PdfCanvas(page);
+                try {
+                    pdfCanvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(), 12.0f).ShowText("Text").EndText();
+                }
+                catch (System.IO.IOException) {
+                }
+            }
+
+            internal _T144523969(PdfStampingTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly PdfStampingTest _enclosing;
         }
     }
 }
