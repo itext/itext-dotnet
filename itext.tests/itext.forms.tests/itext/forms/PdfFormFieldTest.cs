@@ -43,10 +43,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -398,6 +403,31 @@ namespace iText.Forms {
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_flushedPagesTest.pdf", destinationFolder
                 , "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFormWithDefaultResourcesUpdateFont() {
+            String outPdf = destinationFolder + "fillFormWithDefaultResourcesUpdateFont.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithDefaultResourcesUpdateFont.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "formWithDefaultResources.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            PdfFormField field = fields.Get("Text1");
+            // TODO DEVSIX-2016: the font in /DR of AcroForm dict is not updated, even though /DA field is updated.
+            field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+            field.SetValue("New value size must be 8, but with different font.");
+            new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph
+                ("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."));
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
