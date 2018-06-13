@@ -4,6 +4,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Renderer implementing the use tag.</summary>
@@ -29,7 +30,7 @@ namespace iText.Svg.Renderers.Impl {
                             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
                                 y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
                             }
-                            if (x != 0 || y != 0) {
+                            if (SvgMathUtils.CompareFloats(x, 0) || SvgMathUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
                                 currentCanvas.ConcatMatrix(translation);
                             }

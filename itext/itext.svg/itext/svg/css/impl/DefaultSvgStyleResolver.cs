@@ -82,8 +82,8 @@ namespace iText.Svg.Css.Impl {
             try {
                 this.internalStyleSheet = CssStyleSheetParser.Parse(defaultCssStream);
             }
-            catch (System.IO.IOException) {
-                this.logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
+            catch (System.IO.IOException e) {
+                this.logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
                 this.internalStyleSheet = new CssStyleSheet();
             }
             try {
@@ -172,7 +172,7 @@ namespace iText.Svg.Css.Impl {
                                     (styleSheetUri).ToExternalForm());
                                 this.internalStyleSheet.AppendCssStyleSheet(styleSheet);
                             }
-                            catch (Exception exc) {
+                            catch (System.IO.IOException exc) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
                                 logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
                             }
@@ -194,7 +194,7 @@ namespace iText.Svg.Css.Impl {
         /// instances
         /// </returns>
         public virtual IList<CssFontFaceRule> GetFonts() {
-            return fonts;
+            return new List<CssFontFaceRule>(fonts);
         }
 
         /// <summary>Collects fonts from the style sheet.</summary>

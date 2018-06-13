@@ -156,7 +156,7 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Gets the font face sources.</summary>
         /// <returns>the sources</returns>
         public virtual IList<FontFace.FontFaceSrc> GetSources() {
-            return sources;
+            return new List<FontFace.FontFaceSrc>(sources);
         }
 
         /// <summary>Instantiates a new font face.</summary>
@@ -164,7 +164,7 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="sources">the sources</param>
         private FontFace(String alias, IList<FontFace.FontFaceSrc> sources) {
             this.alias = alias;
-            this.sources = sources;
+            this.sources = new List<FontFace.FontFaceSrc>(sources);
         }
 
         /// <summary>Class that defines a font face source.</summary>
