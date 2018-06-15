@@ -148,6 +148,8 @@ namespace iText.Kernel.Pdf {
 
         private long documentId;
 
+        private VersionInfo versionInfo = iText.Kernel.Version.GetInstance().GetInfo();
+
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
         /// Yet not copied link annotations from the other documents.
@@ -263,7 +265,7 @@ namespace iText.Kernel.Pdf {
                 AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, iText.Kernel.Version.GetInstance().GetVersion());
+                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, versionInfo.GetVersion());
                     SetXmpMetadata(xmpMeta);
                 }
                 catch (XMPException) {
@@ -1843,20 +1845,12 @@ namespace iText.Kernel.Pdf {
                         writer.crypto = reader.decrypt;
                     }
                     writer.document = this;
-                    String producer = null;
                     if (reader == null) {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
-                        producer = iText.Kernel.Version.GetInstance().GetVersion();
                     }
-                    else {
-                        if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                            producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
-                        }
-                        producer = AddModifiedPostfix(producer);
-                    }
+                    UpdateProducerInInfoDictionary();
                     info.AddModDate();
-                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
@@ -2059,10 +2053,16 @@ namespace iText.Kernel.Pdf {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }
 
+        /// <summary>Gets iText version info.</summary>
+        /// <returns>iText version info.</returns>
+        internal VersionInfo GetVersionInfo() {
+            return versionInfo;
+        }
+
         private void UpdateProducerInInfoDictionary() {
             String producer = null;
             if (reader == null) {
-                producer = iText.Kernel.Version.GetInstance().GetVersion();
+                producer = versionInfo.GetVersion();
             }
             else {
                 if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
@@ -2299,9 +2299,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private String AddModifiedPostfix(String producer) {
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
-                return version.GetVersion();
+            if (producer == null || !versionInfo.GetVersion().Contains(versionInfo.GetProduct())) {
+                return versionInfo.GetVersion();
             }
             else {
                 int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
@@ -2313,7 +2312,7 @@ namespace iText.Kernel.Pdf {
                     buf = new StringBuilder(producer.JSubstring(0, idx));
                 }
                 buf.Append("; modified using ");
-                buf.Append(version.GetVersion());
+                buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
             }
         }

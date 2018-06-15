@@ -385,12 +385,12 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = document.GetWriter();
             FingerPrint fingerPrint = document.GetFingerPrint();
             String platform = " for .NET";
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            String k = version.GetKey();
+            VersionInfo versionInfo = document.GetVersionInfo();
+            String k = versionInfo.GetKey();
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, versionInfo.GetRelease(), platform));
             foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
                 writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
             }

@@ -87,12 +87,27 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private String producerLine = iTextProductName + " " + release + " \u00a92000-2018 iText Group NV";
+        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2018 iText Group NV";
 
-        /// <summary>The license key.</summary>
-        private String key = null;
+        /// <summary>The version info;</summary>
+        private readonly VersionInfo info;
 
         private bool expired;
+
+        /// <depricated>
+        /// Use
+        /// <see cref="GetInstance()"/>
+        /// instead. Will be removed in next major release.
+        /// </depricated>
+        [Obsolete]
+        public Version() {
+            this.info = new VersionInfo(iTextProductName, release, producerLine, null);
+        }
+
+        private Version(VersionInfo info, bool expired) {
+            this.info = info;
+            this.expired = expired;
+        }
 
         /// <summary>Gets an instance of the iText version that is currently used.</summary>
         /// <remarks>
@@ -106,21 +121,22 @@ namespace iText.Kernel {
                     return version;
                 }
             }
-            iText.Kernel.Version localVersion = new iText.Kernel.Version();
+            iText.Kernel.Version localVersion;
+            String key = null;
             try {
                 String coreVersion = release;
                 String[] info = GetLicenseeInfoFromLicenseKey(coreVersion);
                 if (info != null) {
                     if (info[3] != null && info[3].Trim().Length > 0) {
-                        localVersion.key = info[3];
+                        key = info[3];
                     }
                     else {
-                        localVersion.key = "Trial version ";
+                        key = "Trial version ";
                         if (info[5] == null) {
-                            localVersion.key += "unauthorised";
+                            key += "unauthorised";
                         }
                         else {
-                            localVersion.key += info[5];
+                            key += info[5];
                         }
                     }
                     if (info.Length > 6) {
@@ -130,27 +146,27 @@ namespace iText.Kernel {
                         }
                     }
                     if (info[4] != null && info[4].Trim().Length > 0) {
-                        localVersion.producerLine = info[4];
+                        localVersion = InitVersion(info[4], key, false);
                     }
                     else {
                         if (info[2] != null && info[2].Trim().Length > 0) {
-                            localVersion.AddLicensedPostfix(info[2]);
+                            localVersion = InitDefaultLicensedVersion(info[2], key);
                         }
                         else {
                             if (info[0] != null && info[0].Trim().Length > 0) {
                                 // fall back to contact name, if company name is unavailable.
                                 // we shouldn't have a licensed version without company name,
                                 // but let's account for it anyway
-                                localVersion.AddLicensedPostfix(info[0]);
+                                localVersion = InitDefaultLicensedVersion(info[0], key);
                             }
                             else {
-                                localVersion.AddAGPLPostfix(null);
+                                localVersion = InitAGPLVersion(null, key);
                             }
                         }
                     }
                 }
                 else {
-                    localVersion.AddAGPLPostfix(null);
+                    localVersion = InitAGPLVersion(null, key);
                 }
             }
             catch (LicenseVersionException lve) {
@@ -160,7 +176,7 @@ namespace iText.Kernel {
             }
             catch (TypeLoadException) {
                 //License key library not on classpath, switch to AGPL
-                localVersion.AddAGPLPostfix(null);
+                localVersion = InitAGPLVersion(null, key);
             }
             catch (Exception e) {
                 //Check if an iText5 license is loaded
@@ -171,7 +187,7 @@ namespace iText.Kernel {
                             );
                     }
                 }
-                localVersion.AddAGPLPostfix(e.InnerException);
+                localVersion = InitAGPLVersion(e.InnerException, key);
             }
             return AtomicSetVersion(localVersion);
         }
@@ -196,7 +212,7 @@ namespace iText.Kernel {
         /// </remarks>
         /// <returns>the product name</returns>
         public String GetProduct() {
-            return iTextProductName;
+            return info.GetProduct();
         }
 
         /// <summary>Gets the release number.</summary>
@@ -207,7 +223,7 @@ namespace iText.Kernel {
         /// </remarks>
         /// <returns>the release number</returns>
         public String GetRelease() {
-            return release;
+            return info.GetRelease();
         }
 
         /// <summary>Returns the iText version as shown in the producer line.</summary>
@@ -219,30 +235,40 @@ namespace iText.Kernel {
         /// </remarks>
         /// <returns>iText version</returns>
         public String GetVersion() {
-            return producerLine;
+            return info.GetVersion();
         }
 
         /// <summary>Returns a license key if one was provided, or null if not.</summary>
         /// <returns>a license key.</returns>
         public String GetKey() {
-            return key;
+            return info.GetKey();
         }
 
-        private void AddLicensedPostfix(String ownerName) {
-            producerLine += " (" + ownerName;
+        /// <summary>Returns a version info in one class</summary>
+        /// <returns>a version info.</returns>
+        public VersionInfo GetInfo() {
+            return info;
+        }
+
+        private static iText.Kernel.Version InitDefaultLicensedVersion(String ownerName, String key) {
+            String producer = producerLine + " (" + ownerName;
             if (!key.ToLowerInvariant().StartsWith("trial")) {
-                producerLine += "; licensed version)";
+                producer += "; licensed version)";
             }
             else {
-                producerLine += "; " + key + ")";
+                producer += "; " + key + ")";
             }
+            return InitVersion(producer, key, false);
         }
 
-        private void AddAGPLPostfix(Exception cause) {
-            producerLine += AGPL;
-            if (cause != null && cause.Message != null && cause.Message.Contains("expired")) {
-                expired = true;
-            }
+        private static iText.Kernel.Version InitAGPLVersion(Exception cause, String key) {
+            String producer = producerLine + AGPL;
+            bool expired = cause != null && cause.Message != null && cause.Message.Contains("expired");
+            return InitVersion(producer, key, expired);
+        }
+
+        private static iText.Kernel.Version InitVersion(String producer, String key, bool expired) {
+            return new iText.Kernel.Version(new VersionInfo(iTextProductName, release, producer, key), expired);
         }
 
         private static void CheckLicenseVersion(String coreVersionString, String licenseVersionString) {
