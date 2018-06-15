@@ -41,20 +41,24 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.Barcodes.Dmcode {
     public class Placement {
-        private int nrow;
+        private readonly int nrow;
 
-        private int ncol;
+        private readonly int ncol;
 
-        private short[] array;
+        private readonly short[] array;
 
-        private static readonly IDictionary<int, short[]> cache = new Dictionary<int, short[]>();
+        private static readonly IDictionary<int, short[]> cache = new ConcurrentDictionary<int, short[]>();
 
-        private Placement() {
+        private Placement(int nrow, int ncol) {
+            this.nrow = nrow;
+            this.ncol = ncol;
+            array = new short[nrow * ncol];
         }
 
         /// <summary>Execute the placement</summary>
@@ -67,10 +71,7 @@ namespace iText.Barcodes.Dmcode {
             if (pc != null) {
                 return pc;
             }
-            iText.Barcodes.Dmcode.Placement p = new iText.Barcodes.Dmcode.Placement();
-            p.nrow = nrow;
-            p.ncol = ncol;
-            p.array = new short[nrow * ncol];
+            iText.Barcodes.Dmcode.Placement p = new iText.Barcodes.Dmcode.Placement(nrow, ncol);
             p.Ecc200();
             cache.Put(key, p.array);
             return p.array;
