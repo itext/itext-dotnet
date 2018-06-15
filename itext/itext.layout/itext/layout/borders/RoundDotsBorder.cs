@@ -218,7 +218,7 @@ namespace iText.Layout.Borders {
                     x0 -= innerRadiusFirst;
                     y0 += borderWidthBefore / 2;
                     x3 -= innerRadiusSecond;
-                    y3 -= borderWidthAfter;
+                    y3 -= borderWidthAfter / 2;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0, y0 - 10));
                     clipPoint2 = GetIntersectionPoint(new Point(x2 + width, y2 - borderWidthAfter), new Point(x2, y2), new Point
@@ -285,7 +285,7 @@ namespace iText.Layout.Borders {
                     x0 += innerRadiusFirst;
                     y0 -= borderWidthBefore / 2;
                     x3 += innerRadiusSecond;
-                    y3 += borderWidthAfter;
+                    y3 += borderWidthAfter / 2;
                     clipPoint1 = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), new Point(x1, y1), new Point
                         (x0, y0), new Point(x0, y0 + 10));
                     clipPoint2 = GetIntersectionPoint(new Point(x2 - width, y2 + borderWidthAfter), new Point(x2, y2), new Point
