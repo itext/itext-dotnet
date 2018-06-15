@@ -69,7 +69,6 @@ namespace iText.Forms.Fields {
     /// This class represents a single field or field group in an
     /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>
     /// .
-    /// <p>
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -2268,25 +2267,16 @@ namespace iText.Forms.Fields {
         /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
         /// define such properties as the field's text size and color.
         /// </summary>
-        /// <remarks>
-        /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
-        /// define such properties as the field's text size and color.
-        /// If form field has the same default appearance (incl. inherited) it won't be updated.
-        /// </remarks>
         /// <param name="defaultAppearance">a valid sequence of PDF content stream syntax</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
-            PdfString prev = GetDefaultAppearance();
-            if (prev == null || !defaultAppearance.Trim().Equals(prev.GetValue().Trim()) || true) {
-                byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
-                int len = b.Length;
-                for (int k = 0; k < len; ++k) {
-                    if (b[k] == '\n') {
-                        b[k] = 32;
-                    }
+            byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
+            for (int k = 0; k < b.Length; ++k) {
+                if (b[k] == '\n') {
+                    b[k] = 32;
                 }
-                GetPdfObject().Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
             }
+            GetPdfObject().Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
             return this;
         }
 
@@ -3765,6 +3755,28 @@ namespace iText.Forms.Fields {
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
+        /// <param name="fontSize">the size of the font</param>
+        /// <returns>
+        /// a new
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// </returns>
+        /// <seealso cref="DrawPushButtonAppearance(float, float, System.String, iText.Kernel.Font.PdfFont, iText.Kernel.Pdf.PdfName, float)
+        ///     "/>
+        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
+        protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
+            PdfFont font, float fontSize) {
+            return DrawPushButtonAppearance(width, height, text, font, null, fontSize);
+        }
+
+        /// <summary>Draws the appearance for a push button.</summary>
+        /// <param name="width">the width of the pushbutton</param>
+        /// <param name="height">the width of the pushbutton</param>
+        /// <param name="text">the text to display on the button</param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </param>
+        /// <param name="fontName">fontName in DR.</param>
         /// <param name="fontSize">the size of the font</param>
         /// <returns>
         /// a new
