@@ -2268,17 +2268,25 @@ namespace iText.Forms.Fields {
         /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
         /// define such properties as the field's text size and color.
         /// </summary>
+        /// <remarks>
+        /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
+        /// define such properties as the field's text size and color.
+        /// If form field has the same default appearance (incl. inherited) it won't be updated.
+        /// </remarks>
         /// <param name="defaultAppearance">a valid sequence of PDF content stream syntax</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
-            byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
-            int len = b.Length;
-            for (int k = 0; k < len; ++k) {
-                if (b[k] == '\n') {
-                    b[k] = 32;
+            PdfString prev = GetDefaultAppearance();
+            if (prev == null || !defaultAppearance.Trim().Equals(prev.GetValue().Trim())) {
+                byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
+                int len = b.Length;
+                for (int k = 0; k < len; ++k) {
+                    if (b[k] == '\n') {
+                        b[k] = 32;
+                    }
                 }
+                GetPdfObject().Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
             }
-            GetPdfObject().Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
             return this;
         }
 
@@ -2679,7 +2687,7 @@ namespace iText.Forms.Fields {
                         appearance.SetBBox(new PdfArray(new float[] { 0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
                             () }));
                     }
-                    if (appearance == null) {
+                    else {
                         appearance = new AppearanceXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
                             ()));
                     }
@@ -2826,9 +2834,12 @@ namespace iText.Forms.Fields {
         private float NormalizeFontSize(float fs, PdfFont localFont, PdfArray bBox, String value) {
             if (fs == 0) {
                 if (IsMultiline()) {
+                    //We do not support autosize with multiline.
                     fontSize = DEFAULT_FONT_SIZE;
                 }
                 else {
+                    // Save it for Default Appearance.
+                    fontSize = 0;
                     fs = ApproximateFontSizeToFitBBox(localFont, bBox.ToRectangle(), value);
                 }
             }
@@ -3233,8 +3244,27 @@ namespace iText.Forms.Fields {
             return array;
         }
 
+        /// <summary>Generate default appearance, /DA key.</summary>
+        /// <param name="font">
+        /// preferred font. If
+        /// <see cref="GetFont()"/>
+        /// is not null, it will be used instead.
+        /// </param>
+        /// <param name="fontSize">
+        /// preferred font size. If
+        /// <see cref="fontSize"/>
+        /// is valid,
+        /// it will be used instead.
+        /// </param>
+        /// <returns>generated string</returns>
         protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, float fontSize, Color color
             , PdfResources res) {
+            if (this.fontSize >= 0) {
+                fontSize = this.fontSize;
+            }
+            if (this.font != null) {
+                font = this.font;
+            }
             PdfStream stream = new PdfStream();
             PdfCanvas canvas = new PdfCanvas(stream, res, GetDocument());
             canvas.SetFontAndSize(font, fontSize);
@@ -3406,10 +3436,7 @@ namespace iText.Forms.Fields {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            //TODO seems that FontName shall be passed
-            if (GetDefaultAppearance() == null) {
-                SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
-            }
+            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
             float height = rect.GetHeight();
             float width = rect.GetWidth();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
@@ -3764,10 +3791,8 @@ namespace iText.Forms.Fields {
                 else {
                     DrawButton(canvas, 0, 0, width, height, text, font, fontSize);
                     xObject.AddFontFromDR(fontName, font);
-                    if (GetDefaultAppearance() == null) {
-                        SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, new PdfResources()));
-                        xObject.GetResources().AddFont(GetDocument(), font);
-                    }
+                    SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, new PdfResources()));
+                    xObject.GetResources().AddFont(GetDocument(), font);
                 }
             }
             xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
@@ -3823,7 +3848,6 @@ namespace iText.Forms.Fields {
                 DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
             }
-            //TODO what is current font actually?
             PdfFont ufont = GetFont();
             if (fontSize <= 0) {
                 fontSize = ApproximateFontSizeToFitBBox(ufont, new Rectangle(width, height), text);
