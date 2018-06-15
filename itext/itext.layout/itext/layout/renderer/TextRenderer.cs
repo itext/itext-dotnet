@@ -822,11 +822,15 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
                 }
+                bool backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                 canvas.SaveState().SetFillColor(background.GetColor());
                 canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise - background.GetExtraBottom
                     (), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea
                     .GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());
                 canvas.Fill().RestoreState();
+                if (backgroundAreaIsClipped) {
+                    drawContext.GetCanvas().RestoreState();
+                }
                 if (isTagged) {
                     canvas.CloseTag();
                 }
