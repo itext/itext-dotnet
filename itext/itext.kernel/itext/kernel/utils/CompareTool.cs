@@ -98,7 +98,7 @@ namespace iText.Kernel.Utils {
 
         private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
-        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa))?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
+        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
 
         private const String versionReplacement = "iText\u00ae <version>";
 
