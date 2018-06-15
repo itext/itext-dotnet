@@ -2277,7 +2277,7 @@ namespace iText.Forms.Fields {
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
             PdfString prev = GetDefaultAppearance();
-            if (prev == null || !defaultAppearance.Trim().Equals(prev.GetValue().Trim())) {
+            if (prev == null || !defaultAppearance.Trim().Equals(prev.GetValue().Trim()) || true) {
                 byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
                 int len = b.Length;
                 for (int k = 0; k < len; ++k) {
@@ -3773,7 +3773,8 @@ namespace iText.Forms.Fields {
         protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
             PdfFont font, PdfName fontName, float fontSize) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
+            AppearanceResources resources = new AppearanceResources().AddFontFromDefaultResources(fontName, font);
+            PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
             AppearanceXObject xObject = new AppearanceXObject(new Rectangle(0, 0, width, height));
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
@@ -3791,7 +3792,7 @@ namespace iText.Forms.Fields {
                 else {
                     DrawButton(canvas, 0, 0, width, height, text, font, fontSize);
                     xObject.AddFontFromDR(fontName, font);
-                    SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, new PdfResources()));
+                    SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
                     xObject.GetResources().AddFont(GetDocument(), font);
                 }
             }

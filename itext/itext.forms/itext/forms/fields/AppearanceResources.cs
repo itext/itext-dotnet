@@ -17,15 +17,21 @@ namespace iText.Forms.Fields {
         private IDictionary<PdfIndirectReference, PdfName> drFonts = new Dictionary<PdfIndirectReference, PdfName>
             ();
 
+        internal AppearanceResources()
+            : base() {
+        }
+
         internal AppearanceResources(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
-        internal virtual void AddFontFromDefaultResources(PdfName name, PdfFont font) {
+        internal virtual iText.Forms.Fields.AppearanceResources AddFontFromDefaultResources(PdfName name, PdfFont 
+            font) {
             if (name != null && font != null && font.GetPdfObject().GetIndirectReference() != null) {
                 //So, most likely it's a document PdfFont
                 drFonts.Put(font.GetPdfObject().GetIndirectReference(), name);
             }
+            return this;
         }
 
         public override PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
