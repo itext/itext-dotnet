@@ -87,7 +87,7 @@ namespace iText.Kernel.Counter {
              + "gaW50ZW50aW9uLCBwbGVhc2UgY29udGFjdCB1cyBieSBmaWxsaW5nIG91dCB0aGlz" + "IGZvcm06IGh0dHA6Ly9pdGV4dHBkZi5jb20vc2FsZXMgb3IgYnkgY29udGFjdGluZ"
              + "yBvdXIgc2FsZXMgZGVwYXJ0bWVudC4=");
 
-        protected internal override void Process(IEvent @event) {
+        protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
             if (count.IncrementAndGet() > repeatLevel) {
                 if (iText.Kernel.Version.IsAGPLVersion() || iText.Kernel.Version.IsExpired()) {
                     String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1);

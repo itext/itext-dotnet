@@ -165,7 +165,8 @@ namespace iText.Signatures.Sign {
         private void TestSignatureAppearanceAutoscale(String dest, Rectangle rect, PdfSignatureAppearance.RenderingMode
              renderingMode) {
             String src = sourceFolder + "simpleDocument.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), false);
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
             // Creating the appearance
             signer.GetSignatureAppearance().SetLayer2FontSize(0).SetReason("Test 1").SetLocation("TestCity").SetPageRect
                 (rect).SetRenderingMode(renderingMode).SetSignatureGraphic(ImageDataFactory.Create(sourceFolder + "itext.png"
@@ -206,7 +207,8 @@ namespace iText.Signatures.Sign {
             String dest = destinationFolder + fileName;
             Rectangle rect = new Rectangle(36, 648, 100, 50);
             String src = sourceFolder + "simpleDocument.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), false);
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
             // Creating the appearance
             signer.GetSignatureAppearance().SetLayer2FontColor(ColorConstants.RED).SetLayer2Text("Verified and signed by me."
                 ).SetPageRect(rect);

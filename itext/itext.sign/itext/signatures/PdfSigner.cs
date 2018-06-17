@@ -144,6 +144,8 @@ namespace iText.Signatures {
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
         /// <exception cref="System.IO.IOException"/>
+        [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, iText.Kernel.Pdf.StampingProperties) instead."
+            )]
         public PdfSigner(PdfReader reader, Stream outputStream, bool append)
             : this(reader, outputStream, null, append) {
         }
@@ -159,18 +161,56 @@ namespace iText.Signatures {
         /// <param name="path">File to which the output is temporarily written</param>
         /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
         /// <exception cref="System.IO.IOException"/>
-        public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append) {
-            StampingProperties properties = new StampingProperties().PreserveEncryption();
-            if (append) {
-                properties.UseAppendMode();
-            }
+        [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, System.String, iText.Kernel.Pdf.StampingProperties) instead."
+            )]
+        public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
+            : this(reader, outputStream, path, InitStampingProperties(append)) {
+        }
+
+        /// <summary>Creates a PdfSigner instance.</summary>
+        /// <remarks>
+        /// Creates a PdfSigner instance. Uses a
+        /// <see cref="System.IO.MemoryStream"/>
+        /// instead of a temporary file.
+        /// </remarks>
+        /// <param name="reader">PdfReader that reads the PDF file</param>
+        /// <param name="outputStream">OutputStream to write the signed PDF file</param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
+        /// for the signing document. Note that encryption will be
+        /// preserved regardless of what is set in properties.
+        /// </param>
+        /// <exception cref="System.IO.IOException"/>
+        public PdfSigner(PdfReader reader, Stream outputStream, StampingProperties properties)
+            : this(reader, outputStream, null, properties) {
+        }
+
+        /// <summary>Creates a PdfSigner instance.</summary>
+        /// <remarks>
+        /// Creates a PdfSigner instance. Uses a
+        /// <see cref="System.IO.MemoryStream"/>
+        /// instead of a temporary file.
+        /// </remarks>
+        /// <param name="reader">PdfReader that reads the PDF file</param>
+        /// <param name="outputStream">OutputStream to write the signed PDF file</param>
+        /// <param name="path">File to which the output is temporarily written</param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
+        /// for the signing document. Note that encryption will be
+        /// preserved regardless of what is set in properties.
+        /// </param>
+        /// <exception cref="System.IO.IOException"/>
+        public PdfSigner(PdfReader reader, Stream outputStream, String path, StampingProperties properties) {
+            StampingProperties localProps = new StampingProperties(properties).PreserveEncryption();
             if (path == null) {
                 temporaryOS = new MemoryStream();
-                document = InitDocument(reader, new PdfWriter(temporaryOS), properties);
+                document = InitDocument(reader, new PdfWriter(temporaryOS), localProps);
             }
             else {
                 this.tempFile = FileUtil.CreateTempFile(path);
-                document = InitDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), properties);
+                document = InitDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), localProps);
             }
             originalOS = outputStream;
             signDate = DateTimeUtil.GetCurrentTime();
@@ -1126,6 +1166,14 @@ namespace iText.Signatures {
 
         private bool IsDocumentPdf2() {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
+        }
+
+        private static StampingProperties InitStampingProperties(bool append) {
+            StampingProperties properties = new StampingProperties();
+            if (append) {
+                properties.UseAppendMode();
+            }
+            return properties;
         }
 
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>

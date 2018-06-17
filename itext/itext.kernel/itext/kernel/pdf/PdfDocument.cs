@@ -165,7 +165,14 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
-        public PdfDocument(PdfReader reader) {
+        public PdfDocument(PdfReader reader)
+            : this(reader, new DocumentProperties()) {
+        }
+
+        /// <summary>Open PDF document in reading mode.</summary>
+        /// <param name="reader">PDF reader.</param>
+        /// <param name="properties">document properties</param>
+        public PdfDocument(PdfReader reader, DocumentProperties properties) {
             if (reader == null) {
                 throw new ArgumentException("The reader in PdfDocument constructor can not be null.");
             }
@@ -173,6 +180,7 @@ namespace iText.Kernel.Pdf {
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(null);
         }
 
@@ -182,7 +190,18 @@ namespace iText.Kernel.Pdf {
         /// Document has no pages when initialized.
         /// </remarks>
         /// <param name="writer">PDF writer</param>
-        public PdfDocument(PdfWriter writer) {
+        public PdfDocument(PdfWriter writer)
+            : this(writer, new DocumentProperties()) {
+        }
+
+        /// <summary>Open PDF document in writing mode.</summary>
+        /// <remarks>
+        /// Open PDF document in writing mode.
+        /// Document has no pages when initialized.
+        /// </remarks>
+        /// <param name="writer">PDF writer</param>
+        /// <param name="properties">document properties</param>
+        public PdfDocument(PdfWriter writer, DocumentProperties properties) {
             if (writer == null) {
                 throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
@@ -190,6 +209,7 @@ namespace iText.Kernel.Pdf {
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(writer.properties.pdfVersion);
         }
 
@@ -1785,11 +1805,10 @@ namespace iText.Kernel.Pdf {
         /// <see langword="null"/>
         /// otherwise
         /// </param>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
             try {
-                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, GetType());
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 if (reader != null) {
                     reader.pdfDocument = this;
                     reader.ReadPdf();

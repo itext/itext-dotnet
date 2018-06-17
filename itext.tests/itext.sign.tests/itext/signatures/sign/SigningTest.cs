@@ -287,7 +287,8 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             byte[] ownerPass = "World".GetBytes();
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(ownerPass));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), true);
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties().UseAppendMode
+                ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason("Test1").SetLocation("TestCity"
                 );
@@ -315,7 +316,8 @@ namespace iText.Signatures.Sign {
             ICipherParameters privateKey = Pkcs12FileHelper.ReadFirstKey(sourceFolder + "test.p12", password, password
                 );
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPublicKeySecurityParams(cert, privateKey));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), true);
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties().UseAppendMode
+                ());
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
@@ -338,7 +340,11 @@ namespace iText.Signatures.Sign {
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
             ) {
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode);
+            StampingProperties properties = new StampingProperties();
+            if (isAppendMode) {
+                properties.UseAppendMode();
+            }
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location

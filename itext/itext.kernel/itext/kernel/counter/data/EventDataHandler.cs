@@ -108,11 +108,11 @@ namespace iText.Kernel.Counter.Data {
             return all != null ? all : JavaCollectionsUtil.EmptyList<V>();
         }
 
-        public virtual void Register(IEvent @event) {
+        public virtual void Register(IEvent @event, IMetaInfo metaInfo) {
             V data;
             //Synchronization is left here mostly in consistency with cache and process, but factories are usually not thread safe anyway.
             lock (factory) {
-                data = factory.Create(@event);
+                data = factory.Create(@event, metaInfo);
             }
             if (data != null) {
                 lock (cache) {

@@ -71,7 +71,7 @@ namespace iText.Kernel.Counter {
             : this(cls.FullName) {
         }
 
-        protected internal override void Process(IEvent @event) {
+        protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
             System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} event", name, @event.GetEventType()));
         }
     }

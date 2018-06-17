@@ -44,8 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.Kernel.Counter.Context;
 
@@ -83,142 +81,38 @@ namespace iText.Kernel.Counter {
             return instance;
         }
 
-        /// <summary>
-        /// Gets the top
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// based on the stack trace.
-        /// For example if the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// was created inside pdfHtml,
-        /// and the pdfHtml was called directly,
-        /// then calling this method from
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// will retrieve pdfHtml context.
-        /// </summary>
-        /// <returns>
-        /// the top
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// instance, or
-        /// <see langword="null"/>
-        /// if the context is unknown
-        /// </returns>
-        public virtual IContext GetTopContext() {
-            return GetTopContext(null);
-        }
-
-        /// <summary>
-        /// Gets the top
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// based on the stack trace.
-        /// For example if the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// was created inside pdfHtml,
-        /// and the pdfHtml was called directly,
-        /// then calling this method from
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// will retrieve pdfHtml context.
-        /// </summary>
-        /// <param name="stop">
-        /// if this class is encountered during stack trace analysis,
-        /// then the process is stopped and
-        /// <see langword="null"/>
-        /// is returned
-        /// </param>
-        /// <returns>
-        /// the top
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// instance, or
-        /// <see langword="null"/>
-        /// if the context is unknown or
-        /// <paramref name="stop"/>
-        /// is encountered
-        /// </returns>
-        public virtual IContext GetTopContext(Type stop) {
-            return GetNamespaceMapping(GetTopRecognisedNamespace(stop));
-        }
-
-        /// <summary>Gets the top recognised namespace based on the stack trace.</summary>
+        /// <summary>Gets the context associated with the passed class object.</summary>
         /// <remarks>
-        /// Gets the top recognised namespace based on the stack trace.
-        /// For example if the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// was created inside pdfHtml,
-        /// and the pdfHtml was called directly,
-        /// then calling this method from
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// will retrieve pdfHtml namespace.
+        /// Gets the context associated with the passed class object.
+        /// The context is determined by class namespace.
         /// </remarks>
+        /// <param name="clazz">the class for which the context will be determined.</param>
         /// <returns>
-        /// the top recognised namespace, or
+        /// the
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// associated with the class, or
         /// <see langword="null"/>
-        /// if it is unrecognised
+        /// if the class is unknown.
         /// </returns>
-        public virtual String GetTopRecognisedNamespace() {
-            return GetTopRecognisedNamespace(null);
+        public virtual IContext GetContext(Type clazz) {
+            return clazz != null ? GetContext(clazz.FullName) : null;
         }
 
-        /// <summary>Gets the top recognised namespace based on the stack trace.</summary>
+        /// <summary>Gets the context associated with the passed class object.</summary>
         /// <remarks>
-        /// Gets the top recognised namespace based on the stack trace.
-        /// For example if the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// was created inside pdfHtml,
-        /// and the pdfHtml was called directly,
-        /// then calling this method from
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// will retrieve pdfHtml namespace.
+        /// Gets the context associated with the passed class object.
+        /// The context is determined by class namespace.
         /// </remarks>
-        /// <param name="stop">
-        /// if this class is encountered during stack trace analysis,
-        /// then the process is stopped and
-        /// <see langword="null"/>
-        /// is returned
-        /// </param>
+        /// <param name="className">the class name with the namespace for which the context will be determined.</param>
         /// <returns>
-        /// the top recognised namespace, or
+        /// the
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// associated with the class, or
         /// <see langword="null"/>
-        /// if the context is unknown
+        /// if the class is unknown.
         /// </returns>
-        public virtual String GetTopRecognisedNamespace(Type stop) {
-            if (stop == null) {
-                stop = GetType();
-            }
-            String result;
-#if NETSTANDARD1_6
-            String[] stackTrace = Environment.StackTrace.Split(new char[] {'\n', '\r'});
-            for (int i = stackTrace.Length - 1; i >= 0; --i) {
-                String fullClassName = null;
-                foreach (Match match in Regex.Matches(stackTrace[i], @"   at ([^\.]+(?:\.[^\.]+)*)\.([^\.]+)\(.*")) {
-                    fullClassName = match.Groups[1].Value;
-                    break;
-                }
-                if (fullClassName != null) {
-                    if (fullClassName.Equals(stop.FullName)) {
-                        return null;
-                    }
-                    result = GetRecognisedNamespace(fullClassName);
-                    if (result != null) {
-                        return result;
-                    }
-                }
-            }
-#else
-            StackTrace stackTrace = new StackTrace();
-            Type declaringType;
-            String declaringTypeFullName;
-            for (int i = stackTrace.FrameCount - 1; i >= 0; --i) {
-                declaringType = stackTrace.GetFrame(i).GetMethod().DeclaringType;
-                declaringTypeFullName = declaringType != null ? declaringType.FullName : null;
-                if (stop.FullName != null && stop.FullName.Equals(declaringTypeFullName)) {
-                    return null;
-                }
-                result = GetRecognisedNamespace(declaringTypeFullName);
-                if (result != null) {
-                    return result;
-                }
-            }
-#endif
-            return null;
+        public virtual IContext GetContext(String className) {
+            return GetNamespaceMapping(GetRecognisedNamespace(className));
         }
 
         private String GetRecognisedNamespace(String className) {

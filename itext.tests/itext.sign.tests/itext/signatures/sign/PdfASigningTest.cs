@@ -126,7 +126,11 @@ namespace iText.Signatures.Sign {
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
             ) {
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode);
+            StampingProperties properties = new StampingProperties();
+            if (isAppendMode) {
+                properties.UseAppendMode();
+            }
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
             PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", true);
             // Creating the appearance

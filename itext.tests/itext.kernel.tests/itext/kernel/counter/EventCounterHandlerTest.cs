@@ -40,7 +40,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using Common.Logging;
 using iText.Kernel.Counter.Event;
 using iText.Test;
@@ -57,32 +56,14 @@ namespace iText.Kernel.Counter {
                 ());
             EventCounterHandler.GetInstance().Register(counterFactory);
             for (int i = 0; i < COUNT; ++i) {
-                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, GetType());
-            }
-            EventCounterHandler.GetInstance().Unregister(counterFactory);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestUnknownEvent() {
-            IEventCounterFactory counterFactory = new SimpleEventCounterFactory(new EventCounterHandlerTest.ToLogCounter
-                ());
-            EventCounterHandler.GetInstance().Register(counterFactory);
-            IEvent unknown = new EventCounterHandlerTest.UnknownEvent();
-            for (int i = 0; i < COUNT; ++i) {
-                EventCounterHandler.GetInstance().OnEvent(unknown, GetType());
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, null, GetType());
             }
             EventCounterHandler.GetInstance().Unregister(counterFactory);
         }
 
         private class ToLogCounter : EventCounter {
-            protected internal override void Process(IEvent @event) {
+            protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
                 LogManager.GetLogger(GetType()).Warn("Process event: " + @event.GetEventType());
-            }
-        }
-
-        private class UnknownEvent : IEvent {
-            public virtual String GetEventType() {
-                return "unknown";
             }
         }
     }

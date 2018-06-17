@@ -43,18 +43,34 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Counter.Data {
-    /// <summary>
-    /// Interface that is responsible for creating new instance of
-    /// <see cref="EventData{T}"/>
-    /// .
-    /// Used in
-    /// <see cref="EventDataHandler{T, V}"/>
-    /// </summary>
-    /// 
-    /// 
-    public interface IEventDataFactory<T, V>
-        where V : EventData<T> {
-        V Create(IEvent @event, IMetaInfo metaInfo);
+namespace iText.Kernel.Pdf {
+    public class DocumentProperties {
+        protected internal IMetaInfo metaInfo = null;
+
+        public DocumentProperties() {
+        }
+
+        public DocumentProperties(iText.Kernel.Pdf.DocumentProperties other) {
+            this.metaInfo = other.metaInfo;
+        }
+
+        /// <summary>Sets document meta info.</summary>
+        /// <remarks>
+        /// Sets document meta info. This meta info will be passed to the
+        /// <see cref="iText.Kernel.Counter.EventCounter"/>
+        /// with
+        /// <see cref="iText.Kernel.Counter.Event.CoreEvent"/>
+        /// and can be used to determine event origin.
+        /// </remarks>
+        /// <param name="metaInfo">meta info to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="DocumentProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.DocumentProperties SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
+            return this;
+        }
     }
 }

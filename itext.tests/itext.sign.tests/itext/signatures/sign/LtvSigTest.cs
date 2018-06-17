@@ -95,7 +95,7 @@ namespace iText.Signatures.Sign {
             ltvVerification.Merge();
             document.Close();
             PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), new FileStream(ltvTsFileName, FileMode.Create
-                ), true);
+                ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
         }

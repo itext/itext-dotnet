@@ -41,20 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Counter.Event;
-
-namespace iText.Kernel.Counter.Data {
-    /// <summary>
-    /// Interface that is responsible for creating new instance of
-    /// <see cref="EventData{T}"/>
-    /// .
-    /// Used in
-    /// <see cref="EventDataHandler{T, V}"/>
-    /// </summary>
-    /// 
-    /// 
-    public interface IEventDataFactory<T, V>
-        where V : EventData<T> {
-        V Create(IEvent @event, IMetaInfo metaInfo);
+namespace iText.Kernel.Counter.Event {
+    /// <summary>The meta info that can holds information about instance that throws the event</summary>
+    public interface IMetaInfo {
     }
 }

@@ -56,7 +56,8 @@ namespace iText.Kernel.Counter {
     /// for each registered
     /// <see cref="IEventCounterFactory"/>
     /// and send corresponding events when calling
-    /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, System.Type{T})"/>
+    /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Kernel.Counter.Event.IMetaInfo, System.Type{T})
+    ///     "/>
     /// method.
     /// <br/>
     /// You can implement your own
@@ -102,17 +103,27 @@ namespace iText.Kernel.Counter {
         /// instance
         /// and count the event.
         /// </summary>
-        public virtual void OnEvent(IEvent @event, Type caller) {
+        public virtual void OnEvent(IEvent @event, IMetaInfo metaInfo, Type caller) {
             IContext context = null;
             bool contextInitialized = false;
             foreach (IEventCounterFactory factory in factories.Keys) {
                 EventCounter counter = factory.GetCounter(caller);
                 if (counter != null) {
                     if (!contextInitialized) {
-                        context = ContextManager.GetInstance().GetTopContext(GetType());
+                        if (metaInfo != null) {
+                            context = ContextManager.GetInstance().GetContext(metaInfo.GetType());
+                        }
+                        if (context == null) {
+                            context = ContextManager.GetInstance().GetContext(caller);
+                        }
+                        if (context == null) {
+                            context = ContextManager.GetInstance().GetContext(@event.GetType());
+                        }
                         contextInitialized = true;
                     }
-                    counter.OnEvent(@event, context);
+                    if ((context != null && context.Allow(@event)) || (context == null && counter.fallback.Allow(@event))) {
+                        counter.OnEvent(@event, metaInfo);
+                    }
                 }
             }
         }

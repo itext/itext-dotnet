@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Counter.Context;
 using iText.Kernel.Counter.Event;
 
@@ -57,7 +58,7 @@ namespace iText.Kernel.Counter {
     /// (e.g. count the number of documents or the volume in bytes in the context of a SaaS license).
     /// </remarks>
     public abstract class EventCounter {
-        private readonly IContext fallback;
+        internal readonly IContext fallback;
 
         /// <summary>
         /// Creates instance of this class that allows all events from unknown
@@ -79,27 +80,10 @@ namespace iText.Kernel.Counter {
         /// that will be used in case the event context is unknown
         /// </param>
         public EventCounter(IContext fallback) {
+            if (fallback == null) {
+                throw new ArgumentException("The fallback context in EventCounter constructor cannot be null");
+            }
             this.fallback = fallback;
-        }
-
-        /// <summary>Entry point for event processing.</summary>
-        /// <remarks>Entry point for event processing. Some events may be discarded based on the event context.</remarks>
-        /// <param name="event">
-        /// 
-        /// <see cref="iText.Kernel.Counter.Event.IEvent"/>
-        /// to count
-        /// </param>
-        /// <param name="context">
-        /// event's
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// </param>
-        public void OnEvent(IEvent @event, IContext context) {
-            if (context == null) {
-                context = fallback;
-            }
-            if (context.Allow(@event)) {
-                Process(@event);
-            }
         }
 
         /// <summary>The method that should be overridden for actual event processing</summary>
@@ -108,6 +92,11 @@ namespace iText.Kernel.Counter {
         /// <see cref="iText.Kernel.Counter.Event.IEvent"/>
         /// to count
         /// </param>
-        protected internal abstract void Process(IEvent @event);
+        /// <param name="metaInfo">
+        /// the
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// that can hold information about event origin
+        /// </param>
+        protected internal abstract void OnEvent(IEvent @event, IMetaInfo metaInfo);
     }
 }

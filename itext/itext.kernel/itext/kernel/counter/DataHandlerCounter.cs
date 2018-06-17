@@ -69,8 +69,8 @@ namespace iText.Kernel.Counter {
             EventDataHandlerUtil.RegisterTimedProcessing<T, V>(dataHandler);
         }
 
-        protected internal override void Process(IEvent @event) {
-            dataHandler.Register(@event);
+        protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
+            dataHandler.Register(@event, metaInfo);
         }
     }
 }

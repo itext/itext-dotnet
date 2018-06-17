@@ -60,17 +60,17 @@ namespace iText.Kernel.Counter.Data {
         [LogMessage("Process event with signature: type2, and count: 2", Count = 2)]
         public virtual void RunTest() {
             DataHandlerTest.TestDataHandler dataHandler = new DataHandlerTest.TestDataHandler();
-            dataHandler.Register(new DataHandlerTest.TestEvent("type1"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
             Thread.Sleep(100);
-            dataHandler.Register(new DataHandlerTest.TestEvent("type1"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
             Thread.Sleep(100);
-            dataHandler.Register(new DataHandlerTest.TestEvent("type2"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type2"), null);
             Thread.Sleep(100);
-            dataHandler.Register(new DataHandlerTest.TestEvent("type1"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
             Thread.Sleep(100);
-            dataHandler.Register(new DataHandlerTest.TestEvent("type1"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
             Thread.Sleep(100);
-            dataHandler.Register(new DataHandlerTest.TestEvent("type2"));
+            dataHandler.Register(new DataHandlerTest.TestEvent("type2"), null);
             Thread.Sleep(100);
             dataHandler.TryProcessRest();
         }
@@ -82,7 +82,7 @@ namespace iText.Kernel.Counter.Data {
         }
 
         private class SimpleDataFactory : IEventDataFactory<String, DataHandlerTest.SimpleData> {
-            public virtual DataHandlerTest.SimpleData Create(IEvent @event) {
+            public virtual DataHandlerTest.SimpleData Create(IEvent @event, IMetaInfo metaInfo) {
                 return new DataHandlerTest.SimpleData(@event.GetEventType());
             }
         }
