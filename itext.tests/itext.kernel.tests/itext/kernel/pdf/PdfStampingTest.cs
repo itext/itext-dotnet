@@ -1221,7 +1221,7 @@ namespace iText.Kernel.Pdf {
                 ));
             PdfDocument pdfDocOutput = new PdfDocument(new PdfWriter(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
                 , new WriterProperties().SetCompressionLevel(0)));
-            pdfDocOutput.AddEventHandler(PdfDocumentEvent.END_PAGE, new _T1231341417(this));
+            pdfDocOutput.AddEventHandler(PdfDocumentEvent.END_PAGE, new _T1988125281(this));
             pdfDocInput.CopyPagesTo(1, pdfDocInput.GetNumberOfPages(), pdfDocOutput);
             pdfDocInput.Close();
             pdfDocOutput.Close();
@@ -1229,7 +1229,7 @@ namespace iText.Kernel.Pdf {
                 , sourceFolder + "cmp_stampingStreamNoEndingWhitespace01.pdf", destinationFolder, "diff_"));
         }
 
-        internal class _T1231341417 : IEventHandler {
+        internal class _T1988125281 : IEventHandler {
             public virtual void HandleEvent(Event @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
                 PdfPage page = pdfEvent.GetPage();
@@ -1241,7 +1241,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
 
-            internal _T1231341417(PdfStampingTest _enclosing) {
+            internal _T1988125281(PdfStampingTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
