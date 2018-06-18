@@ -663,6 +663,10 @@ namespace iText.Forms {
         /// If generateAppearance is set to <code>true</code>, then
         /// <code>NeedAppearances</code> is set to <code>false</code>. This does not
         /// apply vice versa.
+        /// <p>
+        /// Note, this method does not change default behaviour of
+        /// <see cref="iText.Forms.Fields.PdfFormField.SetValue(System.String)"/>
+        /// method.
         /// </summary>
         /// <param name="generateAppearance">a boolean</param>
         public virtual void SetGenerateAppearance(bool generateAppearance) {
