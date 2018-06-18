@@ -376,6 +376,7 @@ namespace iText.IO.Font.Otf {
             }
 
             public GlyphLinePart(int start, int end, String actualText) {
+                // Might be null if it's not necessary
                 this.start = start;
                 this.end = end;
                 this.actualText = actualText;
