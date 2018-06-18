@@ -1189,6 +1189,23 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(coef < 0.01);
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StampingStreamNoEndingWhitespace01() {
+            //TODO: DEVSIX-2007
+            PdfDocument pdfDocInput = new PdfDocument(new PdfReader(sourceFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                ));
+            PdfDocument pdfDocOutput = new PdfDocument(new PdfWriter(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                , new WriterProperties().SetCompressionLevel(0)));
+            pdfDocOutput.AddEventHandler(PdfDocumentEvent.END_PAGE, new PdfStampingTest.WatermarkEventHandler());
+            pdfDocInput.CopyPagesTo(1, pdfDocInput.GetNumberOfPages(), pdfDocOutput);
+            pdfDocInput.Close();
+            pdfDocOutput.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
+                , sourceFolder + "cmp_stampingStreamNoEndingWhitespace01.pdf", destinationFolder, "diff_"));
+        }
+
         internal static void VerifyPdfPagesCount(PdfObject root) {
             if (root.GetObjectType() == PdfObject.INDIRECT_REFERENCE) {
                 root = ((PdfIndirectReference)root).GetRefersTo();
@@ -1212,24 +1229,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void StampingStreamNoEndingWhitespace01() {
-            //TODO: DEVSIX-2007
-            PdfDocument pdfDocInput = new PdfDocument(new PdfReader(sourceFolder + "stampingStreamNoEndingWhitespace01.pdf"
-                ));
-            PdfDocument pdfDocOutput = new PdfDocument(new PdfWriter(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
-                , new WriterProperties().SetCompressionLevel(0)));
-            pdfDocOutput.AddEventHandler(PdfDocumentEvent.END_PAGE, new _T1988125281(this));
-            pdfDocInput.CopyPagesTo(1, pdfDocInput.GetNumberOfPages(), pdfDocOutput);
-            pdfDocInput.Close();
-            pdfDocOutput.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
-                , sourceFolder + "cmp_stampingStreamNoEndingWhitespace01.pdf", destinationFolder, "diff_"));
-        }
-
-        internal class _T1988125281 : IEventHandler {
+        internal class WatermarkEventHandler : IEventHandler {
             public virtual void HandleEvent(Event @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
                 PdfPage page = pdfEvent.GetPage();
@@ -1240,12 +1240,6 @@ namespace iText.Kernel.Pdf {
                 catch (System.IO.IOException) {
                 }
             }
-
-            internal _T1988125281(PdfStampingTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfStampingTest _enclosing;
         }
     }
 }
