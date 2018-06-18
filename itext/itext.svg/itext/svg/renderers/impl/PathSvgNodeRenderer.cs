@@ -116,8 +116,10 @@ namespace iText.Svg.Renderers.Impl {
                             shapes.Add(pathShape);
                         }
                         else {
-                            pathShape.SetCoordinates(JavaUtil.ArraysCopyOfRange(pathProperties, 1, pathProperties.Length));
-                            shapes.Add(pathShape);
+                            if (pathShape != null) {
+                                pathShape.SetCoordinates(JavaUtil.ArraysCopyOfRange(pathProperties, 1, pathProperties.Length));
+                                shapes.Add(pathShape);
+                            }
                         }
                     }
                 }

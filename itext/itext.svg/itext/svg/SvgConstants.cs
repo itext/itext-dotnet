@@ -352,17 +352,65 @@ namespace iText.Svg {
             /// <summary>CurveTo Path Operator.</summary>
             public const String PATH_DATA_CURVE_TO = "C";
 
+            /// <summary>Relative CurveTo Path Operator.</summary>
+            public const String PATH_DATA_REL_CURVE_TO = "c";
+
+            /// <summary>Attribute defining Eliptical arc path operator.</summary>
+            public const String PATH_DATA_ELIPTICAL_ARC_A = "A";
+
+            /// <summary>Attribute defining Eliptical arc path operator.</summary>
+            public const String PATH_DATA_REL_ELIPTICAL_ARC_A = "a";
+
             /// <summary>Smooth CurveTo Path Operator.</summary>
             public const String PATH_DATA_CURVE_TO_S = "S";
 
-            /// <summary>LineTo Path Operator.</summary>
+            /// <summary>Relative Smooth CurveTo Path Operator.</summary>
+            public const String PATH_DATA_REL_CURVE_TO_S = "s";
+
+            /// <summary>Absolute LineTo Path Operator.</summary>
             public const String PATH_DATA_LINE_TO = "L";
+
+            /// <summary>Absolute hrizontal LineTo Path Operator.</summary>
+            public const String PATH_DATA_LINE_TO_H = "H";
+
+            /// <summary>Relative horizontal LineTo Path Operator.</summary>
+            public const String PATH_DATA_REL_LINE_TO_H = "h";
+
+            /// <summary>Absolute vertical LineTo Path operator.</summary>
+            public const String PATH_DATA_LINE_TO_V = "V";
+
+            /// <summary>Relative vertical LineTo Path operator.</summary>
+            public const String PATH_DATA_REL_LINE_TO_V = "v";
+
+            /// <summary>Relative LineTo Path Operator.</summary>
+            public const String PATH_DATA_REL_LINE_TO = "l";
 
             /// <summary>MoveTo Path Operator.</summary>
             public const String PATH_DATA_MOVE_TO = "M";
 
+            /// <summary>Shorthand/smooth quadratic Bézier curveto.</summary>
+            public const String PATH_DATA_SHORTHAND_CURVE_TO = "T";
+
+            /// <summary>Relative Shorthand/smooth quadratic Bézier curveto.</summary>
+            public const String PATH_DATA_REL_SHORTHAND_CURVE_TO = "t";
+
+            /// <summary>Catmull-Rom curve command.</summary>
+            public const String PATH_DATA_CATMULL_CURVE = "R";
+
+            /// <summary>Relative Catmull-Rom curve command.</summary>
+            public const String PATH_DATA_REL_CATMULL_CURVE = "r";
+
+            /// <summary>Bearing command.</summary>
+            public const String PATH_DATA_BEARING = "B";
+
+            /// <summary>Relative Bearing command.</summary>
+            public const String PATH_DATA_REL_BEARING = "b";
+
             /// <summary>Quadratic CurveTo Path Operator.</summary>
             public const String PATH_DATA_QUAD_CURVE_TO = "Q";
+
+            /// <summary>Relative Quadratic CurveTo Path Operator.</summary>
+            public const String PATH_DATA_REL_QUAD_CURVE_TO = "q";
 
             /// <summary>Attribute defining the points of a polyline or polygon.</summary>
             public const String POINTS = "points";

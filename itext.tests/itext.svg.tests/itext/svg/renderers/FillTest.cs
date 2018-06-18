@@ -87,8 +87,61 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void EoFillTest01() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill01");
+        }
+
+        /* This test should fail when RND-1025 is resolved*/
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EoFillTest02() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill02");
+        }
+
+        /* This test should fail when RND-1025 is resolved*/
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EoFillTest03() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill03");
+        }
+
+        /* This test should fail when RND-1025 is resolved*/
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultipleObjectsTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleObjectsTest");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void EoFillStrokeTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
+        }
+
+        /* This test should fail when RND-1031 is resolved*/
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NonZeroFillTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "nonzerofill");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OpacityFillTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityfill");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EofillUnsuportedAtributeTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillUnsuportedAtributeTest");
         }
     }
 }

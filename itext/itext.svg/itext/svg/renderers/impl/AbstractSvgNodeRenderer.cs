@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Extgstate;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -142,6 +143,15 @@ namespace iText.Svg.Renderers.Impl {
                             currentCanvas.SetLineWidth(strokeWidth);
                             doStroke = true;
                         }
+                    }
+                }
+ {
+                    // opacity
+                    String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
+                    if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                        PdfExtGState gs1 = new PdfExtGState();
+                        gs1.SetFillOpacity(float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture));
+                        currentCanvas.SetExtGState(gs1);
                     }
                 }
             }
