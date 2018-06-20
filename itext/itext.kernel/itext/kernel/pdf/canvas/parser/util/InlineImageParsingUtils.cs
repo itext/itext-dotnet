@@ -52,7 +52,7 @@ using iText.Kernel.Pdf.Filters;
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
     public sealed class InlineImageParsingUtils {
-        private static readonly byte[] EI = new byte[] { (byte) 'E', (byte) 'I' };
+        private static readonly byte[] EI = new byte[] { (byte)'E', (byte)'I' };
 
         private InlineImageParsingUtils() {
         }
