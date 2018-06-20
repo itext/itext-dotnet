@@ -55,39 +55,25 @@ namespace iText.Forms {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest01() {
-            String srcFilename = sourceFolder + "formFlatteningSource.pdf";
-            String filename = destinationFolder + "formFlatteningTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            form.FlattenFields();
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_formFlatteningTest01.pdf"
-                , destinationFolder, "diff_"));
+            String srcFilename = "formFlatteningSource.pdf";
+            String filename = "formFlatteningTest01.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningChoiceFieldTest01() {
-            String srcFilename = sourceFolder + "formFlatteningSourceChoiceField.pdf";
-            String filename = destinationFolder + "formFlatteningChoiceFieldTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            form.FlattenFields();
-            doc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFlatteningChoiceFieldTest01.pdf"
-                , destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            String srcFilename = "formFlatteningSourceChoiceField.pdf";
+            String filename = "formFlatteningChoiceFieldTest01.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -103,6 +89,67 @@ namespace iText.Forms {
             form.FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RotatedFieldAppearanceTest01() {
+            String srcFilename = "src_rotatedFieldAppearanceTest01.pdf";
+            String filename = "rotatedFieldAppearanceTest01.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RotatedFieldAppearanceTest02() {
+            String srcFilename = "src_rotatedFieldAppearanceTest02.pdf";
+            String filename = "rotatedFieldAppearanceTest02.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DegeneratedRectTest01() {
+            String srcFilename = "src_degeneratedRectTest01.pdf";
+            String filename = "degeneratedRectTest01.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DegeneratedRectTest02() {
+            String srcFilename = "src_degeneratedRectTest02.pdf";
+            String filename = "degeneratedRectTest02.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ScaledRectTest01() {
+            String srcFilename = "src_scaledRectTest01.pdf";
+            String filename = "scaledRectTest01.pdf";
+            FlattenFieldsAndCompare(srcFilename, filename);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private static void FlattenFieldsAndCompare(String srcFile, String outFile) {
+            PdfReader reader = new PdfReader(sourceFolder + srcFile);
+            PdfWriter writer = new PdfWriter(destinationFolder + outFile);
+            PdfDocument document = new PdfDocument(reader, writer);
+            PdfAcroForm.GetAcroForm(document, false).FlattenFields();
+            document.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destinationFolder + outFile, sourceFolder + "cmp_" + outFile
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
         }
     }
 }
