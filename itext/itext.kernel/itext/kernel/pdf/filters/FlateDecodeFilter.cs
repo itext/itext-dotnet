@@ -50,10 +50,38 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles FlateDecode filter.</summary>
     public class FlateDecodeFilter : IFilterHandler {
+        /// <summary>Defines how the corrupted streams should be treated.</summary>
+        private bool strictDecoding = false;
+
+        /// <summary>Creates a FlateDecodeFilter.</summary>
+        public FlateDecodeFilter()
+            : this(false) {
+        }
+
+        /// <summary>Creates a FlateDecodeFilter.</summary>
+        /// <param name="strictDecoding">defines whether the decoder will try to read a corrupted stream</param>
+        public FlateDecodeFilter(bool strictDecoding) {
+            this.strictDecoding = strictDecoding;
+        }
+
+        /// <summary>Checks whether the decoder will try to read a corrupted stream (not strict) or not (strict)</summary>
+        /// <returns>true if the decoder will try to read a corrupted stream otherwise false</returns>
+        public virtual bool IsStrictDecoding() {
+            return strictDecoding;
+        }
+
+        /// <summary>Defines how the corrupted streams should be treated.</summary>
+        /// <param name="strict">true if the decoder should try to read a corrupted stream otherwise false</param>
+        /// <returns>the decoder</returns>
+        public virtual iText.Kernel.Pdf.Filters.FlateDecodeFilter SetStrictDecoding(bool strict) {
+            this.strictDecoding = strict;
+            return this;
+        }
+
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
             byte[] res = FlateDecode(b, true);
-            if (res == null) {
+            if (res == null && !strictDecoding) {
                 res = FlateDecode(b, false);
             }
             b = DecodePredictor(res, decodeParams);
