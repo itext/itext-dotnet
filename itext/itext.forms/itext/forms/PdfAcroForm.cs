@@ -762,7 +762,7 @@ namespace iText.Forms {
                     }
                     // Subtype is required key, if there is no Subtype it is invalid XObject. DEVSIX-725
                     if (xObject != null && xObject.GetPdfObject().Get(PdfName.Subtype) != null) {
-                        Rectangle box = fieldObject.GetAsRectangle(PdfName.Rect);
+                        Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
                             throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                         }
@@ -779,15 +779,10 @@ namespace iText.Forms {
                             TagReference tagRef = tagPointer.GetTagReference();
                             canvas.OpenTag(tagRef);
                         }
-                        PdfArray oldMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
-                        if (oldMatrix != null && JavaUtil.ArraysEquals(oldMatrix.ToFloatArray(), new float[] { 1, 0, 0, 1, 0, 0 })
-                            ) {
-                            Rectangle boundingBox = xObject.GetBBox().ToRectangle();
-                            PdfArray newMatrixArray = new PdfArray(new float[] { box.GetWidth() / boundingBox.GetWidth(), 0, 0, box.GetHeight
-                                () / boundingBox.GetHeight(), 0, 0 });
-                            xObject.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
-                        }
-                        canvas.AddXObject(xObject, box.GetX(), box.GetY());
+                        AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
+                        float[] m = new float[6];
+                        at.GetMatrix(m);
+                        canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
                         if (tagPointer != null) {
                             canvas.CloseTag();
                         }
@@ -1220,6 +1215,44 @@ namespace iText.Forms {
                 }
             }
             return preparedFields;
+        }
+
+        private AffineTransform CalcFieldAppTransformToAnnotRect(PdfFormXObject xObject, Rectangle annotBBox) {
+            PdfArray bBox = xObject.GetBBox();
+            if (bBox.Size() != 4) {
+                bBox = new PdfArray(new Rectangle(0, 0));
+                xObject.SetBBox(bBox);
+            }
+            float[] xObjBBox = bBox.ToFloatArray();
+            PdfArray xObjMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
+            Rectangle transformedRect;
+            if (xObjMatrix != null && xObjMatrix.Size() == 6) {
+                Point[] xObjRectPoints = new Point[] { new Point(xObjBBox[0], xObjBBox[1]), new Point(xObjBBox[0], xObjBBox
+                    [3]), new Point(xObjBBox[2], xObjBBox[1]), new Point(xObjBBox[2], xObjBBox[3]) };
+                Point[] transformedAppBoxPoints = new Point[xObjRectPoints.Length];
+                new AffineTransform(xObjMatrix.ToDoubleArray()).Transform(xObjRectPoints, 0, transformedAppBoxPoints, 0, xObjRectPoints
+                    .Length);
+                float[] transformedRectArr = new float[] { float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue
+                     };
+                foreach (Point p in transformedAppBoxPoints) {
+                    transformedRectArr[0] = (float)Math.Min(transformedRectArr[0], p.x);
+                    transformedRectArr[1] = (float)Math.Min(transformedRectArr[1], p.y);
+                    transformedRectArr[2] = (float)Math.Max(transformedRectArr[2], p.x);
+                    transformedRectArr[3] = (float)Math.Max(transformedRectArr[3], p.y);
+                }
+                transformedRect = new Rectangle(transformedRectArr[0], transformedRectArr[1], transformedRectArr[2] - transformedRectArr
+                    [0], transformedRectArr[3] - transformedRectArr[1]);
+            }
+            else {
+                transformedRect = new Rectangle(0, 0).SetBbox(xObjBBox[0], xObjBBox[1], xObjBBox[2], xObjBBox[3]);
+            }
+            AffineTransform at = AffineTransform.GetTranslateInstance(-transformedRect.GetX(), -transformedRect.GetY()
+                );
+            float scaleX = transformedRect.GetWidth() == 0 ? 1 : annotBBox.GetWidth() / transformedRect.GetWidth();
+            float scaleY = transformedRect.GetHeight() == 0 ? 1 : annotBBox.GetHeight() / transformedRect.GetHeight();
+            at.PreConcatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
+            at.PreConcatenate(AffineTransform.GetTranslateInstance(annotBBox.GetX(), annotBBox.GetY()));
+            return at;
         }
     }
 }
