@@ -496,12 +496,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfTextFormField"/>
         /// </returns>
         public static PdfTextFormField CreateText(PdfDocument doc, Rectangle rect, String name, String value) {
-            try {
-                return CreateText(doc, rect, name, value, PdfFontFactory.CreateFont(), (float)DEFAULT_FONT_SIZE);
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(e);
-            }
+            return CreateText(doc, rect, name, value, null, -1);
         }
 
         /// <summary>
@@ -658,12 +653,7 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static PdfTextFormField CreateMultilineText(PdfDocument doc, Rectangle rect, String name, String value
             ) {
-            try {
-                return CreateText(doc, rect, name, value, PdfFontFactory.CreateFont(), (float)DEFAULT_FONT_SIZE, true);
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(e);
-            }
+            return CreateText(doc, rect, name, value, null, -1, true);
         }
 
         /// <summary>
@@ -3274,70 +3264,58 @@ namespace iText.Forms.Fields {
             if (asNormal != null) {
                 normalResources = asNormal.GetAsDictionary(PdfName.Resources);
             }
+            PdfDictionary daFontDict = null;
+            PdfName daFontName = null;
+            Object[] dab = new Object[3];
             if (defaultResources != null || normalResources != null) {
                 PdfDictionary normalFontDic = normalResources != null ? normalResources.GetAsDictionary(PdfName.Font) : null;
                 PdfDictionary defaultFontDic = defaultResources != null ? defaultResources.GetAsDictionary(PdfName.Font) : 
                     null;
                 PdfString defaultAppearance = GetDefaultAppearance();
                 if ((normalFontDic != null || defaultFontDic != null) && defaultAppearance != null) {
-                    Object[] dab = SplitDAelements(defaultAppearance.ToUnicodeString());
-                    PdfName fontName = new PdfName(dab[DA_FONT].ToString());
-                    fontAndSize[2] = fontName;
-                    PdfDictionary requiredFontDictionary = null;
-                    if (normalFontDic != null && null != normalFontDic.GetAsDictionary(fontName)) {
-                        requiredFontDictionary = normalFontDic.GetAsDictionary(fontName);
-                    }
-                    else {
-                        if (defaultFontDic != null) {
-                            requiredFontDictionary = defaultFontDic.GetAsDictionary(fontName);
+                    dab = SplitDAelements(defaultAppearance.ToUnicodeString());
+                    Object fontNameObj = dab[DA_FONT];
+                    if (fontNameObj != null) {
+                        daFontName = new PdfName(fontNameObj.ToString());
+                        // according to spec, DA font shall be taken from the DR
+                        if (defaultFontDic != null && null != defaultFontDic.GetAsDictionary(daFontName)) {
+                            daFontDict = defaultFontDic.GetAsDictionary(daFontName);
                         }
-                    }
-                    if (font != null) {
-                        fontAndSize[0] = font;
-                    }
-                    else {
-                        PdfFont dicFont = document != null ? document.GetFont(requiredFontDictionary) : PdfFontFactory.CreateFont(
-                            requiredFontDictionary);
-                        fontAndSize[0] = dicFont;
-                    }
-                    if (fontSize >= 0) {
-                        fontAndSize[1] = fontSize;
-                    }
-                    else {
-                        fontAndSize[1] = dab[DA_SIZE];
-                    }
-                    if (color == null) {
-                        color = (Color)dab[DA_COLOR];
-                    }
-                }
-                else {
-                    if (font != null) {
-                        fontAndSize[0] = font;
-                    }
-                    else {
-                        fontAndSize[0] = PdfFontFactory.CreateFont();
-                    }
-                    if (fontSize >= 0) {
-                        fontAndSize[1] = fontSize;
-                    }
-                    else {
-                        fontAndSize[1] = (float)DEFAULT_FONT_SIZE;
+                        else {
+                            if (normalFontDic != null) {
+                                // search normal appearance as a fall back in case it was not found in DR
+                                daFontDict = normalFontDic.GetAsDictionary(daFontName);
+                            }
+                        }
                     }
                 }
             }
+            if (font != null) {
+                fontAndSize[0] = font;
+            }
             else {
-                if (font != null) {
-                    fontAndSize[0] = font;
+                if (daFontDict != null) {
+                    PdfFont daFont = document != null ? document.GetFont(daFontDict) : PdfFontFactory.CreateFont(daFontDict);
+                    fontAndSize[0] = daFont;
+                    fontAndSize[2] = daFontName;
                 }
                 else {
                     fontAndSize[0] = PdfFontFactory.CreateFont();
                 }
-                if (fontSize >= 0) {
-                    fontAndSize[1] = fontSize;
+            }
+            if (fontSize >= 0) {
+                fontAndSize[1] = fontSize;
+            }
+            else {
+                if (dab[DA_SIZE] != null) {
+                    fontAndSize[1] = dab[DA_SIZE];
                 }
                 else {
                     fontAndSize[1] = (float)DEFAULT_FONT_SIZE;
                 }
+            }
+            if (color == null) {
+                color = (Color)dab[DA_COLOR];
             }
             return fontAndSize;
         }
@@ -3407,7 +3385,7 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
-            catch (System.IO.IOException) {
+            catch (Exception) {
             }
             return ret;
         }

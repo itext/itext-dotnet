@@ -121,6 +121,28 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FormFieldTest04() {
+            String filename = destinationFolder + "formFieldTest04.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), new PdfWriter(filename
+                ));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfPage page = pdfDoc.GetFirstPage();
+            Rectangle rect = new Rectangle(210, 490, 150, 22);
+            PdfTextFormField field = PdfFormField.CreateText(pdfDoc, rect, "TestField", "some value in courier font", 
+                PdfFontFactory.CreateFont(StandardFonts.COURIER), 10);
+            form.AddField(field, page);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFieldTest04.pdf", destinationFolder
+                , "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnicodeFormFieldTest() {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
@@ -425,6 +447,30 @@ namespace iText.Forms {
             field.SetValue("New value size must be 8, but with different font.");
             new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph
                 ("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."));
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FormRegenerateWithInvalidDefaultAppearance01() {
+            String testName = "formRegenerateWithInvalidDefaultAppearance01";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            String srcPdf = sourceFolder + "invalidDA.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(srcPdf);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("Text1").SetValue("New field value");
+            fields.Get("Text2").SetValue("New field value");
+            fields.Get("Text3").SetValue("New field value");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
