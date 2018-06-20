@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Forms.Fields;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -150,6 +152,62 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FieldsJustificationTest01() {
+            FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FieldsJustificationTest02() {
+            FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest02");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private static void FillTextFieldsThenFlattenThenCompare(String testName) {
+            String src = sourceFolder + "src_" + testName + ".pdf";
+            String dest = destinationFolder + testName + ".pdf";
+            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            foreach (PdfFormField field in form.GetFormFields().Values) {
+                if (field is PdfTextFormField) {
+                    String newValue;
+                    if (field.IsMultiline()) {
+                        newValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                    }
+                    else {
+                        newValue = "HELLO!";
+                    }
+                    int? justification = field.GetJustification();
+                    if (null == justification || 0 == (int)justification) {
+                        field.SetBackgroundColor(new DeviceRgb(255, 200, 200));
+                    }
+                    else {
+                        // reddish
+                        if (1 == (int)justification) {
+                            field.SetBackgroundColor(new DeviceRgb(200, 255, 200));
+                        }
+                        else {
+                            // greenish
+                            if (2 == (int)justification) {
+                                field.SetBackgroundColor(new DeviceRgb(200, 200, 255));
+                            }
+                        }
+                    }
+                    // blueish
+                    field.SetValue(newValue);
+                }
+            }
+            form.FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
     }
 }
