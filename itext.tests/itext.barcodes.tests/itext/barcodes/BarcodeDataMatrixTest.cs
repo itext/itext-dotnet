@@ -186,5 +186,32 @@ namespace iText.Barcodes {
             int result = bc.SetCode(aCode);
             NUnit.Framework.Assert.AreEqual(result, BarcodeDataMatrix.DM_ERROR_TEXT_TOO_BIG);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode08Test() {
+            BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+            barcodeDataMatrix.SetWidth(18);
+            barcodeDataMatrix.SetHeight(18);
+            int result = barcodeDataMatrix.SetCode("AbcdFFghijklmnopqrstuWXSQ");
+            NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_ERROR_TEXT_TOO_BIG, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode09Test() {
+            BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+            barcodeDataMatrix.SetWidth(17);
+            barcodeDataMatrix.SetHeight(17);
+            int result = barcodeDataMatrix.SetCode("AbcdFFghijklmnopqrstuWXSQ");
+            NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_ERROR_INVALID_SQUARE, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode10Test() {
+            BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+            barcodeDataMatrix.SetWidth(26);
+            barcodeDataMatrix.SetHeight(12);
+            int result = barcodeDataMatrix.SetCode("AbcdFFghijklmnopqrstuWXSQ");
+            NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_ERROR_TEXT_TOO_BIG, result);
+        }
     }
 }

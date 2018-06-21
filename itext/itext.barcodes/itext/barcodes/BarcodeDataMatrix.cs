@@ -333,23 +333,24 @@ namespace iText.Barcodes {
 
         /// <summary>Sets the height of the barcode.</summary>
         /// <remarks>
-        /// Sets the height of the barcode. If the height is zero it will be calculated. This height doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (height, width):<p>
+        /// Sets the height of the barcode. If the height is zero it will be calculated.
+        /// This height doesn't include the whitespace border, if any.
+        /// The allowed dimensions are (width, height):<p>
         /// 10, 10<br />
         /// 12, 12<br />
-        /// 8, 18<br />
+        /// 18, 8<br />
         /// 14, 14<br />
-        /// 8, 32<br />
+        /// 32, 8<br />
         /// 16, 16<br />
-        /// 12, 26<br />
+        /// 26, 12<br />
         /// 18, 18<br />
         /// 20, 20<br />
-        /// 12, 36<br />
+        /// 36, 12<br />
         /// 22, 22<br />
-        /// 16, 36<br />
+        /// 36, 16<br />
         /// 24, 24<br />
         /// 26, 26<br />
-        /// 16, 48<br />
+        /// 48, 16<br />
         /// 32, 32<br />
         /// 36, 36<br />
         /// 40, 40<br />
@@ -383,23 +384,24 @@ namespace iText.Barcodes {
 
         /// <summary>Sets the width of the barcode.</summary>
         /// <remarks>
-        /// Sets the width of the barcode. If the width is zero it will be calculated. This width doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (height, width):<p>
+        /// Sets the width of the barcode. If the width is zero it will be calculated.
+        /// This width doesn't include the whitespace border, if any.
+        /// The allowed dimensions are (width, height):<p>
         /// 10, 10<br />
         /// 12, 12<br />
-        /// 8, 18<br />
+        /// 18, 8<br />
         /// 14, 14<br />
-        /// 8, 32<br />
+        /// 32, 8<br />
         /// 16, 16<br />
-        /// 12, 26<br />
+        /// 26, 12<br />
         /// 18, 18<br />
         /// 20, 20<br />
-        /// 12, 36<br />
+        /// 36, 12<br />
         /// 22, 22<br />
-        /// 16, 36<br />
+        /// 36, 16<br />
         /// 24, 24<br />
         /// 26, 26<br />
-        /// 16, 48<br />
+        /// 48, 16<br />
         /// 32, 32<br />
         /// 36, 36<br />
         /// 40, 40<br />
@@ -1117,7 +1119,7 @@ namespace iText.Barcodes {
                                 dataOffsetNew = requiredCapacityForASCII;
                             }
                         }
-                        addLatch = unlatch < 0 ? true : (dataOffset - requiredCapacityForASCII != unlatch);
+                        addLatch = (unlatch < 0) || ((dataOffset - requiredCapacityForASCII) != unlatch);
                         if (requiredCapacityForC40orText % 3 == 0 && requiredCapacityForC40orText / 3 * 2 + (addLatch ? 2 : 0) < requiredCapacityForASCII
                             ) {
                             usingASCII = false;
@@ -1138,17 +1140,15 @@ namespace iText.Barcodes {
                     usingASCII = true;
                 }
             }
+            if (dataOffset < 0) {
+                return -1;
+            }
             if (usingASCII) {
                 return AsciiEncodation(text, textOffset, 1, data, dataOffset, dataLength, prevEnc == mode ? 1 : -1, DM_ASCII
                     , origDataOffset);
             }
             if (addLatch) {
-                if (c40) {
-                    data[dataOffset + ptrOut++] = LATCH_C40;
-                }
-                else {
-                    data[dataOffset + ptrOut++] = LATCH_TEXT;
-                }
+                data[dataOffset + ptrOut++] = c40 ? LATCH_C40 : LATCH_TEXT;
             }
             int[] enc = new int[textLength * 4 + 10];
             encPtr = 0;
