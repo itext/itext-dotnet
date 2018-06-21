@@ -249,5 +249,18 @@ namespace iText.Barcodes {
             , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode14Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+                barcodeDataMatrix.SetWidth(18);
+                barcodeDataMatrix.SetHeight(18);
+                byte[] str = "AbcdFFghijklmnop".GetBytes();
+                barcodeDataMatrix.SetCode(str, 0, -1);
+            }
+            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+;
+        }
     }
 }
