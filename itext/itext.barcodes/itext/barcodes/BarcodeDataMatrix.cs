@@ -257,6 +257,12 @@ namespace iText.Barcodes {
         /// <CODE>DM_ERROR_EXTENSION</CODE> - an error was while parsing an extension.
         /// </returns>
         public virtual int SetCode(byte[] text, int textOffset, int textSize) {
+            if (textOffset < 0) {
+                throw new IndexOutOfRangeException("" + textOffset);
+            }
+            if (textOffset + textSize > text.Length) {
+                throw new IndexOutOfRangeException("" + textSize);
+            }
             int extCount;
             int e;
             int k;

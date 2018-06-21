@@ -213,5 +213,41 @@ namespace iText.Barcodes {
             int result = barcodeDataMatrix.SetCode("AbcdFFghijklmnopqrstuWXSQ");
             NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_ERROR_TEXT_TOO_BIG, result);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode11Test() {
+            BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+            barcodeDataMatrix.SetWidth(18);
+            barcodeDataMatrix.SetHeight(18);
+            byte[] str = "AbcdFFghijklmnop".GetBytes();
+            int result = barcodeDataMatrix.SetCode(str, 0, str.Length);
+            NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_NO_ERROR, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode12Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+                barcodeDataMatrix.SetWidth(18);
+                barcodeDataMatrix.SetHeight(18);
+                byte[] str = "AbcdFFghijklmnop".GetBytes();
+                barcodeDataMatrix.SetCode(str, -1, str.Length);
+            }
+            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Barcode13Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodeDataMatrix barcodeDataMatrix = new BarcodeDataMatrix();
+                barcodeDataMatrix.SetWidth(18);
+                barcodeDataMatrix.SetHeight(18);
+                byte[] str = "AbcdFFghijklmnop".GetBytes();
+                barcodeDataMatrix.SetCode(str, 0, str.Length + 1);
+            }
+            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+;
+        }
     }
 }
