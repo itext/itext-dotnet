@@ -30,7 +30,7 @@ namespace iText.Svg.Renderers.Impl {
                             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
                                 y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
                             }
-                            if (SvgMathUtils.CompareFloats(x, 0) || SvgMathUtils.CompareFloats(y, 0)) {
+                            if (!SvgMathUtils.CompareFloats(x, 0) || !SvgMathUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
                                 currentCanvas.ConcatMatrix(translation);
                             }
