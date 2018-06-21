@@ -260,7 +260,7 @@ namespace iText.Barcodes {
             if (textOffset < 0) {
                 throw new IndexOutOfRangeException("" + textOffset);
             }
-            if (textOffset + textSize > text.Length || textOffset + textSize < 0) {
+            if (textOffset + textSize > text.Length || textSize < 0) {
                 throw new IndexOutOfRangeException("" + textSize);
             }
             int extCount;
