@@ -69,7 +69,7 @@ namespace iText.StyledXmlParser.Css.Media {
         /// <param name="not">logical "not" value</param>
         internal MediaQuery(String type, IList<MediaExpression> expressions, bool only, bool not) {
             this.type = type;
-            this.expressions = expressions;
+            this.expressions = new List<MediaExpression>(expressions);
             this.only = only;
             this.not = not;
         }

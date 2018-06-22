@@ -60,14 +60,14 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>Gets the properties.</summary>
         /// <returns>the properties</returns>
         public virtual IList<CssDeclaration> GetProperties() {
-            return properties;
+            return new List<CssDeclaration>(properties);
         }
 
         /* (non-Javadoc)
         * @see com.itextpdf.html2pdf.css.CssNestedAtRule#addBodyCssDeclarations(java.util.List)
         */
         public override void AddBodyCssDeclarations(IList<CssDeclaration> cssDeclarations) {
-            properties = cssDeclarations;
+            properties = new List<CssDeclaration>(cssDeclarations);
         }
 
         /* (non-Javadoc)

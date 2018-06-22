@@ -139,8 +139,8 @@ namespace iText.StyledXmlParser.Css.Media {
                                 .GetWidth();
                         }
                         else {
-                            return aspectRatio != null && Equals(aspectRatio[0] * deviceDescription.GetHeight(), aspectRatio[1] * deviceDescription
-                                .GetWidth(), 0.000001);
+                            return aspectRatio != null && CssUtils.CompareFloats(aspectRatio[0] * deviceDescription.GetHeight(), aspectRatio
+                                [1] * deviceDescription.GetWidth());
                         }
                     }
                     goto case MediaFeature.GRID;
@@ -248,10 +248,6 @@ namespace iText.StyledXmlParser.Css.Media {
             else {
                 return CssUtils.ParseAbsoluteLength(value);
             }
-        }
-
-        private static bool Equals(double a, double b, double epsilon) {
-            return a == b ? true : Math.Abs(a - b) < epsilon;
         }
     }
 }

@@ -56,6 +56,8 @@ namespace iText.StyledXmlParser.Css.Util {
         private static readonly String[] RELATIVE_MEASUREMENTS = new String[] { CssConstants.PERCENTAGE, CssConstants
             .EM, CssConstants.EX, CssConstants.REM };
 
+        private const float EPSILON = 0.000000000000001f;
+
         /// <summary>
         /// Creates a new
         /// <see cref="CssUtils"/>
@@ -414,6 +416,12 @@ namespace iText.StyledXmlParser.Css.Util {
             //TODO re-add Webcolors by either creating a dependency on kernel or moving webcolors to io
             return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || CssConstants.TRANSPARENT
                 .Equals(value);
+        }
+
+        /// <summary>Helper method for comparing floating point numbers</summary>
+        /// <returns>true if both floating point numbers are close enough to be considered equal</returns>
+        public static bool CompareFloats(double f1, double f2) {
+            return (Math.Abs(f1 - f2) < EPSILON);
         }
     }
 }
