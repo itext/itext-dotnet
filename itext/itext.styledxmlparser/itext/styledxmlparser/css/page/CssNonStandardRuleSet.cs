@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,34 +41,49 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.IO;
-using iText.StyledXmlParser.Node;
+using System.Collections.Generic;
+using System.Text;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Selector;
 
-namespace iText.StyledXmlParser {
-    /// <summary>Interface for the HTML parsing operations that accept HTML and return a document node.</summary>
-    public interface IHtmlParser {
+namespace iText.StyledXmlParser.Css.Page {
+    /// <summary>
+    /// Class for a non standard
+    /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>
+    /// .
+    /// </summary>
+    internal class CssNonStandardRuleSet : CssRuleSet {
         /// <summary>
-        /// Parses HTML provided as an
-        /// <c>InputStream</c>
-        /// and an encoding.
+        /// Creates a new
+        /// <see cref="CssNonStandardRuleSet"/>
+        /// instance.
         /// </summary>
-        /// <param name="htmlStream">the html stream</param>
-        /// <param name="charset">
-        /// the character set. If
-        /// <see langword="null"/>
-        /// then parser should detect encoding from stream.
-        /// </param>
-        /// <returns>a document node</returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
-        IDocumentNode Parse(Stream htmlStream, String charset);
+        /// <param name="selector">the selector</param>
+        /// <param name="declarations">the declarations</param>
+        public CssNonStandardRuleSet(ICssSelector selector, IList<CssDeclaration> declarations)
+            : base(selector, declarations) {
+        }
 
-        /// <summary>
-        /// Parses HTML provided as a
-        /// <c>String</c>
-        /// .
-        /// </summary>
-        /// <param name="html">the html string</param>
-        /// <returns>a document node</returns>
-        IDocumentNode Parse(String html);
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.css.CssRuleSet#toString()
+        */
+        public override String ToString() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < GetNormalDeclarations().Count; i++) {
+                if (i > 0) {
+                    sb.Append(";").Append("\n");
+                }
+                CssDeclaration declaration = GetNormalDeclarations()[i];
+                sb.Append(declaration.ToString());
+            }
+            for (int i = 0; i < GetImportantDeclarations().Count; i++) {
+                if (i > 0 || GetNormalDeclarations().Count > 0) {
+                    sb.Append(";").Append("\n");
+                }
+                CssDeclaration declaration = GetImportantDeclarations()[i];
+                sb.Append(declaration.ToString()).Append(" !important");
+            }
+            return sb.ToString();
+        }
     }
 }

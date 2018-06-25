@@ -64,14 +64,14 @@ namespace iText.StyledXmlParser.Css {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.CssNestedAtRule#addBodyCssDeclarations(java.util.List)
+        * @see com.itextpdf.styledxmlparser.css.CssNestedAtRule#addBodyCssDeclarations(java.util.List)
         */
         public override void AddBodyCssDeclarations(IList<CssDeclaration> cssDeclarations) {
             properties = new List<CssDeclaration>(cssDeclarations);
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.CssNestedAtRule#toString()
+        * @see com.itextpdf.styledxmlparser.css.CssNestedAtRule#toString()
         */
         public override String ToString() {
             StringBuilder sb = new StringBuilder();

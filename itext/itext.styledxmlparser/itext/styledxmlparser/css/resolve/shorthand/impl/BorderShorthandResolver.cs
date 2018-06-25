@@ -54,14 +54,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// </summary>
     public class BorderShorthandResolver : AbstractBorderShorthandResolver {
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.resolve.shorthand.impl.AbstractBorderShorthandResolver#getPrefix()
+        * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.impl.AbstractBorderShorthandResolver#getPrefix()
         */
         protected internal override String GetPrefix() {
-            return CssConstants.BORDER;
+            return CommonCssConstants.BORDER;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.resolve.shorthand.impl.AbstractBorderShorthandResolver#resolveShorthand(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.impl.AbstractBorderShorthandResolver#resolveShorthand(java.lang.String)
         */
         public override IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             IList<CssDeclaration> preResolvedProps = base.ResolveShorthand(shorthandExpression);

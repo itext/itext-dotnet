@@ -51,12 +51,12 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 
 namespace iText.StyledXmlParser.Node.Impl.Jsoup {
     /// <summary>Class that uses JSoup to parse HTML.</summary>
-    public class JsoupHtmlParser : IHtmlParser {
+    public class JsoupHtmlParser : IXmlParser {
         /// <summary>The logger.</summary>
         private static ILog logger = LogManager.GetLogger(typeof(JsoupHtmlParser));
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.IHtmlParser#parse(java.io.InputStream, java.lang.String)
+        * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
         */
         /// <exception cref="System.IO.IOException"/>
         public virtual IDocumentNode Parse(Stream htmlStream, String charset) {
@@ -74,7 +74,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.IHtmlParser#parse(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.lang.String)
         */
         public virtual IDocumentNode Parse(String html) {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);

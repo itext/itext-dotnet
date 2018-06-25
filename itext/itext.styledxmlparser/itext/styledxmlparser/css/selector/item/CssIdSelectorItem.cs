@@ -64,21 +64,21 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.item.ICssSelectorItem#getSpecificity()
+        * @see com.itextpdf.styledxmlparser.css.selector.item.ICssSelectorItem#getSpecificity()
         */
         public virtual int GetSpecificity() {
             return CssSpecificityConstants.ID_SPECIFICITY;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.item.ICssSelectorItem#matches(com.itextpdf.html2pdf.html.node.INode)
+        * @see com.itextpdf.styledxmlparser.css.selector.item.ICssSelectorItem#matches(com.itextpdf.styledxmlparser.html.node.INode)
         */
         public virtual bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
                 return false;
             }
             IElementNode element = (IElementNode)node;
-            return id.Equals(element.GetAttribute(AttributeConstants.ID));
+            return id.Equals(element.GetAttribute(CommonAttributeConstants.ID));
         }
 
         /* (non-Javadoc)

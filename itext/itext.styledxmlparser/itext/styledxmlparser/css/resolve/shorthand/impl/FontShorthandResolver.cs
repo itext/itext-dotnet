@@ -57,21 +57,22 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class FontShorthandResolver : IShorthandResolver {
         /// <summary>Unsupported shorthand values.</summary>
         private static readonly ICollection<String> UNSUPPORTED_VALUES_OF_FONT_SHORTHAND = new HashSet<String>(JavaUtil.ArraysAsList
-            (CssConstants.CAPTION, CssConstants.ICON, CssConstants.MENU, CssConstants.MESSAGE_BOX, CssConstants.SMALL_CAPTION
-            , CssConstants.STATUS_BAR));
+            (CommonCssConstants.CAPTION, CommonCssConstants.ICON, CommonCssConstants.MENU, CommonCssConstants.MESSAGE_BOX
+            , CommonCssConstants.SMALL_CAPTION, CommonCssConstants.STATUS_BAR));
 
         /// <summary>Font weight values.</summary>
         private static readonly ICollection<String> FONT_WEIGHT_NOT_DEFAULT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (CssConstants.BOLD, CssConstants.BOLDER, CssConstants.LIGHTER, "100", "200", "300", "400", "500", "600"
-            , "700", "800", "900"));
+            (CommonCssConstants.BOLD, CommonCssConstants.BOLDER, CommonCssConstants.LIGHTER, "100", "200", "300", 
+            "400", "500", "600", "700", "800", "900"));
 
         /// <summary>Font size values.</summary>
-        private static readonly ICollection<String> FONT_SIZE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList(CssConstants
-            .MEDIUM, CssConstants.XX_SMALL, CssConstants.X_SMALL, CssConstants.SMALL, CssConstants.LARGE, CssConstants
-            .X_LARGE, CssConstants.XX_LARGE, CssConstants.SMALLER, CssConstants.LARGER));
+        private static readonly ICollection<String> FONT_SIZE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants
+            .MEDIUM, CommonCssConstants.XX_SMALL, CommonCssConstants.X_SMALL, CommonCssConstants.SMALL, CommonCssConstants
+            .LARGE, CommonCssConstants.X_LARGE, CommonCssConstants.XX_LARGE, CommonCssConstants.SMALLER, CommonCssConstants
+            .LARGER));
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             if (UNSUPPORTED_VALUES_OF_FONT_SHORTHAND.Contains(shorthandExpression)) {
@@ -79,11 +80,13 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 logger.Error(MessageFormatUtil.Format("The \"{0}\" value of CSS shorthand property \"font\" is not supported"
                     , shorthandExpression));
             }
-            if (CssConstants.INITIAL.Equals(shorthandExpression) || CssConstants.INHERIT.Equals(shorthandExpression)) {
-                return JavaUtil.ArraysAsList(new CssDeclaration(CssConstants.FONT_STYLE, shorthandExpression), new CssDeclaration
-                    (CssConstants.FONT_VARIANT, shorthandExpression), new CssDeclaration(CssConstants.FONT_WEIGHT, shorthandExpression
-                    ), new CssDeclaration(CssConstants.FONT_SIZE, shorthandExpression), new CssDeclaration(CssConstants.LINE_HEIGHT
-                    , shorthandExpression), new CssDeclaration(CssConstants.FONT_FAMILY, shorthandExpression));
+            if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression
+                )) {
+                return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.FONT_STYLE, shorthandExpression), new CssDeclaration
+                    (CommonCssConstants.FONT_VARIANT, shorthandExpression), new CssDeclaration(CommonCssConstants.FONT_WEIGHT
+                    , shorthandExpression), new CssDeclaration(CommonCssConstants.FONT_SIZE, shorthandExpression), new CssDeclaration
+                    (CommonCssConstants.LINE_HEIGHT, shorthandExpression), new CssDeclaration(CommonCssConstants.FONT_FAMILY
+                    , shorthandExpression));
             }
             String fontStyleValue = null;
             String fontVariantValue = null;
@@ -95,11 +98,11 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 , ","));
             foreach (String value in properties) {
                 int slashSymbolIndex = value.IndexOf('/');
-                if (CssConstants.ITALIC.Equals(value) || CssConstants.OBLIQUE.Equals(value)) {
+                if (CommonCssConstants.ITALIC.Equals(value) || CommonCssConstants.OBLIQUE.Equals(value)) {
                     fontStyleValue = value;
                 }
                 else {
-                    if (CssConstants.SMALL_CAPS.Equals(value)) {
+                    if (CommonCssConstants.SMALL_CAPS.Equals(value)) {
                         fontVariantValue = value;
                     }
                     else {
@@ -124,13 +127,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     }
                 }
             }
-            IList<CssDeclaration> cssDeclarations = JavaUtil.ArraysAsList(new CssDeclaration(CssConstants.FONT_STYLE, 
-                fontStyleValue == null ? CssConstants.INITIAL : fontStyleValue), new CssDeclaration(CssConstants.FONT_VARIANT
-                , fontVariantValue == null ? CssConstants.INITIAL : fontVariantValue), new CssDeclaration(CssConstants
-                .FONT_WEIGHT, fontWeightValue == null ? CssConstants.INITIAL : fontWeightValue), new CssDeclaration(CssConstants
-                .FONT_SIZE, fontSizeValue == null ? CssConstants.INITIAL : fontSizeValue), new CssDeclaration(CssConstants
-                .LINE_HEIGHT, lineHeightValue == null ? CssConstants.INITIAL : lineHeightValue), new CssDeclaration(CssConstants
-                .FONT_FAMILY, fontFamilyValue == null ? CssConstants.INITIAL : fontFamilyValue));
+            IList<CssDeclaration> cssDeclarations = JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.FONT_STYLE
+                , fontStyleValue == null ? CommonCssConstants.INITIAL : fontStyleValue), new CssDeclaration(CommonCssConstants
+                .FONT_VARIANT, fontVariantValue == null ? CommonCssConstants.INITIAL : fontVariantValue), new CssDeclaration
+                (CommonCssConstants.FONT_WEIGHT, fontWeightValue == null ? CommonCssConstants.INITIAL : fontWeightValue
+                ), new CssDeclaration(CommonCssConstants.FONT_SIZE, fontSizeValue == null ? CommonCssConstants.INITIAL
+                 : fontSizeValue), new CssDeclaration(CommonCssConstants.LINE_HEIGHT, lineHeightValue == null ? CommonCssConstants
+                .INITIAL : lineHeightValue), new CssDeclaration(CommonCssConstants.FONT_FAMILY, fontFamilyValue == null
+                 ? CommonCssConstants.INITIAL : fontFamilyValue));
             return cssDeclarations;
         }
 

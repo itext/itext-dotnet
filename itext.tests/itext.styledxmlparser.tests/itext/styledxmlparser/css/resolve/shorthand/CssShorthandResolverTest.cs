@@ -55,7 +55,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: italic"
                 , "font-variant: initial", "font-weight: bold", "font-size: 12px", "line-height: 30px", "font-family: georgia,serif"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -67,7 +67,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: initial"
                 , "font-variant: initial", "font-weight: bold", "font-size: initial", "line-height: initial", "font-family: georgia,serif"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -79,7 +79,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: inherit"
                 , "font-variant: inherit", "font-weight: inherit", "font-size: inherit", "line-height: inherit", "font-family: inherit"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -91,7 +91,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: initial"
                 , "font-variant: initial", "font-weight: bold", "font-size: initial", "line-height: initial", "font-family: georgia,serif,\"Times New Roman\""
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -103,7 +103,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: italic"
                 , "font-variant: initial", "font-weight: bold", "font-size: 12px", "line-height: 30px", "font-family: georgia,\"Times New Roman\",serif"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -115,7 +115,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: italic"
                 , "font-variant: initial", "font-weight: bold", "font-size: 12px", "line-height: 30px", "font-family: georgia,\"Times New Roman\",serif"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -127,7 +127,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: italic"
                 , "font-variant: initial", "font-weight: bold", "font-size: 12px", "line-height: 30px", "font-family: georgia,\"Times New Roman\""
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -139,7 +139,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: initial"
                 , "font-variant: initial", "font-weight: initial", "font-size: initial", "line-height: initial", "font-family: georgia,'Times New Roman'"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
@@ -151,7 +151,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: initial"
                 , "font-variant: initial", "font-weight: initial", "font-size: initial", "line-height: initial", "font-family: georgia,'Times New Roman',serif"
                 ));
-            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssConstants.FONT);
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.FONT);
             NUnit.Framework.Assert.IsNotNull(resolver);
             IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
             CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);

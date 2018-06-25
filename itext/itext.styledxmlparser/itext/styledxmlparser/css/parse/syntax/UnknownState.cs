@@ -60,7 +60,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.parse.syntax.IParserState#process(char)
+        * @see com.itextpdf.styledxmlparser.css.parse.syntax.IParserState#process(char)
         */
         public virtual void Process(char ch) {
             if (ch == '/') {

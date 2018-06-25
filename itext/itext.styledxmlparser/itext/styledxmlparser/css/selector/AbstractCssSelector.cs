@@ -51,7 +51,7 @@ namespace iText.StyledXmlParser.Css.Selector {
     /// <summary>Abstract superclass for CSS Selectors.</summary>
     public abstract class AbstractCssSelector : ICssSelector {
         /// <summary>The selector items.</summary>
-        internal IList<ICssSelectorItem> selectorItems;
+        protected internal IList<ICssSelectorItem> selectorItems;
 
         /// <summary>
         /// Creates a new
@@ -68,7 +68,7 @@ namespace iText.StyledXmlParser.Css.Selector {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.ICssSelector#calculateSpecificity()
+        * @see com.itextpdf.styledxmlparser.css.selector.ICssSelector#calculateSpecificity()
         */
         public virtual int CalculateSpecificity() {
             int specificity = 0;

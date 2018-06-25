@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
@@ -50,15 +51,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// </summary>
     public class CssQuotesValidator : ICssDataTypeValidator {
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
         */
         public virtual bool IsValid(String objectString) {
-            /*
-            CssQuotes quotes = CssQuotes.createQuotes(objectString, false);
+            CssQuotes quotes = CssQuotes.CreateQuotes(objectString, false);
             return quotes != null;
-            */
-            //TODO: decide on moving CSSQuotes
-            return true;
         }
     }
 }

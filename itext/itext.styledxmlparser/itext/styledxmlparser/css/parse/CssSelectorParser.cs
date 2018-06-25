@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css.Selector.Item;
+using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse a CSS selector.</summary>
@@ -110,8 +111,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     }
 
                     case ':': {
-                        //TODO (RND-866): Consider pseudo-elements in SVG
-                        //appendPseudoSelector(selectorItems, selectorItem, match);
+                        AppendPseudoSelector(selectorItems, selectorItem, match);
                         break;
                     }
 
@@ -163,6 +163,78 @@ namespace iText.StyledXmlParser.Css.Parse {
                 throw new ArgumentException("Selector declaration is invalid");
             }
             return selectorItems;
+        }
+
+        /// <summary>
+        /// Resolves a pseudo selector, appends it to list and updates
+        /// <see cref="CssSelectorParserMatch"/>
+        /// in process.
+        /// </summary>
+        /// <param name="selectorItems">list of items to which new selector will be added to</param>
+        /// <param name="pseudoSelector">the pseudo selector</param>
+        /// <param name="match">
+        /// the corresponding
+        /// <see cref="CssSelectorParserMatch"/>
+        /// that will be updated.
+        /// </param>
+        private static void AppendPseudoSelector(IList<ICssSelectorItem> selectorItems, String pseudoSelector, CssSelectorParserMatch
+             match) {
+            pseudoSelector = pseudoSelector.ToLowerInvariant();
+            int start = match.GetIndex() + pseudoSelector.Length;
+            String source = match.GetSource();
+            if (start < source.Length && source[start] == '(') {
+                int bracketDepth = 1;
+                int curr = start + 1;
+                while (bracketDepth > 0 && curr < source.Length) {
+                    if (source[curr] == '(') {
+                        ++bracketDepth;
+                    }
+                    else {
+                        if (source[curr] == ')') {
+                            --bracketDepth;
+                        }
+                        else {
+                            if (source[curr] == '"' || source[curr] == '\'') {
+                                curr = CssUtils.FindNextUnescapedChar(source, source[curr], curr + 1);
+                            }
+                        }
+                    }
+                    ++curr;
+                }
+                if (bracketDepth == 0) {
+                    match.Next(curr);
+                    pseudoSelector += source.JSubstring(start, curr);
+                }
+                else {
+                    match.Next();
+                }
+            }
+            else {
+                match.Next();
+            }
+            /*
+            This :: notation is introduced by the current document in order to establish a discrimination between
+            pseudo-classes and pseudo-elements.
+            For compatibility with existing style sheets, user agents must also accept the previous one-colon
+            notation for pseudo-elements introduced in CSS levels 1 and 2 (namely, :first-line, :first-letter, :before and :after).
+            This compatibility is not allowed for the new pseudo-elements introduced in this specification.
+            */
+            if (pseudoSelector.StartsWith("::")) {
+                selectorItems.Add(new CssPseudoElementSelectorItem(pseudoSelector.Substring(2)));
+            }
+            else {
+                if (pseudoSelector.StartsWith(":") && legacyPseudoElements.Contains(pseudoSelector.Substring(1))) {
+                    selectorItems.Add(new CssPseudoElementSelectorItem(pseudoSelector.Substring(1)));
+                }
+                else {
+                    ICssSelectorItem pseudoClassSelectorItem = CssPseudoClassSelectorItem.Create(pseudoSelector.Substring(1));
+                    if (pseudoClassSelectorItem == null) {
+                        throw new ArgumentException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNSUPPORTED_PSEUDO_CSS_SELECTOR
+                            , pseudoSelector));
+                    }
+                    selectorItems.Add(pseudoClassSelectorItem);
+                }
+            }
         }
     }
 }

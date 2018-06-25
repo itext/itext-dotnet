@@ -45,6 +45,9 @@ using System;
 namespace iText.StyledXmlParser {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class LogMessageConstant {
+        /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
+        public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";
+
         /// <summary>The Constant ERROR_PARSING_COULD_NOT_MAP_NODE</summary>
         public const String ERROR_PARSING_COULD_NOT_MAP_NODE = "Could not map node type: {0}";
 
@@ -57,6 +60,9 @@ namespace iText.StyledXmlParser {
         public const String URL_IS_EMPTY_IN_CSS_EXPRESSION = "url function is empty in expression:{0}";
 
         public const String URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION = "url function is not properly closed in expression:{0}";
+
+        /// <summary>The Constant QUOTES_PROPERTY_INVALID.</summary>
+        public const String QUOTES_PROPERTY_INVALID = "Quote property \"{0}\" is invalid. It should contain even number of <string> values.";
 
         /// <summary>The Constant QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION.</summary>
         public const String QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION = "The quote is not closed in css expression: {0}";
@@ -78,6 +84,11 @@ namespace iText.StyledXmlParser {
         public const String UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE = "Unable to process external css file";
 
         public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
+
+        public const String UNSUPPORTED_PSEUDO_CSS_SELECTOR = "Unsupported pseudo css selector: {0}";
+
+        /// <summary>The Constant WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES.</summary>
+        public const String WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES = "Was not able to define one of the background CSS shorthand properties: {0}";
 
         /// <summary>Instantiates a new log message constant.</summary>
         private LogMessageConstant() {

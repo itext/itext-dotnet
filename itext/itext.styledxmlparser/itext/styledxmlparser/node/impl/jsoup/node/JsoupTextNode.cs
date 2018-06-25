@@ -68,7 +68,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.ITextNode#wholeText()
+        * @see com.itextpdf.styledxmlparser.html.node.ITextNode#wholeText()
         */
         public virtual String WholeText() {
             return textNode.GetWholeText();

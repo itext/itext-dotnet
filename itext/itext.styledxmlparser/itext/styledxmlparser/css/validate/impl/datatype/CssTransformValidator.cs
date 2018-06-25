@@ -51,10 +51,10 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// </summary>
     public class CssTransformValidator : ICssDataTypeValidator {
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
         */
         public virtual bool IsValid(String objectString) {
-            if (CssConstants.NONE.Equals(objectString)) {
+            if (CommonCssConstants.NONE.Equals(objectString)) {
                 return true;
             }
             String[] components = iText.IO.Util.StringUtil.Split(objectString, "\\)");
@@ -69,19 +69,19 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
         private bool IsValidComponent(String objectString) {
             String function;
             String args;
-            if (!CssConstants.NONE.Equals(objectString) && objectString.IndexOf('(') > 0) {
+            if (!CommonCssConstants.NONE.Equals(objectString) && objectString.IndexOf('(') > 0) {
                 function = objectString.JSubstring(0, objectString.IndexOf('(')).Trim();
                 args = objectString.Substring(objectString.IndexOf('(') + 1);
             }
             else {
                 return false;
             }
-            if (CssConstants.MATRIX.Equals(function) || CssConstants.SCALE.Equals(function) || CssConstants.SCALE_X.Equals
-                (function) || CssConstants.SCALE_Y.Equals(function)) {
+            if (CommonCssConstants.MATRIX.Equals(function) || CommonCssConstants.SCALE.Equals(function) || CommonCssConstants
+                .SCALE_X.Equals(function) || CommonCssConstants.SCALE_Y.Equals(function)) {
                 String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
-                if (arg.Length == 6 && CssConstants.MATRIX.Equals(function) || (arg.Length == 1 || arg.Length == 2) && CssConstants
-                    .SCALE.Equals(function) || arg.Length == 1 && (CssConstants.SCALE_X.Equals(function) || CssConstants.SCALE_Y
-                    .Equals(function))) {
+                if (arg.Length == 6 && CommonCssConstants.MATRIX.Equals(function) || (arg.Length == 1 || arg.Length == 2) 
+                    && CommonCssConstants.SCALE.Equals(function) || arg.Length == 1 && (CommonCssConstants.SCALE_X.Equals(
+                    function) || CommonCssConstants.SCALE_Y.Equals(function))) {
                     int i = 0;
                     for (; i < arg.Length; i++) {
                         try {
@@ -98,10 +98,10 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                 return false;
             }
             else {
-                if (CssConstants.TRANSLATE.Equals(function) || CssConstants.TRANSLATE_X.Equals(function) || CssConstants.TRANSLATE_Y
-                    .Equals(function)) {
+                if (CommonCssConstants.TRANSLATE.Equals(function) || CommonCssConstants.TRANSLATE_X.Equals(function) || CommonCssConstants
+                    .TRANSLATE_Y.Equals(function)) {
                     String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
-                    if ((arg.Length == 1 || arg.Length == 2 && CssConstants.TRANSLATE.Equals(function))) {
+                    if ((arg.Length == 1 || arg.Length == 2 && CommonCssConstants.TRANSLATE.Equals(function))) {
                         foreach (String a in arg) {
                             if (!IsValidForTranslate(a)) {
                                 return false;
@@ -112,7 +112,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                     return false;
                 }
                 else {
-                    if (CssConstants.ROTATE.Equals(function)) {
+                    if (CommonCssConstants.ROTATE.Equals(function)) {
                         try {
                             float value = float.Parse(args, System.Globalization.CultureInfo.InvariantCulture);
                             if (value == 0.0f) {
@@ -135,10 +135,10 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                         return false;
                     }
                     else {
-                        if (CssConstants.SKEW.Equals(function) || CssConstants.SKEW_X.Equals(function) || CssConstants.SKEW_Y.Equals
-                            (function)) {
+                        if (CommonCssConstants.SKEW.Equals(function) || CommonCssConstants.SKEW_X.Equals(function) || CommonCssConstants
+                            .SKEW_Y.Equals(function)) {
                             String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
-                            if ((arg.Length == 1) || (arg.Length == 2 && CssConstants.SKEW.Equals(function))) {
+                            if ((arg.Length == 1) || (arg.Length == 2 && CommonCssConstants.SKEW.Equals(function))) {
                                 for (int k = 0; k < arg.Length; k++) {
                                     try {
                                         float value = float.Parse(arg[k], System.Globalization.CultureInfo.InvariantCulture);
@@ -196,10 +196,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                     return false;
                 }
                 return (float.Parse(@string.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture) == 0.0f
-                     || @string.Substring(pos).Equals(CssConstants.PT) || @string.Substring(pos).Equals(CssConstants.IN) ||
-                     @string.Substring(pos).Equals(CssConstants.CM) || @string.Substring(pos).Equals(CssConstants.Q) || @string
-                    .Substring(pos).Equals(CssConstants.MM) || @string.Substring(pos).Equals(CssConstants.PC) || @string.Substring
-                    (pos).Equals(CssConstants.PX) || @string.Substring(pos).Equals(CssConstants.PERCENTAGE));
+                     || @string.Substring(pos).Equals(CommonCssConstants.PT) || @string.Substring(pos).Equals(CommonCssConstants
+                    .IN) || @string.Substring(pos).Equals(CommonCssConstants.CM) || @string.Substring(pos).Equals(CommonCssConstants
+                    .Q) || @string.Substring(pos).Equals(CommonCssConstants.MM) || @string.Substring(pos).Equals(CommonCssConstants
+                    .PC) || @string.Substring(pos).Equals(CommonCssConstants.PX) || @string.Substring(pos).Equals(CommonCssConstants
+                    .PERCENTAGE));
             }
             return false;
         }

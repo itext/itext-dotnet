@@ -55,7 +55,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// </summary>
     public class CssIdentifierValidator : ICssDataTypeValidator {
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
         */
         public virtual bool IsValid(String objectString) {
             // TODO now the validation is very lenient. Make it more strict

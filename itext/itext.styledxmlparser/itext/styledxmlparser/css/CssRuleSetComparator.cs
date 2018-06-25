@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2017 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -40,11 +40,20 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
+using iText.StyledXmlParser.Css.Selector;
+
 namespace iText.StyledXmlParser.Css {
-    /// <summary>
-    /// Interface for the CSS context used by a
-    /// <see cref="ICssResolver"/>
-    /// </summary>
-    public interface ICssContext {
+    /// <summary>Comparator class used to sort CSS rule set objects.</summary>
+    public class CssRuleSetComparator : IComparer<CssRuleSet> {
+        /// <summary>The selector comparator.</summary>
+        private CssSelectorComparator selectorComparator = new CssSelectorComparator();
+
+        /* (non-Javadoc)
+        * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+        */
+        public virtual int Compare(CssRuleSet o1, CssRuleSet o2) {
+            return selectorComparator.Compare(o1.GetSelector(), o2.GetSelector());
+        }
     }
 }

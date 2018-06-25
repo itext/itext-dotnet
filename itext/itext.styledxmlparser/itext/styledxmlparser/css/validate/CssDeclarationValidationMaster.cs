@@ -54,27 +54,30 @@ namespace iText.StyledXmlParser.Css.Validate {
 
         static CssDeclarationValidationMaster() {
             // TODO lazy initialization?
-            ICssDeclarationValidator colorCommonValidator = new MultiTypeDeclarationValidator(new CssEnumValidator(CssConstants
-                .TRANSPARENT, CssConstants.INITIAL, CssConstants.INHERIT, CssConstants.CURRENTCOLOR), new CssColorValidator
-                ());
+            ICssDeclarationValidator colorCommonValidator = new MultiTypeDeclarationValidator(new CssEnumValidator(CommonCssConstants
+                .TRANSPARENT, CommonCssConstants.INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.CURRENTCOLOR)
+                , new CssColorValidator());
             DEFAULT_VALIDATORS = new Dictionary<String, ICssDeclarationValidator>();
-            DEFAULT_VALIDATORS.Put(CssConstants.BACKGROUND_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.BORDER_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.BORDER_BOTTOM_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.BORDER_TOP_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.BORDER_LEFT_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.BORDER_RIGHT_COLOR, colorCommonValidator);
-            DEFAULT_VALIDATORS.Put(CssConstants.FLOAT, new SingleTypeDeclarationValidator(new CssEnumValidator(CssConstants
-                .LEFT, CssConstants.RIGHT, CssConstants.NONE, CssConstants.INHERIT, CssConstants.CENTER)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BORDER_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BORDER_BOTTOM_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BORDER_TOP_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BORDER_LEFT_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BORDER_RIGHT_COLOR, colorCommonValidator);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLOAT, new SingleTypeDeclarationValidator(new CssEnumValidator(CommonCssConstants
+                .LEFT, CommonCssConstants.RIGHT, CommonCssConstants.NONE, CommonCssConstants.INHERIT, CommonCssConstants
+                .CENTER)));
             /*center comes from legacy*/
-            DEFAULT_VALIDATORS.Put(CssConstants.PAGE_BREAK_BEFORE, new SingleTypeDeclarationValidator(new CssEnumValidator
-                (CssConstants.AUTO, CssConstants.ALWAYS, CssConstants.AVOID, CssConstants.LEFT, CssConstants.RIGHT)));
-            DEFAULT_VALIDATORS.Put(CssConstants.PAGE_BREAK_AFTER, new SingleTypeDeclarationValidator(new CssEnumValidator
-                (CssConstants.AUTO, CssConstants.ALWAYS, CssConstants.AVOID, CssConstants.LEFT, CssConstants.RIGHT)));
-            DEFAULT_VALIDATORS.Put(CssConstants.QUOTES, new MultiTypeDeclarationValidator(new CssEnumValidator(CssConstants
-                .INITIAL, CssConstants.INHERIT, CssConstants.NONE), new CssQuotesValidator()));
-            DEFAULT_VALIDATORS.Put(CssConstants.TRANSFORM, new SingleTypeDeclarationValidator(new CssTransformValidator
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.PAGE_BREAK_BEFORE, new SingleTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.AUTO, CommonCssConstants.ALWAYS, CommonCssConstants.AVOID, CommonCssConstants.LEFT
+                , CommonCssConstants.RIGHT)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.PAGE_BREAK_AFTER, new SingleTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.AUTO, CommonCssConstants.ALWAYS, CommonCssConstants.AVOID, CommonCssConstants.LEFT
+                , CommonCssConstants.RIGHT)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.QUOTES, new MultiTypeDeclarationValidator(new CssEnumValidator(CommonCssConstants
+                .INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.NONE), new CssQuotesValidator()));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.TRANSFORM, new SingleTypeDeclarationValidator(new CssTransformValidator
                 ()));
         }
 

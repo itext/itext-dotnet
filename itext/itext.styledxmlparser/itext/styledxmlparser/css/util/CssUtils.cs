@@ -44,17 +44,19 @@ using System;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel.Colors;
+using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
     public class CssUtils {
-        private static readonly String[] METRIC_MEASUREMENTS = new String[] { CssConstants.PX, CssConstants.IN, CssConstants
-            .CM, CssConstants.MM, CssConstants.PC, CssConstants.PT };
+        private static readonly String[] METRIC_MEASUREMENTS = new String[] { CommonCssConstants.PX, CommonCssConstants
+            .IN, CommonCssConstants.CM, CommonCssConstants.MM, CommonCssConstants.PC, CommonCssConstants.PT };
 
-        private static readonly String[] RELATIVE_MEASUREMENTS = new String[] { CssConstants.PERCENTAGE, CssConstants
-            .EM, CssConstants.EX, CssConstants.REM };
+        private static readonly String[] RELATIVE_MEASUREMENTS = new String[] { CommonCssConstants.PERCENTAGE, CommonCssConstants
+            .EM, CommonCssConstants.EX, CommonCssConstants.REM };
 
         private const float EPSILON = 0.000000000000001f;
 
@@ -160,36 +162,43 @@ namespace iText.StyledXmlParser.Css.Util {
             float f = float.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
             String unit = length.Substring(pos);
             //points
-            if (unit.StartsWith(CssConstants.PT) || unit.Equals("") && defaultMetric.Equals(CssConstants.PT)) {
+            if (unit.StartsWith(CommonCssConstants.PT) || unit.Equals("") && defaultMetric.Equals(CommonCssConstants.PT
+                )) {
                 return f;
             }
             // inches
-            if (unit.StartsWith(CssConstants.IN) || (unit.Equals("") && defaultMetric.Equals(CssConstants.IN))) {
+            if (unit.StartsWith(CommonCssConstants.IN) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
+                IN))) {
                 return f * 72f;
             }
             else {
                 // centimeters
-                if (unit.StartsWith(CssConstants.CM) || (unit.Equals("") && defaultMetric.Equals(CssConstants.CM))) {
+                if (unit.StartsWith(CommonCssConstants.CM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
+                    CM))) {
                     return (f / 2.54f) * 72f;
                 }
                 else {
                     // quarter of a millimeter (1/40th of a centimeter).
-                    if (unit.StartsWith(CssConstants.Q) || (unit.Equals("") && defaultMetric.Equals(CssConstants.Q))) {
+                    if (unit.StartsWith(CommonCssConstants.Q) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.Q
+                        ))) {
                         return (f / 2.54f) * 72f / 40;
                     }
                     else {
                         // millimeters
-                        if (unit.StartsWith(CssConstants.MM) || (unit.Equals("") && defaultMetric.Equals(CssConstants.MM))) {
+                        if (unit.StartsWith(CommonCssConstants.MM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
+                            MM))) {
                             return (f / 25.4f) * 72f;
                         }
                         else {
                             // picas
-                            if (unit.StartsWith(CssConstants.PC) || (unit.Equals("") && defaultMetric.Equals(CssConstants.PC))) {
+                            if (unit.StartsWith(CommonCssConstants.PC) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
+                                PC))) {
                                 return f * 12f;
                             }
                             else {
                                 // pixels (1px = 0.75pt).
-                                if (unit.StartsWith(CssConstants.PX) || (unit.Equals("") && defaultMetric.Equals(CssConstants.PX))) {
+                                if (unit.StartsWith(CommonCssConstants.PX) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
+                                    PX))) {
                                     return f * 0.75f;
                                 }
                             }
@@ -207,7 +216,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="length">the length as a string</param>
         /// <returns>the length as a float</returns>
         public static float ParseAbsoluteLength(String length) {
-            return ParseAbsoluteLength(length, CssConstants.PX);
+            return ParseAbsoluteLength(length, CommonCssConstants.PX);
         }
 
         /// <summary>
@@ -229,20 +238,76 @@ namespace iText.StyledXmlParser.Css.Util {
             double f = Double.Parse(relativeValue.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
                 );
             String unit = relativeValue.Substring(pos);
-            if (unit.StartsWith(CssConstants.PERCENTAGE)) {
+            if (unit.StartsWith(CommonCssConstants.PERCENTAGE)) {
                 f = baseValue * f / 100;
             }
             else {
-                if (unit.StartsWith(CssConstants.EM) || unit.StartsWith(CssConstants.REM)) {
+                if (unit.StartsWith(CommonCssConstants.EM) || unit.StartsWith(CommonCssConstants.REM)) {
                     f = baseValue * f;
                 }
                 else {
-                    if (unit.StartsWith(CssConstants.EX)) {
+                    if (unit.StartsWith(CommonCssConstants.EX)) {
                         f = baseValue * f / 2;
                     }
                 }
             }
             return (float)f;
+        }
+
+        /// <summary>Convenience method for parsing a value to pt.</summary>
+        /// <remarks>
+        /// Convenience method for parsing a value to pt. Possible values are: <ul>
+        /// <li>a numeric value in pixels (e.g. 123, 1.23, .123),</li>
+        /// <li>a value with a metric unit (px, in, cm, mm, pc or pt) attached to it,</li>
+        /// <li>or a value with a relative value (%, em, ex).</li>
+        /// </ul>
+        /// </remarks>
+        /// <param name="value">the value</param>
+        /// <param name="emValue">the em value</param>
+        /// <param name="remValue">the root em value</param>
+        /// <returns>the unit value</returns>
+        public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
+            if (IsMetricValue(value) || IsNumericValue(value)) {
+                return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
+            }
+            else {
+                if (value != null && value.EndsWith(CommonCssConstants.PERCENTAGE)) {
+                    return new UnitValue(UnitValue.PERCENT, float.Parse(value.JSubstring(0, value.Length - 1), System.Globalization.CultureInfo.InvariantCulture
+                        ));
+                }
+                else {
+                    if (IsRemValue(value)) {
+                        return new UnitValue(UnitValue.POINT, ParseRelativeValue(value, remValue));
+                    }
+                    else {
+                        if (IsRelativeValue(value)) {
+                            return new UnitValue(UnitValue.POINT, ParseRelativeValue(value, emValue));
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Parses the border radius of specific corner.</summary>
+        /// <param name="specificBorderRadius">string that defines the border radius of specific corner.</param>
+        /// <param name="emValue">the em value</param>
+        /// <param name="remValue">the root em value</param>
+        /// <returns>
+        /// an array of
+        /// <see cref="iText.Layout.Properties.UnitValue">UnitValues</see>
+        /// that define horizontal and vertical border radius values
+        /// </returns>
+        public static UnitValue[] ParseSpecificCornerBorderRadius(String specificBorderRadius, float emValue, float
+             remValue) {
+            if (null == specificBorderRadius) {
+                return null;
+            }
+            UnitValue[] cornerRadii = new UnitValue[2];
+            String[] props = iText.IO.Util.StringUtil.Split(specificBorderRadius, "\\s+");
+            cornerRadii[0] = ParseLengthValueToPt(props[0], emValue, remValue);
+            cornerRadii[1] = 2 == props.Length ? ParseLengthValueToPt(props[1], emValue, remValue) : cornerRadii[0];
+            return cornerRadii;
         }
 
         /// <summary>Parses the resolution.</summary>
@@ -256,11 +321,11 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             float f = float.Parse(resolutionStr.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
             String unit = resolutionStr.Substring(pos);
-            if (unit.StartsWith(CssConstants.DPCM)) {
+            if (unit.StartsWith(CommonCssConstants.DPCM)) {
                 f *= 2.54f;
             }
             else {
-                if (unit.StartsWith(CssConstants.DPPX)) {
+                if (unit.StartsWith(CommonCssConstants.DPPX)) {
                     f *= 96;
                 }
             }
@@ -333,8 +398,8 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the string that needs to be checked.</param>
         /// <returns>boolean true if value contains an allowed metric value.</returns>
         public static bool IsRemValue(String value) {
-            return value != null && value.EndsWith(CssConstants.REM) && IsNumericValue(value.JSubstring(0, value.Length
-                 - CssConstants.REM.Length).Trim());
+            return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumericValue(value.JSubstring(0, value
+                .Length - CommonCssConstants.REM.Length).Trim());
         }
 
         /// <summary>Checks whether a string matches a numeric value (e.g.</summary>
@@ -409,19 +474,27 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the value</param>
         /// <returns>true, if the value contains a color property</returns>
         public static bool IsColorProperty(String value) {
-            /*
-            return value.contains("rgb(") || value.contains("rgba(") || value.contains("#")
-            || WebColors.NAMES.containsKey(value.toLowerCase()) || CssConstants.TRANSPARENT.equals(value);
-            */
-            //TODO re-add Webcolors by either creating a dependency on kernel or moving webcolors to io
-            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || CssConstants.TRANSPARENT
-                .Equals(value);
+            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || WebColors.NAMES.Contains
+                (value.ToLowerInvariant()) || CommonCssConstants.TRANSPARENT.Equals(value);
         }
 
         /// <summary>Helper method for comparing floating point numbers</summary>
         /// <returns>true if both floating point numbers are close enough to be considered equal</returns>
         public static bool CompareFloats(double f1, double f2) {
             return (Math.Abs(f1 - f2) < EPSILON);
+        }
+
+        /// <summary>Parses the RGBA color.</summary>
+        /// <param name="colorValue">the color value</param>
+        /// <returns>an RGBA value expressed as an array with four float values</returns>
+        public static float[] ParseRgbaColor(String colorValue) {
+            float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
+            if (rgbaColor == null) {
+                ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
+                rgbaColor = new float[] { 0, 0, 0, 1 };
+            }
+            return rgbaColor;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,29 +40,66 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using System.Collections.Generic;
+using iText.IO.Util;
 using iText.StyledXmlParser.Node;
 
-namespace iText.StyledXmlParser {
-    /// <summary>Utilities class with HTML-related functionality.</summary>
-    public sealed class HtmlUtils {
-        /// <summary>
-        /// Creates a new
-        /// <see cref="HtmlUtils"/>
-        /// instance.
-        /// </summary>
-        private HtmlUtils() {
-        }
+namespace iText.StyledXmlParser.Css {
+    /// <summary>The CSS context node.</summary>
+    public abstract class CssContextNode : INode, IStylesContainer {
+        /// <summary>The child nodes.</summary>
+        private IList<INode> childNodes = new List<INode>();
+
+        /// <summary>The parent node.</summary>
+        private INode parentNode;
+
+        /// <summary>The styles.</summary>
+        private IDictionary<String, String> styles;
 
         /// <summary>
-        /// Checks if an
-        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
-        /// represents a style sheet link.
+        /// Creates a new
+        /// <see cref="CssContextNode"/>
+        /// instance.
         /// </summary>
-        /// <param name="headChildElement">the head child element</param>
-        /// <returns>true, if the element node represents a style sheet link</returns>
-        public static bool IsStyleSheetLink(IElementNode headChildElement) {
-            return headChildElement.Name().Equals(TagConstants.LINK) && AttributeConstants.STYLESHEET.Equals(headChildElement
-                .GetAttribute(AttributeConstants.REL));
+        /// <param name="parentNode">the parent node</param>
+        public CssContextNode(INode parentNode) {
+            this.parentNode = parentNode;
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.html.node.INode#childNodes()
+        */
+        public virtual IList<INode> ChildNodes() {
+            return JavaCollectionsUtil.UnmodifiableList(childNodes);
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.html.node.INode#addChild(com.itextpdf.styledxmlparser.html.node.INode)
+        */
+        public virtual void AddChild(INode node) {
+            childNodes.Add(node);
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.html.node.INode#parentNode()
+        */
+        public virtual INode ParentNode() {
+            return parentNode;
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.html.node.IStylesContainer#setStyles(java.util.Map)
+        */
+        public virtual void SetStyles(IDictionary<String, String> stringStringMap) {
+            this.styles = stringStringMap;
+        }
+
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.html.node.IStylesContainer#getStyles()
+        */
+        public virtual IDictionary<String, String> GetStyles() {
+            return this.styles;
         }
     }
 }

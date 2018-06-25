@@ -405,8 +405,31 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element, so that you can add more child nodes or elements.</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element PrependChild(iText.StyledXmlParser.Jsoup.Nodes.Node
              child) {
+            return InsertChild(0, child);
+        }
+
+        /// <summary>Inserts the given child node into this element at the specified index.</summary>
+        /// <remarks>
+        /// Inserts the given child node into this element at the specified index. Current node will be shifted to the
+        /// right. The inserted nodes will be moved from their current parent. To prevent moving, copy the node first.
+        /// </remarks>
+        /// <param name="index">
+        /// 0-based index to insert children at. Specify
+        /// <c>0</c>
+        /// to insert at the start,
+        /// <c>-1</c>
+        /// at the
+        /// end
+        /// </param>
+        /// <param name="child">child node to insert</param>
+        /// <returns>this element, for chaining.</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertChild(int index, iText.StyledXmlParser.Jsoup.Nodes.Node
+             child) {
+            if (index == -1) {
+                return AppendChild(child);
+            }
             Validate.NotNull(child);
-            AddChildren(0, child);
+            AddChildren(index, child);
             return this;
         }
 
@@ -1001,12 +1024,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_937(accum)).Traverse(this);
+            new NodeTraversor(new _NodeVisitor_952(accum)).Traverse(this);
             return accum.ToString().Trim();
         }
 
-        private sealed class _NodeVisitor_937 : NodeVisitor {
-            public _NodeVisitor_937(StringBuilder accum) {
+        private sealed class _NodeVisitor_952 : NodeVisitor {
+            public _NodeVisitor_952(StringBuilder accum) {
                 this.accum = accum;
             }
 

@@ -52,7 +52,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
            .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/resolver/retrieveStreamTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, Count = 1)]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, Count = 2)]
         public virtual void malformedResourceNameTest() {
             String fileName = "resourceResolverTest .png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);

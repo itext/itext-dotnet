@@ -93,7 +93,7 @@ namespace iText.StyledXmlParser.Css {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.CssStatement#getCssRuleSets(com.itextpdf.html2pdf.html.node.INode, com.itextpdf.html2pdf.css.media.MediaDeviceDescription)
+        * @see com.itextpdf.styledxmlparser.css.CssStatement#getCssRuleSets(com.itextpdf.styledxmlparser.html.node.INode, com.itextpdf.styledxmlparser.css.media.MediaDeviceDescription)
         */
         public override IList<iText.StyledXmlParser.Css.CssRuleSet> GetCssRuleSets(INode element, MediaDeviceDescription
              deviceDescription) {

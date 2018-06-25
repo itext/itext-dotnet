@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -53,8 +53,21 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
 
         static ShorthandResolverFactory() {
             shorthandResolvers = new Dictionary<String, IShorthandResolver>();
-            shorthandResolvers.Put(CssConstants.BORDER, new BorderShorthandResolver());
-            shorthandResolvers.Put(CssConstants.FONT, new FontShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BACKGROUND, new BackgroundShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER, new BorderShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_BOTTOM, new BorderBottomShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_COLOR, new BorderColorShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_LEFT, new BorderLeftShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_RADIUS, new BorderRadiusShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_RIGHT, new BorderRightShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_STYLE, new BorderStyleShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_TOP, new BorderTopShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BORDER_WIDTH, new BorderWidthShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.FONT, new FontShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.LIST_STYLE, new ListStyleShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.MARGIN, new MarginShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.OUTLINE, new OutlineShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.PADDING, new PaddingShorthandResolver());
         }
 
         // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers

@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 
@@ -51,12 +52,13 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>Collect all CSS declarations from the provided INode tree.</summary>
         /// <param name="rootNode">tree from which to collect CSS</param>
         /// <param name="resourceResolver">ResourceResolver used to resolve resources</param>
-        void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver);
+        /// <param name="context">the CSS context (RootFontSize, etc.)</param>
+        void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver, AbstractCssContext context);
 
         /// <summary>Resolves the styles of a node given the passed context.</summary>
         /// <param name="node">the node</param>
         /// <param name="context">the CSS context (RootFontSize, etc.)</param>
         /// <returns>the map containing the resolved styles</returns>
-        IDictionary<String, String> ResolveStyles(INode node, ICssContext context);
+        IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context);
     }
 }

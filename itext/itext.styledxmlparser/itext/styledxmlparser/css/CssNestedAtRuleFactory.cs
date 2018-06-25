@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Css.Page;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>
@@ -79,7 +80,10 @@ namespace iText.StyledXmlParser.Css {
                     return new CssMediaRule(ruleParameters);
                 }
 
-                case CssRuleName.PAGE:
+                case CssRuleName.PAGE: {
+                    return new CssPageRule(ruleParameters);
+                }
+
                 case CssRuleName.TOP_LEFT_CORNER:
                 case CssRuleName.TOP_LEFT:
                 case CssRuleName.TOP_CENTER:
@@ -95,10 +99,11 @@ namespace iText.StyledXmlParser.Css {
                 case CssRuleName.BOTTOM_LEFT:
                 case CssRuleName.BOTTOM_CENTER:
                 case CssRuleName.BOTTOM_RIGHT:
-                case CssRuleName.BOTTOM_RIGHT_CORNER:
+                case CssRuleName.BOTTOM_RIGHT_CORNER: {
+                    return new CssMarginRule(ruleName, ruleParameters);
+                }
+
                 case CssRuleName.FONT_FACE: {
-                    //return new CssPageRule(ruleParameters);
-                    //return new CssMarginRule(ruleName, ruleParameters);
                     return new CssFontFaceRule(ruleParameters);
                 }
 

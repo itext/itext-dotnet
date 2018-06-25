@@ -70,7 +70,7 @@ namespace iText.StyledXmlParser.Css.Util {
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFrom10px() {
             String value = "10px";
-            float actual = CssUtils.ParseAbsoluteLength(value, CssConstants.PX);
+            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.PX);
             float expected = 7.5f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
         }
@@ -78,7 +78,7 @@ namespace iText.StyledXmlParser.Css.Util {
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFrom10cm() {
             String value = "10cm";
-            float actual = CssUtils.ParseAbsoluteLength(value, CssConstants.CM);
+            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.CM);
             float expected = 283.46457f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
         }
@@ -86,7 +86,7 @@ namespace iText.StyledXmlParser.Css.Util {
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFrom10in() {
             String value = "10in";
-            float actual = CssUtils.ParseAbsoluteLength(value, CssConstants.IN);
+            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.IN);
             float expected = 720.0f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
         }
@@ -94,7 +94,7 @@ namespace iText.StyledXmlParser.Css.Util {
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFrom10pt() {
             String value = "10pt";
-            float actual = CssUtils.ParseAbsoluteLength(value, CssConstants.PT);
+            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.PT);
             float expected = 10.0f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
         }

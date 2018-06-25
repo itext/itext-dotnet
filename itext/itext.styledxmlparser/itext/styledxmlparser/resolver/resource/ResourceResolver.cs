@@ -65,6 +65,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </summary>
         private SimpleImageCache imageCache;
 
+        /// <summary>Identifier string used when loading in base64 images</summary>
+        public const String BASE64IDENTIFIER = "base64";
+
         /// <summary>
         /// Creates
         /// <see cref="ResourceResolver"/>
@@ -104,10 +107,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             if (src == null) {
                 return null;
             }
-            if (src.Contains("base64")) {
+            if (src.Contains(BASE64IDENTIFIER)) {
                 try {
                     String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
-                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf("base64", StringComparison.Ordinal) + 7);
+                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
                     PdfImageXObject imageXObject = imageCache.GetImage(fixedSrc);
                     if (imageXObject == null) {
                         imageXObject = new PdfImageXObject(ImageDataFactory.Create(Convert.FromBase64String(fixedSrc)));
@@ -153,6 +156,33 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         /// <summary>
+        /// Deprecated: use retrieveBytesFromResource instead
+        /// Replaced by retrieveBytesFromResource for the sake of method name clarity.
+        /// </summary>
+        /// <remarks>
+        /// Deprecated: use retrieveBytesFromResource instead
+        /// Replaced by retrieveBytesFromResource for the sake of method name clarity.
+        /// Retrieve a resource as a byte array from a source that
+        /// can either be a link to a file, or a base64 encoded
+        /// <see cref="System.String"/>
+        /// .
+        /// </remarks>
+        /// <param name="src">either link to file or base64 encoded stream.</param>
+        /// <returns>byte[] on success, otherwise null.</returns>
+        [Obsolete]
+        public virtual byte[] RetrieveStream(String src) {
+            try {
+                return StreamUtil.InputStreamToArray(RetrieveResourceAsInputStream(src));
+            }
+            catch (Exception e) {
+                ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
+                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), e);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
         /// <see cref="System.String"/>
@@ -160,18 +190,39 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>
-        public virtual byte[] RetrieveStream(String src) {
+        public virtual byte[] RetrieveBytesFromResource(String src) {
+            Stream stream = RetrieveResourceAsInputStream(src);
+            if (stream != null) {
+                try {
+                    return StreamUtil.InputStreamToArray(stream);
+                }
+                catch (System.IO.IOException ioe) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
+                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                        , uriResolver.GetBaseUri(), src), ioe);
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+
+        /// <summary>Retrieve the resource found in src as an InputStream</summary>
+        /// <param name="src">path to the resource</param>
+        /// <returns>InputStream for the resource</returns>
+        public virtual Stream RetrieveResourceAsInputStream(String src) {
             if (src.Contains("base64")) {
                 try {
                     String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
                     fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf("base64", StringComparison.Ordinal) + 7);
-                    return Convert.FromBase64String(fixedSrc);
+                    return new MemoryStream(Convert.FromBase64String(fixedSrc));
                 }
                 catch (Exception) {
                 }
             }
             try {
-                return StreamUtil.InputStreamToArray(UrlUtil.OpenStream(uriResolver.ResolveAgainstBaseUri(src)));
+                return UrlUtil.OpenStream(uriResolver.ResolveAgainstBaseUri(src));
             }
             catch (Exception e) {
                 ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
@@ -192,6 +243,23 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Resets the simple image cache.</summary>
         public virtual void ResetCache() {
             imageCache.Reset();
+        }
+
+        /// <summary>
+        /// Check if the type of image located at the passed is supported by the
+        /// <see cref="iText.IO.Image.ImageDataFactory"/>
+        /// </summary>
+        /// <param name="src">location of the image resource</param>
+        /// <returns>true if the image type is supported, false otherwise</returns>
+        public virtual bool IsImageTypeSupportedByImageDataFactory(String src) {
+            try {
+                Uri url = uriResolver.ResolveAgainstBaseUri(src);
+                url = UrlUtil.GetFinalURL(url);
+                return ImageDataFactory.IsSupportedType(url);
+            }
+            catch (Exception) {
+                return false;
+            }
         }
     }
 }
