@@ -45,10 +45,10 @@ using System.Collections.Generic;
 using System.IO;
 using Common.Logging;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Parse;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
@@ -109,11 +109,11 @@ namespace iText.Svg.Css.Impl {
         public DefaultSvgStyleResolver(INode rootNode, ProcessorContext context) {
             this.deviceDescription = context.GetDeviceDescription();
             internalStyleSheet = new CssStyleSheet();
-            CollectCssDeclarations(rootNode, context.GetResourceResolver());
+            CollectCssDeclarations(rootNode, context.GetResourceResolver(), null);
             CollectFonts();
         }
 
-        public virtual IDictionary<String, String> ResolveStyles(INode node, ICssContext context) {
+        public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             //Load in from collected style sheets
             IList<CssDeclaration> styleSheetDeclarations = internalStyleSheet.GetCssDeclarations(node, MediaDeviceDescription
@@ -133,7 +133,8 @@ namespace iText.Svg.Css.Impl {
             return styles;
         }
 
-        public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
+        public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver, AbstractCssContext
+             context) {
             this.internalStyleSheet = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
@@ -164,7 +165,7 @@ namespace iText.Svg.Css.Impl {
                     }
                     else {
                         if (SvgCssUtils.IsStyleSheetLink(headChildElement)) {
-                            String styleSheetUri = headChildElement.GetAttribute(AttributeConstants.HREF);
+                            String styleSheetUri = headChildElement.GetAttribute(SvgConstants.Attributes.HREF);
                             try {
                                 Stream stream = resourceResolver.RetrieveStyleSheet(styleSheetUri);
                                 byte[] bytes = StreamUtil.InputStreamToArray(stream);
@@ -225,7 +226,7 @@ namespace iText.Svg.Css.Impl {
 
         private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
             //Style attribute needs to be parsed further
-            if (attr.GetKey().Equals(AttributeConstants.STYLE)) {
+            if (attr.GetKey().Equals(SvgConstants.Attributes.STYLE)) {
                 IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
                 foreach (KeyValuePair<String, String> style in parsed) {
                     styles.Put(style.Key, style.Value);

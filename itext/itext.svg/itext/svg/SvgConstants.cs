@@ -1,4 +1,5 @@
 using System;
+using iText.StyledXmlParser;
 
 namespace iText.Svg {
     /// <summary>
@@ -193,6 +194,9 @@ namespace iText.Svg {
             /// <summary>Tag defining a linear gradient</summary>
             public const String LINEAR_GRADIENT = "linearGradient";
 
+            /// <summary>Tag defining a link</summary>
+            public const String LINK = "link";
+
             /// <summary>Tag defining the graphics (arrowheads or polymarkers) to be drawn at the end of paths, lines, etc.
             ///     </summary>
             public const String MARKER = "marker";
@@ -302,7 +306,7 @@ namespace iText.Svg {
         }
 
         /// <summary>Class containing the constant property names for the attributes of tags in the SVG spec</summary>
-        public sealed class Attributes {
+        public sealed class Attributes : CommonAttributeConstants {
             /// <summary>Attribute defining the x value of the center of a circle or ellipse.</summary>
             public const String CX = "cx";
 

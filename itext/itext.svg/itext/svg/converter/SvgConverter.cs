@@ -51,6 +51,7 @@ using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
+using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
@@ -495,8 +496,8 @@ namespace iText.Svg.Converter {
             //Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
-            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.HEIGHT));
+            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH));
+            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT));
             //adjust pagesize and create new page
             pdfDocument.SetDefaultPageSize(new PageSize(width, height));
             PdfPage page = pdfDocument.AddNewPage();
@@ -890,8 +891,8 @@ namespace iText.Svg.Converter {
              properties, SvgDrawContext context) {
             CheckNull(topSvgRenderer);
             CheckNull(document);
-            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(AttributeConstants.HEIGHT));
+            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH));
+            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT));
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             if (properties == null) {
@@ -1024,7 +1025,7 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static ISvgProcessorResult ParseAndProcess(Stream svgStream, String charset, ISvgConverterProperties
              props) {
-            IHtmlParser parser = new JsoupXmlParser();
+            IXmlParser parser = new JsoupXmlParser();
             INode nodeTree = parser.Parse(svgStream, charset);
             ISvgProcessor processor = new DefaultSvgProcessor();
             return processor.Process(nodeTree, props);
@@ -1072,7 +1073,7 @@ namespace iText.Svg.Converter {
         /// <returns>an XML DOM tree corresponding to the passed String input</returns>
         public static INode Parse(String content) {
             CheckNull(content);
-            IHtmlParser xmlParser = new JsoupXmlParser();
+            IXmlParser xmlParser = new JsoupXmlParser();
             return xmlParser.Parse(content);
         }
 
@@ -1117,7 +1118,7 @@ namespace iText.Svg.Converter {
         public static INode Parse(Stream stream, ISvgConverterProperties props) {
             CheckNull(stream);
             // props is allowed to be null
-            IHtmlParser xmlParser = new JsoupXmlParser();
+            IXmlParser xmlParser = new JsoupXmlParser();
             return xmlParser.Parse(stream, props != null ? props.GetCharset() : null);
         }
     }

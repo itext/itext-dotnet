@@ -43,9 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 
@@ -66,10 +68,11 @@ namespace iText.Svg.Css {
             circleAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("ry", "53"));
             circleAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("style", "stroke-width:1.5;stroke:#da0000;"
                 ));
-            ICssContext cssContext = new SvgCssContext();
+            AbstractCssContext cssContext = new SvgCssContext();
             INode circle = new JsoupElementNode(jsoupCircle);
             ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(circle));
             ICssResolver resolver = new DefaultSvgStyleResolver(circle, context);
+            resolver.CollectCssDeclarations(circle, new ResourceResolver(""), null);
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("id", "circle1");
@@ -95,7 +98,8 @@ namespace iText.Svg.Css {
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
             ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
             DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
-            ICssContext svgContext = new SvgCssContext();
+            resolver.CollectCssDeclarations(jSoupStyle, new ResourceResolver(""), null);
+            AbstractCssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("stroke-width", "1.76388889");

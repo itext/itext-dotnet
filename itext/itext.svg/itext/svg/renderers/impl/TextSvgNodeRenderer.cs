@@ -74,7 +74,7 @@ namespace iText.Svg.Renderers.Impl {
                 float y = 0f;
                 float fontSize = 0f;
                 if (fontSizeRawValue != null && !String.IsNullOrEmpty(fontSizeRawValue)) {
-                    fontSize = CssUtils.ParseAbsoluteLength(fontSizeRawValue, CssConstants.PT);
+                    fontSize = CssUtils.ParseAbsoluteLength(fontSizeRawValue, CommonCssConstants.PT);
                 }
                 if (!xValuesList.IsEmpty()) {
                     x = CssUtils.ParseAbsoluteLength(xValuesList[0]);

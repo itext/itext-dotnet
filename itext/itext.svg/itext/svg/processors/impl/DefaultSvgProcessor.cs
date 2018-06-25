@@ -146,7 +146,7 @@ namespace iText.Svg.Processors.Impl {
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver());
+                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver(), cssContext);
                 IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
                 startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);

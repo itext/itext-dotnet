@@ -40,7 +40,7 @@ namespace iText.Svg.Processors.Impl {
             }
             fontProvider = converterProperties.GetFontProvider();
             if (fontProvider == null) {
-                fontProvider = new DefaultFontProvider();
+                fontProvider = new BasicFontProvider();
             }
             baseUri = converterProperties.GetBaseUri();
             if (baseUri == null) {

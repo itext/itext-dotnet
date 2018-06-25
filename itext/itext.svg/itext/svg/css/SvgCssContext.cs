@@ -40,7 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Resolve;
 
 namespace iText.Svg.Css {
     /// <summary>
@@ -51,6 +51,6 @@ namespace iText.Svg.Css {
     /// Context necessary for evaluating certain Css statements whose final values depends on other statements
     /// e.g. relative font-size statements.
     /// </remarks>
-    public class SvgCssContext : ICssContext {
+    public class SvgCssContext : AbstractCssContext {
     }
 }
