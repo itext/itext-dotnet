@@ -14,8 +14,8 @@ namespace iText.Svg.Css.Impl {
         private static readonly IList<String> fontSizeDependentPercentage = new List<String>(2);
 
         static StyleResolverUtil() {
-            fontSizeDependentPercentage.Add(CssConstants.FONT_SIZE);
-            fontSizeDependentPercentage.Add(CssConstants.LINE_HEIGHT);
+            fontSizeDependentPercentage.Add(CommonCssConstants.FONT_SIZE);
+            fontSizeDependentPercentage.Add(CommonCssConstants.LINE_HEIGHT);
         }
 
         public StyleResolverUtil(ICollection<IStyleInheritance> inheritanceRules) {
@@ -36,15 +36,15 @@ namespace iText.Svg.Css.Impl {
         public virtual void MergeParentStyleDeclaration(IDictionary<String, String> styles, String styleProperty, 
             String parentPropValue, String parentFontSizeString) {
             String childPropValue = styles.Get(styleProperty);
-            if ((childPropValue == null && CheckInheritance(styleProperty)) || CssConstants.INHERIT.Equals(childPropValue
+            if ((childPropValue == null && CheckInheritance(styleProperty)) || CommonCssConstants.INHERIT.Equals(childPropValue
                 )) {
-                if (ValueIsOfMeasurement(parentPropValue, CssConstants.EM) || ValueIsOfMeasurement(parentPropValue, CssConstants
-                    .EX) || (ValueIsOfMeasurement(parentPropValue, CssConstants.PERCENTAGE) && fontSizeDependentPercentage
+                if (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.EM) || ValueIsOfMeasurement(parentPropValue, 
+                    CommonCssConstants.EX) || (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.PERCENTAGE) && fontSizeDependentPercentage
                     .Contains(styleProperty))) {
                     float absoluteParentFontSize = CssUtils.ParseAbsoluteLength(parentFontSizeString);
                     // Format to 4 decimal places to prevent differences between Java and C#
                     styles.Put(styleProperty, DecimalFormatUtil.FormatNumber(CssUtils.ParseRelativeValue(parentPropValue, absoluteParentFontSize
-                        ), "0.####") + CssConstants.PT);
+                        ), "0.####") + CommonCssConstants.PT);
                 }
                 else {
                     //Property is inherited, add to element style declarations
@@ -52,8 +52,8 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             else {
-                if (CssConstants.TEXT_DECORATION.Equals(styleProperty) && !CssConstants.INLINE_BLOCK.Equals(styles.Get(CssConstants
-                    .DISPLAY))) {
+                if (CommonCssConstants.TEXT_DECORATION.Equals(styleProperty) && !CommonCssConstants.INLINE_BLOCK.Equals(styles
+                    .Get(CommonCssConstants.DISPLAY))) {
                     // TODO Note! This property is formally not inherited, but the browsers behave very similar to inheritance here.
                     /* Text decorations on inline boxes are drawn across the entire element,
                     going across any descendant elements without paying any attention to their presence. */

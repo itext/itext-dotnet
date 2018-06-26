@@ -143,7 +143,7 @@ namespace iText.Svg.Css.Impl {
                 }
                 if (parentStyles != null) {
                     foreach (KeyValuePair<String, String> entry in parentStyles) {
-                        String parentFontSizeString = parentStyles.Get(CssConstants.FONT_SIZE);
+                        String parentFontSizeString = parentStyles.Get(CommonCssConstants.FONT_SIZE);
                         if (parentFontSizeString == null) {
                             parentFontSizeString = "0";
                         }
