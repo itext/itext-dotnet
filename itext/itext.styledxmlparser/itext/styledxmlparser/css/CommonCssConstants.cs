@@ -675,24 +675,24 @@ namespace iText.StyledXmlParser.Css {
         public const String XX_SMALL = "xx-small";
 
         /// <summary>The Constant BACKGROUND_SIZE_VALUES.</summary>
-        public static readonly ICollection<String> BACKGROUND_SIZE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (AUTO, COVER, CONTAIN));
+        public static readonly ICollection<String> BACKGROUND_SIZE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<String>(JavaUtil.ArraysAsList(AUTO, COVER, CONTAIN)));
 
         /// <summary>The Constant BACKGROUND_ORIGIN_OR_CLIP_VALUES.</summary>
-        public static readonly ICollection<String> BACKGROUND_ORIGIN_OR_CLIP_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (PADDING_BOX, BORDER_BOX, CONTENT_BOX));
+        public static readonly ICollection<String> BACKGROUND_ORIGIN_OR_CLIP_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(PADDING_BOX, BORDER_BOX, CONTENT_BOX)));
 
         /// <summary>The Constant BACKGROUND_REPEAT_VALUES.</summary>
-        public static readonly ICollection<String> BACKGROUND_REPEAT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y));
+        public static readonly ICollection<String> BACKGROUND_REPEAT_VALUES = JavaCollectionsUtil.UnmodifiableSet(
+            new HashSet<String>(JavaUtil.ArraysAsList(REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y)));
 
         /// <summary>The Constant BACKGROUND_ATTACHMENT_VALUES.</summary>
-        public static readonly ICollection<String> BACKGROUND_ATTACHMENT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (FIXED, SCROLL, LOCAL));
+        public static readonly ICollection<String> BACKGROUND_ATTACHMENT_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(FIXED, SCROLL, LOCAL)));
 
         /// <summary>The Constant BACKGROUND_POSITION_VALUES.</summary>
-        public static readonly ICollection<String> BACKGROUND_POSITION_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (LEFT, CENTER, BOTTOM, TOP, RIGHT));
+        public static readonly ICollection<String> BACKGROUND_POSITION_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(LEFT, CENTER, BOTTOM, TOP, RIGHT)));
 
         /// <summary>The Constant BORDER_WIDTH_VALUES.</summary>
         public static readonly ICollection<String> BORDER_WIDTH_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
