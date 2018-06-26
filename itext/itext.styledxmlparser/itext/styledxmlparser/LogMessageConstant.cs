@@ -90,6 +90,9 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES.</summary>
         public const String WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES = "Was not able to define one of the background CSS shorthand properties: {0}";
 
+        /// <summary>The Constant ERROR_RESOLVING_PARENT_STYLES.</summary>
+        public const String ERROR_RESOLVING_PARENT_STYLES = "Element parent styles are not resolved. Styles for current element might be incorrect.";
+
         /// <summary>Instantiates a new log message constant.</summary>
         private LogMessageConstant() {
         }

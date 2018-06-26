@@ -47,7 +47,7 @@ using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Resolve {
     /// <summary>Helper class that allows you to check if a property is inheritable.</summary>
-    public class CssInheritance {
+    public class CssInheritance : IStyleInheritance {
         /// <summary>
         /// Set of inheritable properties
         /// in accordance with "http://www.w3schools.com/cssref/"
@@ -84,7 +84,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// <summary>Checks if a property is inheritable.</summary>
         /// <param name="cssProperty">the CSS property</param>
         /// <returns>true, if the property is inheritable</returns>
-        public static bool IsInheritable(String cssProperty) {
+        public virtual bool IsInheritable(String cssProperty) {
             return inheritableProperties.Contains(cssProperty);
         }
     }
