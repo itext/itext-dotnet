@@ -101,5 +101,11 @@ namespace iText.Svg.Renderers.Impl {
             //No drawing if ry is absent
             return true;
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            EllipseSvgNodeRenderer copy = new EllipseSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

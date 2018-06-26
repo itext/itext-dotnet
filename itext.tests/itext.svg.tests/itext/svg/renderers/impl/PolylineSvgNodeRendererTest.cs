@@ -166,5 +166,13 @@ namespace iText.Svg.Renderers.Impl {
                 NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            PolylineSvgNodeRenderer expected = new PolylineSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

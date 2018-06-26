@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -146,6 +147,14 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void HelloWorldSCombinedTransformationsTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_combinedTransformations");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            TextSvgNodeRenderer expected = new TextSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "Hello World");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

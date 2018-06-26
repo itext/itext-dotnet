@@ -155,5 +155,11 @@ namespace iText.Svg.Renderers.Impl {
             resultList.Add(closePath);
             return resultList;
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            PathSvgNodeRenderer copy = new PathSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

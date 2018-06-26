@@ -154,5 +154,13 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            PolygonSvgNodeRenderer expected = new PolygonSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

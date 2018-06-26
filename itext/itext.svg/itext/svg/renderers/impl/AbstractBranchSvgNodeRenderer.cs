@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -57,7 +58,7 @@ namespace iText.Svg.Renderers.Impl {
     /// Abstract class that will be the superclass for any element that can function
     /// as a parent.
     /// </summary>
-    public class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
+    public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
         /// <summary>
@@ -246,6 +247,33 @@ namespace iText.Svg.Renderers.Impl {
         public IList<ISvgNodeRenderer> GetChildren() {
             // final method, in order to disallow modifying the List
             return JavaCollectionsUtil.UnmodifiableList(children);
+        }
+
+        /// <summary>
+        /// Create a deep copy of every child renderer and add them to the passed
+        /// <see cref="AbstractBranchSvgNodeRenderer"/>
+        /// </summary>
+        /// <param name="deepCopy">renderer to add copies of children to</param>
+        protected internal void DeepCopyChildren(AbstractBranchSvgNodeRenderer deepCopy) {
+            foreach (ISvgNodeRenderer child in children) {
+                ISvgNodeRenderer newChild = child.CreateDeepCopy();
+                child.SetParent(deepCopy);
+                deepCopy.AddChild(newChild);
+            }
+        }
+
+        public abstract override ISvgNodeRenderer CreateDeepCopy();
+
+        public override bool Equals(Object other) {
+            if (!(other is AbstractBranchSvgNodeRenderer)) {
+                return false;
+            }
+            AbstractBranchSvgNodeRenderer oabr = (AbstractBranchSvgNodeRenderer)other;
+            bool result = base.Equals(oabr);
+            if (result) {
+                result &= Enumerable.SequenceEqual(children, oabr.GetChildren());
+            }
+            return result;
         }
     }
 }

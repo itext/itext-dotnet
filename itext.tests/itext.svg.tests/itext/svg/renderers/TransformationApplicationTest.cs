@@ -72,6 +72,10 @@ namespace iText.Svg.Renderers {
             public _AbstractSvgNodeRenderer_68() {
             }
 
+            public override ISvgNodeRenderer CreateDeepCopy() {
+                return null;
+            }
+
             protected internal override void DoDraw(SvgDrawContext context) {
             }
         }

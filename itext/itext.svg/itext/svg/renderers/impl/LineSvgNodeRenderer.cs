@@ -88,5 +88,11 @@ namespace iText.Svg.Renderers.Impl {
             }
             return 0;
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            LineSvgNodeRenderer copy = new LineSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

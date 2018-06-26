@@ -43,5 +43,11 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            ImageSvgNodeRenderer copy = new ImageSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

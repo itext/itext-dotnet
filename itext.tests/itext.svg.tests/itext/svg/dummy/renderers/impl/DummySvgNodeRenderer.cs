@@ -93,6 +93,14 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         public virtual void SetAttribute(String key, String value) {
         }
 
+        public virtual IDictionary<String, String> GetAttributeMapCopy() {
+            return null;
+        }
+
+        public virtual ISvgNodeRenderer CreateDeepCopy() {
+            return new iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer(name);
+        }
+
         public override String ToString() {
             return name;
         }

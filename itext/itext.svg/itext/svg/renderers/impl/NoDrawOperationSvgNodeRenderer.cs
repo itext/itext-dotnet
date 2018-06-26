@@ -13,5 +13,11 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            NoDrawOperationSvgNodeRenderer copy = new NoDrawOperationSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

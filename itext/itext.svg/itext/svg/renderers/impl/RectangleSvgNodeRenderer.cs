@@ -181,5 +181,12 @@ namespace iText.Svg.Renderers.Impl {
             float biggestRadius = Math.Max(rx, ry);
             return Math.Min(maxRadius, biggestRadius);
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer copy = new iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer
+                ();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

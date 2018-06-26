@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
+using iText.Svg;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -268,6 +269,14 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveComplexTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "curves");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            PathSvgNodeRenderer expected = new PathSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

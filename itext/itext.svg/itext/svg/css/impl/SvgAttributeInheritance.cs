@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2017 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -40,41 +40,27 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.StyledXmlParser.Css.Util;
+using System;
+using System.Collections.Generic;
+using iText.IO.Util;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.Svg;
-using iText.Svg.Renderers;
 
-namespace iText.Svg.Renderers.Impl {
-    /// <summary>
-    /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-    /// implementation for the &lt;circle&gt; tag.
-    /// </summary>
-    public class CircleSvgNodeRenderer : EllipseSvgNodeRenderer {
-        protected internal override bool SetParameters() {
-            cx = 0;
-            cy = 0;
-            if (GetAttribute(SvgConstants.Attributes.CX) != null) {
-                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
-            }
-            if (GetAttribute(SvgConstants.Attributes.CY) != null) {
-                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
-            }
-            if (GetAttribute(SvgConstants.Attributes.R) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
-                .R)) > 0) {
-                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.R));
-                ry = rx;
-            }
-            else {
-                return false;
-            }
-            //No drawing if rx is absent
-            return true;
-        }
+namespace iText.Svg.Css.Impl {
+    /// <summary>Helper class that allows you to check if a property is inheritable.</summary>
+    public class SvgAttributeInheritance : IStyleInheritance {
+        /// <summary>
+        /// Set of inheritable SVG style attributes
+        /// in accordance with "http://www.w3schools.com/cssref/"
+        /// and "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference"
+        /// </summary>
+        private static readonly ICollection<String> inheritableProperties = new HashSet<String>(JavaUtil.ArraysAsList
+            (SvgConstants.Attributes.STROKE, SvgConstants.Attributes.FILL));
 
-        public override ISvgNodeRenderer CreateDeepCopy() {
-            CircleSvgNodeRenderer copy = new CircleSvgNodeRenderer();
-            DeepCopyAttributesAndStyles(copy);
-            return copy;
+        //Stroke
+        //Fill
+        public virtual bool IsInheritable(String cssProperty) {
+            return inheritableProperties.Contains(cssProperty);
         }
     }
 }

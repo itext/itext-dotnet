@@ -50,6 +50,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SetAttribute(String key, String value) {
         }
 
+        public virtual IDictionary<String, String> GetAttributeMapCopy() {
+            return null;
+        }
+
         internal virtual AffineTransform CalculateTransformation(SvgDrawContext context) {
             Rectangle viewPort = context.GetCurrentViewPort();
             float horizontal = viewPort.GetX();
@@ -77,6 +81,23 @@ namespace iText.Svg.Renderers.Impl {
             portWidth = bboxArray.GetAsNumber(2).FloatValue() - portX;
             portHeight = bboxArray.GetAsNumber(3).FloatValue() - portY;
             return new Rectangle(portX, portY, portWidth, portHeight);
+        }
+
+        public virtual ISvgNodeRenderer CreateDeepCopy() {
+            iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer copy = new iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer
+                (subTreeRoot.CreateDeepCopy());
+            return copy;
+        }
+
+        public override int GetHashCode() {
+            return 42 + subTreeRoot.GetHashCode();
+        }
+
+        public override bool Equals(Object other) {
+            if (!(other is iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer)) {
+                return false;
+            }
+            return ((iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer)other).subTreeRoot.Equals(subTreeRoot);
         }
     }
 }

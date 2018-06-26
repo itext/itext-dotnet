@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
@@ -76,6 +77,12 @@ namespace iText.Svg.Renderers.Impl {
             if (JavaUtil.DoubleCompare(start.x, end.x) != 0 && JavaUtil.DoubleCompare(start.y, end.y) != 0) {
                 points.Add(new Point(start.x, start.y));
             }
+        }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            PolygonSvgNodeRenderer copy = new PolygonSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
         }
     }
 }

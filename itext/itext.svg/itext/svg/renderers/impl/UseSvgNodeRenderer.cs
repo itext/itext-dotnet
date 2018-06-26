@@ -3,6 +3,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
+using iText.Svg.Css.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -19,7 +20,12 @@ namespace iText.Svg.Renderers.Impl {
                 if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
                     String normalizedName = NormalizeName(elementToReUse);
                     if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
-                        ISvgNodeRenderer namedObject = context.GetNamedObject(normalizedName);
+                        ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
+                        //Clone template
+                        ISvgNodeRenderer namedObject = template.CreateDeepCopy();
+                        //Resolve parent inheritance
+                        SvgNodeRendererInheritanceResolver iresolver = new SvgNodeRendererInheritanceResolver();
+                        iresolver.ApplyInheritanceToSubTree(this, namedObject);
                         if (namedObject != null) {
                             PdfCanvas currentCanvas = context.GetCurrentCanvas();
                             float x = 0f;
@@ -55,6 +61,12 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool IsValidHref(String name) {
             return name.StartsWith("#");
+        }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            UseSvgNodeRenderer copy = new UseSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
         }
     }
 }

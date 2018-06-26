@@ -94,5 +94,13 @@ namespace iText.Svg.Renderers {
         /// <param name="key">the name of the attribute</param>
         /// <param name="value">the value of the attribute</param>
         void SetAttribute(String key, String value);
+
+        /// <summary>Get a modifiable copy of the style and attribute map</summary>
+        /// <returns>copy of the attributes and styles-map</returns>
+        IDictionary<String, String> GetAttributeMapCopy();
+
+        /// <summary>Creates a deep copy of this renderer, including it's subtree of children</summary>
+        /// <returns>deep copy of this renderer</returns>
+        ISvgNodeRenderer CreateDeepCopy();
     }
 }

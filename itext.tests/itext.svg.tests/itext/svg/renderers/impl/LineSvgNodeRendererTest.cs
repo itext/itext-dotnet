@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.StyledXmlParser.Exceptions;
+using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -193,6 +194,13 @@ namespace iText.Svg.Renderers.Impl {
             float actual = lineSvgNodeRenderer.GetAttribute(attributes, "notHere");
             NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
         }
-        //TODO(RND-823) We'll need an integration test with the entire (not yet created) pipeline as well
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            LineSvgNodeRenderer expected = new LineSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.STROKE, "blue");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

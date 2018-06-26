@@ -40,6 +40,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Svg;
+using iText.Svg.Renderers;
+
 namespace iText.Svg.Renderers.Impl {
     public class RectangleSvgNodeRendererUnitTest {
         private const float EPSILON = 0.00001f;
@@ -97,6 +100,14 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void FindCircularRadiusSmallWidthTest() {
             float rad = renderer.FindCircularRadius(0f, 20f, 5f, 200f);
             NUnit.Framework.Assert.AreEqual(2.5f, rad, EPSILON);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            RectangleSvgNodeRenderer expected = new RectangleSvgNodeRenderer();
+            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

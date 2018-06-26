@@ -180,7 +180,11 @@ namespace iText.Svg.Processors.Impl {
                 if (!rendererFactory.IsTagIgnored(element)) {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
-                        renderer.SetAttributesAndStyles(cssResolver.ResolveStyles(node, cssContext));
+                        IDictionary<String, String> styles = cssResolver.ResolveStyles(node, cssContext);
+                        element.SetStyles(styles);
+                        //For inheritance
+                        renderer.SetAttributesAndStyles(styles);
+                        //For drawing operations
                         String attribute = renderer.GetAttribute(SvgConstants.Attributes.ID);
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);

@@ -470,6 +470,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining image source.</summary>
             public const String XLINK_HREF = "xlink:href";
 
+            /// <summary>Attribute defining XML namespace</summary>
+            public const String XMLNS = "xmlns";
+
             /// <summary>Attribute defining the y value of an element.</summary>
             public const String Y = "y";
 
@@ -478,6 +481,9 @@ namespace iText.Svg {
 
             /// <summary>Attribute defining the second y coordinate value of a line.</summary>
             public const String Y2 = "y2";
+
+            /// <summary>Attribute defining version</summary>
+            public const String VERSION = "version";
         }
 
         /// <summary>Class containing the constants for values appearing in SVG tags and attributes</summary>
@@ -499,6 +505,9 @@ namespace iText.Svg {
 
             /// <summary>Value representing the "none" value".</summary>
             public const String NONE = "none";
+
+            /// <summary>The value corresponding with the namespace url for SVG</summary>
+            public const String SVGNAMESPACEURL = "http://www.w3.org/2000/svg";
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";
@@ -523,6 +532,8 @@ namespace iText.Svg {
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMAX_YMAX = "xmaxymax";
+
+            public const String VERSION1_1 = "1.1";
         }
     }
 }

@@ -50,6 +50,14 @@ namespace iText.Svg.Utils {
         private SvgMathUtils() {
         }
 
+        /// <summary>Compare two floats and return true if they are close enough to be considered equal.</summary>
+        /// <remarks>
+        /// Compare two floats and return true if they are close enough to be considered equal.
+        /// The comparison makes use of an internal epsilon to determine the outcome.
+        /// </remarks>
+        /// <param name="f1">first float to compare</param>
+        /// <param name="f2">second float to compare</param>
+        /// <returns>True if the both floats are close enough to be considered equal, false otherwise</returns>
         public static bool CompareFloats(float f1, float f2) {
             return (Math.Abs(f1 - f2) < EPSILON);
         }

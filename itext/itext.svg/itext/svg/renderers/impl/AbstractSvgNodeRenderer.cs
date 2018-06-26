@@ -234,5 +234,58 @@ namespace iText.Svg.Renderers.Impl {
             }
             this.attributesAndStyles.Put(key, value);
         }
+
+        public virtual IDictionary<String, String> GetAttributeMapCopy() {
+            Dictionary<String, String> copy = new Dictionary<String, String>();
+            if (attributesAndStyles == null) {
+                return copy;
+            }
+            copy.AddAll(attributesAndStyles);
+            return copy;
+        }
+
+        public override bool Equals(Object other) {
+            if (!(other is AbstractSvgNodeRenderer)) {
+                return false;
+            }
+            AbstractSvgNodeRenderer oar = (AbstractSvgNodeRenderer)other;
+            //Compare attribute and style map
+            bool attributesAndStylesEqual = true;
+            if (attributesAndStyles != null && oar.attributesAndStyles != null) {
+                attributesAndStylesEqual &= (attributesAndStyles.Count == oar.attributesAndStyles.Count);
+                foreach (KeyValuePair<String, String> kvp in attributesAndStyles) {
+                    String value = oar.attributesAndStyles.Get(kvp.Key);
+                    if (value == null || !kvp.Value.Equals(value)) {
+                        return false;
+                    }
+                }
+            }
+            else {
+                attributesAndStylesEqual = (attributesAndStyles == null && oar.attributesAndStyles == null);
+            }
+            return attributesAndStylesEqual && doFill == oar.doFill && doStroke == oar.doStroke;
+        }
+
+        public override int GetHashCode() {
+            //No particular reasoning behind this hashing
+            int hash = 112;
+            hash = hash * 3 + attributesAndStyles.GetHashCode();
+            return hash;
+        }
+
+        /// <summary>
+        /// Make a deep copy of the styles and attributes of this renderer
+        /// Helper method for deep copying logic
+        /// </summary>
+        /// <param name="deepCopy">renderer to insert the deep copied attributes into</param>
+        protected internal virtual void DeepCopyAttributesAndStyles(ISvgNodeRenderer deepCopy) {
+            IDictionary<String, String> stylesDeepCopy = new Dictionary<String, String>();
+            if (this.attributesAndStyles != null) {
+                stylesDeepCopy.AddAll(this.attributesAndStyles);
+                deepCopy.SetAttributesAndStyles(stylesDeepCopy);
+            }
+        }
+
+        public abstract ISvgNodeRenderer CreateDeepCopy();
     }
 }

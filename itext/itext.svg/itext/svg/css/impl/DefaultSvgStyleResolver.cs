@@ -71,6 +71,9 @@ namespace iText.Svg.Css.Impl {
         /// <summary>The list of fonts.</summary>
         private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
 
+        /// <summary>The style-resolver util responsible for resolving inheritance rules</summary>
+        private StyleResolverUtil sru;
+
         /// <summary>
         /// Creates a
         /// <see cref="DefaultSvgStyleResolver"/>
@@ -92,6 +95,7 @@ namespace iText.Svg.Css.Impl {
             catch (System.IO.IOException e) {
                 throw new SvgProcessingException(SvgLogMessageConstant.ERROR_CLOSING_CSS_STREAM, e);
             }
+            this.sru = new StyleResolverUtil();
         }
 
         /// <summary>Creates a DefaultSvgStyleResolver.</summary>
@@ -111,6 +115,7 @@ namespace iText.Svg.Css.Impl {
             internalStyleSheet = new CssStyleSheet();
             CollectCssDeclarations(rootNode, context.GetResourceResolver(), null);
             CollectFonts();
+            this.sru = new StyleResolverUtil();
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
@@ -121,13 +126,29 @@ namespace iText.Svg.Css.Impl {
             foreach (CssDeclaration ssd in styleSheetDeclarations) {
                 styles.Put(ssd.GetProperty(), ssd.GetExpression());
             }
-            //Load in inherited declarations from parent
-            //TODO: RND-880
             //Load in attributes declarations
             if (node is IElementNode) {
                 IElementNode eNode = (IElementNode)node;
                 foreach (IAttribute attr in eNode.GetAttributes()) {
                     ProcessAttribute(attr, styles);
+                }
+            }
+            //Load in and merge inherited declarations from parent
+            if (node.ParentNode() is IStylesContainer) {
+                IStylesContainer parentNode = (IStylesContainer)node.ParentNode();
+                IDictionary<String, String> parentStyles = parentNode.GetStyles();
+                if (parentStyles == null && !(node.ParentNode() is IDocumentNode)) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
+                    logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+                }
+                if (parentStyles != null) {
+                    foreach (KeyValuePair<String, String> entry in parentStyles) {
+                        String parentFontSizeString = parentStyles.Get(CssConstants.FONT_SIZE);
+                        if (parentFontSizeString == null) {
+                            parentFontSizeString = "0";
+                        }
+                        sru.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeString);
+                    }
                 }
             }
             return styles;

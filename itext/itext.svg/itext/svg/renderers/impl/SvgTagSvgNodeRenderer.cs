@@ -96,5 +96,12 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override bool CanElementFill() {
             return false;
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            SvgTagSvgNodeRenderer copy = new SvgTagSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            DeepCopyChildren(copy);
+            return copy;
+        }
     }
 }

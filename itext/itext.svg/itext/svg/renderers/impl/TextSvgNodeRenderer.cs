@@ -97,5 +97,11 @@ namespace iText.Svg.Renderers.Impl {
                 currentCanvas.EndText();
             }
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            TextSvgNodeRenderer copy = new TextSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }

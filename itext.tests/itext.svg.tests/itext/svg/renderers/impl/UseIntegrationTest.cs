@@ -124,6 +124,7 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleRectReuseTest() {
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleRectReuse", properties);
         }

@@ -56,5 +56,12 @@ namespace iText.Svg.Renderers.Impl {
                 currentCanvas.RestoreState();
             }
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            GroupSvgNodeRenderer copy = new GroupSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            DeepCopyChildren(copy);
+            return copy;
+        }
     }
 }

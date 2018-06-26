@@ -10,7 +10,7 @@ using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PdfRootSvgNodeRendererTest : SvgIntegrationTest {
+    public class PdfRootSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportTest() {
             Rectangle expected = new Rectangle(0, 0, 600, 600);
@@ -98,6 +98,16 @@ namespace iText.Svg.Renderers.Impl {
             PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(renderer);
             context.AddViewPort(root.CalculateViewPort(context));
             AffineTransform actual = root.CalculateTransformation(context);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeepCopyTest() {
+            SvgTagSvgNodeRenderer subTree = new SvgTagSvgNodeRenderer();
+            subTree.AddChild(new CircleSvgNodeRenderer());
+            PdfRootSvgNodeRenderer expected = new PdfRootSvgNodeRenderer(subTree);
+            ISvgNodeRenderer actual = expected.CreateDeepCopy();
+            expected.Equals(actual);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

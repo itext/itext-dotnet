@@ -113,5 +113,11 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            PolylineSvgNodeRenderer copy = new PolylineSvgNodeRenderer();
+            DeepCopyAttributesAndStyles(copy);
+            return copy;
+        }
     }
 }
