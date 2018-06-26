@@ -176,6 +176,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant DIRECTION.</summary>
         public const String DIRECTION = "direction";
 
+        /// <summary>The Constant DISPLAY.</summary>
+        public const String DISPLAY = "display";
+
         /// <summary>The Constant EMPTY_CELLS.</summary>
         public const String EMPTY_CELLS = "empty-cells";
 
@@ -241,6 +244,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant HYPHENS.</summary>
         public const String HYPHENS = "hyphens";
+
+        /// <summary>The Constant INLINE-BLOCK</summary>
+        public const String INLINE_BLOCK = "inline-block";
 
         /// <summary>The Constant LETTER_SPACING.</summary>
         public const String LETTER_SPACING = "letter-spacing";
