@@ -18,10 +18,6 @@ namespace iText.Svg.Css.Impl {
             fontSizeDependentPercentage.Add(CommonCssConstants.LINE_HEIGHT);
         }
 
-        public StyleResolverUtil(ICollection<IStyleInheritance> inheritanceRules) {
-            this.inheritanceRules = inheritanceRules;
-        }
-
         public StyleResolverUtil() {
             this.inheritanceRules = new HashSet<IStyleInheritance>();
             inheritanceRules.Add(new CssInheritance());

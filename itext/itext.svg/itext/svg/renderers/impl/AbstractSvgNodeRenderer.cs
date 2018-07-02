@@ -245,7 +245,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override bool Equals(Object other) {
-            if (!(other is AbstractSvgNodeRenderer)) {
+            if (other == null || this.GetType() != other.GetType()) {
                 return false;
             }
             AbstractSvgNodeRenderer oar = (AbstractSvgNodeRenderer)other;

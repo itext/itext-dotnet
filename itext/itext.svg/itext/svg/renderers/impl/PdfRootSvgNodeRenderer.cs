@@ -94,7 +94,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override bool Equals(Object other) {
-            if (!(other is iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer)) {
+            if (other == null || this.GetType() != other.GetType()) {
                 return false;
             }
             return ((iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer)other).subTreeRoot.Equals(subTreeRoot);
