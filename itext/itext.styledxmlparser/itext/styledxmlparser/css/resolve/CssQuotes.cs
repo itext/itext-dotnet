@@ -67,8 +67,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// <param name="openQuotes">the open quotes</param>
         /// <param name="closeQuotes">the close quotes</param>
         private CssQuotes(List<String> openQuotes, List<String> closeQuotes) {
-            this.openQuotes = openQuotes;
-            this.closeQuotes = closeQuotes;
+            this.openQuotes = new List<String>(openQuotes);
+            this.closeQuotes = new List<String>(closeQuotes);
         }
 
         /// <summary>

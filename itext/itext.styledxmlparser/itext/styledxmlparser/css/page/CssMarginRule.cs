@@ -78,7 +78,7 @@ namespace iText.StyledXmlParser.Css.Page {
         /// <summary>Sets the page selectors.</summary>
         /// <param name="pageSelectors">the new page selectors</param>
         internal virtual void SetPageSelectors(IList<ICssSelector> pageSelectors) {
-            this.pageSelectors = pageSelectors;
+            this.pageSelectors = new List<ICssSelector>(pageSelectors);
         }
     }
 }
