@@ -49,6 +49,7 @@ using iText.Kernel.Utils;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -277,6 +278,64 @@ namespace iText.Svg.Renderers.Impl {
             expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
             ISvgNodeRenderer actual = expected.CreateDeepCopy();
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathZOperatorTest01() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathZOperatorTest01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathZOperatorTest02() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathZOperatorTest02");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathZOperatorTest03() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathZOperatorTest03");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathZOperatorTest04() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathZOperatorTest04");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InvalidZOperatorTest01() {
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidZOperatorTest01");
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InvalidOperatorTest01() {
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperatorTest01");
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
+        }
+
+        /* This test should fail when RND-1034 is resolved*/
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathLOperatorMultipleCoordinates() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathLOperatorMultipleCoordinates");
         }
     }
 }

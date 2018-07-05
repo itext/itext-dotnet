@@ -84,7 +84,7 @@ namespace iText.Svg.Renderers {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
         }
 
-        /* This test should fail when RND-1025 is resolved*/
+        /* This test should fail when RND-910 is resolved*/
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -138,7 +138,7 @@ namespace iText.Svg.Renderers {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityfill");
         }
 
-        /* This test should fail when RND-1025 is resolved*/
+        /* This test should fail when RND-910 is resolved*/
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

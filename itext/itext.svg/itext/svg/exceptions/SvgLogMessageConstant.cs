@@ -66,6 +66,10 @@ namespace iText.Svg.Exceptions {
 
         public const String INODEROOTISNULL = "Input root value is null";
 
+        public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before a move to operation (M)";
+
+        public const String INVALID_PATH_D_ATTRIBUTE_OPERATORS = "Invalid operators found in path data attribute: {0}";
+
         public const String INVALID_TRANSFORM_DECLARATION = "Transformation declaration is not formed correctly.";
 
         public const String LOOP = "Loop detected";
