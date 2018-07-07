@@ -64,14 +64,14 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\styled-xml-parser\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
       <Project>{8636F290-00DF-403E-B841-E4BFD6D9CE7A}</Project>
-      <Name>itext.styled-xml-parser</Name>
+      <Name>itext.styledxmlparser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="itext.snk" />
     <None Include="packages.config" />
   </ItemGroup>
-    <ItemGroup>  
+  <ItemGroup>
     <EmbeddedResource Include="resources\default.css">
       <LogicalName>iText.Svg.default.css</LogicalName>
     </EmbeddedResource>
