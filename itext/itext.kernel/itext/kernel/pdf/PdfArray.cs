@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Create a new PdfArray.</summary>
         /// <remarks>
         /// Create a new PdfArray. The array is filled with the four values of the Rectangle in the
-        /// follozing order: left, bottom, right, top.
+        /// following order: left, bottom, right, top.
         /// </remarks>
         /// <param name="rectangle">Rectangle whose 4 values will be added to the PdfArray</param>
         public PdfArray(Rectangle rectangle) {
@@ -289,7 +289,7 @@ namespace iText.Kernel.Pdf {
             list.JRemoveAt(index);
         }
 
-        /// <summary>Removes the PdfObject at the specified index.</summary>
+        /// <summary>Removes the first occurrence of the specified PdfObject, if it is present.</summary>
         /// <param name="o">a PdfObject to be removed</param>
         /// <seealso cref="System.Collections.IList{E}.Remove(System.Object)"/>
         public virtual void Remove(PdfObject o) {
