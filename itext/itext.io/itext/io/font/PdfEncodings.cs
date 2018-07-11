@@ -69,7 +69,7 @@ namespace iText.IO.Font {
         public const String WINANSI = "Windows-1252";
 
         /// <summary>A possible encoding.</summary>
-        public const String MACROMAN = "x-mac-romanian";
+        public const String MACROMAN = "MacRoman";
 
         /// <summary>A possible encoding.</summary>
         public const String SYMBOL = "Symbol";
