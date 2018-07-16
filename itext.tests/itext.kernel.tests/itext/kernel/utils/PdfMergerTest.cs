@@ -235,10 +235,9 @@ namespace iText.Kernel.Utils {
             merger.Close();
             output.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = "";
             String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_tableWithEmptyTd.pdf"
                 );
-            errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
+            String errorMessage = tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
