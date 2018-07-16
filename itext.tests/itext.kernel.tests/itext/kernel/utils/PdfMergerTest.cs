@@ -215,5 +215,33 @@ namespace iText.Kernel.Utils {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void MergeTableWithEmptyTdTest() {
+            String filename = sourceFolder + "tableWithEmptyTd.pdf";
+            String resultFile = destinationFolder + "tableWithEmptyTdResult.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument sourceDoc = new PdfDocument(reader);
+            PdfDocument output = new PdfDocument(new PdfWriter(resultFile));
+            output.SetTagged();
+            PdfMerger merger = new PdfMerger(output).SetCloseSourceDocuments(true);
+            merger.Merge(sourceDoc, 1, sourceDoc.GetNumberOfPages());
+            sourceDoc.Close();
+            reader.Close();
+            merger.Close();
+            output.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = "";
+            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_tableWithEmptyTd.pdf"
+                );
+            errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
+            if (!String.IsNullOrEmpty(errorMessage)) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
