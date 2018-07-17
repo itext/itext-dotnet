@@ -92,6 +92,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public ResourceResolver(String baseUri) {
             // TODO handle <base href=".."> tag?
             // TODO provide a way to configure capacity, manually reset or disable the image cache?
+            if (baseUri == null) {
+                baseUri = "";
+            }
             this.uriResolver = new UriResolver(baseUri);
             this.imageCache = new SimpleImageCache();
         }

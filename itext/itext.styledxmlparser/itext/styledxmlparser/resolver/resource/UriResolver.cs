@@ -69,6 +69,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
         /// <param name="baseUri"> the base URI</param>
         public UriResolver(String baseUri)
         {
+            if (baseUri == null) throw new ArgumentNullException("baseUri");
             ResolveBaseUrlOrPath(baseUri);
         }
 
