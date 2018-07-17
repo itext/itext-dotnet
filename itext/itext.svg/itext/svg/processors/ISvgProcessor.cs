@@ -55,25 +55,11 @@ namespace iText.Svg.Processors {
     /// </remarks>
     public interface ISvgProcessor {
         /// <summary>
-        /// Process an SVG, returning a {link
-        /// <see cref="ISvgProcessorResult"/>
-        /// } containing the root of a renderer-tree
-        /// </summary>
-        /// <param name="root">Root of the INode representation of the SVG</param>
-        /// <returns>a wrapped root of the renderer-tree representing the SVG</returns>
-        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException">
-        /// throws an exception if the root node is null
-        /// or if the child node being processed is null
-        /// </exception>
-        ISvgProcessorResult Process(INode root);
-
-        //TODO does it make sense?
-        /// <summary>
         /// Process an SVG, returning the root of a renderer-tree and a list
         /// of named objects wrapped in a processor result object
         /// </summary>
         /// <param name="root">Root of the INode representation of the SVG</param>
-        /// <param name="convertorprops">configuration properties</param>
+        /// <param name="converterProperties">configuration properties</param>
         /// <returns>
         /// root of the renderer-tree representing the SVG wrapped in {link
         /// <see cref="ISvgProcessorResult"/>
@@ -83,6 +69,6 @@ namespace iText.Svg.Processors {
         /// throws an exception if the root
         /// node is null or if the child node being processed is null
         /// </exception>
-        ISvgProcessorResult Process(INode root, ISvgConverterProperties convertorprops);
+        ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProperties);
     }
 }

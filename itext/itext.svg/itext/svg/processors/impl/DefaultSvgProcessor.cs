@@ -85,15 +85,15 @@ namespace iText.Svg.Processors.Impl {
         }
 
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
-        public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
+        public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProperties) {
             if (root == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
             }
-            if (converterProps == null) {
-                converterProps = new SvgConverterProperties();
+            if (converterProperties == null) {
+                converterProperties = new SvgConverterProperties();
             }
             //Setup processorState
-            PerformSetup(root, converterProps);
+            PerformSetup(root, converterProperties);
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
@@ -134,7 +134,8 @@ namespace iText.Svg.Processors.Impl {
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                cssResolver.CollectCssDeclarations(startingNode, context.GetResourceResolver(), null);
+                //Actually cssResolver has already initialized
+                //cssResolver.collectCssDeclarations(startingNode, context.getResourceResolver(), null);
                 IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
                 startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);

@@ -45,14 +45,9 @@ using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Node;
-using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Svg.Dummy.Css.Impl {
     public class DummyCssResolver : ICssResolver {
-        public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver, AbstractCssContext
-             context) {
-        }
-
         public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             if (node is IElementNode) {

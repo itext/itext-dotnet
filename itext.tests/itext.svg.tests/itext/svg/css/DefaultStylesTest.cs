@@ -7,9 +7,7 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Dummy.Sdk;
-using iText.Svg.Exceptions;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     public class DefaultStylesTest : ExtendedITextTest {
@@ -56,6 +54,7 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual("12px", resolvedStyles.Get(SvgConstants.Attributes.FONT_SIZE));
         }
 
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmptyStreamTest() {
             ICssResolver styleResolver = new SvgStyleResolver(new MemoryStream(new byte[] {  }));
@@ -66,15 +65,14 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual(0, resolvedStyles.Count);
         }
 
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, Count = 1)]
         public virtual void EmptyStylesFallbackTest() {
-            ICssResolver styleResolver = new SvgStyleResolver(new ExceptionInputStream());
-            iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("svg"), "");
-            INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
-            NUnit.Framework.Assert.AreEqual(0, resolvedStyles.Count);
+            NUnit.Framework.Assert.That(() =>  {
+                new SvgStyleResolver(new ExceptionInputStream());
+            }
+            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>());
+;
         }
 
         [NUnit.Framework.Test]

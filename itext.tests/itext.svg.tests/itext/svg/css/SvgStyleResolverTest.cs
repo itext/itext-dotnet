@@ -82,7 +82,7 @@ namespace iText.Svg.Css {
                 ));
             AbstractCssContext cssContext = new SvgCssContext();
             INode circle = new JsoupElementNode(jsoupCircle);
-            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(circle));
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties());
             ICssResolver resolver = new SvgStyleResolver(circle, context);
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
@@ -107,7 +107,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("ellipse"), "");
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
-            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(jSoupStyle));
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties());
             SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
             AbstractCssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
@@ -126,7 +126,7 @@ namespace iText.Svg.Css {
                  + "\t}\n" + "  ", "");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
-            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(jSoupStyle));
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties());
             SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
             IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);

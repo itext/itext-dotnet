@@ -91,35 +91,8 @@ namespace iText.Svg.Processors {
         /// <returns>the base URI</returns>
         String GetBaseUri();
 
-        /// <summary>Sets the base URI.</summary>
-        /// <param name="baseUri">the base URI</param>
-        /// <returns>the ConverterProperties instance</returns>
-        ISvgConverterProperties SetBaseUri(String baseUri);
-
-        //TODO setters in the interface?
         /// <summary>Gets the media device description.</summary>
         /// <returns>the media device description</returns>
         MediaDeviceDescription GetMediaDeviceDescription();
-
-        /// <summary>Sets the media device description.</summary>
-        /// <param name="mediaDeviceDescription">the media device description</param>
-        /// <returns>the ConverterProperties instance</returns>
-        ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription);
-
-        //TODO setters in the interface?
-        /// <summary>Sets the font provider.</summary>
-        /// <remarks>
-        /// Sets the font provider. Please note that
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// instances cannot be reused across several documents
-        /// and thus as soon as you set this property, this
-        /// <see cref="ISvgConverterProperties"/>
-        /// instance becomes only useful for a single
-        /// HTML conversion.
-        /// </remarks>
-        /// <param name="fontProvider">the font provider</param>
-        /// <returns>the ISvgConverterProperties instance</returns>
-        ISvgConverterProperties SetFontProvider(FontProvider fontProvider);
-        //TODO setters in the interface?
     }
 }

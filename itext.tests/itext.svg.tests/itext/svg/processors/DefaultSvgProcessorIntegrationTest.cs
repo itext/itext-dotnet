@@ -62,10 +62,10 @@ namespace iText.Svg.Processors {
         public virtual void DefaultBehaviourTest() {
             String svgFile = sourceFolder + "RedCircle.svg";
             Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
-            ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)processor.Process(root).GetRootRenderer();
+            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
+                ();
             IBranchSvgNodeRenderer expected = new SvgTagSvgNodeRenderer();
             ISvgNodeRenderer expectedEllipse = new EllipseSvgNodeRenderer();
             IDictionary<String, String> expectedEllipseAttributes = new Dictionary<String, String>();
@@ -79,18 +79,16 @@ namespace iText.Svg.Processors {
         //TODO(RND-868) : Replace above check with the following
         //Assert.assertEquals(expected,actual);
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NamedObjectRectangleTest() {
             String svgFile = sourceFolder + "namedObjectRectangleTest.svg";
             Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
-            ISvgProcessor processor = new DefaultSvgProcessor();
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            ISvgProcessorResult processorResult = processor.Process(root);
-            IDictionary<String, ISvgNodeRenderer> acutal = processorResult.GetNamedObjects();
-            NUnit.Framework.Assert.AreEqual(1, acutal.Count);
-            NUnit.Framework.Assert.IsTrue(acutal.ContainsKey("MyRect"));
+            ISvgProcessorResult processorResult = new DefaultSvgProcessor().Process(root);
+            IDictionary<String, ISvgNodeRenderer> actual = processorResult.GetNamedObjects();
+            NUnit.Framework.Assert.AreEqual(1, actual.Count);
+            NUnit.Framework.Assert.IsTrue(actual.ContainsKey("MyRect"));
         }
     }
 }

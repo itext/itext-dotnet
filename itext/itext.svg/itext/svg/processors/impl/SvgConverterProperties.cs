@@ -44,7 +44,6 @@ using System;
 using System.Text;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css.Media;
-using iText.StyledXmlParser.Node;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
@@ -67,24 +66,16 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgNodeRendererFactory rendererFactory;
 
+        private String charset = Encoding.UTF8.Name();
+
         /// <summary>Creates a SvgConverterProperties object.</summary>
         /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
         ///     </remarks>
         public SvgConverterProperties() {
-            //TODO Why Default, why not just SvgConverterProperties? Yes
             this.rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 
-        /// <summary>Creates a SvgConverterProperties object.</summary>
-        /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
-        ///     </remarks>
-        /// <param name="root">the root tag of the SVG image</param>
-        public SvgConverterProperties(INode root) {
-            //TODO
-            this.rendererFactory = new DefaultSvgNodeRendererFactory();
-        }
-
-        public virtual ISvgConverterProperties SetFontProvider(FontProvider fontProvider) {
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetFontProvider(FontProvider fontProvider) {
             this.fontProvider = fontProvider;
             return this;
         }
@@ -95,7 +86,11 @@ namespace iText.Svg.Processors.Impl {
 
         public virtual String GetCharset() {
             // may also return null, but null will always default to UTF-8 in JSoup
-            return Encoding.UTF8.Name();
+            return charset;
+        }
+
+        public virtual void SetCharset(String charset) {
+            this.charset = charset;
         }
 
         /// <summary>Gets the base URI.</summary>
@@ -119,8 +114,8 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Sets the media device description.</summary>
         /// <param name="mediaDeviceDescription">the media device description</param>
         /// <returns>the ConverterProperties instance</returns>
-        public virtual ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription
-            ) {
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription
+             mediaDeviceDescription) {
             this.mediaDeviceDescription = mediaDeviceDescription;
             return this;
         }
@@ -128,7 +123,7 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Sets the base URI.</summary>
         /// <param name="baseUri">the base URI</param>
         /// <returns>the ConverterProperties instance</returns>
-        public virtual ISvgConverterProperties SetBaseUri(String baseUri) {
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetBaseUri(String baseUri) {
             this.baseUri = baseUri;
             return this;
         }

@@ -62,9 +62,6 @@ namespace iText.Svg.Renderers.Impl {
     /// - x, y
     /// </remarks>
     public class TextSvgNodeRenderer : AbstractSvgNodeRenderer {
-        private const String SPACE_CHAR = "";
-
-        //TODO is it space char?
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                 )) {
@@ -92,7 +89,8 @@ namespace iText.Svg.Renderers.Impl {
                     String fontWeight = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_WEIGHT);
                     String fontStyle = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_STYLE);
                     FontProvider provider = new FontProvider(context.GetFontSet());
-                    if (fontFamily != null && !fontFamily.Trim().Equals(SPACE_CHAR)) {
+                    fontFamily = fontFamily != null ? fontFamily.Trim() : "";
+                    if (fontFamily.Length != 0) {
                         FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, provider);
                         currentCanvas.SetFontAndSize(provider.GetPdfFont(fontInfo, provider.GetFontSet()), fontSize);
                     }

@@ -81,7 +81,7 @@ namespace iText.Svg.Dummy.Processors.Impl {
             return baseUri;
         }
 
-        public virtual ISvgConverterProperties SetBaseUri(String baseUri) {
+        public virtual iText.Svg.Dummy.Processors.Impl.DummySvgConverterProperties SetBaseUri(String baseUri) {
             return this;
         }
 
@@ -89,12 +89,13 @@ namespace iText.Svg.Dummy.Processors.Impl {
             return mediaDeviceDescription;
         }
 
-        public virtual ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription
-            ) {
+        public virtual iText.Svg.Dummy.Processors.Impl.DummySvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription
+             mediaDeviceDescription) {
             return this;
         }
 
-        public virtual ISvgConverterProperties SetFontProvider(FontProvider fontProvider) {
+        public virtual iText.Svg.Dummy.Processors.Impl.DummySvgConverterProperties SetFontProvider(FontProvider fontProvider
+            ) {
             return this;
         }
     }

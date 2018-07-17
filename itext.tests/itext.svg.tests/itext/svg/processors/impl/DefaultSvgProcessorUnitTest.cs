@@ -239,17 +239,13 @@ namespace iText.Svg.Processors.Impl {
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new DefaultSvgProcessorUnitTest.EmptySvgConverterProperties(root);
+            ISvgConverterProperties convProps = new DefaultSvgProcessorUnitTest.EmptySvgConverterProperties();
             ISvgNodeRenderer rootActual = processor.Process(root, convProps).GetRootRenderer();
             //Compare
             NUnit.Framework.Assert.IsNull(rootActual);
         }
 
         private class EmptySvgConverterProperties : SvgConverterProperties {
-            internal EmptySvgConverterProperties(INode root)
-                : base(root) {
-            }
-
             public override ISvgNodeRendererFactory GetRendererFactory() {
                 return null;
             }
