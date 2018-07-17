@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
 
@@ -70,6 +71,17 @@ namespace iText.Svg.Renderers {
         private FontProvider fontProvider;
 
         private FontSet tempFonts;
+
+        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider) {
+            if (resourceResolver == null) {
+                resourceResolver = new ResourceResolver("");
+            }
+            this.resourceResolver = resourceResolver;
+            if (fontProvider == null) {
+                fontProvider = new BasicFontProvider();
+            }
+            this.fontProvider = fontProvider;
+        }
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
@@ -150,12 +162,6 @@ namespace iText.Svg.Renderers {
             return this.namedObjects.Get(name);
         }
 
-        /// <summary>Sets the ResourceResolver.</summary>
-        /// <param name="resourceResolver">resource resolver to be used during drawing operations</param>
-        public virtual void SetResourceResolver(ResourceResolver resourceResolver) {
-            this.resourceResolver = resourceResolver;
-        }
-
         /// <summary>Gets the ResourceResolver to be used during the drawing operations.</summary>
         /// <returns>resource resolver instance</returns>
         public virtual ResourceResolver GetResourceResolver() {
@@ -170,13 +176,7 @@ namespace iText.Svg.Renderers {
             this.namedObjects.AddAll(namedObjects);
         }
 
-        /// <summary>Sets the FontProvider.</summary>
-        /// <param name="fontProvider">font provider to be used during drawing operations</param>
-        public virtual void SetFontProvider(FontProvider fontProvider) {
-            this.fontProvider = fontProvider;
-        }
-
-        /// <summary>Gets the FontSet to be used during the drawing operations.</summary>
+        /// <summary>Gets the FontProvider to be used during the drawing operations.</summary>
         /// <returns>font provider instance</returns>
         public virtual FontProvider GetFontProvider() {
             return fontProvider;

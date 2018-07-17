@@ -130,9 +130,9 @@ namespace iText.Svg.Processors.Impl {
             ISvgNodeRenderer rootActual = processor.Process(root, props).GetRootRenderer();
             //setup expected
             ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
+            NUnit.Framework.Assert.AreEqual(rootExpected, rootActual);
         }
 
-        //TODO any assert?
         [NUnit.Framework.Test]
         public virtual void DummyProcessingSvgTagIsNotRootOfInput() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRandomElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
@@ -167,13 +167,12 @@ namespace iText.Svg.Processors.Impl {
                 //Run
                 DefaultSvgProcessor processor = new DefaultSvgProcessor();
                 ISvgConverterProperties props = new DummySvgConverterProperties();
-                ISvgNodeRenderer rootActual = processor.Process(root, props).GetRootRenderer();
+                processor.Process(root, props).GetRootRenderer();
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NOROOT));
 ;
         }
 
-        //TODO any assert?
         [NUnit.Framework.Test]
         public virtual void DummyProcessingTestNullInput() {
             NUnit.Framework.Assert.That(() =>  {

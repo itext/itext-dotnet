@@ -64,7 +64,7 @@ namespace iText.Svg.Renderers {
             tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             page1 = new PdfCanvas(tokenDoc.AddNewPage());
             page2 = new PdfCanvas(tokenDoc.AddNewPage());
-            context = new SvgDrawContext();
+            context = new SvgDrawContext(null, null);
         }
 
         [NUnit.Framework.TearDown]

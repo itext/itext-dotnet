@@ -62,7 +62,7 @@ namespace iText.Svg.Renderers {
             IElementNode tag = new JsoupElementNode(element);
             ISvgNodeRenderer renderer = fact.CreateSvgNodeRendererForTag(tag, null);
             NUnit.Framework.Assert.IsTrue(renderer is DummyProcessableSvgNodeRenderer);
-            renderer.Draw(new SvgDrawContext());
+            renderer.Draw(new SvgDrawContext(null, null));
             DummyProcessableSvgNodeRenderer processed = (DummyProcessableSvgNodeRenderer)renderer;
             NUnit.Framework.Assert.IsTrue(processed.IsProcessed());
         }
@@ -77,7 +77,7 @@ namespace iText.Svg.Renderers {
             IElementNode childTag = new JsoupElementNode(childEl);
             ISvgNodeRenderer parentRenderer = fact.CreateSvgNodeRendererForTag(parentTag, null);
             ISvgNodeRenderer childRenderer = fact.CreateSvgNodeRendererForTag(childTag, parentRenderer);
-            parentRenderer.Draw(new SvgDrawContext());
+            parentRenderer.Draw(new SvgDrawContext(null, null));
             DummyProcessableSvgNodeRenderer parentProcessed = (DummyProcessableSvgNodeRenderer)parentRenderer;
             NUnit.Framework.Assert.IsTrue(parentProcessed.IsProcessed());
             DummyProcessableSvgNodeRenderer childProcessed = (DummyProcessableSvgNodeRenderer)childRenderer;

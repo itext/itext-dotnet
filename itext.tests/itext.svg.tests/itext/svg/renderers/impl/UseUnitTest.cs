@@ -10,7 +10,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ReferenceNotFoundTest() {
             DummySvgNodeRenderer renderer = new DummySvgNodeRenderer();
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfPage page = pdfDocument.AddNewPage();
             context.PushCanvas(new PdfCanvas(page));

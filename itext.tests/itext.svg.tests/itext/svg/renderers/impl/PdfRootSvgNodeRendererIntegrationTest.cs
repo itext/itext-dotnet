@@ -14,7 +14,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportTest() {
             Rectangle expected = new Rectangle(0, 0, 600, 600);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                 (0)));
             document.AddNewPage();
@@ -30,7 +30,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportWithDifferentXYTest() {
             Rectangle expected = new Rectangle(10, 20, 600, 600);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                 (0)));
             document.AddNewPage();
@@ -46,7 +46,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CalculateNestedViewportDifferentFromParentTest() {
             Rectangle expected = new Rectangle(0, 0, 500, 500);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                 (0)));
             document.AddNewPage();
@@ -76,7 +76,7 @@ namespace iText.Svg.Renderers.Impl {
                 PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(processed);
                 PdfFormXObject pdfForm = new PdfFormXObject(new PdfStream());
                 PdfCanvas canvas = new PdfCanvas(pdfForm, document);
-                SvgDrawContext context = new SvgDrawContext();
+                SvgDrawContext context = new SvgDrawContext(null, null);
                 context.PushCanvas(canvas);
                 root.Draw(context);
             }
@@ -87,7 +87,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostTransformation() {
             AffineTransform expected = new AffineTransform(1d, 0d, 0d, -1d, 0d, 600d);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                 (0)));
             document.AddNewPage();

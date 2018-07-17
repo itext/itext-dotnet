@@ -105,8 +105,7 @@ namespace iText.Svg.Css.Impl {
         /// <param name="rootNode">node to collect css from</param>
         /// <param name="context">the processor context</param>
         public SvgStyleResolver(INode rootNode, SvgProcessorContext context) {
-            // TODO shall this method fetch default css first?
-            // TODO discuss and create ticket
+            // TODO DEVSIX-2060. Fetch default styles first.
             this.deviceDescription = context.GetDeviceDescription();
             CollectCssDeclarations(rootNode, context.GetResourceResolver());
             CollectFonts();

@@ -53,7 +53,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CalculateNestedViewportSameAsParentTest() {
             Rectangle expected = new Rectangle(0, 0, 600, 600);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                 (0)));
             document.AddNewPage();

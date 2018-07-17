@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers.Impl {
             lineProperties.Put("stroke-width", "25");
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             root.Draw(context);
@@ -101,7 +101,7 @@ namespace iText.Svg.Renderers.Impl {
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             root.Draw(context);
@@ -122,7 +122,7 @@ namespace iText.Svg.Renderers.Impl {
                 lineProperties.Put("x2", "notAnum");
                 lineProperties.Put("y2", "alsoNotANum");
                 root.SetAttributesAndStyles(lineProperties);
-                SvgDrawContext context = new SvgDrawContext();
+                SvgDrawContext context = new SvgDrawContext(null, null);
                 PdfCanvas cv = new PdfCanvas(doc, 1);
                 context.PushCanvas(cv);
                 root.Draw(context);
@@ -132,7 +132,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void InvalidAttributeTest02() {
@@ -147,7 +146,7 @@ namespace iText.Svg.Renderers.Impl {
             doc.AddNewPage();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             root.Draw(context);
@@ -164,7 +163,7 @@ namespace iText.Svg.Renderers.Impl {
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             root.SetAttributesAndStyles(lineProperties);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             root.Draw(context);

@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M 100,100, L300,100,L200,300,z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -101,7 +101,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M 100 100 l300 100 L200 300 z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -124,7 +124,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M100,200 C100,100 250,100 250,200 S400,300 400,200,z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -147,7 +147,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M100 200 C100 300 250 300 250 200 S400 100 400 200 z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -170,7 +170,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M200,300 Q400,50 600,300,z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -193,7 +193,7 @@ namespace iText.Svg.Renderers.Impl {
             pathShapes.Put("d", "M200 300 Q400 50 600 300 z");
             ISvgNodeRenderer pathRenderer = new PathSvgNodeRenderer();
             pathRenderer.SetAttributesAndStyles(pathShapes);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
@@ -217,7 +217,7 @@ namespace iText.Svg.Renderers.Impl {
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             NUnit.Framework.Assert.IsTrue(root.GetChildren()[0] is PathSvgNodeRenderer);
@@ -237,7 +237,7 @@ namespace iText.Svg.Renderers.Impl {
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             NUnit.Framework.Assert.IsTrue(root.GetChildren()[0] is PathSvgNodeRenderer);
@@ -257,7 +257,7 @@ namespace iText.Svg.Renderers.Impl {
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
             NUnit.Framework.Assert.IsTrue(root.GetChildren()[0] is PathSvgNodeRenderer);

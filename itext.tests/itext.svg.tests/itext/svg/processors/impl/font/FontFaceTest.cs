@@ -129,6 +129,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNABLE_TO_RETRIEVE_FONT)]
         public virtual void FontFaceTtcTest() {
+            //TODO (DEVSIX-2064) Cannot retrieve NotoSansCJK-Regular
             RunTest("fontFaceTtcTest");
         }
 
@@ -144,6 +145,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNABLE_TO_RETRIEVE_FONT)]
         public virtual void FontFaceWoff2TtcTest() {
+            //TODO (DEVSIX-2064) Cannot retrieve NotoSansCJK-Regular
             RunTest("fontFaceWoff2TtcTest");
         }
 

@@ -84,15 +84,16 @@ namespace iText.Svg.Renderers.Impl {
                     y = CssUtils.ParseAbsoluteLength(yValuesList[0]);
                 }
                 currentCanvas.BeginText();
+                FontProvider provider = context.GetFontProvider();
+                FontSet tempFonts = context.GetTempFonts();
                 PdfFont font = null;
-                if (context.GetFontProvider() != null) {
+                if (!provider.GetFontSet().IsEmpty() || (tempFonts != null && !tempFonts.IsEmpty())) {
                     String fontFamily = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_FAMILY);
                     String fontWeight = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_WEIGHT);
                     String fontStyle = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_STYLE);
                     fontFamily = fontFamily != null ? fontFamily.Trim() : "";
-                    FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, context.GetFontProvider(), context.
-                        GetTempFonts());
-                    font = context.GetFontProvider().GetPdfFont(fontInfo, context.GetTempFonts());
+                    FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, provider, tempFonts);
+                    font = provider.GetPdfFont(fontInfo, tempFonts);
                 }
                 if (font == null) {
                     try {

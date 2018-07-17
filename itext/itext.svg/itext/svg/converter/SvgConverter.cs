@@ -486,9 +486,8 @@ namespace iText.Svg.Converter {
             //process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
             ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
-            SvgDrawContext drawContext = new SvgDrawContext();
             String baseUri = props != null ? props.GetBaseUri() : "";
-            drawContext.SetResourceResolver(new ResourceResolver(baseUri));
+            SvgDrawContext drawContext = new SvgDrawContext(new ResourceResolver(baseUri), null);
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             //Extract topmost dimensions
             CheckNull(topSvgRenderer);
@@ -594,10 +593,9 @@ namespace iText.Svg.Converter {
             CheckNull(content);
             CheckNull(document);
             ISvgProcessorResult processorResult = Process(Parse(content), props);
-            SvgDrawContext drawContext = new SvgDrawContext();
-            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            drawContext.SetFontProvider(processorResult.GetFontProvider());
+            SvgDrawContext drawContext = new SvgDrawContext(null, processorResult.GetFontProvider());
             drawContext.SetTempFonts(processorResult.GetTempFonts());
+            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
         }
 
@@ -647,9 +645,8 @@ namespace iText.Svg.Converter {
             CheckNull(stream);
             CheckNull(document);
             ISvgProcessorResult processorResult = Process(Parse(stream, props), props);
-            SvgDrawContext drawContext = new SvgDrawContext();
+            SvgDrawContext drawContext = new SvgDrawContext(null, processorResult.GetFontProvider());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            drawContext.SetFontProvider(processorResult.GetFontProvider());
             drawContext.SetTempFonts(processorResult.GetTempFonts());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
         }
@@ -845,7 +842,7 @@ namespace iText.Svg.Converter {
         /// corresponding to the passed node renderer tree.
         /// </returns>
         public static PdfFormXObject ConvertToXObject(ISvgNodeRenderer topSvgRenderer, PdfDocument document) {
-            return ConvertToXObject(topSvgRenderer, document, new SvgDrawContext());
+            return ConvertToXObject(topSvgRenderer, document, new SvgDrawContext(null, null));
         }
 
         /// <summary>

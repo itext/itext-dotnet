@@ -59,7 +59,7 @@ namespace iText.Svg.Renderers {
             IDictionary<String, String> attributeMap = new Dictionary<String, String>();
             attributeMap.Put(SvgConstants.Attributes.TRANSFORM, "translate(10)");
             nodeRenderer.SetAttributesAndStyles(attributeMap);
-            SvgDrawContext context = new SvgDrawContext();
+            SvgDrawContext context = new SvgDrawContext(null, null);
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             context.PushCanvas(canvas);
