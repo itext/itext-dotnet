@@ -245,7 +245,7 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.IsNull(rootActual);
         }
 
-        private class EmptySvgConverterProperties : DefaultSvgConverterProperties {
+        private class EmptySvgConverterProperties : SvgConverterProperties {
             internal EmptySvgConverterProperties(INode root)
                 : base(root) {
             }

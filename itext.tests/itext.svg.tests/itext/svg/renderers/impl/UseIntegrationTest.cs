@@ -21,7 +21,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            properties = new DefaultSvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
+            properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
         /// <exception cref="System.IO.IOException"/>

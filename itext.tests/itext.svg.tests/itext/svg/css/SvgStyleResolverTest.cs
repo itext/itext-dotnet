@@ -53,12 +53,12 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Css {
-    public class DefaultSvgStyleResolverTest : SvgIntegrationTest {
+    public class SvgStyleResolverTest : SvgIntegrationTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/DefaultSvgStyleResolver/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
 
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/css/DefaultSvgStyleResolver/";
+             + "/test/itext/svg/css/SvgStyleResolver/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -69,7 +69,7 @@ namespace iText.Svg.Css {
         //Inherits values from parent?
         //Calculates values from parent
         [NUnit.Framework.Test]
-        public virtual void DefaultSvgCssResolverBasicAttributeTest() {
+        public virtual void SvgCssResolverBasicAttributeTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("circle"), "");
             Attributes circleAttributes = jsoupCircle.Attributes();
@@ -82,8 +82,8 @@ namespace iText.Svg.Css {
                 ));
             AbstractCssContext cssContext = new SvgCssContext();
             INode circle = new JsoupElementNode(jsoupCircle);
-            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(circle));
-            ICssResolver resolver = new DefaultSvgStyleResolver(circle, context);
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(circle));
+            ICssResolver resolver = new SvgStyleResolver(circle, context);
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("id", "circle1");
@@ -97,7 +97,7 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DefaultSvgCssResolverStyleTagTest() {
+        public virtual void SvgCssResolverStyleTagTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("style"), "");
             TextNode styleContents = new TextNode("\n" + "\tellipse{\n" + "\t\tstroke-width:1.76388889;\n" + "\t\tstroke:#da0000;\n"
@@ -107,8 +107,8 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("ellipse"), "");
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
-            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
-            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(jSoupStyle));
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
             AbstractCssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
@@ -126,8 +126,8 @@ namespace iText.Svg.Css {
                  + "\t}\n" + "  ", "");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
-            ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
-            DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
+            ProcessorContext context = new ProcessorContext(new SvgConverterProperties(jSoupStyle));
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
             IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
             NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);

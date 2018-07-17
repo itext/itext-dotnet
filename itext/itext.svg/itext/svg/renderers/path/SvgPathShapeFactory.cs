@@ -49,8 +49,8 @@ namespace iText.Svg.Renderers.Path {
     /// <see cref="IPathShape"/>
     /// objects.
     /// </summary>
-    public class DefaultSvgPathShapeFactory {
-        private DefaultSvgPathShapeFactory() {
+    public class SvgPathShapeFactory {
+        private SvgPathShapeFactory() {
         }
 
         /// <summary>

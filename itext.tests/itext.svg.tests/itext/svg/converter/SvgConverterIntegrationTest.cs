@@ -253,7 +253,7 @@ namespace iText.Svg.Converter {
             String destName = "CTXO_" + name + "_StringDocProps";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc, props);
             PdfCanvas canv = new PdfCanvas(page);
             canv.AddXObject(xObj, 0, 0);
@@ -271,7 +271,7 @@ namespace iText.Svg.Converter {
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(fis, doc, props);
             PdfCanvas canv = new PdfCanvas(page);
             canv.AddXObject(xObj, 0, 0);
@@ -308,7 +308,7 @@ namespace iText.Svg.Converter {
             FileStream fos = new FileStream(destinationFolder + destName + ".pdf", FileMode.Create);
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos, new WriterProperties().SetCompressionLevel(0)
                 ));
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             Image image = SvgConverter.ConvertToImage(fis, pdfDocument, props);
             Document doc = new Document(pdfDocument);
             doc.Add(image);
@@ -339,7 +339,7 @@ namespace iText.Svg.Converter {
             String destName = "DOP_" + name + "_StringPdfPageConverterProps";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -370,7 +370,7 @@ namespace iText.Svg.Converter {
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(fis, page, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -400,7 +400,7 @@ namespace iText.Svg.Converter {
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(fis, doc, 1, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -415,7 +415,7 @@ namespace iText.Svg.Converter {
             String destName = "DOD_" + name + "_StreamPdfDocumentIntProps";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             doc.AddNewPage();
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -444,7 +444,7 @@ namespace iText.Svg.Converter {
             String destName = "DOC_" + name + "_StringCanvasProps";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -475,7 +475,7 @@ namespace iText.Svg.Converter {
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            ISvgConverterProperties props = new DefaultSvgConverterProperties();
+            ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(fis, canvas, props);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
@@ -506,7 +506,7 @@ namespace iText.Svg.Converter {
             root.SetAttribute("version", "1.1");
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
-            ISvgProcessorResult expected = new DefaultSvgProcessorResult(map, root, new FontSet());
+            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
             //TODO(RND-868): remove below checks
             NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());

@@ -60,9 +60,6 @@ namespace iText.Svg.Renderers.Factories {
 
         private ICollection<String> ignoredTags = new HashSet<String>();
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory
-            ));
-
         /// <summary>
         /// Default constructor which uses the default
         /// <see cref="ISvgNodeRendererMapper"/>
@@ -107,7 +104,8 @@ namespace iText.Svg.Renderers.Factories {
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
             }
             catch (MissingMethodException ex) {
-                LOGGER.Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory).FullName, ex);
+                LogManager.GetLogger(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory)).Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory
+                    ).FullName, ex);
                 throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
                     ));
             }

@@ -90,7 +90,7 @@ namespace iText.Svg.Processors.Impl {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
             }
             if (converterProps == null) {
-                converterProps = new DefaultSvgConverterProperties();
+                converterProps = new SvgConverterProperties();
             }
             //Setup processorState
             PerformSetup(root, converterProps);
@@ -100,7 +100,7 @@ namespace iText.Svg.Processors.Impl {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
-                return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer, context.GetTempFonts());
+                return new SvgProcessorResult(namedObjects, rootSvgRenderer, context.GetTempFonts());
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
@@ -120,7 +120,7 @@ namespace iText.Svg.Processors.Impl {
                 rendererFactory = converterProps.GetRendererFactory();
             }
             context = new ProcessorContext(converterProps);
-            cssResolver = new DefaultSvgStyleResolver(root, context);
+            cssResolver = new SvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
             //TODO RND-1042
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();

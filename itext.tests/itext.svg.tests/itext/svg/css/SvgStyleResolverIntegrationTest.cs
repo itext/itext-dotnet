@@ -50,12 +50,12 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Css {
-    public class DefaultSvgStyleResolverIntegrationTest : SvgIntegrationTest {
+    public class SvgStyleResolverIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/DefaultSvgStyleResolver/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/css/DefaultSvgStyleResolver/";
+             + "/test/itext/svg/css/SvgStyleResolver/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

@@ -21,8 +21,8 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <param name="cssResolver">the css styles resolver</param>
         public virtual void AddFontFaceFonts(ICssResolver cssResolver) {
             //TODO Shall we add getFonts() to ICssResolver?
-            if (cssResolver is DefaultSvgStyleResolver) {
-                foreach (CssFontFaceRule fontFace in ((DefaultSvgStyleResolver)cssResolver).GetFonts()) {
+            if (cssResolver is SvgStyleResolver) {
+                foreach (CssFontFaceRule fontFace in ((SvgStyleResolver)cssResolver).GetFonts()) {
                     bool findSupportedSrc = false;
                     FontFace ff = FontFace.Create(fontFace.GetProperties());
                     if (ff != null) {

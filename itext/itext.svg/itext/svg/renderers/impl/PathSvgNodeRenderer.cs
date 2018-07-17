@@ -111,7 +111,7 @@ namespace iText.Svg.Renderers.Impl {
                         String[] startingControlPoint = new String[2];
                         //Implements (absolute) command value only
                         //TODO implement relative values e. C(absolute), c(relative)
-                        IPathShape pathShape = DefaultSvgPathShapeFactory.CreatePathShape(pathProperties[0].ToUpperInvariant());
+                        IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0].ToUpperInvariant());
                         if (pathShape is MoveTo) {
                             zOperator = new LineTo();
                             zOperator.SetCoordinates(JavaUtil.ArraysCopyOfRange(pathProperties, 1, pathProperties.Length));

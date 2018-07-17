@@ -55,7 +55,7 @@ namespace iText.Svg.Processors.Impl {
     /// for
     /// <see cref="DefaultSvgProcessor"/>
     /// </summary>
-    public class DefaultSvgConverterProperties : ISvgConverterProperties {
+    public class SvgConverterProperties : ISvgConverterProperties {
         /// <summary>The media device description.</summary>
         private MediaDeviceDescription mediaDeviceDescription;
 
@@ -63,23 +63,24 @@ namespace iText.Svg.Processors.Impl {
         private FontProvider fontProvider;
 
         /// <summary>The base URI.</summary>
-        private String baseUri;
+        private String baseUri = "";
 
         private ISvgNodeRendererFactory rendererFactory;
 
-        /// <summary>Creates a DefaultSvgConverterProperties object.</summary>
-        /// <remarks>Creates a DefaultSvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
+        /// <summary>Creates a SvgConverterProperties object.</summary>
+        /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
         ///     </remarks>
-        public DefaultSvgConverterProperties() {
-            //Why Default, why not just SvgConverterProperties?
+        public SvgConverterProperties() {
+            //TODO Why Default, why not just SvgConverterProperties? Yes
             this.rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 
-        /// <summary>Creates a DefaultSvgConverterProperties object.</summary>
-        /// <remarks>Creates a DefaultSvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
+        /// <summary>Creates a SvgConverterProperties object.</summary>
+        /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
         ///     </remarks>
         /// <param name="root">the root tag of the SVG image</param>
-        public DefaultSvgConverterProperties(INode root) {
+        public SvgConverterProperties(INode root) {
+            //TODO
             this.rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 

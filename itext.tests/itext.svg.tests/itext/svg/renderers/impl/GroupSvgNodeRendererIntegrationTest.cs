@@ -11,7 +11,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/GroupRendererTest/";
 
-        private DefaultSvgConverterProperties properties;
+        private SvgConverterProperties properties;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

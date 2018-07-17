@@ -23,8 +23,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            properties = new DefaultSvgConverterProperties(new JsoupDocumentNode(new Document(""))).SetBaseUri(sourceFolder
-                );
+            properties = new SvgConverterProperties(new JsoupDocumentNode(new Document(""))).SetBaseUri(sourceFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -10,15 +10,15 @@ namespace iText.Svg.Processors.Impl {
     /// <see cref="iText.Svg.Processors.ISvgProcessor"/>
     /// objects.
     /// </summary>
-    public class DefaultSvgProcessorResult : ISvgProcessorResult {
+    public class SvgProcessorResult : ISvgProcessorResult {
         private IDictionary<String, ISvgNodeRenderer> namedObjects;
 
         private ISvgNodeRenderer root;
 
         private FontSet fontSet;
 
-        public DefaultSvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root
-            , FontSet fontSet) {
+        public SvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root, FontSet
+             fontSet) {
             this.namedObjects = namedObjects;
             this.root = root;
             this.fontSet = fontSet;
@@ -40,8 +40,7 @@ namespace iText.Svg.Processors.Impl {
             if (o == null || (!o.GetType().Equals(this.GetType()))) {
                 return false;
             }
-            iText.Svg.Processors.Impl.DefaultSvgProcessorResult otherResult = (iText.Svg.Processors.Impl.DefaultSvgProcessorResult
-                )o;
+            iText.Svg.Processors.Impl.SvgProcessorResult otherResult = (iText.Svg.Processors.Impl.SvgProcessorResult)o;
             return otherResult.GetNamedObjects().Equals(this.GetNamedObjects()) && otherResult.GetRootRenderer().Equals
                 (this.GetRootRenderer());
         }

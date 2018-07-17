@@ -58,7 +58,7 @@ using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default CSS resolver implementation.</summary>
-    public class DefaultSvgStyleResolver : ICssResolver {
+    public class SvgStyleResolver : ICssResolver {
         private CssStyleSheet css;
 
         private const String DEFAULT_CSS_PATH = "iText.Svg.default.css";
@@ -74,27 +74,28 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>
         /// Creates a
-        /// <see cref="DefaultSvgStyleResolver"/>
+        /// <see cref="SvgStyleResolver"/>
         /// with a given default CSS.
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
-        public DefaultSvgStyleResolver(Stream defaultCssStream) {
+        public SvgStyleResolver(Stream defaultCssStream) {
             InitializeCss(defaultCssStream, false);
         }
 
-        /// <summary>Creates a DefaultSvgStyleResolver.</summary>
-        public DefaultSvgStyleResolver() {
+        /// <summary>Creates a SvgStyleResolver.</summary>
+        public SvgStyleResolver() {
+            //TODO → try with resources
             InitializeCss(ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH), true);
         }
 
-        /// <summary>Creates a DefaultSvgStyleResolver.</summary>
+        /// <summary>Creates a SvgStyleResolver.</summary>
         /// <remarks>
-        /// Creates a DefaultSvgStyleResolver. This constructor will instantiate its internal style sheet and it
+        /// Creates a SvgStyleResolver. This constructor will instantiate its internal style sheet and it
         /// will collect the css declarations from the provided node.
         /// </remarks>
         /// <param name="rootNode">node to collect css from</param>
         /// <param name="context">the processor context</param>
-        public DefaultSvgStyleResolver(INode rootNode, ProcessorContext context) {
+        public SvgStyleResolver(INode rootNode, ProcessorContext context) {
             //TODO shall this method fetch default css first?
             this.deviceDescription = context.GetDeviceDescription();
             //TODO should be private, as implementation related method
@@ -122,7 +123,7 @@ namespace iText.Svg.Css.Impl {
                 IStylesContainer parentNode = (IStylesContainer)node.ParentNode();
                 IDictionary<String, String> parentStyles = parentNode.GetStyles();
                 if (parentStyles == null && !(node.ParentNode() is IDocumentNode)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
                     logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
                 }
                 if (parentStyles != null) {
@@ -179,7 +180,7 @@ namespace iText.Svg.Css.Impl {
                                 this.css.AppendCssStyleSheet(styleSheet);
                             }
                             catch (System.IO.IOException exc) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
+                                ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
                                 logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
                             }
                         }
