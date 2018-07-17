@@ -138,6 +138,7 @@ namespace iText.Svg.Css {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FontResolverIntegrationTest() {
+            //TODO DEVSIX-2058
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
         }
 

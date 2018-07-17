@@ -67,8 +67,8 @@ namespace iText.Svg.Converter {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/converter/SvgConverterTest/";
 
-        public const String ECLIPSESVGSTRING = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + 
-            "<svg\n" + "   xmlns=\"http://www.w3.org/2000/svg\"\n" + "   width=\"200pt\"\n" + "   height=\"200pt\"\n"
+        private const String ECLIPSESVGSTRING = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+             "<svg\n" + "   xmlns=\"http://www.w3.org/2000/svg\"\n" + "   width=\"200pt\"\n" + "   height=\"200pt\"\n"
              + "   viewBox=\"0 0 100 100\"\n" + "   version=\"1.1\">\n" + "    <circle\n" + "       style=\"opacity:1;fill:none;fill-opacity:1;stroke:#ffcc00;stroke-width:4.13364887;stroke-miterlimit:4;stroke-opacity:1\"\n"
              + "       cx=\"35.277779\"\n" + "       cy=\"35.277779\"\n" + "       r=\"33.210953\" />\n" + "    <circle\n"
              + "       style=\"opacity:1;fill:#ffcc00;fill-opacity:1;stroke:#ffcc00;stroke-width:1.42177439;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1\"\n"
@@ -506,7 +506,7 @@ namespace iText.Svg.Converter {
             root.SetAttribute("version", "1.1");
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
-            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontSet());
+            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
             //TODO(RND-868): remove below checks
             NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());

@@ -596,7 +596,8 @@ namespace iText.Svg.Converter {
             ISvgProcessorResult processorResult = Process(Parse(content), props);
             SvgDrawContext drawContext = new SvgDrawContext();
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            drawContext.SetFontSet(processorResult.GetFontSet());
+            drawContext.SetFontProvider(processorResult.GetFontProvider());
+            drawContext.SetTempFonts(processorResult.GetTempFonts());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
         }
 
@@ -648,7 +649,8 @@ namespace iText.Svg.Converter {
             ISvgProcessorResult processorResult = Process(Parse(stream, props), props);
             SvgDrawContext drawContext = new SvgDrawContext();
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            drawContext.SetFontSet(processorResult.GetFontSet());
+            drawContext.SetFontProvider(processorResult.GetFontProvider());
+            drawContext.SetTempFonts(processorResult.GetTempFonts());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
         }
 

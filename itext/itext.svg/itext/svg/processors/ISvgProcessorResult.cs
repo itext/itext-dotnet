@@ -24,10 +24,14 @@ namespace iText.Svg.Processors {
 
         /// <summary>
         /// Obtains the
-        /// <see cref="iText.Layout.Font.FontSet"/>
-        /// font set.
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// .
         /// </summary>
+        /// <returns>FontProvider</returns>
+        FontProvider GetFontProvider();
+
+        /// <summary>Obtains the list of temporary fonts</summary>
         /// <returns>FontSet</returns>
-        FontSet GetFontSet();
+        FontSet GetTempFonts();
     }
 }

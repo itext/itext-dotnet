@@ -67,7 +67,9 @@ namespace iText.Svg.Renderers {
 
         private ResourceResolver resourceResolver;
 
-        private FontSet fontSet;
+        private FontProvider fontProvider;
+
+        private FontSet tempFonts;
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
@@ -168,18 +170,28 @@ namespace iText.Svg.Renderers {
             this.namedObjects.AddAll(namedObjects);
         }
 
-        /// <summary>Sets the FontSet.</summary>
-        /// <param name="fontSet">font set to be used during drawing operations</param>
-        public virtual void SetFontSet(FontSet fontSet) {
-            //TODO seems that FontProvider should be here
-            this.fontSet = fontSet;
+        /// <summary>Sets the FontProvider.</summary>
+        /// <param name="fontProvider">font provider to be used during drawing operations</param>
+        public virtual void SetFontProvider(FontProvider fontProvider) {
+            this.fontProvider = fontProvider;
         }
 
         /// <summary>Gets the FontSet to be used during the drawing operations.</summary>
-        /// <returns>fontSet font set instance</returns>
-        public virtual FontSet GetFontSet() {
-            //TODO seems that FontProvider should be here
-            return fontSet;
+        /// <returns>font provider instance</returns>
+        public virtual FontProvider GetFontProvider() {
+            return fontProvider;
+        }
+
+        /// <summary>Gets list of temporary fonts from @font-face.</summary>
+        /// <returns>font set instance</returns>
+        public virtual FontSet GetTempFonts() {
+            return tempFonts;
+        }
+
+        /// <summary>Sets the FontSet.</summary>
+        /// <param name="tempFonts">font set to be used during drawing operations</param>
+        public virtual void SetTempFonts(FontSet tempFonts) {
+            this.tempFonts = tempFonts;
         }
 
         /// <summary>Returns true when this id has been used before</summary>

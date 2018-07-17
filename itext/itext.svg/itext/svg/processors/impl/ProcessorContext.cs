@@ -20,9 +20,6 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>The device description.</summary>
         private MediaDeviceDescription deviceDescription;
 
-        /// <summary>The base URI.</summary>
-        private String baseUri;
-
         /// <summary>
         /// Instantiates a new
         /// <see cref="ProcessorContext"/>
@@ -34,6 +31,7 @@ namespace iText.Svg.Processors.Impl {
         /// instance
         /// </param>
         public ProcessorContext(ISvgConverterProperties converterProperties) {
+            //TODO Svg processor context
             deviceDescription = converterProperties.GetMediaDeviceDescription();
             if (deviceDescription == null) {
                 deviceDescription = MediaDeviceDescription.GetDefault();
@@ -42,7 +40,7 @@ namespace iText.Svg.Processors.Impl {
             if (fontProvider == null) {
                 fontProvider = new BasicFontProvider();
             }
-            baseUri = converterProperties.GetBaseUri();
+            String baseUri = converterProperties.GetBaseUri();
             if (baseUri == null) {
                 baseUri = "";
             }

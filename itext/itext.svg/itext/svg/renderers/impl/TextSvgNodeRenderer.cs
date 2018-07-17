@@ -84,34 +84,28 @@ namespace iText.Svg.Renderers.Impl {
                     y = CssUtils.ParseAbsoluteLength(yValuesList[0]);
                 }
                 currentCanvas.BeginText();
-                if (context.GetFontSet() != null && !context.GetFontSet().IsEmpty()) {
+                PdfFont font = null;
+                if (context.GetFontProvider() != null) {
                     String fontFamily = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_FAMILY);
                     String fontWeight = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_WEIGHT);
                     String fontStyle = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_STYLE);
-                    FontProvider provider = new FontProvider(context.GetFontSet());
                     fontFamily = fontFamily != null ? fontFamily.Trim() : "";
-                    if (fontFamily.Length != 0) {
-                        FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, provider);
-                        currentCanvas.SetFontAndSize(provider.GetPdfFont(fontInfo, provider.GetFontSet()), fontSize);
-                    }
-                    else {
-                        try {
-                            currentCanvas.SetFontAndSize(PdfFontFactory.CreateFont(), fontSize);
-                        }
-                        catch (System.IO.IOException e) {
-                            throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
-                        }
-                    }
+                    FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, context.GetFontProvider(), context.
+                        GetTempFonts());
+                    font = context.GetFontProvider().GetPdfFont(fontInfo, context.GetTempFonts());
                 }
-                else {
+                if (font == null) {
                     try {
-                        //TODO each call of createFont() or not?
-                        currentCanvas.SetFontAndSize(PdfFontFactory.CreateFont(), fontSize);
+                        // TODO (DEVSIX-2057)
+                        // TODO each call of createFont() create a new instance of PdfFont.
+                        // TODO FontProvider shall be used instead.
+                        font = PdfFontFactory.CreateFont();
                     }
                     catch (System.IO.IOException e) {
                         throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
                     }
                 }
+                currentCanvas.SetFontAndSize(font, fontSize);
                 //Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
                 currentCanvas.SetTextMatrix(1, 0, 0, -1, x, y);
                 currentCanvas.SetColor(ColorConstants.BLACK, true);
@@ -121,15 +115,15 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private FontInfo ResolveFontName(String fontFamily, String fontWeight, String fontStyle, FontProvider provider
-            ) {
-            bool isBold = fontWeight != null ? fontWeight.EqualsIgnoreCase(SvgConstants.Attributes.BOLD) : false;
-            bool isItalic = fontStyle != null ? fontStyle.EqualsIgnoreCase(SvgConstants.Attributes.ITALIC) : false;
+            , FontSet tempFonts) {
+            bool isBold = fontWeight != null && fontWeight.EqualsIgnoreCase(SvgConstants.Attributes.BOLD);
+            bool isItalic = fontStyle != null && fontStyle.EqualsIgnoreCase(SvgConstants.Attributes.ITALIC);
             FontCharacteristics fontCharacteristics = new FontCharacteristics();
             IList<String> stringArrayList = new List<String>();
             stringArrayList.Add(fontFamily);
             fontCharacteristics.SetBoldFlag(isBold);
             fontCharacteristics.SetItalicFlag(isItalic);
-            return provider.GetFontSelector(stringArrayList, fontCharacteristics).BestMatch();
+            return provider.GetFontSelector(stringArrayList, fontCharacteristics, tempFonts).BestMatch();
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {
