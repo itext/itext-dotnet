@@ -59,9 +59,7 @@ using iText.Svg.Utils;
 namespace iText.Svg.Css.Impl {
     /// <summary>Default CSS resolver implementation.</summary>
     public class DefaultSvgStyleResolver : ICssResolver {
-        private CssStyleSheet internalStyleSheet;
-
-        private ILog logger;
+        private CssStyleSheet css;
 
         private const String DEFAULT_CSS_PATH = "iText.Svg.default.css";
 
@@ -72,7 +70,7 @@ namespace iText.Svg.Css.Impl {
         private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
 
         /// <summary>The style-resolver util responsible for resolving inheritance rules</summary>
-        private StyleResolverUtil sru;
+        private StyleResolverUtil sru = new StyleResolverUtil();
 
         /// <summary>
         /// Creates a
@@ -81,26 +79,12 @@ namespace iText.Svg.Css.Impl {
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
         public DefaultSvgStyleResolver(Stream defaultCssStream) {
-            this.logger = LogManager.GetLogger(this.GetType());
-            try {
-                this.internalStyleSheet = CssStyleSheetParser.Parse(defaultCssStream);
-            }
-            catch (System.IO.IOException e) {
-                this.logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
-                this.internalStyleSheet = new CssStyleSheet();
-            }
-            try {
-                defaultCssStream.Dispose();
-            }
-            catch (System.IO.IOException e) {
-                throw new SvgProcessingException(SvgLogMessageConstant.ERROR_CLOSING_CSS_STREAM, e);
-            }
-            this.sru = new StyleResolverUtil();
+            InitializeCss(defaultCssStream, false);
         }
 
         /// <summary>Creates a DefaultSvgStyleResolver.</summary>
-        public DefaultSvgStyleResolver()
-            : this(ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH)) {
+        public DefaultSvgStyleResolver() {
+            InitializeCss(ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH), true);
         }
 
         /// <summary>Creates a DefaultSvgStyleResolver.</summary>
@@ -111,18 +95,18 @@ namespace iText.Svg.Css.Impl {
         /// <param name="rootNode">node to collect css from</param>
         /// <param name="context">the processor context</param>
         public DefaultSvgStyleResolver(INode rootNode, ProcessorContext context) {
+            //TODO shall this method fetch default css first?
             this.deviceDescription = context.GetDeviceDescription();
-            internalStyleSheet = new CssStyleSheet();
+            //TODO should be private, as implementation related method
             CollectCssDeclarations(rootNode, context.GetResourceResolver(), null);
             CollectFonts();
-            this.sru = new StyleResolverUtil();
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             //Load in from collected style sheets
-            IList<CssDeclaration> styleSheetDeclarations = internalStyleSheet.GetCssDeclarations(node, MediaDeviceDescription
-                .CreateDefault());
+            IList<CssDeclaration> styleSheetDeclarations = css.GetCssDeclarations(node, MediaDeviceDescription.CreateDefault
+                ());
             foreach (CssDeclaration ssd in styleSheetDeclarations) {
                 styles.Put(ssd.GetProperty(), ssd.GetExpression());
             }
@@ -156,7 +140,7 @@ namespace iText.Svg.Css.Impl {
 
         public virtual void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver, AbstractCssContext
              context) {
-            this.internalStyleSheet = new CssStyleSheet();
+            this.css = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
                 q.Add(rootNode);
@@ -181,7 +165,7 @@ namespace iText.Svg.Css.Impl {
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
                             //TODO(RND-863): media query wrap
                             //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
-                            this.internalStyleSheet.AppendCssStyleSheet(styleSheet);
+                            this.css.AppendCssStyleSheet(styleSheet);
                         }
                     }
                     else {
@@ -192,7 +176,7 @@ namespace iText.Svg.Css.Impl {
                                 byte[] bytes = StreamUtil.InputStreamToArray(stream);
                                 CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new MemoryStream(bytes), resourceResolver.ResolveAgainstBaseUri
                                     (styleSheetUri).ToExternalForm());
-                                this.internalStyleSheet.AppendCssStyleSheet(styleSheet);
+                                this.css.AppendCssStyleSheet(styleSheet);
                             }
                             catch (System.IO.IOException exc) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.DefaultSvgStyleResolver));
@@ -219,9 +203,28 @@ namespace iText.Svg.Css.Impl {
             return new List<CssFontFaceRule>(fonts);
         }
 
+        private void InitializeCss(Stream defaultCssStream, bool close) {
+            try {
+                this.css = CssStyleSheetParser.Parse(defaultCssStream);
+            }
+            catch (System.IO.IOException e) {
+                ILog logger = LogManager.GetLogger(this.GetType());
+                logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
+                this.css = new CssStyleSheet();
+            }
+            if (close) {
+                try {
+                    defaultCssStream.Dispose();
+                }
+                catch (System.IO.IOException e) {
+                    throw new SvgProcessingException(SvgLogMessageConstant.ERROR_CLOSING_CSS_STREAM, e);
+                }
+            }
+        }
+
         /// <summary>Collects fonts from the style sheet.</summary>
         private void CollectFonts() {
-            foreach (CssStatement cssStatement in internalStyleSheet.GetStatements()) {
+            foreach (CssStatement cssStatement in css.GetStatements()) {
                 CollectFonts(cssStatement);
             }
         }

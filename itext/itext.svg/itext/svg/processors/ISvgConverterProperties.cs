@@ -42,9 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Layout.Font;
-using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
-using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Processors {
@@ -53,19 +51,6 @@ namespace iText.Svg.Processors {
     /// <see cref="ISvgProcessor"/>
     /// </summary>
     public interface ISvgConverterProperties {
-        /// <summary>
-        /// Retrieve the CSS Resolver that the
-        /// <see cref="ISvgProcessor"/>
-        /// should use for
-        /// resolving and assigning CSS.
-        /// </summary>
-        /// <returns>
-        /// A
-        /// <see cref="iText.StyledXmlParser.Css.ICssResolver"/>
-        /// implementation
-        /// </returns>
-        ICssResolver GetCssResolver();
-
         /// <summary>
         /// Retrieve the factory responsible for creating
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
@@ -111,6 +96,7 @@ namespace iText.Svg.Processors {
         /// <returns>the ConverterProperties instance</returns>
         ISvgConverterProperties SetBaseUri(String baseUri);
 
+        //TODO setters in the interface?
         /// <summary>Gets the media device description.</summary>
         /// <returns>the media device description</returns>
         MediaDeviceDescription GetMediaDeviceDescription();
@@ -120,10 +106,7 @@ namespace iText.Svg.Processors {
         /// <returns>the ConverterProperties instance</returns>
         ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription);
 
-        /// <summary>Gets the provided ResourceResolver.</summary>
-        /// <returns>resourceResolver specified by the user</returns>
-        ResourceResolver GetResourceResolver();
-
+        //TODO setters in the interface?
         /// <summary>Sets the font provider.</summary>
         /// <remarks>
         /// Sets the font provider. Please note that
@@ -137,5 +120,6 @@ namespace iText.Svg.Processors {
         /// <param name="fontProvider">the font provider</param>
         /// <returns>the ISvgConverterProperties instance</returns>
         ISvgConverterProperties SetFontProvider(FontProvider fontProvider);
+        //TODO setters in the interface?
     }
 }

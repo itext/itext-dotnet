@@ -171,12 +171,14 @@ namespace iText.Svg.Renderers {
         /// <summary>Sets the FontSet.</summary>
         /// <param name="fontSet">font set to be used during drawing operations</param>
         public virtual void SetFontSet(FontSet fontSet) {
+            //TODO seems that FontProvider should be here
             this.fontSet = fontSet;
         }
 
         /// <summary>Gets the FontSet to be used during the drawing operations.</summary>
         /// <returns>fontSet font set instance</returns>
         public virtual FontSet GetFontSet() {
+            //TODO seems that FontProvider should be here
             return fontSet;
         }
 

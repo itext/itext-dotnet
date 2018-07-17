@@ -2,7 +2,7 @@ using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.Svg.Processors;
+using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Processors.Impl.Font {
@@ -16,9 +16,8 @@ namespace iText.Svg.Processors.Impl.Font {
                  + "\t}\n" + "  ", "");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
-            ISvgConverterProperties properties = new DefaultSvgConverterProperties(jSoupStyle);
             ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties());
-            ICssResolver cssResolver = properties.GetCssResolver();
+            ICssResolver cssResolver = new DefaultSvgStyleResolver(jSoupStyle, context);
             SvgFontProcessor svgFontProcessor = new SvgFontProcessor(context);
             svgFontProcessor.AddFontFaceFonts(cssResolver);
             FontInfo info = (FontInfo)context.GetTempFonts().GetFonts().ToArray()[0];

@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.IO;
 using iText.Kernel.Utils;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -258,8 +257,7 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         private void RunTest(String fileName) {
-            Convert(new FileStream(sourceFolder + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(destinationFolder
-                 + fileName + ".pdf", FileMode.Create));
+            Convert(sourceFolder + fileName + ".svg", destinationFolder + fileName + ".pdf");
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(destinationFolder + fileName + ".pdf", sourceFolder + 
                 "cmp_" + fileName + ".pdf", destinationFolder, "diff_");

@@ -46,6 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Svg.Converter;
 using iText.Svg.Processors;
+using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Renderers {
     public class SvgIntegrationTest {
@@ -55,6 +56,15 @@ namespace iText.Svg.Renderers {
                 (0)));
             doc.AddNewPage();
             SvgConverter.DrawOnDocument(svg, doc, 1);
+            doc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Convert(String svg, String output) {
+            PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
+            doc.AddNewPage();
+            ISvgConverterProperties properties = new DefaultSvgConverterProperties().SetBaseUri(svg);
+            SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
             doc.Close();
         }
 
@@ -74,8 +84,7 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void ConvertAndCompareVisually(String src, String dest, String fileName) {
-            Convert(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(dest + fileName
-                 + ".pdf", FileMode.Create));
+            Convert(src + fileName + ".svg", dest + fileName + ".pdf");
             Compare(fileName, src, dest);
         }
 

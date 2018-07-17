@@ -67,6 +67,7 @@ namespace iText.Svg.Processors {
         /// </exception>
         ISvgProcessorResult Process(INode root);
 
+        //TODO does it make sense?
         /// <summary>
         /// Process an SVG, returning the root of a renderer-tree and a list
         /// of named objects wrapped in a processor result object

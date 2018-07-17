@@ -1,5 +1,5 @@
 using System;
-using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -12,7 +12,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/UseIntegrationTest/";
 
-        private DefaultSvgConverterProperties properties;
+        private ISvgConverterProperties properties;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -21,9 +21,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            ResourceResolver resourceResolver = new ResourceResolver(SOURCE_FOLDER);
-            properties = new DefaultSvgConverterProperties();
-            properties.SetResourceResolver(resourceResolver);
+            properties = new DefaultSvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
         /// <exception cref="System.IO.IOException"/>

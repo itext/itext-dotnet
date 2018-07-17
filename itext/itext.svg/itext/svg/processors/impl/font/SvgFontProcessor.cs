@@ -11,9 +11,6 @@ using iText.Svg.Processors.Impl;
 namespace iText.Svg.Processors.Impl.Font {
     /// <summary>Class that processes and add resolved css fonts to the FontProvider</summary>
     public class SvgFontProcessor {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Processors.Impl.Font.SvgFontProcessor
-            ));
-
         private ProcessorContext context;
 
         public SvgFontProcessor(ProcessorContext context) {
@@ -37,8 +34,8 @@ namespace iText.Svg.Processors.Impl.Font {
                         }
                     }
                     if (!findSupportedSrc) {
-                        LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace
-                            ));
+                        LogManager.GetLogger(typeof(iText.Svg.Processors.Impl.Font.SvgFontProcessor)).Error(MessageFormatUtil.Format
+                            (iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace));
                     }
                 }
             }
@@ -98,6 +95,7 @@ namespace iText.Svg.Processors.Impl.Font {
                 case FontFace.FontFormat.OpenType:
                 case FontFace.FontFormat.WOFF:
                 case FontFace.FontFormat.WOFF2: {
+                    //TODO code duplication
                     return true;
                 }
 

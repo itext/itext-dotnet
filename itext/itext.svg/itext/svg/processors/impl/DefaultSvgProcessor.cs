@@ -46,6 +46,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.Svg;
 using iText.Svg.Css;
+using iText.Svg.Css.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl.Font;
@@ -71,13 +72,11 @@ namespace iText.Svg.Processors.Impl {
 
         private ICssResolver cssResolver;
 
-        private SvgCssContext cssContext;
-
         private ISvgNodeRendererFactory rendererFactory;
 
-        private ISvgConverterProperties defaultProps;
-
         private IDictionary<String, ISvgNodeRenderer> namedObjects;
+
+        private SvgCssContext cssContext;
 
         private ProcessorContext context;
 
@@ -85,36 +84,21 @@ namespace iText.Svg.Processors.Impl {
         public DefaultSvgProcessor() {
         }
 
-        //Processor context
-        //Processor context
-        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
-        public virtual ISvgProcessorResult Process(INode root) {
-            ISvgConverterProperties properties = root != null ? new DefaultSvgConverterProperties(root) : new DefaultSvgConverterProperties
-                ();
-            return Process(root, properties);
-        }
-
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
             }
+            if (converterProps == null) {
+                converterProps = new DefaultSvgConverterProperties();
+            }
             //Setup processorState
-            if (converterProps != null) {
-                PerformSetup(converterProps);
-            }
-            else {
-                this.defaultProps = new DefaultSvgConverterProperties(root);
-                PerformSetup(this.defaultProps);
-            }
+            PerformSetup(root, converterProps);
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
                 //Iterate over children
-                if (converterProps == null) {
-                    converterProps = this.defaultProps;
-                }
-                ExecuteDepthFirstTraversal(svgRoot, converterProps);
+                ExecuteDepthFirstTraversal(svgRoot);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
                 return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer, context.GetTempFonts());
             }
@@ -123,32 +107,34 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
+        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
+        public virtual ISvgProcessorResult Process(INode root) {
+            return Process(root, null);
+        }
+
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
         /// <param name="converterProps">that contains configuration properties and operations</param>
-        private void PerformSetup(ISvgConverterProperties converterProps) {
+        private void PerformSetup(INode root, ISvgConverterProperties converterProps) {
             processorState = new ProcessorState();
-            if (converterProps.GetCssResolver() != null) {
-                cssResolver = converterProps.GetCssResolver();
-            }
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
             }
             context = new ProcessorContext(converterProps);
+            cssResolver = new DefaultSvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
             //TODO RND-1042
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             cssContext = new SvgCssContext();
         }
 
-        //TODO(RND-865): resolve/initialize CSS context
         /// <summary>Start the depth-first traversal of the INode tree, pushing the results on the stack</summary>
         /// <param name="startingNode">node to start on</param>
-        private void ExecuteDepthFirstTraversal(INode startingNode, ISvgConverterProperties converterProperties) {
+        private void ExecuteDepthFirstTraversal(INode startingNode) {
             //Create and push rootNode
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver(), null);
+                cssResolver.CollectCssDeclarations(startingNode, context.GetResourceResolver(), null);
                 IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
                 startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);
@@ -231,7 +217,7 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="textNode">node containing text to process</param>
         private void ProcessText(ITextNode textNode) {
             ISvgNodeRenderer parentRenderer = this.processorState.Top();
-            if (parentRenderer != null && parentRenderer is TextSvgNodeRenderer) {
+            if (parentRenderer is TextSvgNodeRenderer) {
                 // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
                 // tab/space indented xml files will retain their tabs and spaces.
                 // The following regex replaces all whitespace with a single space.

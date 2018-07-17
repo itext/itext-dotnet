@@ -41,10 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
@@ -65,8 +63,7 @@ namespace iText.Svg.Processors.Impl {
                 .ValueOf("circle"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("path"), "");
-            INode root = null;
-            root = new JsoupElementNode(jsoupSVGRoot);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGCircle));
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
@@ -90,8 +87,7 @@ namespace iText.Svg.Processors.Impl {
                 .ValueOf("circle"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("path"), "");
-            INode root = null;
-            root = new JsoupElementNode(jsoupSVGRoot);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGCircle));
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             INode nestedSvg = new JsoupElementNode(jsoupSVGRoot);
@@ -136,6 +132,7 @@ namespace iText.Svg.Processors.Impl {
             ISvgNodeRenderer rootExpected = new DummySvgNodeRenderer("svg");
         }
 
+        //TODO any assert?
         [NUnit.Framework.Test]
         public virtual void DummyProcessingSvgTagIsNotRootOfInput() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRandomElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
@@ -176,6 +173,7 @@ namespace iText.Svg.Processors.Impl {
 ;
         }
 
+        //TODO any assert?
         [NUnit.Framework.Test]
         public virtual void DummyProcessingTestNullInput() {
             NUnit.Framework.Assert.That(() =>  {
@@ -196,17 +194,14 @@ namespace iText.Svg.Processors.Impl {
                 .ValueOf("circle"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("path"), "");
-            INode root = null;
-            root = new JsoupElementNode(jsoupSVGRoot);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGCircle));
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             ISvgNodeRenderer rootActual = processor.Process(root).GetRootRenderer();
-            //setup expected
-            ISvgNodeRenderer rootExpected = null;
             //Compare
-            NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
+            NUnit.Framework.Assert.IsNull(rootActual);
         }
 
         [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
@@ -219,17 +214,14 @@ namespace iText.Svg.Processors.Impl {
                 .ValueOf("circle"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("path"), "");
-            INode root = null;
-            root = new JsoupElementNode(jsoupSVGRoot);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGCircle));
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             ISvgNodeRenderer rootActual = processor.Process(root, null).GetRootRenderer();
-            //setup expected
-            ISvgNodeRenderer rootExpected = null;
             //Compare
-            NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
+            NUnit.Framework.Assert.IsNull(rootActual);
         }
 
         [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
@@ -242,27 +234,20 @@ namespace iText.Svg.Processors.Impl {
                 .ValueOf("circle"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("path"), "");
-            INode root = null;
-            root = new JsoupElementNode(jsoupSVGRoot);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGCircle));
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new _DefaultSvgConverterProperties_252(root);
+            ISvgConverterProperties convProps = new DefaultSvgProcessorUnitTest.EmptySvgConverterProperties(root);
             ISvgNodeRenderer rootActual = processor.Process(root, convProps).GetRootRenderer();
-            //setup expected
-            ISvgNodeRenderer rootExpected = null;
             //Compare
-            NUnit.Framework.Assert.AreEqual(rootActual, rootExpected);
+            NUnit.Framework.Assert.IsNull(rootActual);
         }
 
-        private sealed class _DefaultSvgConverterProperties_252 : DefaultSvgConverterProperties {
-            public _DefaultSvgConverterProperties_252(INode baseArg1)
-                : base(baseArg1) {
-            }
-
-            public override ICssResolver GetCssResolver() {
-                return null;
+        private class EmptySvgConverterProperties : DefaultSvgConverterProperties {
+            internal EmptySvgConverterProperties(INode root)
+                : base(root) {
             }
 
             public override ISvgNodeRendererFactory GetRendererFactory() {
@@ -270,10 +255,6 @@ namespace iText.Svg.Processors.Impl {
             }
 
             public override String GetCharset() {
-                return null;
-            }
-
-            public override ResourceResolver GetResourceResolver() {
                 return null;
             }
         }

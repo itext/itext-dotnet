@@ -42,18 +42,14 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Layout.Font;
-using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
-using iText.Svg.Dummy.Css.Impl;
 using iText.Svg.Dummy.Factories;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Dummy.Processors.Impl {
     public class DummySvgConverterProperties : ISvgConverterProperties {
-        internal ICssResolver cssResolver;
-
         internal ISvgNodeRendererFactory rendererFactory;
 
         internal String baseUri;
@@ -63,15 +59,10 @@ namespace iText.Svg.Dummy.Processors.Impl {
         internal ResourceResolver resourceResolver;
 
         public DummySvgConverterProperties() {
-            cssResolver = new DummyCssResolver();
             rendererFactory = new DummySvgNodeFactory();
             mediaDeviceDescription = new MediaDeviceDescription("");
             baseUri = "";
             resourceResolver = new ResourceResolver("");
-        }
-
-        public virtual ICssResolver GetCssResolver() {
-            return cssResolver;
         }
 
         public virtual ISvgNodeRendererFactory GetRendererFactory() {
@@ -101,10 +92,6 @@ namespace iText.Svg.Dummy.Processors.Impl {
         public virtual ISvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription mediaDeviceDescription
             ) {
             return this;
-        }
-
-        public virtual ResourceResolver GetResourceResolver() {
-            return this.resourceResolver;
         }
 
         public virtual ISvgConverterProperties SetFontProvider(FontProvider fontProvider) {

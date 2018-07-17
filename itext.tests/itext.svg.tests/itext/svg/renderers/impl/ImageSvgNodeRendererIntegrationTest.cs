@@ -1,7 +1,7 @@
 using System;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -14,7 +14,7 @@ namespace iText.Svg.Renderers.Impl {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/ImageSvgNodeRendererTest/";
 
-        private DefaultSvgConverterProperties properties;
+        private ISvgConverterProperties properties;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -23,9 +23,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            ResourceResolver resourceResolver = new ResourceResolver(sourceFolder);
-            properties = new DefaultSvgConverterProperties(new JsoupDocumentNode(new Document("")));
-            properties.SetResourceResolver(resourceResolver);
+            properties = new DefaultSvgConverterProperties(new JsoupDocumentNode(new Document(""))).SetBaseUri(sourceFolder
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
