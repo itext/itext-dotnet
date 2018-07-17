@@ -60,14 +60,10 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void NonExistingTagTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element nonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                    (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("notAnExistingTag"), "");
-                IElementNode tag = new JsoupElementNode(nonExistingElement);
-                fact.CreateSvgNodeRendererForTag(tag, null);
-            }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element nonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("notAnExistingTag"), "");
+            IElementNode tag = new JsoupElementNode(nonExistingElement);
+            fact.CreateSvgNodeRendererForTag(tag, null);
         }
 
         [NUnit.Framework.Test]
@@ -106,7 +102,7 @@ namespace iText.Svg.Renderers {
                 iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                     (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
                 IElementNode tag = new JsoupElementNode(protectedElement);
-                fact.CreateSvgNodeRendererForTag(tag, null);
+                NUnit.Framework.Assert.IsNull(fact.CreateSvgNodeRendererForTag(tag, null));
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
 ;

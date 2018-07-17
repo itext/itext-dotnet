@@ -272,5 +272,17 @@ namespace iText.Svg.Processors.Impl {
             ISvgProcessorResult expected = processor.Process(root);
             NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer(), actual.GetRootRenderer());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DepthFirstNullRendererTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupNonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("nonExisting"), "");
+            INode root = new JsoupElementNode(jsoupNonExistingElement);
+            DefaultSvgProcessor dsp = new DefaultSvgProcessor();
+            ISvgConverterProperties scp = new SvgConverterProperties();
+            dsp.PerformSetup(root, scp);
+            // below method must not throw a NullPointerException
+            dsp.ExecuteDepthFirstTraversal(root);
+        }
     }
 }

@@ -52,7 +52,6 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Svg.Dummy.Sdk;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -110,22 +109,24 @@ namespace iText.Svg.Converter {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonExistingTagIntegrationTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String contents = "<svg width='100pt' height='100pt'> <nonExistingTag/> </svg>";
-                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-                doc.AddNewPage();
-                try {
-                    SvgConverter.ConvertToXObject(contents, doc);
-                }
-                finally {
-                    doc.Close();
-                }
-            }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
-;
+            String contents = "<svg width='100pt' height='100pt'> <nonExistingTag/> </svg>";
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.AddNewPage();
+            SvgConverter.ConvertToXObject(contents, doc);
+            doc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CaseSensitiveTagTest() {
+            String contents = "<svg width='100pt' height='100pt'>" + "<altGlyph /><altglyph />" + "<feMergeNode /><femergeNode /><feMergenode /><femergenode />"
+                 + "<foreignObject /><foreignobject />" + "<glyphRef /><glyphref />" + "<linearGradient /><lineargradient />"
+                 + "<radialGradient /><radialgradient />" + "</svg>";
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.AddNewPage();
+            SvgConverter.ConvertToXObject(contents, doc);
+            doc.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>

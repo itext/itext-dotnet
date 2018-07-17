@@ -115,7 +115,7 @@ namespace iText.Svg.Processors.Impl {
 
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
         /// <param name="converterProps">that contains configuration properties and operations</param>
-        private void PerformSetup(INode root, ISvgConverterProperties converterProps) {
+        internal virtual void PerformSetup(INode root, ISvgConverterProperties converterProps) {
             processorState = new ProcessorState();
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
@@ -130,16 +130,18 @@ namespace iText.Svg.Processors.Impl {
 
         /// <summary>Start the depth-first traversal of the INode tree, pushing the results on the stack</summary>
         /// <param name="startingNode">node to start on</param>
-        private void ExecuteDepthFirstTraversal(INode startingNode) {
+        internal virtual void ExecuteDepthFirstTraversal(INode startingNode) {
             //Create and push rootNode
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
-                startingRenderer.SetAttributesAndStyles(attributesAndStyles);
-                processorState.Push(startingRenderer);
-                foreach (INode rootChild in startingNode.ChildNodes()) {
-                    Visit(rootChild);
+                if (startingRenderer != null) {
+                    IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
+                    startingRenderer.SetAttributesAndStyles(attributesAndStyles);
+                    processorState.Push(startingRenderer);
+                    foreach (INode rootChild in startingNode.ChildNodes()) {
+                        Visit(rootChild);
+                    }
                 }
             }
         }
