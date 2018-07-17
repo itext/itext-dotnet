@@ -8,7 +8,7 @@ using iText.Svg.Processors;
 
 namespace iText.Svg.Processors.Impl {
     /// <summary>Context class with accessors to properties/objects used in processing Svg documents</summary>
-    public class ProcessorContext {
+    public class SvgProcessorContext {
         /// <summary>The font provider.</summary>
         private FontProvider fontProvider;
 
@@ -22,7 +22,7 @@ namespace iText.Svg.Processors.Impl {
 
         /// <summary>
         /// Instantiates a new
-        /// <see cref="ProcessorContext"/>
+        /// <see cref="SvgProcessorContext"/>
         /// instance.
         /// </summary>
         /// <param name="converterProperties">
@@ -30,8 +30,7 @@ namespace iText.Svg.Processors.Impl {
         /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
         /// instance
         /// </param>
-        public ProcessorContext(ISvgConverterProperties converterProperties) {
-            //TODO Svg processor context
+        public SvgProcessorContext(ISvgConverterProperties converterProperties) {
             deviceDescription = converterProperties.GetMediaDeviceDescription();
             if (deviceDescription == null) {
                 deviceDescription = MediaDeviceDescription.GetDefault();

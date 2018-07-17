@@ -11,16 +11,15 @@ using iText.Svg.Processors.Impl;
 namespace iText.Svg.Processors.Impl.Font {
     /// <summary>Class that processes and add resolved css fonts to the FontProvider</summary>
     public class SvgFontProcessor {
-        private ProcessorContext context;
+        private SvgProcessorContext context;
 
-        public SvgFontProcessor(ProcessorContext context) {
+        public SvgFontProcessor(SvgProcessorContext context) {
             this.context = context;
         }
 
         /// <summary>Adds @font-face fonts to the FontProvider.</summary>
         /// <param name="cssResolver">the css styles resolver</param>
         public virtual void AddFontFaceFonts(ICssResolver cssResolver) {
-            //TODO Shall we add getFonts() to ICssResolver?
             if (cssResolver is SvgStyleResolver) {
                 foreach (CssFontFaceRule fontFace in ((SvgStyleResolver)cssResolver).GetFonts()) {
                     bool findSupportedSrc = false;
@@ -68,7 +67,7 @@ namespace iText.Svg.Processors.Impl.Font {
                     try {
                         // Cache at resource resolver level only, at font level we will create font in any case.
                         // The instance of fontProgram will be collected by GC if the is no need in it.
-                        byte[] bytes = context.GetResourceResolver().RetrieveStream(src.src);
+                        byte[] bytes = context.GetResourceResolver().RetrieveBytesFromResource(src.src);
                         if (bytes != null) {
                             FontProgram fp = FontProgramFactory.CreateFont(bytes, false);
                             context.AddTemporaryFont(fp, PdfEncodings.IDENTITY_H, fontFamily);
@@ -95,7 +94,7 @@ namespace iText.Svg.Processors.Impl.Font {
                 case FontFace.FontFormat.OpenType:
                 case FontFace.FontFormat.WOFF:
                 case FontFace.FontFormat.WOFF2: {
-                    //TODO code duplication
+                    //TODO (RND-1065) code duplication
                     return true;
                 }
 

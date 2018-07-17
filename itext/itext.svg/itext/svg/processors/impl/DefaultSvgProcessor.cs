@@ -78,22 +78,22 @@ namespace iText.Svg.Processors.Impl {
 
         private SvgCssContext cssContext;
 
-        private ProcessorContext context;
+        private SvgProcessorContext context;
 
         /// <summary>Instantiates a DefaultSvgProcessor object.</summary>
         public DefaultSvgProcessor() {
         }
 
         /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
-        public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProperties) {
+        public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
             }
-            if (converterProperties == null) {
-                converterProperties = new SvgConverterProperties();
+            if (converterProps == null) {
+                converterProps = new SvgConverterProperties();
             }
             //Setup processorState
-            PerformSetup(root, converterProperties);
+            PerformSetup(root, converterProps);
             //Find root
             IElementNode svgRoot = FindFirstElement(root, SvgConstants.Tags.SVG);
             if (svgRoot != null) {
@@ -120,7 +120,7 @@ namespace iText.Svg.Processors.Impl {
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
             }
-            context = new ProcessorContext(converterProps);
+            context = new SvgProcessorContext(converterProps);
             cssResolver = new SvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
             //TODO RND-1042
@@ -135,8 +135,6 @@ namespace iText.Svg.Processors.Impl {
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                //Actually cssResolver has already initialized
-                //cssResolver.collectCssDeclarations(startingNode, context.getResourceResolver(), null);
                 IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
                 startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);

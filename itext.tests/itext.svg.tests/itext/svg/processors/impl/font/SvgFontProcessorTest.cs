@@ -16,7 +16,7 @@ namespace iText.Svg.Processors.Impl.Font {
                  + "\t}\n" + "  ", "");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
-            ProcessorContext context = new ProcessorContext(new SvgConverterProperties());
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
             ICssResolver cssResolver = new SvgStyleResolver(jSoupStyle, context);
             SvgFontProcessor svgFontProcessor = new SvgFontProcessor(context);
             svgFontProcessor.AddFontFaceFonts(cssResolver);
