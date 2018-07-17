@@ -93,13 +93,5 @@ namespace iText.Svg.Processors.Impl {
             }
             tempFonts.AddFont(fontInfo, alias);
         }
-
-        /// <summary>Check fonts in font provider and temporary font set.</summary>
-        /// <returns>true, if there is at least one font either in FontProvider or temporary FontSet.</returns>
-        /// <seealso cref="AddTemporaryFont(iText.Layout.Font.FontInfo, System.String)"/>
-        /// <seealso cref="AddTemporaryFont(iText.IO.Font.FontProgram, System.String, System.String)"/>
-        public virtual bool HasFonts() {
-            return !fontProvider.GetFontSet().IsEmpty() || (tempFonts != null && !tempFonts.IsEmpty());
-        }
     }
 }

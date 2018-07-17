@@ -48,6 +48,7 @@ using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
+using iText.Svg.Processors.Impl.Font;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
 using iText.Svg.Renderers.Impl;
@@ -115,7 +116,7 @@ namespace iText.Svg.Processors.Impl {
                 }
                 ExecuteDepthFirstTraversal(svgRoot, converterProps);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
-                return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer);
+                return new DefaultSvgProcessorResult(namedObjects, rootSvgRenderer, context.GetTempFonts());
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
@@ -134,6 +135,7 @@ namespace iText.Svg.Processors.Impl {
             }
             context = new ProcessorContext(converterProps);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
+            //TODO RND-1042
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             cssContext = new SvgCssContext();
         }
@@ -146,7 +148,7 @@ namespace iText.Svg.Processors.Impl {
             if (startingNode is IElementNode && !rendererFactory.IsTagIgnored((IElementNode)startingNode)) {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
-                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver(), cssContext);
+                cssResolver.CollectCssDeclarations(startingNode, converterProperties.GetResourceResolver(), null);
                 IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
                 startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                 processorState.Push(startingRenderer);

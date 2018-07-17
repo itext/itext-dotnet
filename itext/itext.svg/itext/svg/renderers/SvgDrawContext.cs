@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
 
@@ -65,6 +66,8 @@ namespace iText.Svg.Renderers {
         private readonly Stack<String> useIds = new Stack<String>();
 
         private ResourceResolver resourceResolver;
+
+        private FontSet fontSet;
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
@@ -163,6 +166,18 @@ namespace iText.Svg.Renderers {
         /// <param name="namedObjects">Map containing the named objects keyed to their ID strings</param>
         public virtual void AddNamedObjects(IDictionary<String, ISvgNodeRenderer> namedObjects) {
             this.namedObjects.AddAll(namedObjects);
+        }
+
+        /// <summary>Sets the FontSet.</summary>
+        /// <param name="fontSet">font set to be used during drawing operations</param>
+        public virtual void SetFontSet(FontSet fontSet) {
+            this.fontSet = fontSet;
+        }
+
+        /// <summary>Gets the FontSet to be used during the drawing operations.</summary>
+        /// <returns>fontSet font set instance</returns>
+        public virtual FontSet GetFontSet() {
+            return fontSet;
         }
 
         /// <summary>Returns true when this id has been used before</summary>

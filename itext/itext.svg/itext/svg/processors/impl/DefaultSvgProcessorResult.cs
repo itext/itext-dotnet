@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Layout.Font;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
 
@@ -14,10 +15,13 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgNodeRenderer root;
 
+        private FontSet fontSet;
+
         public DefaultSvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root
-            ) {
+            , FontSet fontSet) {
             this.namedObjects = namedObjects;
             this.root = root;
+            this.fontSet = fontSet;
         }
 
         public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
@@ -26,6 +30,10 @@ namespace iText.Svg.Processors.Impl {
 
         public virtual ISvgNodeRenderer GetRootRenderer() {
             return root;
+        }
+
+        public virtual FontSet GetFontSet() {
+            return fontSet;
         }
 
         public override bool Equals(Object o) {
@@ -39,7 +47,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         public override int GetHashCode() {
-            int hash = GetNamedObjects().GetHashCode() + 42 * GetRootRenderer().GetHashCode();
+            int hash = GetNamedObjects().GetHashCode() + 43 * GetRootRenderer().GetHashCode();
             return hash;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Layout.Font;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Processors {
@@ -20,5 +21,13 @@ namespace iText.Svg.Processors {
         /// </summary>
         /// <returns>ISvgNodeRenderer</returns>
         ISvgNodeRenderer GetRootRenderer();
+
+        /// <summary>
+        /// Obtains the
+        /// <see cref="iText.Layout.Font.FontSet"/>
+        /// font set.
+        /// </summary>
+        /// <returns>FontSet</returns>
+        FontSet GetFontSet();
     }
 }

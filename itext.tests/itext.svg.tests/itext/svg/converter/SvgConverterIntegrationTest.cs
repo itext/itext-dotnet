@@ -50,6 +50,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Svg.Dummy.Sdk;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
@@ -505,7 +506,7 @@ namespace iText.Svg.Converter {
             root.SetAttribute("version", "1.1");
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
-            ISvgProcessorResult expected = new DefaultSvgProcessorResult(map, root);
+            ISvgProcessorResult expected = new DefaultSvgProcessorResult(map, root, new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
             //TODO(RND-868): remove below checks
             NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());

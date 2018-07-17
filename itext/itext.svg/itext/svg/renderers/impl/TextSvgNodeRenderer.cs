@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
@@ -61,6 +62,8 @@ namespace iText.Svg.Renderers.Impl {
     /// - x, y
     /// </remarks>
     public class TextSvgNodeRenderer : AbstractSvgNodeRenderer {
+        private const String SPACE_CHAR = "";
+
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                 )) {
@@ -83,12 +86,31 @@ namespace iText.Svg.Renderers.Impl {
                     y = CssUtils.ParseAbsoluteLength(yValuesList[0]);
                 }
                 currentCanvas.BeginText();
-                try {
-                    // TODO font resolution RND-883
-                    currentCanvas.SetFontAndSize(PdfFontFactory.CreateFont(), fontSize);
+                if (context.GetFontSet() != null && !context.GetFontSet().IsEmpty()) {
+                    String fontFamily = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_FAMILY);
+                    String fontWeight = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_WEIGHT);
+                    String fontStyle = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_STYLE);
+                    FontProvider provider = new FontProvider(context.GetFontSet());
+                    if (fontFamily != null && !fontFamily.Trim().Equals(SPACE_CHAR)) {
+                        FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, provider);
+                        currentCanvas.SetFontAndSize(provider.GetPdfFont(fontInfo, provider.GetFontSet()), fontSize);
+                    }
+                    else {
+                        try {
+                            currentCanvas.SetFontAndSize(PdfFontFactory.CreateFont(), fontSize);
+                        }
+                        catch (System.IO.IOException e) {
+                            throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
+                        }
+                    }
                 }
-                catch (System.IO.IOException e) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
+                else {
+                    try {
+                        currentCanvas.SetFontAndSize(PdfFontFactory.CreateFont(), fontSize);
+                    }
+                    catch (System.IO.IOException e) {
+                        throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
+                    }
                 }
                 //Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
                 currentCanvas.SetTextMatrix(1, 0, 0, -1, x, y);
@@ -96,6 +118,18 @@ namespace iText.Svg.Renderers.Impl {
                 currentCanvas.ShowText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
                 currentCanvas.EndText();
             }
+        }
+
+        private FontInfo ResolveFontName(String fontFamily, String fontWeight, String fontStyle, FontProvider provider
+            ) {
+            bool isBold = fontWeight != null ? fontWeight.EqualsIgnoreCase(SvgConstants.Attributes.BOLD) : false;
+            bool isItalic = fontStyle != null ? fontStyle.EqualsIgnoreCase(SvgConstants.Attributes.ITALIC) : false;
+            FontCharacteristics fontCharacteristics = new FontCharacteristics();
+            IList<String> stringArrayList = new List<String>();
+            stringArrayList.Add(fontFamily);
+            fontCharacteristics.SetBoldFlag(isBold);
+            fontCharacteristics.SetItalicFlag(isItalic);
+            return provider.GetFontSelector(stringArrayList, fontCharacteristics).BestMatch();
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {

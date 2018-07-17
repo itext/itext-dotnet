@@ -47,12 +47,24 @@ using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
-using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
+using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Css {
-    public class DefaultSvgStyleResolverTest {
+    public class DefaultSvgStyleResolverTest : SvgIntegrationTest {
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/DefaultSvgStyleResolver/";
+
+        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/svg/css/DefaultSvgStyleResolver/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            ITextTest.CreateDestinationFolder(destinationFolder);
+        }
+
         //Single element test
         //Inherits values from parent?
         //Calculates values from parent
@@ -72,7 +84,6 @@ namespace iText.Svg.Css {
             INode circle = new JsoupElementNode(jsoupCircle);
             ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(circle));
             ICssResolver resolver = new DefaultSvgStyleResolver(circle, context);
-            resolver.CollectCssDeclarations(circle, new ResourceResolver(""), null);
             IDictionary<String, String> actual = resolver.ResolveStyles(circle, cssContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
             expected.Put("id", "circle1");
@@ -98,7 +109,6 @@ namespace iText.Svg.Css {
             JsoupElementNode jSoupEllipse = new JsoupElementNode(ellipse);
             ProcessorContext context = new ProcessorContext(new DefaultSvgConverterProperties(jSoupStyle));
             DefaultSvgStyleResolver resolver = new DefaultSvgStyleResolver(jSoupStyle, context);
-            resolver.CollectCssDeclarations(jSoupStyle, new ResourceResolver(""), null);
             AbstractCssContext svgContext = new SvgCssContext();
             IDictionary<String, String> actual = resolver.ResolveStyles(jSoupEllipse, svgContext);
             IDictionary<String, String> expected = new Dictionary<String, String>();
@@ -121,6 +131,31 @@ namespace iText.Svg.Css {
             IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
             NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontResolverIntegrationTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ValidLocalFontTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
+        }
+
+        /// <summary>The following test should fail when RND-1042 is resolved</summary>
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GoogleFontsTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
         }
     }
 }

@@ -328,8 +328,20 @@ namespace iText.Svg {
             /// <summary>Attribute defining the font family.</summary>
             public const String FONT_FAMILY = "font-family";
 
+            /// <summary>Attribute defining the font weight.</summary>
+            public const String FONT_WEIGHT = "font-weight";
+
+            /// <summary>Attribute defining the font style.</summary>
+            public const String FONT_STYLE = "font-style";
+
             /// <summary>Attribute defining the font size.</summary>
             public const String FONT_SIZE = "font-size";
+
+            /// <summary>The Constant ITALIC.</summary>
+            public const String ITALIC = "italic";
+
+            /// <summary>The Constant BOLD.</summary>
+            public const String BOLD = "bold";
 
             /// <summary>Attribute defining the height.</summary>
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
@@ -359,11 +371,11 @@ namespace iText.Svg {
             /// <summary>Relative CurveTo Path Operator.</summary>
             public const String PATH_DATA_REL_CURVE_TO = "c";
 
-            /// <summary>Attribute defining Eliptical arc path operator.</summary>
-            public const String PATH_DATA_ELIPTICAL_ARC_A = "A";
+            /// <summary>Attribute defining Elliptical arc path operator.</summary>
+            public const String PATH_DATA_ELLIPTICAL_ARC_A = "A";
 
-            /// <summary>Attribute defining Eliptical arc path operator.</summary>
-            public const String PATH_DATA_REL_ELIPTICAL_ARC_A = "a";
+            /// <summary>Attribute defining Elliptical arc path operator.</summary>
+            public const String PATH_DATA_REL_ELLIPTICAL_ARC_A = "a";
 
             /// <summary>Smooth CurveTo Path Operator.</summary>
             public const String PATH_DATA_CURVE_TO_S = "S";

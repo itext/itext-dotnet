@@ -644,6 +644,7 @@ namespace iText.Svg.Converter {
             ISvgProcessorResult processorResult = Process(Parse(stream));
             SvgDrawContext drawContext = new SvgDrawContext();
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
+            drawContext.SetFontSet(processorResult.GetFontSet());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, new DefaultSvgConverterProperties(), 
                 drawContext);
         }
