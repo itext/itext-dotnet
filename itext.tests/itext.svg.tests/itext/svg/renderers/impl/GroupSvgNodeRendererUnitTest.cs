@@ -3,7 +3,6 @@ using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     public class GroupSvgNodeRendererUnitTest {
-        [NUnit.Framework.Ignore("RND-880, list comparison fails")]
         [NUnit.Framework.Test]
         public virtual void DeepCopyTest() {
             GroupSvgNodeRenderer expected = new GroupSvgNodeRenderer();

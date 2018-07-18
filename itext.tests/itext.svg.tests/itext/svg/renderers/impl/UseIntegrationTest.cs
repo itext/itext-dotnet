@@ -35,7 +35,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleUseFillTest() {
-            // will break on implementation of RND-880
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "singleUseFill");
         }
 
@@ -43,7 +42,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DoubleNestedUseFillTest() {
-            // will break on implementation of RND-880
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "doubleNestedUseFill");
         }
 
@@ -51,7 +49,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleUseStrokeTest() {
-            // will break on implementation of RND-880
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "singleUseStroke");
         }
 
@@ -59,7 +56,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DoubleNestedUseStrokeTest() {
-            // will break on implementation of RND-880
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "doubleNestedUseStroke");
         }
 
