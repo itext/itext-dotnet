@@ -87,9 +87,8 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-880")]
+        [NUnit.Framework.Ignore("RND-1089")]
         public virtual void InheritedDefaultStyleTest() {
-            // TODO RND-880
             ICssResolver styleResolver = new SvgStyleResolver();
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
