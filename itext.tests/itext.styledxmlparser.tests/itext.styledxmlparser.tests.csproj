@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.layout\itext.layout.csproj">
+      <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
+      <Name>itext.layout</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\itextcore\itext\itext.pdftest\itext.pdftest.csproj">
       <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
       <Name>itext.pdftest</Name>
