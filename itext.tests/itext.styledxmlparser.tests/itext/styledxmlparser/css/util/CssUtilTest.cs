@@ -109,5 +109,25 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual("url(haveEscapedEndBracket\\))", CssUtils.NormalizeCssProperty("url(  haveEscapedEndBracket\\) )"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseUnicodeRangeTest() {
+            NUnit.Framework.Assert.AreEqual("[(0; 1048575)]", CssUtils.ParseUnicodeRange("U+?????").ToString());
+            NUnit.Framework.Assert.AreEqual("[(38; 38)]", CssUtils.ParseUnicodeRange("U+26").ToString());
+            NUnit.Framework.Assert.AreEqual("[(0; 127)]", CssUtils.ParseUnicodeRange(" U+0-7F").ToString());
+            NUnit.Framework.Assert.AreEqual("[(37; 255)]", CssUtils.ParseUnicodeRange("U+0025-00FF").ToString());
+            NUnit.Framework.Assert.AreEqual("[(1024; 1279)]", CssUtils.ParseUnicodeRange("U+4??").ToString());
+            NUnit.Framework.Assert.AreEqual("[(262224; 327519)]", CssUtils.ParseUnicodeRange("U+4??5?").ToString());
+            NUnit.Framework.Assert.AreEqual("[(37; 255), (1024; 1279)]", CssUtils.ParseUnicodeRange("U+0025-00FF, U+4??"
+                ).ToString());
+            NUnit.Framework.Assert.IsNull(CssUtils.ParseUnicodeRange("U+??????"));
+            // more than 5 question marks are not allowed
+            NUnit.Framework.Assert.IsNull(CssUtils.ParseUnicodeRange("UU+7-10"));
+            // wrong syntax
+            NUnit.Framework.Assert.IsNull(CssUtils.ParseUnicodeRange("U+7?-9?"));
+            // wrong syntax
+            NUnit.Framework.Assert.IsNull(CssUtils.ParseUnicodeRange("U+7-"));
+        }
+        // wrong syntax
     }
 }

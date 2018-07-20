@@ -45,6 +45,7 @@ using System.Text;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
@@ -495,6 +496,54 @@ namespace iText.StyledXmlParser.Css.Util {
                 rgbaColor = new float[] { 0, 0, 0, 1 };
             }
             return rgbaColor;
+        }
+
+        /// <summary>Parses the unicode range.</summary>
+        /// <param name="unicodeRange">the string which stores the unicode range</param>
+        /// <returns>
+        /// the unicode range as a
+        /// <see cref="iText.Layout.Font.Range"/>
+        /// object
+        /// </returns>
+        public static Range ParseUnicodeRange(String unicodeRange) {
+            String[] ranges = iText.IO.Util.StringUtil.Split(unicodeRange, ",");
+            RangeBuilder builder = new RangeBuilder();
+            foreach (String range in ranges) {
+                if (!AddRange(builder, range)) {
+                    return null;
+                }
+            }
+            return builder.Create();
+        }
+
+        private static bool AddRange(RangeBuilder builder, String range) {
+            range = range.Trim();
+            if (range.Matches("[uU]\\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?")) {
+                String[] parts = iText.IO.Util.StringUtil.Split(range.JSubstring(2, range.Length), "-");
+                if (1 == parts.Length) {
+                    if (parts[0].Contains("?")) {
+                        return AddRange(builder, parts[0].Replace('?', '0'), parts[0].Replace('?', 'F'));
+                    }
+                    else {
+                        return AddRange(builder, parts[0], parts[0]);
+                    }
+                }
+                else {
+                    return AddRange(builder, parts[0], parts[1]);
+                }
+            }
+            return false;
+        }
+
+        private static bool AddRange(RangeBuilder builder, String left, String right) {
+            int l = Convert.ToInt32(left, 16);
+            int r = Convert.ToInt32(right, 16);
+            if (l > r || r > 1114111) {
+                // Although Firefox follows the spec (and therefore the second condition), it seems it's ignored in Chrome or Edge
+                return false;
+            }
+            builder.AddRange(l, r);
+            return true;
         }
     }
 }
