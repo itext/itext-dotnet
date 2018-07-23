@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -386,6 +387,26 @@ namespace iText.Kernel.Pdf {
             catch (OutOfMemoryException) {
                 NUnit.Framework.Assert.Fail("StackOverflow thrown when reading document with a large number of outlines.");
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OutlineTypeNull() {
+            NUnit.Framework.Assert.That(() =>  {
+                //Test should not throw exception after fix in DEVSIX-2046
+                String filename = "outlineTypeNull";
+                String outputFile = destinationFolder + filename + ".pdf";
+                PdfReader reader = new PdfReader(sourceFolder + filename + ".pdf");
+                PdfWriter writer = new PdfWriter(new FileStream(outputFile, FileMode.Create));
+                PdfDocument pdfDoc = new PdfDocument(reader, writer);
+                pdfDoc.RemovePage(3);
+                pdfDoc.Close();
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outputFile, sourceFolder + "cmp_" + filename
+                     + ".pdf", destinationFolder, "diff_"));
+            }
+            , NUnit.Framework.Throws.TypeOf<NullReferenceException>());
+;
         }
     }
 }
