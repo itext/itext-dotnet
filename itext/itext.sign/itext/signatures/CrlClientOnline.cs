@@ -176,5 +176,9 @@ namespace iText.Signatures {
             urls.Add(url);
             LOGGER.Info("Added CRL url: " + url);
         }
+
+        public virtual int GetUrlsSize() {
+            return urls.Count;
+        }
     }
 }
