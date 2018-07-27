@@ -50,6 +50,7 @@ using System.Xml;
 using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Util;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -98,7 +99,7 @@ namespace iText.Kernel.Utils {
 
         private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
-        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa))?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
+        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
 
         private const String versionReplacement = "iText\u00ae <version>";
 
@@ -137,6 +138,8 @@ namespace iText.Kernel.Utils {
         private bool encryptionCompareEnabled = false;
 
         private bool useCachedPagesForComparison = true;
+
+        private IMetaInfo metaInfo;
 
         /// <summary>Creates an instance of the CompareTool.</summary>
         public CompareTool() {
@@ -258,6 +261,16 @@ namespace iText.Kernel.Utils {
             ) {
             this.generateCompareByContentXmlReport = generateCompareByContentXmlReport;
             return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// info that will be used for both read and written documents creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
         }
 
         /// <summary>Enables the comparison of the encryption properties of the documents.</summary>
@@ -650,8 +663,10 @@ namespace iText.Kernel.Utils {
             PdfDocument cmpDocument = null;
             PdfDocument outDocument = null;
             try {
-                cmpDocument = new PdfDocument(new PdfReader(this.cmpPdf));
-                outDocument = new PdfDocument(new PdfReader(this.outPdf));
+                cmpDocument = new PdfDocument(new PdfReader(this.cmpPdf), new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo));
+                outDocument = new PdfDocument(new PdfReader(this.outPdf), new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo));
                 byte[] cmpBytes = cmpDocument.GetXmpMetadata();
                 byte[] outBytes = outDocument.GetXmpMetadata();
                 if (ignoreDateAndProducerProperties) {
@@ -726,8 +741,10 @@ namespace iText.Kernel.Utils {
             System.Console.Out.Write("[itext] INFO  Comparing document info.......");
             String message = null;
             SetPassword(outPass, cmpPass);
-            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()));
-            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()));
+            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()), new DocumentProperties
+                ().SetEventCountingMetaInfo(metaInfo));
+            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()), new DocumentProperties
+                ().SetEventCountingMetaInfo(metaInfo));
             String[] cmpInfo = ConvertInfo(cmpDocument.GetDocumentInfo());
             String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
             for (int i = 0; i < cmpInfo.Length; ++i) {
@@ -768,8 +785,10 @@ namespace iText.Kernel.Utils {
         public virtual String CompareLinkAnnotations(String outPdf, String cmpPdf) {
             System.Console.Out.Write("[itext] INFO  Comparing link annotations....");
             String message = null;
-            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf));
-            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf));
+            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf), new DocumentProperties().SetEventCountingMetaInfo
+                (metaInfo));
+            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf), new DocumentProperties().SetEventCountingMetaInfo
+                (metaInfo));
             for (int i = 0; i < outDocument.GetNumberOfPages() && i < cmpDocument.GetNumberOfPages(); i++) {
                 IList<PdfLinkAnnotation> outLinks = GetLinkAnnotations(i + 1, outDocument);
                 IList<PdfLinkAnnotation> cmpLinks = GetLinkAnnotations(i + 1, cmpDocument);
@@ -818,13 +837,15 @@ namespace iText.Kernel.Utils {
             String cmpXmlPath = outPdf.Replace(".pdf", ".cmp.xml");
             String message = null;
             PdfReader readerOut = new PdfReader(outPdf);
-            PdfDocument docOut = new PdfDocument(readerOut);
+            PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
+                ));
             FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create);
             new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
             docOut.Close();
             xmlOut.Dispose();
             PdfReader readerCmp = new PdfReader(cmpPdf);
-            PdfDocument docCmp = new PdfDocument(readerCmp);
+            PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
+                ));
             FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create);
             new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
             docCmp.Close();
@@ -981,8 +1002,10 @@ namespace iText.Kernel.Utils {
         private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int, IList<Rectangle>> ignoredAreas) {
             PdfWriter outWriter = new PdfWriter(outPath + ignoredAreasPrefix + outPdfName);
             PdfWriter cmpWriter = new PdfWriter(outPath + ignoredAreasPrefix + cmpPdfName);
-            PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter);
-            PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter);
+            StampingProperties properties = new StampingProperties();
+            properties.SetEventCountingMetaInfo(metaInfo);
+            PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter, properties);
+            PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter, properties);
             foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas) {
                 int pageNumber = entry.Key;
                 IList<Rectangle> rectangles = entry.Value;
@@ -1063,7 +1086,8 @@ namespace iText.Kernel.Utils {
             System.Console.Out.Write("Comparing by content..........");
             PdfDocument outDocument;
             try {
-                outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()));
+                outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()), new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo));
             }
             catch (System.IO.IOException e) {
                 throw new System.IO.IOException("File \"" + outPdf + "\" not found", e);
@@ -1073,7 +1097,8 @@ namespace iText.Kernel.Utils {
             LoadPagesFromReader(outDocument, outPages, outPagesRef);
             PdfDocument cmpDocument;
             try {
-                cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()));
+                cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()), new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo));
             }
             catch (System.IO.IOException e) {
                 throw new System.IO.IOException("File \"" + cmpPdf + "\" not found", e);

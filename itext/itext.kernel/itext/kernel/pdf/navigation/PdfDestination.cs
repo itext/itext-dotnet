@@ -69,15 +69,16 @@ namespace iText.Kernel.Pdf.Navigation {
                         }
                         else {
                             PdfObject firstObj = destArray.Get(0);
-                            // In case of explicit destination this is a page dictionary or page number
-                            if (firstObj.IsNumber() || firstObj.IsDictionary() && PdfName.Page.Equals(((PdfDictionary)firstObj).GetAsName
-                                (PdfName.Type))) {
+                            // In case of explicit destination for remote go-to action this is a page number
+                            if (firstObj.IsNumber()) {
+                                return new PdfExplicitRemoteGoToDestination(destArray);
+                            }
+                            // In case of explicit destination for not remote go-to action this is a page dictionary
+                            if (firstObj.IsDictionary() && PdfName.Page.Equals(((PdfDictionary)firstObj).GetAsName(PdfName.Type))) {
                                 return new PdfExplicitDestination(destArray);
                             }
-                            else {
-                                // In case of structure destination this is a struct element dictionary or a string ID. Type is not required for structure elements
-                                return new PdfStructureDestination(destArray);
-                            }
+                            // In case of structure destination this is a struct element dictionary or a string ID. Type is not required for structure elements
+                            return new PdfStructureDestination(destArray);
                         }
                     }
                     else {

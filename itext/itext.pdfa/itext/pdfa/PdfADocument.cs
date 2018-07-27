@@ -90,7 +90,32 @@ namespace iText.Pdfa {
         /// <see cref="iText.Kernel.Pdf.PdfOutputIntent"/>
         /// </param>
         public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent)
-            : base(writer) {
+            : this(writer, conformanceLevel, outputIntent, new DocumentProperties()) {
+        }
+
+        /// <summary>Constructs a new PdfADocument for writing purposes, i.e.</summary>
+        /// <remarks>
+        /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
+        /// PDF/A file has a conformance level, and must have an explicit output
+        /// intent.
+        /// </remarks>
+        /// <param name="writer">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// object to write to
+        /// </param>
+        /// <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+        /// <param name="outputIntent">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfOutputIntent"/>
+        /// </param>
+        /// <param name="properties">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.DocumentProperties"/>
+        /// </param>
+        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent, 
+            DocumentProperties properties)
+            : base(writer, properties) {
             SetChecker(conformanceLevel);
             AddOutputIntent(outputIntent);
         }
@@ -278,6 +303,7 @@ namespace iText.Pdfa {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
+        [Obsolete]
         protected override IList<ICounter> GetCounters() {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Pdfa.PdfADocument));
         }

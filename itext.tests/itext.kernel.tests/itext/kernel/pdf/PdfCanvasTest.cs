@@ -1505,5 +1505,30 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
                 ));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CanvasSmallFontSize01() {
+            String cmpFile = sourceFolder + "cmp_canvasSmallFontSize01.pdf";
+            String destFile = destinationFolder + "canvasSmallFontSize01.pdf";
+            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(50, 750).SetFontAndSize(PdfFontFactory.CreateFont(), 0).ShowText("simple text"
+                ).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), -0.00005f).ShowText
+                ("simple text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 650).SetFontAndSize(PdfFontFactory.CreateFont(), 0.00005f).ShowText
+                ("simple text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 600).SetFontAndSize(PdfFontFactory.CreateFont(), -12).ShowText
+                ("simple text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 550).SetFontAndSize(PdfFontFactory.CreateFont(), 12).ShowText(
+                "simple text").EndText().RestoreState();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
     }
 }

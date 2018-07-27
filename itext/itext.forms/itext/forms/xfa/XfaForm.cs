@@ -318,11 +318,23 @@ namespace iText.Forms.Xfa
 		/// <returns>the complete name or <CODE>null</CODE> if not found</returns>
 		public virtual String FindFieldName(String name)
 		{
-            if (acroFieldsSom == null && xfaPresent)
+            if (acroFieldsSom == null && xfaPresent && datasetsSom != null)
+            {
+                IDictionary<String, XNode> name2Node = datasetsSom.GetName2Node();
+                ICollection<String> keys = name2Node.Keys;
+                acroFieldsSom = new AcroFieldsSearch(keys);
+            }
+
+            if (acroFieldsSom != null && xfaPresent)
 			{
-				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
-				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName
-					().Get(name) : acroFieldsSom.InverseSearchGlobal(new List<string>(new Stack<string>(Xml2Som.SplitParts(name))));
+                List<string> parts = new List<string>(new Stack<string>(Xml2Som.SplitParts(name)));
+
+                bool containsKey = acroFieldsSom.GetAcroShort2LongName().ContainsKey(name);
+
+                string inverse = acroFieldsSom.InverseSearchGlobal(parts);
+                string normal = acroFieldsSom.GetAcroShort2LongName().Get(name);
+
+                return containsKey ? normal : inverse;
 			}
 			return null;
 		}

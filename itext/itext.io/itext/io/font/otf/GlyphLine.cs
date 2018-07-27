@@ -334,12 +334,12 @@ namespace iText.IO.Font.Otf {
                 int otherPos = other.start + i - start;
                 Glyph myGlyph = Get(i);
                 Glyph otherGlyph = other.Get(otherPos);
-                if (myGlyph == null && otherGlyph != null || !myGlyph.Equals(otherGlyph)) {
+                if (myGlyph == null && otherGlyph != null || myGlyph != null && !myGlyph.Equals(otherGlyph)) {
                     return false;
                 }
                 GlyphLine.ActualText myAT = actualText == null ? null : actualText[i];
                 GlyphLine.ActualText otherAT = other.actualText == null ? null : other.actualText[otherPos];
-                if (myAT == null && otherAT != null || !myAT.Equals(otherAT)) {
+                if (myAT == null && otherAT != null || myAT != null && !myAT.Equals(otherAT)) {
                     return false;
                 }
             }
@@ -376,6 +376,7 @@ namespace iText.IO.Font.Otf {
             }
 
             public GlyphLinePart(int start, int end, String actualText) {
+                // Might be null if it's not necessary
                 this.start = start;
                 this.end = end;
                 this.actualText = actualText;

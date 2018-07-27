@@ -58,6 +58,62 @@ namespace iText.Layout {
             TestHyphenateResult("uk", "\u0434\u0435\u043D\u044C", null);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ParenthesisTest01() {
+            //Annuitätendarlehen
+            TestHyphenateResult("de", "((:::(\"|;Annuitätendarlehen|\")))", new int[] { 5, 7, 10, 13, 15 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SpacesTest01() {
+            //Annuitätendarlehen
+            TestHyphenateResult("de", "    Annuitätendarlehen", new int[] { 5, 7, 10, 13, 15 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SoftHyphenTest01() {
+            //Ann\u00ADuit\u00ADätendarl\u00ADehen
+            TestHyphenateResult("de", "Ann\u00ADuit\u00ADätendarl\u00ADehen", new int[] { 3, 7, 16 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StackoverflowTestDe() {
+            //https://stackoverflow.com/
+            TestHyphenateResult("de", "https://stackoverflow.com/", new int[] { 3, 14, 17 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StackoverflowTestEn() {
+            //https://stackoverflow.com/
+            TestHyphenateResult("en", "https://stackoverflow.com/", new int[] { 13, 17 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest01() {
+            //99\u2011verheiratet
+            TestHyphenateResult("de", "999\u2011verheiratet", new int[] { 3, 6, 8 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest02() {
+            //honorificabilitudinitatibus
+            TestHyphenateResult("en", "honorificabilitudinitatibus", new int[] { 3, 5, 6, 9, 11, 13, 15, 19, 21, 22, 24
+                 });
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonBreakingHyphenTest02A() {
+            //honorificabil\u2011itudinitatibus
+            TestHyphenateResult("en", "honorificabil\u2011itudinitatibus", new int[] { 3, 5, 6, 9, 11, 20, 22, 23, 25 }
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NumberTest01() {
+            //123456789
+            TestHyphenateResult("en", "123456789", null);
+        }
+
         private void TestHyphenateResult(String lang, String testWorld, int[] expectedHyphenatePoints) {
             String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
             lang = parts[0];

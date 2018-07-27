@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Kernel.Log {
     /// <summary>
     /// Interface that can be implemented if you want to count the number of documents
@@ -53,6 +55,8 @@ namespace iText.Kernel.Log {
     /// Implementers may use this method to record actual system usage for licensing purposes
     /// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
     /// </remarks>
+    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounter instead."
+        )]
     public interface ICounter {
         /// <summary>This method gets triggered if a document is read.</summary>
         /// <param name="size">the length of the document that was read</param>

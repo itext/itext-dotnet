@@ -1020,5 +1020,43 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
                 ));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void Make3dAnnotationTest() {
+            String filename = sourceFolder + "3d_annotation.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfPage page1 = pdfDoc.GetPage(1);
+            IList<PdfAnnotation> annots = page1.GetAnnotations();
+            NUnit.Framework.Assert.IsTrue(annots[0] is Pdf3DAnnotation);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Add3dAnnotationTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "add3DAnnotation01.pdf"));
+            Rectangle rect = new Rectangle(100, 400, 400, 400);
+            PdfStream stream3D = new PdfStream(pdfDoc, new FileStream(sourceFolder + "teapot.u3d", FileMode.Open, FileAccess.Read
+                ));
+            stream3D.Put(PdfName.Type, new PdfName("3D"));
+            stream3D.Put(PdfName.Subtype, new PdfName("U3D"));
+            stream3D.SetCompressionLevel(CompressionConstants.UNDEFINED_COMPRESSION);
+            stream3D.Flush();
+            PdfDictionary dict3D = new PdfDictionary();
+            dict3D.Put(PdfName.Type, new PdfName("3DView"));
+            dict3D.Put(new PdfName("XN"), new PdfString("Default"));
+            dict3D.Put(new PdfName("IN"), new PdfString("Unnamed"));
+            dict3D.Put(new PdfName("MS"), PdfName.M);
+            dict3D.Put(new PdfName("C2W"), new PdfArray(new float[] { 1, 0, 0, 0, 0, -1, 0, 1, 0, 3, -235, 28 }));
+            dict3D.Put(PdfName.CO, new PdfNumber(235));
+            Pdf3DAnnotation annot = new Pdf3DAnnotation(rect, stream3D);
+            annot.SetContents(new PdfString("3D Model"));
+            annot.SetDefaultInitialView(dict3D);
+            pdfDoc.AddNewPage().AddAnnotation(annot);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add3DAnnotation01.pdf"
+                , sourceFolder + "cmp_add3DAnnotation01.pdf", destinationFolder, "diff_"));
+        }
     }
 }

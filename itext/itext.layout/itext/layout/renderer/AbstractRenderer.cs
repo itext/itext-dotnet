@@ -808,6 +808,10 @@ namespace iText.Layout.Renderer {
                 BorderRadius[] borderRadii = GetBorderRadii();
                 float[] verticalRadii = CalculateRadii(borderRadii, borderRect, false);
                 float[] horizontalRadii = CalculateRadii(borderRadii, borderRect, true);
+                for (int i = 0; i < 4; i++) {
+                    verticalRadii[i] = Math.Min(verticalRadii[i], borderRect.GetHeight() / 2);
+                    horizontalRadii[i] = Math.Min(horizontalRadii[i], borderRect.GetWidth() / 2);
+                }
                 if (borders[0] != null) {
                     if (0 != horizontalRadii[0] || 0 != verticalRadii[0] || 0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
                         borders[0].Draw(canvas, x1, y2, x2, y2, horizontalRadii[0], verticalRadii[0], horizontalRadii[1], verticalRadii
@@ -1742,9 +1746,10 @@ namespace iText.Layout.Renderer {
                 if (enlargeOccupiedAreaOnHeightWasClipped) {
                     float? maxHeight = RetrieveMaxHeight();
                     splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - usedHeight).SetHeight((float)maxHeight);
+                    usedHeight = (float)maxHeight;
                 }
             }
-            if (overflowRenderer == null) {
+            if (overflowRenderer == null || IsKeepTogether()) {
                 return;
             }
             // Update height related properties on split or overflow

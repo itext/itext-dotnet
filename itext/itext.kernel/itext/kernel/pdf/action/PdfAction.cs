@@ -121,6 +121,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <param name="destination">the desired destination of the action</param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoTo(PdfDestination destination) {
+            ValidateNotRemoteDestination(destination);
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoTo).Put(PdfName.D, destination.GetPdfObject
                 ());
         }
@@ -175,8 +176,8 @@ namespace iText.Kernel.Pdf.Action {
         /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum, bool newWindow) {
-            return CreateGoToR(new PdfStringFS(filename), PdfExplicitDestination.CreateFitH(pageNum, 10000), newWindow
-                );
+            return CreateGoToR(new PdfStringFS(filename), PdfExplicitRemoteGoToDestination.CreateFitH(pageNum, 10000), 
+                newWindow);
         }
 
         /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
@@ -235,7 +236,12 @@ namespace iText.Kernel.Pdf.Action {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
             if (destination != null) {
+                ValidateRemoteDestination(destination);
                 action.Put(PdfName.D, destination.GetPdfObject());
+            }
+            else {
+                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED
+                    );
             }
             if (targetDictionary != null) {
                 action.Put(PdfName.T, targetDictionary.GetPdfObject());
@@ -667,10 +673,11 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         private static void ValidateRemoteDestination(PdfDestination destination) {
+            // No page object can be specified for a destination associated with a remote go-to action because the
+            // destination page is in a different PDF document. In this case, the page parameter specifies an integer
+            // page number within the remote document instead of a page object in the current document.
+            // See section 12.3.2.2 of ISO 32000-1.
             if (destination is PdfExplicitDestination) {
-                // No page object can be specified for a destination associated with a remote go-to action because the
-                // destination page is in a different PDF document. In this case, the page parameter specifies an integer
-                // page number within the remote document instead of a page object in the current document.
                 PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
                 if (firstObj.IsDictionary()) {
                     throw new ArgumentException("Explicit destinations shall specify page number in remote go-to actions instead of page dictionary"
@@ -697,6 +704,24 @@ namespace iText.Kernel.Pdf.Action {
                             ((PdfArray)destination.GetPdfObject()).Set(0, id);
                             destination.GetPdfObject().SetModified();
                         }
+                    }
+                }
+            }
+        }
+
+        public static void ValidateNotRemoteDestination(PdfDestination destination) {
+            if (destination is PdfExplicitRemoteGoToDestination) {
+                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                    );
+            }
+            else {
+                if (destination is PdfExplicitDestination) {
+                    // No page number can be specified for a destination associated with a not remote go-to action because the
+                    // destination page is in a current PDF document. See section 12.3.2.2 of ISO 32000-1.
+                    PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
+                    if (firstObj.IsNumber()) {
+                        LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                            );
                     }
                 }
             }

@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -57,7 +58,11 @@ namespace iText.Kernel.Pdf {
     /// It is also possible to change the info dictionary.
     /// </remarks>
     public sealed class PdfEncryptor {
-        private PdfEncryptor() {
+        private IMetaInfo metaInfo;
+
+        private EncryptionProperties properties;
+
+        public PdfEncryptor() {
         }
 
         /// <summary>Entry point to encrypt a PDF document.</summary>
@@ -78,12 +83,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties, IDictionary<String
             , String> newInfo) {
-            WriterProperties writerProperties = new WriterProperties();
-            writerProperties.encryptionProperties = properties;
-            PdfWriter writer = new PdfWriter(os, writerProperties);
-            PdfDocument document = new PdfDocument(reader, writer);
-            document.GetDocumentInfo().SetMoreInfo(newInfo);
-            document.Close();
+            new iText.Kernel.Pdf.PdfEncryptor().SetEncryptionProperties(properties).Encrypt(reader, os, newInfo);
         }
 
         /// <summary>Entry point to encrypt a PDF document.</summary>
@@ -187,6 +187,68 @@ namespace iText.Kernel.Pdf {
         /// <returns>true if degraded printing is allowed</returns>
         public static bool IsDegradedPrintingAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// that will be used during
+        /// <see cref="PdfDocument"/>
+        /// creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfEncryptor"/>
+        /// instance
+        /// </returns>
+        public iText.Kernel.Pdf.PdfEncryptor SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="EncryptionProperties"/>
+        /// </summary>
+        /// <param name="properties">the properties to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfEncryptor"/>
+        /// instance
+        /// </returns>
+        public iText.Kernel.Pdf.PdfEncryptor SetEncryptionProperties(EncryptionProperties properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        /// <summary>Entry point to encrypt a PDF document.</summary>
+        /// <param name="reader">the read PDF</param>
+        /// <param name="os">the output destination</param>
+        /// <param name="newInfo">
+        /// an optional
+        /// <c>String</c>
+        /// map to add or change
+        /// the info dictionary. Entries with
+        /// <see langword="null"/>
+        /// values delete the key in the original info dictionary
+        /// </param>
+        public void Encrypt(PdfReader reader, Stream os, IDictionary<String, String> newInfo) {
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.encryptionProperties = properties;
+            PdfWriter writer = new PdfWriter(os, writerProperties);
+            StampingProperties stampingProperties = new StampingProperties();
+            stampingProperties.SetEventCountingMetaInfo(metaInfo);
+            PdfDocument document = new PdfDocument(reader, writer, stampingProperties);
+            document.GetDocumentInfo().SetMoreInfo(newInfo);
+            document.Close();
+        }
+
+        /// <summary>Entry point to encrypt a PDF document.</summary>
+        /// <param name="reader">the read PDF</param>
+        /// <param name="os">the output destination</param>
+        public void Encrypt(PdfReader reader, Stream os) {
+            Encrypt(reader, os, (IDictionary<String, String>)null);
         }
     }
 }

@@ -78,7 +78,7 @@ namespace iText.Signatures.Testutils.Client {
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
             TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
             tsqGenerator.SetCertReq(true);
-            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetSystemTimeTicks());
+            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetTimeBasedSeed());
             TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest
                 (DIGEST_ALG)), imprint, nonce);
             return new TestTimestampTokenBuilder(tsaCertificateChain, tsaPrivateKey).CreateTimeStampToken(request);

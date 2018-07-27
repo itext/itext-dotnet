@@ -83,13 +83,15 @@ namespace iText.Layout.Font {
             int nextUnignorable = NextSignificantIndex();
             if (nextUnignorable < text.Length) {
                 foreach (FontInfo f in selector.GetFonts()) {
-                    PdfFont currentFont = GetPdfFont(f);
                     int codePoint = IsSurrogatePair(text, nextUnignorable) ? iText.IO.Util.TextUtil.ConvertToUtf32(text, nextUnignorable
                         ) : (int)text[nextUnignorable];
-                    Glyph glyph = currentFont.GetGlyph(codePoint);
-                    if (null != glyph && 0 != glyph.GetCode()) {
-                        font = currentFont;
-                        break;
+                    if (f.GetFontUnicodeRange().Contains(codePoint)) {
+                        PdfFont currentFont = GetPdfFont(f);
+                        Glyph glyph = currentFont.GetGlyph(codePoint);
+                        if (null != glyph && 0 != glyph.GetCode()) {
+                            font = currentFont;
+                            break;
+                        }
                     }
                 }
             }

@@ -63,6 +63,8 @@ namespace iText.Kernel.Log {
     /// <p>
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.IEventCounterFactory instead."
+        )]
     public interface ICounterFactory {
         ICounter GetCounter(Type cls);
     }

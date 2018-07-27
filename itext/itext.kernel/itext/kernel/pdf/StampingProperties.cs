@@ -42,14 +42,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
-    public class StampingProperties {
-        protected internal bool appendMode;
+    public class StampingProperties : DocumentProperties {
+        protected internal bool appendMode = false;
 
-        protected internal bool preserveEncryption;
+        protected internal bool preserveEncryption = false;
 
         public StampingProperties() {
-            appendMode = false;
-            preserveEncryption = false;
+        }
+
+        public StampingProperties(iText.Kernel.Pdf.StampingProperties other)
+            : base(other) {
+            this.appendMode = other.appendMode;
+            this.preserveEncryption = other.preserveEncryption;
         }
 
         /// <summary>Defines if the document will be edited in append mode.</summary>

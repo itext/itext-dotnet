@@ -46,7 +46,13 @@ using Common.Logging;
 using iText.IO.Codec;
 
 namespace iText.Kernel.Log {
-    /// <summary>Default implementation of the ICounter interface that essentially doesn't do anything.</summary>
+    /// <summary>
+    /// Default implementation of the
+    /// <see cref="ICounter"/>
+    /// interface that essentially doesn't do anything.
+    /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.DefaultEventCounter instead."
+        )]
     public class DefaultCounter : ICounter {
         private volatile int count = 0;
 

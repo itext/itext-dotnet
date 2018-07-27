@@ -74,7 +74,8 @@ namespace iText.Signatures {
         public SignatureUtil(PdfDocument document) {
             // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
             this.document = document;
-            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+            // Only create new AcroForm if there is a writer
+            this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
         }
 
         /// <summary>Verifies a signature.</summary>
@@ -140,7 +141,7 @@ namespace iText.Signatures {
         /// </returns>
         public virtual PdfDictionary GetSignatureDictionary(String name) {
             GetSignatureNames();
-            if (!sigNames.ContainsKey(name)) {
+            if (acroForm == null || !sigNames.ContainsKey(name)) {
                 return null;
             }
             PdfFormField field = acroForm.GetField(name);
@@ -154,8 +155,8 @@ namespace iText.Signatures {
             RandomAccessFileOrArray rf = document.GetReader().GetSafeFile();
             Stream rg = null;
             try {
-                rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(rf.CreateSourceView(), AsLongArray(b)
-                    ));
+                rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(rf.CreateSourceView(), b.ToLongArray(
+                    )));
                 byte[] buf = new byte[8192];
                 int rd;
                 while ((rd = rg.JRead(buf, 0, buf.Length)) > 0) {
@@ -186,57 +187,7 @@ namespace iText.Signatures {
             }
             sigNames = new Dictionary<String, int[]>();
             orderedSignatureNames = new List<String>();
-            IList<Object[]> sorter = new List<Object[]>();
-            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
-                PdfFormField field = entry.Value;
-                PdfDictionary merged = field.GetPdfObject();
-                if (!PdfName.Sig.Equals(merged.Get(PdfName.FT))) {
-                    continue;
-                }
-                PdfDictionary v = merged.GetAsDictionary(PdfName.V);
-                if (v == null) {
-                    continue;
-                }
-                PdfString contents = v.GetAsString(PdfName.Contents);
-                if (contents == null) {
-                    continue;
-                }
-                else {
-                    contents.MarkAsUnencryptedObject();
-                }
-                PdfArray ro = v.GetAsArray(PdfName.ByteRange);
-                if (ro == null) {
-                    continue;
-                }
-                int rangeSize = ro.Size();
-                if (rangeSize < 2) {
-                    continue;
-                }
-                int length = ro.GetAsNumber(rangeSize - 1).IntValue() + ro.GetAsNumber(rangeSize - 2).IntValue();
-                sorter.Add(new Object[] { entry.Key, new int[] { length, 0 } });
-            }
-            JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
-            if (sorter.Count > 0) {
-                try {
-                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
-                        totalRevisions = sorter.Count;
-                    }
-                    else {
-                        totalRevisions = sorter.Count + 1;
-                    }
-                }
-                catch (System.IO.IOException) {
-                }
-                // TODO: add exception handling (at least some logger)
-                for (int k = 0; k < sorter.Count; ++k) {
-                    Object[] objs = sorter[k];
-                    String name = (String)objs[0];
-                    int[] p = (int[])objs[1];
-                    p[1] = k + 1;
-                    sigNames.Put(name, p);
-                    orderedSignatureNames.Add(name);
-                }
-            }
+            PopulateSignatureNames();
             return new List<String>(orderedSignatureNames);
         }
 
@@ -245,16 +196,18 @@ namespace iText.Signatures {
         public virtual IList<String> GetBlankSignatureNames() {
             GetSignatureNames();
             IList<String> sigs = new List<String>();
-            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
-                PdfFormField field = entry.Value;
-                PdfDictionary merged = field.GetPdfObject();
-                if (!PdfName.Sig.Equals(merged.GetAsName(PdfName.FT))) {
-                    continue;
+            if (acroForm != null) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                    PdfFormField field = entry.Value;
+                    PdfDictionary merged = field.GetPdfObject();
+                    if (!PdfName.Sig.Equals(merged.GetAsName(PdfName.FT))) {
+                        continue;
+                    }
+                    if (sigNames.ContainsKey(entry.Key)) {
+                        continue;
+                    }
+                    sigs.Add(entry.Key);
                 }
-                if (sigNames.ContainsKey(entry.Key)) {
-                    continue;
-                }
-                sigs.Add(entry.Key);
             }
             return sigs;
         }
@@ -274,7 +227,7 @@ namespace iText.Signatures {
         }
 
         public virtual String GetTranslatedFieldName(String name) {
-            if (acroForm.GetXfaForm().IsXfaPresent()) {
+            if (acroForm != null && acroForm.GetXfaForm().IsXfaPresent()) {
                 String namex = acroForm.GetXfaForm().FindFieldName(name);
                 if (namex != null) {
                     name = namex;
@@ -329,13 +282,70 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="pdfArray">PdfArray to be converted</param>
         /// <returns>long[] containing the PdfArray values</returns>
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use iText.Kernel.Pdf.PdfArray.ToLongArray() instead")]
         public static long[] AsLongArray(PdfArray pdfArray) {
-            // TODO: copied from iText 5 PdfArray.asLongArray
             long[] rslt = new long[pdfArray.Size()];
             for (int k = 0; k < rslt.Length; ++k) {
                 rslt[k] = pdfArray.GetAsNumber(k).LongValue();
             }
             return rslt;
+        }
+
+        private void PopulateSignatureNames() {
+            if (acroForm == null) {
+                return;
+            }
+            IList<Object[]> sorter = new List<Object[]>();
+            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                PdfFormField field = entry.Value;
+                PdfDictionary merged = field.GetPdfObject();
+                if (!PdfName.Sig.Equals(merged.Get(PdfName.FT))) {
+                    continue;
+                }
+                PdfDictionary v = merged.GetAsDictionary(PdfName.V);
+                if (v == null) {
+                    continue;
+                }
+                PdfString contents = v.GetAsString(PdfName.Contents);
+                if (contents == null) {
+                    continue;
+                }
+                else {
+                    contents.MarkAsUnencryptedObject();
+                }
+                PdfArray ro = v.GetAsArray(PdfName.ByteRange);
+                if (ro == null) {
+                    continue;
+                }
+                int rangeSize = ro.Size();
+                if (rangeSize < 2) {
+                    continue;
+                }
+                int length = ro.GetAsNumber(rangeSize - 1).IntValue() + ro.GetAsNumber(rangeSize - 2).IntValue();
+                sorter.Add(new Object[] { entry.Key, new int[] { length, 0 } });
+            }
+            JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
+            if (sorter.Count > 0) {
+                try {
+                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
+                        totalRevisions = sorter.Count;
+                    }
+                    else {
+                        totalRevisions = sorter.Count + 1;
+                    }
+                }
+                catch (System.IO.IOException) {
+                }
+                // TODO: add exception handling (at least some logger)
+                for (int k = 0; k < sorter.Count; ++k) {
+                    Object[] objs = sorter[k];
+                    String name = (String)objs[0];
+                    int[] p = (int[])objs[1];
+                    p[1] = k + 1;
+                    sigNames.Put(name, p);
+                    orderedSignatureNames.Add(name);
+                }
+            }
         }
 
         private class SorterComparator : IComparer<Object[]> {

@@ -127,11 +127,23 @@ namespace iText.Forms.Xfa
 			{
 				return "";
 			}
+
+            IList<string> temp = new List<string>();
+
+            while ( stack.Count > 0 )
+            {
+                temp.Add(stack.Pop());
+            }
+
 			StringBuilder s = new StringBuilder();
-			for (int k = 0; k < stack.Count; ++k)
+
+            for ( int k = temp.Count - 1; k >= 0; --k )
 			{
-				s.Append('.').Append(stack.ElementAt(k));
+                string name = temp.ElementAt(k);
+                s.Append('.').Append(name);
+                stack.Push(name);
 			}
+
 			return s.ToString().Substring(1);
 		}
 

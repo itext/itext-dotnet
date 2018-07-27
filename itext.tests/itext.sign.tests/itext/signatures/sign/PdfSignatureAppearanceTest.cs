@@ -41,14 +41,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Image;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -160,10 +163,57 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestSigningInAppendModeWithHybridDocument() {
+            String src = sourceFolder + "hybrid.pdf";
+            String dest = destinationFolder + "signed_hybrid.pdf";
+            String cmp = sourceFolder + "cmp_signed_hybrid.pdf";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ().UseAppendMode());
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetLayer2FontSize(13.8f).SetPageRect(new Rectangle(36, 748, 200, 100)).SetPageNumber(1).SetReason
+                ("Test").SetLocation("Nagpur");
+            signer.SetFieldName("Sign1");
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            // Make sure iText can open the document
+            new PdfDocument(new PdfReader(dest)).Close();
+            // Assert that the document can be rendered correctly
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, destinationFolder, "diff_", GetIgnoredAreaTestMap
+                (new Rectangle(36, 748, 200, 100))));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FontColorTest01() {
+            String fileName = "fontColorTest01.pdf";
+            String dest = destinationFolder + fileName;
+            Rectangle rect = new Rectangle(36, 648, 100, 50);
+            String src = sourceFolder + "simpleDocument.pdf";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            signer.GetSignatureAppearance().SetLayer2FontColor(ColorConstants.RED).SetLayer2Text("Verified and signed by me."
+                ).SetPageRect(rect);
+            signer.SetFieldName("Signature1");
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private void TestSignatureAppearanceAutoscale(String dest, Rectangle rect, PdfSignatureAppearance.RenderingMode
              renderingMode) {
             String src = sourceFolder + "simpleDocument.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), false);
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
             // Creating the appearance
             signer.GetSignatureAppearance().SetLayer2FontSize(0).SetReason("Test 1").SetLocation("TestCity").SetPageRect
                 (rect).SetRenderingMode(renderingMode).SetSignatureGraphic(ImageDataFactory.Create(sourceFolder + "itext.png"
@@ -193,6 +243,12 @@ namespace iText.Signatures.Sign {
             float foundFontSize = float.Parse(fontSize, System.Globalization.CultureInfo.InvariantCulture);
             NUnit.Framework.Assert.IsTrue(Math.Abs(foundFontSize - expectedFontSize) < 0.1 * expectedFontSize, MessageFormatUtil
                 .Format("Font size: exptected {0}, found {1}", expectedFontSize, fontSize));
+        }
+
+        private static IDictionary<int, IList<Rectangle>> GetIgnoredAreaTestMap(Rectangle ignoredArea) {
+            IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
+            result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
+            return result;
         }
     }
 }

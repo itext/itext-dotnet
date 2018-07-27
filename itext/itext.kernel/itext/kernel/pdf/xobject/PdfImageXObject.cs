@@ -554,6 +554,11 @@ namespace iText.Kernel.Pdf.Xobject {
                                             if (value is float[]) {
                                                 dictionary.Put(new PdfName(key), new PdfArray((float[])value));
                                             }
+                                            else {
+                                                if (value is int[]) {
+                                                    dictionary.Put(new PdfName(key), new PdfArray((int[])value));
+                                                }
+                                            }
                                         }
                                     }
                                 }

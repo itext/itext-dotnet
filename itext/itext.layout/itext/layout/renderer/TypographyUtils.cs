@@ -108,26 +108,37 @@ namespace iText.Layout.Renderer {
             }
             catch (TypeLoadException) {
             }
-            TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
+            ICollection<UnicodeScript> supportedScripts = null;
             if (moduleFound) {
-                SUPPORTED_SCRIPTS = GetSupportedScripts();
+                try {
+                    supportedScripts = (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS
+                        , new Type[] {  });
+                }
+                catch (Exception e) {
+                    supportedScripts = null;
+                    logger.Error(e.Message);
+                }
             }
-            else {
-                SUPPORTED_SCRIPTS = null;
+            moduleFound = supportedScripts != null;
+            if (!moduleFound) {
+                cachedClasses.Clear();
+                cachedMethods.Clear();
             }
+            TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
+            SUPPORTED_SCRIPTS = supportedScripts;
         }
 
-        internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script) {
+        internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
+             typographyConfig) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.Warn(typographyNotFoundException);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
-                    ), typeof(UnicodeScript?) }, fontProgram, text, script);
+                    ), typeof(UnicodeScript?), typeof(Object) }, fontProgram, text, script, typographyConfig);
             }
         }
 
-        //            Shaper.applyOtfScript((TrueTypeFont)fontProgram, text, script);
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.Warn(typographyNotFoundException);
@@ -237,17 +248,21 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             else {
-                if (SUPPORTED_SCRIPTS != null) {
-                    return SUPPORTED_SCRIPTS;
-                }
-                else {
-                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, new Type
-                        [] {  });
-                }
+                return SUPPORTED_SCRIPTS;
             }
         }
 
-        //            return (Collection<Character.UnicodeScript>) Shaper.getSupportedScripts();
+        internal static ICollection<UnicodeScript> GetSupportedScripts(Object typographyConfig) {
+            if (!TYPOGRAPHY_MODULE_INITIALIZED) {
+                logger.Warn(typographyNotFoundException);
+                return null;
+            }
+            else {
+                return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, (Object)
+                    null, new Type[] { typeof(Object) }, typographyConfig);
+            }
+        }
+
         internal static bool IsTypographyModuleInitialized() {
             return TYPOGRAPHY_MODULE_INITIALIZED;
         }
@@ -268,6 +283,10 @@ namespace iText.Layout.Renderer {
             }
             catch (TypeLoadException) {
                 logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
+            }
+            catch (ArgumentException e) {
+                logger.Warn(MessageFormatUtil.Format("Illegal arguments passed to {0}#{1} method call: {2}", className, methodName
+                    , e.Message));
             }
             catch (Exception e) {
                 throw new Exception(e.ToString(), e);

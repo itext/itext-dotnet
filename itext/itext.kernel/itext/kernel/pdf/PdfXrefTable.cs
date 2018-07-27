@@ -216,41 +216,14 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
-            IList<int> sections = new List<int>();
-            int first = 0;
-            int len = 0;
-            for (int i = 0; i < Size(); i++) {
-                PdfIndirectReference reference = xref[i];
-                if (document.properties.appendMode && reference != null && !reference.CheckState(PdfObject.MODIFIED)) {
-                    reference = null;
-                }
-                if (reference == null) {
-                    if (len > 0) {
-                        sections.Add(first);
-                        sections.Add(len);
-                    }
-                    len = 0;
-                }
-                else {
-                    if (len > 0) {
-                        len++;
-                    }
-                    else {
-                        first = i;
-                        len = 1;
-                    }
-                }
-            }
-            if (len > 0) {
-                sections.Add(first);
-                sections.Add(len);
-            }
+            IList<int> sections = CreateSections(document, false);
             if (document.properties.appendMode && sections.Count == 0) {
                 // no modifications.
                 xref = null;
                 return;
             }
             long startxref = writer.GetCurrentPos();
+            long xRefStmPos = -1;
             if (writer.IsFullCompression()) {
                 PdfStream xrefStream = (PdfStream)new PdfStream().MakeIndirect(document);
                 xrefStream.MakeIndirect(document);
@@ -269,15 +242,16 @@ namespace iText.Kernel.Pdf {
                 foreach (int? section in sections) {
                     index.Add(new PdfNumber((int)section));
                 }
-                if (document.properties.appendMode) {
+                if (document.properties.appendMode && !document.reader.hybridXref) {
+                    // "not meaningful in hybrid-reference files"
                     PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
                     xrefStream.Put(PdfName.Prev, lastXref);
                 }
                 xrefStream.Put(PdfName.Index, index);
                 iText.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
                 for (int k = 0; k < sections.Count; k += 2) {
-                    first = (int)sections[k];
-                    len = (int)sections[k + 1];
+                    int first = (int)sections[k];
+                    int len = (int)sections[k + 1];
                     for (int i = first; i < first + len; i++) {
                         PdfIndirectReference reference = xrefTable.Get(i);
                         if (reference.IsFree()) {
@@ -300,13 +274,23 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 xrefStream.Flush();
+                xRefStmPos = startxref;
             }
-            else {
+            // For documents with hybrid cross-reference table, i.e. containing xref streams as well as regular xref sections,
+            // we write additional regular xref section at the end of the document because the /Prev reference from
+            // xref stream to a regular xref section doesn't seem to be valid
+            bool needsRegularXref = !writer.IsFullCompression() || document.properties.appendMode && document.reader.hybridXref;
+            if (needsRegularXref) {
+                startxref = writer.GetCurrentPos();
                 writer.WriteString("xref\n");
                 iText.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
+                if (xRefStmPos != -1) {
+                    // Get rid of all objects from object stream. This is done for hybrid documents
+                    sections = CreateSections(document, true);
+                }
                 for (int k = 0; k < sections.Count; k += 2) {
-                    first = (int)sections[k];
-                    len = (int)sections[k + 1];
+                    int first = (int)sections[k];
+                    int len = (int)sections[k + 1];
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
                     for (int i = first; i < first + len; i++) {
                         PdfIndirectReference reference = xrefTable.Get(i);
@@ -330,6 +314,9 @@ namespace iText.Kernel.Pdf {
                 trailer.Remove(PdfName.Length);
                 trailer.Put(PdfName.Size, new PdfNumber(this.Size()));
                 trailer.Put(PdfName.ID, fileId);
+                if (xRefStmPos != -1) {
+                    trailer.Put(PdfName.XRefStm, new PdfNumber(xRefStmPos));
+                }
                 if (crypto != null) {
                     trailer.Put(PdfName.Encrypt, crypto);
                 }
@@ -355,6 +342,40 @@ namespace iText.Kernel.Pdf {
                 xref[i] = null;
             }
             count = 1;
+        }
+
+        private IList<int> CreateSections(PdfDocument document, bool dropObjectsFromObjectStream) {
+            IList<int> sections = new List<int>();
+            int first = 0;
+            int len = 0;
+            for (int i = 0; i < Size(); i++) {
+                PdfIndirectReference reference = xref[i];
+                if (document.properties.appendMode && reference != null && (!reference.CheckState(PdfObject.MODIFIED) || dropObjectsFromObjectStream
+                     && reference.GetObjStreamNumber() != 0)) {
+                    reference = null;
+                }
+                if (reference == null) {
+                    if (len > 0) {
+                        sections.Add(first);
+                        sections.Add(len);
+                    }
+                    len = 0;
+                }
+                else {
+                    if (len > 0) {
+                        len++;
+                    }
+                    else {
+                        first = i;
+                        len = 1;
+                    }
+                }
+            }
+            if (len > 0) {
+                sections.Add(first);
+                sections.Add(len);
+            }
+            return sections;
         }
 
         /// <summary>Gets size of the offset.</summary>
@@ -385,12 +406,12 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = document.GetWriter();
             FingerPrint fingerPrint = document.GetFingerPrint();
             String platform = " for .NET";
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            String k = version.GetKey();
+            VersionInfo versionInfo = document.GetVersionInfo();
+            String k = versionInfo.GetKey();
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, versionInfo.GetRelease(), platform));
             foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
                 writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
             }

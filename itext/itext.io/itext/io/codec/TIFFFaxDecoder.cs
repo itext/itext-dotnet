@@ -821,7 +821,7 @@ namespace iText.IO.Codec {
                 // Reset search start position for getNextChangingElement
                 lastChangingElement = 0;
                 // Till one whole scanline is decoded
-                while (bitOffset < w && bytePointer < data.Length) {
+                while (bitOffset < w && bytePointer < data.Length - 1) {
                     // Get the next changing element
                     GetNextChangingElement(a0, isWhite, b);
                     b1 = b[0];

@@ -52,8 +52,23 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public class SystemUtil {
+
+        [Obsolete]
         public static long GetSystemTimeTicks() {
             return DateTime.Now.Ticks / 10000 + Environment.TickCount;
+        }
+
+        public static int GetTimeBasedSeed() {
+            return unchecked((int)DateTime.Now.Ticks) + Environment.TickCount;
+        }
+
+        /// <summary>
+        /// Should be used in relative constructs (for example to check how many milliseconds have passed).
+        /// Shouldn't be used in the DateTime creation since the nanoseconds are expected there.
+        /// </summary>
+        /// <returns>relative time in milliseconds</returns>
+        public static long GetRelativeTimeMillis() {
+            return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
 
         public static long GetFreeMemory() {

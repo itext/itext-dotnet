@@ -92,16 +92,21 @@ namespace iText.IO.Font.Otf
                     return null;
                 }
                 pos = currentResult.end;
-                while (pos < glyphLine.end && !GlyphLinePartNeedsActualText(currentResult)) {
+
+                if (!GlyphLinePartNeedsActualText(currentResult)) {
                     currentResult.actualText = null;
-                    GlyphLine.GlyphLinePart nextResult = NextGlyphLinePart(pos);
-                    if (nextResult != null && !GlyphLinePartNeedsActualText(nextResult)) {
-                        currentResult.end = nextResult.end;
-                        pos = nextResult.end;
-                    } else {
-                        break;
+                    // Try to add more pieces without "actual text"
+                    while (pos < glyphLine.end) {
+                        GlyphLine.GlyphLinePart nextResult = NextGlyphLinePart(pos);
+                        if (nextResult != null && !GlyphLinePartNeedsActualText(nextResult)) {
+                            currentResult.end = nextResult.end;
+                            pos = nextResult.end;
+                        } else {
+                            break;
+                        }
                     }
                 }
+
                 return currentResult;
             }
         }

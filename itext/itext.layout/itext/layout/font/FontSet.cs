@@ -141,8 +141,9 @@ namespace iText.Layout.Font {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="alias">font alias.</param>
+        /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
-        public bool AddFont(FontProgram fontProgram, String encoding, String alias) {
+        public bool AddFont(FontProgram fontProgram, String encoding, String alias, Range unicodeRange) {
             if (fontProgram == null) {
                 return false;
             }
@@ -151,7 +152,7 @@ namespace iText.Layout.Font {
                 logger.Error(iText.IO.LogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
                 return false;
             }
-            FontInfo fi = FontInfo.Create(fontProgram, encoding, alias);
+            FontInfo fi = FontInfo.Create(fontProgram, encoding, alias, unicodeRange);
             if (AddFont(fi)) {
                 fontPrograms.Put(fi, fontProgram);
                 return true;
@@ -159,6 +160,31 @@ namespace iText.Layout.Font {
             else {
                 return false;
             }
+        }
+
+        /// <summary>Add not supported for auto creating FontPrograms.</summary>
+        /// <remarks>
+        /// Add not supported for auto creating FontPrograms.
+        /// <p>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </remarks>
+        /// <param name="fontProgram">
+        /// 
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// </param>
+        /// <param name="encoding">
+        /// FontEncoding for creating
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </param>
+        /// <param name="alias">font alias.</param>
+        /// <returns>true, if font was successfully added, otherwise false.</returns>
+        public bool AddFont(FontProgram fontProgram, String encoding, String alias) {
+            return AddFont(fontProgram, encoding, alias, null);
         }
 
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
@@ -207,10 +233,38 @@ namespace iText.Layout.Font {
         /// <param name="fontPath">path to font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
         /// <param name="alias">font alias.</param>
+        /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
+        /// <returns>true, if font was successfully added, otherwise false.</returns>
+        /// <seealso cref="iText.IO.Font.PdfEncodings"/>
+        public bool AddFont(String fontPath, String encoding, String alias, Range unicodeRange) {
+            return AddFont(FontInfo.Create(fontPath, encoding, alias, unicodeRange));
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="FontInfo"/>
+        /// , fetches
+        /// <see cref="iText.IO.Font.FontProgramDescriptor"/>
+        /// and adds just created
+        /// <see cref="FontInfo"/>
+        /// to
+        /// <see cref="FontSet"/>
+        /// .
+        /// <p>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </summary>
+        /// <param name="fontPath">path to font data.</param>
+        /// <param name="encoding">preferred font encoding.</param>
+        /// <param name="alias">font alias.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
         public bool AddFont(String fontPath, String encoding, String alias) {
-            return AddFont(FontInfo.Create(fontPath, encoding, alias));
+            return AddFont(fontPath, encoding, alias, null);
         }
 
         /// <summary>
@@ -236,7 +290,35 @@ namespace iText.Layout.Font {
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
         public bool AddFont(String fontPath, String encoding) {
-            return AddFont(FontInfo.Create(fontPath, encoding, null));
+            return AddFont(FontInfo.Create(fontPath, encoding, null, null));
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="FontInfo"/>
+        /// , fetches
+        /// <see cref="iText.IO.Font.FontProgramDescriptor"/>
+        /// and adds just created
+        /// <see cref="FontInfo"/>
+        /// to
+        /// <see cref="FontSet"/>
+        /// .
+        /// <p>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </summary>
+        /// <param name="fontData">font data.</param>
+        /// <param name="encoding">preferred font encoding.</param>
+        /// <param name="alias">font alias.</param>
+        /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
+        /// <returns>true, if font was successfully added, otherwise false.</returns>
+        /// <seealso cref="iText.IO.Font.PdfEncodings"/>
+        public bool AddFont(byte[] fontData, String encoding, String alias, Range unicodeRange) {
+            return AddFont(FontInfo.Create(fontData, encoding, alias, unicodeRange));
         }
 
         /// <summary>
@@ -263,7 +345,7 @@ namespace iText.Layout.Font {
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
         public bool AddFont(byte[] fontData, String encoding, String alias) {
-            return AddFont(FontInfo.Create(fontData, encoding, alias));
+            return AddFont(fontData, encoding, alias, null);
         }
 
         /// <summary>
@@ -289,7 +371,7 @@ namespace iText.Layout.Font {
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
         public bool AddFont(byte[] fontData, String encoding) {
-            return AddFont(FontInfo.Create(fontData, encoding, null));
+            return AddFont(FontInfo.Create(fontData, encoding, null, null));
         }
 
         /// <summary>
@@ -358,9 +440,29 @@ namespace iText.Layout.Font {
         /// </summary>
         /// <param name="fontInfo">font info.</param>
         /// <param name="alias">font alias.</param>
+        /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
+        /// <returns>true, if font was successfully added, otherwise false.</returns>
+        public bool AddFont(FontInfo fontInfo, String alias, Range unicodeRange) {
+            return AddFont(FontInfo.Create(fontInfo, alias, unicodeRange));
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="FontInfo"/>
+        /// with alias. Could be used to fill temporary font set.
+        /// <p>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </summary>
+        /// <param name="fontInfo">font info.</param>
+        /// <param name="alias">font alias.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         public bool AddFont(FontInfo fontInfo, String alias) {
-            return AddFont(FontInfo.Create(fontInfo, alias));
+            return AddFont(fontInfo, alias, null);
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.1.2</version>
+    <version>7.1.3</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -32,6 +32,7 @@
         <dependency id="System.Text.Encoding.CodePages" version="4.3.0" />
         <dependency id="System.Collections.NonGeneric" version="4.3.0" />
         <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
         <dependency id="System.Threading.ThreadPool" version="4.3.0" />
         <dependency id="System.Xml.XmlDocument" version="4.3.0" />
         <dependency id="System.Net.Requests" version="4.3.0" />

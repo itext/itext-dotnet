@@ -48,8 +48,10 @@ namespace iText.Kernel.Log {
     /// <see cref="ICounterFactory"/>
     /// implementation that creates new
     /// <see cref="SystemOutCounter"/>
-    /// on each call
+    /// on each call.
     /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in the next major release, please use iText.Kernel.Counter.SystemOutEventCounterFactory instead."
+        )]
     public class SystemOutCounterFactory : ICounterFactory {
         public virtual ICounter GetCounter(Type cls) {
             return cls != null ? new SystemOutCounter(cls) : new SystemOutCounter();

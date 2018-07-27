@@ -253,8 +253,7 @@ namespace iText.IO.Font {
                     continue;
                 }
                 if (b0 >= 32 && b0 <= 246) {
-                    byte item = (byte)(b0 - 139);
-                    args[arg_count] = (int)item;
+                    args[arg_count] = b0 - 139;
                     arg_count++;
                     //System.err.println(item+" ");
                     continue;

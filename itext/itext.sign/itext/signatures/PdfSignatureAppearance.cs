@@ -47,6 +47,7 @@ using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Image;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -138,6 +139,9 @@ namespace iText.Signatures {
 
         /// <summary>Font size for the font of Layer 2.</summary>
         private float layer2FontSize = 0;
+
+        /// <summary>Font color for the font of Layer 2.</summary>
+        private Color layer2FontColor;
 
         /// <summary>
         /// Indicates the field to be signed if it is already presented in the document
@@ -423,6 +427,25 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>Gets the n2 and n4 layer font size.</summary>
+        /// <returns>the n2 and n4 layer font size</returns>
+        public virtual float GetLayer2FontSize() {
+            return layer2FontSize;
+        }
+
+        /// <summary>Sets the n2 and n4 layer font color.</summary>
+        /// <param name="color">font color</param>
+        public virtual iText.Signatures.PdfSignatureAppearance SetLayer2FontColor(Color color) {
+            this.layer2FontColor = color;
+            return this;
+        }
+
+        /// <summary>Gets the n2 and n4 layer font color.</summary>
+        /// <returns>the n2 and n4 layer font color</returns>
+        public virtual Color GetLayer2FontColor() {
+            return layer2FontColor;
+        }
+
         /// <summary>Gets the visibility status of the signature.</summary>
         /// <returns>the visibility status of the signature</returns>
         public virtual bool IsInvisible() {
@@ -683,6 +706,7 @@ namespace iText.Signatures {
             canvas = new PdfCanvas(n2, document);
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetMargin(0).SetMultipliedLeading(0.9f);
             iText.Layout.Canvas layoutCanvas = new iText.Layout.Canvas(canvas, document, dataRect);
+            paragraph.SetFontColor(layer2FontColor);
             if (layer2FontSize == 0) {
                 ApplyCopyFittingFontSize(paragraph, dataRect, layoutCanvas.GetRenderer());
             }

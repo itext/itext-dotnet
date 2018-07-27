@@ -85,7 +85,7 @@ namespace iText.Signatures.Testutils.Builder {
 
             tsTokGen.SetCertificates(X509StoreFactory.Create("Certificate/Collection", new X509CollectionStoreParameters(tsaCertificateChain.ToList())));
             // should be unique for every timestamp
-            BigInteger serialNumber = new BigInteger(SystemUtil.GetSystemTimeTicks().ToString());
+            BigInteger serialNumber = new BigInteger(SystemUtil.GetTimeBasedSeed().ToString());
             DateTime genTime = DateTimeUtil.GetCurrentUtcTime();
             TimeStampToken tsToken = tsTokGen.Generate(request, serialNumber, genTime);
             return tsToken.GetEncoded();

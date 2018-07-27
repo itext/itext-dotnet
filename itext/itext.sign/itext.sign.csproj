@@ -67,6 +67,10 @@
       <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
       <Name>itext.layout</Name>
     </ProjectReference>
+    <ProjectReference Include="..\itext.pdfa\itext.pdfa.csproj">
+      <Project>{9fc2f0b3-a8d2-46da-8724-72e00e67a8fa}</Project>
+      <Name>itext.pdfa</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

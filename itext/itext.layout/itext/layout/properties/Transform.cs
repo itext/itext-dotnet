@@ -44,13 +44,40 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// This class is used to store and process multiple
+    /// <c>transform</c>
+    /// css property before drawing.
+    /// </summary>
     public class Transform {
         private IList<Transform.SingleTransform> multipleTransform;
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Transform"/>
+        /// instance.
+        /// </summary>
+        /// <param name="length">
+        /// the amount of
+        /// <see cref="SingleTransform"/>
+        /// instances that this
+        /// <see cref="Transform"/>
+        /// instant shall contain and be able to process
+        /// </param>
         public Transform(int length) {
             multipleTransform = new List<Transform.SingleTransform>(length);
         }
 
+        /// <summary>
+        /// Adds a
+        /// <see cref="SingleTransform"/>
+        /// in a list of single transforms to process later.
+        /// </summary>
+        /// <param name="singleTransform">
+        /// a
+        /// <see cref="SingleTransform"/>
+        /// instance
+        /// </param>
         public virtual void AddSingleTransform(Transform.SingleTransform singleTransform) {
             multipleTransform.Add(singleTransform);
         }
@@ -59,6 +86,26 @@ namespace iText.Layout.Properties {
             return multipleTransform;
         }
 
+        /// <summary>
+        /// Converts the
+        /// <see cref="Transform"/>
+        /// instance, i.e. the list of
+        /// <see cref="SingleTransform"/>
+        /// instances,
+        /// to the equivalent
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance relatively to the available area,
+        /// including resolving of percent values to point values.
+        /// </summary>
+        /// <param name="t">
+        /// a
+        /// <see cref="Transform"/>
+        /// instance to convert
+        /// </param>
+        /// <param name="width">the width of available area, the point value of which is equivalent to 100% for percentage resolving
+        ///     </param>
+        /// <param name="height">the height of available area, the point value of which is equivalent to 100% for percentage resolving
+        ///     </param>
         public static AffineTransform GetAffineTransform(iText.Layout.Properties.Transform t, float width, float height
             ) {
             IList<Transform.SingleTransform> multipleTransform = t.GetMultipleTransform();
@@ -78,6 +125,11 @@ namespace iText.Layout.Properties {
             return affineTransform;
         }
 
+        /// <summary>
+        /// This class is used to store one
+        /// <c>transform</c>
+        /// function.
+        /// </summary>
         public class SingleTransform {
             private float a;
 
@@ -91,6 +143,11 @@ namespace iText.Layout.Properties {
 
             private UnitValue ty;
 
+            /// <summary>
+            /// Creates a default
+            /// <see cref="SingleTransform"/>
+            /// instance equivalent to no transform.
+            /// </summary>
             public SingleTransform() {
                 this.a = 1;
                 this.b = 0;
@@ -100,6 +157,17 @@ namespace iText.Layout.Properties {
                 this.ty = new UnitValue(UnitValue.POINT, 0);
             }
 
+            /// <summary>
+            /// Creates a
+            /// <see cref="SingleTransform"/>
+            /// instance.
+            /// </summary>
+            /// <param name="a">horizontal scaling</param>
+            /// <param name="b">vertical skewing</param>
+            /// <param name="c">horizontal skewing</param>
+            /// <param name="d">vertical scaling</param>
+            /// <param name="tx">horizontal translation</param>
+            /// <param name="ty">vertical translation</param>
             public SingleTransform(float a, float b, float c, float d, UnitValue tx, UnitValue ty) {
                 this.a = a;
                 this.b = b;
@@ -109,10 +177,19 @@ namespace iText.Layout.Properties {
                 this.ty = ty;
             }
 
+            /// <summary>Gets an array of values corresponding to transformation, i.e.</summary>
+            /// <remarks>Gets an array of values corresponding to transformation, i.e. scaling and skewing.</remarks>
+            /// <returns>an array of floats</returns>
             public virtual float[] GetFloats() {
                 return new float[] { a, b, c, d };
             }
 
+            /// <summary>Gets an array of values corresponding to translation.</summary>
+            /// <returns>
+            /// an array of
+            /// <see cref="UnitValue"/>
+            /// -s
+            /// </returns>
             public virtual UnitValue[] GetUnitValues() {
                 return new UnitValue[] { tx, ty };
             }

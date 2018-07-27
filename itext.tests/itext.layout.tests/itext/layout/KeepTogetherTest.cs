@@ -42,13 +42,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -271,6 +274,199 @@ namespace iText.Layout {
             div.Add(new Paragraph(buffer.ToString()));
             div.SetKeepTogether(true);
             doc.Add(new Paragraph().Add(div));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 8)]
+        public virtual void NarrowPageTest01() {
+            String testName = "narrowPageTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table tbl = new Table(UnitValue.CreatePointArray(new float[] { 30.0F, 30.0F, 30.0F, 30.0F }));
+            tbl.SetWidth(120.0F);
+            tbl.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+            tbl.SetFontSize(8.0F);
+            for (int x = 0; x < 12; x++) {
+                for (int y = 0; y < 4; y++) {
+                    Cell cell = new Cell();
+                    cell.Add(new Paragraph("row " + x));
+                    cell.SetHeight(10.5f);
+                    cell.SetMaxHeight(10.5f);
+                    cell.SetKeepTogether(true);
+                    tbl.AddCell(cell);
+                }
+            }
+            doc.Add(tbl);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void NarrowPageTest02() {
+            String testName = "narrowPageTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 132.0F)));
+            Paragraph p = new Paragraph("row 10");
+            Div div = new Div();
+            div.Add(p);
+            div.SetKeepTogether(true);
+            doc.Add(new Paragraph("a"));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            div.SetHeight(30);
+            doc.Add(new Paragraph("a"));
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            doc.Add(new AreaBreak());
+            div.DeleteOwnProperty(Property.HEIGHT);
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            doc.Add(new AreaBreak());
+            div.SetHeight(30);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NarrowPageTest02A() {
+            String testName = "narrowPageTest02A.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 102.0F)));
+            Paragraph p = new Paragraph("row 10");
+            p.SetKeepTogether(true);
+            doc.Add(new Paragraph("a"));
+            doc.Add(p);
+            doc.Add(new AreaBreak());
+            p.SetHeight(30);
+            doc.Add(new Paragraph("a"));
+            doc.Add(p);
+            doc.Add(new AreaBreak());
+            doc.Add(new AreaBreak());
+            p.DeleteOwnProperty(Property.HEIGHT);
+            doc.Add(p);
+            doc.Add(new AreaBreak());
+            doc.Add(new AreaBreak());
+            p.SetHeight(30);
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        private class SpecialOddPagesDocumentRenderer : DocumentRenderer {
+            private PageSize firstPageSize;
+
+            public SpecialOddPagesDocumentRenderer(Document document, PageSize firstPageSize)
+                : base(document) {
+                this.firstPageSize = new PageSize(firstPageSize);
+            }
+
+            protected internal override PageSize AddNewPage(PageSize customPageSize) {
+                PageSize newPageSize = null;
+                switch (currentPageNumber % 2) {
+                    case 1: {
+                        newPageSize = firstPageSize;
+                        break;
+                    }
+
+                    case 0:
+                    default: {
+                        newPageSize = PageSize.A4;
+                        break;
+                    }
+                }
+                return base.AddNewPage(newPageSize);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void UpdateHeightTest01() {
+            String testName = "updateHeightTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetDefaultPageSize(new PageSize(102.0F, 102.0F));
+            Document doc = new Document(pdfDoc);
+            Div div = new Div();
+            div.SetBackgroundColor(ColorConstants.RED);
+            div.Add(new Paragraph("row"));
+            div.Add(new Paragraph("row 10"));
+            div.SetKeepTogether(true);
+            div.SetHeight(100);
+            doc.Add(new Paragraph("a"));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 22)]
+        public virtual void PartialTest01() {
+            //TODO DEVSIX-1977
+            String testName = "partialTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetDefaultPageSize(PageSize.A7);
+            Document doc = new Document(pdfDoc);
+            Div div = new Div();
+            div.SetBackgroundColor(ColorConstants.RED);
+            div.SetKeepTogether(true);
+            div.SetHeight(200);
+            for (int i = 0; i < 30; i++) {
+                div.Add(new Paragraph("row " + i));
+            }
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FixedHeightOverflowTest01() {
+            String cmpFileName = sourceFolder + "cmp_fixedHeightOverflowTest01.pdf";
+            String outFile = destinationFolder + "fixedHeightOverflowTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.SetDefaultPageSize(PageSize.A4);
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("first string"));
+            int divHeight = 1000;
+            // specifying height definitely bigger than page height
+            // test keep-together processing on height-only overflow for blocks
+            Div div = new Div().SetHeight(divHeight).SetBorder(new SolidBorder(3));
+            div.SetKeepTogether(true);
+            doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));

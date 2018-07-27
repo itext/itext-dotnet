@@ -63,12 +63,16 @@ namespace iText.Kernel.Log {
     /// and register it with
     /// <see cref="SimpleCounterFactory"/>
     /// like this:
-    /// <code>CounterFactory.getInstance().register(new SimpleCounterFactory(new SystemOutCounter());</code>
+    /// <code>CounterManager.getInstance().register(new SimpleCounterFactory(new SystemOutCounter());</code>
     /// <see cref="SystemOutCounter"/>
-    /// is just an example of a ICounter implementation.
+    /// is just an example of a
+    /// <see cref="ICounter"/>
+    /// implementation.
     /// <p>
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
+    [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounterHandler instead."
+        )]
     public class CounterManager {
         /// <summary>The singleton instance.</summary>
         private static iText.Kernel.Log.CounterManager instance = new iText.Kernel.Log.CounterManager();
@@ -77,7 +81,6 @@ namespace iText.Kernel.Log {
         private ICollection<ICounterFactory> factories = new HashSet<ICounterFactory>();
 
         private CounterManager() {
-            Register(new SimpleCounterFactory(new DefaultCounter()));
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>

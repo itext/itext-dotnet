@@ -257,6 +257,12 @@ namespace iText.Barcodes {
         /// <CODE>DM_ERROR_EXTENSION</CODE> - an error was while parsing an extension.
         /// </returns>
         public virtual int SetCode(byte[] text, int textOffset, int textSize) {
+            if (textOffset < 0) {
+                throw new IndexOutOfRangeException("" + textOffset);
+            }
+            if (textOffset + textSize > text.Length || textSize < 0) {
+                throw new IndexOutOfRangeException("" + textSize);
+            }
             int extCount;
             int e;
             int k;
@@ -333,23 +339,24 @@ namespace iText.Barcodes {
 
         /// <summary>Sets the height of the barcode.</summary>
         /// <remarks>
-        /// Sets the height of the barcode. If the height is zero it will be calculated. This height doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (height, width):<p>
+        /// Sets the height of the barcode. If the height is zero it will be calculated.
+        /// This height doesn't include the whitespace border, if any.
+        /// The allowed dimensions are (width, height):<p>
         /// 10, 10<br />
         /// 12, 12<br />
-        /// 8, 18<br />
+        /// 18, 8<br />
         /// 14, 14<br />
-        /// 8, 32<br />
+        /// 32, 8<br />
         /// 16, 16<br />
-        /// 12, 26<br />
+        /// 26, 12<br />
         /// 18, 18<br />
         /// 20, 20<br />
-        /// 12, 36<br />
+        /// 36, 12<br />
         /// 22, 22<br />
-        /// 16, 36<br />
+        /// 36, 16<br />
         /// 24, 24<br />
         /// 26, 26<br />
-        /// 16, 48<br />
+        /// 48, 16<br />
         /// 32, 32<br />
         /// 36, 36<br />
         /// 40, 40<br />
@@ -383,23 +390,24 @@ namespace iText.Barcodes {
 
         /// <summary>Sets the width of the barcode.</summary>
         /// <remarks>
-        /// Sets the width of the barcode. If the width is zero it will be calculated. This width doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (height, width):<p>
+        /// Sets the width of the barcode. If the width is zero it will be calculated.
+        /// This width doesn't include the whitespace border, if any.
+        /// The allowed dimensions are (width, height):<p>
         /// 10, 10<br />
         /// 12, 12<br />
-        /// 8, 18<br />
+        /// 18, 8<br />
         /// 14, 14<br />
-        /// 8, 32<br />
+        /// 32, 8<br />
         /// 16, 16<br />
-        /// 12, 26<br />
+        /// 26, 12<br />
         /// 18, 18<br />
         /// 20, 20<br />
-        /// 12, 36<br />
+        /// 36, 12<br />
         /// 22, 22<br />
-        /// 16, 36<br />
+        /// 36, 16<br />
         /// 24, 24<br />
         /// 26, 26<br />
-        /// 16, 48<br />
+        /// 48, 16<br />
         /// 32, 32<br />
         /// 36, 36<br />
         /// 40, 40<br />
@@ -1117,7 +1125,7 @@ namespace iText.Barcodes {
                                 dataOffsetNew = requiredCapacityForASCII;
                             }
                         }
-                        addLatch = unlatch < 0 ? true : (dataOffset - requiredCapacityForASCII != unlatch);
+                        addLatch = (unlatch < 0) || ((dataOffset - requiredCapacityForASCII) != unlatch);
                         if (requiredCapacityForC40orText % 3 == 0 && requiredCapacityForC40orText / 3 * 2 + (addLatch ? 2 : 0) < requiredCapacityForASCII
                             ) {
                             usingASCII = false;
@@ -1138,17 +1146,15 @@ namespace iText.Barcodes {
                     usingASCII = true;
                 }
             }
+            if (dataOffset < 0) {
+                return -1;
+            }
             if (usingASCII) {
                 return AsciiEncodation(text, textOffset, 1, data, dataOffset, dataLength, prevEnc == mode ? 1 : -1, DM_ASCII
                     , origDataOffset);
             }
             if (addLatch) {
-                if (c40) {
-                    data[dataOffset + ptrOut++] = LATCH_C40;
-                }
-                else {
-                    data[dataOffset + ptrOut++] = LATCH_TEXT;
-                }
+                data[dataOffset + ptrOut++] = c40 ? LATCH_C40 : LATCH_TEXT;
             }
             int[] enc = new int[textLength * 4 + 10];
             encPtr = 0;
@@ -1331,40 +1337,41 @@ namespace iText.Barcodes {
                 f[4][0] = X12Encodation(text, textOffset, 1, dataDynamic[4], dataOffset, dataSize, 0, -1, dataOffset);
                 f[5][0] = EdifactEncodation(text, textOffset, 1, dataDynamic[5], dataOffset, dataSize, 0, -1, dataOffset, 
                     sizeFixed);
-                int[] dataNewOffset = new int[6];
                 for (int i = 1; i < textSize; i++) {
                     int[] tempForMin = new int[6];
-                    for (int k = 0; k < 6; k++) {
-                        dataNewOffset[k] = f[k][i - 1] >= 0 ? f[k][i - 1] : int.MaxValue;
-                    }
                     for (int currEnc = 0; currEnc < 6; currEnc++) {
                         byte[][] dataDynamicInner = new byte[][] { new byte[data.Length], new byte[data.Length], new byte[data.Length
                             ], new byte[data.Length], new byte[data.Length], new byte[data.Length] };
                         for (int prevEnc = 0; prevEnc < 6; prevEnc++) {
                             Array.Copy(dataDynamic[prevEnc], 0, dataDynamicInner[prevEnc], 0, data.Length);
-                            if (currEnc == 0) {
-                                tempForMin[prevEnc] = AsciiEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
+                            if (f[prevEnc][i - 1] < 0) {
+                                tempForMin[prevEnc] = -1;
                             }
-                            if (currEnc == 1) {
-                                tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset
-                                    [prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], true, i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 2) {
-                                tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset
-                                    [prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], false, i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 3) {
-                                tempForMin[prevEnc] = B256Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 4) {
-                                tempForMin[prevEnc] = X12Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[prevEnc
-                                    ] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset);
-                            }
-                            if (currEnc == 5) {
-                                tempForMin[prevEnc] = EdifactEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], dataNewOffset[
-                                    prevEnc] + dataOffset, dataSize - dataNewOffset[prevEnc], i, prevEnc + 1, dataOffset, sizeFixed);
+                            else {
+                                if (currEnc == 0) {
+                                    tempForMin[prevEnc] = AsciiEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1
+                                        ] + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 1) {
+                                    tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i
+                                         - 1] + dataOffset, dataSize - f[prevEnc][i - 1], true, i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 2) {
+                                    tempForMin[prevEnc] = C40OrTextEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i
+                                         - 1] + dataOffset, dataSize - f[prevEnc][i - 1], false, i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 3) {
+                                    tempForMin[prevEnc] = B256Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1]
+                                         + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 4) {
+                                    tempForMin[prevEnc] = X12Encodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i - 1] 
+                                        + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset);
+                                }
+                                if (currEnc == 5) {
+                                    tempForMin[prevEnc] = EdifactEncodation(text, textOffset + i, 1, dataDynamicInner[prevEnc], f[prevEnc][i -
+                                         1] + dataOffset, dataSize - f[prevEnc][i - 1], i, prevEnc + 1, dataOffset, sizeFixed);
+                                }
                             }
                         }
                         SolveFAndSwitchMode(tempForMin, currEnc, i);
@@ -1534,11 +1541,11 @@ namespace iText.Barcodes {
                             return -1;
                         }
                         c = text[textOffset + ptrIn++] & 0xff;
-                        if (c != '5' && c != '5') {
+                        if (c != '5') {
                             return -1;
                         }
                         data[ptrOut++] = (byte)234;
-                        data[ptrOut++] = (byte)(c == '5' ? 236 : 237);
+                        data[ptrOut++] = (byte)236;
                         break;
                     }
 

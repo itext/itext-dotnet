@@ -57,15 +57,15 @@ namespace iText.Kernel.Pdf.Filters {
                     // this is implicit end of data
                     break;
                 }
-                if (dupCount >= 0) {
+                if ((dupCount & 0x80) == 0) {
                     int bytesToCopy = dupCount + 1;
-                    baos.Write(b, i, bytesToCopy);
+                    baos.Write(b, i + 1, bytesToCopy);
                     i += bytesToCopy;
                 }
                 else {
                     // make dupcount copies of the next byte
                     i++;
-                    for (int j = 0; j < 1 - (int)(dupCount); j++) {
+                    for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
                         baos.Write(b[i]);
                     }
                 }

@@ -50,6 +50,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.IO.Util;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
@@ -86,6 +87,9 @@ namespace iText.Signatures {
         /// <summary>The document security store for the revision that is being verified</summary>
         protected internal PdfDictionary dss;
 
+        /// <summary>The meta info</summary>
+        protected internal IMetaInfo metaInfo;
+
         private SignatureUtil sgnUtil;
 
         /// <summary>Creates a VerificationData object for a PdfReader</summary>
@@ -112,6 +116,18 @@ namespace iText.Signatures {
         /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
         public virtual void SetVerifyRootCertificate(bool verifyRootCertificate) {
             this.verifyRootCertificate = verifyRootCertificate;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// that will be used during
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
         }
 
         /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
@@ -246,7 +262,8 @@ namespace iText.Signatures {
             IList<String> names = sgnUtil.GetSignatureNames();
             if (names.Count > 1) {
                 signatureName = names[names.Count - 2];
-                document = new PdfDocument(new PdfReader(sgnUtil.ExtractRevision(signatureName)));
+                document = new PdfDocument(new PdfReader(sgnUtil.ExtractRevision(signatureName)), new DocumentProperties()
+                    .SetEventCountingMetaInfo(metaInfo));
                 this.acroForm = PdfAcroForm.GetAcroForm(document, true);
                 this.sgnUtil = new SignatureUtil(document);
                 names = sgnUtil.GetSignatureNames();

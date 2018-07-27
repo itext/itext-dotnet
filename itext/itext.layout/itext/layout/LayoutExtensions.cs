@@ -196,6 +196,29 @@ namespace iText.Layout {
             return value;
         }
 
+        public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
+            T[] r;
+            int colSize = col.Count;
+            if (colSize <= toArray.Length) {
+                col.CopyTo(toArray, 0);
+                if (colSize != toArray.Length) {
+                    toArray[colSize] = default(T);
+                }
+                r = toArray;
+            } else {
+                r = new T[colSize];
+                col.CopyTo(r, 0);
+            }
+
+            return r;
+        }
+    
+        public static T[] ToArray<T>(this ICollection<T> col) {
+            T[] r = new T[col.Count];
+            col.CopyTo(r, 0);
+            return r;
+        }
+
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD1_6
             return type.Assembly;

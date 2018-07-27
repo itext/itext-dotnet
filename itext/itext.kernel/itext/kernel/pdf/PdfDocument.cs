@@ -48,6 +48,8 @@ using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Counter;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Crypto;
 using iText.Kernel.Events;
 using iText.Kernel.Font;
@@ -146,6 +148,8 @@ namespace iText.Kernel.Pdf {
 
         private long documentId;
 
+        private VersionInfo versionInfo = iText.Kernel.Version.GetInstance().GetInfo();
+
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
         /// Yet not copied link annotations from the other documents.
@@ -161,7 +165,14 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
-        public PdfDocument(PdfReader reader) {
+        public PdfDocument(PdfReader reader)
+            : this(reader, new DocumentProperties()) {
+        }
+
+        /// <summary>Open PDF document in reading mode.</summary>
+        /// <param name="reader">PDF reader.</param>
+        /// <param name="properties">document properties</param>
+        public PdfDocument(PdfReader reader, DocumentProperties properties) {
             if (reader == null) {
                 throw new ArgumentException("The reader in PdfDocument constructor can not be null.");
             }
@@ -169,6 +180,7 @@ namespace iText.Kernel.Pdf {
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(null);
         }
 
@@ -178,7 +190,18 @@ namespace iText.Kernel.Pdf {
         /// Document has no pages when initialized.
         /// </remarks>
         /// <param name="writer">PDF writer</param>
-        public PdfDocument(PdfWriter writer) {
+        public PdfDocument(PdfWriter writer)
+            : this(writer, new DocumentProperties()) {
+        }
+
+        /// <summary>Open PDF document in writing mode.</summary>
+        /// <remarks>
+        /// Open PDF document in writing mode.
+        /// Document has no pages when initialized.
+        /// </remarks>
+        /// <param name="writer">PDF writer</param>
+        /// <param name="properties">document properties</param>
+        public PdfDocument(PdfWriter writer, DocumentProperties properties) {
             if (writer == null) {
                 throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
@@ -186,6 +209,7 @@ namespace iText.Kernel.Pdf {
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(writer.properties.pdfVersion);
         }
 
@@ -261,7 +285,7 @@ namespace iText.Kernel.Pdf {
                 AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, iText.Kernel.Version.GetInstance().GetVersion());
+                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, versionInfo.GetVersion());
                     SetXmpMetadata(xmpMeta);
                 }
                 catch (XMPException) {
@@ -1303,6 +1327,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddNamedDestination(String key, PdfObject value) {
             CheckClosingStatus();
+            if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
+                LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                    );
+            }
             catalog.AddNamedDestination(key, value);
         }
 
@@ -1780,6 +1808,7 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
             try {
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 if (reader != null) {
                     reader.pdfDocument = this;
                     reader.ReadPdf();
@@ -1835,27 +1864,19 @@ namespace iText.Kernel.Pdf {
                         writer.crypto = reader.decrypt;
                     }
                     writer.document = this;
-                    String producer = null;
                     if (reader == null) {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
-                        producer = iText.Kernel.Version.GetInstance().GetVersion();
                     }
-                    else {
-                        if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                            producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
-                        }
-                        producer = AddModifiedPostfix(producer);
-                    }
+                    UpdateProducerInInfoDictionary();
                     info.AddModDate();
-                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
-                            trailer.Put(PdfName.ID, reader.trailer.GetAsArray(PdfName.ID));
+                            trailer.Put(PdfName.ID, reader.trailer.Get(PdfName.ID));
                         }
                     }
                 }
@@ -2046,14 +2067,21 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Log.ICounter"/>
         /// instances.
         /// </returns>
+        [Obsolete]
         protected internal virtual IList<ICounter> GetCounters() {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
+        }
+
+        /// <summary>Gets iText version info.</summary>
+        /// <returns>iText version info.</returns>
+        internal VersionInfo GetVersionInfo() {
+            return versionInfo;
         }
 
         private void UpdateProducerInInfoDictionary() {
             String producer = null;
             if (reader == null) {
-                producer = iText.Kernel.Version.GetInstance().GetVersion();
+                producer = versionInfo.GetVersion();
             }
             else {
                 if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
@@ -2290,9 +2318,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private String AddModifiedPostfix(String producer) {
-            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-            if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
-                return version.GetVersion();
+            if (producer == null || !versionInfo.GetVersion().Contains(versionInfo.GetProduct())) {
+                return versionInfo.GetVersion();
             }
             else {
                 int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
@@ -2304,7 +2331,7 @@ namespace iText.Kernel.Pdf {
                     buf = new StringBuilder(producer.JSubstring(0, idx));
                 }
                 buf.Append("; modified using ");
-                buf.Append(version.GetVersion());
+                buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
             }
         }

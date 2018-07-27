@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils {
@@ -56,6 +57,8 @@ namespace iText.Kernel.Utils {
 
         private bool preserveOutlines;
 
+        private IMetaInfo metaInfo;
+
         /// <summary>Creates a new instance of PdfSplitter class.</summary>
         /// <param name="pdfDocument">the document to be split.</param>
         public PdfSplitter(PdfDocument pdfDocument) {
@@ -65,6 +68,18 @@ namespace iText.Kernel.Utils {
             this.pdfDocument = pdfDocument;
             this.preserveTagged = true;
             this.preserveOutlines = true;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// that will be used during
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
         }
 
         /// <summary>If original document is tagged, then by default all resultant document will also be tagged.</summary>
@@ -140,12 +155,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_155(splitDocuments));
+            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_167(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_155 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_155(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_167 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_167(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -177,12 +192,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageCount(pageCount, new _IDocumentReadyListener_192(splitDocuments));
+            SplitByPageCount(pageCount, new _IDocumentReadyListener_204(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_192 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_192(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_204 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_204(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -239,7 +254,8 @@ namespace iText.Kernel.Utils {
         }
 
         private PdfDocument CreatePdfDocument(PageRange currentPageRange) {
-            PdfDocument newDocument = new PdfDocument(GetNextPdfWriter(currentPageRange));
+            PdfDocument newDocument = new PdfDocument(GetNextPdfWriter(currentPageRange), new DocumentProperties().SetEventCountingMetaInfo
+                (metaInfo));
             if (pdfDocument.IsTagged() && preserveTagged) {
                 newDocument.SetTagged();
             }

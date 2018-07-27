@@ -78,6 +78,10 @@ namespace iText.Barcodes {
             col[key] = value;
             return oldVal;
         }
+        
+        public static byte[] GetBytes(this String str) {
+            return System.Text.Encoding.UTF8.GetBytes(str);
+        }
 
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD1_6

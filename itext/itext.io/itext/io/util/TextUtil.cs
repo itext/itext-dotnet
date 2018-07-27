@@ -93,6 +93,14 @@ namespace iText.IO.Util {
         public static bool IsSurrogateLow(char c) {
             return c >= '\udc00' && c <= '\udfff';
         }
+        
+        public static char HighSurrogate(int codePoint) {
+            return (char) ((int)((uint)codePoint >> 10) + ('\uD800' - (int)((uint)0x010000 >> 10)));
+        }
+
+        public static char LowSurrogate(int codePoint) {
+            return (char) ((codePoint & 0x3ff) + '\uDC00');
+        }
 
         /// <summary>
         /// Checks if two subsequent characters in a String are
@@ -161,7 +169,7 @@ namespace iText.IO.Util {
                     pos++;
                 }
             }
-            return ArrayUtil.ToArray(charCodes);
+            return ArrayUtil.ToIntArray(charCodes);
         }
 
         /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).</summary>
@@ -279,6 +287,11 @@ namespace iText.IO.Util {
         public static bool IsWhitespace(Glyph glyph)
         {
             return IsWhiteSpace(glyph.GetUnicode());
+        }
+
+        public static bool IsNonBreakingHyphen(Glyph glyph)
+        {
+            return '\u2011' == glyph.GetUnicode();
         }
 
         /// <summary>

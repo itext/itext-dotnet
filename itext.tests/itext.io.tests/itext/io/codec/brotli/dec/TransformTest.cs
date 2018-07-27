@@ -3,6 +3,9 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
+
+using iText.Test;
+
 namespace iText.IO.Codec.Brotli.Dec
 {
 	/// <summary>
@@ -10,7 +13,7 @@ namespace iText.IO.Codec.Brotli.Dec
 	/// <see cref="Transform"/>
 	/// .
 	/// </summary>
-	public class TransformTest
+	public class TransformTest : ExtendedITextTest
 	{
 		private static long Crc64(byte[] data)
 		{

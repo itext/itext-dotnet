@@ -207,6 +207,7 @@ namespace iText.Layout.Renderer {
             bool ignoreNewLineSymbol = false;
             // true when \r\n are found
             bool crlf = false;
+            HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(Property.HYPHENATION);
             // For example, if a first character is a RTL mark (U+200F), and the second is a newline, we need to break anyway
             int firstPrintPos = currentTextPos;
             while (firstPrintPos < text.end && NoPrint(text.Get(firstPrintPos))) {
@@ -228,6 +229,10 @@ namespace iText.Layout.Renderer {
                 float nonBreakablePartMaxDescender = 0;
                 float nonBreakablePartMaxHeight = 0;
                 int firstCharacterWhichExceedsAllowedWidth = -1;
+                float nonBreakingHyphenRelatedChunkWidth = 0;
+                int nonBreakingHyphenRelatedChunkStart = -1;
+                float beforeNonBreakingHyphenRelatedChunkMaxAscender = 0;
+                float beforeNonBreakingHyphenRelatedChunkMaxDescender = 0;
                 for (int ind = currentTextPos; ind < text.end; ind++) {
                     if (iText.IO.Util.TextUtil.IsNewLine(text.Get(ind))) {
                         wordBreakGlyphAtLineEnding = text.Get(ind);
@@ -281,6 +286,20 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
+                    if (null != hyphenationConfig) {
+                        if (GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind)) {
+                            if (-1 == nonBreakingHyphenRelatedChunkStart) {
+                                beforeNonBreakingHyphenRelatedChunkMaxAscender = nonBreakablePartMaxAscender;
+                                beforeNonBreakingHyphenRelatedChunkMaxDescender = nonBreakablePartMaxDescender;
+                                nonBreakingHyphenRelatedChunkStart = ind;
+                            }
+                            nonBreakingHyphenRelatedChunkWidth += glyphWidth + xAdvance;
+                        }
+                        else {
+                            nonBreakingHyphenRelatedChunkStart = -1;
+                            nonBreakingHyphenRelatedChunkWidth = 0;
+                        }
+                    }
                     if (firstCharacterWhichExceedsAllowedWidth == -1) {
                         nonBreakablePartWidthWhichDoesNotExceedAllowedWidth += glyphWidth + xAdvance;
                     }
@@ -290,7 +309,9 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
-                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth()) {
+                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth() && (0 ==
+                         nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
+                        (text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
                             // we will have to split the word anyway.
@@ -340,48 +361,62 @@ namespace iText.Layout.Renderer {
                         // cannot fit a word as a whole
                         bool wordSplit = false;
                         bool hyphenationApplied = false;
-                        HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(Property.HYPHENATION);
                         if (hyphenationConfig != null) {
-                            int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math.Max(currentTextPos, firstCharacterWhichExceedsAllowedWidth
-                                 - 1));
-                            if (wordBounds != null) {
-                                String word = text.ToUnicodeString(wordBounds[0], wordBounds[1]);
-                                iText.Layout.Hyphenation.Hyphenation hyph = hyphenationConfig.Hyphenate(word);
-                                if (hyph != null) {
-                                    for (int i = hyph.Length() - 1; i >= 0; i--) {
-                                        String pre = hyph.GetPreHyphenText(i);
-                                        String pos = hyph.GetPostHyphenText(i);
-                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(pre + hyphenationConfig.
-                                            GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing, wordSpacing);
-                                        if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
-                                            <= layoutBox.GetWidth()) {
-                                            hyphenationApplied = true;
-                                            if (line.start == -1) {
-                                                line.start = currentTextPos;
+                            if (-1 == nonBreakingHyphenRelatedChunkStart) {
+                                int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math.Max(currentTextPos, firstCharacterWhichExceedsAllowedWidth
+                                     - 1));
+                                if (wordBounds != null) {
+                                    String word = text.ToUnicodeString(wordBounds[0], wordBounds[1]);
+                                    iText.Layout.Hyphenation.Hyphenation hyph = hyphenationConfig.Hyphenate(word);
+                                    if (hyph != null) {
+                                        for (int i = hyph.Length() - 1; i >= 0; i--) {
+                                            String pre = hyph.GetPreHyphenText(i);
+                                            String pos = hyph.GetPostHyphenText(i);
+                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
+                                                , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
+                                                , wordSpacing);
+                                            if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
+                                                <= layoutBox.GetWidth()) {
+                                                hyphenationApplied = true;
+                                                if (line.start == -1) {
+                                                    line.start = currentTextPos;
+                                                }
+                                                line.end = Math.Max(line.end, wordBounds[0] + pre.Length);
+                                                GlyphLine lineCopy = line.Copy(line.start, line.end);
+                                                lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
+                                                lineCopy.end++;
+                                                line = lineCopy;
+                                                // TODO these values are based on whole word. recalculate properly based on hyphenated part
+                                                currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
+                                                currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
+                                                currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
+                                                currentLineWidth += currentHyphenationChoicePreTextWidth;
+                                                widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                    );
+                                                widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                    );
+                                                currentTextPos = wordBounds[0] + pre.Length;
+                                                break;
                                             }
-                                            line.end = Math.Max(line.end, currentTextPos + pre.Length);
-                                            GlyphLine lineCopy = line.Copy(line.start, line.end);
-                                            lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
-                                            lineCopy.end++;
-                                            line = lineCopy;
-                                            // TODO these values are based on whole word. recalculate properly based on hyphenated part
-                                            currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
-                                            currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
-                                            currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
-                                            currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                );
-                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                );
-                                            currentTextPos += pre.Length;
-                                            break;
                                         }
                                     }
                                 }
                             }
+                            else {
+                                if (text.start == nonBreakingHyphenRelatedChunkStart) {
+                                    nonBreakingHyphenRelatedChunkWidth = 0;
+                                    firstCharacterWhichExceedsAllowedWidth = previousCharPos + 1;
+                                }
+                                else {
+                                    firstCharacterWhichExceedsAllowedWidth = nonBreakingHyphenRelatedChunkStart;
+                                    nonBreakablePartFullWidth -= nonBreakingHyphenRelatedChunkWidth;
+                                    nonBreakablePartMaxAscender = beforeNonBreakingHyphenRelatedChunkMaxAscender;
+                                    nonBreakablePartMaxDescender = beforeNonBreakingHyphenRelatedChunkMaxDescender;
+                                }
+                            }
                         }
-                        if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || (forcePartialSplitOnFirstChar
-                            )) {
+                        if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar
+                             || -1 != nonBreakingHyphenRelatedChunkStart) {
                             // if the word is too long for a single line we will have to split it
                             if (line.start == -1) {
                                 line.start = currentTextPos;
@@ -492,46 +527,71 @@ namespace iText.Layout.Renderer {
         public virtual void ApplyOtf() {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
-            if (!otfFeaturesApplied) {
-                if (script == null && TypographyUtils.IsTypographyModuleInitialized()) {
-                    // Try to autodetect complex script.
-                    ICollection<UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts();
-                    IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, int?>();
-                    for (int i = text.start; i < text.end; i++) {
-                        int unicode = text.Get(i).GetUnicode();
-                        if (unicode > -1) {
-                            UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
-                            if (scriptFrequency.ContainsKey(glyphScript)) {
-                                scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
-                            }
-                            else {
-                                scriptFrequency.Put(glyphScript, 1);
+            if (!otfFeaturesApplied && TypographyUtils.IsTypographyModuleInitialized() && text.start < text.end) {
+                if (HasOtfFont()) {
+                    Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
+                    ICollection<UnicodeScript> supportedScripts = null;
+                    if (typographyConfig != null) {
+                        supportedScripts = TypographyUtils.GetSupportedScripts(typographyConfig);
+                    }
+                    if (supportedScripts == null) {
+                        supportedScripts = TypographyUtils.GetSupportedScripts();
+                    }
+                    IList<TextRenderer.ScriptRange> scriptsRanges = new List<TextRenderer.ScriptRange>();
+                    if (script != null) {
+                        scriptsRanges.Add(new TextRenderer.ScriptRange(script, text.end));
+                    }
+                    else {
+                        // Try to autodetect script.
+                        TextRenderer.ScriptRange currRange = new TextRenderer.ScriptRange(null, text.end);
+                        scriptsRanges.Add(currRange);
+                        for (int i = text.start; i < text.end; i++) {
+                            int unicode = text.Get(i).GetUnicode();
+                            if (unicode > -1) {
+                                UnicodeScript glyphScript = UnicodeScriptUtil.Of(unicode);
+                                if (UnicodeScript.COMMON.Equals(glyphScript) || UnicodeScript.UNKNOWN.Equals(glyphScript) || UnicodeScript
+                                    .INHERITED.Equals(glyphScript)) {
+                                    continue;
+                                }
+                                if (glyphScript != currRange.script) {
+                                    if (currRange.script == null) {
+                                        currRange.script = glyphScript;
+                                    }
+                                    else {
+                                        currRange.rangeEnd = i;
+                                        currRange = new TextRenderer.ScriptRange(glyphScript, text.end);
+                                        scriptsRanges.Add(currRange);
+                                    }
+                                }
                             }
                         }
                     }
-                    int? max = 0;
-                    KeyValuePair<UnicodeScript, int?>? selectedEntry = null;
-                    foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
-                        UnicodeScript? entryScript = entry.Key;
-                        if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript
-                            ) && !UnicodeScript.INHERITED.Equals(entryScript)) {
-                            max = entry.Value;
-                            selectedEntry = entry;
+                    int delta = 0;
+                    int origTextStart = text.start;
+                    int origTextEnd = text.end;
+                    int shapingRangeStart = text.start;
+                    foreach (TextRenderer.ScriptRange scriptsRange in scriptsRanges) {
+                        if (scriptsRange.script == null || !supportedScripts.Contains(EnumUtil.ThrowIfNull(scriptsRange.script))) {
+                            continue;
                         }
-                    }
-                    if (selectedEntry != null) {
-                        UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
-                        if ((selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW) && parent is LineRenderer
-                            ) {
+                        scriptsRange.rangeEnd += delta;
+                        text.start = shapingRangeStart;
+                        text.end = scriptsRange.rangeEnd;
+                        if ((scriptsRange.script == UnicodeScript.ARABIC || scriptsRange.script == UnicodeScript.HEBREW) && parent
+                             is LineRenderer) {
+                            // It's safe to set here BASE_DIRECTION to TextRenderer without additional checks, because
+                            // by convention this property makes sense only if it's applied to LineRenderer or it's
+                            // parents (Paragraph or above).
+                            // Only if it's not found there first, LineRenderer tries to fetch autodetected BaseDirection
+                            // from text renderers (see LineRenderer#applyOtf).
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
-                        if (supportedScripts != null && supportedScripts.Contains(selectScript)) {
-                            script = selectScript;
-                        }
+                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig);
+                        delta += text.end - scriptsRange.rangeEnd;
+                        scriptsRange.rangeEnd = shapingRangeStart = text.end;
                     }
-                }
-                if (HasOtfFont() && script != null) {
-                    TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
+                    text.start = origTextStart;
+                    text.end = origTextEnd + delta;
                 }
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
@@ -675,7 +735,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_713();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_769();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -740,8 +800,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_713 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_713() {
+        private sealed class _IGlyphLineFilter_769 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_769() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -762,11 +822,15 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     canvas.OpenTag(new CanvasArtifact());
                 }
+                bool backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                 canvas.SaveState().SetFillColor(background.GetColor());
                 canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise - background.GetExtraBottom
                     (), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea
                     .GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());
                 canvas.Fill().RestoreState();
+                if (backgroundAreaIsClipped) {
+                    drawContext.GetCanvas().RestoreState();
+                }
                 if (isTagged) {
                     canvas.CloseTag();
                 }
@@ -1199,6 +1263,12 @@ namespace iText.Layout.Renderer {
             return iText.IO.Util.TextUtil.IsNonPrintable(c);
         }
 
+        private static bool GlyphBelongsToNonBreakingHyphenRelatedChunk(GlyphLine text, int ind) {
+            return iText.IO.Util.TextUtil.IsNonBreakingHyphen(text.Get(ind)) || (ind + 1 < text.end && iText.IO.Util.TextUtil
+                .IsNonBreakingHyphen(text.Get(ind + 1))) || ind - 1 >= text.start && iText.IO.Util.TextUtil.IsNonBreakingHyphen
+                (text.Get(ind - 1));
+        }
+
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing
             ) {
             if (hScale == null) {
@@ -1256,10 +1326,10 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode
-                () || '\u00a0' == g.GetUnicode() || '\u2011' == g.GetUnicode();
+            return char.IsLetter((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode();
         }
 
+        // soft hyphen
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
                 try {
@@ -1422,6 +1492,17 @@ namespace iText.Layout.Renderer {
             
             object IEnumerator.Current {
                 get { return Current; }
+            }
+        }
+
+        private class ScriptRange {
+            internal UnicodeScript? script;
+
+            internal int rangeEnd;
+
+            internal ScriptRange(UnicodeScript? script, int rangeEnd) {
+                this.script = script;
+                this.rangeEnd = rangeEnd;
             }
         }
     }

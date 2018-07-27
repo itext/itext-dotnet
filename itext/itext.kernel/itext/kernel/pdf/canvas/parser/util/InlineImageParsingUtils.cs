@@ -52,6 +52,8 @@ using iText.Kernel.Pdf.Filters;
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
     public sealed class InlineImageParsingUtils {
+        private static readonly byte[] EI = new byte[] { (byte)'E', (byte)'I' };
+
         private InlineImageParsingUtils() {
         }
 
@@ -328,61 +330,35 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 ) {
                 return ParseUnfilteredSamples(imageDictionary, colorSpaceDic, ps);
             }
-            // read all content until we reach an EI operator surrounded by whitespace.
-            // The following algorithm has two potential issues: what if the image stream
-            // contains <ws>EI<ws> ?
-            // Plus, there are some streams that don't have the <ws> before the EI operator
-            // it sounds like we would have to actually decode the content stream, which
-            // I'd rather avoid right now.
+            // read all content until we reach an EI operator followed by whitespace.
+            // then decode the content stream to check that bytes that were parsed are really all image bytes
             MemoryStream baos = new MemoryStream();
-            MemoryStream accumulated = new MemoryStream();
             int ch;
             int found = 0;
             PdfTokenizer tokeniser = ps.GetTokeniser();
             while ((ch = tokeniser.Read()) != -1) {
-                if (found == 0 && PdfTokenizer.IsWhitespace(ch)) {
-                    found++;
-                    accumulated.Write(ch);
+                if (ch == 'E') {
+                    baos.Write(EI, 0, found);
+                    // probably some bytes were preserved so write them
+                    found = 1;
                 }
                 else {
-                    if (found == 1 && ch == 'E') {
-                        found++;
-                        accumulated.Write(ch);
+                    // just preserve 'E' and do not write it immediately
+                    if (found == 1 && ch == 'I') {
+                        found = 2;
                     }
                     else {
-                        if (found == 1 && PdfTokenizer.IsWhitespace(ch)) {
-                            // this clause is needed if we have a white space character that is part of the image data
-                            // followed by a whitespace character that precedes the EI operator.  In this case, we need
-                            // to flush the first whitespace, then treat the current whitespace as the first potential
-                            // character for the end of stream check.  Note that we don't increment 'found' here.
-                            baos.Write(accumulated.ToArray());
-                            accumulated.JReset();
-                            accumulated.Write(ch);
-                        }
-                        else {
-                            if (found == 2 && ch == 'I') {
-                                found++;
-                                accumulated.Write(ch);
-                            }
-                            else {
-                                if (found == 3 && PdfTokenizer.IsWhitespace(ch)) {
-                                    byte[] tmp = baos.ToArray();
-                                    if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
-                                        return tmp;
-                                    }
-                                    baos.Write(accumulated.ToArray());
-                                    accumulated.JReset();
-                                    baos.Write(ch);
-                                    found = 0;
-                                }
-                                else {
-                                    baos.Write(accumulated.ToArray());
-                                    accumulated.JReset();
-                                    baos.Write(ch);
-                                    found = 0;
-                                }
+                        // just preserve 'EI' and do not write it immediately
+                        if (found == 2 && PdfTokenizer.IsWhitespace(ch)) {
+                            byte[] tmp = baos.ToArray();
+                            if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
+                                return tmp;
                             }
                         }
+                        baos.Write(EI, 0, found);
+                        // probably some bytes were preserved so write them
+                        baos.Write(ch);
+                        found = 0;
                     }
                 }
             }
@@ -417,6 +393,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 filters.Put(PdfName.DCTDecode, stubfilter);
                 filters.Put(PdfName.JBIG2Decode, stubfilter);
                 filters.Put(PdfName.JPXDecode, stubfilter);
+                ((FlateDecodeFilter)filters.Get(PdfName.FlateDecode)).SetStrictDecoding(true);
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
             }
             catch (Exception) {

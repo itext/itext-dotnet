@@ -136,10 +136,8 @@ namespace System.util.zlib {
                         nomoreinput=true;
                     }
                 }
-                err=z.inflate(flushLevel);
-                if(nomoreinput&&(err==JZlib.Z_BUF_ERROR))
-                    return(0);
-                if(err!=JZlib.Z_OK && err!=JZlib.Z_STREAM_END)
+                err = z.inflate(flushLevel);
+                if (err!=JZlib.Z_OK && err!=JZlib.Z_STREAM_END)
                     throw new IOException("inflating: "+z.msg);
                 if((nomoreinput||err==JZlib.Z_STREAM_END)&&(z.avail_out==len))
                     return(0);

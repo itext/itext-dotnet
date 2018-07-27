@@ -265,6 +265,10 @@ namespace iText.IO.Font.Otf {
             int[] lookupTableLocations = ReadUShortArray(lookupCount, lookupListTableLocation);
             // read LookUp tables
             foreach (int lookupLocation in lookupTableLocations) {
+                if (lookupLocation == 0) {
+                    // be tolerant to NULL offset in LookupList table
+                    continue;
+                }
                 ReadLookupTable(lookupLocation);
             }
         }
