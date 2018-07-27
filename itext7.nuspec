@@ -41,7 +41,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="itext\itext.pdftest\bin\Release\net40\itext.pdftest.dll" target="lib\net40" />
     <file src="itext\itext.io\bin\Release\net40\itext.io.dll" target="lib\net40" />
     <file src="itext\itext.io\bin\Release\net40\itext.io.xml" target="lib\net40" />
     <file src="itext\itext.kernel\bin\Release\net40\itext.kernel.dll" target="lib\net40" />
@@ -60,7 +59,6 @@
     <file src="..\styled-xml-parser\itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.xml" target="lib\net40" />
     <file src="..\svg\itext\itext.svg\bin\Release\net40\itext.svg.dll" target="lib\net40" />
     <file src="..\svg\itext\itext.svg\bin\Release\net40\itext.svg.xml" target="lib\net40" />
-    <file src="itext\itext.pdftest\bin\Release\netstandard1.6\itext.pdftest.dll" target="lib\netstandard1.6" />
     <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.dll" target="lib\netstandard1.6" />
     <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.xml" target="lib\netstandard1.6" />
     <file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.dll" target="lib\netstandard1.6" />
