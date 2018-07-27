@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,6 +55,7 @@ namespace iText.Svg.Utils {
     /// <remarks>
     /// Utility class responsible for converting Strings containing transformation declarations
     /// into AffineTransform objects.
+    /// <p>
     /// This class only supports the transformations as described in the SVG specification:
     /// - matrix
     /// - rotate
@@ -67,6 +68,7 @@ namespace iText.Svg.Utils {
         /// <summary>Keyword for matrix transformations.</summary>
         /// <remarks>
         /// Keyword for matrix transformations. Accepts 6 values.
+        /// <p>
         /// matrix(0 1 2 3 4 5)
         /// </remarks>
         private const String MATRIX = "MATRIX";
@@ -75,6 +77,7 @@ namespace iText.Svg.Utils {
         /// <remarks>
         /// Keyword for rotation transformation. Accepts either 1 or 3 values.
         /// In the case of 1 value, x and y are assumed to be the origin of the user space.
+        /// <p>
         /// rotate(angle x y)
         /// rotate(angle)
         /// </remarks>
@@ -84,6 +87,7 @@ namespace iText.Svg.Utils {
         /// <remarks>
         /// Keyword for scale transformation. Accepts either 1 or 2 values.
         /// In the case of 1 value, the second value is assumed to be the same as the first one.
+        /// <p>
         /// scale(x y)
         /// scale(x)
         /// </remarks>
@@ -92,6 +96,7 @@ namespace iText.Svg.Utils {
         /// <summary>Keyword for skewX transformation.</summary>
         /// <remarks>
         /// Keyword for skewX transformation. Accepts 1 value.
+        /// <p>
         /// skewX(angle)
         /// </remarks>
         private const String SKEWX = "SKEWX";
@@ -99,6 +104,7 @@ namespace iText.Svg.Utils {
         /// <summary>Keyword for skewY transformation.</summary>
         /// <remarks>
         /// Keyword for skewY transformation. Accepts 1 value.
+        /// <p>
         /// skewY(angle)
         /// </remarks>
         private const String SKEWY = "SKEWY";
@@ -107,6 +113,7 @@ namespace iText.Svg.Utils {
         /// <remarks>
         /// Keyword for translate transformation. Accepts either 1 or 2 values.
         /// In the case of 1 value, the y value is assumed to be 0.
+        /// <p>
         /// translate(x y)
         /// translate(x)
         /// </remarks>
@@ -157,7 +164,10 @@ namespace iText.Svg.Utils {
             List<String> list = new List<String>();
             StringTokenizer tokenizer = new StringTokenizer(transform, ")", false);
             while (tokenizer.HasMoreTokens()) {
-                list.Add(tokenizer.NextToken().Trim() + ")");
+                String trim = tokenizer.NextToken().Trim();
+                if (trim != null && !String.IsNullOrEmpty(trim)) {
+                    list.Add(trim + ")");
+                }
             }
             return list;
         }
