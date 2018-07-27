@@ -79,53 +79,53 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
             : base(element) {
             this.element = element;
             this.attributes = new JsoupAttributes(element.Attributes());
-            this.lang = GetAttribute(AttributeConstants.LANG);
+            this.lang = GetAttribute(CommonAttributeConstants.LANG);
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#name()
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#name()
         */
         public virtual String Name() {
             return element.NodeName();
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#getAttributes()
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAttributes()
         */
         public virtual IAttributes GetAttributes() {
             return attributes;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#getAttribute(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAttribute(java.lang.String)
         */
         public virtual String GetAttribute(String key) {
             return attributes.GetAttribute(key);
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IStylesContainer#setStyles(java.util.Map)
+        * @see com.itextpdf.styledxmlparser.html.node.IStylesContainer#setStyles(java.util.Map)
         */
         public virtual void SetStyles(IDictionary<String, String> elementResolvedStyles) {
             this.elementResolvedStyles = elementResolvedStyles;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IStylesContainer#getStyles()
+        * @see com.itextpdf.styledxmlparser.html.node.IStylesContainer#getStyles()
         */
         public virtual IDictionary<String, String> GetStyles() {
             return this.elementResolvedStyles;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#getAdditionalHtmlStyles()
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAdditionalHtmlStyles()
         */
         public virtual IList<IDictionary<String, String>> GetAdditionalHtmlStyles() {
             return customDefaultStyles;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#addAdditionalHtmlStyles(java.util.Map)
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#addAdditionalHtmlStyles(java.util.Map)
         */
         public virtual void AddAdditionalHtmlStyles(IDictionary<String, String> styles) {
             if (customDefaultStyles == null) {
@@ -135,7 +135,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IElementNode#getLang()
+        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getLang()
         */
         public virtual String GetLang() {
             if (lang != null) {

@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Css.Page;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>
@@ -73,8 +75,15 @@ namespace iText.StyledXmlParser.Css {
             String ruleName = ExtractRuleNameFromDeclaration(ruleDeclaration);
             String ruleParameters = ruleDeclaration.Substring(ruleName.Length).Trim();
             switch (ruleName) {
-                case CssRuleName.MEDIA:
-                case CssRuleName.PAGE:
+                case CssRuleName.MEDIA: {
+                    //TODO (RND-863) consider media rules in SVG
+                    return new CssMediaRule(ruleParameters);
+                }
+
+                case CssRuleName.PAGE: {
+                    return new CssPageRule(ruleParameters);
+                }
+
                 case CssRuleName.TOP_LEFT_CORNER:
                 case CssRuleName.TOP_LEFT:
                 case CssRuleName.TOP_CENTER:
@@ -90,14 +99,15 @@ namespace iText.StyledXmlParser.Css {
                 case CssRuleName.BOTTOM_LEFT:
                 case CssRuleName.BOTTOM_CENTER:
                 case CssRuleName.BOTTOM_RIGHT:
-                case CssRuleName.BOTTOM_RIGHT_CORNER:
-                case CssRuleName.FONT_FACE:
+                case CssRuleName.BOTTOM_RIGHT_CORNER: {
+                    return new CssMarginRule(ruleName, ruleParameters);
+                }
+
+                case CssRuleName.FONT_FACE: {
+                    return new CssFontFaceRule(ruleParameters);
+                }
+
                 default: {
-                    //TODO (RND-863) consider media rules in SVG
-                    //return new CssMediaRule(ruleParameters);
-                    //return new CssPageRule(ruleParameters);
-                    //return new CssMarginRule(ruleName, ruleParameters);
-                    //return new CssFontFaceRule(ruleParameters);
                     return new CssNestedAtRule(ruleName, ruleParameters);
                 }
             }

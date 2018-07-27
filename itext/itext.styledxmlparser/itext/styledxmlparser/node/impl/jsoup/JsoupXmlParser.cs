@@ -51,12 +51,12 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 
 namespace iText.StyledXmlParser.Node.Impl.Jsoup {
     /// <summary>Class that uses JSoup to parse HTML.</summary>
-    public class JsoupXmlParser : IHtmlParser {
+    public class JsoupXmlParser : IXmlParser {
         /// <summary>The logger.</summary>
         private static ILog logger = LogManager.GetLogger(typeof(JsoupXmlParser));
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.IHtmlParser#parse(java.io.InputStream, java.lang.String)
+        * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
         */
         /// <exception cref="System.IO.IOException"/>
         public virtual IDocumentNode Parse(Stream xmlStream, String charset) {
@@ -74,7 +74,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.IHtmlParser#parse(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.lang.String)
         */
         public virtual IDocumentNode Parse(String xml) {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseXML(xml);
@@ -123,7 +123,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 if (jsoupNode is Comment) {
                                 }
                                 else {
-                                    logger.Error(MessageFormatUtil.Format("Could not map node type: {0}", jsoupNode.GetType()));
+                                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
+                                        , jsoupNode.GetType()));
                                 }
                             }
                         }

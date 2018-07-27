@@ -50,7 +50,7 @@ using iText.StyledXmlParser.Jsoup.Parser;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Parses a CSS selector into an Evaluator tree.</summary>
-    internal class QueryParser {
+    public class QueryParser {
         private static readonly String[] combinators = new String[] { ",", ">", "+", "~", " " };
 
         private static readonly String[] AttributeEvals = new String[] { "=", "!=", "^=", "$=", "*=", "~=" };

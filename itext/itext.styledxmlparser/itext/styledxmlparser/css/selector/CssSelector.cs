@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Css.Parse;
+using iText.StyledXmlParser.Css.Pseudo;
 using iText.StyledXmlParser.Css.Selector.Item;
 using iText.StyledXmlParser.Node;
 
@@ -73,7 +74,7 @@ namespace iText.StyledXmlParser.Css.Selector {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.ICssSelector#matches(com.itextpdf.html2pdf.html.node.INode)
+        * @see com.itextpdf.styledxmlparser.css.selector.ICssSelector#matches(com.itextpdf.styledxmlparser.html.node.INode)
         */
         public override bool Matches(INode element) {
             return Matches(element, selectorItems.Count - 1);
@@ -91,17 +92,16 @@ namespace iText.StyledXmlParser.Css.Selector {
                 return true;
             }
             //TODO: Consider pseudo-elements in SVG
-            //boolean isPseudoElement = element instanceof CssPseudoElementNode;
+            bool isPseudoElement = element is CssPseudoElementNode;
             for (int i = lastSelectorItemInd; i >= 0; i--) {
-                /*
-                if (isPseudoElement && selectorItems.get(lastSelectorItemInd) instanceof CssPseudoElementSelectorItem && i < lastSelectorItemInd) {
-                // Pseudo element selector item shall be at the end of the selector string
-                // and be single pseudo element selector item in it. All other selector items are checked against
-                // pseudo element node parent.
-                element = element.parentNode();
-                isPseudoElement = false;
+                if (isPseudoElement && selectorItems[lastSelectorItemInd] is CssPseudoElementSelectorItem && i < lastSelectorItemInd
+                    ) {
+                    // Pseudo element selector item shall be at the end of the selector string
+                    // and be single pseudo element selector item in it. All other selector items are checked against
+                    // pseudo element node parent.
+                    element = element.ParentNode();
+                    isPseudoElement = false;
                 }
-                */
                 ICssSelectorItem currentItem = selectorItems[i];
                 if (currentItem is CssSeparatorSelectorItem) {
                     char separator = ((CssSeparatorSelectorItem)currentItem).GetSeparator();

@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 
@@ -76,7 +75,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         protected internal abstract String GetPostfix();
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+");
@@ -93,10 +92,10 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             }
             else {
                 foreach (String prop in props) {
-                    if (CssConstants.INHERIT.Equals(prop) || CssConstants.INITIAL.Equals(prop)) {
+                    if (CommonCssConstants.INHERIT.Equals(prop) || CommonCssConstants.INITIAL.Equals(prop)) {
                         ILog logger = LogManager.GetLogger(typeof(AbstractBoxShorthandResolver));
-                        logger.Warn(MessageFormatUtil.Format(LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, shorthandExpression
-                            ));
+                        logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , shorthandExpression));
                         return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                     }
                 }

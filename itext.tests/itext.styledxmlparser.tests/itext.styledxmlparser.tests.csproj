@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\NUnit.3.7.1\lib\net40\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.layout\itext.layout.csproj">
+      <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
+      <Name>itext.layout</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\itextcore\itext\itext.pdftest\itext.pdftest.csproj">
       <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
       <Name>itext.pdftest</Name>
@@ -55,7 +59,11 @@
     </ProjectReference>
     <ProjectReference Include="..\..\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
       <Project>{8636f290-00df-403e-b841-e4bfd6d9ce7a}</Project>
-      <Name>styled-xml-parser</Name>
+      <Name>styledxmlparser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\itextcore\itext\itext.kernel\itext.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itext.kernel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

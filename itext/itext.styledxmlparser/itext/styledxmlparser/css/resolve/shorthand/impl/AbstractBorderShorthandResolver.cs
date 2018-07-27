@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -70,13 +69,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         protected internal abstract String GetPrefix();
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             String widthPropName = MessageFormatUtil.Format(_0_WIDTH, GetPrefix());
             String stylePropName = MessageFormatUtil.Format(_0_STYLE, GetPrefix());
             String colorPropName = MessageFormatUtil.Format(_0_COLOR, GetPrefix());
-            if (CssConstants.INITIAL.Equals(shorthandExpression) || CssConstants.INHERIT.Equals(shorthandExpression)) {
+            if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression
+                )) {
                 return JavaUtil.ArraysAsList(new CssDeclaration(widthPropName, shorthandExpression), new CssDeclaration(stylePropName
                     , shorthandExpression), new CssDeclaration(colorPropName, shorthandExpression));
             }
@@ -85,18 +85,18 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String borderStyleValue = null;
             String borderWidthValue = null;
             foreach (String value in props) {
-                if (CssConstants.INITIAL.Equals(value) || CssConstants.INHERIT.Equals(value)) {
+                if (CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value)) {
                     ILog logger = LogManager.GetLogger(typeof(AbstractBorderShorthandResolver));
-                    logger.Warn(MessageFormatUtil.Format(LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, shorthandExpression
-                        ));
+                    logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }
-                if (CssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssUtils.IsNumericValue(value) || CssUtils.IsMetricValue
+                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssUtils.IsNumericValue(value) || CssUtils.IsMetricValue
                     (value) || CssUtils.IsRelativeValue(value)) {
                     borderWidthValue = value;
                 }
                 else {
-                    if (CssConstants.BORDER_STYLE_VALUES.Contains(value) || value.Equals(CssConstants.AUTO)) {
+                    if (CommonCssConstants.BORDER_STYLE_VALUES.Contains(value) || value.Equals(CommonCssConstants.AUTO)) {
                         // AUTO property value is needed for outline property only
                         borderStyleValue = value;
                     }
@@ -108,12 +108,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 }
             }
             IList<CssDeclaration> resolvedDecl = new List<CssDeclaration>();
-            resolvedDecl.Add(new CssDeclaration(widthPropName, borderWidthValue == null ? CssConstants.INITIAL : borderWidthValue
-                ));
-            resolvedDecl.Add(new CssDeclaration(stylePropName, borderStyleValue == null ? CssConstants.INITIAL : borderStyleValue
-                ));
-            resolvedDecl.Add(new CssDeclaration(colorPropName, borderColorValue == null ? CssConstants.INITIAL : borderColorValue
-                ));
+            resolvedDecl.Add(new CssDeclaration(widthPropName, borderWidthValue == null ? CommonCssConstants.INITIAL : 
+                borderWidthValue));
+            resolvedDecl.Add(new CssDeclaration(stylePropName, borderStyleValue == null ? CommonCssConstants.INITIAL : 
+                borderStyleValue));
+            resolvedDecl.Add(new CssDeclaration(colorPropName, borderColorValue == null ? CommonCssConstants.INITIAL : 
+                borderColorValue));
             return resolvedDecl;
         }
     }

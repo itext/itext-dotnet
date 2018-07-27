@@ -70,14 +70,14 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IAttribute#getKey()
+        * @see com.itextpdf.styledxmlparser.html.node.IAttribute#getKey()
         */
         public virtual String GetKey() {
             return attribute.Key;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.IAttribute#getValue()
+        * @see com.itextpdf.styledxmlparser.html.node.IAttribute#getValue()
         */
         public virtual String GetValue() {
             return attribute.Value;

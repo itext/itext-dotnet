@@ -31,10 +31,10 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("7.1.2.0")]
-[assembly: AssemblyVersion("7.1.2.0")]
-[assembly: AssemblyFileVersion("7.1.2.0")]
-[assembly: AssemblyInformationalVersion("7.1.2")]
+// [assembly: AssemblyVersion("7.1.3.0")]
+[assembly: AssemblyVersion("7.1.3.0")]
+[assembly: AssemblyFileVersion("7.1.3.0")]
+[assembly: AssemblyInformationalVersion("7.1.3")]
 #if !NETSTANDARD1_6
 [assembly: NUnit.Framework.Timeout(300000)]
 #endif

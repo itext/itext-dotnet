@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
@@ -50,15 +51,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// </summary>
     public class CssColorValidator : ICssDataTypeValidator {
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
         */
         public virtual bool IsValid(String objectString) {
-            /*
-            float[] rgbaColor = WebColors.getRGBAColor(objectString);
+            float[] rgbaColor = WebColors.GetRGBAColor(objectString);
             return rgbaColor != null;
-            */
-            //TODO (RND-767): figure out the possible dependency on Kernel
-            return true;
         }
     }
 }

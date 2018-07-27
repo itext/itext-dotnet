@@ -74,14 +74,14 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.INode#childNodes()
+        * @see com.itextpdf.styledxmlparser.html.node.INode#childNodes()
         */
         public virtual IList<INode> ChildNodes() {
             return JavaCollectionsUtil.UnmodifiableList(childNodes);
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.INode#addChild(com.itextpdf.html2pdf.html.node.INode)
+        * @see com.itextpdf.styledxmlparser.html.node.INode#addChild(com.itextpdf.styledxmlparser.html.node.INode)
         */
         public virtual void AddChild(INode node) {
             if (node is iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode) {
@@ -95,7 +95,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.html.node.INode#parentNode()
+        * @see com.itextpdf.styledxmlparser.html.node.INode#parentNode()
         */
         public virtual INode ParentNode() {
             return parentNode;

@@ -65,7 +65,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Declaration {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.validate.ICssDeclarationValidator#isValid(com.itextpdf.html2pdf.css.CssDeclaration)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDeclarationValidator#isValid(com.itextpdf.styledxmlparser.css.CssDeclaration)
         */
         public virtual bool IsValid(CssDeclaration cssDeclaration) {
             foreach (ICssDataTypeValidator dTypeValidator in allowedTypes) {

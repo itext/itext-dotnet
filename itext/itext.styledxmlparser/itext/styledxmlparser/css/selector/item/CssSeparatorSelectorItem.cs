@@ -64,14 +64,14 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.item.ICssSelectorItem#getSpecificity()
+        * @see com.itextpdf.styledxmlparser.css.selector.item.ICssSelectorItem#getSpecificity()
         */
         public virtual int GetSpecificity() {
             return 0;
         }
 
         /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.css.selector.item.ICssSelectorItem#matches(com.itextpdf.html2pdf.html.node.INode)
+        * @see com.itextpdf.styledxmlparser.css.selector.item.ICssSelectorItem#matches(com.itextpdf.styledxmlparser.html.node.INode)
         */
         public virtual bool Matches(INode node) {
             throw new InvalidOperationException("Separator item is not supposed to be matched against an element");

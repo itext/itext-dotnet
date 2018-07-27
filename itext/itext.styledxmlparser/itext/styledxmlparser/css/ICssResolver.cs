@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css {
@@ -51,6 +52,6 @@ namespace iText.StyledXmlParser.Css {
         /// <param name="node">the node</param>
         /// <param name="context">the CSS context (RootFontSize, etc.)</param>
         /// <returns>the map containing the resolved styles</returns>
-        IDictionary<String, String> ResolveStyles(INode node, ICssContext context);
+        IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context);
     }
 }
