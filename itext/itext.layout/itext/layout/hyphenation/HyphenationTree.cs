@@ -507,7 +507,7 @@ namespace iText.Layout.Hyphenation {
                 // result[k] = corresponding index(w)
                 for (i = 0; i < len; i++) {
                     if (((il[i + 1] & 1) == 1) && i >= remainCharCount && i <= (len - pushCharCount)) {
-                        result[k++] = i + iIgnoreAtBeginning;
+                        result[k++] = i;
                     }
                 }
             }
@@ -515,7 +515,7 @@ namespace iText.Layout.Hyphenation {
                 // trim result array
                 int[] res = new int[k];
                 Array.Copy(result, 0, res, 0, k);
-                return new iText.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
+                return new iText.Layout.Hyphenation.Hyphenation(new String(w, iIgnoreAtBeginning, len), res);
             }
             else {
                 return null;

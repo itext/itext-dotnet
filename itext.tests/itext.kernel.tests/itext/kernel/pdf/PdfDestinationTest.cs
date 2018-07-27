@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,10 +41,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -161,6 +163,35 @@ namespace iText.Kernel.Pdf {
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RemoteGoToDestinationTest() {
+            String cmpFile = sourceFolder + "cmp_remoteGoToDestinationTest.pdf";
+            String outFile = destinationFolder + "remoteGoToDestinationTest.pdf";
+            PdfDocument @out = new PdfDocument(new PdfWriter(outFile));
+            @out.AddNewPage();
+            IList<PdfDestination> destinations = new List<PdfDestination>(7);
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFit(1));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitH(1, 10));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitV(1, 10));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitR(1, 10, 10, 10, 10));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitB(1));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitBH(1, 10));
+            destinations.Add(PdfExplicitRemoteGoToDestination.CreateFitBV(1, 10));
+            int y = 785;
+            foreach (PdfDestination destination in destinations) {
+                PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, y, 160, 15));
+                PdfAction action = PdfAction.CreateGoToR(new PdfStringFS("Some fake destination"), destination);
+                linkExplicitDest.SetAction(action);
+                @out.GetFirstPage().AddAnnotation(linkExplicitDest);
+                y -= 20;
+            }
+            @out.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
                 ));
         }

@@ -3,7 +3,7 @@ using System.IO;
 /*
  *
  * This file is part of the iText project.
- * Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
  * Authors: Bruno Lowagie, Paulo Soares, et al.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -136,10 +136,8 @@ namespace System.util.zlib {
                         nomoreinput=true;
                     }
                 }
-                err=z.inflate(flushLevel);
-                if(nomoreinput&&(err==JZlib.Z_BUF_ERROR))
-                    return(0);
-                if(err!=JZlib.Z_OK && err!=JZlib.Z_STREAM_END)
+                err = z.inflate(flushLevel);
+                if (err!=JZlib.Z_OK && err!=JZlib.Z_STREAM_END)
                     throw new IOException("inflating: "+z.msg);
                 if((nomoreinput||err==JZlib.Z_STREAM_END)&&(z.avail_out==len))
                     return(0);

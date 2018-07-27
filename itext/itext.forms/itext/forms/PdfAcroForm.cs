@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -663,6 +663,10 @@ namespace iText.Forms {
         /// If generateAppearance is set to <code>true</code>, then
         /// <code>NeedAppearances</code> is set to <code>false</code>. This does not
         /// apply vice versa.
+        /// <p>
+        /// Note, this method does not change default behaviour of
+        /// <see cref="iText.Forms.Fields.PdfFormField.SetValue(System.String)"/>
+        /// method.
         /// </summary>
         /// <param name="generateAppearance">a boolean</param>
         public virtual void SetGenerateAppearance(bool generateAppearance) {

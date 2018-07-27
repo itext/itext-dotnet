@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -73,12 +73,12 @@ namespace iText.IO.Font.Woff2.W3c {
         }
 
         private String GetDestinationFolder() {
-            String localPackage = GetLocalPackage();
+            String localPackage = GetLocalPackage().ToLowerInvariant();
             return baseDestinationFolder + localPackage + Path.DirectorySeparatorChar + GetTestClassName() + Path.DirectorySeparatorChar;
         }
 
         private String GetSourceFolder() {
-            String localPackage = GetLocalPackage();
+            String localPackage = GetLocalPackage().ToLowerInvariant();
             return baseSourceFolder + localPackage + Path.DirectorySeparatorChar;
         }
 

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1682,6 +1682,17 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void UpdateHeightsOnSplit(bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
              splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer) {
+            if (wasHeightClipped) {
+                //if height was clipped, max height exists and can be resolved
+                float? maxHeight = RetrieveMaxHeight();
+                ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
+                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
+                    ((float)maxHeight);
+            }
+            if (null == overflowRenderer || IsKeepTogether()) {
+                return;
+            }
             //Update height related properties on split or overflow
             float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             //For relative heights, we need the parent's resolved height declaration
@@ -1746,17 +1757,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            //If parent has no resolved height, relative height declarations can be ignored
-            if (wasHeightClipped) {
-                //if height was clipped, max height exists and can be resolved
-                float? maxHeight = RetrieveMaxHeight();
-                ILogger logger = LoggerFactory.GetLogger(typeof(BlockRenderer));
-                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight
-                    ((float)maxHeight);
-            }
         }
 
+        //If parent has no resolved height, relative height declarations can be ignored
         protected internal virtual MinMaxWidth GetMinMaxWidth() {
             return GetMinMaxWidth(MinMaxWidthUtils.GetMax());
         }

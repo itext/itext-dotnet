@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1263,6 +1263,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddNamedDestination(String key, PdfObject value) {
             CheckClosingStatus();
+            if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
+                LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                    );
+            }
             catalog.AddNamedDestination(key, value);
         }
 
@@ -1780,7 +1784,7 @@ namespace iText.Kernel.Pdf {
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
-                            trailer.Put(PdfName.ID, reader.trailer.GetAsArray(PdfName.ID));
+                            trailer.Put(PdfName.ID, reader.trailer.Get(PdfName.ID));
                         }
                     }
                 }

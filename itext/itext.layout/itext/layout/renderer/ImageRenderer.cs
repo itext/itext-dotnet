@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -460,20 +460,25 @@ namespace iText.Layout.Renderer {
             // So let's find scaling coefficient
             float scaleCoeff = 1;
             if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE))) {
-                scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / (float)height);
-                height *= scaleCoeff;
-                width *= scaleCoeff;
+                if (maxWidth / (float)width < maxHeight / (float)height) {
+                    scaleCoeff = maxWidth / (float)width;
+                    height *= maxWidth / (float)width;
+                    width = maxWidth;
+                }
+                else {
+                    scaleCoeff = maxHeight / (float)height;
+                    width *= maxHeight / (float)height;
+                    height = maxHeight;
+                }
             }
             else {
-                if (null != GetPropertyAsBoolean(Property.AUTO_SCALE_WIDTH) && (bool)GetPropertyAsBoolean(Property.AUTO_SCALE_WIDTH
-                    )) {
+                if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE_WIDTH))) {
                     scaleCoeff = maxWidth / (float)width;
                     height *= scaleCoeff;
                     width = maxWidth;
                 }
                 else {
-                    if (null != GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT) && (bool)GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT
-                        )) {
+                    if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT))) {
                         scaleCoeff = maxHeight / (float)height;
                         height = maxHeight;
                         width *= scaleCoeff;

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -339,15 +339,16 @@ namespace iText.Layout.Renderer {
                                     for (int i = hyph.Length() - 1; i >= 0; i--) {
                                         String pre = hyph.GetPreHyphenText(i);
                                         String pos = hyph.GetPostHyphenText(i);
-                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(pre + hyphenationConfig.
-                                            GetHyphenSymbol()), fontSize, hScale, characterSpacing, wordSpacing);
+                                        float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
+                                            , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize, hScale, characterSpacing, wordSpacing
+                                            );
                                         if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
                                             <= layoutBox.GetWidth()) {
                                             hyphenationApplied = true;
                                             if (line.start == -1) {
                                                 line.start = currentTextPos;
                                             }
-                                            line.end = Math.Max(line.end, currentTextPos + pre.Length);
+                                            line.end = Math.Max(line.end, wordBounds[0] + pre.Length);
                                             GlyphLine lineCopy = line.Copy(line.start, line.end);
                                             lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
                                             lineCopy.end++;
@@ -361,7 +362,7 @@ namespace iText.Layout.Renderer {
                                                 );
                                             widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
                                                 );
-                                            currentTextPos += pre.Length;
+                                            currentTextPos = wordBounds[0] + pre.Length;
                                             break;
                                         }
                                     }

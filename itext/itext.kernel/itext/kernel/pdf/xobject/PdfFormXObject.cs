@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2017 iText Group NV
+    Copyright (c) 1998-2018 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <summary>A wrapper for Form XObject.</summary>
     /// <remarks>A wrapper for Form XObject. ISO 32000-1, 8.10 FormXObjects.</remarks>
     public class PdfFormXObject : PdfXObject {
-        private PdfResources resources = null;
+        protected internal PdfResources resources = null;
 
         /// <summary>Creates a new instance of Form XObject.</summary>
         /// <param name="bBox">the form XObject’s bounding box.</param>
