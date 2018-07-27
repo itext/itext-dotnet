@@ -34,7 +34,6 @@
     </dependencies>
   </metadata>
   <files>
-	<file src="itext\itext.pdftest\bin\Release\net40\itext.pdftest.dll" target="lib\net40" />
 	<file src="itext\itext.io\bin\Release\net40\itext.io.dll" target="lib\net40" />
 	<file src="itext\itext.io\bin\Release\net40\itext.io.xml" target="lib\net40" />
 	<file src="itext\itext.kernel\bin\Release\net40\itext.kernel.dll" target="lib\net40" />
@@ -49,7 +48,6 @@
 	<file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.xml" target="lib\net40" />
 	<file src="itext\itext.sign\bin\Release\net40\itext.sign.dll" target="lib\net40" />
 	<file src="itext\itext.sign\bin\Release\net40\itext.sign.xml" target="lib\net40" />
-	<file src="itext\itext.pdftest\bin\Release\netstandard1.6\itext.pdftest.dll" target="lib\netstandard1.6" />
 	<file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.dll" target="lib\netstandard1.6" />
 	<file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.xml" target="lib\netstandard1.6" />
 	<file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.dll" target="lib\netstandard1.6" />
