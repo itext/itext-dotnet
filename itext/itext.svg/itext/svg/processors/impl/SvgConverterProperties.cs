@@ -68,6 +68,12 @@ namespace iText.Svg.Processors.Impl {
 
         private String charset = Encoding.UTF8.Name();
 
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetRendererFactory(ISvgNodeRendererFactory
+             rendererFactory) {
+            this.rendererFactory = rendererFactory;
+            return this;
+        }
+
         /// <summary>Creates a SvgConverterProperties object.</summary>
         /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
         ///     </remarks>
@@ -89,8 +95,9 @@ namespace iText.Svg.Processors.Impl {
             return charset;
         }
 
-        public virtual void SetCharset(String charset) {
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetCharset(String charset) {
             this.charset = charset;
+            return this;
         }
 
         /// <summary>Gets the base URI.</summary>

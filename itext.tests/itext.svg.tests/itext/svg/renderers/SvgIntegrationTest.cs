@@ -75,10 +75,36 @@ namespace iText.Svg.Renderers {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf) {
+            SvgConverter.CreatePdf(svg, pdf);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, ISvgConverterProperties properties) {
+            SvgConverter.CreatePdf(svg, pdf, properties);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, ISvgConverterProperties properties, WriterProperties
+             writerProperties) {
+            SvgConverter.CreatePdf(svg, pdf, properties, writerProperties);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, WriterProperties writerProperties) {
+            SvgConverter.CreatePdf(svg, pdf, writerProperties);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream, ISvgConverterProperties properties
             ) {
-            WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            SvgConverter.CreatePdf(svg, properties, pdfOutputStream, writerprops);
+            SvgConverter.CreatePdf(svg, pdfOutputStream, properties);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream, ISvgConverterProperties properties
+            , WriterProperties writerprops) {
+            SvgConverter.CreatePdf(svg, pdfOutputStream, properties, writerprops);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -132,7 +158,7 @@ namespace iText.Svg.Renderers {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void Compare(String filename, String sourceFolder, String destinationFolder) {
+        protected internal virtual void Compare(String filename, String sourceFolder, String destinationFolder) {
             String result = new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder + "cmp_"
                  + filename + ".pdf", destinationFolder, "diff_");
             if (result != null && !result.Contains("No visual differences")) {

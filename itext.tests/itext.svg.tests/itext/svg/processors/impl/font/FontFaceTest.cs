@@ -41,8 +41,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Utils;
+using System.IO;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
+using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Resolver.Font;
 using iText.Svg.Exceptions;
+using iText.Svg.Processors;
+using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -258,12 +264,100 @@ namespace iText.Svg.Processors.Impl.Font {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithoutWriterProperties() {
+            String fileName = "fontSelectorTest";
+            ISvgConverterProperties properties = new SvgConverterProperties().SetFontProvider(new BasicFontProvider())
+                .SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
+            ConvertToSinglePage(new FileInfo(sourceFolder + fileName + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), properties);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithoutConverterPropertiesAndWriterProperties() {
+            String fileName = "resolveFonts_WithoutConverterPropertiesAndWriterProperties";
+            String svgFile = "fontSelectorTest";
+            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"));
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithAllProperties() {
+            String fileName = "resolveFonts_WithAllProperties";
+            String svgFile = "fontSelectorTest";
+            WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
+            String baseUri = FileUtil.GetParentDirectory(new FileInfo(sourceFolder + svgFile + ".svg"));
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
+                BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
+            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), properties, writerprops);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithWriterProperties() {
+            String fileName = "resolveFonts_WithWriterProperties";
+            String svgFile = "fontSelectorTest";
+            WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
+            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), writerprops);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithConverterPropsAndWriterProps() {
+            String fileName = "resolveFonts_WithConverterPropsAndWriterProps";
+            String svgFile = "fontSelectorTest";
+            WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
+            String baseUri = FileUtil.GetParentDirectory(new FileInfo(sourceFolder + svgFile + ".svg"));
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
+                BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
+            ConvertToSinglePage(new FileStream(sourceFolder + svgFile + ".svg", FileMode.Open, FileAccess.Read), new FileStream
+                (destinationFolder + fileName + ".pdf", FileMode.Create), properties, writerprops);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithConverterPropertiesAndEmptyUri() {
+            String fileName = "resolveFonts_WithConverterPropertiesAndEmptyUri";
+            String svgFile = "fontSelectorTest";
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri("").SetFontProvider(new BasicFontProvider
+                ()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
+            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), properties);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsWithConverterPropertiesAndNullUri() {
+            String fileName = "resolveFonts_WithConverterPropertiesAndNullUri";
+            String svgFile = "fontSelectorTest";
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(null).SetFontProvider(new BasicFontProvider
+                ()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
+            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), properties);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         private void RunTest(String fileName) {
             Convert(sourceFolder + fileName + ".svg", destinationFolder + fileName + ".pdf");
-            CompareTool compareTool = new CompareTool();
-            String compareResult = compareTool.CompareByContent(destinationFolder + fileName + ".pdf", sourceFolder + 
-                "cmp_" + fileName + ".pdf", destinationFolder, "diff_");
-            NUnit.Framework.Assert.IsNull(compareResult);
+            Compare(fileName, sourceFolder, destinationFolder);
         }
     }
 }

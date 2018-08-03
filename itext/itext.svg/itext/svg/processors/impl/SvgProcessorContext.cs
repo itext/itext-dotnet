@@ -43,6 +43,7 @@ namespace iText.Svg.Processors.Impl {
             if (baseUri == null) {
                 baseUri = "";
             }
+            //TODO DEVSIX-2095
             resourceResolver = new ResourceResolver(baseUri);
         }
 
