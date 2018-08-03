@@ -157,6 +157,10 @@ namespace iText.IO.Util {
             return Directory.GetParent(path).FullName;
         }
 
+        public static String GetParentDirectory(FileInfo file) {
+            return file != null ? new Uri(Directory.GetParent(file.FullName).FullName).AbsoluteUri + System.IO.Path.DirectorySeparatorChar : "";
+        }
+
         public static String GetBaseDirectory() {
 #if !NETSTANDARD1_6
             return AppDomain.CurrentDomain.BaseDirectory;

@@ -62,5 +62,21 @@ namespace iText.IO.Util {
             UrlUtil.GetFinalURL(UrlUtil.ToURL(tempFile.FullName));
             NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(tempFile));
         }
+
+        [NUnit.Framework.Test]
+        public void GetBaseUriTest() {
+            String absolutePathRoot = new Uri(new Uri("file://"), destinationFolder).AbsoluteUri;
+            // artificial fix with subtracting the last backslash
+            String expected = absolutePathRoot.Substring(0, absolutePathRoot.Length - 1) + System.IO.Path.DirectorySeparatorChar;
+            FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+        }
+
+        [NUnit.Framework.Test]
+        public void nullBaseUriTest() {
+            String expected = "";
+            FileInfo tempFile = null;
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+        }
     }
 }
