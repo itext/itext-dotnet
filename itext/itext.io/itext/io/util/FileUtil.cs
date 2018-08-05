@@ -153,6 +153,7 @@ namespace iText.IO.Util {
             bool Accept(FileInfo pathname);
         }
 
+        [System.ObsoleteAttribute]
         public static String GetParentDirectory(String path) {
             return Directory.GetParent(path).FullName;
         }
