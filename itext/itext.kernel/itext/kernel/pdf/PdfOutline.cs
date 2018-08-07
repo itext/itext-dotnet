@@ -372,8 +372,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Remove this outline from the document.</summary>
         internal virtual void RemoveOutline() {
-            PdfName type = content.GetAsName(PdfName.Type);
-            if (type != null && type.Equals(PdfName.Outlines)) {
+            if (!pdfDoc.HasOutlines() || IsOutlineRoot()) {
                 pdfDoc.GetCatalog().Remove(PdfName.Outlines);
                 return;
             }
@@ -405,6 +404,42 @@ namespace iText.Kernel.Pdf {
                     next.Remove(PdfName.Prev);
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the Outline root in
+        /// <see cref="pdfDoc"/>
+        /// 's catalog entry
+        /// </summary>
+        /// <returns>
+        /// The
+        /// <see cref="PdfDictionary"/>
+        /// of the document's Outline root, or
+        /// <see langword="null"/>
+        /// if it can't be found.
+        /// </returns>
+        private PdfDictionary GetOutlineRoot() {
+            if (!pdfDoc.HasOutlines()) {
+                return null;
+            }
+            return pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Outlines);
+        }
+
+        /// <summary>
+        /// Determines if the current
+        /// <see cref="PdfOutline"/>
+        /// object is the Outline Root.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="false"/>
+        /// if this is not the outline root or the root can not be found,
+        /// <see langword="true"/>
+        /// otherwise.
+        /// </returns>
+        private bool IsOutlineRoot() {
+            PdfDictionary outlineRoot = GetOutlineRoot();
+            return outlineRoot == content;
         }
     }
 }
