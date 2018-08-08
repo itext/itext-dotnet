@@ -353,6 +353,21 @@ namespace iText.Svg.Processors.Impl.Font {
             Compare(fileName, sourceFolder, destinationFolder);
         }
 
+        // TODO DEVSIX-2113
+        // This test passes correctly when baseUri is set manually. Remove SvgConverterProperties and use convertToSinglePage(File, File) method instead.
+        // It must produce the same pdf as the one with a pre-defined baseUri does
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontsDefaultUri() {
+            SvgConverterProperties properties = new SvgConverterProperties();
+            properties.SetBaseUri(sourceFolder);
+            String fileName = "fontSelectorTest02";
+            ConvertToSinglePage(new FileInfo(sourceFolder + fileName + ".svg"), new FileInfo(destinationFolder + fileName
+                 + ".pdf"), properties);
+            Compare(fileName, sourceFolder, destinationFolder);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         private void RunTest(String fileName) {
