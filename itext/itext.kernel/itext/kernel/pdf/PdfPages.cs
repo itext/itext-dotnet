@@ -64,6 +64,9 @@ namespace iText.Kernel.Pdf {
             GetPdfObject().Put(PdfName.Type, PdfName.Pages);
             GetPdfObject().Put(PdfName.Kids, this.kids);
             GetPdfObject().Put(PdfName.Count, this.count);
+            if (parent != null) {
+                GetPdfObject().Put(PdfName.Parent, this.parent.GetPdfObject());
+            }
         }
 
         public PdfPages(int from, PdfDocument pdfDocument)
