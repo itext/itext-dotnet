@@ -99,7 +99,7 @@ namespace iText.Kernel.Utils {
 
         private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
-        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d\\.)+\\d(-SNAPSHOT)?";
+        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d+\\.)+\\d+(-SNAPSHOT)?";
 
         private const String versionReplacement = "iText\u00ae <version>";
 
@@ -861,6 +861,36 @@ namespace iText.Kernel.Utils {
             }
             System.Console.Out.Flush();
             return message;
+        }
+
+        internal virtual String[] ConvertInfo(PdfDocumentInfo info) {
+            String[] convertedInfo = new String[] { "", "", "", "", "" };
+            String infoValue = info.GetTitle();
+            if (infoValue != null) {
+                convertedInfo[0] = infoValue;
+            }
+            infoValue = info.GetAuthor();
+            if (infoValue != null) {
+                convertedInfo[1] = infoValue;
+            }
+            infoValue = info.GetSubject();
+            if (infoValue != null) {
+                convertedInfo[2] = infoValue;
+            }
+            infoValue = info.GetKeywords();
+            if (infoValue != null) {
+                convertedInfo[3] = infoValue;
+            }
+            infoValue = info.GetProducer();
+            if (infoValue != null) {
+                convertedInfo[4] = ConvertProducerLine(infoValue);
+            }
+            return convertedInfo;
+        }
+
+        internal virtual String ConvertProducerLine(String producer) {
+            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, versionRegexp, versionReplacement
+                ), copyrightRegexp, copyrightReplacement);
         }
 
         private void Init(String outPdf, String cmpPdf) {
@@ -1866,36 +1896,6 @@ namespace iText.Kernel.Utils {
                 }
             }
             throw new ArgumentException("PdfLinkAnnotation comparison: Page not found.");
-        }
-
-        private String[] ConvertInfo(PdfDocumentInfo info) {
-            String[] convertedInfo = new String[] { "", "", "", "", "" };
-            String infoValue = info.GetTitle();
-            if (infoValue != null) {
-                convertedInfo[0] = infoValue;
-            }
-            infoValue = info.GetAuthor();
-            if (infoValue != null) {
-                convertedInfo[1] = infoValue;
-            }
-            infoValue = info.GetSubject();
-            if (infoValue != null) {
-                convertedInfo[2] = infoValue;
-            }
-            infoValue = info.GetKeywords();
-            if (infoValue != null) {
-                convertedInfo[3] = infoValue;
-            }
-            infoValue = info.GetProducer();
-            if (infoValue != null) {
-                convertedInfo[4] = ConvertProducerLine(infoValue);
-            }
-            return convertedInfo;
-        }
-
-        private String ConvertProducerLine(String producer) {
-            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, versionRegexp, versionReplacement
-                ), copyrightRegexp, copyrightReplacement);
         }
 
         private class PngFileFilter : iText.IO.Util.FileUtil.IFileFilter {

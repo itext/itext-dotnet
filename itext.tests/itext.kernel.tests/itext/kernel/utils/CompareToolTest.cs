@@ -141,5 +141,12 @@ namespace iText.Kernel.Utils {
             String agpl = sourceFolder + "producerAGPL.pdf";
             NUnit.Framework.Assert.AreEqual(expectedMessage, new CompareTool().CompareDocumentInfo(agpl, licensed));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void VersionReplaceTest() {
+            String initial = "iText® 1.10.10-SNAPSHOT (licensed to iText) ©2000-2018 iText Group NV";
+            String replacedExpected = "iText® <version> (licensed to iText) ©<copyright years> iText Group NV";
+            NUnit.Framework.Assert.AreEqual(replacedExpected, new CompareTool().ConvertProducerLine(initial));
+        }
     }
 }
