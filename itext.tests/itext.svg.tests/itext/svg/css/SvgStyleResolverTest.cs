@@ -150,6 +150,14 @@ namespace iText.Svg.Css {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
         }
 
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontWeightTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontWeightTest");
+        }
+
         /// <summary>The following test should fail when RND-1042 is resolved</summary>
         /// <exception cref="iText.IO.IOException"/>
         /// <exception cref="System.Exception"/>
