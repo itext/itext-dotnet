@@ -45,9 +45,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.io\itext.io.netstandard.csproj" />
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.layout\itext.layout.netstandard.csproj" />
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.pdftest\itext.pdftest.netstandard.csproj" />
+    <ProjectReference Include="..\..\itext\itext.io\itext.io.netstandard.csproj" />
+    <ProjectReference Include="..\..\itext\itext.layout\itext.layout.netstandard.csproj" />
+    <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.styledxmlparser\itext.styledxmlparser.netstandard.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">

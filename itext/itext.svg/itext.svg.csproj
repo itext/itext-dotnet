@@ -50,19 +50,19 @@
     <Compile Include="SvgExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.io\itext.io.csproj">
+    <ProjectReference Include="..\itext.io\itext.io.csproj">
       <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
       <Name>itext.io</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.kernel\itext.kernel.csproj">
+    <ProjectReference Include="..\itext.kernel\itext.kernel.csproj">
       <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
       <Name>itext.kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\itextcore\itext\itext.layout\itext.layout.csproj">
+    <ProjectReference Include="..\itext.layout\itext.layout.csproj">
       <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
       <Name>itext.layout</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\styled-xml-parser\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
+    <ProjectReference Include="..\itext.styledxmlparser\itext.styledxmlparser.csproj">
       <Project>{8636F290-00DF-403E-B841-E4BFD6D9CE7A}</Project>
       <Name>itext.styledxmlparser</Name>
     </ProjectReference>

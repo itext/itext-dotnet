@@ -64,7 +64,7 @@
       <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
       <Name>itext.pdftest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\styled-xml-parser\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
+    <ProjectReference Include="..\..\itext\itext.styledxmlparser\itext.styledxmlparser.csproj">
       <Project>{8636f290-00df-403e-b841-e4bfd6d9ce7a}</Project>
       <Name>itext.styledxmlparser</Name>
     </ProjectReference>
