@@ -115,6 +115,19 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.NotNull(stream);
             NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
         }
-
+        
+        [NUnit.Framework.Test]
+        public virtual void absolutePathTest2() {
+            //TODO check this test with on linux or mac with mono!
+            String fileName = "retrieveStyleSheetTest.css";
+            String absolutePath = UrlUtil.ToNormalizedURI(baseUri) + fileName;
+            //this constructor will fail.
+            //Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
+        
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
+            NUnit.Framework.Assert.NotNull(stream);
+            //NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
+        }
     }
 }
