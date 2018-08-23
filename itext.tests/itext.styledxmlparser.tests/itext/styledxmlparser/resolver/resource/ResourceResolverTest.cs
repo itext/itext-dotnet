@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
 using iText.Test;
 using iText.Test.Attributes;
@@ -100,5 +101,20 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.NotNull(image);
             NUnit.Framework.Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("png"));
         }
+        
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("RND-1019 — different behaviour on windows and linux")]
+        public virtual void absolutePathTest() {
+            //TODO check this test with on linux or mac with mono!
+            String fileName = "retrieveStyleSheetTest.css";
+            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).AbsolutePath + fileName;
+            Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
+
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
+            NUnit.Framework.Assert.NotNull(stream);
+            NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
+        }
+
     }
 }
