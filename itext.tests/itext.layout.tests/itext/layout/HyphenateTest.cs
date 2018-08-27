@@ -49,77 +49,42 @@ using iText.Test;
 
 namespace iText.Layout {
     public class HyphenateTest : ExtendedITextTest {
-        private IList<HyphenateTest.TestParams> @params = iText.IO.Util.JavaUtil.ArraysAsList(
-            new HyphenateTest.TestParams("af"), 
-            new HyphenateTest.TestParams("as", "\u09A8\u09AE\u09B8\u09CD\u0995\u09BE\u09F0"),  //নমস্কাৰ 
-            new HyphenateTest.TestParams("bg", "\u0417\u0434\u0440\u0430\u0432\u0435\u0439"),  //Здравей
-            new HyphenateTest.TestParams("bn", "\u0986\u09B2\u09BE\u0987\u0995\u09C1\u09AE"), //আলাইকুম
-            new HyphenateTest.TestParams("ca", "Benvinguts"), 
-            new HyphenateTest.TestParams("cop", "\u2C98\u2C89\u2CA7\u2CA2\u2C89\u2C99\u0300\u2C9B\u2CAD\u2C8F\u2C99\u2C93"), //ⲘⲉⲧⲢⲉⲙ̀ⲛⲭⲏⲙⲓ 
-            new HyphenateTest.TestParams("cs"), 
-            new HyphenateTest.TestParams("cy"), 
-            new HyphenateTest.TestParams("da"), 
-            new HyphenateTest.TestParams("de"),
-            new HyphenateTest.TestParams("de_DE", "14\u00a0Tagen 14\u00a0Tagen 14\u00a0Tagen "),
-            new HyphenateTest.TestParams("de_DE", "14\u20110Tagen 14\u2011Tagen 14\u20110Tagen "),
-            new HyphenateTest.TestParams("de_1901"), 
-            new HyphenateTest.TestParams("de_CH"), 
-            new HyphenateTest.TestParams("de_DR"), 
-            new HyphenateTest.TestParams("el", "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), //καλημέρα 
-            new HyphenateTest.TestParams("el_Polyton", "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), //καλημέρα 
-            new HyphenateTest.TestParams("en"), 
-            new HyphenateTest.TestParams("en_GB"), 
-            new HyphenateTest.TestParams("en_US"), 
-            new HyphenateTest.TestParams("eo"), 
-            new HyphenateTest.TestParams("es", "gracias"), 
-            new HyphenateTest.TestParams("et", "Vabandust"), 
-            new HyphenateTest.TestParams("eu", "euskara"), 
-            new HyphenateTest.TestParams("fi", "N\u00E4kemiin"),  //Näkemiin 
-            new HyphenateTest.TestParams("fr"), 
-            new HyphenateTest.TestParams("ga"), 
-            new HyphenateTest.TestParams("gl"), 
-            new HyphenateTest.TestParams("grc", "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), //καλημέρα 
-            new HyphenateTest.TestParams("gu", "\u0A97\u0AC1\u0A9C\u0AB0\u0ABE\u0AA4\u0AC0"), //ગુજરાતી 
-            new HyphenateTest.TestParams("hi", "\u0938\u0941\u092A\u094D\u0930\u092D\u093E\u0924\u092E\u094D"), //सुप्रभातम् 
-            new HyphenateTest.TestParams("hr"), 
-            new HyphenateTest.TestParams("hsb"), 
-            new HyphenateTest.TestParams("hu", "sziasztok"), 
-            new HyphenateTest.TestParams("hy", "\u0577\u0576\u0578\u0580\u0570\u0561\u056F\u0561\u056C\u0578\u0582\u0569\u0575\u0578\u0582\u0576"), //շնորհակալություն 
-            new HyphenateTest.TestParams("ia"), 
-            new HyphenateTest.TestParams("id"), 
-            new HyphenateTest.TestParams("is"), 
-            new HyphenateTest.TestParams("it"),
-            new HyphenateTest.TestParams("kmr"), 
-            new HyphenateTest.TestParams("kn", "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1"), //ಕನ್ನಡ
-            new HyphenateTest.TestParams("la"), 
-            new HyphenateTest.TestParams("lo", "\u0E8D\u0EB4\u0E99\u0E94\u0EB5\u0E95\u0EC9\u0EAD\u0E99\u0EAE\u0EB1\u0E9A"), //ຍິນດີຕ້ອນຮັບ 
-            new HyphenateTest.TestParams("lt", "Labanakt"), 
-            new HyphenateTest.TestParams("lv", "Labvakar"), 
-            new HyphenateTest.TestParams("ml", "\u0D38\u0D4D\u0D35\u0D3E\u0D17\u0D24\u0D02"), //സ്വാഗതം 
-            new HyphenateTest.TestParams("mn", "\u04E8\u0440\u0448\u04E9\u04E9\u0433\u04E9\u04E9\u0440\u044D\u0439"), //Өршөөгөөрэй 
-            new HyphenateTest.TestParams("mr", "\u0928\u092E\u0938\u094D\u0915\u093E\u0930"), //नमस्कार 
-            new HyphenateTest.TestParams("nb"), 
-            new HyphenateTest.TestParams("nl"), 
-            new HyphenateTest.TestParams("nn"), 
-            new HyphenateTest.TestParams("no"), 
-            new HyphenateTest.TestParams("or", "\u0B28\u0B2E\u0B38\u0B4D\u0B15\u0B3E\u0B30"), //ନମସ୍କାର
-            new HyphenateTest.TestParams("pa", "\u0A28\u0A2E\u0A38\u0A15\u0A3E\u0A30"), //ਨਮਸਕਾਰ 
-            new HyphenateTest.TestParams("pl"), 
-            new HyphenateTest.TestParams("pt"), 
-            new HyphenateTest.TestParams("ro"), 
-            new HyphenateTest.TestParams("ru", "\u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439"), //здравствуй 
-            new HyphenateTest.TestParams("sa"), 
-            new HyphenateTest.TestParams("sk"), 
-            new HyphenateTest.TestParams("sl"), 
-            new HyphenateTest.TestParams("sr_Cyrl", "\u0414\u043E\u0431\u0440\u043E\u0434\u043E\u0448\u043B\u0438"), //Добродошли 
-            new HyphenateTest.TestParams("sr_Latn"), 
-            new HyphenateTest.TestParams("sv", "V\u00E4lkommen"), //Välkommen 
-            new HyphenateTest.TestParams("ta", "\u0BB5\u0BBE\u0BB0\u0BC1\u0B99\u0BCD\u0B95\u0BB3\u0BCD"), //வாருங்கள் 
-            new HyphenateTest.TestParams("te", "\u0C38\u0C41\u0C38\u0C4D\u0C35\u0C3E\u0C17\u0C24\u0C02"), //సుస్వాగతం 
-            new HyphenateTest.TestParams("tk"), 
-            new HyphenateTest.TestParams("tr", "Merhaba"), 
-            new HyphenateTest.TestParams("uk", "\u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439"), //здравствуй 
-            new HyphenateTest.TestParams("zh_Latn"));
+        private IList<HyphenateTest.TestParams> @params = JavaUtil.ArraysAsList(new HyphenateTest.TestParams("af")
+            , new HyphenateTest.TestParams("as", "\u09A8\u09AE\u09B8\u09CD\u0995\u09BE\u09F0"), new HyphenateTest.TestParams
+            ("bg", "\u0417\u0434\u0440\u0430\u0432\u0435\u0439"), new HyphenateTest.TestParams("bn", "\u0986\u09B2\u09BE\u0987\u0995\u09C1\u09AE"
+            ), new HyphenateTest.TestParams("ca", "Benvinguts"), new HyphenateTest.TestParams("cop", "\u2C98\u2C89\u2CA7\u2CA2\u2C89\u2C99\u0300\u2C9B\u2CAD\u2C8F\u2C99\u2C93"
+            ), new HyphenateTest.TestParams("cs"), new HyphenateTest.TestParams("cy"), new HyphenateTest.TestParams
+            ("da"), new HyphenateTest.TestParams("de"), new HyphenateTest.TestParams("de_DE", "14\u00a0Tagen 14\u00a0Tagen 14\u00a0Tagen "
+            ), new HyphenateTest.TestParams("de_DE", "14\u20110Tagen 14\u2011Tagen 14\u20110Tagen "), new HyphenateTest.TestParams
+            ("de_1901"), new HyphenateTest.TestParams("de_CH"), new HyphenateTest.TestParams("de_DR"), new HyphenateTest.TestParams
+            ("el", "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), new HyphenateTest.TestParams("el_Polyton", 
+            "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), new HyphenateTest.TestParams("en"), new HyphenateTest.TestParams
+            ("en_GB"), new HyphenateTest.TestParams("en_US"), new HyphenateTest.TestParams("eo"), new HyphenateTest.TestParams
+            ("es", "gracias"), new HyphenateTest.TestParams("et", "Vabandust"), new HyphenateTest.TestParams("eu", 
+            "euskara"), new HyphenateTest.TestParams("fi", "N\u00E4kemiin"), new HyphenateTest.TestParams("fr"), new 
+            HyphenateTest.TestParams("ga"), new HyphenateTest.TestParams("gl"), new HyphenateTest.TestParams("grc"
+            , "\u03BA\u03B1\u03BB\u03B7\u03BC\u03AD\u03C1\u03B1"), new HyphenateTest.TestParams("gu", "\u0A97\u0AC1\u0A9C\u0AB0\u0ABE\u0AA4\u0AC0"
+            ), new HyphenateTest.TestParams("hi", "\u0938\u0941\u092A\u094D\u0930\u092D\u093E\u0924\u092E\u094D"), 
+            new HyphenateTest.TestParams("hr"), new HyphenateTest.TestParams("hsb"), new HyphenateTest.TestParams(
+            "hu", "sziasztok"), new HyphenateTest.TestParams("hy", "\u0577\u0576\u0578\u0580\u0570\u0561\u056F\u0561\u056C\u0578\u0582\u0569\u0575\u0578\u0582\u0576"
+            ), new HyphenateTest.TestParams("ia"), new HyphenateTest.TestParams("id"), new HyphenateTest.TestParams
+            ("is"), new HyphenateTest.TestParams("it"), new HyphenateTest.TestParams("kmr"), new HyphenateTest.TestParams
+            ("kn", "\u0C95\u0CA8\u0CCD\u0CA8\u0CA1"), new HyphenateTest.TestParams("la"), new HyphenateTest.TestParams
+            ("lo", "\u0E8D\u0EB4\u0E99\u0E94\u0EB5\u0E95\u0EC9\u0EAD\u0E99\u0EAE\u0EB1\u0E9A"), new HyphenateTest.TestParams
+            ("lt", "Labanakt"), new HyphenateTest.TestParams("lv", "Labvakar"), new HyphenateTest.TestParams("ml", 
+            "\u0D38\u0D4D\u0D35\u0D3E\u0D17\u0D24\u0D02"), new HyphenateTest.TestParams("mn", "\u04E8\u0440\u0448\u04E9\u04E9\u0433\u04E9\u04E9\u0440\u044D\u0439"
+            ), new HyphenateTest.TestParams("mr", "\u0928\u092E\u0938\u094D\u0915\u093E\u0930"), new HyphenateTest.TestParams
+            ("nb"), new HyphenateTest.TestParams("nl"), new HyphenateTest.TestParams("nn"), new HyphenateTest.TestParams
+            ("no"), new HyphenateTest.TestParams("or", "\u0B28\u0B2E\u0B38\u0B4D\u0B15\u0B3E\u0B30"), new HyphenateTest.TestParams
+            ("pa", "\u0A28\u0A2E\u0A38\u0A15\u0A3E\u0A30"), new HyphenateTest.TestParams("pl"), new HyphenateTest.TestParams
+            ("pt"), new HyphenateTest.TestParams("ro"), new HyphenateTest.TestParams("ru", "\u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439"
+            ), new HyphenateTest.TestParams("sa"), new HyphenateTest.TestParams("sk"), new HyphenateTest.TestParams
+            ("sl"), new HyphenateTest.TestParams("sr_Cyrl", "\u0414\u043E\u0431\u0440\u043E\u0434\u043E\u0448\u043B\u0438"
+            ), new HyphenateTest.TestParams("sr_Latn"), new HyphenateTest.TestParams("sv", "V\u00E4lkommen"), new 
+            HyphenateTest.TestParams("ta", "\u0BB5\u0BBE\u0BB0\u0BC1\u0B99\u0BCD\u0B95\u0BB3\u0BCD"), new HyphenateTest.TestParams
+            ("te", "\u0C38\u0C41\u0C38\u0C4D\u0C35\u0C3E\u0C17\u0C24\u0C02"), new HyphenateTest.TestParams("tk"), 
+            new HyphenateTest.TestParams("tr", "Merhaba"), new HyphenateTest.TestParams("uk", "\u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439"
+            ), new HyphenateTest.TestParams("zh_Latn"));
 
         private IList<String> errors = new List<String>();
 
@@ -148,7 +113,7 @@ namespace iText.Layout {
         //సుస్వాగతం
         //здравствуй
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1793: bad performance compared to java")]
+        [NUnit.Framework.Ignore("DEVSIX-2036")]
         public virtual void RunTest() {
             foreach (HyphenateTest.TestParams param in @params) {
                 TryHyphenate(param.lang, param.testWorld, param.shouldPass);
