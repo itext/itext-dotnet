@@ -118,6 +118,8 @@ namespace iText.Layout.Font {
 
             public virtual int Compare(FontInfo o1, FontInfo o2) {
                 int res = 0;
+                // It's important to mention that at the FontProvider level we add the default font-family
+                // which is to be processed if for all provided font-families the score is 0.
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
                     String fontFamily = fontFamilies[i];
@@ -147,32 +149,26 @@ namespace iText.Layout.Font {
             }
 
             /// <summary>
-            /// // TODO DEVSIX-2050 Update the documentation once the changes are accepted
-            /// This method is used to compare two fonts (the first is described by fontInfo,
-            /// the second is described by fc and fontFamily) and measure their similarity.
+            /// This method is used to compare two fonts (the required one which is described by fontInfo and
+            /// the one to be examined which is described by fc and fontFamily) and measure their similarity.
             /// </summary>
             /// <remarks>
-            /// // TODO DEVSIX-2050 Update the documentation once the changes are accepted
-            /// This method is used to compare two fonts (the first is described by fontInfo,
-            /// the second is described by fc and fontFamily) and measure their similarity.
+            /// This method is used to compare two fonts (the required one which is described by fontInfo and
+            /// the one to be examined which is described by fc and fontFamily) and measure their similarity.
             /// The more the fonts are similar the higher the score is.
-            /// <p>
-            /// We check whether the fonts are both:
+            /// Firstly we check if the font-family described by fontInfo equals to the required one.
+            /// If it's not true the examination fails, it continues otherwise.
+            /// If the required font-family is monospace, serif or sans serif we check whether
+            /// the font under examination is monospace, serif or sans serif resp. Its font-family is not
+            /// taking into considerations.
+            /// If font-family is respected, we consider the next font-style characteristics to select the required font
+            /// of the respected font-family:
             /// a) bold
             /// b) italic
-            /// c) monospaced
-            /// <p>
-            /// We also check whether the font names are identical. There are two blocks of conditions:
-            /// "equals" and "contains". They cannot be satisfied simultaneously.
-            /// Some remarks about these checks:
-            /// a) "contains" block checks are much easier to be satisfied so one can get award from this block
-            /// higher than from "equals" block only if all "contains" conditions are satisfied.
-            /// b) since ideally all conditions of a certain block are satisfied simultaneously, it may result
-            /// in highly inflated score. So we decrease an award for other conditions of the block
-            /// if one has been already satisfied.
             /// </remarks>
             private static int CharacteristicsSimilarity(String fontFamily, FontCharacteristics fc, FontInfo fontInfo, 
                 bool isLastFontFamilyToBeProcessed) {
+                // TODO DEVSIX-2120 Update javadoc if necessary
                 bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
                 bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
                 bool isFontMonospace = fontInfo.GetDescriptor().IsMonospace();

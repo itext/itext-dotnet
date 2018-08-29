@@ -252,14 +252,15 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the font of this Element.</summary>
+        /// <summary>Sets the font family of this Element.</summary>
         /// <remarks>
-        /// Sets the font of this Element. Note that
+        /// Sets the font family of this Element. Note that
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// shall be set as well.
         /// See
         /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
         /// </remarks>
+        /// <seealso cref="iText.IO.Font.Constants.StandardFontFamilies"/>
         /// <param name="font">
         /// a font name to fetch from
         /// <see cref="iText.Layout.Font.FontProvider"/>

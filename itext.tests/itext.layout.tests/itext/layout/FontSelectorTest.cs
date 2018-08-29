@@ -180,7 +180,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Div div = new Div().SetFont(StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2136 Update of necessary
             Paragraph paragraph = new Paragraph("Times Roman Bold text");
             paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
             div.Add(paragraph);
@@ -206,7 +206,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Div div = new Div().SetFont(StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2136 Update of necessary
             Paragraph paragraph = new Paragraph("Times Roman Bold text");
             paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
             div.Add(paragraph);

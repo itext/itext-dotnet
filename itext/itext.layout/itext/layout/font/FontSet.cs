@@ -131,6 +131,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </remarks>
         /// <param name="fontProgram">
         /// 
@@ -172,6 +173,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </remarks>
         /// <param name="fontProgram">
         /// 
@@ -188,16 +190,6 @@ namespace iText.Layout.Font {
         }
 
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
-        /// <remarks>
-        /// Add not supported for auto creating FontPrograms.
-        /// <p>
-        /// Note,
-        /// <see cref="FontInfo.GetAlias()"/>
-        /// do not taken into account in
-        /// <see cref="FontInfo.Equals(System.Object)"/>
-        /// .
-        /// The same font with different alias will not be replaced.
-        /// </remarks>
         /// <param name="fontProgram">
         /// 
         /// <see cref="iText.IO.Font.FontProgram"/>
@@ -229,10 +221,11 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
-        /// <param name="alias">font alias.</param>
+        /// <param name="alias">font alias, will replace original font family.</param>
         /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
@@ -257,6 +250,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -277,13 +271,6 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p>
-        /// Note,
-        /// <see cref="FontInfo.GetAlias()"/>
-        /// do not taken into account in
-        /// <see cref="FontInfo.Equals(System.Object)"/>
-        /// .
-        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -310,6 +297,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -338,6 +326,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -358,13 +347,6 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
-        /// <p>
-        /// Note,
-        /// <see cref="FontInfo.GetAlias()"/>
-        /// do not taken into account in
-        /// <see cref="FontInfo.Equals(System.Object)"/>
-        /// .
-        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -386,13 +368,6 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
-        /// <p>
-        /// Note,
-        /// <see cref="FontInfo.GetAlias()"/>
-        /// do not taken into account in
-        /// <see cref="FontInfo.Equals(System.Object)"/>
-        /// .
-        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
@@ -412,13 +387,6 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
-        /// <p>
-        /// Note,
-        /// <see cref="FontInfo.GetAlias()"/>
-        /// do not taken into account in
-        /// <see cref="FontInfo.Equals(System.Object)"/>
-        /// .
-        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
@@ -437,6 +405,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontInfo">font info.</param>
         /// <param name="alias">font alias.</param>
@@ -457,6 +426,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo.Equals(System.Object)"/>
         /// .
         /// The same font with different alias will not be replaced.
+        /// Alias will replace original font family in font selector algorithm.
         /// </summary>
         /// <param name="fontInfo">font info.</param>
         /// <param name="alias">font alias.</param>

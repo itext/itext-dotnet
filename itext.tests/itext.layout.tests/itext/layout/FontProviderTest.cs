@@ -105,7 +105,7 @@ namespace iText.Layout {
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph("Next paragraph contains a triangle, actually Type 3 Font");
             paragraph.SetProperty(Property.FONT, StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2136 Update of necessary
             doc.Add(paragraph);
             paragraph = new Paragraph("A");
             paragraph.SetFont("CustomFont");
@@ -126,7 +126,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();
             fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2119 Update if necessary
             fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA);
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
@@ -150,12 +150,12 @@ namespace iText.Layout {
             FontProvider fontProvider = new FontProvider();
             // bold font. shouldn't be selected
             fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "times");
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2119 Update if necessary
             // monospace font. shouldn't be selected
             fontProvider.GetFontSet().AddFont(StandardFonts.COURIER);
             fontProvider.GetFontSet().AddFont(sourceFolder + "../fonts/FreeSans.ttf", PdfEncodings.IDENTITY_H);
             fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
-            // TODO DEVSIX-2119
+            // TODO DEVSIX-2119 Update if necessary
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(fontProvider);

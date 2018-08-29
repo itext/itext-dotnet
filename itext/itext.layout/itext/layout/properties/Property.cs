@@ -128,6 +128,8 @@ namespace iText.Layout.Properties {
 
         public const int FLUSH_ON_DRAW = 19;
 
+        /// <summary>Font family as String or PdfFont shall be set.</summary>
+        /// <seealso cref="iText.IO.Font.Constants.StandardFontFamilies"/>
         public const int FONT = 20;
 
         public const int FONT_COLOR = 21;
