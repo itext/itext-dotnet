@@ -79,5 +79,16 @@ namespace iText.StyledXmlParser.Resolver.Font {
                 AddSystemFonts();
             }
         }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BasicFontProvider"/>
+        /// instance.
+        /// </summary>
+        /// <param name="fontSet">predefined set of fonts, could be null.</param>
+        /// <param name="defaultFontFamily">default font family.</param>
+        public BasicFontProvider(FontSet fontSet, String defaultFontFamily)
+            : base(fontSet, defaultFontFamily) {
+        }
     }
 }
