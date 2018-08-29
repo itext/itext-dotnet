@@ -86,7 +86,8 @@ namespace iText.IO.Util {
 
         public static String[] Split(String srcStr, String splitSequence) {
             if (splitSequence.Length == 1)
-                return srcStr.Split(splitSequence.ToCharArray());
+                return srcStr.TrimEnd().Split(splitSequence.ToCharArray());
+
             Regex regex = new Regex(splitSequence);
             Match match = regex.Match(srcStr);
             String[] result;
