@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Layout.Font;
 
 namespace iText.StyledXmlParser.Resolver.Font {
@@ -49,6 +50,8 @@ namespace iText.StyledXmlParser.Resolver.Font {
     /// that allows configuring in the constructor which fonts are loaded by default.
     /// </summary>
     public class BasicFontProvider : FontProvider {
+        private const String DEFAULT_FONT_FAMILY = "Times";
+
         /// <summary>
         /// Creates a new
         /// <see cref="BasicFontProvider"/>
@@ -68,7 +71,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
         /// <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
         ///     </param>
         public BasicFontProvider(bool registerStandardPdfFonts, bool registerSystemFonts)
-            : base() {
+            : base(DEFAULT_FONT_FAMILY) {
             if (registerStandardPdfFonts) {
                 AddStandardPdfFonts();
             }
