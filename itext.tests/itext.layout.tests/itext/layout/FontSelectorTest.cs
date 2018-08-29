@@ -64,6 +64,8 @@ namespace iText.Layout {
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
+        private const String PANGRAM = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
@@ -380,6 +382,119 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StandardFontSetTimesTest01() {
+            StandardFontSetTest("Times", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StandardFontSetHelveticaTest01() {
+            StandardFontSetTest("Helvetica", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StandardFontSetCourierTest() {
+            StandardFontSetTest("Courier", "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique");
+        }
+
+        private void StandardFontSetTest(String fontFamily, String expectedNormal, String expectedBold, String expectedItalic
+            , String expectedBoldItalic) {
+            ICollection<FontInfo> fontInfoCollection = GetStandardFontSet().GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add(fontFamily);
+            FontCharacteristics fc;
+            // Normal
+            fc = new FontCharacteristics();
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("normal");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("normal");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            // Bold
+            fc = new FontCharacteristics();
+            fc.SetBoldFlag(true);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("bold");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)800);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            // Italic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("normal");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)300);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)500);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            // BoldItalic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("bold");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            fc.SetFontWeight("bold");
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)700);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)800);
+            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+        }
+
+        private bool CheckFontSelector(ICollection<FontInfo> fontInfoCollection, IList<String> fontFamilies, FontCharacteristics
+             fc, String expectedFontName) {
+            return expectedFontName.Equals(new FontSelector(fontInfoCollection, fontFamilies, fc).BestMatch().GetFontName
+                ());
+        }
+
+        private static FontSet GetStandardFontSet() {
+            FontSet set = new FontSet();
+            set.AddFont(StandardFonts.COURIER);
+            set.AddFont(StandardFonts.COURIER_BOLD);
+            set.AddFont(StandardFonts.COURIER_BOLDOBLIQUE);
+            set.AddFont(StandardFonts.COURIER_OBLIQUE);
+            set.AddFont(StandardFonts.HELVETICA);
+            set.AddFont(StandardFonts.HELVETICA_BOLD);
+            set.AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            set.AddFont(StandardFonts.HELVETICA_OBLIQUE);
+            set.AddFont(StandardFonts.SYMBOL);
+            set.AddFont(StandardFonts.TIMES_ROMAN);
+            set.AddFont(StandardFonts.TIMES_BOLD);
+            set.AddFont(StandardFonts.TIMES_BOLDITALIC);
+            set.AddFont(StandardFonts.TIMES_ITALIC);
+            set.AddFont(StandardFonts.ZAPFDINGBATS);
+            return set;
         }
 
         private static FontInfo GetFirst(ICollection<FontInfo> fonts) {
