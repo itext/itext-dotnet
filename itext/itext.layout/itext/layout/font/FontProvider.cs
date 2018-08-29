@@ -168,15 +168,15 @@ namespace iText.Layout.Font {
             AddFont(StandardFonts.COURIER_BOLD);
             AddFont(StandardFonts.COURIER_BOLDOBLIQUE);
             AddFont(StandardFonts.COURIER_OBLIQUE);
-            AddFont(StandardFonts.HELVETICA);
-            AddFont(StandardFonts.HELVETICA_BOLD);
-            AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
-            AddFont(StandardFonts.HELVETICA_OBLIQUE);
+            fontSet.AddFont(StandardFonts.HELVETICA);
+            fontSet.AddFont(StandardFonts.HELVETICA_BOLD);
+            fontSet.AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            fontSet.AddFont(StandardFonts.HELVETICA_OBLIQUE);
             AddFont(StandardFonts.SYMBOL);
-            fontSet.AddFont(StandardFonts.TIMES_ROMAN, null, "Times");
-            fontSet.AddFont(StandardFonts.TIMES_BOLD, null, "Times-Roman Bold");
-            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC, null, "Times-Roman BoldItalic");
-            fontSet.AddFont(StandardFonts.TIMES_ITALIC, null, "Times-Roman Italic");
+            fontSet.AddFont(StandardFonts.TIMES_ROMAN, null, "Roman Times");
+            fontSet.AddFont(StandardFonts.TIMES_BOLD, null, "Roman Times");
+            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC, null, "Roman Times");
+            fontSet.AddFont(StandardFonts.TIMES_ITALIC, null, "Roman Times");
             AddFont(StandardFonts.ZAPFDINGBATS);
             return 14;
         }
