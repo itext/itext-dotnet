@@ -49,8 +49,6 @@ namespace iText.Layout.Font {
     public class FontSelector {
         protected internal IList<FontInfo> fonts;
 
-        private const String DEFAULT_FONT_FAMILY = "times";
-
         private const int EXPECTED_FONT_IS_BOLD_AWARD = 5;
 
         private const int EXPECTED_FONT_IS_NOT_BOLD_AWARD = 3;
@@ -112,11 +110,8 @@ namespace iText.Layout.Font {
                         this.fontFamilies.Add(lowercaseFontFamily);
                         this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, fc));
                     }
-                    this.fontFamilies.Add(DEFAULT_FONT_FAMILY);
-                    this.fontStyles.Add(ParseFontStyle(DEFAULT_FONT_FAMILY, fc));
                 }
                 else {
-                    this.fontFamilies.Add(DEFAULT_FONT_FAMILY);
                     this.fontStyles.Add(fc);
                 }
             }

@@ -90,23 +90,46 @@ namespace iText.Layout.Font {
     /// .
     /// </remarks>
     public class FontProvider {
+        private const String DEFAULT_FONT_FAMILY = "Helvetica";
+
         private readonly FontSet fontSet;
 
         private readonly FontSelectorCache fontSelectorCache;
+
+        /// <summary>
+        /// The default font-family is used by
+        /// <see cref="FontSelector"/>
+        /// if it's impossible to select a font for all other set font-families
+        /// </summary>
+        protected internal readonly String defaultFontFamily;
 
         protected internal readonly IDictionary<FontInfo, PdfFont> pdfFonts;
 
         /// <summary>Creates a new instance of FontProvider</summary>
         /// <param name="fontSet">predefined set of fonts, could be null.</param>
-        public FontProvider(FontSet fontSet) {
-            this.fontSet = fontSet != null ? fontSet : new FontSet();
-            pdfFonts = new Dictionary<FontInfo, PdfFont>();
-            fontSelectorCache = new FontSelectorCache(this.fontSet);
+        public FontProvider(FontSet fontSet)
+            : this(fontSet, DEFAULT_FONT_FAMILY) {
         }
 
         /// <summary>Creates a new instance of FontProvider.</summary>
         public FontProvider()
             : this(new FontSet()) {
+        }
+
+        /// <summary>Creates a new instance of FontProvider.</summary>
+        /// <param name="defaultFontFamily">default font family.</param>
+        public FontProvider(String defaultFontFamily)
+            : this(new FontSet(), defaultFontFamily) {
+        }
+
+        /// <summary>Creates a new instance of FontProvider</summary>
+        /// <param name="fontSet">predefined set of fonts, could be null.</param>
+        /// <param name="defaultFontFamily">default font family.</param>
+        public FontProvider(FontSet fontSet, String defaultFontFamily) {
+            this.fontSet = fontSet != null ? fontSet : new FontSet();
+            pdfFonts = new Dictionary<FontInfo, PdfFont>();
+            fontSelectorCache = new FontSelectorCache(this.fontSet);
+            this.defaultFontFamily = defaultFontFamily;
         }
 
         public virtual bool AddFont(FontProgram fontProgram, String encoding, Range unicodeRange) {
@@ -168,15 +191,15 @@ namespace iText.Layout.Font {
             AddFont(StandardFonts.COURIER_BOLD);
             AddFont(StandardFonts.COURIER_BOLDOBLIQUE);
             AddFont(StandardFonts.COURIER_OBLIQUE);
-            fontSet.AddFont(StandardFonts.HELVETICA);
-            fontSet.AddFont(StandardFonts.HELVETICA_BOLD);
-            fontSet.AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
-            fontSet.AddFont(StandardFonts.HELVETICA_OBLIQUE);
+            AddFont(StandardFonts.HELVETICA);
+            AddFont(StandardFonts.HELVETICA_BOLD);
+            AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            AddFont(StandardFonts.HELVETICA_OBLIQUE);
             AddFont(StandardFonts.SYMBOL);
-            fontSet.AddFont(StandardFonts.TIMES_ROMAN);
-            fontSet.AddFont(StandardFonts.TIMES_BOLD);
-            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC);
-            fontSet.AddFont(StandardFonts.TIMES_ITALIC);
+            AddFont(StandardFonts.TIMES_ROMAN);
+            AddFont(StandardFonts.TIMES_BOLD);
+            AddFont(StandardFonts.TIMES_BOLDITALIC);
+            AddFont(StandardFonts.TIMES_ITALIC);
             AddFont(StandardFonts.ZAPFDINGBATS);
             return 14;
         }
@@ -189,6 +212,12 @@ namespace iText.Layout.Font {
         /// <returns>the fontset</returns>
         public virtual FontSet GetFontSet() {
             return fontSet;
+        }
+
+        /// <summary>Gets the default font-family</summary>
+        /// <returns>the default font-family</returns>
+        public virtual String GetDefaultFontFamily() {
+            return defaultFontFamily;
         }
 
         public virtual String GetDefaultEncoding(FontProgram fontProgram) {
@@ -305,7 +334,9 @@ namespace iText.Layout.Font {
         /// </returns>
         protected internal virtual FontSelector CreateFontSelector(ICollection<FontInfo> fonts, IList<String> fontFamilies
             , FontCharacteristics fc) {
-            return new FontSelector(fonts, fontFamilies, fc);
+            IList<String> fontFamiliesToBeProcessed = new List<String>(fontFamilies);
+            fontFamiliesToBeProcessed.Add(defaultFontFamily);
+            return new FontSelector(fonts, fontFamiliesToBeProcessed, fc);
         }
 
         /// <summary>
