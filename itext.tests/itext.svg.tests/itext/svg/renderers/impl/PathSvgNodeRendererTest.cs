@@ -94,6 +94,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
+            //This test should fail when RND-904 (relative line operator l ) is implemented.
             String filename = "pathNodeRendererMoveToTest1.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
@@ -336,6 +337,48 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathLOperatorMultipleCoordinates() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathLOperatorMultipleCoordinates");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathVOperatorTest01() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathVOperatorTest01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathZOperatorContinuePathingTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathZOperatorContinuePathingTest");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathVOperatorMultipleArgumentsTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathVOperatorMultipleArgumentsTest");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathHOperatorSimpleTest01() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathHOperatorSimpleTest01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathHandVOperatorTest01() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathHandVOperatorTest01");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CurveToContinuePathingTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "curveToContinuePathingTest");
         }
     }
 }

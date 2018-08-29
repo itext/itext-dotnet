@@ -135,12 +135,26 @@ namespace iText.Svg.Renderers {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityfill");
         }
 
-        /* This test should fail when RND-910 is resolved*/
+        /* This test should fail when RND-1108 is resolved*/
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EofillUnsuportedAtributeTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillUnsuportedAtributeTest");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathVerticalLineFillTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "pathVerticalLineFillTest");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathHorizontalLineFillTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHorizontalLineFillTest");
         }
     }
 }

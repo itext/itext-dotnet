@@ -362,8 +362,8 @@ namespace iText.Svg {
             /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
             public const String RY = "ry";
 
-            /// <summary>Colse Path Operator.</summary>
-            public const String PATH_DATA_CLOSE_PATH = "z";
+            /// <summary>Close Path Operator.</summary>
+            public const String PATH_DATA_CLOSE_PATH = "Z";
 
             /// <summary>CurveTo Path Operator.</summary>
             public const String PATH_DATA_CURVE_TO = "C";

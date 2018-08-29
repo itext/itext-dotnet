@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Svg.Renderers.Path {
@@ -62,5 +63,21 @@ namespace iText.Svg.Renderers.Path {
         void SetCoordinates(String[] coordinates);
 
         IDictionary<String, String> GetCoordinates();
+
+        /// <summary>
+        /// Gets the ending point on the canvas after the path shape has been drawn
+        /// via the
+        /// <see cref="Draw(iText.Kernel.Pdf.Canvas.PdfCanvas)"/>
+        /// method.
+        /// </summary>
+        /// <returns>
+        /// The
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// representing the final point in the drawn path.
+        /// If the point does not exist or does not change
+        /// <see langword="null"/>
+        /// may be returned.
+        /// </returns>
+        Point GetEndingPoint();
     }
 }

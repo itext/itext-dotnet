@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
 using iText.Svg.Exceptions;
@@ -43,6 +44,10 @@ namespace iText.Svg.Renderers.Impl {
             }
 
             public override void SetCoordinates(String[] coordinates) {
+            }
+
+            public override Point GetEndingPoint() {
+                return null;
             }
 
             internal DummyShape(PathShapeUnitTest _enclosing) {

@@ -42,11 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements curveTo(L) attribute of SVG's path element</summary>
+    /// <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
     public class QuadraticCurveTo : AbstractPathShape {
         /// <summary>Draws a quadratic Bézier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
@@ -63,6 +64,12 @@ namespace iText.Svg.Renderers.Path.Impl {
             map.Put("x", coordinates.Length > 2 && !String.IsNullOrEmpty(coordinates[2]) ? coordinates[2] : "0");
             map.Put("y", coordinates.Length > 3 && !String.IsNullOrEmpty(coordinates[3]) ? coordinates[3] : "0");
             SetProperties(map);
+        }
+
+        public override Point GetEndingPoint() {
+            float x = GetSvgCoordinate(properties, SvgConstants.Attributes.X);
+            float y = GetSvgCoordinate(properties, SvgConstants.Attributes.Y);
+            return new Point(x, y);
         }
     }
 }

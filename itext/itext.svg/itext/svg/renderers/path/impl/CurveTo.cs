@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
 
@@ -64,6 +65,12 @@ namespace iText.Svg.Renderers.Path.Impl {
             map.Put("x", coordinates.Length > 4 && !String.IsNullOrEmpty(coordinates[4]) ? coordinates[4] : "0");
             map.Put("y", coordinates.Length > 5 && !String.IsNullOrEmpty(coordinates[5]) ? coordinates[5] : "0");
             SetProperties(map);
+        }
+
+        public override Point GetEndingPoint() {
+            float x = GetSvgCoordinate(properties, SvgConstants.Attributes.X);
+            float y = GetSvgCoordinate(properties, SvgConstants.Attributes.Y);
+            return new Point(x, y);
         }
     }
 }
