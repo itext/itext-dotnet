@@ -173,10 +173,10 @@ namespace iText.Layout.Font {
             fontSet.AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
             fontSet.AddFont(StandardFonts.HELVETICA_OBLIQUE);
             AddFont(StandardFonts.SYMBOL);
-            fontSet.AddFont(StandardFonts.TIMES_ROMAN, null, "Roman Times");
-            fontSet.AddFont(StandardFonts.TIMES_BOLD, null, "Roman Times");
-            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC, null, "Roman Times");
-            fontSet.AddFont(StandardFonts.TIMES_ITALIC, null, "Roman Times");
+            fontSet.AddFont(StandardFonts.TIMES_ROMAN);
+            fontSet.AddFont(StandardFonts.TIMES_BOLD);
+            fontSet.AddFont(StandardFonts.TIMES_BOLDITALIC);
+            fontSet.AddFont(StandardFonts.TIMES_ITALIC);
             AddFont(StandardFonts.ZAPFDINGBATS);
             return 14;
         }

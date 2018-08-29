@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
@@ -50,7 +49,7 @@ namespace iText.Layout.Font {
     public class FontSelector {
         protected internal IList<FontInfo> fonts;
 
-        private const String DEFAULT_FONT = "times";
+        private const String DEFAULT_FONT_FAMILY = "times";
 
         private const int EXPECTED_FONT_IS_BOLD_AWARD = 5;
 
@@ -64,32 +63,7 @@ namespace iText.Layout.Font {
 
         private const int EXPECTED_FONT_IS_NOT_MONOSPACED_AWARD = 1;
 
-        private const int FULL_NAME_EQUALS_AWARD = 3;
-
-        private const int FONT_NAME_EQUALS_AWARD = 3;
-
-        private const int ALIAS_EQUALS_AWARD = 13;
-
-        private const int FULL_NAME_CONTAINS_AWARD = 5;
-
-        private const int FONT_NAME_CONTAINS_AWARD = 5;
-
-        private const int ALIAS_CONTAINS_AWARD = 5;
-
-        private const int CONTAINS_ADDITIONAL_AWARD = 3;
-
-        private const int EQUALS_ADDITIONAL_AWARD = 1;
-
-        private static ICollection<String> styleItems;
-
-        static FontSelector() {
-            styleItems = new HashSet<String>();
-            styleItems.Add("italic");
-            styleItems.Add("oblique");
-            styleItems.Add("bold");
-            styleItems.Add("boldoblique");
-            styleItems.Add("bolditalic");
-        }
+        private const int FONT_FAMILY_EQUALS_AWARD = 13;
 
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
@@ -138,11 +112,11 @@ namespace iText.Layout.Font {
                         this.fontFamilies.Add(lowercaseFontFamily);
                         this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, fc));
                     }
-                    this.fontFamilies.Add("times");
-                    this.fontStyles.Add(ParseFontStyle("times", fc));
+                    this.fontFamilies.Add(DEFAULT_FONT_FAMILY);
+                    this.fontStyles.Add(ParseFontStyle(DEFAULT_FONT_FAMILY, fc));
                 }
                 else {
-                    this.fontFamilies.Add("times");
+                    this.fontFamilies.Add(DEFAULT_FONT_FAMILY);
                     this.fontStyles.Add(fc);
                 }
             }
@@ -155,7 +129,9 @@ namespace iText.Layout.Font {
                     if (fontFamily.EqualsIgnoreCase("monospace")) {
                         fc.SetMonospaceFlag(true);
                     }
-                    res = CharacteristicsSimilarity(fontFamily, fc, o2) - CharacteristicsSimilarity(fontFamily, fc, o1);
+                    bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;
+                    res = CharacteristicsSimilarity(fontFamily, fc, o2, isLastFontFamilyToBeProcessed) - CharacteristicsSimilarity
+                        (fontFamily, fc, o1, isLastFontFamilyToBeProcessed);
                 }
                 return res;
             }
@@ -176,19 +152,21 @@ namespace iText.Layout.Font {
             }
 
             /// <summary>
-            /// // TODO-2050 Update the documentation once the changes are accepted
+            /// // TODO DEVSIX-2050 Update the documentation once the changes are accepted
             /// This method is used to compare two fonts (the first is described by fontInfo,
             /// the second is described by fc and fontFamily) and measure their similarity.
             /// </summary>
             /// <remarks>
-            /// // TODO-2050 Update the documentation once the changes are accepted
+            /// // TODO DEVSIX-2050 Update the documentation once the changes are accepted
             /// This method is used to compare two fonts (the first is described by fontInfo,
             /// the second is described by fc and fontFamily) and measure their similarity.
             /// The more the fonts are similar the higher the score is.
+            /// <p>
             /// We check whether the fonts are both:
             /// a) bold
             /// b) italic
             /// c) monospaced
+            /// <p>
             /// We also check whether the font names are identical. There are two blocks of conditions:
             /// "equals" and "contains". They cannot be satisfied simultaneously.
             /// Some remarks about these checks:
@@ -198,11 +176,43 @@ namespace iText.Layout.Font {
             /// in highly inflated score. So we decrease an award for other conditions of the block
             /// if one has been already satisfied.
             /// </remarks>
-            private static int CharacteristicsSimilarity(String fontFamily, FontCharacteristics fc, FontInfo fontInfo) {
+            private static int CharacteristicsSimilarity(String fontFamily, FontCharacteristics fc, FontInfo fontInfo, 
+                bool isLastFontFamilyToBeProcessed) {
                 bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
                 bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
                 bool isFontMonospace = fontInfo.GetDescriptor().IsMonospace();
                 int score = 0;
+                // if font-family is monospace, serif or sans-serif, actual font's name shouldn't be checked
+                bool fontFamilySetByCharacteristics = false;
+                // check whether we want to select a monospace, TODO DEVSIX-1034 serif or sans-serif font
+                if (fc.IsMonospace()) {
+                    fontFamilySetByCharacteristics = true;
+                    if (isFontMonospace) {
+                        score += EXPECTED_FONT_IS_MONOSPACED_AWARD;
+                    }
+                    else {
+                        score -= EXPECTED_FONT_IS_MONOSPACED_AWARD;
+                    }
+                }
+                else {
+                    if (isFontMonospace) {
+                        score -= EXPECTED_FONT_IS_NOT_MONOSPACED_AWARD;
+                    }
+                }
+                if (!fontFamilySetByCharacteristics) {
+                    // if alias is set, fontInfo's descriptor should not be checked
+                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && fontInfo.GetDescriptor().GetFamilyNameLowerCase
+                        ().Equals(fontFamily) || (null != fontInfo.GetAlias() && fontInfo.GetAlias().ToLowerInvariant().Equals
+                        (fontFamily)))) {
+                        score += FONT_FAMILY_EQUALS_AWARD;
+                    }
+                    else {
+                        if (!isLastFontFamilyToBeProcessed) {
+                            return score;
+                        }
+                    }
+                }
+                // calculate style characteristics
                 if (fc.IsBold()) {
                     if (isFontBold) {
                         score += EXPECTED_FONT_IS_BOLD_AWARD;
@@ -229,74 +239,7 @@ namespace iText.Layout.Font {
                         score -= EXPECTED_FONT_IS_NOT_ITALIC_AWARD;
                     }
                 }
-                if (fc.IsMonospace()) {
-                    if (isFontMonospace) {
-                        score += EXPECTED_FONT_IS_MONOSPACED_AWARD;
-                    }
-                    else {
-                        score -= EXPECTED_FONT_IS_MONOSPACED_AWARD;
-                    }
-                }
-                else {
-                    if (isFontMonospace) {
-                        score -= EXPECTED_FONT_IS_NOT_MONOSPACED_AWARD;
-                    }
-                }
-                // empty font name means that font family wasn't detected. in that case one should use the default one
-                if ("".Equals(fontFamily) || (!fontFamily.Equals(fontInfo.GetDescriptor().GetFamilyNameLowerCase()) && (null
-                     == fontInfo.GetAlias() || !fontInfo.GetAlias().Contains(fontFamily)))) {
-                    return score;
-                }
-                FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
-                bool containsConditionHasBeenSatisfied = false;
-                int num = GetNumberOfCommonItems(fontFamily, descriptor.GetFullNameLowerCase());
-                if (num > 0) {
-                    // the next condition can be simplified. it's been written that way to prevent mistakes if the condition is moved.
-                    score += !containsConditionHasBeenSatisfied ? num * FULL_NAME_CONTAINS_AWARD : num * CONTAINS_ADDITIONAL_AWARD;
-                    containsConditionHasBeenSatisfied = true;
-                }
-                num = GetNumberOfCommonItems(fontFamily, descriptor.GetFamilyNameLowerCase());
-                if (num > 0) {
-                    score += !containsConditionHasBeenSatisfied ? num * FONT_NAME_CONTAINS_AWARD : num * CONTAINS_ADDITIONAL_AWARD;
-                    containsConditionHasBeenSatisfied = true;
-                }
-                if (null != fontInfo.GetAlias()) {
-                    num = GetNumberOfCommonItems(fontFamily, fontInfo.GetAlias());
-                    if (num > 0) {
-                        score += !containsConditionHasBeenSatisfied ? num * ALIAS_CONTAINS_AWARD : num * CONTAINS_ADDITIONAL_AWARD;
-                        // the next line is redundant. it's added to prevent mistakes if other condition is added.
-                        containsConditionHasBeenSatisfied = true;
-                    }
-                }
-                bool equalsConditionHasBeenSatisfied = false;
-                if (fontFamily.Equals(fontInfo.GetAlias())) {
-                    score += ALIAS_EQUALS_AWARD;
-                    equalsConditionHasBeenSatisfied = true;
-                }
-                if (fontFamily.Equals(descriptor.GetFullNameLowerCase())) {
-                    // the next condition can be simplified. it's been written that way to prevent mistakes if the condition is moved.
-                    score += !equalsConditionHasBeenSatisfied ? FULL_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
-                    equalsConditionHasBeenSatisfied = true;
-                }
-                if (fontFamily.Equals(descriptor.GetFontNameLowerCase())) {
-                    score += !equalsConditionHasBeenSatisfied ? FONT_NAME_EQUALS_AWARD : EQUALS_ADDITIONAL_AWARD;
-                    // the next line is redundant. it's added to prevent mistakes if other condition is added.
-                    equalsConditionHasBeenSatisfied = true;
-                }
                 return score;
-            }
-
-            private static int GetNumberOfCommonItems(String expectedString, String testString) {
-                int result = 0;
-                StringTokenizer tokenizer = new StringTokenizer(expectedString, " -");
-                String token = null;
-                while (tokenizer.HasMoreTokens()) {
-                    token = tokenizer.NextToken();
-                    if (testString.Contains(token) && !styleItems.Contains(token)) {
-                        result++;
-                    }
-                }
-                return result;
             }
         }
     }
