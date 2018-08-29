@@ -64,8 +64,6 @@ namespace iText.Layout {
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
-        private const String PANGRAM = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
@@ -98,6 +96,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup2() {
+            // TODO DEVSIX-2120 The font-family name of Puritan2.otf is 'Puritan 2.0' but this name doesn't match font-family name pattern
             String fileName = "cyrillicAndLatinGroup2";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
@@ -386,96 +385,139 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StandardFontSetTimesTest01() {
-            StandardFontSetTest("Times", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic");
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void StandardFontSetHelveticaTest01() {
-            StandardFontSetTest("Helvetica", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique"
+            CheckSelector(GetStandardFontSet().GetFonts(), "Times", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic"
                 );
         }
 
         [NUnit.Framework.Test]
-        public virtual void StandardFontSetCourierTest() {
-            StandardFontSetTest("Courier", "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique");
+        public virtual void StandardFontSetHelveticaTest01() {
+            CheckSelector(GetStandardFontSet().GetFonts(), "Helvetica", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique"
+                , "Helvetica-BoldOblique");
         }
 
-        private void StandardFontSetTest(String fontFamily, String expectedNormal, String expectedBold, String expectedItalic
-            , String expectedBoldItalic) {
-            ICollection<FontInfo> fontInfoCollection = GetStandardFontSet().GetFonts();
+        [NUnit.Framework.Test]
+        public virtual void StandardFontSetCourierTest01() {
+            CheckSelector(GetStandardFontSet().GetFonts(), "Courier", "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansFontSetIncorrectNameTest01() {
+            // TODO DEVSIX-2120 Currently both light and regular fonts have the same score so that light is picked up lexicographically. After the changes are implemented the correct one (regular) font shall be selected and the expected constants should be updated
+            // TODO Default font shall be specified.
+            FontSet set = GetOpenSansFontSet();
+            AddTimesFonts(set);
+            CheckSelector(set.GetFonts(), "OpenSans", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic", "OpenSans-BoldItalic"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansFontSetRegularTest01() {
+            // TODO DEVSIX-2120 Currently both light and regular fonts have the same score so that light is picked up lexicographically. After the changes are implemented the correct one (regular) font shall be selected and the expected constants should be updated
+            // TODO Default font shall be specified.
+            FontSet set = GetOpenSansFontSet();
+            AddTimesFonts(set);
+            CheckSelector(set.GetFonts(), "Open Sans", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic", "OpenSans-BoldItalic"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansFontSetLightTest01() {
+            // TODO DEVSIX-2127 After DEVSIX-2120 the font should be selected correctly, but the text will still need to be bolded via emulation
+            // TODO DEVSIX-2120 Light subfamily is not processed
+            // TODO Default font shall be specified.
+            FontSet set = GetOpenSansFontSet();
+            AddTimesFonts(set);
+            CheckSelector(set.GetFonts(), "Open Sans Light", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic"
+                , "OpenSans-BoldItalic");
+        }
+
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2120: we cannot set a wrong expected string for normal font characteristics because in different contexts iText selects different fonts"
+            )]
+        public virtual void OpenSansFontSetExtraBoldTest01() {
+            // TODO DEVSIX-2120 ExtraBold subfamily is not processed
+            // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
+            FontSet set = GetOpenSansFontSet();
+            AddTimesFonts(set);
+            CheckSelector(set.GetFonts(), "Open Sans ExtraBold", "Times-Bold", "Times-Bold", "Times-BoldItalic", "Times-BoldItalic"
+                );
+        }
+
+        private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal
+            , String expectedBold, String expectedItalic, String expectedBoldItalic) {
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add(fontFamily);
-            FontCharacteristics fc;
             // Normal
-            fc = new FontCharacteristics();
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            FontCharacteristics fc = new FontCharacteristics();
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedNormal);
             fc = new FontCharacteristics();
             fc.SetFontWeight((short)300);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedNormal);
             fc = new FontCharacteristics();
             fc.SetFontWeight((short)100);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedNormal);
             fc = new FontCharacteristics();
             fc.SetFontWeight("normal");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedNormal);
             fc = new FontCharacteristics();
             fc.SetFontStyle("normal");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedNormal));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedNormal);
             // Bold
             fc = new FontCharacteristics();
             fc.SetBoldFlag(true);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBold);
             fc = new FontCharacteristics();
             fc.SetFontWeight("bold");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBold);
             fc = new FontCharacteristics();
             fc.SetFontWeight((short)700);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBold);
             fc = new FontCharacteristics();
             fc.SetFontWeight((short)800);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBold));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBold);
             // Italic
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight("normal");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)300);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)500);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedItalic);
             // BoldItalic
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight("bold");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBoldItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
             fc.SetFontWeight("bold");
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBoldItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)700);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBoldItalic);
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)800);
-            NUnit.Framework.Assert.IsTrue(CheckFontSelector(fontInfoCollection, fontFamilies, fc, expectedBoldItalic));
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, expectedBoldItalic);
         }
 
-        private bool CheckFontSelector(ICollection<FontInfo> fontInfoCollection, IList<String> fontFamilies, FontCharacteristics
+        private void AssertSelectedFont(ICollection<FontInfo> fontInfoCollection, IList<String> fontFamilies, FontCharacteristics
              fc, String expectedFontName) {
-            return expectedFontName.Equals(new FontSelector(fontInfoCollection, fontFamilies, fc).BestMatch().GetFontName
-                ());
+            NUnit.Framework.Assert.AreEqual(expectedFontName, new FontSelector(fontInfoCollection, fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
         }
 
         private static FontSet GetStandardFontSet() {
@@ -489,11 +531,32 @@ namespace iText.Layout {
             set.AddFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
             set.AddFont(StandardFonts.HELVETICA_OBLIQUE);
             set.AddFont(StandardFonts.SYMBOL);
+            set.AddFont(StandardFonts.ZAPFDINGBATS);
+            AddTimesFonts(set);
+            return set;
+        }
+
+        private static FontSet GetOpenSansFontSet() {
+            String openSansFolder = "Open_Sans/";
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Bold.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-BoldItalic.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-ExtraBold.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-ExtraBoldItalic.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Light.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-LightItalic.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Regular.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Italic.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-SemiBold.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-SemiBoldItalic.ttf");
+            return set;
+        }
+
+        private static FontSet AddTimesFonts(FontSet set) {
             set.AddFont(StandardFonts.TIMES_ROMAN);
             set.AddFont(StandardFonts.TIMES_BOLD);
             set.AddFont(StandardFonts.TIMES_BOLDITALIC);
             set.AddFont(StandardFonts.TIMES_ITALIC);
-            set.AddFont(StandardFonts.ZAPFDINGBATS);
             return set;
         }
 
