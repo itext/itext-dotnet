@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -59,6 +61,7 @@ using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Converter {
     /// <summary>
@@ -70,6 +73,8 @@ namespace iText.Svg.Converter {
     public sealed class SvgConverter {
         private SvgConverter() {
         }
+
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Converter.SvgConverter));
 
         private static void CheckNull(Object o) {
             if (o == null) {
@@ -706,8 +711,11 @@ namespace iText.Svg.Converter {
             //Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
-            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT));
+            float width;
+            float height;
+            float[] wh = ExtractWidthAndHeight(topSvgRenderer);
+            width = wh[0];
+            height = wh[1];
             //adjust pagesize and create new page
             pdfDocument.SetDefaultPageSize(new PageSize(width, height));
             PdfPage page = pdfDocument.AddNewPage();
@@ -1133,8 +1141,11 @@ namespace iText.Svg.Converter {
             CheckNull(topSvgRenderer);
             CheckNull(document);
             CheckNull(context);
-            float width = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH));
-            float height = CssUtils.ParseAbsoluteLength(topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT));
+            float width;
+            float height;
+            float[] wh = ExtractWidthAndHeight(topSvgRenderer);
+            width = wh[0];
+            height = wh[1];
             PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
@@ -1286,6 +1297,64 @@ namespace iText.Svg.Converter {
             // props is allowed to be null
             IXmlParser xmlParser = new JsoupXmlParser();
             return xmlParser.Parse(stream, props != null ? props.GetCharset() : null);
+        }
+
+        /// <summary>
+        /// Extract width and height of the passed SVGNodeRenderer,
+        /// defaulting to respective viewbox values if either one is not present or
+        /// to browser default if viewbox is missing as well
+        /// </summary>
+        /// <returns>float[2], width is in position 0, height in position 1</returns>
+        private static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
+            float[] res = new float[2];
+            bool viewBoxPresent = false;
+            //Parse viewbox
+            String vbString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX);
+            float[] values = new float[] { 0, 0, 0, 0 };
+            if (vbString != null) {
+                IList<String> valueStrings = SvgCssUtils.SplitValueList(vbString);
+                values = new float[valueStrings.Count];
+                for (int i = 0; i < values.Length; i++) {
+                    values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+                }
+            }
+            float width;
+            float height;
+            String wString;
+            String hString;
+            wString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH);
+            if (wString == null) {
+                //Log Warning
+                LOGGER.Warn(SvgLogMessageConstant.MISSING_WIDTH);
+                if (viewBoxPresent) {
+                    width = values[2];
+                }
+                else {
+                    //Set to browser default
+                    width = CssUtils.ParseAbsoluteLength("300px");
+                }
+            }
+            else {
+                width = CssUtils.ParseAbsoluteLength(wString);
+            }
+            hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
+            if (hString == null) {
+                //Log Warning
+                LOGGER.Warn(SvgLogMessageConstant.MISSING_HEIGHT);
+                if (viewBoxPresent) {
+                    height = values[3];
+                }
+                else {
+                    //Set to browser default
+                    height = CssUtils.ParseAbsoluteLength("150px");
+                }
+            }
+            else {
+                height = CssUtils.ParseAbsoluteLength(hString);
+            }
+            res[0] = width;
+            res[1] = height;
+            return res;
         }
     }
 }

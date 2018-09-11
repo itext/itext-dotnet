@@ -69,45 +69,29 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AbsentEverything() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentEverything");
-            }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
-;
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         public virtual void AbsentHeight() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
-            }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
-;
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AbsentWidth() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
-            }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
-;
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AbsentWidthAndHeight() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
-            }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
-;
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AbsentWHViewboxPresent() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWHViewboxPresent");
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -74,6 +74,10 @@ namespace iText.Svg.Exceptions {
 
         public const String LOOP = "Loop detected";
 
+        public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not present, so browser default of 300px is used";
+
+        public const String MISSING_HEIGHT = "Top Svg tag has no defined height attribute and viewbox height is not present, so browser default of 150px is used";
+
         public const String NAMED_OBJECT_NAME_NULL_OR_EMPTY = "The name of the named object can't be null or empty.";
 
         public const String NAMED_OBJECT_NULL = "A named object can't be null.";
