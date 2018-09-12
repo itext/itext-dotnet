@@ -95,7 +95,7 @@ namespace iText.Kernel.Utils {
 
         private const String ignoredAreasPrefix = "ignored_areas_";
 
-        private const String gsParams = " -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile='<outputfile>' '<inputfile>'";
+        private const String gsParams = " -dSAFER s-dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile='<outputfile>' '<inputfile>'";
 
         private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
