@@ -380,5 +380,48 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void CurveToContinuePathingTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "curveToContinuePathingTest");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RelativeHorizontalLineToTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "relativeHorizontalLineTo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RelativeVerticalLineToTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "relativeVerticalLineTo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CombinedRelativeVerticalLineToAndRelativeHorizontalLineToTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "combinedRelativeVerticalLineToAndRelativeHorizontalLineTo"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultipleRelativeHorizontalLineToTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "multipleRelativeHorizontalLineTo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultipleRelativeVerticalLineToTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "multipleRelativeVerticalLineTo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EofillUnsuportedPathTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
+        }
     }
 }

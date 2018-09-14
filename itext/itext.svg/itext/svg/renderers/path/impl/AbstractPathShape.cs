@@ -54,6 +54,9 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>The properties of this shape.</summary>
         protected internal IDictionary<String, String> properties;
 
+        /// <summary>Whether this is a relative operator or not.</summary>
+        protected internal bool relative;
+
         /// <summary>Get a coordinate based on a key value.</summary>
         /// <param name="attributes">map containing the attributes of the shape</param>
         /// <param name="key">key of the coordinate</param>
@@ -87,6 +90,10 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         public virtual IDictionary<String, String> GetCoordinates() {
             return properties;
+        }
+
+        public virtual bool IsRelative() {
+            return this.relative;
         }
 
         public abstract void Draw(PdfCanvas arg1);

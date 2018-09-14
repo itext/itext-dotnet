@@ -46,6 +46,18 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(V) attribute of SVG's path element</summary>
     public class VerticalLineTo : OneDimensionalLineTo {
+        /// <summary>Creates an absolute Vertical LineTo.</summary>
+        public VerticalLineTo()
+            : this(false) {
+        }
+
+        /// <summary>Creates a Vertical LineTo.</summary>
+        /// <remarks>Creates a Vertical LineTo. Set argument to true to create a relative VerticalLineTo.</remarks>
+        /// <param name="relative">whether this is a relative VerticalLineTo or not</param>
+        public VerticalLineTo(bool relative) {
+            base.relative = relative;
+        }
+
         public override void Draw(PdfCanvas canvas) {
             float minY = GetCoordinate(properties, MINIMUM_CHANGING_DIMENSION_VALUE);
             float maxY = GetCoordinate(properties, MAXIMUM_CHANGING_DIMENSION_VALUE);

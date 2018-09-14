@@ -112,6 +112,7 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% path\n");
+            currentPoint = new Point(0, 0);
             foreach (IPathShape item in GetShapes()) {
                 item.Draw(canvas);
             }
@@ -151,7 +152,7 @@ namespace iText.Svg.Renderers.Impl {
                 if (previousShape != null) {
                     IDictionary<String, String> coordinates = previousShape.GetCoordinates();
                     //if the previous command was a C or S use its last control point
-                    if (((previousShape is CurveTo) || (previousShape is SmoothSCurveTo))) {
+                    if (((previousShape is CurveTo))) {
                         float reflectedX = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.X)) - CssUtils.
                             ParseFloat(coordinates.Get(SvgConstants.Attributes.X2)));
                         float reflectedy = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.Y)) - CssUtils.
@@ -175,14 +176,16 @@ namespace iText.Svg.Renderers.Impl {
                 if (shape is VerticalLineTo) {
                     String currentX = currentPoint.x.ToString();
                     String currentY = currentPoint.y.ToString();
-                    String[] yValues = Concatenate(new String[] { currentY }, operatorArgs);
+                    String[] yValues = Concatenate(new String[] { currentY }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
+                        (operatorArgs, currentPoint.y) : operatorArgs);
                     shapeCoordinates = Concatenate(new String[] { currentX }, yValues);
                 }
                 else {
                     if (shape is HorizontalLineTo) {
                         String currentX = currentPoint.x.ToString();
                         String currentY = currentPoint.y.ToString();
-                        String[] xValues = Concatenate(new String[] { currentX }, operatorArgs);
+                        String[] xValues = Concatenate(new String[] { currentX }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
+                            (operatorArgs, currentPoint.x) : operatorArgs);
                         shapeCoordinates = Concatenate(new String[] { currentY }, xValues);
                     }
                 }
@@ -191,6 +194,17 @@ namespace iText.Svg.Renderers.Impl {
                 shapeCoordinates = operatorArgs;
             }
             return shapeCoordinates;
+        }
+
+        private String[] MakeRelativeOperatorsAbsolute(String[] relativeOperators, double currentCoordinate) {
+            String[] absoluteOperators = new String[relativeOperators.Length];
+            for (int i = 0; i < relativeOperators.Length; i++) {
+                double relativeDouble = Double.Parse(relativeOperators[i], System.Globalization.CultureInfo.InvariantCulture
+                    );
+                relativeDouble += currentCoordinate;
+                absoluteOperators[i] = relativeDouble.ToString();
+            }
+            return absoluteOperators;
         }
 
         /// <summary>
@@ -236,15 +250,14 @@ namespace iText.Svg.Renderers.Impl {
                     zOperator.SetCoordinates(shapeCoordinates);
                 }
             }
-            Point endingPoint = null;
             if (pathShape != null) {
                 if (shapeCoordinates != null) {
                     pathShape.SetCoordinates(shapeCoordinates);
                 }
-                endingPoint = pathShape.GetEndingPoint();
+                currentPoint = pathShape.GetEndingPoint();
+                // unsupported operators are ignored.
                 shapes.Add(pathShape);
             }
-            currentPoint = endingPoint;
             return shapes;
         }
 

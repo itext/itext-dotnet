@@ -49,6 +49,14 @@ using iText.Svg;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(L) attribute of SVG's path element</summary>
     public class LineTo : AbstractPathShape {
+        public LineTo()
+            : this(false) {
+        }
+
+        public LineTo(bool relative) {
+            base.relative = relative;
+        }
+
         public override void Draw(PdfCanvas canvas) {
             canvas.LineTo(GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
                 .Y));

@@ -56,7 +56,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// For vertical lines the x value will not change,
         /// for horizontal lines y value will not change.
         /// </remarks>
-        protected internal readonly String CURRENT_NONCHANGING_DIMENSION_VALUE = "CURRENT_NONCHANGING_DIMENSION_VALUE";
+        protected internal const String CURRENT_NONCHANGING_DIMENSION_VALUE = "CURRENT_NONCHANGING_DIMENSION_VALUE";
 
         /// <summary>The minimum x or y value in the dimension that will change.</summary>
         /// <remarks>
@@ -64,7 +64,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// For vertical lines this will be the y value of the bottom-most point.
         /// For horizontal lines this will be the x value of the left-most point.
         /// </remarks>
-        protected internal readonly String MINIMUM_CHANGING_DIMENSION_VALUE = "MINIMUM_CHANGING_DIMENSION_VALUE";
+        protected internal const String MINIMUM_CHANGING_DIMENSION_VALUE = "MINIMUM_CHANGING_DIMENSION_VALUE";
 
         /// <summary>The maximum x or y value in the dimension that will change.</summary>
         /// <remarks>
@@ -72,7 +72,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// For vertical lines this will be the y value of the top-most point.
         /// For horizontal lines this will be the x value of the righ-most point.
         /// </remarks>
-        protected internal readonly String MAXIMUM_CHANGING_DIMENSION_VALUE = "MAXIMUM_CHANGING_DIMENSION_VALUE";
+        protected internal const String MAXIMUM_CHANGING_DIMENSION_VALUE = "MAXIMUM_CHANGING_DIMENSION_VALUE";
 
         /// <summary>The final x or y value in the dimension that will change.</summary>
         /// <remarks>
@@ -80,7 +80,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// For vertical lines this will be the y value of the last point.
         /// For horizontal lines this will be the x value of the last point.
         /// </remarks>
-        protected internal readonly String ENDING_CHANGING_DIMENSION_VALUE = "ENDING_CHANGING_DIMENSION_VALUE";
+        protected internal const String ENDING_CHANGING_DIMENSION_VALUE = "ENDING_CHANGING_DIMENSION_VALUE";
 
         /// <summary>Sets the minimum and maximum value of the coordinates in the dimension that changes for this line segment.
         ///     </summary>

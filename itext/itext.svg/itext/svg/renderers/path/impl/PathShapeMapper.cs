@@ -60,7 +60,9 @@ namespace iText.Svg.Renderers.Path.Impl {
             IDictionary<String, IPathShape> result = new Dictionary<String, IPathShape>();
             result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO, new LineTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO_V, new VerticalLineTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_LINE_TO_V, new VerticalLineTo(true));
             result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO_H, new HorizontalLineTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_LINE_TO_H, new HorizontalLineTo(true));
             result.Put(SvgConstants.Attributes.PATH_DATA_CLOSE_PATH, new ClosePath());
             result.Put(SvgConstants.Attributes.PATH_DATA_CLOSE_PATH.ToLowerInvariant(), new ClosePath());
             result.Put(SvgConstants.Attributes.PATH_DATA_MOVE_TO, new MoveTo());

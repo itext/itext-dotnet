@@ -62,6 +62,8 @@ namespace iText.Svg.Renderers.Path {
         /// </param>
         void SetCoordinates(String[] coordinates);
 
+        /// <summary>Returns the coordinates associated with this Shape.</summary>
+        /// <returns>the coordinates associated with this Shape</returns>
         IDictionary<String, String> GetCoordinates();
 
         /// <summary>
@@ -79,5 +81,10 @@ namespace iText.Svg.Renderers.Path {
         /// may be returned.
         /// </returns>
         Point GetEndingPoint();
+
+        /// <summary>Returns true when this shape is a relative operator.</summary>
+        /// <remarks>Returns true when this shape is a relative operator. False if it is an absolute operator.</remarks>
+        /// <returns>true if relative, false if absolute</returns>
+        bool IsRelative();
     }
 }
