@@ -1305,7 +1305,7 @@ namespace iText.Svg.Converter {
         /// to browser default if viewbox is missing as well
         /// </summary>
         /// <returns>float[2], width is in position 0, height in position 1</returns>
-        private static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
+        public static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
             float[] res = new float[2];
             bool viewBoxPresent = false;
             //Parse viewbox
