@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Test;
@@ -72,14 +73,103 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 }
             }
             // compare
-            NUnit.Framework.Assert.AreEqual(locationList.Count, 1);
+            NUnit.Framework.Assert.AreEqual(1, locationList.Count);
             IPdfTextLocation loc = locationList[0];
-            NUnit.Framework.Assert.AreEqual(loc.GetText(), "{{Signature}}");
+            NUnit.Framework.Assert.AreEqual("{{Signature}}", loc.GetText());
             NUnit.Framework.Assert.AreEqual(23, (int)loc.GetRectangle().GetX());
             NUnit.Framework.Assert.AreEqual(375, (int)loc.GetRectangle().GetY());
             NUnit.Framework.Assert.AreEqual(55, (int)loc.GetRectangle().GetWidth());
             NUnit.Framework.Assert.AreEqual(11, (int)loc.GetRectangle().GetHeight());
             // close
+            pdfDocument.Close();
+        }
+
+        // https://jira.itextsupport.com/browse/DEVSIX-1940
+        // text is 'calligraphy' and 'll' is composing a ligature
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestLigatureBeforeLigature() {
+            System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
+            // build strategy
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("ca");
+            // get locations
+            IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
+            for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
+                foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
+                    if (location != null) {
+                        locationList.Add(location);
+                    }
+                }
+            }
+            // compare
+            NUnit.Framework.Assert.AreEqual(1, locationList.Count);
+            IPdfTextLocation loc = locationList[0];
+            NUnit.Framework.Assert.AreEqual("ca", loc.GetText());
+            Rectangle rect = loc.GetRectangle();
+            NUnit.Framework.Assert.AreEqual(36, rect.GetX(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(655.4600, rect.GetY(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(25.1000, rect.GetWidth(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(20, rect.GetHeight(), 0.0001);
+            pdfDocument.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestLigatureCrossLigature() {
+            System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
+            // build strategy
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("al");
+            // get locations
+            IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
+            for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
+                foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
+                    if (location != null) {
+                        locationList.Add(location);
+                    }
+                }
+            }
+            // compare
+            NUnit.Framework.Assert.AreEqual(1, locationList.Count);
+            IPdfTextLocation loc = locationList[0];
+            NUnit.Framework.Assert.AreEqual("al", loc.GetText());
+            Rectangle rect = loc.GetRectangle();
+            NUnit.Framework.Assert.AreEqual(48.7600, rect.GetX(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(655.4600, rect.GetY(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(25.9799, rect.GetWidth(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(20, rect.GetHeight(), 0.0001);
+            pdfDocument.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestLigatureInLigature() {
+            System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
+            // build strategy
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("l");
+            // get locations
+            IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
+            for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
+                foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
+                    if (location != null) {
+                        locationList.Add(location);
+                    }
+                }
+            }
+            // compare
+            NUnit.Framework.Assert.AreEqual(1, locationList.Count);
+            IPdfTextLocation loc = locationList[0];
+            NUnit.Framework.Assert.AreEqual("l", loc.GetText());
+            Rectangle rect = loc.GetRectangle();
+            NUnit.Framework.Assert.AreEqual(61.0999, rect.GetX(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(655.4600, rect.GetY(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(13.6399, rect.GetWidth(), 0.0001);
+            NUnit.Framework.Assert.AreEqual(20, rect.GetHeight(), 0.0001);
             pdfDocument.Close();
         }
     }

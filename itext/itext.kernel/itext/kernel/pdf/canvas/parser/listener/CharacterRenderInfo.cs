@@ -72,8 +72,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             for (int i = 0; i < cris.Count; i++) {
                 iText.Kernel.Pdf.Canvas.Parser.Listener.CharacterRenderInfo chunk = cris[i];
                 if (lastChunk == null) {
-                    indexMap.Put(sb.Length, i);
-                    sb.Append(chunk.GetText());
+                    PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                 }
                 else {
                     if (chunk.SameLine(lastChunk)) {
@@ -82,12 +81,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                             chunk.GetText().EndsWith(" ")) {
                             sb.Append(' ');
                         }
-                        indexMap.Put(sb.Length, i);
-                        sb.Append(chunk.GetText());
+                        PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                     else {
-                        indexMap.Put(sb.Length, i);
-                        sb.Append(chunk.GetText());
+                        PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                 }
                 lastChunk = chunk;
@@ -98,14 +95,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return ret;
         }
 
+        private static void PutCharsWithIndex(String seq, int index, IDictionary<int, int?> indexMap, StringBuilder
+             sb) {
+            int charCount = seq.Length;
+            for (int i = 0; i < charCount; i++) {
+                indexMap.Put(sb.Length, index);
+                sb.Append(seq[i]);
+            }
+        }
+
         public CharacterRenderInfo(TextRenderInfo tri)
             : base(tri == null ? "" : tri.GetText(), tri == null ? null : GetLocation(tri)) {
             if (tri == null) {
                 throw new ArgumentException("TextRenderInfo argument is not nullable.");
-            }
-            if (tri.GetText().Length != 1) {
-                throw new ArgumentException("CharacterRenderInfo objects represent a single character. They should not be made from TextRenderInfo objects containing more than a single character of text."
-                    );
             }
             // determine bounding box
             float x0 = tri.GetDescentLine().GetStartPoint().Get(0);
