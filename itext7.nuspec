@@ -55,10 +55,10 @@
     <file src="itext\itext.barcodes\bin\Release\net40\itext.barcodes.xml" target="lib\net40" />
     <file src="itext\itext.sign\bin\Release\net40\itext.sign.dll" target="lib\net40" />
     <file src="itext\itext.sign\bin\Release\net40\itext.sign.xml" target="lib\net40" />
-    <file src="..\styled-xml-parser\itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.dll" target="lib\net40" />
-    <file src="..\styled-xml-parser\itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.xml" target="lib\net40" />
-    <file src="..\svg\itext\itext.svg\bin\Release\net40\itext.svg.dll" target="lib\net40" />
-    <file src="..\svg\itext\itext.svg\bin\Release\net40\itext.svg.xml" target="lib\net40" />
+    <file src="itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.dll" target="lib\net40" />
+    <file src="itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.xml" target="lib\net40" />
+    <file src="itext\itext.svg\bin\Release\net40\itext.svg.dll" target="lib\net40" />
+    <file src="itext\itext.svg\bin\Release\net40\itext.svg.xml" target="lib\net40" />
     <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.dll" target="lib\netstandard1.6" />
     <file src="itext\itext.io\bin\Release\netstandard1.6\itext.io.xml" target="lib\netstandard1.6" />
     <file src="itext\itext.kernel\bin\Release\netstandard1.6\itext.kernel.dll" target="lib\netstandard1.6" />
@@ -73,10 +73,10 @@
     <file src="itext\itext.barcodes\bin\Release\netstandard1.6\itext.barcodes.xml" target="lib\netstandard1.6" />
     <file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.dll" target="lib\netstandard1.6" />
     <file src="itext\itext.sign\bin\Release\netstandard1.6\itext.sign.xml" target="lib\netstandard1.6" />
-    <file src="..\styled-xml-parser\itext\itext.styledxmlparser\bin\Release\netstandard1.6\itext.styledxmlparser.dll" target="lib\netstandard1.6" />
-    <file src="..\styled-xml-parser\itext\itext.styledxmlparser\bin\Release\netstandard1.6\itext.styledxmlparser.xml" target="lib\netstandard1.6" />
-    <file src="..\svg\itext\itext.svg\bin\Release\netstandard1.6\itext.svg.dll" target="lib\netstandard1.6" />
-    <file src="..\svg\itext\itext.svg\bin\Release\netstandard1.6\itext.svg.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.styledxmlparser\bin\Release\netstandard1.6\itext.styledxmlparser.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.styledxmlparser\bin\Release\netstandard1.6\itext.styledxmlparser.xml" target="lib\netstandard1.6" />
+    <file src="itext\itext.svg\bin\Release\netstandard1.6\itext.svg.dll" target="lib\netstandard1.6" />
+    <file src="itext\itext.svg\bin\Release\netstandard1.6\itext.svg.xml" target="lib\netstandard1.6" />
     <file src="gnu-agpl-v3.0.md" target="" />
     <file src="LICENSE.md" target="" />
   </files>
