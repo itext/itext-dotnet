@@ -421,7 +421,11 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EofillUnsuportedPathTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompareVisually(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
         }
     }
 }

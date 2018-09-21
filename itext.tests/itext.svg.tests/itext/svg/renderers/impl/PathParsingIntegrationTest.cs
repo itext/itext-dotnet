@@ -42,107 +42,70 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 using iText.Test;
 
-namespace iText.Svg.Renderers {
-    public class FillTest : SvgIntegrationTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/FillTest/";
+namespace iText.Svg.Renderers.Impl {
+    public class PathParsingIntegrationTest : SvgIntegrationTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PathParsingIntegrationTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/renderers/impl/FillTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/svg/renderers/impl/PathParsingIntegrationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
+            ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NormalRectangleFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
+        public virtual void NormalTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "normal");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MultipleNormalRectangleFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill");
+        public virtual void MixTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "mix");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NoRectangleFillColorTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
+        public virtual void NoWhitespace() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "noWhitespace");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EoFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
-        }
-
-        /* This test should fail when RND-910 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void EoFillTest01() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill01");
+        public virtual void ZOperator() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "zOperator");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EoFillTest02() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill02");
+        public virtual void MissingOperandArgument() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "missingOperandArgument");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EoFillTest03() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill03");
+        public virtual void DecimalPointHandlingTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "decimalPointHandling");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MultipleObjectsTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleObjectsTest");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void EoFillStrokeTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
-        }
-
-        /* This test should fail when RND-1031 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void NonZeroFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "nonzerofill");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void OpacityFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityfill");
-        }
-
-        /* This test should fail when RND-1108 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void EofillUnsuportedAtributeTest() {
+        public virtual void InvalidOperatorTest() {
             NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillUnsuportedAtributeTest");
+                ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperator");
             }
             , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
 ;
@@ -151,15 +114,48 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PathVerticalLineFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "pathVerticalLineFillTest");
+        public virtual void InvalidOperatorCSensTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperatorCSens");
+            }
+            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PathHorizontalLineFillTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHorizontalLineFillTest");
+        public virtual void DecimalPointParsingTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "2.35.96";
+            String expected = "2.35 .96";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecimalPointParsingSpaceTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "2.35.96 3.25 .25";
+            String expected = "2.35 .96 3.25 .25";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecimalPointParsingTabTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "2.35.96 3.25\t.25";
+            String expected = "2.35 .96 3.25\t.25";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecimalPointParsingMinusTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "2.35.96 3.25-.25";
+            String expected = "2.35 .96 3.25-.25";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

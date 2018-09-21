@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -64,12 +66,19 @@ namespace iText.Svg.Renderers.Impl {
 
         private const String SPACE_CHAR = " ";
 
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PathSvgNodeRenderer));
+
+        private const int MOVETOARGUMENTNR = 2;
+
         /// <summary>
         /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
         /// <p>
-        /// Any two consecutive letters are an invalid operator.
+        /// Find any occurence of a letter that is not an operator
         /// </summary>
-        private readonly String INVALID_OPERATOR_REGEX = "(\\p{L}{2,})";
+        private const String INVALID_OPERATOR_REGEX = "(?:(?![mzlhvcsqtae])\\p{L})";
+
+        private static Regex invalidRegexPattern = iText.IO.Util.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX, System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
 
         /// <summary>
         /// The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
@@ -247,6 +256,10 @@ namespace iText.Svg.Renderers.Impl {
             else {
                 if (pathShape is MoveTo) {
                     zOperator = new ClosePath();
+                    if (shapeCoordinates != null && shapeCoordinates.Length != MOVETOARGUMENTNR) {
+                        LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATH_WRONG_NUMBER_OF_ARGUMENTS, pathProperties[
+                            0], shapeCoordinates.Length, MOVETOARGUMENTNR, MOVETOARGUMENTNR));
+                    }
                     zOperator.SetCoordinates(shapeCoordinates);
                 }
             }
@@ -301,8 +314,8 @@ namespace iText.Svg.Renderers.Impl {
             return arr;
         }
 
-        private bool ContainsInvalidAttributes(String attributes) {
-            return iText.IO.Util.StringUtil.Split(attributes, INVALID_OPERATOR_REGEX).Length > 1;
+        internal virtual bool ContainsInvalidAttributes(String attributes) {
+            return SvgRegexUtils.ContainsAtLeastOneMatch(invalidRegexPattern, attributes);
         }
 
         private ICollection<String> ParsePropertiesAndStyles() {
@@ -320,6 +333,8 @@ namespace iText.Svg.Renderers.Impl {
                     String instruction = instTrim[0] + SPACE_CHAR;
                     String temp = instruction + instTrim.Replace(instTrim[0] + SEPARATOR, SEPARATOR).Replace(",", SPACE_CHAR).
                         Trim();
+                    //Do a run-through for decimal point separation
+                    temp = SeparateDecimalPoints(temp);
                     result.Append(SPACE_CHAR);
                     result.Append(temp);
                 }
@@ -327,6 +342,36 @@ namespace iText.Svg.Renderers.Impl {
             String[] resultArray = iText.IO.Util.StringUtil.Split(result.ToString(), SPLIT_REGEX);
             IList<String> resultList = new List<String>(JavaUtil.ArraysAsList(resultArray));
             return resultList;
+        }
+
+        /// <summary>Iterate over the input string and to seperate</summary>
+        /// <param name="input"/>
+        /// <returns/>
+        internal virtual String SeparateDecimalPoints(String input) {
+            //If a space or minus sign is found reset
+            //If a another point is found, add an extra space on before the point
+            String res = "";
+            //Iterate over string
+            bool decimalPointEncountered = false;
+            for (int i = 0; i < input.Length; i++) {
+                char c = input[i];
+                //If it's a whitespace or minus sign and a point was previously found, reset
+                if (decimalPointEncountered && (c == '-' || iText.IO.Util.TextUtil.IsWhiteSpace(c))) {
+                    decimalPointEncountered = false;
+                }
+                //If a point is found, mark and continue
+                if (c == '.') {
+                    //If it's the second point, add extra space
+                    if (decimalPointEncountered) {
+                        res += " ";
+                    }
+                    else {
+                        decimalPointEncountered = true;
+                    }
+                }
+                res += c;
+            }
+            return res;
         }
     }
 }
