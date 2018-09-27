@@ -175,7 +175,14 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [Obsolete]
         public virtual byte[] RetrieveStream(String src) {
             try {
-                return StreamUtil.InputStreamToArray(RetrieveResourceAsInputStream(src));
+                using (Stream stream = RetrieveResourceAsInputStream(src)) {
+                    if (stream != null) {
+                        return StreamUtil.InputStreamToArray(stream);
+                    }
+                    else {
+                        return null;
+                    }
+                }
             }
             catch (Exception e) {
                 ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
@@ -194,19 +201,20 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>
         public virtual byte[] RetrieveBytesFromResource(String src) {
-            Stream stream = RetrieveResourceAsInputStream(src);
-            if (stream != null) {
-                try {
-                    return StreamUtil.InputStreamToArray(stream);
-                }
-                catch (System.IO.IOException ioe) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
-                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                        , uriResolver.GetBaseUri(), src), ioe);
-                    return null;
+            try {
+                using (Stream stream = RetrieveResourceAsInputStream(src)) {
+                    if (stream != null) {
+                        return StreamUtil.InputStreamToArray(stream);
+                    }
+                    else {
+                        return null;
+                    }
                 }
             }
-            else {
+            catch (System.IO.IOException ioe) {
+                ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
+                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), ioe);
                 return null;
             }
         }
