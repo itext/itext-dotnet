@@ -217,7 +217,7 @@ namespace iText.Kernel.Utils {
         /// By default, pages are treated as special objects and if they are met in the process of comparison, then they are
         /// not checked as objects, but rather simply checked that they has same page numbers in both documents.
         /// This behaviour is intended for the
-        /// <see cref="CompareByContent(System.String, System.String, System.Collections.Generic.IDictionary{K, V})"/>
+        /// <see cref="CompareByContent(System.String, System.String, System.String)"/>
         /// set of methods, because in them documents are compared in page by page basis. Thus, we don't need to check if pages
         /// are of the same content when they are met in comparison process, we are sure that we will compare their content or
         /// we have already compared them.
@@ -404,6 +404,52 @@ namespace iText.Kernel.Utils {
         /// Compares two PDF documents by content starting from page dictionaries and then recursively comparing
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
+        /// <p>
+        /// Unlike
+        /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
+        /// this method performs content comparison page by page
+        /// and doesn't compare the tag structure, acroforms and all other things that doesn't belong to specific pages.
+        /// <br />
+        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// For more info see
+        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>
+        /// .
+        /// For this overload, differenceImagePrefix value is generated using diff_%outPdfFileName%_ format.
+        /// <p>
+        /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
+        /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
+        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
+        ///     </param>
+        /// <returns>
+        /// string containing text report of the encountered content differences and also list of the pages that are
+        /// visually different, or null if there are no content and therefore no visual differences.
+        /// </returns>
+        /// <exception cref="System.Exception">
+        /// if the current thread is interrupted by another thread while it is waiting
+        /// for ghostscript or imagemagic processes, then the wait is ended and an
+        /// <see cref="System.Exception"/>
+        /// is thrown.
+        /// </exception>
+        /// <exception cref="System.IO.IOException">
+        /// is thrown if any of the input files are missing or any of the auxiliary files
+        /// that are created during comparison process wasn't possible to be created.
+        /// </exception>
+        public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath) {
+            return CompareByContent(outPdf, cmpPdf, outPath, null, null, null, null);
+        }
+
+        /// <summary>
+        /// Compares two PDF documents by content starting from page dictionaries and then recursively comparing
+        /// corresponding objects which are referenced from them.
+        /// </summary>
+        /// <remarks>
+        /// Compares two PDF documents by content starting from page dictionaries and then recursively comparing
+        /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
+        /// of the two trees that represent pdf objects structure of the documents.
         /// <br /><br />
         /// Unlike
         /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
@@ -429,8 +475,16 @@ namespace iText.Kernel.Utils {
         /// string containing text report of the encountered content differences and also list of the pages that are
         /// visually different, or null if there are no content and therefore no visual differences.
         /// </returns>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception">
+        /// if the current thread is interrupted by another thread while it is waiting
+        /// for ghostscript or imagemagic processes, then the wait is ended and an
+        /// <see cref="System.Exception"/>
+        /// is thrown.
+        /// </exception>
+        /// <exception cref="System.IO.IOException">
+        /// is thrown if any of the input files are missing or any of the auxiliary files
+        /// that are created during comparison process wasn't possible to be created.
+        /// </exception>
         public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             ) {
             return CompareByContent(outPdf, cmpPdf, outPath, differenceImagePrefix, null, null, null);
@@ -560,8 +614,16 @@ namespace iText.Kernel.Utils {
         /// string containing text report of the encountered content differences and also list of the pages that are
         /// visually different, or null if there are no content and therefore no visual differences.
         /// </returns>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception">
+        /// if the current thread is interrupted by another thread while it is waiting
+        /// for ghostscript or imagemagic processes, then the wait is ended and an
+        /// <see cref="System.Exception"/>
+        /// is thrown.
+        /// </exception>
+        /// <exception cref="System.IO.IOException">
+        /// is thrown if any of the input files are missing or any of the auxiliary files
+        /// that are created during comparison process wasn't possible to be created.
+        /// </exception>
         public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass) {
             Init(outPdf, cmpPdf);
@@ -937,6 +999,14 @@ namespace iText.Kernel.Utils {
             if (!outPath.EndsWith("/")) {
                 outPath = outPath + "/";
             }
+            if (differenceImagePrefix == null) {
+                String fileBasedPrefix = "";
+                if (outPdfName != null) {
+                    // should always be initialized by this moment
+                    fileBasedPrefix = outPdfName + "_";
+                }
+                differenceImagePrefix = "diff_" + fileBasedPrefix;
+            }
             PrepareOutputDirs(outPath, differenceImagePrefix);
             System.Console.Out.WriteLine("Comparing visually..........");
             if (ignoredAreas != null && !ignoredAreas.IsEmpty()) {
@@ -1209,7 +1279,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CompareDocumentsEncryption(PdfDocument outDocument, PdfDocument cmpDocument, CompareTool.CompareResult
              compareResult) {
             PdfDictionary outEncrypt = outDocument.GetTrailer().GetAsDictionary(PdfName.Encrypt);
