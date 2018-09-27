@@ -133,20 +133,6 @@ namespace iText.Kernel.Utils {
                  + "simple_pdf.report.xml"), "CompareTool report differs from the reference one");
         }
 
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void ImgFilterDiffTest() {
-            CompareTool compareTool = new CompareTool();
-            compareTool.SetGenerateCompareByContentXmlReport(true);
-            String outPdf = sourceFolder + "imgFilterDiff.pdf";
-            String cmpPdf = sourceFolder + "cmp_imgFilterDiff.pdf";
-            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
-            // test that compareByContent doesn't fail with error
-            System.Console.Out.WriteLine(result);
-            NUnit.Framework.Assert.IsNotNull(result);
-        }
-
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DifferentProducerTest() {
