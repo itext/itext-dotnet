@@ -41,11 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.Forms.Fields;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
     public class FormFieldFlatteningTest : ExtendedITextTest {
@@ -208,6 +210,31 @@ namespace iText.Forms {
             form.FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 3)]
+        public virtual void FlattenReadOnly() {
+            //Logging is expected since there are duplicate field names
+            //isReadOnly should be true after DEVSIX-2156
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfReader reader = new PdfReader(sourceFolder + "readOnlyForm.pdf");
+            PdfDocument pdfInnerDoc = new PdfDocument(reader);
+            pdfInnerDoc.CopyPagesTo(1, pdfInnerDoc.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            pdfInnerDoc.Close();
+            reader = new PdfReader(sourceFolder + "readOnlyForm.pdf");
+            pdfInnerDoc = new PdfDocument(reader);
+            pdfInnerDoc.CopyPagesTo(1, pdfInnerDoc.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            pdfInnerDoc.Close();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            bool isReadOnly = true;
+            foreach (PdfFormField field in form.GetFormFields().Values) {
+                isReadOnly = (isReadOnly && field.IsReadOnly());
+            }
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsFalse(isReadOnly);
         }
     }
 }
