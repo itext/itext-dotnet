@@ -469,8 +469,10 @@ namespace iText.Kernel.Utils {
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
         /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
         ///     </param>
-        /// <param name="differenceImagePrefix">file name prefix for image files with marked visual differences if there is any.
-        ///     </param>
+        /// <param name="differenceImagePrefix">
+        /// file name prefix for image files with marked visual differences if there is any;
+        /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
+        /// </param>
         /// <returns>
         /// string containing text report of the encountered content differences and also list of the pages that are
         /// visually different, or null if there are no content and therefore no visual differences.
@@ -517,8 +519,10 @@ namespace iText.Kernel.Utils {
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
         /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
         ///     </param>
-        /// <param name="differenceImagePrefix">file name prefix for image files with marked visual differences if there is any.
-        ///     </param>
+        /// <param name="differenceImagePrefix">
+        /// file name prefix for image files with marked visual differences if there is any;
+        /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
+        /// </param>
         /// <param name="outPass">password for the encrypted document specified by the outPdf absolute path.</param>
         /// <param name="cmpPass">password for the encrypted document specified by the cmpPdf absolute path.</param>
         /// <returns>
@@ -560,8 +564,10 @@ namespace iText.Kernel.Utils {
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
         /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
         ///     </param>
-        /// <param name="differenceImagePrefix">file name prefix for image files with marked visual differences if there is any.
-        ///     </param>
+        /// <param name="differenceImagePrefix">
+        /// file name prefix for image files with marked visual differences if there is any;
+        /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
+        /// </param>
         /// <param name="ignoredAreas">a map with one-based page numbers as keys and lists of ignored rectangles as values.
         ///     </param>
         /// <returns>
@@ -604,8 +610,10 @@ namespace iText.Kernel.Utils {
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
         /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
         ///     </param>
-        /// <param name="differenceImagePrefix">file name prefix for image files with marked visual differences if there is any.
-        ///     </param>
+        /// <param name="differenceImagePrefix">
+        /// file name prefix for image files with marked visual differences if there is any;
+        /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
+        /// </param>
         /// <param name="ignoredAreas">a map with one-based page numbers as keys and lists of ignored rectangles as values.
         ///     </param>
         /// <param name="outPass">password for the encrypted document specified by the outPdf absolute path.</param>
@@ -2430,12 +2438,6 @@ namespace iText.Kernel.Utils {
                     return obj.GetType() == GetType() && key.Equals(((CompareTool.ObjectPath.DictPathItem)obj).key);
                 }
 
-                protected internal override XmlElement ToXmlNode(XmlDocument document) {
-                    XmlElement element = document.CreateElement("dictKey");
-                    element.AppendChild(document.CreateTextNode(key.ToString()));
-                    return element;
-                }
-
                 /// <summary>
                 /// The key which defines to which entry of the
                 /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -2452,6 +2454,12 @@ namespace iText.Kernel.Utils {
                 /// </returns>
                 public virtual PdfName GetKey() {
                     return key;
+                }
+
+                protected internal override XmlElement ToXmlNode(XmlDocument document) {
+                    XmlElement element = document.CreateElement("dictKey");
+                    element.AppendChild(document.CreateTextNode(key.ToString()));
+                    return element;
                 }
             }
 
@@ -2492,12 +2500,6 @@ namespace iText.Kernel.Utils {
                     return obj.GetType() == GetType() && index == ((CompareTool.ObjectPath.ArrayPathItem)obj).index;
                 }
 
-                protected internal override XmlElement ToXmlNode(XmlDocument document) {
-                    XmlElement element = document.CreateElement("arrayIndex");
-                    element.AppendChild(document.CreateTextNode(index.ToString()));
-                    return element;
-                }
-
                 /// <summary>
                 /// The index which defines element of the
                 /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -2509,6 +2511,12 @@ namespace iText.Kernel.Utils {
                 /// <returns>the index which defines element of the array to which the transition was performed</returns>
                 public virtual int GetIndex() {
                     return index;
+                }
+
+                protected internal override XmlElement ToXmlNode(XmlDocument document) {
+                    XmlElement element = document.CreateElement("arrayIndex");
+                    element.AppendChild(document.CreateTextNode(index.ToString()));
+                    return element;
                 }
             }
 
