@@ -1572,7 +1572,8 @@ namespace iText.Kernel.Utils {
 
         private bool CompareStreamsExtended(PdfStream outStream, PdfStream cmpStream, CompareTool.ObjectPath currentPath
             , CompareTool.CompareResult compareResult) {
-            bool toDecode = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
+            bool toDecode = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter)) && PdfName.FlateDecode.Equals(cmpStream
+                .Get(PdfName.Filter));
             byte[] outStreamBytes = outStream.GetBytes(toDecode);
             byte[] cmpStreamBytes = cmpStream.GetBytes(toDecode);
             if (JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes)) {
