@@ -78,6 +78,10 @@ namespace iText.Kernel.Font {
             : base() {
         }
 
+        public override bool IsBuiltWith(String fontProgram, String encoding) {
+            return GetFontProgram().IsBuiltWith(fontProgram) && fontEncoding.IsBuiltWith(encoding);
+        }
+
         public override GlyphLine CreateGlyphLine(String content) {
             IList<Glyph> glyphs = new List<Glyph>(content.Length);
             if (fontEncoding.IsFontSpecific()) {

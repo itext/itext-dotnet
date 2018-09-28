@@ -455,6 +455,23 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>
+        /// Checks whether the
+        /// <see cref="PdfFont"/>
+        /// was built with corresponding fontProgram and encoding or CMAP.
+        /// Default value is false unless overridden.
+        /// </summary>
+        /// <param name="fontProgram">a font name or path to a font program</param>
+        /// <param name="encoding">an encoding or CMAP</param>
+        /// <returns>true, if the PdfFont was built with the fontProgram and encoding. Otherwise false.</returns>
+        /// <seealso cref="iText.Kernel.Pdf.PdfDocument.FindFont(System.String, System.String)"/>
+        /// <seealso cref="iText.IO.Font.FontProgram.IsBuiltWith(System.String)"/>
+        /// <seealso cref="iText.IO.Font.FontEncoding.IsBuiltWith(System.String)"/>
+        /// <seealso cref="iText.IO.Font.CMapEncoding.IsBuiltWith(System.String)"/>
+        public virtual bool IsBuiltWith(String fontProgram, String encoding) {
+            return false;
+        }
+
+        /// <summary>
         /// To manually flush a
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure

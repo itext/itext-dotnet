@@ -361,6 +361,10 @@ namespace iText.IO.Font {
             return ret;
         }
 
+        public override bool IsBuiltWith(String fontProgram) {
+            return Object.Equals(fontParser.fileName, fontProgram);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             if (fontParser != null) {

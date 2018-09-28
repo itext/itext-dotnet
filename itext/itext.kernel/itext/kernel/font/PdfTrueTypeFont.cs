@@ -110,6 +110,9 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            if (IsFlushed()) {
+                return;
+            }
             EnsureUnderlyingObjectHasIndirectReference();
             //TODO make subtype class member and simplify this method
             if (newFont) {

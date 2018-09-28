@@ -589,7 +589,14 @@ namespace iText.Kernel.Font {
             return width;
         }
 
+        public override bool IsBuiltWith(String fontProgram, String encoding) {
+            return GetFontProgram().IsBuiltWith(fontProgram) && cmapEncoding.IsBuiltWith(encoding);
+        }
+
         public override void Flush() {
+            if (IsFlushed()) {
+                return;
+            }
             EnsureUnderlyingObjectHasIndirectReference();
             if (newFont) {
                 FlushFontData();
@@ -597,6 +604,9 @@ namespace iText.Kernel.Font {
             base.Flush();
         }
 
+        /// <summary>Gets CMAP associated with the Pdf Font.</summary>
+        /// <returns>CMAP</returns>
+        /// <seealso cref="iText.IO.Font.CMapEncoding"/>
         public virtual CMapEncoding GetCmap() {
             return cmapEncoding;
         }

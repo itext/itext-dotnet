@@ -155,6 +155,13 @@ namespace iText.Kernel.Font {
             return subtype;
         }
 
+        /// <summary>Returns false, because we cannot rely on an actual font subset and font name.</summary>
+        /// <param name="fontName">a font name or path to a font program</param>
+        /// <returns>return false.</returns>
+        public override bool IsBuiltWith(String fontName) {
+            return false;
+        }
+
         public virtual int GetMissingWidth() {
             return missingWidth;
         }

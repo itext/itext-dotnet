@@ -1735,6 +1735,15 @@ namespace iText.Kernel.Pdf {
             return fingerPrint;
         }
 
+        public virtual PdfFont FindFont(String fontProgram, String encoding) {
+            foreach (PdfFont font in documentFonts.Values) {
+                if (!font.IsFlushed() && font.IsBuiltWith(fontProgram, encoding)) {
+                    return font;
+                }
+            }
+            return null;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
