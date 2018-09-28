@@ -64,6 +64,33 @@ namespace iText.Kernel.Pdf.Layer {
     public class PdfOCProperties : PdfObjectWrapper<PdfDictionary> {
         private IList<PdfLayer> layers = new List<PdfLayer>();
 
+        /// <summary>
+        /// Gets the order of the layers in which they will be displayed in the layer view panel,
+        /// including nesting.
+        /// </summary>
+        private static void GetOCGOrder(PdfArray order, PdfLayer layer) {
+            if (!layer.IsOnPanel()) {
+                return;
+            }
+            if (layer.GetTitle() == null) {
+                order.Add(layer.GetPdfObject().GetIndirectReference());
+            }
+            IList<PdfLayer> children = layer.GetChildren();
+            if (children == null) {
+                return;
+            }
+            PdfArray kids = new PdfArray();
+            if (layer.GetTitle() != null) {
+                kids.Add(new PdfString(layer.GetTitle(), PdfEncodings.UNICODE_BIG));
+            }
+            foreach (PdfLayer child in children) {
+                GetOCGOrder(kids, child);
+            }
+            if (kids.Size() > 0) {
+                order.Add(kids);
+            }
+        }
+
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
         public PdfOCProperties(PdfDocument document)
@@ -145,6 +172,7 @@ namespace iText.Kernel.Pdf.Layer {
             if (rbGroups != null) {
                 d.Put(PdfName.RBGroups, rbGroups);
             }
+            d.Put(PdfName.Name, new PdfString(CreateUniqueName(), PdfEncodings.UNICODE_BIG));
             GetPdfObject().Put(PdfName.D, d);
             IList<PdfLayer> docOrder = new List<PdfLayer>(layers);
             for (int i = 0; i < docOrder.Count; i++) {
@@ -193,6 +221,24 @@ namespace iText.Kernel.Pdf.Layer {
             return GetPdfObject();
         }
 
+        private String CreateUniqueName() {
+            int uniqueID = 0;
+            ICollection<String> usedNames = new HashSet<String>();
+            PdfArray configs = GetPdfObject().GetAsArray(PdfName.Configs);
+            if (null != configs) {
+                for (int i = 0; i < configs.Size(); i++) {
+                    PdfDictionary alternateDictionary = configs.GetAsDictionary(i);
+                    if (null != alternateDictionary && alternateDictionary.ContainsKey(PdfName.Name)) {
+                        usedNames.Add(alternateDictionary.GetAsString(PdfName.Name).ToUnicodeString());
+                    }
+                }
+            }
+            while (usedNames.Contains("OCConfigName" + uniqueID)) {
+                uniqueID++;
+            }
+            return "OCConfigName" + uniqueID;
+        }
+
         public override void Flush() {
             FillDictionary();
             base.Flush();
@@ -222,33 +268,6 @@ namespace iText.Kernel.Pdf.Layer {
 
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
-        }
-
-        /// <summary>
-        /// Gets the order of the layers in which they will be displayed in the layer view panel,
-        /// including nesting.
-        /// </summary>
-        private static void GetOCGOrder(PdfArray order, PdfLayer layer) {
-            if (!layer.IsOnPanel()) {
-                return;
-            }
-            if (layer.GetTitle() == null) {
-                order.Add(layer.GetPdfObject().GetIndirectReference());
-            }
-            IList<PdfLayer> children = layer.GetChildren();
-            if (children == null) {
-                return;
-            }
-            PdfArray kids = new PdfArray();
-            if (layer.GetTitle() != null) {
-                kids.Add(new PdfString(layer.GetTitle(), PdfEncodings.UNICODE_BIG));
-            }
-            foreach (PdfLayer child in children) {
-                GetOCGOrder(kids, child);
-            }
-            if (kids.Size() > 0) {
-                order.Add(kids);
-            }
         }
 
         /// <summary>Populates the /AS entry in the /D dictionary.</summary>
