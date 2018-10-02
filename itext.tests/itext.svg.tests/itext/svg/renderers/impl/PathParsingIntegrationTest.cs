@@ -122,6 +122,14 @@ namespace iText.Svg.Renderers.Impl {
 ;
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MoreThanOneHParam() {
+            // TODO-2331 Update the cmp after the issue is resolved
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "moreThanOneHParam");
+        }
+
         [NUnit.Framework.Test]
         public virtual void DecimalPointParsingTest() {
             PathSvgNodeRenderer path = new PathSvgNodeRenderer();
