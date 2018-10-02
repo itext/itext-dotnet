@@ -90,7 +90,7 @@ namespace iText.Svg.Renderers.Impl {
         /// the attribute to be split is valid.
         /// The regex splits at each letter.
         /// </summary>
-        private readonly String SPLIT_REGEX = "(?=[\\p{L}])";
+        private const String SPLIT_REGEX = "(?=[\\p{L}])";
 
         /// <summary>
         /// The
@@ -276,7 +276,7 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <summary>
         /// Processes the
-        /// <see cref="SvgConstants.Attributes.D"/>
+        /// <see cref="iText.Svg.SvgConstants.Attributes.D"/>
         /// 
         /// <see cref="AbstractSvgNodeRenderer.attributesAndStyles"/>
         /// and converts them
@@ -340,38 +340,41 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             String[] resultArray = iText.IO.Util.StringUtil.Split(result.ToString(), SPLIT_REGEX);
-            IList<String> resultList = new List<String>(JavaUtil.ArraysAsList(resultArray));
-            return resultList;
+            return new List<String>(JavaUtil.ArraysAsList(resultArray));
         }
 
         /// <summary>Iterate over the input string and to seperate</summary>
-        /// <param name="input"/>
-        /// <returns/>
         internal virtual String SeparateDecimalPoints(String input) {
             //If a space or minus sign is found reset
             //If a another point is found, add an extra space on before the point
-            String res = "";
+            StringBuilder res = new StringBuilder();
             //Iterate over string
             bool decimalPointEncountered = false;
             for (int i = 0; i < input.Length; i++) {
                 char c = input[i];
-                //If it's a whitespace or minus sign and a point was previously found, reset
+                //If it's a whitespace or a minus sign and a point was previously found, reset the decimal point flag
                 if (decimalPointEncountered && (c == '-' || iText.IO.Util.TextUtil.IsWhiteSpace(c))) {
                     decimalPointEncountered = false;
                 }
                 //If a point is found, mark and continue
                 if (c == '.') {
-                    //If it's the second point, add extra space
+                    //If it's the second point, add an extra space
                     if (decimalPointEncountered) {
-                        res += " ";
+                        res.Append(" ");
                     }
                     else {
                         decimalPointEncountered = true;
                     }
                 }
-                res += c;
+                else {
+                    if (c == '-') {
+                        // If a minus is found, add an extra space
+                        res.Append(" ");
+                    }
+                }
+                res.Append(c);
             }
-            return res;
+            return res.ToString();
         }
     }
 }
