@@ -130,6 +130,27 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "moreThanOneHParam");
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NegativeAfterPositiveHandlingTest01() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "negativeAfterPositiveHandling");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NegativeAfterPositiveHandlingTest02() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "negativeAfterPositiveHandlingExtendedViewbox");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void InsignificantSpacesTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "insignificantSpaces");
+        }
+
         [NUnit.Framework.Test]
         public virtual void DecimalPointParsingTest() {
             PathSvgNodeRenderer path = new PathSvgNodeRenderer();
@@ -161,7 +182,16 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void DecimalPointParsingMinusTest() {
             PathSvgNodeRenderer path = new PathSvgNodeRenderer();
             String input = "2.35.96 3.25-.25";
-            String expected = "2.35 .96 3.25-.25";
+            String expected = "2.35 .96 3.25 -.25";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeAfterPositiveTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "40-50";
+            String expected = "40 -50";
             String actual = path.SeparateDecimalPoints(input);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
