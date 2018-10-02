@@ -127,7 +127,7 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(cv);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "notAnum")));
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "notAnum")))
 ;
         }
 

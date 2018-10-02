@@ -115,7 +115,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidHeight");
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")));
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")))
 ;
         }
 
@@ -126,7 +126,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidWidth");
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")));
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "abc")))
 ;
         }
 
@@ -137,7 +137,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
 ;
         }
 
@@ -148,7 +148,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
 ;
         }
 

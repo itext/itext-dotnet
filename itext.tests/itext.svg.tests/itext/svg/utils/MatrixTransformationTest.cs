@@ -57,7 +57,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix()");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
 ;
         }
 
@@ -66,7 +66,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix(0)");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
 ;
         }
 
@@ -75,7 +75,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix(1 2 3 4 5 6 7 8)");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
 ;
         }
     }

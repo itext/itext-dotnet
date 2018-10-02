@@ -96,7 +96,7 @@ namespace iText.Svg.Processors {
                 ProcessorState testProcessorState = new ProcessorState();
                 testProcessorState.Pop();
             }
-            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
 ;
         }
 
@@ -118,7 +118,7 @@ namespace iText.Svg.Processors {
                 ProcessorState testProcessorState = new ProcessorState();
                 testProcessorState.Pop();
             }
-            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
 ;
         }
     }

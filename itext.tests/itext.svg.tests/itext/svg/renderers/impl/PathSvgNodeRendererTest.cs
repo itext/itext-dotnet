@@ -316,7 +316,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidZOperatorTest01");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -327,7 +327,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperatorTest01");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -424,7 +424,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
     }

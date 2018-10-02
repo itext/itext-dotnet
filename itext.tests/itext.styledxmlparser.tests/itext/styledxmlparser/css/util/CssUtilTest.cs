@@ -55,7 +55,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 String value = "Definitely not a number";
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "Definitely not a number")));
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "Definitely not a number")))
 ;
         }
 
@@ -65,7 +65,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 String value = null;
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")));
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")))
 ;
         }
 

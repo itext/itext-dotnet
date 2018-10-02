@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.That(() =>  {
                 context.GetCurrentCanvas();
             }
-            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
 ;
         }
 
@@ -87,7 +87,7 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.That(() =>  {
                 context.PopCanvas();
             }
-            , NUnit.Framework.Throws.TypeOf<InvalidOperationException>());
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
 ;
         }
 
@@ -160,7 +160,7 @@ namespace iText.Svg.Renderers {
                 String name = "expected";
                 this.context.AddNamedObject(name, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NULL));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NULL))
 ;
         }
 
@@ -170,7 +170,7 @@ namespace iText.Svg.Renderers {
                 ISvgNodeRenderer expected = new DummySvgNodeRenderer();
                 this.context.AddNamedObject(null, expected);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY))
 ;
         }
 
@@ -180,7 +180,7 @@ namespace iText.Svg.Renderers {
                 ISvgNodeRenderer expected = new DummySvgNodeRenderer();
                 this.context.AddNamedObject("", expected);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY))
 ;
         }
 

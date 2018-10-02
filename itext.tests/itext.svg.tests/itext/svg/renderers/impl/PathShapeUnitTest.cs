@@ -55,7 +55,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 new PathShapeUnitTest.DummyShape(this).GetCoordinate(null, "");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.ATTRIBUTES_NULL));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.ATTRIBUTES_NULL))
 ;
         }
 
@@ -66,7 +66,7 @@ namespace iText.Svg.Renderers.Impl {
                 attributes.Put(SvgConstants.Attributes.X, null);
                 new PathShapeUnitTest.DummyShape(this).GetCoordinate(attributes, SvgConstants.Attributes.X);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT))
 ;
         }
 
@@ -77,7 +77,7 @@ namespace iText.Svg.Renderers.Impl {
                 attributes.Put(SvgConstants.Attributes.X, "");
                 new PathShapeUnitTest.DummyShape(this).GetCoordinate(attributes, SvgConstants.Attributes.X);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT))
 ;
         }
 

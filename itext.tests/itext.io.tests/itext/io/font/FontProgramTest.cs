@@ -54,7 +54,7 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.That(() =>  {
                 FontProgramFactory.CreateFont(notExistingFont);
             }
-            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException._1NotFoundAsFileOrResource, notExistingFont)));
+            , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException._1NotFoundAsFileOrResource, notExistingFont)))
 ;
         }
 

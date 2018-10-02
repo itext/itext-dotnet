@@ -74,7 +74,7 @@ namespace iText.Svg.Renderers {
                 IElementNode tag = new JsoupElementNode(protectedElement);
                 fact.CreateSvgNodeRendererForTag(tag, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -92,7 +92,7 @@ namespace iText.Svg.Renderers {
                     throw (MissingMethodException)spe.InnerException;
                 }
             }
-            , NUnit.Framework.Throws.TypeOf<MissingMethodException>());
+            , NUnit.Framework.Throws.InstanceOf<MissingMethodException>())
 ;
         }
 
@@ -104,7 +104,7 @@ namespace iText.Svg.Renderers {
                 IElementNode tag = new JsoupElementNode(protectedElement);
                 NUnit.Framework.Assert.IsNull(fact.CreateSvgNodeRendererForTag(tag, null));
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -122,7 +122,7 @@ namespace iText.Svg.Renderers {
                     throw (MissingMethodException)spe.InnerException;
                 }
             }
-            , NUnit.Framework.Throws.TypeOf<MissingMethodException>());
+            , NUnit.Framework.Throws.InstanceOf<MissingMethodException>())
 ;
         }
 
@@ -186,7 +186,7 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.That(() =>  {
                 fact = new DefaultSvgNodeRendererFactory(new DefaultSvgNodeRendererFactoryTest.FaultyTestMapper());
             }
-            , NUnit.Framework.Throws.TypeOf<Exception>());
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
 ;
         }
     }

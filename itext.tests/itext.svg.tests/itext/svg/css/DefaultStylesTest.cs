@@ -113,7 +113,7 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.That(() =>  {
                 new SvgStyleResolver(new ExceptionInputStream());
             }
-            , NUnit.Framework.Throws.TypeOf<System.IO.IOException>());
+            , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
 ;
         }
 

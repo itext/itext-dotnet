@@ -107,7 +107,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperator");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -118,7 +118,7 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "invalidOperatorCSens");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 

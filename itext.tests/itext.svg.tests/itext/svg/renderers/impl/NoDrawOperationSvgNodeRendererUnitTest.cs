@@ -53,7 +53,7 @@ namespace iText.Svg.Renderers.Impl {
                 NoDrawOperationSvgNodeRenderer renderer = new NoDrawOperationSvgNodeRenderer();
                 renderer.DoDraw(null);
             }
-            , NUnit.Framework.Throws.TypeOf<NotSupportedException>().With.Message.EqualTo(SvgLogMessageConstant.DRAW_NO_DRAW));
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgLogMessageConstant.DRAW_NO_DRAW))
 ;
         }
 

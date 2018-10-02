@@ -90,7 +90,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument((String)null, doc, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -100,7 +100,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument((Stream)null, doc, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -110,7 +110,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument(@is, null, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -119,7 +119,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument((String)null, null, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -129,7 +129,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument((Stream)null, null, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -150,7 +150,7 @@ namespace iText.Svg.Converter {
                 PdfPage page = doc.GetFirstPage();
                 SvgConverter.DrawOnPage((String)null, page);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -161,7 +161,7 @@ namespace iText.Svg.Converter {
                 PdfPage page = doc.GetFirstPage();
                 SvgConverter.DrawOnPage((Stream)null, page);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -171,7 +171,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnPage(@is, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -180,7 +180,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnPage((String)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -190,7 +190,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnPage((Stream)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -213,7 +213,7 @@ namespace iText.Svg.Converter {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 SvgConverter.DrawOnCanvas((String)null, canvas);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -224,7 +224,7 @@ namespace iText.Svg.Converter {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 SvgConverter.DrawOnCanvas((Stream)null, canvas);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -234,7 +234,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnCanvas(@is, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -243,7 +243,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnCanvas((String)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -253,7 +253,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnCanvas((Stream)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -275,7 +275,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((String)null, doc);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -285,7 +285,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((Stream)null, doc);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -294,7 +294,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((ISvgNodeRenderer)null, doc);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -304,7 +304,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject(@is, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -314,7 +314,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject(@is, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -325,7 +325,7 @@ namespace iText.Svg.Converter {
                 ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is)).GetRootRenderer();
                 SvgConverter.ConvertToXObject(renderer, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -334,7 +334,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((String)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -344,7 +344,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((Stream)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -353,7 +353,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.ConvertToXObject((ISvgNodeRenderer)null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -373,7 +373,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Parse((String)null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -383,7 +383,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Parse((Stream)null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -399,7 +399,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Parse(null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -408,7 +408,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Process(null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
@@ -417,7 +417,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Process(null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 

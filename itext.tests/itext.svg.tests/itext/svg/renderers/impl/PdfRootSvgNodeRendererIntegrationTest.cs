@@ -122,7 +122,7 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(canvas);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.ROOT_SVG_NO_BBOX));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.ROOT_SVG_NO_BBOX))
 ;
         }
 

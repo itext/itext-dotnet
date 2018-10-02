@@ -50,7 +50,7 @@ namespace iText.Svg.Renderers.Factories {
                 ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory(null);
                 nodeRendererFactory.CreateSvgNodeRendererForTag(null, null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TAGPARAMETERNULL));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TAGPARAMETERNULL))
 ;
         }
     }

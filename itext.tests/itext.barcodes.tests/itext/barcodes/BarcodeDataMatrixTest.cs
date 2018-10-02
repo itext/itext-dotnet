@@ -233,7 +233,7 @@ namespace iText.Barcodes {
                 byte[] str = "AbcdFFghijklmnop".GetBytes();
                 barcodeDataMatrix.SetCode(str, -1, str.Length);
             }
-            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
 ;
         }
 
@@ -246,7 +246,7 @@ namespace iText.Barcodes {
                 byte[] str = "AbcdFFghijklmnop".GetBytes();
                 barcodeDataMatrix.SetCode(str, 0, str.Length + 1);
             }
-            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
 ;
         }
 
@@ -259,7 +259,7 @@ namespace iText.Barcodes {
                 byte[] str = "AbcdFFghijklmnop".GetBytes();
                 barcodeDataMatrix.SetCode(str, 0, -1);
             }
-            , NUnit.Framework.Throws.TypeOf<IndexOutOfRangeException>());
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
 ;
         }
 

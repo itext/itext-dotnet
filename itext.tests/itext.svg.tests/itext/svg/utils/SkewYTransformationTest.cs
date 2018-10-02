@@ -59,7 +59,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("skewY()");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
 ;
         }
 
@@ -68,7 +68,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("skewY(1 2)");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
 ;
         }
 

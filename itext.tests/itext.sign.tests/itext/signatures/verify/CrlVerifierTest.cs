@@ -90,7 +90,7 @@ namespace iText.Signatures.Verify {
                     );
                 VerifyTest(crlBuilder);
             }
-            , NUnit.Framework.Throws.TypeOf<VerificationException>());
+            , NUnit.Framework.Throws.InstanceOf<VerificationException>())
 ;
         }
 

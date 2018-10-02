@@ -169,7 +169,7 @@ namespace iText.Svg.Processors.Impl {
                 ISvgConverterProperties props = new DummySvgConverterProperties();
                 processor.Process(root, props).GetRootRenderer();
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NOROOT));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NOROOT))
 ;
         }
 
@@ -179,7 +179,7 @@ namespace iText.Svg.Processors.Impl {
                 DefaultSvgProcessor processor = new DefaultSvgProcessor();
                 processor.Process(null);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 

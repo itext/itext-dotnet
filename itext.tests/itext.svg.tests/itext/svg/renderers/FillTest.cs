@@ -144,7 +144,7 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillUnsuportedAtributeTest");
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 

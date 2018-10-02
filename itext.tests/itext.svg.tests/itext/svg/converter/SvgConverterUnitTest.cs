@@ -299,7 +299,7 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.DrawOnDocument("test", null, 1);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL));
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL))
 ;
         }
     }

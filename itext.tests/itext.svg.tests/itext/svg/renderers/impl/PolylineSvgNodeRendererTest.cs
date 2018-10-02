@@ -100,7 +100,7 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(cv);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<StyledXMLParserException>());
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
 ;
         }
 
@@ -118,7 +118,7 @@ namespace iText.Svg.Renderers.Impl {
                 context.PushCanvas(cv);
                 root.Draw(context);
             }
-            , NUnit.Framework.Throws.TypeOf<SvgProcessingException>());
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
