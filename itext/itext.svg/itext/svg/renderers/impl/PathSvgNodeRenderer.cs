@@ -299,7 +299,7 @@ namespace iText.Svg.Renderers.Impl {
             ICollection<String> parsedResults = ParsePropertiesAndStyles();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {
-                String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, SPACE_CHAR);
+                String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, " +");
                 IPathShape previousShape = shapes.Count == 0 ? null : shapes[shapes.Count - 1];
                 IList<IPathShape> operatorShapes = ProcessPathOperator(pathProperties, previousShape);
                 shapes.AddAll(operatorShapes);
