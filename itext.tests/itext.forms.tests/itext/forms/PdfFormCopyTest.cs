@@ -171,7 +171,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 4)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
         public virtual void CopyMultipleSubfieldsTest01() {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest01.pdf";
@@ -179,7 +179,7 @@ namespace iText.Forms {
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
-            for (int i = 0; i < 2; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
@@ -190,6 +190,50 @@ namespace iText.Forms {
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyMultipleSubfieldsTest01.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        public virtual void CopyMultipleSubfieldsTest02() {
+            String srcFilename = sourceFolder + "copyMultipleSubfieldsTest02.pdf";
+            String destFilename = destinationFolder + "copyMultipleSubfieldsTest02.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            // copying the same page from the same document twice
+            for (int i = 0; i < 3; ++i) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text.3").SetValue("Text 3!");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyMultipleSubfieldsTest02.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        public virtual void CopyMultipleSubfieldsTest03() {
+            String srcFilename = sourceFolder + "copyMultipleSubfieldsTest03.pdf";
+            String destFilename = destinationFolder + "copyMultipleSubfieldsTest03.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            // copying the same page from the same document twice
+            for (int i = 0; i < 3; ++i) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text_1").SetValue("Text 1!");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyMultipleSubfieldsTest03.pdf"
                 , destinationFolder, "diff_"));
         }
 
