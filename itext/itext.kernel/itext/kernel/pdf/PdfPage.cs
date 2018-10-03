@@ -1653,10 +1653,8 @@ namespace iText.Kernel.Pdf {
                 RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
-                    kids = new PdfArray();
-                    newParent.Put(PdfName.Kids, kids);
+                    newParent.Put(PdfName.Kids, new PdfArray());
                 }
-                kids.Add(newField);
                 newField.Put(PdfName.Parent, newParent);
             }
         }

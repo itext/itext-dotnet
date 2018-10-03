@@ -171,7 +171,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 4)]
         public virtual void CopyMultipleSubfieldsTest01() {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest01.pdf";
@@ -339,6 +339,27 @@ namespace iText.Forms {
             srcDoc1.Close();
             destDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields12.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 1)]
+        public virtual void CopyFieldsTest13() {
+            String srcFilename = sourceFolder + "copyFields13.pdf";
+            String destFilename = destinationFolder + "copyFields13.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 1; ++i) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text").SetValue("Text!");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields13.pdf"
                 , destinationFolder, "diff_"));
         }
 
