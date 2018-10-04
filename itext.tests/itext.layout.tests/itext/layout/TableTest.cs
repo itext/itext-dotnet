@@ -2266,6 +2266,38 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        //exception to be fixed in DEVSIX-2228
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void RowspanTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //actually ArrayIndexOutOfBoundsException is expected, but it won't be ported.
+                String outFileName = destinationFolder + "rowspanTest.pdf";
+                int numRows = 3;
+                PdfWriter writer = new PdfWriter(outFileName);
+                PdfDocument pdfDoc = new PdfDocument(writer);
+                Document doc = new Document(pdfDoc);
+                Table table = new Table(numRows);
+                table.SetSkipLastFooter(true);
+                table.AddHeaderCell(new Cell(1, numRows).Add(new Paragraph("Header")));
+                table.AddFooterCell(new Cell(1, numRows).Add(new Paragraph("Footer")));
+                for (int rows = 0; rows < 11; rows++) {
+                    table.AddCell(new Cell(numRows, 1).Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", 0"
+                        )));
+                    int numFillerCells = (numRows - 1) * numRows;
+                    //Number of cells to complete the table rows filling up to the cell of colSpan
+                    for (int cells = 0; cells < numFillerCells; cells++) {
+                        table.AddCell(new Cell().Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", " + JavaUtil.IntegerToString
+                            (cells))));
+                    }
+                }
+                doc.Add(table);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
+;
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
