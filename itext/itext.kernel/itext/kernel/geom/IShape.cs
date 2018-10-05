@@ -58,5 +58,12 @@ namespace iText.Kernel.Geom {
         /// consisting of shape's base points.
         /// </returns>
         IList<Point> GetBasePoints();
+        
+        /// <summary>
+        /// Transforms the shape by the specified matrix
+        /// </summary>
+        /// <param name="ctm">the matrix for the transformation</param>
+        /// <returns>the transformed shape</returns>
+        IShape TransformToUserspace(Matrix ctm);
     }
 }
