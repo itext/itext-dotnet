@@ -245,9 +245,49 @@ namespace iText.Kernel.Geom {
             return subpaths.Count == 0;
         }
 
+        /// <summary>
+        /// Transforms the path by the specified matrix
+        /// </summary>
+        /// <param name="ctm">the matrix for the transformation</param>
+        /// <returns>the transformed path</returns>
+        public Path TransformPath(Matrix ctm)
+        {
+            Path transformedPath = new Path();
+            foreach (Subpath subpath in subpaths)
+            {
+                Subpath transformedSubpath = TransformSubpath(subpath, ctm);
+                if (transformedSubpath != null)
+                {
+                    transformedPath.AddSubpath(transformedSubpath);
+                }
+            }
+            return transformedPath;
+        }
+        
         private Subpath GetLastSubpath() {
             System.Diagnostics.Debug.Assert(subpaths.Count > 0);
             return subpaths[subpaths.Count - 1];
+        }
+        
+        private Subpath TransformSubpath(Subpath subpath, Matrix ctm)
+        {
+            try
+            {
+                Subpath newSubpath = new Subpath();
+                foreach (IShape segment in subpath.GetSegments())
+                {
+                    IShape transformedSegment = segment.TransformToUserspace(ctm);
+                    newSubpath.AddSegment(transformedSegment);
+                }
+                newSubpath.SetClosed(subpath.IsClosed());
+
+                return newSubpath;
+            }
+            catch (Exception ex)
+            {
+                //TODO log the exception
+                return null;
+            }
         }
     }
 }
