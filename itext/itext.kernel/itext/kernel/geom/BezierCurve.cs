@@ -167,5 +167,33 @@ namespace iText.Kernel.Geom {
             RecursiveApproximation(x1, y1, x12, y12, x123, y123, x1234, y1234, points);
             RecursiveApproximation(x1234, y1234, x234, y234, x34, y34, x4, y4, points);
         }
+        
+        /// <summary>
+        /// Transforms the bezierCurve by the specified matrix
+        /// </summary>
+        /// <param name="ctm">the matrix for the transformation</param>
+        /// <returns>the transformed bezierCurve</returns>
+        public IShape TransformToUserspace(Matrix ctm)
+        {
+            try
+            {
+                IShape transformedCurve;
+                IList<Point> basePts = controlPoints;
+                Point[] points = basePts.ToArray(new Point[basePts.Count]);
+
+                AffineTransform t = new AffineTransform(ctm.Get(Matrix.I11), ctm.Get(Matrix
+                    .I12), ctm.Get(Matrix.I21), ctm.Get(Matrix.I22), ctm.Get(Matrix.I31), ctm.Get(Matrix.I32));
+                //t = t.CreateInverse();
+                Point[] transformed = new Point[points.Length];
+                t.Transform(points, 0, transformed, 0, points.Length);
+                transformedCurve = new BezierCurve(iText.IO.Util.JavaUtil.ArraysAsList(transformed));
+
+                return transformedCurve;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
