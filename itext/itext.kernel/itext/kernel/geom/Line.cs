@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 
 namespace iText.Kernel.Geom {
@@ -77,6 +78,34 @@ namespace iText.Kernel.Geom {
             basePoints.Add(p1);
             basePoints.Add(p2);
             return basePoints;
+        }
+        
+        /// <summary>
+        /// Transforms the line by the specified matrix
+        /// </summary>
+        /// <param name="ctm">the matrix for the transformation</param>
+        /// <returns>the transformed line</returns>
+        public IShape TransformToUserspace(Matrix ctm)
+        {
+            try
+            {
+                IShape transformedLine;
+                IList<Point> basePoints = GetBasePoints();
+                Point[] points = basePoints.ToArray(new Point[basePoints.Count]);
+
+                AffineTransform t = new AffineTransform(ctm.Get(Matrix.I11), ctm.Get(Matrix
+                    .I12), ctm.Get(Matrix.I21), ctm.Get(Matrix.I22), ctm.Get(Matrix.I31), ctm.Get(Matrix.I32));
+                //t = t.CreateInverse();
+                Point[] transformed = new Point[points.Length];
+                t.Transform(points, 0, transformed, 0, points.Length);
+                transformedLine = new Line(transformed[0], transformed[1]);
+
+                return transformedLine;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
         }
     }
 }
