@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7.pdftest</id>
-    <version>7.1.4-SNAPSHOT</version>
+    <version>7.1.4</version>
     <title>iText 7 pdftest module</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
