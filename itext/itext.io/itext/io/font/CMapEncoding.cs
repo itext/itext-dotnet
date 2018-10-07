@@ -152,6 +152,17 @@ namespace iText.IO.Font {
             return cmap;
         }
 
+        /// <summary>
+        /// Checks whether the
+        /// <see cref="CMapEncoding"/>
+        /// was built with corresponding cmap name.
+        /// </summary>
+        /// <param name="cmap">a CMAP</param>
+        /// <returns>true, if the CMapEncoding was built with the cmap. Otherwise false.</returns>
+        public virtual bool IsBuiltWith(String cmap) {
+            return Object.Equals(cmap, this.cmap);
+        }
+
         [System.ObsoleteAttribute(@"Will be removed in 7.2. Use GetCmapBytes(int) instead.")]
         public virtual int GetCmapCode(int cid) {
             if (isDirect) {

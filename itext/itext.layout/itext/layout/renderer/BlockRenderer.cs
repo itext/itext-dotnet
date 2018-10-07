@@ -853,11 +853,14 @@ namespace iText.Layout.Renderer {
                 if (minWidth != null) {
                     minMaxWidth.SetChildrenMinWidth((float)minWidth);
                 }
+                // if max-width was defined explicitly, it shouldn't be overwritten
                 if (maxWidth != null) {
                     minMaxWidth.SetChildrenMaxWidth((float)maxWidth);
                 }
-                if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
-                    minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth());
+                else {
+                    if (minMaxWidth.GetChildrenMinWidth() > minMaxWidth.GetChildrenMaxWidth()) {
+                        minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMinWidth());
+                    }
                 }
             }
             if (this.GetPropertyAsFloat(Property.ROTATION_ANGLE) != null) {

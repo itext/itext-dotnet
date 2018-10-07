@@ -67,7 +67,7 @@ namespace iText.Kernel.Utils {
             compareTool.SetGenerateCompareByContentXmlReport(true);
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference");
+            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
@@ -86,7 +86,7 @@ namespace iText.Kernel.Utils {
             compareTool.SetGenerateCompareByContentXmlReport(true);
             String outPdf = sourceFolder + "tagged_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_tagged_pdf.pdf";
-            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference");
+            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
@@ -105,7 +105,7 @@ namespace iText.Kernel.Utils {
             compareTool.SetGenerateCompareByContentXmlReport(true);
             String outPdf = sourceFolder + "screenAnnotation.pdf";
             String cmpPdf = sourceFolder + "cmp_screenAnnotation.pdf";
-            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference");
+            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
@@ -125,7 +125,7 @@ namespace iText.Kernel.Utils {
             compareTool.SetGenerateCompareByContentXmlReport(true);
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf_with_space .pdf";
-            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference");
+            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
@@ -140,6 +140,13 @@ namespace iText.Kernel.Utils {
             String licensed = sourceFolder + "producerLicensed.pdf";
             String agpl = sourceFolder + "producerAGPL.pdf";
             NUnit.Framework.Assert.AreEqual(expectedMessage, new CompareTool().CompareDocumentInfo(agpl, licensed));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VersionReplaceTest() {
+            String initial = "iText® 1.10.10-SNAPSHOT (licensed to iText) ©2000-2018 iText Group NV";
+            String replacedExpected = "iText® <version> (licensed to iText) ©<copyright years> iText Group NV";
+            NUnit.Framework.Assert.AreEqual(replacedExpected, new CompareTool().ConvertProducerLine(initial));
         }
     }
 }

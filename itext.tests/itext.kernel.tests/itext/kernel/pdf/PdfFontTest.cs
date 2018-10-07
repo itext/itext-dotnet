@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String creator = "iText 7";
 
-        internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
+        internal const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

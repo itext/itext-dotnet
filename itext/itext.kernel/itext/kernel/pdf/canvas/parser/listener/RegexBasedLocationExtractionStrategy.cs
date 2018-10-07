@@ -85,6 +85,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             * areas of interest highlighted) will not break when compared.
             */
             JavaCollectionsUtil.Sort(retval, new _IComparer_54());
+            
+            // ligatures can produces same rectangle
+            removeDuplicates(retval);
+
             return retval;
         }
 
@@ -103,6 +107,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 }
             }
         }
+        
+        private void removeDuplicates(IList<IPdfTextLocation> sortedList) {
+            IPdfTextLocation lastItem = null;
+            int orgSize = sortedList.Count;
+            for (int i = orgSize - 1; i >= 0; i--) {
+                IPdfTextLocation currItem = sortedList[i];
+                Rectangle currRect = currItem.GetRectangle();
+                if (lastItem != null && currRect.EqualsWithEpsilon(lastItem.GetRectangle())) {
+                    sortedList.Remove(currItem);
+                }
+                lastItem = currItem;
+            }
+        }
+
 
         public virtual void EventOccurred(IEventData data, EventType type) {
             if (data is TextRenderInfo) {

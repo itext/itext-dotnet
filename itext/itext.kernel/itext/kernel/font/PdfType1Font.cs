@@ -90,6 +90,9 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            if (IsFlushed()) {
+                return;
+            }
             EnsureUnderlyingObjectHasIndirectReference();
             if (newFont) {
                 FlushFontData(fontProgram.GetFontNames().GetFontName(), PdfName.Type1);

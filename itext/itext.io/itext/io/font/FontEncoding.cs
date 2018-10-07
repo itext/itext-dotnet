@@ -246,6 +246,17 @@ namespace iText.IO.Font {
             return codeToUnicode[code] > -1;
         }
 
+        /// <summary>
+        /// Checks whether the
+        /// <see cref="FontEncoding"/>
+        /// was built with corresponding encoding.
+        /// </summary>
+        /// <param name="encoding">an encoding</param>
+        /// <returns>true, if the FontEncoding was built with the encoding. Otherwise false.</returns>
+        public virtual bool IsBuiltWith(String encoding) {
+            return Object.Equals(NormalizeEncoding(encoding), baseEncoding);
+        }
+
         protected internal virtual void FillCustomEncoding() {
             differences = new String[256];
             StringTokenizer tok = new StringTokenizer(baseEncoding.Substring(1), " ,\t\n\r\f");

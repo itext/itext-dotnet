@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.barcodes", "itext\itext.barcodes\itext.barcodes.csproj", "{DCAE8241-E391-418D-BA36-C7C064D7C413}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.font-asian", "itext\itext.font-asian\itext.font-asian.csproj", "{0F10190C-7611-4378-A157-03BF2ED78E30}"
@@ -34,6 +36,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.pdfa.tests", "itext.tests\itext.pdfa.tests\itext.pdfa.tests.csproj", "{B7C0E021-71AC-4C97-9A51-8356F1BD53C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.sign.tests", "itext.tests\itext.sign.tests\itext.sign.tests.csproj", "{BE15BDF3-B184-4E2F-8459-EBEE3160E19D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.styledxmlparser", "itext\itext.styledxmlparser\itext.styledxmlparser.csproj", "{8636F290-00DF-403E-B841-E4BFD6D9CE7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.styledxmlparser.tests", "itext.tests\itext.styledxmlparser.tests\itext.styledxmlparser.tests.csproj", "{ED35E7A1-5725-3258-3A99-AB356EDD5844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.svg", "itext\itext.svg\itext.svg.csproj", "{DDEC35D2-5781-471D-5EA1-A6E433EDDB11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.svg.tests", "itext.tests\itext.svg.tests\itext.svg.tests.csproj", "{EA3251AA-1452-3815-1A43-0041AEDEA112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,8 +119,27 @@ Global
 		{BE15BDF3-B184-4E2F-8459-EBEE3160E19D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE15BDF3-B184-4E2F-8459-EBEE3160E19D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE15BDF3-B184-4E2F-8459-EBEE3160E19D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDEC35D2-5781-471D-5EA1-A6E433EDDB11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEC35D2-5781-471D-5EA1-A6E433EDDB11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEC35D2-5781-471D-5EA1-A6E433EDDB11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEC35D2-5781-471D-5EA1-A6E433EDDB11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3251AA-1452-3815-1A43-0041AEDEA112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3251AA-1452-3815-1A43-0041AEDEA112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3251AA-1452-3815-1A43-0041AEDEA112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3251AA-1452-3815-1A43-0041AEDEA112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EFD49654-9685-46E9-9863-96B5554A58DC}
 	EndGlobalSection
 EndGlobal

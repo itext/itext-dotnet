@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.styledxmlparser.tests", "itext.styledxmlparser.tests.csproj", "{ED35E7A1-5725-3258-3A99-AB356EDD5844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.styledxmlparser", "..\..\itext\itext.styledxmlparser\itext.styledxmlparser.csproj", "{8636F290-00DF-403E-B841-E4BFD6D9CE7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED35E7A1-5725-3258-3A99-AB356EDD5844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8636F290-00DF-403E-B841-E4BFD6D9CE7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4628846F-7383-4AE6-A701-BC5840B85E36}
+	EndGlobalSection
+EndGlobal

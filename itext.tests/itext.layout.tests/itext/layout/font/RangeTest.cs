@@ -49,7 +49,7 @@ namespace iText.Layout.Font {
             NUnit.Framework.Assert.That(() =>  {
                 new RangeBuilder().AddRange(11, 10);
             }
-            , NUnit.Framework.Throws.TypeOf<ArgumentException>());
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
 ;
         }
 
@@ -58,7 +58,7 @@ namespace iText.Layout.Font {
             NUnit.Framework.Assert.That(() =>  {
                 new RangeBuilder().Create();
             }
-            , NUnit.Framework.Throws.TypeOf<ArgumentException>());
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
 ;
         }
 

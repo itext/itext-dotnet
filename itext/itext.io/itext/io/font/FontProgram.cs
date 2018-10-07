@@ -150,6 +150,18 @@ namespace iText.IO.Font {
         /// <returns>the kerning to be applied</returns>
         public abstract int GetKerning(Glyph first, Glyph second);
 
+        /// <summary>
+        /// Checks whether the
+        /// <see cref="FontProgram"/>
+        /// was built with corresponding fontName.
+        /// Default value is false unless overridden.
+        /// </summary>
+        /// <param name="fontName">a font name or path to a font program</param>
+        /// <returns>true, if the FontProgram was built with the fontProgram. Otherwise false.</returns>
+        public virtual bool IsBuiltWith(String fontName) {
+            return false;
+        }
+
         protected internal virtual void SetRegistry(String registry) {
             this.registry = registry;
         }

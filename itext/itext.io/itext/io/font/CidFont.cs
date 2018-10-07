@@ -49,11 +49,14 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class CidFont : FontProgram {
+        private String fontName;
+
         private int pdfFontFlags;
 
         private ICollection<String> compatibleCmaps;
 
         internal CidFont(String fontName, ICollection<String> cmaps) {
+            this.fontName = fontName;
             compatibleCmaps = cmaps;
             fontNames = new FontNames();
             InitializeCidFontNameAndStyle(fontName);
@@ -91,6 +94,10 @@ namespace iText.IO.Font {
             return false;
         }
 
+        public override bool IsBuiltWith(String fontName) {
+            return Object.Equals(this.fontName, fontName);
+        }
+
         private void InitializeCidFontNameAndStyle(String fontName) {
             String nameBase = TrimFontStyle(fontName);
             if (nameBase.Length < fontName.Length) {
@@ -113,11 +120,11 @@ namespace iText.IO.Font {
             pdfFontFlags = Convert.ToInt32((String)fontDesc.Get("Flags"));
             String fontBBox = (String)fontDesc.Get("FontBBox");
             StringTokenizer tk = new StringTokenizer(fontBBox, " []\r\n\t\f");
-            int? llx = Convert.ToInt32(tk.NextToken());
-            int? lly = Convert.ToInt32(tk.NextToken());
-            int? urx = Convert.ToInt32(tk.NextToken());
-            int? ury = Convert.ToInt32(tk.NextToken());
-            fontMetrics.UpdateBbox((int)llx, (int)lly, (int)urx, (int)ury);
+            int llx = Convert.ToInt32(tk.NextToken());
+            int lly = Convert.ToInt32(tk.NextToken());
+            int urx = Convert.ToInt32(tk.NextToken());
+            int ury = Convert.ToInt32(tk.NextToken());
+            fontMetrics.UpdateBbox(llx, lly, urx, ury);
             registry = (String)fontDesc.Get("Registry");
             String uniMap = GetCompatibleUniMap(registry);
             if (uniMap != null) {

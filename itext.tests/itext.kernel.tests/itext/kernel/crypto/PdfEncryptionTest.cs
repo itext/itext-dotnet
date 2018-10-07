@@ -283,7 +283,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf"));
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword));
+            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword))
 ;
         }
 
@@ -296,7 +296,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword));
+            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword))
 ;
         }
 
@@ -307,7 +307,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf"));
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate));
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate))
 ;
         }
 
@@ -321,7 +321,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
 ;
         }
 
@@ -335,7 +335,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
 ;
         }
 
@@ -351,7 +351,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.PdfDecryption));
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.PdfDecryption))
 ;
         }
 
@@ -367,7 +367,7 @@ namespace iText.Kernel.Crypto {
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
 ;
         }
 
@@ -429,7 +429,7 @@ namespace iText.Kernel.Crypto {
                      + fileName));
                 document.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword));
+            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword))
 ;
         }
 

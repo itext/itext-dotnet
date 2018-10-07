@@ -132,6 +132,22 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        public static PdfFont CreateFont(String fontProgram, String encoding, PdfDocument cacheTo) {
+            PdfFont pdfFont;
+            if (cacheTo != null) {
+                pdfFont = cacheTo.FindFont(fontProgram, encoding);
+                if (pdfFont != null) {
+                    return pdfFont;
+                }
+            }
+            pdfFont = CreateFont(fontProgram, encoding);
+            if (cacheTo != null) {
+                pdfFont.MakeIndirect(cacheTo);
+            }
+            return pdfFont;
+        }
+
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>

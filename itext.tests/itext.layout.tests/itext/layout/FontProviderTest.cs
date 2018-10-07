@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -90,9 +91,10 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StandardAndType3Fonts() {
-            String srcFileName = sourceFolder + "src_taggedDocumentWithType3Font.pdf";
-            String outFileName = destinationFolder + "taggedDocumentWithType3Font.pdf";
-            String cmpFileName = sourceFolder + "cmp_taggedDocumentWithType3Font.pdf";
+            String fileName = "taggedDocumentWithType3Font";
+            String srcFileName = sourceFolder + "src_" + fileName + ".pdf";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProviderTest.PdfFontProvider sel = new FontProviderTest.PdfFontProvider();
             sel.AddStandardPdfFonts();
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(srcFileName, FileMode.Open, FileAccess.Read
@@ -102,7 +104,8 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph("Next paragraph contains a triangle, actually Type 3 Font");
-            paragraph.SetProperty(Property.FONT, StandardFonts.TIMES_ROMAN);
+            paragraph.SetProperty(Property.FONT, StandardFontFamilies.TIMES);
+            // TODO DEVSIX-2136 Update of necessary
             doc.Add(paragraph);
             paragraph = new Paragraph("A");
             paragraph.SetFont("CustomFont");
@@ -112,7 +115,56 @@ namespace iText.Layout {
             doc.Add(paragraph);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+                , "diff" + fileName));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomFontProvider() {
+            String fileName = "customFontProvider.pdf";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
+            // TODO DEVSIX-2119 Update if necessary
+            fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(fontProvider);
+            Paragraph paragraph1 = new Paragraph("Default Helvetica should be selected.");
+            doc.Add(paragraph1);
+            Paragraph paragraph2 = new Paragraph("Default Helvetica should be selected.").SetFont(StandardFonts.COURIER
+                );
+            doc.Add(paragraph2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + fileName));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomFontProvider2() {
+            String fileName = "customFontProvider2.pdf";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            FontProvider fontProvider = new FontProvider();
+            // bold font. shouldn't be selected
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "times");
+            // TODO DEVSIX-2119 Update if necessary
+            // monospace font. shouldn't be selected
+            fontProvider.GetFontSet().AddFont(StandardFonts.COURIER);
+            fontProvider.GetFontSet().AddFont(sourceFolder + "../fonts/FreeSans.ttf", PdfEncodings.IDENTITY_H);
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
+            // TODO DEVSIX-2119 Update if necessary
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(fontProvider);
+            Paragraph paragraph = new Paragraph("There is no default font (Helvetica) inside the used FontProvider's instance. So the first font, that has been added, should be selected. Here it's FreeSans."
+                ).SetFont("ABRACADABRA_THERE_IS_NO_SUCH_FONT");
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + fileName));
         }
     }
 }

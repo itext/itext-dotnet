@@ -239,6 +239,10 @@ namespace iText.IO.Font {
             return fontStreamLengths;
         }
 
+        public override bool IsBuiltWith(String fontProgram) {
+            return Object.Equals(fontParser.GetAfmPath(), fontProgram);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Process() {
             RandomAccessFileOrArray raf = fontParser.GetMetricsFile();

@@ -72,6 +72,9 @@ namespace iText.Signatures {
     internal sealed class SignUtils {
         internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
 
+        internal static readonly int KEY_USAGE_DIGITAL_SIGNATURE = 0;
+        internal static readonly int KEY_USAGE_NON_REPUDIATION   = 1;
+
         internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
             String algorithm;
             if (cp is RsaKeyParameters) {
@@ -236,25 +239,37 @@ namespace iText.Signatures {
             response.encoding = httpWebResponse.Headers[HttpResponseHeader.ContentEncoding];
             return response;
         }
-
+        
         internal static bool HasUnsupportedCriticalExtension(X509Certificate cert) {
+            if ( cert == null ) {
+                throw new ArgumentException("X509Certificate can't be null.");
+            }
+
             foreach (String oid in cert.GetCriticalExtensionOids()) {
-                if (oid == X509Extensions.KeyUsage.Id
+                if (oid == X509Extensions.BasicConstraints.Id
                     || oid == X509Extensions.CertificatePolicies.Id
-                    || oid == X509Extensions.PolicyMappings.Id
-                    || oid == X509Extensions.InhibitAnyPolicy.Id
                     || oid == X509Extensions.CrlDistributionPoints.Id
-                    || oid == X509Extensions.IssuingDistributionPoint.Id
                     || oid == X509Extensions.DeltaCrlIndicator.Id
+                    || oid == X509Extensions.InhibitAnyPolicy.Id
+                    || oid == X509Extensions.IssuingDistributionPoint.Id
+                    || oid == X509Extensions.NameConstraints.Id
                     || oid == X509Extensions.PolicyConstraints.Id
-                    || oid == X509Extensions.BasicConstraints.Id
-                    || oid == X509Extensions.SubjectAlternativeName.Id
-                    || oid == X509Extensions.NameConstraints.Id) {
+                    || oid == X509Extensions.PolicyMappings.Id
+                    || oid == X509Extensions.SubjectAlternativeName.Id) {
                     continue;
                 }
+
+                if (oid == X509Extensions.KeyUsage.Id) {
+                    bool[] keyUsageFlags = cert.GetKeyUsage();
+
+                    if (keyUsageFlags[KEY_USAGE_DIGITAL_SIGNATURE] || keyUsageFlags[KEY_USAGE_NON_REPUDIATION]) {
+                        continue;
+                    }
+                }
+
                 try {
                     // EXTENDED KEY USAGE and TIMESTAMPING is ALLOWED
-                    if (oid == X509Extensions.ExtendedKeyUsage.Id && cert.GetExtendedKeyUsage().Contains("1.3.6.1.5.5.7.3.8")) {
+                    if (oid == X509Extensions.ExtendedKeyUsage.Id && cert.GetExtendedKeyUsage().Contains(OID.X509Extensions.ID_KP_TIMESTAMPING)) {
                         continue;
                     }
                 } catch (CertificateParsingException) {

@@ -424,5 +424,40 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.GetPage(1);
             NUnit.Framework.Assert.AreEqual(90, page.GetRotation(), "Inherited value is invalid");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PageTreeCleanupParentRefTest() {
+            String src = sourceFolder + "CatalogWithPageAndPagesEntries.pdf";
+            String dest = destinationFolder + "CatalogWithPageAndPagesEntries_opened.pdf";
+            PdfReader reader = new PdfReader(src);
+            PdfWriter writer = new PdfWriter(dest);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsTrue(TestPageTreeParentsValid(src) && TestPageTreeParentsValid(dest));
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.IO.IOException"/>
+        private bool TestPageTreeParentsValid(String src) {
+            bool valid = true;
+            PdfReader reader = new PdfReader(src);
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            PdfDictionary page_root = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages);
+            for (int x = 1; x < pdfDocument.GetNumberOfPdfObjects(); x++) {
+                PdfObject obj = pdfDocument.GetPdfObject(x);
+                if (obj != null && obj.IsDictionary() && ((PdfDictionary)obj).GetAsName(PdfName.Type) != null && ((PdfDictionary
+                    )obj).GetAsName(PdfName.Type).Equals(PdfName.Pages)) {
+                    if (obj != page_root) {
+                        PdfDictionary parent = ((PdfDictionary)obj).GetAsDictionary(PdfName.Parent);
+                        if (parent == null) {
+                            System.Console.Out.WriteLine(obj);
+                            valid = false;
+                        }
+                    }
+                }
+            }
+            return valid;
+        }
     }
 }
