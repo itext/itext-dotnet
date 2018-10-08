@@ -1166,13 +1166,17 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StampingTestWithFullCompression01() {
+            String outPdf = destinationFolder + "stampingTestWithFullCompression01.pdf";
+            String cmpPdf = sourceFolder + "cmp_stampingTestWithFullCompression01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "fullCompressedDocument.pdf"), new PdfWriter
-                (destinationFolder + "stampingTestWithFullCompression01.pdf"));
+                (outPdf));
             pdfDoc.Close();
-            float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression01.pdf").Length;
-            float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression01.pdf").Length;
+            float result = new FileInfo(outPdf).Length;
+            float expected = new FileInfo(cmpPdf).Length;
             float coef = Math.Abs((expected - result) / expected);
+            String compareRes = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder);
             NUnit.Framework.Assert.IsTrue(coef < 0.01);
+            NUnit.Framework.Assert.IsNull(compareRes);
         }
 
         /// <exception cref="System.IO.IOException"/>
