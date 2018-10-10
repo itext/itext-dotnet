@@ -95,9 +95,6 @@ namespace iText.StyledXmlParser.Resolver.Resource
             uriString = UriEncodeUtil.Encode(uriString);
             if (isLocalBaseUri)
             {
-                // remove leading slashes in order to always concatenate such resource URIs: we don't want to scatter all
-                // resources around the file system even if on web page the path started with '\'
-                uriString = uriString.ReplaceFirst("/*\\\\*", "");
                 if (!uriString.StartsWith("file:"))
                 {
                     try

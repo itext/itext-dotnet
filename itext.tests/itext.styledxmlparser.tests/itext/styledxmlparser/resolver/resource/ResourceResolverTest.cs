@@ -104,7 +104,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
         
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-1019 — different behaviour on windows and linux")]
         public virtual void absolutePathTest() {
             //TODO check this test with on linux or mac with mono!
             String fileName = "retrieveStyleSheetTest.css";
