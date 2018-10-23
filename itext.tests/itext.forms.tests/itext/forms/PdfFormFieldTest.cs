@@ -478,5 +478,29 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultilineFormFieldNewLineTest() {
+            //DEVSIX-2393
+            //TODO change cmp file after fix
+            String testName = "multilineFormFieldNewLineTest";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            String srcPdf = sourceFolder + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(srcPdf);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
