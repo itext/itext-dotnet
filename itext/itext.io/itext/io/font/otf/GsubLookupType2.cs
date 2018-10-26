@@ -79,7 +79,7 @@ namespace iText.IO.Font.Otf {
         /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
-            int substFormat = openReader.rf.ReadShort();
+            int substFormat = openReader.rf.ReadUnsignedShort();
             if (substFormat == 1) {
                 int coverage = openReader.rf.ReadUnsignedShort();
                 int sequenceCount = openReader.rf.ReadUnsignedShort();
