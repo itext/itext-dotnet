@@ -182,6 +182,23 @@ namespace iText.IO.Font.Otf {
             actualText = null;
         }
 
+        /// <summary>Add a line to the current one.</summary>
+        /// <remarks>
+        /// Add a line to the current one.
+        /// The glyphs from the start till the end points will be copied.
+        /// The same is true for the actual text.
+        /// </remarks>
+        /// <param name="other">the line that should be added to the current one</param>
+        public virtual void Add(iText.IO.Font.Otf.GlyphLine other) {
+            this.glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
+            if (other.actualText != null) {
+                if (actualText == null) {
+                    actualText = new List<GlyphLine.ActualText>();
+                }
+                actualText.AddAll(other.actualText.SubList(other.start, other.end));
+            }
+        }
+
         public virtual void ReplaceContent(iText.IO.Font.Otf.GlyphLine other) {
             glyphs.Clear();
             glyphs.AddAll(other.glyphs);

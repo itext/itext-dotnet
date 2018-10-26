@@ -40,11 +40,23 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
+using System.IO;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class GlyphLineTest {
+        private static IList<Glyph> ConstructGlyphListFromString(String text, TrueTypeFont font) {
+            IList<Glyph> glyphList = new List<Glyph>();
+            char[] chars = text.ToCharArray();
+            foreach (char letter in chars) {
+                glyphList.Add(font.GetGlyph(letter));
+            }
+            return glyphList;
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestEquals() {
             Glyph glyph = new Glyph(200, 200, 200);
@@ -58,6 +70,31 @@ namespace iText.IO.Font.Otf {
             one.end++;
             two.end++;
             NUnit.Framework.Assert.IsTrue(one.Equals(two));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesAddition() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("Viva France!", font));
+            GlyphLine childLine1 = new GlyphLine(ConstructGlyphListFromString(" Liberte", font));
+            containerLine.Add(childLine1);
+            NUnit.Framework.Assert.AreEqual(containerLine.end, 12);
+            containerLine.end = 20;
+            GlyphLine childLine2 = new GlyphLine(ConstructGlyphListFromString(" Egalite", font));
+            containerLine.Add(childLine2);
+            NUnit.Framework.Assert.AreEqual(containerLine.end, 20);
+            containerLine.start = 10;
+            GlyphLine childLine3 = new GlyphLine(ConstructGlyphListFromString(" Fraternite", font));
+            containerLine.Add(childLine3);
+            NUnit.Framework.Assert.AreEqual(containerLine.start, 10);
+            containerLine.start = 0;
+            containerLine.Add(ConstructGlyphListFromString("!", font)[0]);
+            containerLine.end = 40;
+            NUnit.Framework.Assert.AreEqual(containerLine.glyphs.Count, 40);
         }
     }
 }
