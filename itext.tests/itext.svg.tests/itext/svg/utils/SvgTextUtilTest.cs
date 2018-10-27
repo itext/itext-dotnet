@@ -171,5 +171,13 @@ namespace iText.Svg.Utils {
             String actual = SvgTextUtil.TrimTrailingWhitespace(null);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimTrailingOfStringWithLength1Test() {
+            String toTrim = "A";
+            String actual = SvgTextUtil.TrimTrailingWhitespace(toTrim);
+            String expected = "A";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

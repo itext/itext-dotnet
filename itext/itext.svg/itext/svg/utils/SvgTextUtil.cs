@@ -80,7 +80,7 @@ namespace iText.Svg.Utils {
             int end = toTrim.Length;
             if (end > 0) {
                 int current = end - 1;
-                while (current > 0) {
+                while (current >= 0) {
                     char currentChar = toTrim[current];
                     if (iText.IO.Util.TextUtil.IsWhiteSpace(currentChar) && !(currentChar == '\n' || currentChar == '\r')) {
                         //if the character is whitespace and not a newline, increase current
@@ -90,7 +90,7 @@ namespace iText.Svg.Utils {
                         break;
                     }
                 }
-                if (current == 0) {
+                if (current < 0) {
                     return "";
                 }
                 else {
