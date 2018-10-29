@@ -96,5 +96,52 @@ namespace iText.IO.Font.Otf {
             containerLine.end = 40;
             NUnit.Framework.Assert.AreEqual(containerLine.glyphs.Count, 40);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesWithActualTextAddition() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
+            GlyphLine childLine = new GlyphLine(ConstructGlyphListFromString("---Liberte", font));
+            childLine.SetActualText(3, 10, "Viva");
+            containerLine.Add(childLine);
+            containerLine.end = 16;
+            for (int i = 0; i < 9; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+            for (int i = 9; i < 16; i++) {
+                NUnit.Framework.Assert.AreEqual("Viva", containerLine.actualText[i].value);
+            }
+            NUnit.Framework.Assert.AreEqual("France---Viva", containerLine.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesWithActualTextAddition02() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
+            containerLine.SetActualText(1, 5, "id");
+            GlyphLine childLine = new GlyphLine(ConstructGlyphListFromString("---Liberte", font));
+            childLine.SetActualText(3, 10, "Viva");
+            containerLine.Add(childLine);
+            containerLine.end = 16;
+            NUnit.Framework.Assert.IsNull(containerLine.actualText[0]);
+            for (int i = 1; i < 5; i++) {
+                NUnit.Framework.Assert.AreEqual("id", containerLine.actualText[i].value);
+            }
+            for (int i = 5; i < 9; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+            for (int i = 9; i < 16; i++) {
+                NUnit.Framework.Assert.AreEqual("Viva", containerLine.actualText[i].value);
+            }
+            NUnit.Framework.Assert.AreEqual("Fide---Viva", containerLine.ToString());
+        }
     }
 }

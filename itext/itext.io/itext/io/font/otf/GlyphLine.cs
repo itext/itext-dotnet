@@ -190,13 +190,16 @@ namespace iText.IO.Font.Otf {
         /// </remarks>
         /// <param name="other">the line that should be added to the current one</param>
         public virtual void Add(iText.IO.Font.Otf.GlyphLine other) {
-            this.glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
             if (other.actualText != null) {
                 if (actualText == null) {
-                    actualText = new List<GlyphLine.ActualText>();
+                    actualText = new List<GlyphLine.ActualText>(glyphs.Count);
+                    for (int i = 0; i < glyphs.Count; i++) {
+                        actualText.Add(null);
+                    }
                 }
                 actualText.AddAll(other.actualText.SubList(other.start, other.end));
             }
+            glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
         }
 
         public virtual void ReplaceContent(iText.IO.Font.Otf.GlyphLine other) {
