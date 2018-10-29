@@ -203,10 +203,12 @@ namespace iText.Kernel.Geom {
 
         /// <summary>Closes the current subpath.</summary>
         public virtual void CloseSubpath() {
-            Subpath lastSubpath = GetLastSubpath();
-            lastSubpath.SetClosed(true);
-            Point startPoint = lastSubpath.GetStartPoint();
-            MoveTo((float)startPoint.GetX(), (float)startPoint.GetY());
+            if (!IsEmpty()) {
+                Subpath lastSubpath = GetLastSubpath();
+                lastSubpath.SetClosed(true);
+                Point startPoint = lastSubpath.GetStartPoint();
+                MoveTo((float)startPoint.GetX(), (float)startPoint.GetY());
+            }
         }
 
         /// <summary>Closes all subpathes contained in this path.</summary>
