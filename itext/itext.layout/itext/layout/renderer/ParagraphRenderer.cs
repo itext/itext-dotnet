@@ -245,6 +245,13 @@ namespace iText.Layout.Renderer {
                                 AlignStaticKids(processedRenderer, deltaX / 2);
                                 break;
                             }
+
+                            case TextAlignment.JUSTIFIED: {
+                                if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                                    AlignStaticKids(processedRenderer, deltaX);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
