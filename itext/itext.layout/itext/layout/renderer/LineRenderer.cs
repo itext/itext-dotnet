@@ -648,7 +648,19 @@ namespace iText.Layout.Renderer {
                                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                                         .MARGIN_LEFT));
                                 }
-                                currentWidth += margins[1].GetValue() + margins[3].GetValue();
+                                UnitValue[] paddings = ((TextRenderer)child).GetPaddings();
+                                if (!paddings[1].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .PADDING_RIGHT));
+                                }
+                                if (!paddings[3].IsPointValue()) {
+                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                        .PADDING_LEFT));
+                                }
+                                currentWidth += margins[1].GetValue() + margins[3].GetValue() + paddings[1].GetValue() + paddings[3].GetValue
+                                    ();
                                 ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             }
                             else {
