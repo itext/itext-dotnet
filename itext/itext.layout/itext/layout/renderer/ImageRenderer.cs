@@ -225,17 +225,9 @@ namespace iText.Layout.Renderer {
                     "Drawing won't be performed."));
                 return;
             }
-            ApplyMargins(occupiedArea.GetBBox(), false);
-            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
-            }
-            if (fixedYPosition == null) {
-                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
-            }
-            if (fixedXPosition == null) {
-                fixedXPosition = occupiedArea.GetBBox().GetX();
             }
             bool isTagged = drawContext.IsTaggingEnabled();
             LayoutTaggingHelper taggingHelper = null;
@@ -260,13 +252,21 @@ namespace iText.Layout.Renderer {
             BeginTransformationIfApplied(drawContext.GetCanvas());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                fixedXPosition += rotatedDeltaX;
-                fixedYPosition -= rotatedDeltaY;
                 drawContext.GetCanvas().SaveState();
                 ApplyConcatMatrix(drawContext, angle);
             }
             base.Draw(drawContext);
+            ApplyMargins(occupiedArea.GetBBox(), false);
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
+            if (fixedYPosition == null) {
+                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
+            }
+            if (fixedXPosition == null) {
+                fixedXPosition = occupiedArea.GetBBox().GetX();
+            }
             if (angle != null) {
+                fixedXPosition += rotatedDeltaX;
+                fixedYPosition -= rotatedDeltaY;
                 drawContext.GetCanvas().RestoreState();
             }
             PdfCanvas canvas = drawContext.GetCanvas();
