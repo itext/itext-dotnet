@@ -826,5 +826,24 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageBorderRadiusTest01() {
+            String outFileName = destinationFolder + "imageBorderRadiusTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageBorderRadiusTest01.pdf";
+            String imageFileName = sourceFolder + "itis.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(imageFileName));
+            image.SetBorderRadius(new BorderRadius(20));
+            image.SetBorderBottomLeftRadius(new BorderRadius(35));
+            image.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

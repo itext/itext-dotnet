@@ -256,6 +256,8 @@ namespace iText.Layout.Renderer {
                 ApplyConcatMatrix(drawContext, angle);
             }
             base.Draw(drawContext);
+            bool clipImageInAViewOfBorderRadius = ClipBackgroundArea(drawContext, ApplyMargins(GetOccupiedAreaBBox(), 
+                false), true);
             ApplyMargins(occupiedArea.GetBBox(), false);
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             if (fixedYPosition == null) {
@@ -289,6 +291,9 @@ namespace iText.Layout.Renderer {
             }
             if (isTagged) {
                 canvas.CloseTag();
+            }
+            if (clipImageInAViewOfBorderRadius) {
+                canvas.RestoreState();
             }
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(true);
