@@ -619,7 +619,7 @@ namespace iText.Layout.Renderer {
                     bottomBorderWidth = borders[2].GetWidth();
                     bottom += borders[2].GetWidth();
                     if (y3 < bottom) {
-                        y3 = top;
+                        y3 = bottom;
                     }
                     if (y4 < bottom) {
                         y4 = bottom;
