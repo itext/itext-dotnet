@@ -420,6 +420,14 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2442")]
+        public virtual void ITextLogoTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "iTextLogo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void EofillUnsuportedPathTest() {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompareVisually(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
