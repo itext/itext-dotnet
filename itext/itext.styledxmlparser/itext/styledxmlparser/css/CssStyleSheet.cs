@@ -116,6 +116,24 @@ namespace iText.StyledXmlParser.Css {
             return new List<CssDeclaration>(declarations.Values);
         }
 
+        /// <summary>Gets the CSS declarations.</summary>
+        /// <param name="ruleSets">list of css rule sets</param>
+        /// <returns>the CSS declarations</returns>
+        public static IDictionary<String, String> ExtractStylesFromRuleSets(IList<CssRuleSet> ruleSets) {
+            IDictionary<String, CssDeclaration> declarations = new LinkedDictionary<String, CssDeclaration>();
+            foreach (CssRuleSet ruleSet in ruleSets) {
+                PopulateDeclarationsMap(ruleSet.GetNormalDeclarations(), declarations);
+            }
+            foreach (CssRuleSet ruleSet in ruleSets) {
+                PopulateDeclarationsMap(ruleSet.GetImportantDeclarations(), declarations);
+            }
+            IDictionary<String, String> stringMap = new LinkedDictionary<String, String>();
+            foreach (KeyValuePair<String, CssDeclaration> entry in declarations) {
+                stringMap.Put(entry.Key, entry.Value.GetExpression());
+            }
+            return stringMap;
+        }
+
         /// <summary>Populates the CSS declarations map.</summary>
         /// <param name="declarations">the declarations</param>
         /// <param name="map">the map</param>
@@ -141,7 +159,7 @@ namespace iText.StyledXmlParser.Css {
         /// <param name="node">the node</param>
         /// <param name="deviceDescription">the device description</param>
         /// <returns>the css rule sets</returns>
-        private IList<CssRuleSet> GetCssRuleSets(INode node, MediaDeviceDescription deviceDescription) {
+        public virtual IList<CssRuleSet> GetCssRuleSets(INode node, MediaDeviceDescription deviceDescription) {
             IList<CssRuleSet> ruleSets = new List<CssRuleSet>();
             foreach (CssStatement statement in statements) {
                 ruleSets.AddAll(statement.GetCssRuleSets(node, deviceDescription));
