@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -1139,7 +1140,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     return (PdfDictionary)operand1;
                 }
                 PdfName dictionaryName = ((PdfName)operand1);
-                return resources.GetResource(PdfName.Properties).GetAsDictionary(dictionaryName);
+                PdfDictionary properties = resources.GetResource(PdfName.Properties);
+                if (null == properties) {
+                    ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                        , PdfName.Properties));
+                    return null;
+                }
+                PdfDictionary propertiesDictionary = properties.GetAsDictionary(dictionaryName);
+                if (null == propertiesDictionary) {
+                    ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                        , dictionaryName));
+                    return null;
+                }
+                return properties.GetAsDictionary(dictionaryName);
             }
         }
 
