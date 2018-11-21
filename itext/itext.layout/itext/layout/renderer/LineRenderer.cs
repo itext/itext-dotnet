@@ -772,8 +772,12 @@ namespace iText.Layout.Renderer {
                 childX = lastRightPos;
                 if (child is TextRenderer) {
                     float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
-                    child.SetProperty(Property.CHARACTER_SPACING, characterSpacing / childHSCale);
-                    child.SetProperty(Property.WORD_SPACING, wordSpacing / childHSCale);
+                    float? oldCharacterSpacing = ((TextRenderer)child).GetPropertyAsFloat(Property.CHARACTER_SPACING);
+                    float? oldWordSpacing = ((TextRenderer)child).GetPropertyAsFloat(Property.WORD_SPACING);
+                    child.SetProperty(Property.CHARACTER_SPACING, (null == oldCharacterSpacing ? 0 : (float)oldCharacterSpacing
+                        ) + characterSpacing / childHSCale);
+                    child.SetProperty(Property.WORD_SPACING, (null == oldWordSpacing ? 0 : (float)oldWordSpacing) + wordSpacing
+                         / childHSCale);
                     bool isLastTextRenderer = child == lastChildRenderer;
                     float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() - 1) : ((TextRenderer)child
                         ).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer)child).GetNumberOfSpaces();
