@@ -235,8 +235,8 @@ namespace iText.Layout.Renderer {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
                         Rectangle actualLineLayoutBox = layoutBox.Clone();
                         FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        float deltaX = actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox()
-                            .GetWidth();
+                        float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
+                            ().GetBBox().GetWidth());
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
                                 AlignStaticKids(processedRenderer, deltaX);
