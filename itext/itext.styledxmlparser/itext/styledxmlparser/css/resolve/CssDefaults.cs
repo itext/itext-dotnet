@@ -86,10 +86,11 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.BORDER_TOP_RIGHT_RADIUS, "0");
             defaultValues.Put(CommonCssConstants.BOX_SHADOW, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.FLOAT, CommonCssConstants.NONE);
-            defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.FONT_FAMILY, "times");
             defaultValues.Put(CommonCssConstants.FONT_SIZE, CommonCssConstants.MEDIUM);
             defaultValues.Put(CommonCssConstants.FONT_STYLE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_VARIANT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.HYPHENS, CommonCssConstants.MANUAL);
             defaultValues.Put(CommonCssConstants.LINE_HEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants.DISC);
