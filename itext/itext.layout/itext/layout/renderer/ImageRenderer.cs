@@ -103,6 +103,10 @@ namespace iText.Layout.Renderer {
             CalculateImageDimensions(layoutBox, t, xObject);
             OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
                 ) : OverflowPropertyValue.FIT;
+            bool nowrap = false;
+            if (parent is LineRenderer) {
+                nowrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
+            }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
@@ -123,7 +127,7 @@ namespace iText.Layout.Renderer {
             OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
                 .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
                 >(Property.OVERFLOW_Y);
-            bool processOverflowX = !IsOverflowFit(overflowX);
+            bool processOverflowX = !IsOverflowFit(overflowX) || nowrap;
             bool processOverflowY = !IsOverflowFit(overflowY);
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);

@@ -148,8 +148,7 @@ namespace iText.Layout.Renderer {
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
-            bool? nowrapProp = this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE);
-            bool noSoftWrap = nowrapProp != null && nowrapProp;
+            bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
@@ -743,7 +742,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_779();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_778();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -808,8 +807,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_779 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_779() {
+        private sealed class _IGlyphLineFilter_778 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_778() {
             }
 
             public bool Accept(Glyph glyph) {

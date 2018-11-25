@@ -88,8 +88,7 @@ namespace iText.Layout.Renderer {
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
             }
-            bool? nowrapProp = this.GetPropertyAsBoolean(Property.NO_SOFT_WRAP_INLINE);
-            bool? noSoftWrap = nowrapProp != null && nowrapProp;
+            bool noSoftWrap = true.Equals(this.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
             LineLayoutContext lineLayoutContext = layoutContext is LineLayoutContext ? (LineLayoutContext)layoutContext
                  : new LineLayoutContext(layoutContext);
             if (lineLayoutContext.GetTextIndent() != 0) {
