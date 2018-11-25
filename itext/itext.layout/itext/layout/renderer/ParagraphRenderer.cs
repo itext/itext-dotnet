@@ -204,8 +204,8 @@ namespace iText.Layout.Renderer {
                     minChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMinWidth();
                     maxChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMaxWidth();
                 }
-                widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
-                widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
+                widthHandler.UpdateMinChildWidth(minChildWidth);
+                widthHandler.UpdateMaxChildWidth(maxChildWidth);
                 LineRenderer processedRenderer = null;
                 if (result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;

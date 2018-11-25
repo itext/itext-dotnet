@@ -397,6 +397,7 @@ namespace iText.Layout.Renderer {
                 bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
                     ());
                 bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
+                float currChildTextIndent = anythingPlaced ? 0 : lineLayoutContext.GetTextIndent();
                 if (hangingTabStop != null && (TabAlignment.LEFT == hangingTabStop.GetTabAlignment() || shouldBreakLayouting
                      || childRenderers.Count - 1 == childPos || childRenderers[childPos + 1] is TabRenderer)) {
                     IRenderer tabRenderer = childRenderers[lastTabIndex];
@@ -422,8 +423,8 @@ namespace iText.Layout.Renderer {
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
-                    widthHandler.UpdateMinChildWidth(minChildWidth_1);
-                    widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth_1);
+                    widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
+                    widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth_1 + currChildTextIndent);
                     hangingTabStop = null;
                 }
                 else {
@@ -431,8 +432,8 @@ namespace iText.Layout.Renderer {
                         if (childResult.GetOccupiedArea() != null && childResult.GetOccupiedArea().GetBBox() != null) {
                             curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
                         }
-                        widthHandler.UpdateMinChildWidth(minChildWidth_1);
-                        widthHandler.UpdateMaxChildWidth(maxChildWidth_1);
+                        widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
+                        widthHandler.UpdateMaxChildWidth(maxChildWidth_1 + currChildTextIndent);
                     }
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
