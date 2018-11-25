@@ -148,6 +148,8 @@ namespace iText.Layout.Renderer {
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
+            bool? nowrapProp = this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE);
+            bool? noSoftWrap = nowrapProp != null && nowrapProp;
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
@@ -274,8 +276,8 @@ namespace iText.Layout.Renderer {
                     if (xAdvance != 0) {
                         xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
                     }
-                    if ((nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition) > layoutBox
-                        .GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
+                    if (!noSoftWrap && (nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition
+                        ) > layoutBox.GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
                         if (iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
                             wordBreakGlyphAtLineEnding = currentGlyph;
@@ -309,8 +311,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
-                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth() && (0 ==
-                         nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
+                    if (!noSoftWrap && nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth
+                        () && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
                         (text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
@@ -735,7 +737,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_769();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_774();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -800,8 +802,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_769 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_769() {
+        private sealed class _IGlyphLineFilter_774 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_774() {
             }
 
             public bool Accept(Glyph glyph) {
