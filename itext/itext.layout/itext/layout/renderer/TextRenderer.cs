@@ -149,7 +149,7 @@ namespace iText.Layout.Renderer {
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             bool? nowrapProp = this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE);
-            bool? noSoftWrap = nowrapProp != null && nowrapProp;
+            bool noSoftWrap = nowrapProp != null && nowrapProp;
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
@@ -164,7 +164,13 @@ namespace iText.Layout.Renderer {
             UnitValue[] paddings = GetPaddings();
             ApplyPaddings(layoutBox, paddings, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth());
-            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
+            AbstractWidthHandler widthHandler;
+            if (noSoftWrap) {
+                widthHandler = new SumSumWidthHandler(countedMinMaxWidth);
+            }
+            else {
+                widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
@@ -737,7 +743,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_774();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_779();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -802,8 +808,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_774 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_774() {
+        private sealed class _IGlyphLineFilter_779 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_779() {
             }
 
             public bool Accept(Glyph glyph) {

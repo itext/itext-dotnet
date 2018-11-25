@@ -88,6 +88,8 @@ namespace iText.Layout.Renderer {
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
             }
+            bool? nowrapProp = this.GetPropertyAsBoolean(Property.NO_SOFT_WRAP_INLINE);
+            bool? noSoftWrap = nowrapProp != null && nowrapProp;
             LineLayoutContext lineLayoutContext = layoutContext is LineLayoutContext ? (LineLayoutContext)layoutContext
                  : new LineLayoutContext(layoutContext);
             if (lineLayoutContext.GetTextIndent() != 0) {
@@ -105,7 +107,13 @@ namespace iText.Layout.Renderer {
             maxBlockDescent = 1e20f;
             int childPos = 0;
             MinMaxWidth minMaxWidth = new MinMaxWidth();
-            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
+            AbstractWidthHandler widthHandler;
+            if (noSoftWrap) {
+                widthHandler = new SumSumWidthHandler(minMaxWidth);
+            }
+            else {
+                widthHandler = new MaxSumWidthHandler(minMaxWidth);
+            }
             UpdateChildrenParent();
             ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
@@ -278,20 +286,26 @@ namespace iText.Layout.Renderer {
                 if (!childWidthWasReplaced) {
                     if (isInlineBlockChild && childRenderer is AbstractRenderer) {
                         childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
-                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
+                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth();
                         float lineFullAvailableWidth = layoutContext.GetArea().GetBBox().GetWidth() - lineLayoutContext.GetTextIndent
                             ();
-                        if (childMaxWidth > bbox.GetWidth() && bbox.GetWidth() != lineFullAvailableWidth) {
+                        if (!noSoftWrap && childMaxWidth > bbox.GetWidth() + MIN_MAX_WIDTH_CORRECTION_EPS && bbox.GetWidth() != lineFullAvailableWidth
+                            ) {
                             childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
                         }
                         else {
-                            if (bbox.GetWidth() == lineFullAvailableWidth && childBlockMinMaxWidth.GetMinWidth() > lineFullAvailableWidth
-                                ) {
+                            childMaxWidth += MIN_MAX_WIDTH_CORRECTION_EPS;
+                            float inlineBlockWidth = Math.Min(childMaxWidth, lineFullAvailableWidth);
+                            if (!IsOverflowFit(this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X))) {
+                                float childMinWidth = childBlockMinMaxWidth.GetMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
+                                inlineBlockWidth = Math.Max(childMinWidth, inlineBlockWidth);
+                            }
+                            bbox.SetWidth(inlineBlockWidth);
+                            if (childBlockMinMaxWidth.GetMinWidth() > bbox.GetWidth()) {
                                 LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
                                     );
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
-                            bbox.SetWidth(Math.Min(childMaxWidth, lineFullAvailableWidth));
                         }
                         childBlockMinMaxWidth.SetChildrenMaxWidth(childBlockMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
                             );
@@ -458,7 +472,8 @@ namespace iText.Layout.Renderer {
                                 split[1].childRenderers.Add(childRenderer);
                             }
                             else {
-                                if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().Count == 0) {
+                                if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().Count == 0 && childResult.
+                                    GetStatus() == LayoutResult.PARTIAL) {
                                     LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
                                         );
                                 }
