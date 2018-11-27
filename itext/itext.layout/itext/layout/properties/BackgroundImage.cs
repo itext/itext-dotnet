@@ -44,24 +44,44 @@ using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Layout.Properties {
     public class BackgroundImage {
-        protected internal PdfImageXObject image;
+        protected internal PdfXObject image;
 
         protected internal bool repeatX;
 
         protected internal bool repeatY;
 
-        public BackgroundImage(PdfImageXObject image)
-            : this(image, true, true) {
-        }
-
-        public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY) {
+        private BackgroundImage(PdfXObject image, bool repeatX, bool repeatY) {
             this.image = image;
             this.repeatX = repeatX;
             this.repeatY = repeatY;
         }
 
+        public BackgroundImage(PdfImageXObject image)
+            : this(image, true, true) {
+        }
+
+        public BackgroundImage(PdfFormXObject image)
+            : this(image, true, true) {
+        }
+
+        public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
+            : this((PdfXObject)image, repeatX, repeatY) {
+        }
+
+        public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
+            : this((PdfXObject)image, repeatX, repeatY) {
+        }
+
         public virtual PdfImageXObject GetImage() {
-            return image;
+            return image is PdfImageXObject ? (PdfImageXObject)image : null;
+        }
+
+        public virtual PdfFormXObject GetForm() {
+            return image is PdfFormXObject ? (PdfFormXObject)image : null;
+        }
+
+        public virtual bool IsBackgroundSpecified() {
+            return image is PdfFormXObject || image is PdfImageXObject;
         }
 
         public virtual bool IsRepeatX() {

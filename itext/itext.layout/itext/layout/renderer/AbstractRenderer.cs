@@ -54,6 +54,7 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -487,13 +488,17 @@ namespace iText.Layout.Renderer {
                             (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
                             ();
                     }
-                    if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                    if (backgroundImage != null && backgroundImage.IsBackgroundSpecified()) {
                         if (!backgroundAreaIsClipped) {
                             backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                         }
                         ApplyBorderBox(backgroundArea, false);
-                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
-                            GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                        PdfXObject backgroundXObject = backgroundImage.GetImage();
+                        if (backgroundXObject == null) {
+                            backgroundXObject = backgroundImage.GetForm();
+                        }
+                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject
+                            .GetHeight(), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
@@ -509,7 +514,7 @@ namespace iText.Layout.Renderer {
                             do {
                                 imageRectangle.SetX(initialX);
                                 do {
-                                    drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
+                                    drawContext.GetCanvas().AddXObject(backgroundXObject, imageRectangle);
                                     imageRectangle.MoveRight(imageRectangle.GetWidth());
                                 }
                                 while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
