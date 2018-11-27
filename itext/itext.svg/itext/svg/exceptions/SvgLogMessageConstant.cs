@@ -56,10 +56,12 @@ namespace iText.Svg.Exceptions {
 
         public const String DRAW_NO_DRAW = "Can't draw a NoDrawOperationSvgNodeRenderer.";
 
+        [Obsolete]
         public const String ERROR_CLOSING_CSS_STREAM = "An error occured when trying to close the InputStream of the default CSS.";
 
         public const String ERROR_INITIALIZING_DEFAULT_CSS = "Error loading the default CSS. Initializing an empty style sheet.";
 
+        [Obsolete]
         public const String FLOAT_PARSING_NAN = "The passed value is not a number.";
 
         public const String FONT_NOT_FOUND = "The font wasn't found.";
@@ -96,6 +98,7 @@ namespace iText.Svg.Exceptions {
 
         public const String TRANSFORM_INCORRECT_NUMBER_OF_VALUES = "Transformation doesn't contain the right number of values.";
 
+        [Obsolete]
         public const String TRANSFORM_INCORRECT_VALUE_TYPE = "The transformation value is not a number.";
 
         public const String TRANSFORM_NULL = "The transformation value is null.";
@@ -107,9 +110,9 @@ namespace iText.Svg.Exceptions {
         public const String UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI = "Unable to retrieve stream with given base URI ({0}) and source path ({1})";
 
         /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
+        [Obsolete]
         public const String FONT_PROVIDER_CONTAINS_ZERO_FONTS = "Font Provider contains zero fonts. At least one font shall be present";
 
-        /// <summary>The Constant UNABLE_TO_RETRIEVE_FONT.</summary>
         public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
 
         public const String PATH_WRONG_NUMBER_OF_ARGUMENTS = "Path operator {0} has received {1} arguments, but expects between {2} and {3} arguments. \n Resulting SVG will be incorrect.";

@@ -49,7 +49,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>Simple implementation of an image cache.</summary>
     internal class SimpleImageCache {
         /// <summary>The cache mapping a source path to an Image XObject.</summary>
-        private IDictionary<String, PdfImageXObject> cache = new LinkedDictionary<String, PdfImageXObject>();
+        private IDictionary<String, PdfXObject> cache = new LinkedDictionary<String, PdfXObject>();
 
         /// <summary>Stores how many times each image is used.</summary>
         private IDictionary<String, int?> imagesFrequency = new LinkedDictionary<String, int?>();
@@ -82,7 +82,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Adds an image to the cache.</summary>
         /// <param name="src">the source path</param>
         /// <param name="imageXObject">the image XObject to be cached</param>
-        internal virtual void PutImage(String src, PdfImageXObject imageXObject) {
+        internal virtual void PutImage(String src, PdfXObject imageXObject) {
             if (cache.ContainsKey(src)) {
                 return;
             }
@@ -93,7 +93,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Gets an image from the cache.</summary>
         /// <param name="src">the source path</param>
         /// <returns>the image XObject</returns>
-        internal virtual PdfImageXObject GetImage(String src) {
+        internal virtual PdfXObject GetImage(String src) {
             int? frequency = imagesFrequency.Get(src);
             if (frequency != null) {
                 imagesFrequency.Put(src, frequency + 1);
