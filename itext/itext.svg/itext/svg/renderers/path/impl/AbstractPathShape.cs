@@ -62,8 +62,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <param name="key">key of the coordinate</param>
         /// <returns>coordinate associated with the key</returns>
         public virtual float GetCoordinate(IDictionary<String, String> attributes, String key) {
-            float svgCoordinate = GetSvgCoordinate(attributes, key);
-            return CssUtils.ParseAbsoluteLength(svgCoordinate.ToString());
+            return CssUtils.ParseAbsoluteLength(GetCoordinateAttributeStringSafe(attributes, key));
         }
 
         /// <summary>Get the coordinate based on a key value in the SVG unit-space.</summary>
@@ -71,17 +70,8 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <param name="key">key of the coordinate</param>
         /// <returns>coordinate in SVG units associated with the key</returns>
         public virtual float GetSvgCoordinate(IDictionary<String, String> attributes, String key) {
-            String value;
-            if (attributes == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.ATTRIBUTES_NULL);
-            }
-            value = attributes.Get(key);
-            if (value != null && !String.IsNullOrEmpty(value)) {
-                return float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            else {
-                throw new SvgProcessingException(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT);
-            }
+            return float.Parse(GetCoordinateAttributeStringSafe(attributes, key), System.Globalization.CultureInfo.InvariantCulture
+                );
         }
 
         public virtual void SetProperties(IDictionary<String, String> properties) {
@@ -94,6 +84,18 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         public virtual bool IsRelative() {
             return this.relative;
+        }
+
+        private static String GetCoordinateAttributeStringSafe(IDictionary<String, String> attributes, String key) {
+            String value;
+            if (attributes == null) {
+                throw new SvgProcessingException(SvgLogMessageConstant.ATTRIBUTES_NULL);
+            }
+            value = attributes.Get(key);
+            if (value == null || String.IsNullOrEmpty(value)) {
+                throw new SvgProcessingException(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT);
+            }
+            return value;
         }
 
         public abstract void Draw(PdfCanvas arg1);

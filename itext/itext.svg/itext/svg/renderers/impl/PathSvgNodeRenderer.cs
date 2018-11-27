@@ -183,16 +183,16 @@ namespace iText.Svg.Renderers.Impl {
             }
             else {
                 if (shape is VerticalLineTo) {
-                    String currentX = currentPoint.x.ToString();
-                    String currentY = currentPoint.y.ToString();
+                    String currentX = SvgCssUtils.ConvertDoubleToString(currentPoint.x);
+                    String currentY = SvgCssUtils.ConvertDoubleToString(currentPoint.y);
                     String[] yValues = Concatenate(new String[] { currentY }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
                         (operatorArgs, currentPoint.y) : operatorArgs);
                     shapeCoordinates = Concatenate(new String[] { currentX }, yValues);
                 }
                 else {
                     if (shape is HorizontalLineTo) {
-                        String currentX = currentPoint.x.ToString();
-                        String currentY = currentPoint.y.ToString();
+                        String currentX = SvgCssUtils.ConvertDoubleToString(currentPoint.x);
+                        String currentY = SvgCssUtils.ConvertDoubleToString(currentPoint.y);
                         String[] xValues = Concatenate(new String[] { currentX }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
                             (operatorArgs, currentPoint.x) : operatorArgs);
                         shapeCoordinates = Concatenate(new String[] { currentY }, xValues);
@@ -211,7 +211,7 @@ namespace iText.Svg.Renderers.Impl {
                 double relativeDouble = Double.Parse(relativeOperators[i], System.Globalization.CultureInfo.InvariantCulture
                     );
                 relativeDouble += currentCoordinate;
-                absoluteOperators[i] = relativeDouble.ToString();
+                absoluteOperators[i] = SvgCssUtils.ConvertDoubleToString(relativeDouble);
             }
             return absoluteOperators;
         }

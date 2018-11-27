@@ -84,6 +84,14 @@ namespace iText.Svg.Utils {
         {
             return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
         }
+       
+        ///<summary>Converts a double to a String.</summary>
+        ///<param name="value">to be converted double value</param>
+        ///<returns>the value in a String representation</returns>   
+        public static string ConvertDoubleToString(double value)
+        {
+            return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
+        }
 
         /// <summary>
         /// Checks if an

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>
@@ -100,8 +101,8 @@ namespace iText.Svg.Renderers.Path.Impl {
             if (properties == null) {
                 properties = new Dictionary<String, String>();
             }
-            properties.Put(MAXIMUM_CHANGING_DIMENSION_VALUE, max.ToString());
-            properties.Put(MINIMUM_CHANGING_DIMENSION_VALUE, min.ToString());
+            properties.Put(MAXIMUM_CHANGING_DIMENSION_VALUE, SvgCssUtils.ConvertFloatToString(max));
+            properties.Put(MINIMUM_CHANGING_DIMENSION_VALUE, SvgCssUtils.ConvertFloatToString(min));
         }
 
         /// <summary>The coordinates for a one dimensional line.</summary>
