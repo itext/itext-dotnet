@@ -48,7 +48,7 @@ using System.Globalization;
 namespace iText.IO.Util {
     /// <summary>
     /// This file is a helper class for internal usage only.
-    /// Be aware that it's API and functionality may be changed in future.
+    /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class UnicodeScriptUtil {
         public const int MAX_CODE_POINT = 0X10FFFF;

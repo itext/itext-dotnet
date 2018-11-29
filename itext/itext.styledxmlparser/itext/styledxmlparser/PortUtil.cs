@@ -40,9 +40,17 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
+using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.StyledXmlParser {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </summary>
     public class PortUtil {
         private PortUtil() {
         }
@@ -50,6 +58,17 @@ namespace iText.StyledXmlParser {
         public static TextReader WrapInBufferedReader(TextReader inputStreamReader) {
             return inputStreamReader;
         }
-
+        
+        /// <summary>
+        /// By default "." symbol in regular expressions does not match line terminators.
+        /// The issue is more complicated by the fact that "." does not match only "\n" in C#, while it does not
+        /// match several other characters as well in Java.
+        /// This utility method creates a pattern in which dots match any character, including line terminators
+        /// </summary>
+        /// <param name="regex">regular expression string</param>
+        /// <returns>pattern in which dot characters match any Unicode char, including line terminators</returns>
+        public static Regex CreateRegexPatternWithDotMatchingNewlines(String regex) {
+            return new Regex(regex, RegexOptions.Singleline);
+        }
     }
 }

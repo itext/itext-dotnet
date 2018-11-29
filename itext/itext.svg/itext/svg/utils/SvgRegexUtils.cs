@@ -42,13 +42,14 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace iText.Svg.Utils
 {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </summary>
     public class SvgRegexUtils
     {
         /// <summary>

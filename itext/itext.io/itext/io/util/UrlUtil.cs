@@ -53,7 +53,7 @@ using System.Net.Http;
 namespace iText.IO.Util {
     /// <summary>
     /// This file is a helper class for internal usage only.
-    /// Be aware that it's API and functionality may be changed in future.
+    /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class UrlUtil {
         /// <summary>This method makes a valid URL from a given filename.</summary>
