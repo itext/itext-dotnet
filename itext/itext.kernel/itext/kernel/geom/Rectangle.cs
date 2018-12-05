@@ -152,11 +152,16 @@ namespace iText.Kernel.Geom {
             return result;
         }
 
-        /// <summary>
-        /// Check if this rectangle contains the passed rectangle
-        /// A rectangle will envelop itself
-        /// </summary>
-        /// <param name="rect"/>
+        /// <summary>Check if this rectangle contains the passed rectangle.</summary>
+        /// <remarks>
+        /// Check if this rectangle contains the passed rectangle.
+        /// A rectangle will envelop itself, meaning that for any rectangle
+        /// <paramref name="rect"/>
+        /// the expression
+        /// <c>rect.contains(rect)</c>
+        /// always returns true.
+        /// </remarks>
+        /// <param name="rect">a rectangle which is to be checked if it is fully contained inside this rectangle.</param>
         /// <returns>true if this rectangle contains the passed rectangle, false otherwise.</returns>
         public virtual bool Contains(iText.Kernel.Geom.Rectangle rect) {
             float llx = this.GetX();
@@ -167,7 +172,7 @@ namespace iText.Kernel.Geom {
             float rlly = rect.GetY();
             float rurx = rllx + rect.GetWidth();
             float rury = rlly + rect.GetHeight();
-            return llx <= rllx && lly <= rlly && rurx <= urx && rury <= ury;
+            return llx - EPS <= rllx && lly - EPS <= rlly && rurx <= urx + EPS && rury <= ury + EPS;
         }
 
         /// <summary>Check if this rectangle and the passed rectangle overlap</summary>

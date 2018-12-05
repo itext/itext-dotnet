@@ -232,6 +232,8 @@ namespace iText.IO {
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
 
+        public const String REDACTION_OF_ANNOTATION_TYPE_WATERMARK_IS_NOT_SUPPORTED = "Redaction of annotation subtype /Watermark is not supported";
+
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
 
         public const String RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT = "The renderer was not able to process keep with next property properly";
