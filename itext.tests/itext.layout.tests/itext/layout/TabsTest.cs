@@ -58,10 +58,10 @@ using iText.Test;
 namespace iText.Layout {
     public class TabsTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/TabTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/TabsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/TabTest/";
+             + "/test/itext/layout/TabsTest/";
 
         private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
              + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"
