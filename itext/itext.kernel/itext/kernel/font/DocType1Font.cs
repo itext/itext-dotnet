@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -87,7 +88,7 @@ namespace iText.Kernel.Font {
             }
             iText.Kernel.Font.DocType1Font fontProgram = new iText.Kernel.Font.DocType1Font(baseFont);
             PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
-            fontProgram.subtype = fontDesc.GetAsName(PdfName.Subtype);
+            fontProgram.subtype = fontDesc != null ? fontDesc.GetAsName(PdfName.Subtype) : null;
             FillFontDescriptor(fontProgram, fontDesc);
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
@@ -145,6 +146,8 @@ namespace iText.Kernel.Font {
 
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
+                ILog logger = LogManager.GetLogger(typeof(FontUtil));
+                logger.Warn(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);

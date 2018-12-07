@@ -116,6 +116,8 @@ namespace iText.Kernel.Font {
                 res[i] = missingWidth;
             }
             if (widthsArray == null) {
+                ILog logger = LogManager.GetLogger(typeof(FontUtil));
+                logger.Warn(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
                 return res;
             }
             for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {
