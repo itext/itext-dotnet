@@ -1006,6 +1006,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ML = CreateDirectName("ML");
 
+        public static readonly iText.Kernel.Pdf.PdfName MMType1 = CreateDirectName("MMType1");
+
         public static readonly iText.Kernel.Pdf.PdfName MN = CreateDirectName("ML");
 
         public static readonly iText.Kernel.Pdf.PdfName ModDate = CreateDirectName("ModDate");

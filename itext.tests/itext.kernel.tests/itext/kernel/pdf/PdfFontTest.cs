@@ -1355,6 +1355,34 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void MmType1ReadTest() {
+            String src = sourceFolder + "mmtype1.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src));
+            PdfFont font = PdfFontFactory.CreateFont((PdfDictionary)doc.GetPdfObject(335));
+            doc.Close();
+            NUnit.Framework.Assert.AreEqual(PdfName.MMType1, font.GetPdfObject().GetAsName(PdfName.Subtype));
+            NUnit.Framework.Assert.AreEqual(typeof(PdfType1Font), font.GetType());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MmType1WriteTest() {
+            String src = sourceFolder + "mmtype1.pdf";
+            String filename = destinationFolder + "mmtype1_res.pdf";
+            String cmpFilename = sourceFolder + "cmp_mmtype1.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(filename));
+            PdfFont font = PdfFontFactory.CreateFont((PdfDictionary)doc.GetPdfObject(335));
+            PdfCanvas canvas = new PdfCanvas(doc.GetPage(1));
+            canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(5, 5).SetFontAndSize(font, 6).ShowText
+                ("type1 font").EndText().RestoreState();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFontStyleProcessing() {
