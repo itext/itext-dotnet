@@ -2266,36 +2266,79 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        //exception to be fixed in DEVSIX-2228
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RowspanTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                //actually ArrayIndexOutOfBoundsException is expected, but it won't be ported.
-                String outFileName = destinationFolder + "rowspanTest.pdf";
-                int numRows = 3;
-                PdfWriter writer = new PdfWriter(outFileName);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                Document doc = new Document(pdfDoc);
-                Table table = new Table(numRows);
-                table.SetSkipLastFooter(true);
-                table.AddHeaderCell(new Cell(1, numRows).Add(new Paragraph("Header")));
-                table.AddFooterCell(new Cell(1, numRows).Add(new Paragraph("Footer")));
-                for (int rows = 0; rows < 11; rows++) {
-                    table.AddCell(new Cell(numRows, 1).Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", 0"
-                        )));
-                    int numFillerCells = (numRows - 1) * numRows;
-                    //Number of cells to complete the table rows filling up to the cell of colSpan
-                    for (int cells = 0; cells < numFillerCells; cells++) {
-                        table.AddCell(new Cell().Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", " + JavaUtil.IntegerToString
-                            (cells))));
-                    }
-                }
-                doc.Add(table);
-                doc.Close();
+        public virtual void SkipLastFooterAndProcessBigRowspanTest01() {
+            String testName = "skipLastFooterAndProcessBigRowspanTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595, 140));
+            Table table = new Table(2);
+            table.SetSkipLastFooter(true);
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Footer")));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph(JavaUtil.IntegerToString(1))));
+            for (int z = 0; z < 3; z++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(z))));
             }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastFooterAndProcessBigRowspanTest02() {
+            String testName = "skipLastFooterAndProcessBigRowspanTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            int numRows = 3;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(numRows);
+            table.SetSkipLastFooter(true);
+            table.AddHeaderCell(new Cell(1, numRows).Add(new Paragraph("Header")));
+            table.AddFooterCell(new Cell(1, numRows).Add(new Paragraph("Footer")));
+            for (int rows = 0; rows < 11; rows++) {
+                table.AddCell(new Cell(numRows, 1).Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", 0"
+                    )));
+                int numFillerCells = (numRows - 1) * numRows;
+                //Number of cells to complete the table rows filling up to the cell of colSpan
+                for (int cells = 0; cells < numFillerCells; cells++) {
+                    table.AddCell(new Cell().Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", " + JavaUtil.IntegerToString
+                        (cells))));
+                }
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastFooterOnShortPageTest01() {
+            String testName = "skipLastFooterOnShortPageTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595, 120));
+            Table table = new Table(2);
+            table.SetSkipLastFooter(true);
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Footer")));
+            for (int z = 0; z < 2; z++) {
+                for (int i = 0; i < 2; i++) {
+                    table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(z))));
+                }
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         internal class CustomRenderer : TableRenderer {

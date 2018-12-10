@@ -596,7 +596,6 @@ namespace iText.Layout.Renderer {
                                     if (null != headerRenderer) {
                                         overflowRenderer.SetProperty(Property.BORDER_TOP, Border.NO_BORDER);
                                     }
-                                    overflowRenderer.rowRange = new Table.RowRange(0, rows.Count - row - 1);
                                     overflowRenderer.bordersHandler = bordersHandler;
                                     // save old bordersHandler properties
                                     bordersHandler.SkipFooter(overflowRenderer.GetBorders());
