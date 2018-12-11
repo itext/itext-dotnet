@@ -242,7 +242,7 @@ namespace iText.IO.Image {
                 }
                 png.genBWMask = (!png.palShades && (pal0 > 1 || png.transRedGray >= 0));
                 if (!png.palShades && !png.genBWMask && pal0 == 1) {
-                    png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1}]", palIdx, palIdx));
+                    png.additional.Put("Mask", new int[] { palIdx, palIdx });
                 }
                 bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType & 4) != 0) || png.
                     palShades || png.genBWMask;

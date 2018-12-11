@@ -67,7 +67,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImagesWithDifferentDepth() {
-            //TODO: update after DEVSIX-1934 ticket will be fixed
             String outFileName = destinationFolder + "transparencyTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_transparencyTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
@@ -99,6 +98,56 @@ namespace iText.Kernel.Pdf {
                 ), 16).SetFillColor(ColorConstants.MAGENTA).ShowText("TIF image ").EndText().RestoreState();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_tif.tif");
             canvas.AddImage(img, 300, 300, 200, false);
+            canvas.Release();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Png_imageTransparancy_8bitDepthImage() {
+            String outFileName = destinationFolder + "png_imageTransparancy_8bitDepthImage.pdf";
+            String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_8bitDepthImage.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION)));
+            PdfPage page = pdfDocument.AddNewPage(PageSize.A4);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetFillColor(ColorConstants.LIGHT_GRAY).Fill();
+            canvas.Rectangle(80, 0, PageSize.A4.GetWidth() - 80, PageSize.A4.GetHeight()).Fill();
+            canvas.SaveState().BeginText().MoveText(116, 800).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("8 bit depth PNG").MoveText(0, -20).ShowText("This image should not have a black rectangle as background"
+                ).EndText().RestoreState();
+            ImageData img = ImageDataFactory.Create(sourceFolder + "manualTransparency_8bit.png");
+            canvas.AddImage(img, 100, 450, 200, false);
+            canvas.Release();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Png_imageTransparancy_24bitDepthImage() {
+            String outFileName = destinationFolder + "png_imageTransparancy_24bitDepthImage.pdf";
+            String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_24bitDepthImage.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION)));
+            PdfPage page = pdfDocument.AddNewPage(PageSize.A4);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetFillColor(ColorConstants.LIGHT_GRAY).Fill();
+            canvas.Rectangle(80, 0, PageSize.A4.GetWidth() - 80, PageSize.A4.GetHeight()).Fill();
+            canvas.SaveState().BeginText().MoveText(116, 800).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("24 bit depth PNG").MoveText(0, -20).ShowText("This image should not have a white rectangle as background"
+                ).EndText().RestoreState();
+            ImageData img = ImageDataFactory.Create(sourceFolder + "manualTransparency_24bit.png");
+            canvas.AddImage(img, 100, 450, 200, false);
+            canvas.SaveState().BeginText().MoveText(116, 400).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("32 bit depth PNG").EndText().RestoreState();
+            img = ImageDataFactory.Create(sourceFolder + "manualTransparency_32bit.png");
+            canvas.AddImage(img, 116, 100, 200, false);
             canvas.Release();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
