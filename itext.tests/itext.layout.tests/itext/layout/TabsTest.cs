@@ -93,6 +93,33 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void ChunkEndsAfterOrBeforeTabPosition() {
+            String outFileName = destinationFolder + "chunkEndsAfterOrBeforeTabPosition.pdf";
+            String cmpFileName = sourceFolder + "cmp_chunkEndsAfterOrBeforeTabPosition.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textBeforeTab = "a";
+            String textAfterTab = "tab stop's position = ";
+            Paragraph paragraph;
+            for (int i = 0; i < 20; i++) {
+                paragraph = new Paragraph();
+                paragraph.Add(new Text(textBeforeTab));
+                TabStop[] tabStop = new TabStop[1];
+                tabStop[0] = new TabStop(i);
+                paragraph.AddTabStops(tabStop);
+                paragraph.Add(new Tab());
+                paragraph.Add(new Text(textAfterTab));
+                paragraph.Add(JavaUtil.IntegerToString(i));
+                doc.Add(paragraph);
+            }
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void DefaultTabsTest() {
             String outFileName = destinationFolder + "defaultTabTest.pdf";
             String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
