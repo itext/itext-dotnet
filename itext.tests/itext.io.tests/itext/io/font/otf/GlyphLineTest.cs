@@ -143,5 +143,20 @@ namespace iText.IO.Font.Otf {
             }
             NUnit.Framework.Assert.AreEqual("Fide---Viva", containerLine.ToString());
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestContentReplacingWithNullActualText() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine lineToBeReplaced = new GlyphLine(ConstructGlyphListFromString("Byelorussia", font));
+            lineToBeReplaced.SetActualText(1, 2, "e");
+            GlyphLine lineToBeCopied = new GlyphLine(ConstructGlyphListFromString("Belarus", font));
+            lineToBeReplaced.ReplaceContent(lineToBeCopied);
+            // Test that no exception has been thrown. Also check the content.
+            NUnit.Framework.Assert.AreEqual("Belarus", lineToBeReplaced.ToString());
+        }
     }
 }

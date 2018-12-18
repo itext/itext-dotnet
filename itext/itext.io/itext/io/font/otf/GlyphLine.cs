@@ -47,15 +47,15 @@ using System.Text;
 
 namespace iText.IO.Font.Otf {
     public class GlyphLine {
-        protected internal IList<Glyph> glyphs;
-
-        protected internal IList<GlyphLine.ActualText> actualText;
-
         public int start;
 
         public int end;
 
         public int idx;
+
+        protected internal IList<Glyph> glyphs;
+
+        protected internal IList<GlyphLine.ActualText> actualText;
 
         public GlyphLine() {
             this.glyphs = new List<Glyph>();
@@ -202,17 +202,22 @@ namespace iText.IO.Font.Otf {
             glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
         }
 
+        /// <summary>Replaces the current content with the other line's content.</summary>
+        /// <param name="other">the line with the content to be set to the current one</param>
         public virtual void ReplaceContent(iText.IO.Font.Otf.GlyphLine other) {
             glyphs.Clear();
             glyphs.AddAll(other.glyphs);
-            if (actualText != null) {
-                actualText.Clear();
-            }
             if (other.actualText != null) {
                 if (actualText == null) {
                     actualText = new List<GlyphLine.ActualText>();
                 }
+                else {
+                    actualText.Clear();
+                }
                 actualText.AddAll(other.actualText);
+            }
+            else {
+                actualText = null;
             }
             start = other.start;
             end = other.end;
@@ -382,6 +387,10 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        public interface IGlyphLineFilter {
+            bool Accept(Glyph glyph);
+        }
+
         public class GlyphLinePart {
             public int start;
 
@@ -408,16 +417,12 @@ namespace iText.IO.Font.Otf {
             }
         }
 
-        public interface IGlyphLineFilter {
-            bool Accept(Glyph glyph);
-        }
-
         protected internal class ActualText {
+            public String value;
+
             public ActualText(String value) {
                 this.value = value;
             }
-
-            public String value;
 
             public override bool Equals(Object obj) {
                 if (this == obj) {
