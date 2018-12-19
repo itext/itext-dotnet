@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -52,25 +51,22 @@ namespace iText.Svg.Renderers.Path {
         /// <param name="canvas">to which this instruction is drawn</param>
         void Draw(PdfCanvas canvas);
 
-        /// <summary>Sets the map of attributes that this path instruction needs.</summary>
-        /// <param name="properties">maps key names to values.</param>
-        void SetProperties(IDictionary<String, String> properties);
-
-        /// <param name="coordinates">
-        /// an array containing point values for path coordinates
-        /// This method Mapps point attributes to their respective values
+        /// <summary>
+        /// This method sets the coordinates for the path painting operator and does internal
+        /// preprocessing, if necessary
+        /// </summary>
+        /// <param name="coordinates">an array containing point values for path coordinates</param>
+        /// <param name="startPoint">
+        /// the ending point of the previous operator, or, in broader terms,
+        /// the point that the coordinates should be absolutized against, for relative operators
         /// </param>
-        void SetCoordinates(String[] coordinates);
-
-        /// <summary>Returns the coordinates associated with this Shape.</summary>
-        /// <returns>the coordinates associated with this Shape</returns>
-        IDictionary<String, String> GetCoordinates();
+        void SetCoordinates(String[] coordinates, Point startPoint);
 
         /// <summary>
         /// Gets the ending point on the canvas after the path shape has been drawn
         /// via the
         /// <see cref="Draw(iText.Kernel.Pdf.Canvas.PdfCanvas)"/>
-        /// method.
+        /// method, in SVG space coordinates.
         /// </summary>
         /// <returns>
         /// The

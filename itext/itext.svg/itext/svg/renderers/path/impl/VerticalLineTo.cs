@@ -40,12 +40,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(V) attribute of SVG's path element</summary>
-    public class VerticalLineTo : OneDimensionalLineTo {
+    public class VerticalLineTo : LineTo {
         /// <summary>Creates an absolute Vertical LineTo.</summary>
         public VerticalLineTo()
             : this(false) {
@@ -54,24 +55,18 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Creates a Vertical LineTo.</summary>
         /// <remarks>Creates a Vertical LineTo. Set argument to true to create a relative VerticalLineTo.</remarks>
         /// <param name="relative">whether this is a relative VerticalLineTo or not</param>
-        public VerticalLineTo(bool relative) {
-            base.relative = relative;
+        public VerticalLineTo(bool relative)
+            : base(relative) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            float minY = GetCoordinate(properties, MINIMUM_CHANGING_DIMENSION_VALUE);
-            float maxY = GetCoordinate(properties, MAXIMUM_CHANGING_DIMENSION_VALUE);
-            float endY = GetCoordinate(properties, ENDING_CHANGING_DIMENSION_VALUE);
-            float x = GetCoordinate(properties, CURRENT_NONCHANGING_DIMENSION_VALUE);
-            canvas.LineTo(x, maxY);
-            canvas.LineTo(x, minY);
-            canvas.LineTo(x, endY);
-        }
-
-        public override Point GetEndingPoint() {
-            float y = GetSvgCoordinate(properties, ENDING_CHANGING_DIMENSION_VALUE);
-            float x = GetSvgCoordinate(properties, CURRENT_NONCHANGING_DIMENSION_VALUE);
-            return new Point(x, y);
+        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+            String[] normalizedCoords = new String[coordinates.Length * 2];
+            // A V or v command is equivalent to an L or l command with 0 specified for the x coordinate.
+            for (int i = 0; i < coordinates.Length; i++) {
+                normalizedCoords[i * 2] = IsRelative() ? "0" : SvgCssUtils.ConvertDoubleToString(startPoint.GetX());
+                normalizedCoords[i * 2 + 1] = coordinates[i];
+            }
+            base.SetCoordinates(normalizedCoords, startPoint);
         }
     }
 }

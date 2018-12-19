@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Path;
 
 namespace iText.Svg.Renderers.Path.Impl {
@@ -57,51 +56,18 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Whether this is a relative operator or not.</summary>
         protected internal bool relative;
 
-        /// <summary>Get a coordinate based on a key value.</summary>
-        /// <param name="attributes">map containing the attributes of the shape</param>
-        /// <param name="key">key of the coordinate</param>
-        /// <returns>coordinate associated with the key</returns>
-        public virtual float GetCoordinate(IDictionary<String, String> attributes, String key) {
-            return CssUtils.ParseAbsoluteLength(GetCoordinateAttributeStringSafe(attributes, key));
-        }
-
-        /// <summary>Get the coordinate based on a key value in the SVG unit-space.</summary>
-        /// <param name="attributes">map containing the attributes of the shape</param>
-        /// <param name="key">key of the coordinate</param>
-        /// <returns>coordinate in SVG units associated with the key</returns>
-        public virtual float GetSvgCoordinate(IDictionary<String, String> attributes, String key) {
-            return float.Parse(GetCoordinateAttributeStringSafe(attributes, key), System.Globalization.CultureInfo.InvariantCulture
-                );
-        }
-
-        public virtual void SetProperties(IDictionary<String, String> properties) {
-            this.properties = properties;
-        }
-
-        public virtual IDictionary<String, String> GetCoordinates() {
-            return properties;
-        }
-
         public virtual bool IsRelative() {
             return this.relative;
         }
 
-        private static String GetCoordinateAttributeStringSafe(IDictionary<String, String> attributes, String key) {
-            String value;
-            if (attributes == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.ATTRIBUTES_NULL);
-            }
-            value = attributes.Get(key);
-            if (value == null || String.IsNullOrEmpty(value)) {
-                throw new SvgProcessingException(SvgLogMessageConstant.COORDINATE_VALUE_ABSENT);
-            }
-            return value;
+        protected internal virtual Point CreatePoint(String coordX, String coordY) {
+            return new Point((float)CssUtils.ParseFloat(coordX), (float)CssUtils.ParseFloat(coordY));
         }
 
         public abstract void Draw(PdfCanvas arg1);
 
         public abstract Point GetEndingPoint();
 
-        public abstract void SetCoordinates(String[] arg1);
+        public abstract void SetCoordinates(String[] arg1, Point arg2);
     }
 }

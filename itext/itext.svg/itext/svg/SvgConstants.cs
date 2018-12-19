@@ -446,6 +446,9 @@ namespace iText.Svg {
             /// <summary>MoveTo Path Operator.</summary>
             public const String PATH_DATA_MOVE_TO = "M";
 
+            /// <summary>Relative MoveTo Path Operator.</summary>
+            public const String PATH_DATA_REL_MOVE_TO = "m";
+
             /// <summary>Shorthand/smooth quadratic Bézier curveto.</summary>
             public const String PATH_DATA_SHORTHAND_CURVE_TO = "T";
 

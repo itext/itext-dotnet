@@ -41,30 +41,50 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.Svg;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Exceptions;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements moveTo(M) attribute of SVG's path element</summary>
     public class MoveTo : AbstractPathShape {
-        public override void Draw(PdfCanvas canvas) {
-            canvas.MoveTo(GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
-                .Y));
+        private String[] coordinates;
+
+        public MoveTo()
+            : this(false) {
         }
 
-        public override void SetCoordinates(String[] coordinates) {
-            IDictionary<String, String> map = new Dictionary<String, String>();
-            map.Put("x", coordinates.Length > 0 && !String.IsNullOrEmpty(coordinates[0]) ? coordinates[0] : "0");
-            map.Put("y", coordinates.Length > 1 && !String.IsNullOrEmpty(coordinates[1]) ? coordinates[1] : "0");
-            SetProperties(map);
+        public MoveTo(bool relative) {
+            this.relative = relative;
+        }
+
+        public override void Draw(PdfCanvas canvas) {
+            float x = CssUtils.ParseAbsoluteLength(coordinates[0]);
+            float y = CssUtils.ParseAbsoluteLength(coordinates[1]);
+            canvas.MoveTo(x, y);
+        }
+
+        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+            if (coordinates.Length == 0 || coordinates.Length % 2 != 0) {
+                throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
+                    , JavaUtil.ArraysToString(coordinates)));
+            }
+            if (coordinates.Length > 2) {
+                // (x y)+ parameters will be implemented in the future
+                throw new NotSupportedException();
+            }
+            this.coordinates = new String[] { coordinates[0], coordinates[1] };
+            if (IsRelative()) {
+                this.coordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(coordinates, new double[] { 
+                    startPoint.x, startPoint.y });
+            }
         }
 
         public override Point GetEndingPoint() {
-            float x = GetSvgCoordinate(properties, SvgConstants.Attributes.X);
-            float y = GetSvgCoordinate(properties, SvgConstants.Attributes.Y);
-            return new Point(x, y);
+            return CreatePoint(coordinates[0], coordinates[1]);
         }
     }
 }
