@@ -3811,6 +3811,9 @@ namespace iText.Forms.Fields {
             if (color == null) {
                 color = ColorConstants.BLACK;
             }
+            if (text == null) {
+                text = "";
+            }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 

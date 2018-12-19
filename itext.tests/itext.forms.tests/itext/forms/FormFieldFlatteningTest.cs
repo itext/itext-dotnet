@@ -236,5 +236,12 @@ namespace iText.Forms {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsFalse(isReadOnly);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FieldsRegeneratePushButtonWithoutCaption() {
+            FillTextFieldsThenFlattenThenCompare("pushbutton_without_caption");
+        }
     }
 }
