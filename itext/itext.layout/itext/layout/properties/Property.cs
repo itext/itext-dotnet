@@ -108,6 +108,8 @@ namespace iText.Layout.Properties {
 
         public const int BOX_SIZING = 105;
 
+        public const int CAPTION_SIDE = 119;
+
         public const int CHARACTER_SPACING = 15;
 
         public const int CLEAR = 100;
@@ -341,13 +343,14 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 118;
+        private const int MAX_INHERITED_PROPERTY_ID = 119;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.CAPTION_SIDE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.COLLAPSING_MARGINS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FIRST_LINE_INDENT] = true;

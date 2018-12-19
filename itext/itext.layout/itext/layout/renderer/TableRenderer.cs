@@ -77,10 +77,14 @@ namespace iText.Layout.Renderer {
 
         protected internal iText.Layout.Renderer.TableRenderer footerRenderer;
 
+        protected internal DivRenderer captionRenderer;
+
         /// <summary>True for newly created renderer.</summary>
         /// <remarks>True for newly created renderer. For split renderers this is set to false. Used for tricky layout.
         ///     </remarks>
         protected internal bool isOriginalNonSplitRenderer = true;
+
+        internal TableBorders bordersHandler;
 
         private float[] columnWidths = null;
 
@@ -91,8 +95,6 @@ namespace iText.Layout.Renderer {
         private float totalWidthForColumns;
 
         private float topBorderMaxWidth;
-
-        internal TableBorders bordersHandler;
 
         private TableRenderer() {
         }
@@ -232,6 +234,18 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private void InitializeCaptionRenderer(Div caption) {
+            if (isOriginalNonSplitRenderer && null != caption) {
+                captionRenderer = (DivRenderer)caption.CreateRendererSubTree();
+                captionRenderer.SetParent(this.parent);
+                LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper != null) {
+                    taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(captionRenderer));
+                    LayoutTaggingHelper.AddTreeHints(taggingHelper, captionRenderer);
+                }
+            }
+        }
+
         private bool IsOriginalRenderer() {
             return isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer();
         }
@@ -347,6 +361,25 @@ namespace iText.Layout.Renderer {
                 (Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
+            }
+            InitializeCaptionRenderer(GetTable().GetCaption());
+            if (captionRenderer != null) {
+                float minCaptionWidth = captionRenderer.GetMinMaxWidth().GetMinWidth();
+                LayoutResult captionLayoutResult = captionRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber
+                    (), new Rectangle(layoutBox.GetX(), layoutBox.GetY(), Math.Max(tableWidth, minCaptionWidth), layoutBox
+                    .GetHeight())), wasHeightClipped || wasParentsHeightClipped));
+                if (LayoutResult.FULL != captionLayoutResult.GetStatus()) {
+                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, captionLayoutResult.GetCauseOfNothing());
+                }
+                float captionHeight = captionLayoutResult.GetOccupiedArea().GetBBox().GetHeight();
+                if (CaptionSide.BOTTOM.Equals(tableModel.GetCaption().GetProperty<CaptionSide?>(Property.CAPTION_SIDE))) {
+                    captionRenderer.Move(0, -(layoutBox.GetHeight() - captionHeight));
+                    layoutBox.DecreaseHeight(captionHeight);
+                    layoutBox.MoveUp(captionHeight);
+                }
+                else {
+                    layoutBox.DecreaseHeight(captionHeight);
+                }
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), (float)tableWidth, 0));
@@ -891,6 +924,7 @@ namespace iText.Layout.Renderer {
                         ExtendLastRow(splitResult[1].rows[0], layoutBox);
                     }
                     AdjustFooterAndFixOccupiedArea(layoutBox, 0 != heights.Count ? verticalBorderSpacing : 0);
+                    AdjustCaptionAndFixOccupiedArea(layoutBox, 0 != heights.Count ? verticalBorderSpacing : 0);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
@@ -1082,7 +1116,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            // we should process incomplete table's footer only dureing splitting
+            // we should process incomplete table's footer only during splitting
             if (!tableModel.IsComplete() && null != footerRenderer) {
                 LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
                 if (taggingHelper != null) {
@@ -1093,6 +1127,8 @@ namespace iText.Layout.Renderer {
                 bordersHandler.SkipFooter(bordersHandler.tableBoundingBorders);
             }
             AdjustFooterAndFixOccupiedArea(layoutBox, null != headerRenderer || !tableModel.IsEmpty() ? verticalBorderSpacing
+                 : 0);
+            AdjustCaptionAndFixOccupiedArea(layoutBox, null != headerRenderer || !tableModel.IsEmpty() ? verticalBorderSpacing
                  : 0);
             FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
             if (!isAndWasComplete && !isFirstOnThePage && (0 != rows.Count || (null != footerRenderer && tableModel.IsComplete
@@ -1128,12 +1164,25 @@ namespace iText.Layout.Renderer {
                 ApplyRelativePositioningTranslation(false);
             }
             BeginElementOpacityApplying(drawContext);
+            float captionHeight = null != captionRenderer ? captionRenderer.GetOccupiedArea().GetBBox().GetHeight() : 
+                0;
+            bool isBottomCaption = CaptionSide.BOTTOM.Equals(0 != captionHeight ? captionRenderer.GetProperty<CaptionSide?
+                >(Property.CAPTION_SIDE) : null);
+            if (0 != captionHeight) {
+                occupiedArea.GetBBox().ApplyMargins(isBottomCaption ? 0 : captionHeight, 0, isBottomCaption ? captionHeight
+                     : 0, 0, false);
+            }
             DrawBackground(drawContext);
             if (bordersHandler is SeparatedTableBorders && !IsHeaderRenderer() && !IsFooterRenderer()) {
                 DrawBorder(drawContext);
             }
             DrawChildren(drawContext);
             DrawPositionedChildren(drawContext);
+            if (0 != captionHeight) {
+                occupiedArea.GetBBox().ApplyMargins(isBottomCaption ? 0 : captionHeight, 0, isBottomCaption ? captionHeight
+                     : 0, 0, true);
+            }
+            DrawCaption(drawContext);
             EndElementOpacityApplying(drawContext);
             if (relativePosition) {
                 ApplyRelativePositioningTranslation(true);
@@ -1181,6 +1230,12 @@ namespace iText.Layout.Renderer {
             }
             if (null != footerRenderer) {
                 footerRenderer.DrawBackgrounds(drawContext);
+            }
+        }
+
+        protected internal virtual void DrawCaption(DrawContext drawContext) {
+            if (null != captionRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
+                captionRenderer.Draw(drawContext);
             }
         }
 
@@ -1252,6 +1307,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.footerRenderer = footerRenderer;
             splitRenderer.isLastRendererForModelElement = false;
             splitRenderer.topBorderMaxWidth = topBorderMaxWidth;
+            splitRenderer.captionRenderer = captionRenderer;
             return splitRenderer;
         }
 
@@ -1509,11 +1565,11 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.
+        /// <summary>If there is some space left, we will move the footer up, because initially the footer is at the very bottom of the area.
         ///     </summary>
         /// <remarks>
-        /// If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.
-        /// We also adjust occupied area by footer size if it is present.
+        /// If there is some space left, we will move the footer up, because initially the footer is at the very bottom of the area.
+        /// We also will adjust the occupied area by the footer's size if it is present.
         /// </remarks>
         /// <param name="layoutBox">the layout box which represents the area which is left free.</param>
         private void AdjustFooterAndFixOccupiedArea(Rectangle layoutBox, float verticalBorderSpacing) {
@@ -1521,6 +1577,26 @@ namespace iText.Layout.Renderer {
                 footerRenderer.Move(0, layoutBox.GetHeight() + verticalBorderSpacing);
                 float footerHeight = footerRenderer.GetOccupiedArea().GetBBox().GetHeight() - verticalBorderSpacing;
                 occupiedArea.GetBBox().MoveDown(footerHeight).IncreaseHeight(footerHeight);
+            }
+        }
+
+        /// <summary>If there is some space left, we will move the caption up, because initially the caption is at the very bottom of the area.
+        ///     </summary>
+        /// <remarks>
+        /// If there is some space left, we will move the caption up, because initially the caption is at the very bottom of the area.
+        /// We also will adjust the occupied area by the caption's size if it is present.
+        /// </remarks>
+        /// <param name="layoutBox">the layout box which represents the area which is left free.</param>
+        private void AdjustCaptionAndFixOccupiedArea(Rectangle layoutBox, float verticalBorderSpacing) {
+            if (captionRenderer != null) {
+                float captionHeight = captionRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                occupiedArea.GetBBox().MoveDown(captionHeight).IncreaseHeight(captionHeight);
+                if (CaptionSide.BOTTOM.Equals(captionRenderer.GetProperty<CaptionSide?>(Property.CAPTION_SIDE))) {
+                    captionRenderer.Move(0, layoutBox.GetHeight() + verticalBorderSpacing);
+                }
+                else {
+                    occupiedArea.GetBBox().MoveUp(captionHeight);
+                }
             }
         }
 
