@@ -431,6 +431,22 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillParagraphWithTabsDifferently() {
+            String outFileName = destinationFolder + "fillParagraphWithTabsDifferently.pdf";
+            String cmpFileName = sourceFolder + "cmp_fillParagraphWithTabsDifferently.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("a\tb"));
+            doc.Add(new Paragraph().Add("a").Add("\t").Add("b"));
+            doc.Add(new Paragraph().Add(new Text("a")).Add(new Text("\t")).Add(new Text("b")));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
             return InitDocument(outFileName, false);
