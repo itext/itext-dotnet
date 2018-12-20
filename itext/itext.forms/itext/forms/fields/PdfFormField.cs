@@ -2563,6 +2563,7 @@ namespace iText.Forms.Fields {
                     PdfDictionary apDic = GetPdfObject().GetAsDictionary(PdfName.AP);
                     PdfStream asNormal = null;
                     if (apDic != null) {
+                        //TODO DEVSIX-2528 what if PdfName.N is PdfDictionary?
                         asNormal = apDic.GetAsStream(PdfName.N);
                     }
                     PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);
@@ -2727,6 +2728,7 @@ namespace iText.Forms.Fields {
                             else {
                                 PdfStream asNormal = null;
                                 if (apDic != null) {
+                                    //TODO DEVSIX-2528 what is PdfName.N is PdfDictionary?
                                     asNormal = apDic.GetAsStream(PdfName.N);
                                 }
                                 Object[] fontAndSize = GetFontAndSize(asNormal);
@@ -2756,7 +2758,7 @@ namespace iText.Forms.Fields {
                                     PdfWidgetAnnotation widget = field.GetWidgets()[0];
                                     PdfDictionary apStream = field.GetPdfObject().GetAsDictionary(PdfName.AP);
                                     String state;
-                                    if (null != apStream && null != apStream.GetAsDictionary(PdfName.N).Get(new PdfName(value))) {
+                                    if (null != apStream && null != GetValueFromAppearance(apStream.Get(PdfName.N), new PdfName(value))) {
                                         state = value;
                                     }
                                     else {
@@ -3099,6 +3101,7 @@ namespace iText.Forms.Fields {
             PdfDictionary dic = GetPdfObject();
             dic = dic.GetAsDictionary(PdfName.AP);
             if (dic != null) {
+                //TODO DEVSIX-2528 what if PdfName.N is PdfDictionary?
                 dic = dic.GetAsDictionary(PdfName.N);
                 if (dic != null) {
                     foreach (PdfName state in dic.KeySet()) {
@@ -3978,6 +3981,13 @@ namespace iText.Forms.Fields {
 
         private static double DegreeToRadians(double angle) {
             return Math.PI * angle / 180.0;
+        }
+
+        private PdfObject GetValueFromAppearance(PdfObject appearanceDict, PdfName key) {
+            if (appearanceDict is PdfDictionary) {
+                return ((PdfDictionary)appearanceDict).Get(key);
+            }
+            return null;
         }
     }
 }
