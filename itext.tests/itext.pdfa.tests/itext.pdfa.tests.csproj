@@ -55,7 +55,11 @@
       <Project>{9FC2F0B3-A8D2-46DA-8724-72E00E67A8FA}</Project>
       <Name>itext.pdfa</Name>
     </ProjectReference>
-    <ProjectReference Include="..\itext.forms\itext.forms.csproj">
+    <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj">
+      <Project>{42173642-DB52-44D3-9883-3E34C65C53BC}</Project>
+      <Name>itext.layout</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj">
       <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
       <Name>itext.forms</Name>
     </ProjectReference>

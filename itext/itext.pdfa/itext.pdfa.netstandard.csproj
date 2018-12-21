@@ -32,6 +32,5 @@
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\itext.kernel\itext.kernel.netstandard.csproj" />
-    <ProjectReference Include="..\itext.forms\itext.forms.netstandard.csproj" />
   </ItemGroup>
 </Project>

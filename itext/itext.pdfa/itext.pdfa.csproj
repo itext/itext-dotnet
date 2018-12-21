@@ -56,10 +56,6 @@
       <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
       <Name>itext.kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\itext.forms\itext.forms.csproj">
-      <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
-      <Name>itext.forms</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
