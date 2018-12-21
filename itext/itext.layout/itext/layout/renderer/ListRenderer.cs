@@ -219,7 +219,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? StandardFonts.SYMBOL : StandardFonts.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_211(constantFont, textElement);
+                            textRenderer = new _TextRenderer_210(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -248,8 +248,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_211 : TextRenderer {
-            public _TextRenderer_211(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_210 : TextRenderer {
+            public _TextRenderer_210(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -359,6 +359,8 @@ namespace iText.Layout.Renderer {
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
                 for (int i = 0; i < childRenderers.Count; i++) {
                     childRenderers[i].SetParent(this);
+                    listItemNum = (childRenderers[i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)childRenderers
+                        [i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
                     IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, childRenderers[i]);
                     LayoutResult listSymbolLayoutResult = null;
                     if (currentSymbolRenderer != null) {

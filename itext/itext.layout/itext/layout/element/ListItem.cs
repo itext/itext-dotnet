@@ -67,6 +67,14 @@ namespace iText.Layout.Element {
             Add(new Paragraph(text).SetMarginTop(0).SetMarginBottom(0));
         }
 
+        /// <summary>Customizes the index of the item in the list.</summary>
+        /// <param name="ordinalValue">the custom value property of an ordered list's list item.</param>
+        /// <returns>this listItem.</returns>
+        public virtual iText.Layout.Element.ListItem SetListSymbolOrdinalValue(int ordinalValue) {
+            SetProperty(Property.LIST_SYMBOL_ORDINAL_VALUE, ordinalValue);
+            return this;
+        }
+
         /// <summary>Creates a list item with an image.</summary>
         /// <param name="image">the graphical contents of the list item</param>
         public ListItem(Image image)

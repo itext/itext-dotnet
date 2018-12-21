@@ -214,6 +214,8 @@ namespace iText.Layout.Properties {
 
         public const int LIST_SYMBOL_INDENT = 39;
 
+        public const int LIST_SYMBOL_ORDINAL_VALUE = 120;
+
         public const int LIST_SYMBOL_PRE_TEXT = 41;
 
         public const int LIST_SYMBOL_POSITION = 83;
