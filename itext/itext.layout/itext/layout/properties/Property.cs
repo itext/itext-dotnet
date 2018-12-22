@@ -143,7 +143,7 @@ namespace iText.Layout.Properties {
         /// String value. 'normal'|'italic'|'oblique'
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
-        /// has String value.
+        /// has String[] value.
         /// </remarks>
         public const int FONT_STYLE = 94;
 
@@ -152,7 +152,7 @@ namespace iText.Layout.Properties {
         /// String value. 'normal'|'bold'|number
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
-        /// has String value.
+        /// has String[] value.
         /// </remarks>
         public const int FONT_WEIGHT = 95;
 

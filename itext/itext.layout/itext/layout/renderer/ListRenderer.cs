@@ -367,8 +367,9 @@ namespace iText.Layout.Renderer {
                         ++listItemNum;
                         currentSymbolRenderer.SetParent(childRenderers[i]);
                         // Workaround for the case when font is specified as string
-                        if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
-                            is String) {
+                        if (currentSymbolRenderer is AbstractRenderer && (currentSymbolRenderer.GetProperty<Object>(Property.FONT)
+                             is String[] || currentSymbolRenderer.GetProperty<Object>(Property.FONT) is String)) {
+                            // TODO remove check for String type before 7.2
                             PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
                             currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
                         }

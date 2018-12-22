@@ -742,7 +742,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_778();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_779();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -807,8 +807,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_778 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_778() {
+        private sealed class _IGlyphLineFilter_779 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_779() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1157,7 +1157,7 @@ namespace iText.Layout.Renderer {
         /// <summary>
         /// Resolve
         /// <see cref="iText.Layout.Properties.Property.FONT"/>
-        /// string value.
+        /// String[] value.
         /// </summary>
         /// <param name="addTo">add all processed renderers to.</param>
         /// <returns>
@@ -1172,7 +1172,15 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             else {
-                if (font is String) {
+                if (font is String || font is String[]) {
+                    if (font is String) {
+                        // TODO remove this if-clause before 7.2
+                        ILog logger = LogManager.GetLogger(typeof(AbstractRenderer));
+                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
+                            );
+                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
+                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
+                    }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
@@ -1180,8 +1188,8 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font), fc, fontSet);
+                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
+                        ), fc, fontSet);
                     // process empty renderers because they can have borders or paddings with background to be drawn
                     if (null == strToBeConverted || String.IsNullOrEmpty(strToBeConverted)) {
                         addTo.Add(this);
@@ -1224,9 +1232,9 @@ namespace iText.Layout.Renderer {
             range[1] -= shift;
         }
 
-        internal override PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                (String)font), fc);
+        internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
+            ) {
+            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc);
             IList<Glyph> resolvedGlyphs;
             PdfFont currentFont;
             //try to find first font that can render at least one glyph.

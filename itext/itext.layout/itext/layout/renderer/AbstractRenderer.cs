@@ -2189,17 +2189,25 @@ namespace iText.Layout.Renderer {
                 return (PdfFont)font;
             }
             else {
-                if (font is String) {
+                if (font is String || font is String[]) {
+                    if (font is String) {
+                        // TODO remove this if-clause before 7.2
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
+                            );
+                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
+                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
+                    }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return ResolveFirstPdfFont((String)font, provider, fc);
+                    return ResolveFirstPdfFont((String[])font, provider, fc);
                 }
                 else {
-                    throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
+                    throw new InvalidOperationException("String[] or PdfFont expected as value of FONT property");
                 }
             }
         }
@@ -2209,9 +2217,8 @@ namespace iText.Layout.Renderer {
         // This method is intended to be called from previous method that deals with Font Property.
         // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         // TODO this mechanism does not take text into account
-        internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
-                ());
+        internal virtual PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc) {
+            return provider.GetPdfFont(provider.GetFontSelector(JavaUtil.ArraysAsList(font), fc).BestMatch());
         }
 
         internal static Border[] GetBorders(IRenderer renderer) {

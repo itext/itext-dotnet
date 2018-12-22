@@ -45,7 +45,9 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
@@ -84,7 +86,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "Puritan42");
+            doc.SetProperty(Property.FONT, new String[] { "Puritan42" });
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -108,8 +110,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetFont("'Puritan', \"FreeSans\"");
-            // TODO DEVSIX-2120 font-family is Puritan 2.0 here, however it doesn't match font-family pattern
+            doc.SetFontFamily("Puritan 2.0", "FreeSans");
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -130,7 +131,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetFont("Puritan");
+            doc.SetFontFamily("Puritan 2.0");
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -154,7 +155,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            Div div = new Div().SetFont(StandardFonts.TIMES_ROMAN);
+            Div div = new Div().SetFontFamily(StandardFonts.TIMES_ROMAN);
             Paragraph paragraph = new Paragraph("Times Roman Bold text");
             paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
             div.Add(paragraph);
@@ -180,8 +181,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            Div div = new Div().SetFont(StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2136 Update of necessary
+            Div div = new Div().SetFontFamily(StandardFontFamilies.TIMES);
             Paragraph paragraph = new Paragraph("Times Roman Bold text");
             paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
             div.Add(paragraph);
@@ -206,8 +206,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            Div div = new Div().SetFont(StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2136 Update of necessary
+            Div div = new Div().SetFontFamily(StandardFontFamilies.TIMES);
             Paragraph paragraph = new Paragraph("Times Roman Bold text");
             paragraph.SetProperty(Property.FONT_WEIGHT, "bold");
             div.Add(paragraph);
@@ -230,10 +229,10 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph(s);
-            paragraph.SetFont("Courier");
+            paragraph.SetFontFamily("Courier");
             doc.Add(paragraph);
             paragraph = new Paragraph(s);
-            paragraph.SetProperty(Property.FONT, "Times");
+            paragraph.SetProperty(Property.FONT, new String[] { "Times" });
             doc.Add(paragraph);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -306,6 +305,63 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SearchFontAliasWithUnicodeChars() {
+            String cyrillicAlias = "\u0444\u043E\u043D\u04421";
+            // фонт1
+            String greekAlias = "\u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC2";
+            // γραμματοσειρά2
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
+            // フォント3
+            IDictionary<String, String> aliasToFontName = new LinkedDictionary<String, String>();
+            aliasToFontName.Put(cyrillicAlias, "NotoSans-Regular.ttf");
+            aliasToFontName.Put(greekAlias, "FreeSans.ttf");
+            aliasToFontName.Put(japaneseAlias, "Puritan2.otf");
+            FontProvider provider = new FontProvider();
+            foreach (KeyValuePair<String, String> e in aliasToFontName) {
+                provider.GetFontSet().AddFont(fontsFolder + e.Value, PdfEncodings.IDENTITY_H, e.Key);
+            }
+            ICollection<String> actualAliases = new HashSet<String>();
+            foreach (FontInfo fontInfo in provider.GetFontSet().GetFonts()) {
+                actualAliases.Add(fontInfo.GetAlias());
+            }
+            ICollection<String> expectedAliases = aliasToFontName.Keys;
+            NUnit.Framework.Assert.IsTrue(actualAliases.ContainsAll(expectedAliases) && expectedAliases.ContainsAll(actualAliases
+                ));
+            foreach (String fontAlias in expectedAliases) {
+                PdfFont pdfFont = provider.GetPdfFont(provider.GetFontSelector(JavaCollectionsUtil.SingletonList(fontAlias
+                    ), new FontCharacteristics()).BestMatch());
+                String fontName = pdfFont.GetFontProgram().GetFontNames().GetFontName();
+                NUnit.Framework.Assert.IsTrue(aliasToFontName.Get(fontAlias).Contains(fontName));
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WriteTextInFontWhichAliasWithUnicodeChars() {
+            String fileName = "writeTextInFontWhichAliasWithUnicodeChars";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
+            // フォント3
+            FontProvider provider = new FontProvider();
+            provider.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            provider.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, japaneseAlias);
+            provider.AddFont(fontsFolder + "FreeSans.ttf");
+            String s = "Hello world!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(provider);
+            Paragraph paragraph = new Paragraph(new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY));
+            paragraph.SetFontFamily(japaneseAlias);
+            doc.Add(paragraph);
+            doc.Close();
+            // Text shall be written in Puritan 2.0
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinWithUnicodeRange() {
@@ -322,7 +378,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "FontAlias");
+            doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -348,7 +404,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "FontAlias");
+            doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -374,7 +430,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "FontAlias");
+            doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);

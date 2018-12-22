@@ -81,7 +81,7 @@ namespace iText.Layout.Renderer {
             FontProvider fp = new FontProvider();
             fp.AddFont(fontName);
             rend.SetProperty(Property.FONT_PROVIDER, fp);
-            rend.SetProperty(Property.FONT, fontName);
+            rend.SetProperty(Property.FONT, new String[] { fontName });
             rend.SetText(val);
             NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
         }
@@ -104,7 +104,7 @@ namespace iText.Layout.Renderer {
             FontProvider fp = new FontProvider();
             fp.AddFont("Helvetica");
             txt.SetProperty(Property.FONT_PROVIDER, fp);
-            txt.SetFont("Helvetica");
+            txt.SetFontFamily("Helvetica");
             doc.Add(new Paragraph().Add(txt));
             doc.Close();
         }

@@ -128,6 +128,15 @@ namespace iText.Layout {
             list.Insert(index, elem);
         }
 
+        public static bool ContainsAll<T>(this ICollection<T> thisC, ICollection<T> otherC) {
+            foreach (T e in otherC) {
+                if (!thisC.Contains(e)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static bool IsEmpty<T>(this ICollection<T> collection) {
             return 0 == collection.Count;
         }

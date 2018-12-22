@@ -104,14 +104,13 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph("Next paragraph contains a triangle, actually Type 3 Font");
-            paragraph.SetProperty(Property.FONT, StandardFontFamilies.TIMES);
-            // TODO DEVSIX-2136 Update of necessary
+            paragraph.SetProperty(Property.FONT, new String[] { StandardFontFamilies.TIMES });
             doc.Add(paragraph);
             paragraph = new Paragraph("A");
-            paragraph.SetFont("CustomFont");
+            paragraph.SetFontFamily("CustomFont");
             doc.Add(paragraph);
             paragraph = new Paragraph("Next paragraph");
-            paragraph.SetProperty(Property.FONT, StandardFonts.COURIER);
+            paragraph.SetProperty(Property.FONT, new String[] { StandardFonts.COURIER });
             doc.Add(paragraph);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -133,8 +132,8 @@ namespace iText.Layout {
             doc.SetFontProvider(fontProvider);
             Paragraph paragraph1 = new Paragraph("Default Helvetica should be selected.");
             doc.Add(paragraph1);
-            Paragraph paragraph2 = new Paragraph("Default Helvetica should be selected.").SetFont(StandardFonts.COURIER
-                );
+            Paragraph paragraph2 = new Paragraph("Default Helvetica should be selected.").SetFontFamily(StandardFonts.
+                COURIER);
             doc.Add(paragraph2);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -160,7 +159,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(fontProvider);
             Paragraph paragraph = new Paragraph("There is no default font (Helvetica) inside the used FontProvider's instance. So the first font, that has been added, should be selected. Here it's FreeSans."
-                ).SetFont("ABRACADABRA_THERE_IS_NO_SUCH_FONT");
+                ).SetFontFamily("ABRACADABRA_THERE_IS_NO_SUCH_FONT");
             doc.Add(paragraph);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

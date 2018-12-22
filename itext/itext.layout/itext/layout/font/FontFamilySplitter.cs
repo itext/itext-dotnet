@@ -49,6 +49,10 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Split css font-family string into list of font-families or generic-families
     /// </summary>
+    /// <depricated>
+    /// Will be removed in iText 7.2.
+    /// </depricated>
+    [Obsolete]
     public sealed class FontFamilySplitter {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
 
