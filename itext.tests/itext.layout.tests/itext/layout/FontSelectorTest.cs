@@ -54,6 +54,7 @@ using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class FontSelectorTest : ExtendedITextTest {
@@ -98,7 +99,6 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup2() {
-            // TODO DEVSIX-2120 The font-family name of Puritan2.otf is 'Puritan 2.0' but this name doesn't match font-family name pattern
             String fileName = "cyrillicAndLatinGroup2";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
@@ -111,6 +111,54 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFontFamily("Puritan 2.0", "FreeSans");
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + fileName));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CyrillicAndLatinGroup3() {
+            String fileName = "cyrillicAndLatinGroup3";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetFontFamily(JavaUtil.ArraysAsList("Puritan 2.0", "Noto Sans"));
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + fileName));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
+            )]
+        public virtual void CyrillicAndLatinGroupDeprecatedFontAsStringValue() {
+            String fileName = "cyrillicAndLatinGroupDeprecatedFontAsStringValue";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
             Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);

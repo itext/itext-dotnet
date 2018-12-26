@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -2200,8 +2201,7 @@ namespace iText.Layout.Renderer {
                     }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
-                            );
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     return ResolveFirstPdfFont((String[])font, provider, fc);

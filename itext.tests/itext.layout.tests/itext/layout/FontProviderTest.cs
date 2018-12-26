@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -164,6 +165,22 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff" + fileName));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FontProviderNotSetExceptionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String fileName = "fontProviderNotSetExceptionTest.pdf";
+                String outFileName = destinationFolder + fileName + ".pdf";
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+                Document doc = new Document(pdfDoc);
+                Paragraph paragraph = new Paragraph("Hello world!").SetFontFamily("ABRACADABRA_NO_FONT_PROVIDER_ANYWAY");
+                doc.Add(paragraph);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>().With.Message.EqualTo(PdfException.FontProviderNotSetFontFamilyNotResolved))
+;
         }
     }
 }

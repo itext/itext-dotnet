@@ -261,6 +261,8 @@ namespace iText.Kernel {
 
         public const String FontEmbeddingIssue = "Font embedding issue.";
 
+        public const String FontProviderNotSetFontFamilyNotResolved = "FontProvider and FontSet are empty. Cannot resolve font family name (see ElementPropertyContainer#setFontFamily) without initialized FontProvider (see RootElement#setFontProvider).";
+
         [Obsolete]
         public const String FontSizeIsTooSmall = "Font size is too small.";
 

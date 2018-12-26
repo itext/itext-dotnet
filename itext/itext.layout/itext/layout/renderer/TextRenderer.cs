@@ -48,6 +48,7 @@ using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -742,7 +743,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_779();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_780();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -807,8 +808,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_779 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_779() {
+        private sealed class _IGlyphLineFilter_780 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_780() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1184,8 +1185,7 @@ namespace iText.Layout.Renderer {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider and FontSet are empty. Cannot resolve font with string value."
-                            );
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
@@ -1206,7 +1206,7 @@ namespace iText.Layout.Renderer {
                     return true;
                 }
                 else {
-                    throw new InvalidOperationException("Invalid font type.");
+                    throw new InvalidOperationException("Invalid FONT property value type.");
                 }
             }
         }
