@@ -1105,9 +1105,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = GetPage((int)pageNum);
                 PdfPage newPage = page.CopyTo(toDocument, copier);
                 copiedPages.Add(newPage);
-                if (!page2page.ContainsKey(page)) {
-                    page2page.Put(page, newPage);
-                }
+                page2page.Put(page, newPage);
                 if (lastCopiedPageNum >= pageNum) {
                     rangesOfPagesWithIncreasingNumbers.Add(new Dictionary<PdfPage, PdfPage>());
                 }
