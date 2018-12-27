@@ -1264,6 +1264,9 @@ namespace iText.Forms.Fields {
             mk.Put(PdfName.CA, new PdfString(caption));
             mk.Put(PdfName.BG, new PdfArray(field.backgroundColor.GetColorValue()));
             annot.SetAppearanceCharacteristics(mk);
+            if (pdfAConformanceLevel != null) {
+                CreatePushButtonAppearanceState(annot.GetPdfObject());
+            }
             return field;
         }
 
@@ -2688,36 +2691,37 @@ namespace iText.Forms.Fields {
                     if ((ff & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
                         try {
                             value = text;
+                            PdfDictionary widget = GetPdfObject();
                             PdfFormXObject appearance;
                             Rectangle rect = GetRect(GetPdfObject());
                             PdfDictionary apDic = GetPdfObject().GetAsDictionary(PdfName.AP);
                             if (apDic == null) {
                                 IList<PdfWidgetAnnotation> widgets = GetWidgets();
                                 if (widgets.Count == 1) {
-                                    apDic = widgets[0].GetPdfObject().GetAsDictionary(PdfName.AP);
+                                    widget = widgets[0].GetPdfObject();
+                                    apDic = widget.GetAsDictionary(PdfName.AP);
                                 }
+                            }
+                            if (apDic == null) {
+                                Put(PdfName.AP, apDic = new PdfDictionary());
+                                widget = GetPdfObject();
                             }
                             if (img != null || form != null) {
                                 appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), value, null, null, 0);
                             }
                             else {
-                                PdfStream asNormal = null;
-                                if (apDic != null) {
-                                    //TODO DEVSIX-2528 what is PdfName.N is PdfDictionary?
-                                    asNormal = apDic.GetAsStream(PdfName.N);
-                                }
-                                Object[] fontAndSize = GetFontAndSize(asNormal);
+                                //TODO DEVSIX-2528 what if PdfName.N is PdfDictionary?
+                                Object[] fontAndSize = GetFontAndSize(apDic.GetAsStream(PdfName.N));
                                 PdfFont localFont = (PdfFont)fontAndSize[0];
                                 PdfName localFontName = (PdfName)fontAndSize[2];
                                 float fontSize = (float)fontAndSize[1];
                                 appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), value, localFont, localFontName, 
                                     fontSize);
                             }
-                            if (apDic == null) {
-                                apDic = new PdfDictionary();
-                                Put(PdfName.AP, apDic);
-                            }
                             apDic.Put(PdfName.N, appearance.GetPdfObject());
+                            if (pdfAConformanceLevel != null) {
+                                CreatePushButtonAppearanceState(widget);
+                            }
                         }
                         catch (System.IO.IOException e) {
                             throw new PdfException(e);
@@ -2781,6 +2785,21 @@ namespace iText.Forms.Fields {
                 }
             }
             return true;
+        }
+
+        private static void CreatePushButtonAppearanceState(PdfDictionary widget) {
+            PdfDictionary appearances = widget.GetAsDictionary(PdfName.AP);
+            PdfStream normalAppearanceStream = appearances.GetAsStream(PdfName.N);
+            if (normalAppearanceStream != null) {
+                PdfName stateName = widget.GetAsName(PdfName.AS);
+                if (stateName == null) {
+                    stateName = new PdfName("push");
+                }
+                widget.Put(PdfName.AS, stateName);
+                PdfDictionary normalAppearance = new PdfDictionary();
+                normalAppearance.Put(stateName, normalAppearanceStream);
+                appearances.Put(PdfName.N, normalAppearance);
+            }
         }
 
         // TODO DEVSIX-2536
