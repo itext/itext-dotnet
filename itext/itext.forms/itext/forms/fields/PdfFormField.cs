@@ -1357,25 +1357,25 @@ namespace iText.Forms.Fields {
             String pdfAVersion = pdfAConformanceLevel != null ? pdfAConformanceLevel.GetPart() : "";
             switch (pdfAVersion) {
                 case "1": {
-                    check.DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), value.Equals("Off") ? "Yes" : value, checkType
+                    check.DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
                         );
                     break;
                 }
 
                 case "2": {
-                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), value.Equals("Off") ? "Yes" : value, checkType
+                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
                         );
                     break;
                 }
 
                 case "3": {
-                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), value.Equals("Off") ? "Yes" : value, checkType
+                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
                         );
                     break;
                 }
 
                 default: {
-                    check.DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), value.Equals("Off") ? "Yes" : value);
+                    check.DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value);
                     break;
                 }
             }
@@ -2778,7 +2778,7 @@ namespace iText.Forms.Fields {
                             String pdfAVersion = pdfAConformanceLevel != null ? pdfAConformanceLevel.GetPart() : "";
                             switch (pdfAVersion) {
                                 case "1": {
-                                    DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
+                                    DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), value, checkType);
                                     break;
                                 }
 
@@ -3682,27 +3682,27 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
-        protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String value, int checkType
-            ) {
+        protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
+            int checkType) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObject = new PdfFormXObject(rect);
             this.checkType = checkType;
             DrawBorder(canvas, xObject, width, height);
-            DrawPdfACheckBox(canvas, width, height, true);
-            PdfWidgetAnnotation widget = GetWidgets()[0];
+            DrawPdfACheckBox(canvas, width, height, !"Off".Equals(selectedValue));
             xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
             PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
+            normalAppearance.Put(new PdfName(selectedValue), xObject.GetPdfObject());
             PdfDictionary mk = new PdfDictionary();
             mk.Put(PdfName.CA, new PdfString(text));
+            PdfWidgetAnnotation widget = GetWidgets()[0];
             widget.Put(PdfName.MK, mk);
-            widget.SetNormalAppearance(xObject.GetPdfObject());
+            widget.SetNormalAppearance(normalAppearance);
         }
 
-        protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String value, int checkType
-            ) {
+        protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String onStateName, int
+             checkType) {
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
@@ -3720,7 +3720,7 @@ namespace iText.Forms.Fields {
             xObjectOn.GetResources();
             xObjectOff.GetResources();
             PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(value), xObjectOn.GetPdfObject());
+            normalAppearance.Put(new PdfName(onStateName), xObjectOn.GetPdfObject());
             normalAppearance.Put(new PdfName("Off"), xObjectOff.GetPdfObject());
             PdfDictionary mk = new PdfDictionary();
             mk.Put(PdfName.CA, new PdfString(text));

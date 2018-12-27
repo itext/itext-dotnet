@@ -456,10 +456,17 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                         );
                 }
-                PdfStream n = ap.GetAsStream(PdfName.N);
-                if (n == null) {
-                    throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
-                        );
+                if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && PdfName.Btn.Equals(annotDic.GetAsName(PdfName
+                    .FT))) {
+                    if (ap.GetAsDictionary(PdfName.N) == null) {
+                        throw new PdfAConformanceException(PdfAConformanceException.N_KEY_SHALL_BE_APPEARANCE_SUBDICTIONARY);
+                    }
+                }
+                else {
+                    if (ap.GetAsStream(PdfName.N) == null) {
+                        throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+                            );
+                    }
                 }
                 CheckResourcesOfAppearanceStreams(ap);
             }
