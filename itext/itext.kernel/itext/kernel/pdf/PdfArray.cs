@@ -473,7 +473,16 @@ namespace iText.Kernel.Pdf {
                 float y1 = GetAsNumber(1).FloatValue();
                 float x2 = GetAsNumber(2).FloatValue();
                 float y2 = GetAsNumber(3).FloatValue();
-                return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+                float llx;
+                float lly;
+                float urx;
+                float ury;
+                //Find the lower-left and upper-right of these 4 points
+                llx = Math.Min(x1, x2);
+                lly = Math.Min(y1, y2);
+                urx = Math.Max(x1, x2);
+                ury = Math.Max(y1, y2);
+                return new Rectangle(llx, lly, urx - llx, ury - lly);
             }
             catch (Exception e) {
                 throw new PdfException(PdfException.CannotConvertPdfArrayToRectanle, e, this);
