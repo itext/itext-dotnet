@@ -1151,12 +1151,7 @@ namespace iText.Forms.Fields {
             else {
                 annot.SetAppearanceState(new PdfName("Off"));
             }
-            if (pdfAConformanceLevel != null && "1".Equals(pdfAConformanceLevel.GetPart())) {
-                radio.DrawPdfA1RadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
-            }
-            else {
-                radio.DrawRadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
-            }
+            radio.DrawRadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
             radioGroup.AddKid(radio);
             return radio;
         }
@@ -1347,37 +1342,17 @@ namespace iText.Forms.Fields {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
             PdfButtonFormField check = new PdfButtonFormField(annot, doc);
             check.pdfAConformanceLevel = pdfAConformanceLevel;
-            if (null != pdfAConformanceLevel) {
-                annot.SetFlag(PdfAnnotation.PRINT);
-            }
             check.SetCheckType(checkType);
             check.SetFieldName(name);
             check.Put(PdfName.V, new PdfName(value));
             annot.SetAppearanceState(new PdfName(value));
-            String pdfAVersion = pdfAConformanceLevel != null ? pdfAConformanceLevel.GetPart() : "";
-            switch (pdfAVersion) {
-                case "1": {
-                    check.DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
-                        );
-                    break;
-                }
-
-                case "2": {
-                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
-                        );
-                    break;
-                }
-
-                case "3": {
-                    check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
-                        );
-                    break;
-                }
-
-                default: {
-                    check.DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value);
-                    break;
-                }
+            if (pdfAConformanceLevel != null) {
+                check.DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
+                    );
+                annot.SetFlag(PdfAnnotation.PRINT);
+            }
+            else {
+                check.DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value);
             }
             return check;
         }
@@ -2757,12 +2732,7 @@ namespace iText.Forms.Fields {
                                 Rectangle rect = GetRect(GetPdfObject());
                                 value = GetRadioButtonValue(value);
                                 if (rect != null && !"".Equals(value)) {
-                                    if (pdfAConformanceLevel != null && "1".Equals(pdfAConformanceLevel.GetPart())) {
-                                        DrawPdfA1RadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
-                                    }
-                                    else {
-                                        DrawRadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
-                                    }
+                                    DrawRadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
                                 }
                             }
                             else {
@@ -2788,35 +2758,17 @@ namespace iText.Forms.Fields {
                             }
                         }
                         else {
-                            String onStateName = value;
-                            if ("Off".Equals(onStateName)) {
-                                onStateName = "Yes";
-                            }
                             Rectangle rect = GetRect(GetPdfObject());
                             SetCheckType(checkType);
-                            String pdfAVersion = pdfAConformanceLevel != null ? pdfAConformanceLevel.GetPart() : "";
-                            switch (pdfAVersion) {
-                                case "1": {
-                                    DrawPdfA1CheckAppearance(rect.GetWidth(), rect.GetHeight(), value, checkType);
-                                    break;
-                                }
-
-                                case "2": {
-                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
-                                    break;
-                                }
-
-                                case "3": {
-                                    DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName, checkType);
-                                    break;
-                                }
-
-                                default: {
-                                    DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), onStateName);
-                                    break;
-                                }
-                            }
                             PdfWidgetAnnotation widget = GetWidgets()[0];
+                            if (pdfAConformanceLevel != null) {
+                                DrawPdfA2CheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value, checkType
+                                    );
+                                widget.SetFlag(PdfAnnotation.PRINT);
+                            }
+                            else {
+                                DrawCheckAppearance(rect.GetWidth(), rect.GetHeight(), "Off".Equals(value) ? "Yes" : value);
+                            }
                             if (widget.GetNormalAppearanceObject() != null && widget.GetNormalAppearanceObject().ContainsKey(new PdfName
                                 (value))) {
                                 widget.SetAppearanceState(new PdfName(value));
@@ -3684,6 +3636,7 @@ namespace iText.Forms.Fields {
         /// <param name="width">the width of the radio button to draw</param>
         /// <param name="height">the height of the radio button to draw</param>
         /// <param name="value">the value of the button</param>
+        [System.ObsoleteAttribute(@"Please, use DrawRadioAppearance(float, float, System.String) instead.")]
         protected internal virtual void DrawPdfA1RadioAppearance(float width, float height, String value) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
@@ -3721,33 +3674,62 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the checkbox to draw</param>
         /// <param name="onStateName">the state of the form field that will be drawn</param>
         protected internal virtual void DrawCheckAppearance(float width, float height, String onStateName) {
+            float fontSize = this.fontSize < 0 ? 0 : this.fontSize;
+            Rectangle rect = new Rectangle(0, 0, width, height);
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
-            Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
-            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
-            float fontSize = this.fontSize < 0 ? 0 : this.fontSize;
             DrawBorder(canvasOn, xObjectOn, width, height);
             DrawCheckBox(canvasOn, width, height, fontSize, true);
-            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
-            DrawBorder(canvasOff, xObjectOff, width, height);
-            DrawCheckBox(canvasOff, width, height, fontSize, false);
-            PdfWidgetAnnotation widget = GetWidgets()[0];
             xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
             xObjectOn.GetResources().AddFont(GetDocument(), GetFont());
-            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, xObjectOn.GetResources()));
+            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
+            PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
+            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
+            DrawBorder(canvasOff, xObjectOff, width, height);
+            DrawCheckBox(canvasOff, width, height, fontSize, false);
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
+            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, xObjectOn.GetResources()));
             PdfDictionary normalAppearance = new PdfDictionary();
             normalAppearance.Put(new PdfName(onStateName), xObjectOn.GetPdfObject());
             normalAppearance.Put(new PdfName("Off"), xObjectOff.GetPdfObject());
             PdfDictionary mk = new PdfDictionary();
             mk.Put(PdfName.CA, new PdfString(text));
+            PdfWidgetAnnotation widget = GetWidgets()[0];
             widget.GetPdfObject().Put(PdfName.MK, mk);
             widget.SetNormalAppearance(normalAppearance);
         }
 
+        //Actually it's just PdfA check appearance. According to corrigendum there is no difference between them
+        protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String onStateName, int
+             checkType) {
+            this.checkType = checkType;
+            Rectangle rect = new Rectangle(0, 0, width, height);
+            PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
+            PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
+            PdfFormXObject xObjectOn = new PdfFormXObject(rect);
+            xObjectOn.GetResources();
+            DrawBorder(canvasOn, xObjectOn, width, height);
+            DrawPdfACheckBox(canvasOn, width, height, true);
+            xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
+            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
+            PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
+            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
+            xObjectOff.GetResources();
+            DrawBorder(canvasOff, xObjectOff, width, height);
+            xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
+            PdfDictionary normalAppearance = new PdfDictionary();
+            normalAppearance.Put(new PdfName(onStateName), xObjectOn.GetPdfObject());
+            normalAppearance.Put(new PdfName("Off"), xObjectOff.GetPdfObject());
+            PdfDictionary mk = new PdfDictionary();
+            mk.Put(PdfName.CA, new PdfString(text));
+            PdfWidgetAnnotation widget = GetWidgets()[0];
+            widget.Put(PdfName.MK, mk);
+            widget.SetNormalAppearance(normalAppearance);
+        }
+
+        [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
             int checkType) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
@@ -3763,33 +3745,6 @@ namespace iText.Forms.Fields {
             PdfDictionary mk = new PdfDictionary();
             mk.Put(PdfName.CA, new PdfString(text));
             PdfWidgetAnnotation widget = GetWidgets()[0];
-            widget.Put(PdfName.MK, mk);
-            widget.SetNormalAppearance(normalAppearance);
-        }
-
-        protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String onStateName, int
-             checkType) {
-            PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
-            PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
-            Rectangle rect = new Rectangle(0, 0, width, height);
-            PdfFormXObject xObjectOn = new PdfFormXObject(rect);
-            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
-            this.checkType = checkType;
-            DrawBorder(canvasOn, xObjectOn, width, height);
-            DrawPdfACheckBox(canvasOn, width, height, true);
-            DrawBorder(canvasOff, xObjectOff, width, height);
-            PdfWidgetAnnotation widget = GetWidgets()[0];
-            xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
-            xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
-            xObjectOn.GetResources();
-            xObjectOff.GetResources();
-            PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(onStateName), xObjectOn.GetPdfObject());
-            normalAppearance.Put(new PdfName("Off"), xObjectOff.GetPdfObject());
-            PdfDictionary mk = new PdfDictionary();
-            mk.Put(PdfName.CA, new PdfString(text));
             widget.Put(PdfName.MK, mk);
             widget.SetNormalAppearance(normalAppearance);
         }

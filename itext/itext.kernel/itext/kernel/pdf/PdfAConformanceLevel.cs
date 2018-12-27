@@ -72,9 +72,9 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_3U = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("3", "U");
 
-        private String conformance;
+        private readonly String conformance;
 
-        private String part;
+        private readonly String part;
 
         private PdfAConformanceLevel(String part, String conformance) {
             this.conformance = conformance;

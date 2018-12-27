@@ -41,7 +41,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -67,7 +67,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -141,7 +141,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -167,7 +167,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -191,7 +191,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2B);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -215,7 +215,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2B);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -239,7 +239,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2U);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -263,7 +263,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2U);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -289,7 +289,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -315,7 +315,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3A);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -339,7 +339,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3B);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -363,7 +363,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3B);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -387,7 +387,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3U);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -411,7 +411,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3U);
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
