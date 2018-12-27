@@ -2750,21 +2750,40 @@ namespace iText.Forms.Fields {
                     }
                     else {
                         if ((ff & PdfButtonFormField.FF_RADIO) != 0) {
-                            PdfArray kids = GetKids();
-                            if (null != kids) {
-                                for (int i = 0; i < kids.Size(); i++) {
-                                    PdfObject kid = kids.Get(i);
-                                    iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
-                                    PdfWidgetAnnotation widget = field.GetWidgets()[0];
-                                    PdfDictionary apStream = field.GetPdfObject().GetAsDictionary(PdfName.AP);
-                                    String state;
-                                    if (null != apStream && null != GetValueFromAppearance(apStream.Get(PdfName.N), new PdfName(value))) {
-                                        state = value;
+                            if (IsRadioButton()) {
+                                // TODO DEVSIX-2536
+                                // Actually only radio group has FF_RADIO type.
+                                // This means that only radio group shall have regeneration functionality.
+                                Rectangle rect = GetRect(GetPdfObject());
+                                value = GetRadioButtonValue(value);
+                                if (rect != null && !"".Equals(value)) {
+                                    if (pdfAConformanceLevel != null && "1".Equals(pdfAConformanceLevel.GetPart())) {
+                                        DrawPdfA1RadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
                                     }
                                     else {
-                                        state = "Off";
+                                        DrawRadioAppearance(rect.GetWidth(), rect.GetHeight(), value);
                                     }
-                                    widget.SetAppearanceState(new PdfName(state));
+                                }
+                            }
+                            else {
+                                if (GetKids() != null) {
+                                    foreach (PdfObject kid in GetKids()) {
+                                        iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
+                                        PdfWidgetAnnotation widget = field.GetWidgets()[0];
+                                        PdfDictionary apStream = field.GetPdfObject().GetAsDictionary(PdfName.AP);
+                                        if (apStream == null) {
+                                            //widget annotation was not merged
+                                            apStream = widget.GetPdfObject().GetAsDictionary(PdfName.AP);
+                                        }
+                                        PdfName state;
+                                        if (null != apStream && null != GetValueFromAppearance(apStream.Get(PdfName.N), new PdfName(value))) {
+                                            state = new PdfName(value);
+                                        }
+                                        else {
+                                            state = new PdfName("Off");
+                                        }
+                                        widget.SetAppearanceState(state);
+                                    }
                                 }
                             }
                         }
@@ -2810,6 +2829,49 @@ namespace iText.Forms.Fields {
                 }
             }
             return true;
+        }
+
+        // TODO DEVSIX-2536
+        // Actually this entire method is a mess,
+        // because only radio group has FF_RADIO type and there is no RadioButton at all.
+        // So the goal of that method is just to save backward compatibility until refactoring.
+        private bool IsRadioButton() {
+            if (IsWidgetAnnotation(GetPdfObject())) {
+                return true;
+            }
+            else {
+                if (GetPdfObject().GetAsName(PdfName.V) != null) {
+                    return false;
+                }
+                else {
+                    if (GetKids() != null) {
+                        return IsWidgetAnnotation(GetKids().GetAsDictionary(0));
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private static bool IsWidgetAnnotation(PdfDictionary pdfObject) {
+            return pdfObject != null && PdfName.Widget.Equals(pdfObject.GetAsName(PdfName.Subtype));
+        }
+
+        private String GetRadioButtonValue(String value) {
+            System.Diagnostics.Debug.Assert(value != null);
+            //Otherwise something wrong with getValueAsString().
+            if ("".Equals(value)) {
+                value = "Yes";
+                //let it as default value
+                foreach (String state in GetAppearanceStates()) {
+                    if (!"Off".Equals(state)) {
+                        value = state;
+                        break;
+                    }
+                }
+            }
+            return value;
         }
 
         /// <summary>According to spec (ISO-32000-1, 12.7.3.3) zero font size should interpretaded as auto size.</summary>
@@ -3206,7 +3268,7 @@ namespace iText.Forms.Fields {
                 }
                 rect = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
             }
-            return rect.ToRectangle();
+            return rect != null ? rect.ToRectangle() : null;
         }
 
         protected internal static PdfArray ProcessOptions(String[][] options) {
@@ -3593,27 +3655,29 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the radio button to draw</param>
         /// <param name="value">the value of the button</param>
         protected internal virtual void DrawRadioAppearance(float width, float height, String value) {
+            Rectangle rect = new Rectangle(0, 0, width, height);
+            PdfWidgetAnnotation widget = GetWidgets()[0];
+            widget.SetNormalAppearance(new PdfDictionary());
+            //On state
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
-            Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
-            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawRadioBorder(canvasOn, xObjectOn, width, height);
             DrawRadioField(canvasOn, width, height, true);
+            xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
+            widget.GetNormalAppearanceObject().Put(new PdfName(value), xObjectOn.GetPdfObject());
+            //Off state
             PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
+            PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawRadioBorder(canvasOff, xObjectOff, width, height);
+            xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
+            widget.GetNormalAppearanceObject().Put(new PdfName("Off"), xObjectOff.GetPdfObject());
             if (pdfAConformanceLevel != null && (pdfAConformanceLevel.GetPart().Equals("2") || pdfAConformanceLevel.GetPart
                 ().Equals("3"))) {
                 xObjectOn.GetResources();
                 xObjectOff.GetResources();
             }
-            PdfWidgetAnnotation widget = GetWidgets()[0];
-            xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
-            widget.SetNormalAppearance(new PdfDictionary());
-            widget.GetNormalAppearanceObject().Put(new PdfName(value), xObjectOn.GetPdfObject());
-            xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
-            widget.GetNormalAppearanceObject().Put(new PdfName("Off"), xObjectOff.GetPdfObject());
         }
 
         /// <summary>Draws the appearance of a radio button with a specified value.</summary>
@@ -3626,10 +3690,12 @@ namespace iText.Forms.Fields {
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObject = new PdfFormXObject(rect);
             DrawBorder(canvas, xObject, width, height);
-            DrawRadioField(canvas, rect.GetWidth(), rect.GetHeight(), !value.Equals("Off"));
+            DrawRadioField(canvas, rect.GetWidth(), rect.GetHeight(), !"Off".Equals(value));
+            PdfDictionary normalAppearance = new PdfDictionary();
+            normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
             PdfWidgetAnnotation widget = GetWidgets()[0];
             xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
-            widget.SetNormalAppearance(xObject.GetPdfObject());
+            widget.SetNormalAppearance(normalAppearance);
         }
 
         /// <summary>Draws a radio button.</summary>

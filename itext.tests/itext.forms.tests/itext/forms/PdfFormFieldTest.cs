@@ -221,9 +221,8 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RadiobuttonFieldTest01() {
-            //TODO DEVSIX-2408
-            String file = "radiobuttonFieldTest01.pdf";
+        public virtual void DefaultRadiobuttonFieldTest() {
+            String file = "defaultRadiobuttonFieldTest.pdf";
             String filename = destinationFolder + file;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -233,16 +232,48 @@ namespace iText.Forms {
             PdfFormField.CreateRadioButton(pdfDoc, rect1, group, "1");
             PdfFormField.CreateRadioButton(pdfDoc, rect2, group, "2");
             form.AddField(group);
-            rect1 = new Rectangle(36, 600, 20, 20);
-            rect2 = new Rectangle(36, 580, 20, 20);
-            // TODO DEVSIX-2408
-            // Both radio groups have the same appearances, despite additional properties.
-            // Default value is lost for the second group.
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomizedRadiobuttonFieldTest() {
+            String file = "customizedRadiobuttonFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+            Rectangle rect2 = new Rectangle(36, 680, 20, 20);
             PdfButtonFormField group2 = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup2", "1");
             PdfFormField.CreateRadioButton(pdfDoc, rect1, group2, "1").SetBorderWidth(2).SetBorderColor(ColorConstants
-                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
             PdfFormField.CreateRadioButton(pdfDoc, rect2, group2, "2").SetBorderWidth(2).SetBorderColor(ColorConstants
-                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            form.AddField(group2);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomizedRadiobuttonWithGroupRegeneratingFieldTest() {
+            String file = "customizedRadiobuttonWithGroupRegeneratingFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+            Rectangle rect2 = new Rectangle(36, 680, 20, 20);
+            PdfButtonFormField group2 = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup2", "1");
+            PdfFormField.CreateRadioButton(pdfDoc, rect1, group2, "1").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            PdfFormField.CreateRadioButton(pdfDoc, rect2, group2, "2").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            group2.RegenerateField();
             form.AddField(group2);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
