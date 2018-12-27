@@ -116,6 +116,8 @@ namespace iText.Kernel {
 
         public const String CannotCreatePdfStreamByInputStreamWithoutPdfDocument = "Cannot create pdfstream by InputStream without PdfDocument.";
 
+        public const String CannotDrawElementsOnAlreadyFlushedPages = "Cannot draw elements on already flushed pages.";
+
         public const String CannotGetContentBytes = "Cannot get content bytes.";
 
         public const String CannotGetPdfStreamBytes = "Cannot get PdfStream bytes.";

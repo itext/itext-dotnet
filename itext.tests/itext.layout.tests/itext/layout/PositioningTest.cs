@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -311,6 +312,28 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ShowTextAlignedOnFlushedPageTest01() {
+            NUnit.Framework.Assert.That(() =>  {
+                String outFileName = destinationFolder + "showTextAlignedOnFlushedPageTest01.pdf";
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+                Document doc = new Document(pdfDoc);
+                Paragraph p = new Paragraph();
+                for (int i = 0; i < 1000; ++i) {
+                    p.Add("abcdefghijklkmnopqrstuvwxyz");
+                }
+                doc.Add(p);
+                // First page will be flushed by now, because immediateFlush is set to false by default.
+                int pageNumberToDrawTextOn = 1;
+                doc.ShowTextAligned(new Paragraph("Hello Bruno on page 1!"), 36, 36, pageNumberToDrawTextOn, TextAlignment
+                    .LEFT, VerticalAlignment.TOP, 0);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.CannotDrawElementsOnAlreadyFlushedPages))
+;
         }
 
         private void DrawCross(PdfCanvas canvas, float x, float y) {

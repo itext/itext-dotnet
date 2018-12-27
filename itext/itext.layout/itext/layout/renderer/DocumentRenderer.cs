@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -124,6 +125,9 @@ namespace iText.Layout.Renderer {
                 PdfDocument pdfDocument = document.GetPdfDocument();
                 EnsureDocumentHasNPages(pageNum, null);
                 PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
+                if (correspondingPage.IsFlushed()) {
+                    throw new PdfException(PdfException.CannotDrawElementsOnAlreadyFlushedPages);
+                }
                 bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
                     .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
                     .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;
