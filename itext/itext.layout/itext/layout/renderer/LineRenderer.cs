@@ -930,7 +930,7 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             return result.GetMinMaxWidth();

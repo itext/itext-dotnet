@@ -1343,7 +1343,7 @@ namespace iText.Layout.Renderer {
             return tableWidth;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             InitializeTableLayoutBorders();
             float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();

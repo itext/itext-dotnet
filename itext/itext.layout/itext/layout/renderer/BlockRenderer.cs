@@ -812,7 +812,7 @@ namespace iText.Layout.Renderer {
             return parentWidth - parentBBox.GetWidth();
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this));
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;

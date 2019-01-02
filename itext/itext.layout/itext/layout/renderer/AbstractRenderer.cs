@@ -1824,7 +1824,7 @@ namespace iText.Layout.Renderer {
         }
 
         // If parent has no resolved height, relative height declarations can be ignored
-        protected internal virtual MinMaxWidth GetMinMaxWidth() {
+        public virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
 

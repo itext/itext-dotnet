@@ -581,7 +581,7 @@ namespace iText.Layout.Renderer {
             return CreateOverflowRenderer(parent);
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             MinMaxWidth minMaxWidth = new MinMaxWidth();
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
