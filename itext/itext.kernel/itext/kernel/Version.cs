@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -87,7 +87,7 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2018 iText Group NV";
+        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2019 iText Group NV";
 
         /// <summary>The version info;</summary>
         private readonly VersionInfo info;
