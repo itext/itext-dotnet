@@ -239,6 +239,45 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TablesAndTabInsideOfParagraph() {
+            String testName = "tablesAndTabInsideOfParagraph.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            Document doc = InitDocument(outFileName, false);
+            Table leftTable = new Table(1);
+            for (int x = 0; x < 3; x++) {
+                leftTable.AddCell("Table 1, Line " + (x + 1));
+            }
+            Table rightTable = new Table(1);
+            for (int x = 0; x < 3; x++) {
+                rightTable.AddCell("Table 2, Line " + (x + 1));
+            }
+            Paragraph p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.LEFT));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: LEFT"));
+            doc.Add(p);
+            p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.CENTER));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: CENTER"));
+            doc.Add(p);
+            p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.RIGHT));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: RIGHT"));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SeveralTabsInRowTest() {
             String fileName = "severalTabsInRowTest.pdf";
             String outFileName = destinationFolder + fileName;

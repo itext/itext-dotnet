@@ -408,12 +408,12 @@ namespace iText.Layout.Renderer {
                         ));
                     float sumOfAffectedRendererWidths = 0;
                     foreach (IRenderer renderer in affectedRenderers) {
-                        renderer.GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths);
+                        renderer.Move(tabWidth + sumOfAffectedRendererWidths, 0);
                         sumOfAffectedRendererWidths += renderer.GetOccupiedArea().GetBBox().GetWidth();
                     }
                     if (childResult.GetSplitRenderer() != null) {
-                        childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth + sumOfAffectedRendererWidths
-                             - childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().GetWidth());
+                        childResult.GetSplitRenderer().Move(tabWidth + sumOfAffectedRendererWidths - childResult.GetSplitRenderer(
+                            ).GetOccupiedArea().GetBBox().GetWidth(), 0);
                     }
                     float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
                     if (hangingTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < hangingTabStop
