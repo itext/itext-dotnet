@@ -2640,16 +2640,8 @@ namespace iText.Forms.Fields {
                         bBox = new PdfArray(rect);
                     }
                     //Create appearance
-                    AppearanceXObject appearance = null;
-                    if (asNormal != null) {
-                        appearance = new AppearanceXObject(asNormal);
-                        appearance.SetBBox(new PdfArray(new float[] { 0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
-                            () }));
-                    }
-                    else {
-                        appearance = new AppearanceXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
-                            ()));
-                    }
+                    AppearanceXObject appearance = new AppearanceXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox
+                        .ToRectangle().GetHeight()));
                     appearance.AddFontFromDR(localFontName, localFont);
                     appearance.Put(PdfName.Matrix, matrix);
                     //Create text appearance

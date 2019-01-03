@@ -565,5 +565,27 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFormWithSameEmptyObjsForAppearance() {
+            String outPdf = destinationFolder + "fillFormWithSameEmptyObjsForAppearance.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithSameEmptyObjsForAppearance.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "fillFormWithSameEmptyObjsForAppearance.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            acroForm.GetField("text_1").SetValue("Text 1!");
+            acroForm.GetField("text_2").SetValue("Text 2!");
+            acroForm.GetField("text.3").SetValue("Text 3!");
+            acroForm.GetField("text.4").SetValue("Text 4!");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
