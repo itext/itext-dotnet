@@ -1660,8 +1660,16 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyDestination(PdfDocument document) {
             String destination = this.GetProperty<String>(Property.DESTINATION);
             if (destination != null) {
+                int pageNumber = occupiedArea.GetPageNumber();
+                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    String logMessageArg = "Property.DESTINATION, which specifies this element location as destination, see ElementPropertyContainer.setDestination.";
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                        , logMessageArg));
+                    return;
+                }
                 PdfArray array = new PdfArray();
-                array.Add(document.GetPage(occupiedArea.GetPageNumber()).GetPdfObject());
+                array.Add(document.GetPage(pageNumber).GetPdfObject());
                 array.Add(PdfName.XYZ);
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
@@ -1693,13 +1701,21 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
+                int pageNumber = occupiedArea.GetPageNumber();
+                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                        , logMessageArg));
+                    return;
+                }
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
                 if (linkAnnotation.GetPage() != null) {
                     PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
                     linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
                 }
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
-                PdfPage page = document.GetPage(occupiedArea.GetPageNumber());
+                PdfPage page = document.GetPage(pageNumber);
                 page.AddAnnotation(linkAnnotation);
             }
         }

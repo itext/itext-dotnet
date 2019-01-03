@@ -510,7 +510,14 @@ namespace iText.Layout.Renderer {
             DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
-                Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
+                int pageNumber = occupiedArea.GetPageNumber();
+                Rectangle clippedArea;
+                if (pageNumber < 1 || pageNumber > drawContext.GetDocument().GetNumberOfPages()) {
+                    clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
+                }
+                else {
+                    clippedArea = drawContext.GetDocument().GetPage(pageNumber).GetPageSize();
+                }
                 Rectangle area = GetBorderAreaBBox();
                 if (overflowXHidden) {
                     clippedArea.SetX(area.GetX()).SetWidth(area.GetWidth());
