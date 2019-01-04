@@ -1579,14 +1579,19 @@ namespace iText.Kernel.Utils {
                         outPagesRef.Add(outRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
-                if (cmpPagesRef.Contains(cmpRefKey) && cmpPagesRef.IndexOf(cmpRefKey) == outPagesRef.IndexOf(outRefKey)) {
-                    return true;
+                // If at least on of the page dictionaries is in the document's page tree, we don't proceed with deep comparison,
+                // because pages are compared at different level, so we compare only their index.
+                // However only if both page dictionaries are not in the document's page trees, we continue to comparing them as normal dictionaries.
+                if (cmpPagesRef.Contains(cmpRefKey) || outPagesRef.Contains(outRefKey)) {
+                    if (cmpPagesRef.Contains(cmpRefKey) && cmpPagesRef.IndexOf(cmpRefKey) == outPagesRef.IndexOf(outRefKey)) {
+                        return true;
+                    }
+                    if (compareResult != null && currentPath != null) {
+                        compareResult.AddError(currentPath, MessageFormatUtil.Format("The dictionaries refer to different pages. Expected page number: {0}. Found: {1}"
+                            , cmpPagesRef.IndexOf(cmpRefKey) + 1, outPagesRef.IndexOf(outRefKey) + 1));
+                    }
+                    return false;
                 }
-                if (compareResult != null && currentPath != null) {
-                    compareResult.AddError(currentPath, MessageFormatUtil.Format("The dictionaries refer to different pages. Expected page number: {0}. Found: {1}"
-                        , cmpPagesRef.IndexOf(cmpRefKey) + 1, outPagesRef.IndexOf(outRefKey)) + 1);
-                }
-                return false;
             }
             if (cmpDirectObj.IsDictionary()) {
                 if (!CompareDictionariesExtended((PdfDictionary)outDirectObj, (PdfDictionary)cmpDirectObj, currentPath, compareResult
