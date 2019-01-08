@@ -55,13 +55,13 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LineRenderer : AbstractRenderer {
+        private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
+
         protected internal float maxAscent;
 
         protected internal float maxDescent;
 
         protected internal byte[] levels;
-
-        private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
 
         private float maxTextAscent;
 
@@ -71,8 +71,8 @@ namespace iText.Layout.Renderer {
 
         private float maxBlockDescent;
 
-        // bidi levels
         // AbstractRenderer.EPS is not enough here
+        // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
@@ -375,28 +375,45 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                maxAscent = Math.Max(maxAscent, childAscent);
-                if (childRenderer is TextRenderer) {
-                    maxTextAscent = Math.Max(maxTextAscent, childAscent);
-                }
-                else {
-                    if (!isChildFloating) {
-                        maxBlockAscent = Math.Max(maxBlockAscent, childAscent);
-                    }
-                }
-                maxDescent = Math.Min(maxDescent, childDescent);
-                if (childRenderer is TextRenderer) {
-                    maxTextDescent = Math.Min(maxTextDescent, childDescent);
-                }
-                else {
-                    if (!isChildFloating) {
-                        maxBlockDescent = Math.Min(maxBlockDescent, childDescent);
-                    }
-                }
-                float maxHeight = maxAscent - maxDescent;
                 bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
                     ());
                 bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
+                bool wordWasSplitAndItWillFitOntoNextLine = false;
+                if (shouldBreakLayouting && childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit
+                    ()) {
+                    if (wasXOverflowChanged) {
+                        SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                    }
+                    LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
+                        ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
+                    if (wasXOverflowChanged) {
+                        SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                    }
+                    if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
+                        wordWasSplitAndItWillFitOntoNextLine = true;
+                    }
+                }
+                if (!wordWasSplitAndItWillFitOntoNextLine) {
+                    maxAscent = Math.Max(maxAscent, childAscent);
+                    if (childRenderer is TextRenderer) {
+                        maxTextAscent = Math.Max(maxTextAscent, childAscent);
+                    }
+                    else {
+                        if (!isChildFloating) {
+                            maxBlockAscent = Math.Max(maxBlockAscent, childAscent);
+                        }
+                    }
+                    maxDescent = Math.Min(maxDescent, childDescent);
+                    if (childRenderer is TextRenderer) {
+                        maxTextDescent = Math.Min(maxTextDescent, childDescent);
+                    }
+                    else {
+                        if (!isChildFloating) {
+                            maxBlockDescent = Math.Min(maxBlockDescent, childDescent);
+                        }
+                    }
+                }
+                float maxHeight = maxAscent - maxDescent;
                 float currChildTextIndent = anythingPlaced ? 0 : lineLayoutContext.GetTextIndent();
                 if (hangingTabStop != null && (TabAlignment.LEFT == hangingTabStop.GetTabAlignment() || shouldBreakLayouting
                      || childRenderers.Count - 1 == childPos || childRenderers[childPos + 1] is TabRenderer)) {
@@ -436,25 +453,13 @@ namespace iText.Layout.Renderer {
                         widthHandler.UpdateMaxChildWidth(maxChildWidth_1 + currChildTextIndent);
                     }
                 }
-                occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
-                    curWidth, maxHeight));
+                if (!wordWasSplitAndItWillFitOntoNextLine) {
+                    occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
+                        curWidth, maxHeight));
+                }
                 if (shouldBreakLayouting) {
                     LineRenderer[] split = Split();
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
-                    bool wordWasSplitAndItWillFitOntoNextLine = false;
-                    if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit()) {
-                        if (wasXOverflowChanged) {
-                            SetProperty(Property.OVERFLOW_X, oldXOverflow);
-                        }
-                        LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
-                            ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
-                        if (wasXOverflowChanged) {
-                            SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-                        }
-                        if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
-                            wordWasSplitAndItWillFitOntoNextLine = true;
-                        }
-                    }
                     if (wordWasSplitAndItWillFitOntoNextLine) {
                         split[1].childRenderers.Add(childRenderer);
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
@@ -1288,14 +1293,14 @@ namespace iText.Layout.Renderer {
         }
 
         internal class RendererGlyph {
+            public Glyph glyph;
+
+            public TextRenderer renderer;
+
             public RendererGlyph(Glyph glyph, TextRenderer textRenderer) {
                 this.glyph = glyph;
                 this.renderer = textRenderer;
             }
-
-            public Glyph glyph;
-
-            public TextRenderer renderer;
         }
     }
 }
