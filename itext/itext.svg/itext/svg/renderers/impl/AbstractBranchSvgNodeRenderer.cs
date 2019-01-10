@@ -279,5 +279,14 @@ namespace iText.Svg.Renderers.Impl {
         public override int GetHashCode() {
             return base.GetHashCode() * 7 + 255 + children.GetHashCode();
         }
+
+        internal override void SetPartOfClipPath(bool isPart) {
+            base.SetPartOfClipPath(isPart);
+            foreach (ISvgNodeRenderer child in children) {
+                if (child is AbstractSvgNodeRenderer) {
+                    ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(isPart);
+                }
+            }
+        }
     }
 }

@@ -60,6 +60,7 @@ namespace iText.Svg.Renderers.Factories {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.CLIP_PATH, typeof(ClipPathSvgNodeRenderer));
             result.Put(SvgConstants.Tags.DEFS, typeof(NoDrawOperationSvgNodeRenderer));
             result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
             result.Put(SvgConstants.Tags.G, typeof(GroupSvgNodeRenderer));
@@ -82,7 +83,6 @@ namespace iText.Svg.Renderers.Factories {
             ignored.Add(SvgConstants.Tags.ALT_GLYPH);
             ignored.Add(SvgConstants.Tags.ALT_GLYPH_DEF);
             ignored.Add(SvgConstants.Tags.ALT_GLYPH_ITEM);
-            ignored.Add(SvgConstants.Tags.CLIP_PATH);
             ignored.Add(SvgConstants.Tags.COLOR_PROFILE);
             ignored.Add(SvgConstants.Tags.DESC);
             ignored.Add(SvgConstants.Tags.FE_BLEND);

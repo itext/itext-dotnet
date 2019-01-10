@@ -84,6 +84,8 @@ namespace iText.Svg.Exceptions {
 
         public const String NAMED_OBJECT_NULL = "A named object can't be null.";
 
+        public const String NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH = "Non-invertible transformation matrix was used in a clipping path context. Clipped elements may show undefined behavior.";
+
         public const String NOROOT = "No root found";
 
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
