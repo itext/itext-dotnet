@@ -111,6 +111,9 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        internal override void PostDraw(SvgDrawContext context) {
+        }
+
         /// <summary>The reference value will contain a hashtag character.</summary>
         /// <remarks>The reference value will contain a hashtag character. This method will filter that value.</remarks>
         /// <param name="name">value to be filtered</param>

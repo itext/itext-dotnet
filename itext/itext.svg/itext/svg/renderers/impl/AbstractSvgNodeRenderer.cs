@@ -220,7 +220,6 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 // fill-rule
                 if (partOfClipPath) {
-                    currentCanvas.ClosePath();
                     if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(this.GetAttribute(SvgConstants.Attributes.CLIP_RULE
                         ))) {
                         currentCanvas.EoClip();
@@ -260,6 +259,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        // TODO: see if this is necessary DEVSIX-2583
         /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);

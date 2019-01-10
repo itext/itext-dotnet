@@ -262,6 +262,9 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        internal override void PostDraw(SvgDrawContext context) {
+        }
+
         public abstract override ISvgNodeRenderer CreateDeepCopy();
 
         public override bool Equals(Object other) {
