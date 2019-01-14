@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1005,6 +1005,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName MK = CreateDirectName("MK");
 
         public static readonly iText.Kernel.Pdf.PdfName ML = CreateDirectName("ML");
+
+        public static readonly iText.Kernel.Pdf.PdfName MMType1 = CreateDirectName("MMType1");
 
         public static readonly iText.Kernel.Pdf.PdfName MN = CreateDirectName("ML");
 

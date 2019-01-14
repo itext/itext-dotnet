@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -234,6 +234,31 @@ namespace iText.Forms {
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyMultipleSubfieldsTest03.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
+        public virtual void CopyMultipleSubfieldsSmartModeTest01() {
+            String srcFilename = sourceFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
+            String destFilename = destinationFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename).SetSmartMode(true));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            // copying the same page from the same document twice
+            for (int i = 0; i < 4; ++i) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text_1").SetValue("Text 1!");
+            acroForm.GetField("text_2").SetValue("Text 2!");
+            acroForm.GetField("text.3").SetValue("Text 3!");
+            acroForm.GetField("text.4").SetValue("Text 4!");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyMultipleSubfieldsSmartModeTest01.pdf"
                 , destinationFolder, "diff_"));
         }
 

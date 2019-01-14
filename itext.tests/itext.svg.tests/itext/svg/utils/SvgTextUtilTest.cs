@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -169,6 +169,14 @@ namespace iText.Svg.Utils {
         public virtual void TrimNullTrailingTest() {
             String expected = "";
             String actual = SvgTextUtil.TrimTrailingWhitespace(null);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimTrailingOfStringWithLength1Test() {
+            String toTrim = "A";
+            String actual = SvgTextUtil.TrimTrailingWhitespace(toTrim);
+            String expected = "A";
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -124,6 +125,9 @@ namespace iText.Layout.Renderer {
                 PdfDocument pdfDocument = document.GetPdfDocument();
                 EnsureDocumentHasNPages(pageNum, null);
                 PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
+                if (correspondingPage.IsFlushed()) {
+                    throw new PdfException(PdfException.CannotDrawElementsOnAlreadyFlushedPages);
+                }
                 bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
                     .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
                     .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;

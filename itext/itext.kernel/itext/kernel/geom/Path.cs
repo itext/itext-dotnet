@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -203,10 +203,12 @@ namespace iText.Kernel.Geom {
 
         /// <summary>Closes the current subpath.</summary>
         public virtual void CloseSubpath() {
-            Subpath lastSubpath = GetLastSubpath();
-            lastSubpath.SetClosed(true);
-            Point startPoint = lastSubpath.GetStartPoint();
-            MoveTo((float)startPoint.GetX(), (float)startPoint.GetY());
+            if (!IsEmpty()) {
+                Subpath lastSubpath = GetLastSubpath();
+                lastSubpath.SetClosed(true);
+                Point startPoint = lastSubpath.GetStartPoint();
+                MoveTo((float)startPoint.GetX(), (float)startPoint.GetY());
+            }
         }
 
         /// <summary>Closes all subpathes contained in this path.</summary>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -148,6 +149,7 @@ namespace iText.Layout.Renderer {
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
+            bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
@@ -162,7 +164,13 @@ namespace iText.Layout.Renderer {
             UnitValue[] paddings = GetPaddings();
             ApplyPaddings(layoutBox, paddings, false);
             MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth());
-            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
+            AbstractWidthHandler widthHandler;
+            if (noSoftWrap) {
+                widthHandler = new SumSumWidthHandler(countedMinMaxWidth);
+            }
+            else {
+                widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
@@ -274,8 +282,8 @@ namespace iText.Layout.Renderer {
                     if (xAdvance != 0) {
                         xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
                     }
-                    if ((nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition) > layoutBox
-                        .GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
+                    if (!noSoftWrap && (nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition
+                        ) > layoutBox.GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
                         if (iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
                             wordBreakGlyphAtLineEnding = currentGlyph;
@@ -309,8 +317,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
-                    if (nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth() && (0 ==
-                         nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
+                    if (!noSoftWrap && nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth
+                        () && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
                         (text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
@@ -735,7 +743,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_769();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_780();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -800,8 +808,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_769 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_769() {
+        private sealed class _IGlyphLineFilter_780 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_780() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1065,7 +1073,7 @@ namespace iText.Layout.Renderer {
             return count;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             TextLayoutResult result = (TextLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             return result.GetMinMaxWidth();
@@ -1150,7 +1158,7 @@ namespace iText.Layout.Renderer {
         /// <summary>
         /// Resolve
         /// <see cref="iText.Layout.Properties.Property.FONT"/>
-        /// string value.
+        /// String[] value.
         /// </summary>
         /// <param name="addTo">add all processed renderers to.</param>
         /// <returns>
@@ -1165,16 +1173,23 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             else {
-                if (font is String) {
+                if (font is String || font is String[]) {
+                    if (font is String) {
+                        // TODO remove this if-clause before 7.2
+                        ILog logger = LogManager.GetLogger(typeof(AbstractRenderer));
+                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
+                            );
+                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
+                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
+                    }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider and FontSet are empty. Cannot resolve font with string value."
-                            );
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font), fc, fontSet);
+                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
+                        ), fc, fontSet);
                     // process empty renderers because they can have borders or paddings with background to be drawn
                     if (null == strToBeConverted || String.IsNullOrEmpty(strToBeConverted)) {
                         addTo.Add(this);
@@ -1191,7 +1206,7 @@ namespace iText.Layout.Renderer {
                     return true;
                 }
                 else {
-                    throw new InvalidOperationException("Invalid font type.");
+                    throw new InvalidOperationException("Invalid FONT property value type.");
                 }
             }
         }
@@ -1217,9 +1232,9 @@ namespace iText.Layout.Renderer {
             range[1] -= shift;
         }
 
-        internal override PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                (String)font), fc);
+        internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
+            ) {
+            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc);
             IList<Glyph> resolvedGlyphs;
             PdfFont currentFont;
             //try to find first font that can render at least one glyph.

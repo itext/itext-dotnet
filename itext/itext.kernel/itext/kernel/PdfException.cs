@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -115,6 +115,8 @@ namespace iText.Kernel {
         public const String CannotCreatePdfImageXObjectByWmfImage = "Cannot create PdfImageXObject instance by WmfImage. Use PdfFormXObject constructor instead.";
 
         public const String CannotCreatePdfStreamByInputStreamWithoutPdfDocument = "Cannot create pdfstream by InputStream without PdfDocument.";
+
+        public const String CannotDrawElementsOnAlreadyFlushedPages = "Cannot draw elements on already flushed pages.";
 
         public const String CannotGetContentBytes = "Cannot get content bytes.";
 
@@ -260,6 +262,8 @@ namespace iText.Kernel {
         public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
 
         public const String FontEmbeddingIssue = "Font embedding issue.";
+
+        public const String FontProviderNotSetFontFamilyNotResolved = "FontProvider and FontSet are empty. Cannot resolve font family name (see ElementPropertyContainer#setFontFamily) without initialized FontProvider (see RootElement#setFontProvider).";
 
         [Obsolete]
         public const String FontSizeIsTooSmall = "Font size is too small.";

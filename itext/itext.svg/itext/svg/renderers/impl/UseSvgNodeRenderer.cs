@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,11 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Css.Impl;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -64,11 +66,14 @@ namespace iText.Svg.Renderers.Impl {
                     if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
                         ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
                         //Clone template
-                        ISvgNodeRenderer namedObject = template.CreateDeepCopy();
+                        ISvgNodeRenderer namedObject = template == null ? null : template.CreateDeepCopy();
                         //Resolve parent inheritance
                         SvgNodeRendererInheritanceResolver iresolver = new SvgNodeRendererInheritanceResolver();
                         iresolver.ApplyInheritanceToSubTree(this, namedObject);
                         if (namedObject != null) {
+                            if (namedObject is AbstractSvgNodeRenderer) {
+                                ((AbstractSvgNodeRenderer)namedObject).SetPartOfClipPath(partOfClipPath);
+                            }
                             PdfCanvas currentCanvas = context.GetCurrentCanvas();
                             float x = 0f;
                             float y = 0f;
@@ -78,19 +83,35 @@ namespace iText.Svg.Renderers.Impl {
                             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
                                 y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
                             }
+                            AffineTransform inverseMatrix = null;
                             if (!SvgMathUtils.CompareFloats(x, 0) || !SvgMathUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
                                 currentCanvas.ConcatMatrix(translation);
+                                if (partOfClipPath) {
+                                    try {
+                                        inverseMatrix = translation.CreateInverse();
+                                    }
+                                    catch (NoninvertibleTransformException ex) {
+                                        LogManager.GetLogger(typeof(UseSvgNodeRenderer)).Warn(SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
+                                            , ex);
+                                    }
+                                }
                             }
                             // setting the parent of the referenced element to this instance
                             namedObject.SetParent(this);
                             namedObject.Draw(context);
                             // unsetting the parent of the referenced element
                             namedObject.SetParent(null);
+                            if (inverseMatrix != null) {
+                                currentCanvas.ConcatMatrix(inverseMatrix);
+                            }
                         }
                     }
                 }
             }
+        }
+
+        internal override void PostDraw(SvgDrawContext context) {
         }
 
         /// <summary>The reference value will contain a hashtag character.</summary>

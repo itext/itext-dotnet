@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2018 iText Group NV
+    Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ using System.Collections.Generic;
 namespace iText.IO.Util {
     /// <summary>
     /// This file is a helper class for internal usage only.
-    /// Be aware that it's API and functionality may be changed in future.
+    /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class StringUtil {
         public static String ReplaceAll(String srcString, String regex, String replacement) {

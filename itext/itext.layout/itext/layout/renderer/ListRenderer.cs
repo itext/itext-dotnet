@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -107,7 +107,7 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             if (errorResult != null) {
@@ -133,7 +133,7 @@ namespace iText.Layout.Renderer {
         private IRenderer CreateListSymbolRenderer(int index, IRenderer renderer) {
             Object defaultListSymbol = GetListItemOrListProperty(renderer, this, Property.LIST_SYMBOL);
             if (defaultListSymbol is Text) {
-                return new TextRenderer((Text)defaultListSymbol);
+                return SurroundTextBullet(new TextRenderer((Text)defaultListSymbol));
             }
             else {
                 if (defaultListSymbol is Image) {
@@ -229,11 +229,12 @@ namespace iText.Layout.Renderer {
                         else {
                             textRenderer = new TextRenderer(textElement);
                         }
-                        return textRenderer;
+                        return SurroundTextBullet(textRenderer);
                     }
                     else {
                         if (defaultListSymbol is IListSymbolFactory) {
-                            return ((IListSymbolFactory)defaultListSymbol).CreateSymbol(index, this, renderer).CreateRendererSubTree();
+                            return SurroundTextBullet(((IListSymbolFactory)defaultListSymbol).CreateSymbol(index, this, renderer).CreateRendererSubTree
+                                ());
                         }
                         else {
                             if (defaultListSymbol == null) {
@@ -264,6 +265,18 @@ namespace iText.Layout.Renderer {
             }
 
             private readonly String constantFont;
+        }
+
+        // Wrap the bullet with a line because the direction (f.e. RTL) is processed on the LineRenderer level.
+        private LineRenderer SurroundTextBullet(IRenderer bulletRenderer) {
+            LineRenderer lineRenderer = new LineRenderer();
+            Text zeroWidthJoiner = new Text("\u200D");
+            zeroWidthJoiner.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
+            TextRenderer zeroWidthJoinerRenderer = new TextRenderer(zeroWidthJoiner);
+            lineRenderer.AddChild(zeroWidthJoinerRenderer);
+            lineRenderer.AddChild(bulletRenderer);
+            lineRenderer.AddChild(zeroWidthJoinerRenderer);
+            return lineRenderer;
         }
 
         /// <summary>
@@ -359,17 +372,16 @@ namespace iText.Layout.Renderer {
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
                 for (int i = 0; i < childRenderers.Count; i++) {
                     childRenderers[i].SetParent(this);
+                    listItemNum = (childRenderers[i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)childRenderers
+                        [i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
                     IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, childRenderers[i]);
+                    if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                        currentSymbolRenderer.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
+                    }
                     LayoutResult listSymbolLayoutResult = null;
                     if (currentSymbolRenderer != null) {
                         ++listItemNum;
                         currentSymbolRenderer.SetParent(childRenderers[i]);
-                        // Workaround for the case when font is specified as string
-                        if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
-                            is String) {
-                            PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
-                            currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
-                        }
                         listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
                         currentSymbolRenderer.SetParent(null);
                     }
@@ -420,7 +432,12 @@ namespace iText.Layout.Renderer {
                     if (symbolRenderer != null) {
                         LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
                         if (taggingHelper != null) {
-                            taggingHelper.SetRoleHint(symbolRenderer, StandardRoles.LBL);
+                            if (symbolRenderer is LineRenderer) {
+                                taggingHelper.SetRoleHint(symbolRenderer.GetChildRenderers()[1], StandardRoles.LBL);
+                            }
+                            else {
+                                taggingHelper.SetRoleHint(symbolRenderer, StandardRoles.LBL);
+                            }
                         }
                     }
                 }

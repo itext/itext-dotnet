@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -181,6 +182,88 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowHiddenOnCanvasTest01() {
+            String outFileName = destinationFolder + "overflowHiddenOnCanvasTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowHiddenOnCanvasTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new Canvas(new PdfCanvas(page), pdfDocument, page.GetPageSize().Clone().ApplyMargins
+                (36, 36, 36, 36, false));
+            AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.HIDDEN);
+            canvas.Close();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowHiddenOnCanvasTest02() {
+            String outFileName = destinationFolder + "overflowHiddenOnCanvasTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowHiddenOnCanvasTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetPageSize().Clone().ApplyMargins(36, 36, 
+                36, 36, false));
+            AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.HIDDEN);
+            canvas.Close();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowVisibleOnCanvasTest01() {
+            String outFileName = destinationFolder + "overflowVisibleOnCanvasTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowVisibleOnCanvasTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(page), pdfDocument, page.GetPageSize().
+                Clone().ApplyMargins(36, 36, 36, 36, false));
+            AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.VISIBLE);
+            canvas.Close();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OverflowVisibleOnCanvasTest02() {
+            String outFileName = destinationFolder + "overflowVisibleOnCanvasTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowVisibleOnCanvasTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetPageSize().Clone().ApplyMargins(36, 36, 
+                36, 36, false));
+            AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.VISIBLE);
+            canvas.Close();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.UriFormatException"/>
+        private static void AddParaWithImgSetOverflowX(iText.Layout.Canvas canvas, OverflowPropertyValue? overflowX
+            ) {
+            String imgPath = sourceFolder + "itis.jpg";
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath));
+            Paragraph p = new Paragraph().SetTextAlignment(TextAlignment.CENTER).SetHeight(150f).SetWidth(150f).SetBorder
+                (new SolidBorder(5f));
+            p.SetProperty(Property.OVERFLOW_X, overflowX);
+            p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+            img.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            img.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            canvas.Add(p.Add(img));
         }
 
         /// <exception cref="System.IO.IOException"/>

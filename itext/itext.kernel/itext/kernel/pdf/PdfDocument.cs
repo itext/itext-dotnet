@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1105,9 +1105,7 @@ namespace iText.Kernel.Pdf {
                 PdfPage page = GetPage((int)pageNum);
                 PdfPage newPage = page.CopyTo(toDocument, copier);
                 copiedPages.Add(newPage);
-                if (!page2page.ContainsKey(page)) {
-                    page2page.Put(page, newPage);
-                }
+                page2page.Put(page, newPage);
                 if (lastCopiedPageNum >= pageNum) {
                     rangesOfPagesWithIncreasingNumbers.Add(new Dictionary<PdfPage, PdfPage>());
                 }

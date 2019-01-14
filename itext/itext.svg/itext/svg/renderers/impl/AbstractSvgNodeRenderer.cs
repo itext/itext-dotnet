@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,8 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool doStroke = false;
 
+        internal bool partOfClipPath;
+
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
         }
@@ -99,12 +101,36 @@ namespace iText.Svg.Renderers.Impl {
                     context.AddUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
                 }
             }
-            PreDraw(context);
-            DoDraw(context);
-            PostDraw(context);
+            /* If a (non-empty) clipping path exists, drawing operations must be surrounded by q/Q operators
+            and may have to be drawn multiple times
+            */
+            if (!DrawInClipPath(context)) {
+                PreDraw(context);
+                DoDraw(context);
+                PostDraw(context);
+            }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
                 context.RemoveUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
             }
+        }
+
+        private bool DrawInClipPath(SvgDrawContext context) {
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
+                String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
+                ISvgNodeRenderer template = context.GetNamedObject(NormalizeName(clipPathName));
+                //Clone template to avoid muddying the state
+                if (template is ClipPathSvgNodeRenderer) {
+                    ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
+                    clipPath.SetClippedRenderer(this);
+                    clipPath.Draw(context);
+                    return !clipPath.GetChildren().IsEmpty();
+                }
+            }
+            return false;
+        }
+
+        private String NormalizeName(String name) {
+            return name.Replace("url(#", "").Replace(")", "").Trim();
         }
 
         /// <summary>Operations to perform before drawing an element.</summary>
@@ -116,42 +142,44 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual void PreDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                if (!partOfClipPath) {
  {
-                    // fill
-                    String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
-                    this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
-                    if (doFill && CanElementFill()) {
-                        Color color = ColorConstants.BLACK;
-                        if (fillRawValue != null) {
-                            color = WebColors.GetRGBColor(fillRawValue);
-                        }
-                        currentCanvas.SetFillColor(color);
-                    }
-                }
- {
-                    // stroke
-                    String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
-                    if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
-                        DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
-                        if (strokeRawValue != null && rgbColor != null) {
-                            currentCanvas.SetStrokeColor(rgbColor);
-                            String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                            float strokeWidth = 1f;
-                            if (strokeWidthRawValue != null) {
-                                strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                        // fill
+                        String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
+                        this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
+                        if (doFill && CanElementFill()) {
+                            Color color = ColorConstants.BLACK;
+                            if (fillRawValue != null) {
+                                color = WebColors.GetRGBColor(fillRawValue);
                             }
-                            currentCanvas.SetLineWidth(strokeWidth);
-                            doStroke = true;
+                            currentCanvas.SetFillColor(color);
                         }
                     }
-                }
  {
-                    // opacity
-                    String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
-                    if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                        PdfExtGState gs1 = new PdfExtGState();
-                        gs1.SetFillOpacity(float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture));
-                        currentCanvas.SetExtGState(gs1);
+                        // stroke
+                        String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
+                        if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
+                            DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
+                            if (strokeRawValue != null && rgbColor != null) {
+                                currentCanvas.SetStrokeColor(rgbColor);
+                                String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
+                                float strokeWidth = 1f;
+                                if (strokeWidthRawValue != null) {
+                                    strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                                }
+                                currentCanvas.SetLineWidth(strokeWidth);
+                                doStroke = true;
+                            }
+                        }
+                    }
+ {
+                        // opacity
+                        String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
+                        if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                            PdfExtGState gs1 = new PdfExtGState();
+                            gs1.SetFillOpacity(float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture));
+                            currentCanvas.SetExtGState(gs1);
+                        }
                     }
                 }
             }
@@ -191,35 +219,47 @@ namespace iText.Svg.Renderers.Impl {
             if (this.attributesAndStyles != null) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 // fill-rule
-                if (doFill && CanElementFill()) {
-                    String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                    if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
-                        // TODO RND-878
-                        if (doStroke) {
-                            currentCanvas.EoFillStroke();
+                if (partOfClipPath) {
+                    if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(this.GetAttribute(SvgConstants.Attributes.CLIP_RULE
+                        ))) {
+                        currentCanvas.EoClip();
+                    }
+                    else {
+                        currentCanvas.Clip();
+                    }
+                    currentCanvas.NewPath();
+                }
+                else {
+                    if (doFill && CanElementFill()) {
+                        String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
+                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                            if (doStroke) {
+                                currentCanvas.EoFillStroke();
+                            }
+                            else {
+                                currentCanvas.EoFill();
+                            }
                         }
                         else {
-                            currentCanvas.EoFill();
+                            if (doStroke) {
+                                currentCanvas.FillStroke();
+                            }
+                            else {
+                                currentCanvas.Fill();
+                            }
                         }
                     }
                     else {
                         if (doStroke) {
-                            currentCanvas.FillStroke();
-                        }
-                        else {
-                            currentCanvas.Fill();
+                            currentCanvas.Stroke();
                         }
                     }
+                    currentCanvas.ClosePath();
                 }
-                else {
-                    if (doStroke) {
-                        currentCanvas.Stroke();
-                    }
-                }
-                currentCanvas.ClosePath();
             }
         }
 
+        // TODO: see if this is necessary DEVSIX-2583
         /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
@@ -284,6 +324,10 @@ namespace iText.Svg.Renderers.Impl {
                 stylesDeepCopy.AddAll(this.attributesAndStyles);
                 deepCopy.SetAttributesAndStyles(stylesDeepCopy);
             }
+        }
+
+        internal virtual void SetPartOfClipPath(bool value) {
+            partOfClipPath = value;
         }
 
         public abstract ISvgNodeRenderer CreateDeepCopy();

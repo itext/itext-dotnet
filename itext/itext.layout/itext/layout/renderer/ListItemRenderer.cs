@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -128,21 +128,38 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
             if (symbolRenderer != null && !symbolAddedInside) {
+                bool isRtl = BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION));
                 symbolRenderer.SetParent(this);
-                float x = occupiedArea.GetBBox().GetX();
+                float x = isRtl ? occupiedArea.GetBBox().GetRight() : occupiedArea.GetBBox().GetLeft();
                 ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
                     , Property.LIST_SYMBOL_POSITION);
                 if (symbolPosition != ListSymbolPosition.DEFAULT) {
                     float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                    x -= symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent);
+                    if (isRtl) {
+                        x += (symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent));
+                    }
+                    else {
+                        x -= (symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent));
+                    }
                     if (symbolPosition == ListSymbolPosition.OUTSIDE) {
-                        UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
-                        if (!marginLeftUV.IsPointValue()) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                .MARGIN_LEFT));
+                        if (isRtl) {
+                            UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
+                            if (!marginRightUV.IsPointValue()) {
+                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                    .MARGIN_RIGHT));
+                            }
+                            x -= marginRightUV.GetValue();
                         }
-                        x += marginLeftUV.GetValue();
+                        else {
+                            UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+                            if (!marginLeftUV.IsPointValue()) {
+                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                                    .MARGIN_LEFT));
+                            }
+                            x += marginLeftUV.GetValue();
+                        }
                     }
                 }
                 ApplyMargins(occupiedArea.GetBBox(), false);
@@ -158,8 +175,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (yLine != null) {
-                        if (symbolRenderer is TextRenderer) {
-                            ((TextRenderer)symbolRenderer).MoveYLineTo((float)yLine);
+                        if (symbolRenderer is LineRenderer) {
+                            symbolRenderer.Move(0, (float)yLine - ((LineRenderer)symbolRenderer).GetYLine());
                         }
                         else {
                             symbolRenderer.Move(0, (float)yLine - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
@@ -183,12 +200,31 @@ namespace iText.Layout.Renderer {
                 ApplyBorderBox(occupiedArea.GetBBox(), true);
                 ApplyMargins(occupiedArea.GetBBox(), true);
                 ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(Property
-                    .LIST_SYMBOL_ALIGNMENT, ListSymbolAlignment.RIGHT);
-                float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
+                    .LIST_SYMBOL_ALIGNMENT, isRtl ? ListSymbolAlignment.LEFT : ListSymbolAlignment.RIGHT);
+                float dxPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
                 if (listSymbolAlignment == ListSymbolAlignment.RIGHT) {
-                    xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                    if (!isRtl) {
+                        dxPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                    }
                 }
-                symbolRenderer.Move(xPosition, 0);
+                else {
+                    if (listSymbolAlignment == ListSymbolAlignment.LEFT) {
+                        if (isRtl) {
+                            dxPosition -= (symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                        }
+                    }
+                }
+                if (symbolRenderer is LineRenderer) {
+                    if (isRtl) {
+                        symbolRenderer.Move(dxPosition - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth(), 0);
+                    }
+                    else {
+                        symbolRenderer.Move(dxPosition, 0);
+                    }
+                }
+                else {
+                    symbolRenderer.Move(dxPosition, 0);
+                }
                 if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
@@ -234,13 +270,26 @@ namespace iText.Layout.Renderer {
                 ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
                     , Property.LIST_SYMBOL_POSITION);
                 if (symbolPosition == ListSymbolPosition.INSIDE) {
+                    bool isRtl = BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION));
                     if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
                         ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
                         float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                        if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue((float)symbolIndent));
+                        if (symbolRenderer is LineRenderer) {
+                            if (symbolIndent != null) {
+                                symbolRenderer.GetChildRenderers()[1].SetProperty(isRtl ? Property.MARGIN_LEFT : Property.MARGIN_RIGHT, UnitValue
+                                    .CreatePointValue((float)symbolIndent));
+                            }
+                            foreach (IRenderer childRenderer in symbolRenderer.GetChildRenderers()) {
+                                paragraphRenderer.childRenderers.Add(0, childRenderer);
+                            }
                         }
-                        paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                        else {
+                            if (symbolIndent != null) {
+                                symbolRenderer.SetProperty(isRtl ? Property.MARGIN_LEFT : Property.MARGIN_RIGHT, UnitValue.CreatePointValue
+                                    ((float)symbolIndent));
+                            }
+                            paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                        }
                         symbolAddedInside = true;
                     }
                     else {
@@ -275,8 +324,15 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsListSymbolEmpty(IRenderer listSymbolRenderer) {
-            return listSymbolRenderer is TextRenderer && ((TextRenderer)listSymbolRenderer).GetText().ToString().Length
-                 == 0;
+            if (listSymbolRenderer is TextRenderer) {
+                return ((TextRenderer)listSymbolRenderer).GetText().ToString().Length == 0;
+            }
+            else {
+                if (listSymbolRenderer is LineRenderer) {
+                    return ((TextRenderer)listSymbolRenderer.GetChildRenderers()[1]).GetText().ToString().Length == 0;
+                }
+            }
+            return false;
         }
 
         private float[] CalculateAscenderDescender() {

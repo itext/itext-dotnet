@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -901,7 +901,7 @@ namespace iText.Layout {
             doc.SetFontProvider(fontProvider);
             String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
             doc.Add(new Paragraph(loremIpsum).SetHeight(100).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(
-                new SolidBorder(3)).SetFont(StandardFonts.TIMES_ROMAN));
+                new SolidBorder(3)).SetFontFamily(StandardFonts.TIMES_ROMAN));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

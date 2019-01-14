@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -132,7 +132,8 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             if (currentArea == null) {
-                currentArea = new RootLayoutArea(0, canvas.GetRootArea().Clone());
+                int pageNumber = canvas.IsCanvasOfPage() ? canvas.GetPdfDocument().GetPageNumber(canvas.GetPage()) : 0;
+                currentArea = new RootLayoutArea(pageNumber, canvas.GetRootArea().Clone());
             }
             else {
                 SetProperty(Property.FULL, true);

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -184,6 +184,8 @@ namespace iText.Pdfa {
 
         public const String MIME_TYPE_SHALL_BE_SPECIFIED_USING_THE_SUBTYPE_KEY_OF_THE_FILE_SPECIFICATION_STREAM_DICTIONARY
              = "Mime type shall be specified using the subtype key of the file specification stream dictionary";
+
+        public const String N_KEY_SHALL_BE_APPEARANCE_SUBDICTIONARY = "If an annotation dictionary's Subtype key has a value of Widget and its FT key has a value of Btn, the value of the N key shall be an appearance subdictionary";
 
         public const String NAMED_ACTION_TYPE_0_IS_NOT_ALLOWED = "Named action type {0} not allowed";
 

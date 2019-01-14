@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -108,6 +108,8 @@ namespace iText.Layout.Properties {
 
         public const int BOX_SIZING = 105;
 
+        public const int CAPTION_SIDE = 119;
+
         public const int CHARACTER_SPACING = 15;
 
         public const int CLEAR = 100;
@@ -141,7 +143,7 @@ namespace iText.Layout.Properties {
         /// String value. 'normal'|'italic'|'oblique'
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
-        /// has String value.
+        /// has String[] value.
         /// </remarks>
         public const int FONT_STYLE = 94;
 
@@ -150,7 +152,7 @@ namespace iText.Layout.Properties {
         /// String value. 'normal'|'bold'|number
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
-        /// has String value.
+        /// has String[] value.
         /// </remarks>
         public const int FONT_WEIGHT = 95;
 
@@ -212,6 +214,8 @@ namespace iText.Layout.Properties {
 
         public const int LIST_SYMBOL_INDENT = 39;
 
+        public const int LIST_SYMBOL_ORDINAL_VALUE = 120;
+
         public const int LIST_SYMBOL_PRE_TEXT = 41;
 
         public const int LIST_SYMBOL_POSITION = 83;
@@ -235,6 +239,8 @@ namespace iText.Layout.Properties {
         public const int MIN_HEIGHT = 85;
 
         public const int MIN_WIDTH = 80;
+
+        public const int NO_SOFT_WRAP_INLINE = 118;
 
         public const int OPACITY = 92;
 
@@ -339,13 +345,14 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 117;
+        private const int MAX_INHERITED_PROPERTY_ID = 119;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.CAPTION_SIDE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.COLLAPSING_MARGINS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FIRST_LINE_INDENT] = true;
@@ -363,6 +370,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.NO_SOFT_WRAP_INLINE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;

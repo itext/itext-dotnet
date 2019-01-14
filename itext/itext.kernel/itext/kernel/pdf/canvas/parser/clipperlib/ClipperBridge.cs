@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -254,7 +254,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
 
         /// <summary>
         /// Converts iText filling rule constant into the corresponding constant
-        /// of the Clipper library .
+        /// of the Clipper library.
         /// </summary>
         /// <param name="fillingRule">
         /// Either
@@ -272,6 +272,90 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             return fillType;
         }
 
+        /// <summary>
+        /// Builds a
+        /// <see cref="List<IntPoint>"/>
+        /// instance based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
+        /// a closed polygon.
+        /// <p>
+        /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
+        /// <ul>
+        /// <li>it has less than 3 vertices;</li>
+        /// <li>the vertices are all co-linear.</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="clipper">
+        /// 
+        /// <see cref="Clipper"/>
+        /// instance to which the created polygon path will be added.
+        /// </param>
+        /// <param name="polyVertices">
+        /// an array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which will be internally converted
+        /// to
+        /// <see cref="List<IntPoint>"/>
+        /// and added to the clipper instance.
+        /// </param>
+        /// <param name="polyType">
+        /// either
+        /// <see cref="PolyType.SUBJECT"/>
+        /// or
+        /// <see cref="PolyType.CLIP"/>
+        /// denoting whether added
+        /// path is a subject of clipping or a part of the clipping polygon.
+        /// </param>
+        /// <returns>true if polygon path was successfully added, false otherwise.</returns>
+        public static bool AddPolygonToClipper(Clipper clipper, Point[] polyVertices, PolyType polyType) {
+            return clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(polyVertices
+                )))), polyType, true);
+        }
+
+        /// <summary>
+        /// Builds a
+        /// <see cref="List<IntPoint>"/>
+        /// instance based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
+        /// a polyline (an open path in terms of clipper library). This path is added to the subject of future clipping.
+        /// Polylines cannot be part of clipping polygon.
+        /// <p>
+        /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
+        /// <ul>
+        /// <li>it has less than 2 vertices;</li>
+        /// </ul>
+        /// </summary>
+        /// <param name="clipper">
+        /// 
+        /// <see cref="Clipper"/>
+        /// instance to which the created polyline path will be added.
+        /// </param>
+        /// <param name="lineVertices">
+        /// an array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which will be internally converted
+        /// to
+        /// <see cref="List<IntPoint>"/>
+        /// and added to the clipper instance.
+        /// </param>
+        /// <returns>true if polyline path was successfully added, false otherwise.</returns>
+        public static bool AddPolylineSubjectToClipper(Clipper clipper, Point[] lineVertices) {
+            return clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(lineVertices
+                )))), PolyType.SUBJECT, false);
+        }
+
         internal static void AddContour(Path path, IList<IntPoint> contour, bool close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
             Point point = floatContour[0];
@@ -285,6 +369,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             }
         }
 
+        [System.ObsoleteAttribute(@"use AddPolygonToClipper(Clipper, iText.Kernel.Geom.Point[], PolyType) instead."
+            )]
         public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
             clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(rectVertices)
                 ))), polyType, true);

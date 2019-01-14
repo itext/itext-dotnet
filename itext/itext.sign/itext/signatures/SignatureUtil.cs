@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,23 @@ namespace iText.Signatures {
 
         private int totalRevisions;
 
+        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
+        /// <summary>
+        /// Converts a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// to an array of longs
+        /// </summary>
+        /// <param name="pdfArray">PdfArray to be converted</param>
+        /// <returns>long[] containing the PdfArray values</returns>
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use iText.Kernel.Pdf.PdfArray.ToLongArray() instead")]
+        public static long[] AsLongArray(PdfArray pdfArray) {
+            long[] rslt = new long[pdfArray.Size()];
+            for (int k = 0; k < rslt.Length; ++k) {
+                rslt[k] = pdfArray.GetAsNumber(k).LongValue();
+            }
+            return rslt;
+        }
+
         /// <summary>Creates a SignatureUtil instance.</summary>
         /// <remarks>
         /// Creates a SignatureUtil instance. Sets the acroForm field to the acroForm in the PdfDocument.
@@ -72,7 +89,6 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="document">PdfDocument to be inspected</param>
         public SignatureUtil(PdfDocument document) {
-            // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
             this.document = document;
             // Only create new AcroForm if there is a writer
             this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
@@ -250,7 +266,8 @@ namespace iText.Signatures {
             return new RASInputStream(new WindowRandomAccessSource(raf.CreateSourceView(), 0, length));
         }
 
-        /// <summary>Checks if the signature covers the entire document or just part of it.</summary>
+        /// <summary>Checks if the signature covers the entire document (except for signature's Contents) or just a part of it.
+        ///     </summary>
         /// <param name="name">the signature field name</param>
         /// <returns>true if the signature covers the entire document, false if it doesn't</returns>
         public virtual bool SignatureCoversWholeDocument(String name) {
@@ -259,7 +276,9 @@ namespace iText.Signatures {
                 return false;
             }
             try {
-                return sigNames.Get(name)[0] == document.GetReader().GetFileLength();
+                SignatureUtil.ContentsChecker signatureReader = new SignatureUtil.ContentsChecker(document.GetReader().GetSafeFile
+                    ().CreateSourceView());
+                return signatureReader.CheckWhetherSignatureCoversWholeDocument(acroForm.GetField(name));
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(e);
@@ -273,22 +292,6 @@ namespace iText.Signatures {
         /// <returns>boolean does the signature field exist</returns>
         public virtual bool DoesSignatureFieldExist(String name) {
             return GetBlankSignatureNames().Contains(name) || GetSignatureNames().Contains(name);
-        }
-
-        /// <summary>
-        /// Converts a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// to an array of longs
-        /// </summary>
-        /// <param name="pdfArray">PdfArray to be converted</param>
-        /// <returns>long[] containing the PdfArray values</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use iText.Kernel.Pdf.PdfArray.ToLongArray() instead")]
-        public static long[] AsLongArray(PdfArray pdfArray) {
-            long[] rslt = new long[pdfArray.Size()];
-            for (int k = 0; k < rslt.Length; ++k) {
-                rslt[k] = pdfArray.GetAsNumber(k).LongValue();
-            }
-            return rslt;
         }
 
         private void PopulateSignatureNames() {
@@ -353,6 +356,123 @@ namespace iText.Signatures {
                 int n1 = ((int[])o1[1])[0];
                 int n2 = ((int[])o2[1])[0];
                 return n1 - n2;
+            }
+        }
+
+        private class ContentsChecker : PdfReader {
+            private long contentsStart;
+
+            private long contentsEnd;
+
+            private int currentLevel = 0;
+
+            private int contentsLevel = 1;
+
+            private bool searchInV = true;
+
+            private bool rangeIsCorrect = false;
+
+            /// <exception cref="System.IO.IOException"/>
+            public ContentsChecker(IRandomAccessSource byteSource)
+                : base(byteSource, null) {
+            }
+
+            public virtual bool CheckWhetherSignatureCoversWholeDocument(PdfFormField signatureField) {
+                rangeIsCorrect = false;
+                PdfDictionary signature = (PdfDictionary)signatureField.GetValue();
+                int[] byteRange = ((PdfArray)signature.Get(PdfName.ByteRange)).ToIntArray();
+                try {
+                    if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
+                        [3]) {
+                        return false;
+                    }
+                }
+                catch (System.IO.IOException) {
+                    // That's not expected because if the signature is invalid, it should have already failed
+                    return false;
+                }
+                contentsStart = byteRange[1];
+                contentsEnd = byteRange[2];
+                long signatureOffset;
+                if (null != signature.GetIndirectReference()) {
+                    signatureOffset = signature.GetIndirectReference().GetOffset();
+                    searchInV = true;
+                }
+                else {
+                    signatureOffset = signatureField.GetPdfObject().GetIndirectReference().GetOffset();
+                    searchInV = false;
+                    contentsLevel++;
+                }
+                try {
+                    tokens.Seek(signatureOffset);
+                    tokens.NextValidToken();
+                    ReadObject(false, false);
+                }
+                catch (System.IO.IOException) {
+                    // That's not expected because if the signature is invalid, it should have already failed
+                    return false;
+                }
+                return rangeIsCorrect;
+            }
+
+            /// <exception cref="System.IO.IOException"/>
+            protected override PdfDictionary ReadDictionary(bool objStm) {
+                // The method copies the logic of PdfReader's method.
+                // Only Contents related checks have been introduced.
+                currentLevel++;
+                PdfDictionary dic = new PdfDictionary();
+                while (!rangeIsCorrect) {
+                    tokens.NextValidToken();
+                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
+                        currentLevel--;
+                        break;
+                    }
+                    if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
+                        tokens.ThrowError(PdfException.DictionaryKey1IsNotAName, tokens.GetStringValue());
+                    }
+                    PdfName name = ReadPdfName(true);
+                    PdfObject obj;
+                    if (PdfName.Contents.Equals(name) && searchInV && contentsLevel == currentLevel) {
+                        long startPosition = tokens.GetPosition();
+                        int ch;
+                        int whiteSpacesCount = -1;
+                        do {
+                            ch = tokens.Read();
+                            whiteSpacesCount++;
+                        }
+                        while (ch != -1 && PdfTokenizer.IsWhitespace(ch));
+                        tokens.Seek(startPosition);
+                        obj = ReadObject(true, objStm);
+                        long endPosition = tokens.GetPosition();
+                        if (endPosition == contentsEnd && startPosition + whiteSpacesCount == contentsStart) {
+                            rangeIsCorrect = true;
+                        }
+                    }
+                    else {
+                        if (PdfName.V.Equals(name) && !searchInV && 1 == currentLevel) {
+                            searchInV = true;
+                            obj = ReadObject(true, objStm);
+                            searchInV = false;
+                        }
+                        else {
+                            obj = ReadObject(true, objStm);
+                        }
+                    }
+                    if (obj == null) {
+                        if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
+                            tokens.ThrowError(PdfException.UnexpectedGtGt);
+                        }
+                        if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
+                            tokens.ThrowError(PdfException.UnexpectedCloseBracket);
+                        }
+                    }
+                    dic.Put(name, obj);
+                }
+                return dic;
+            }
+
+            protected override PdfObject ReadReference(bool readAsDirect) {
+                return new PdfNull();
             }
         }
     }

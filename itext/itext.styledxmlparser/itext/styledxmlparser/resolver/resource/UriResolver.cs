@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -95,9 +95,6 @@ namespace iText.StyledXmlParser.Resolver.Resource
             uriString = UriEncodeUtil.Encode(uriString);
             if (isLocalBaseUri)
             {
-                // remove leading slashes in order to always concatenate such resource URIs: we don't want to scatter all
-                // resources around the file system even if on web page the path started with '\'
-                uriString = uriString.ReplaceFirst("/*\\\\*", "");
                 if (!uriString.StartsWith("file:"))
                 {
                     try

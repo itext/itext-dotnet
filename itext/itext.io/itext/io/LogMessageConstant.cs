@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -127,9 +127,15 @@ namespace iText.IO {
 
         public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object. Null object will be written instead.";
 
+        public const String FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR = "Font dictionary does not contain required /FontDescriptor entry.";
+
+        public const String FONT_DICTIONARY_WITH_NO_WIDTHS = "Font dictionary does not contain required /Widths entry.";
+
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
-        public const String FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT = "The Font Property must be a PdfFont object";
+        public const String FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT = "The \"Property.FONT\" property must be a PdfFont object in this context.";
+
+        public const String FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD = "The \"Property.FONT\" property with values of String type is deprecated, use String[] as property value type instead.";
 
         public const String FONT_SUBSET_ISSUE = "Font subset issue. Full font will be embedded.";
 
@@ -188,6 +194,8 @@ namespace iText.IO {
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
+        public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
+
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
         public const String NO_FIELDS_IN_ACROFORM = "Required AcroForm entry /Fields does not exist in the document. Empty array /Fields will be created.";
@@ -208,11 +216,15 @@ namespace iText.IO {
 
         public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
 
+        public const String PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED = "The page passed to Canvas#enableAutoTagging(PdfPage) method shall be the one on which this canvas will be rendered. However the actual passed PdfPage instance sets not such page. This might lead to creation of malformed PDF document.";
+
         public const String PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED = "Path key is present. Vertices will be ignored";
 
         public const String PDF_OBJECT_FLUSHING_NOT_PERFORMED = "PdfObject flushing is not performed: PdfDocument is opened in append mode and the object is not marked as modified ( see PdfObject#setModified() ).";
 
         public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
+
+        public const String PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY = "The PDF contains a BDC operator which refers to a not existing Property dictionary: {0}.";
 
         public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
 
@@ -225,6 +237,8 @@ namespace iText.IO {
         public const String RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES = "The {0} rectangle has negative or zero sizes. It will not be displayed.";
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
+
+        public const String REDACTION_OF_ANNOTATION_TYPE_WATERMARK_IS_NOT_SUPPORTED = "Redaction of annotation subtype /Watermark is not supported";
 
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
 

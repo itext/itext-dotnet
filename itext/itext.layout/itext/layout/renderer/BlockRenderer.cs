@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -510,7 +510,14 @@ namespace iText.Layout.Renderer {
             DrawBorder(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
-                Rectangle clippedArea = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber()).GetPageSize();
+                int pageNumber = occupiedArea.GetPageNumber();
+                Rectangle clippedArea;
+                if (pageNumber < 1 || pageNumber > drawContext.GetDocument().GetNumberOfPages()) {
+                    clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
+                }
+                else {
+                    clippedArea = drawContext.GetDocument().GetPage(pageNumber).GetPageSize();
+                }
                 Rectangle area = GetBorderAreaBBox();
                 if (overflowXHidden) {
                     clippedArea.SetX(area.GetX()).SetWidth(area.GetWidth());
@@ -812,7 +819,7 @@ namespace iText.Layout.Renderer {
             return parentWidth - parentBBox.GetWidth();
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this));
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
                 float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;

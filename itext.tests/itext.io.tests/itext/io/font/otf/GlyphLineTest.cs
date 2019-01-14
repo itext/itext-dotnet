@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,11 +40,23 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
+using System.IO;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class GlyphLineTest {
+        private static IList<Glyph> ConstructGlyphListFromString(String text, TrueTypeFont font) {
+            IList<Glyph> glyphList = new List<Glyph>();
+            char[] chars = text.ToCharArray();
+            foreach (char letter in chars) {
+                glyphList.Add(font.GetGlyph(letter));
+            }
+            return glyphList;
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestEquals() {
             Glyph glyph = new Glyph(200, 200, 200);
@@ -58,6 +70,93 @@ namespace iText.IO.Font.Otf {
             one.end++;
             two.end++;
             NUnit.Framework.Assert.IsTrue(one.Equals(two));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesAddition() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("Viva France!", font));
+            GlyphLine childLine1 = new GlyphLine(ConstructGlyphListFromString(" Liberte", font));
+            containerLine.Add(childLine1);
+            NUnit.Framework.Assert.AreEqual(containerLine.end, 12);
+            containerLine.end = 20;
+            GlyphLine childLine2 = new GlyphLine(ConstructGlyphListFromString(" Egalite", font));
+            containerLine.Add(childLine2);
+            NUnit.Framework.Assert.AreEqual(containerLine.end, 20);
+            containerLine.start = 10;
+            GlyphLine childLine3 = new GlyphLine(ConstructGlyphListFromString(" Fraternite", font));
+            containerLine.Add(childLine3);
+            NUnit.Framework.Assert.AreEqual(containerLine.start, 10);
+            containerLine.start = 0;
+            containerLine.Add(ConstructGlyphListFromString("!", font)[0]);
+            containerLine.end = 40;
+            NUnit.Framework.Assert.AreEqual(containerLine.glyphs.Count, 40);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesWithActualTextAddition() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
+            GlyphLine childLine = new GlyphLine(ConstructGlyphListFromString("---Liberte", font));
+            childLine.SetActualText(3, 10, "Viva");
+            containerLine.Add(childLine);
+            containerLine.end = 16;
+            for (int i = 0; i < 9; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+            for (int i = 9; i < 16; i++) {
+                NUnit.Framework.Assert.AreEqual("Viva", containerLine.actualText[i].value);
+            }
+            NUnit.Framework.Assert.AreEqual("France---Viva", containerLine.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestOtherLinesWithActualTextAddition02() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
+            containerLine.SetActualText(1, 5, "id");
+            GlyphLine childLine = new GlyphLine(ConstructGlyphListFromString("---Liberte", font));
+            childLine.SetActualText(3, 10, "Viva");
+            containerLine.Add(childLine);
+            containerLine.end = 16;
+            NUnit.Framework.Assert.IsNull(containerLine.actualText[0]);
+            for (int i = 1; i < 5; i++) {
+                NUnit.Framework.Assert.AreEqual("id", containerLine.actualText[i].value);
+            }
+            for (int i = 5; i < 9; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+            for (int i = 9; i < 16; i++) {
+                NUnit.Framework.Assert.AreEqual("Viva", containerLine.actualText[i].value);
+            }
+            NUnit.Framework.Assert.AreEqual("Fide---Viva", containerLine.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestContentReplacingWithNullActualText() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine lineToBeReplaced = new GlyphLine(ConstructGlyphListFromString("Byelorussia", font));
+            lineToBeReplaced.SetActualText(1, 2, "e");
+            GlyphLine lineToBeCopied = new GlyphLine(ConstructGlyphListFromString("Belarus", font));
+            lineToBeReplaced.ReplaceContent(lineToBeCopied);
+            // Test that no exception has been thrown. Also check the content.
+            NUnit.Framework.Assert.AreEqual("Belarus", lineToBeReplaced.ToString());
         }
     }
 }

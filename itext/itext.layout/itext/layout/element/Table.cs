@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -94,6 +94,8 @@ namespace iText.Layout.Element {
         private Document document;
 
         private Cell[] lastAddedRow;
+
+        private Div caption;
 
         /// <summary>
         /// Constructs a
@@ -606,6 +608,56 @@ namespace iText.Layout.Element {
         public virtual iText.Layout.Element.Table SetSkipLastFooter(bool skipLastFooter) {
             this.skipLastFooter = skipLastFooter;
             return this;
+        }
+
+        /// <summary>Sets the table's caption.</summary>
+        /// <remarks>
+        /// Sets the table's caption.
+        /// If there is no
+        /// <see cref="iText.Layout.Properties.Property.CAPTION_SIDE"/>
+        /// set (note that it's an inheritable property),
+        /// <see cref="iText.Layout.Properties.CaptionSide.TOP"/>
+        /// will be used.
+        /// Also the
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.CAPTION"/>
+        /// will be set on the element.
+        /// </remarks>
+        /// <param name="caption">The element to be set as a caption.</param>
+        /// <returns>this element</returns>
+        public virtual iText.Layout.Element.Table SetCaption(Div caption) {
+            this.caption = caption;
+            if (null != caption) {
+                EnsureCaptionPropertiesAreSet();
+            }
+            return this;
+        }
+
+        /// <summary>Sets the table's caption and its caption side.</summary>
+        /// <remarks>
+        /// Sets the table's caption and its caption side.
+        /// Also the
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.CAPTION"/>
+        /// will be set on the element.
+        /// </remarks>
+        /// <param name="caption">The element to be set as a caption.</param>
+        /// <param name="side">The caption side to be set on the caption.</param>
+        /// <returns>this element</returns>
+        public virtual iText.Layout.Element.Table SetCaption(Div caption, CaptionSide side) {
+            if (null != caption) {
+                caption.SetProperty(Property.CAPTION_SIDE, side);
+            }
+            SetCaption(caption);
+            return this;
+        }
+
+        private void EnsureCaptionPropertiesAreSet() {
+            this.caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
+        }
+
+        /// <summary>Gets the table's caption.</summary>
+        /// <returns>the table's caption.</returns>
+        public virtual Div GetCaption() {
+            return caption;
         }
 
         /// <summary>Starts new row.</summary>

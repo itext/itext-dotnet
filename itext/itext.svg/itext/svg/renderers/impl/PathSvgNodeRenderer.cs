@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,6 @@ using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
@@ -135,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <summary>
         /// Gets the coordinates that shall be passed to
-        /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[])"/>
+        /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[], iText.Kernel.Geom.Point)"/>
         /// for the current shape.
         /// </summary>
         /// <param name="shape">The current shape.</param>
@@ -148,7 +147,7 @@ namespace iText.Svg.Renderers.Impl {
         /// a
         /// <see>String[]</see>
         /// of coordinates that shall be passed to
-        /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[])"/>
+        /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[], iText.Kernel.Geom.Point)"/>
         /// </returns>
         private String[] GetShapeCoordinates(IPathShape shape, IPathShape previousShape, String[] pathProperties) {
             if (shape is ClosePath) {
@@ -159,19 +158,18 @@ namespace iText.Svg.Renderers.Impl {
             if (shape is SmoothSCurveTo) {
                 String[] startingControlPoint = new String[2];
                 if (previousShape != null) {
-                    IDictionary<String, String> coordinates = previousShape.GetCoordinates();
+                    Point previousEndPoint = previousShape.GetEndingPoint();
                     //if the previous command was a C or S use its last control point
                     if (((previousShape is CurveTo))) {
-                        float reflectedX = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.X)) - CssUtils.
-                            ParseFloat(coordinates.Get(SvgConstants.Attributes.X2)));
-                        float reflectedy = (float)(2 * CssUtils.ParseFloat(coordinates.Get(SvgConstants.Attributes.Y)) - CssUtils.
-                            ParseFloat(coordinates.Get(SvgConstants.Attributes.Y2)));
+                        Point lastControlPoint = ((CurveTo)previousShape).GetLastControlPoint();
+                        float reflectedX = (float)(2 * previousEndPoint.GetX() - lastControlPoint.GetX());
+                        float reflectedY = (float)(2 * previousEndPoint.GetY() - lastControlPoint.GetY());
                         startingControlPoint[0] = SvgCssUtils.ConvertFloatToString(reflectedX);
-                        startingControlPoint[1] = SvgCssUtils.ConvertFloatToString(reflectedy);
+                        startingControlPoint[1] = SvgCssUtils.ConvertFloatToString(reflectedY);
                     }
                     else {
-                        startingControlPoint[0] = coordinates.Get(SvgConstants.Attributes.X);
-                        startingControlPoint[1] = coordinates.Get(SvgConstants.Attributes.Y);
+                        startingControlPoint[0] = SvgCssUtils.ConvertDoubleToString(previousEndPoint.GetX());
+                        startingControlPoint[1] = SvgCssUtils.ConvertDoubleToString(previousEndPoint.GetY());
                     }
                 }
                 else {
@@ -181,39 +179,10 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 shapeCoordinates = Concatenate(startingControlPoint, operatorArgs);
             }
-            else {
-                if (shape is VerticalLineTo) {
-                    String currentX = currentPoint.x.ToString();
-                    String currentY = currentPoint.y.ToString();
-                    String[] yValues = Concatenate(new String[] { currentY }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
-                        (operatorArgs, currentPoint.y) : operatorArgs);
-                    shapeCoordinates = Concatenate(new String[] { currentX }, yValues);
-                }
-                else {
-                    if (shape is HorizontalLineTo) {
-                        String currentX = currentPoint.x.ToString();
-                        String currentY = currentPoint.y.ToString();
-                        String[] xValues = Concatenate(new String[] { currentX }, shape.IsRelative() ? MakeRelativeOperatorsAbsolute
-                            (operatorArgs, currentPoint.x) : operatorArgs);
-                        shapeCoordinates = Concatenate(new String[] { currentY }, xValues);
-                    }
-                }
-            }
             if (shapeCoordinates == null) {
                 shapeCoordinates = operatorArgs;
             }
             return shapeCoordinates;
-        }
-
-        private String[] MakeRelativeOperatorsAbsolute(String[] relativeOperators, double currentCoordinate) {
-            String[] absoluteOperators = new String[relativeOperators.Length];
-            for (int i = 0; i < relativeOperators.Length; i++) {
-                double relativeDouble = Double.Parse(relativeOperators[i], System.Globalization.CultureInfo.InvariantCulture
-                    );
-                relativeDouble += currentCoordinate;
-                absoluteOperators[i] = relativeDouble.ToString();
-            }
-            return absoluteOperators;
         }
 
         /// <summary>
@@ -248,24 +217,27 @@ namespace iText.Svg.Renderers.Impl {
             IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0]);
             String[] shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, pathProperties);
             if (pathShape is ClosePath) {
-                pathShape = zOperator;
-                if (pathShape == null) {
+                if (previousShape != null) {
+                    pathShape = zOperator;
+                }
+                else {
                     throw new SvgProcessingException(SvgLogMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
                 }
             }
             else {
                 if (pathShape is MoveTo) {
-                    zOperator = new ClosePath();
+                    zOperator = new ClosePath(pathShape.IsRelative());
                     if (shapeCoordinates != null && shapeCoordinates.Length != MOVETOARGUMENTNR) {
                         LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATH_WRONG_NUMBER_OF_ARGUMENTS, pathProperties[
                             0], shapeCoordinates.Length, MOVETOARGUMENTNR, MOVETOARGUMENTNR));
                     }
-                    zOperator.SetCoordinates(shapeCoordinates);
+                    zOperator.SetCoordinates(shapeCoordinates, currentPoint);
                 }
             }
             if (pathShape != null) {
                 if (shapeCoordinates != null) {
-                    pathShape.SetCoordinates(shapeCoordinates);
+                    // Cast will be removed when the method is introduced in the interface
+                    pathShape.SetCoordinates(shapeCoordinates, currentPoint);
                 }
                 currentPoint = pathShape.GetEndingPoint();
                 // unsupported operators are ignored.

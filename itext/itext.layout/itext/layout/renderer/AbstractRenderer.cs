@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -54,6 +55,7 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -487,13 +489,17 @@ namespace iText.Layout.Renderer {
                             (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
                             ();
                     }
-                    if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                    if (backgroundImage != null && backgroundImage.IsBackgroundSpecified()) {
                         if (!backgroundAreaIsClipped) {
                             backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                         }
                         ApplyBorderBox(backgroundArea, false);
-                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
-                            GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                        PdfXObject backgroundXObject = backgroundImage.GetImage();
+                        if (backgroundXObject == null) {
+                            backgroundXObject = backgroundImage.GetForm();
+                        }
+                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject
+                            .GetHeight(), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
@@ -509,7 +515,7 @@ namespace iText.Layout.Renderer {
                             do {
                                 imageRectangle.SetX(initialX);
                                 do {
-                                    drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
+                                    drawContext.GetCanvas().AddXObject(backgroundXObject, imageRectangle);
                                     imageRectangle.MoveRight(imageRectangle.GetWidth());
                                 }
                                 while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
@@ -530,12 +536,29 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {
+            return ClipArea(drawContext, outerBorderBox, true, true, false, true);
+        }
+
+        protected internal virtual bool ClipBackgroundArea(DrawContext drawContext, Rectangle outerBorderBox) {
+            return ClipArea(drawContext, outerBorderBox, true, false, false, false);
+        }
+
+        protected internal virtual bool ClipBackgroundArea(DrawContext drawContext, Rectangle outerBorderBox, bool
+             considerBordersBeforeClipping) {
+            return ClipArea(drawContext, outerBorderBox, true, false, considerBordersBeforeClipping, false);
+        }
+
+        private bool ClipArea(DrawContext drawContext, Rectangle outerBorderBox, bool clipOuter, bool clipInner, bool
+             considerBordersBeforeOuterClipping, bool considerBordersBeforeInnerClipping) {
+            // border widths should be considered only once
+            System.Diagnostics.Debug.Assert(false == considerBordersBeforeOuterClipping || false == considerBordersBeforeInnerClipping
+                );
             double curv = 0.4477f;
+            // border widths
+            float[] borderWidths = new float[] { 0, 0, 0, 0 };
             // outer box
-            float top = outerBorderBox.GetTop();
-            float right = outerBorderBox.GetRight();
-            float bottom = outerBorderBox.GetBottom();
-            float left = outerBorderBox.GetLeft();
+            float[] outerBox = new float[] { outerBorderBox.GetTop(), outerBorderBox.GetRight(), outerBorderBox.GetBottom
+                (), outerBorderBox.GetLeft() };
             // radii
             bool hasNotNullRadius = false;
             BorderRadius[] borderRadii = GetBorderRadii();
@@ -550,198 +573,185 @@ namespace iText.Layout.Renderer {
             }
             if (hasNotNullRadius) {
                 // coordinates of corner centers
-                float x1 = left + horizontalRadii[0];
-                float y1 = top - verticalRadii[0];
-                float x2 = right - horizontalRadii[1];
-                float y2 = top - verticalRadii[1];
-                float x3 = right - horizontalRadii[2];
-                float y3 = bottom + verticalRadii[2];
-                float x4 = left + horizontalRadii[3];
-                float y4 = bottom + verticalRadii[3];
+                float[] cornersX = new float[] { outerBox[3] + horizontalRadii[0], outerBox[1] - horizontalRadii[1], outerBox
+                    [1] - horizontalRadii[2], outerBox[3] + horizontalRadii[3] };
+                float[] cornersY = new float[] { outerBox[0] - verticalRadii[0], outerBox[0] - verticalRadii[1], outerBox[
+                    2] + verticalRadii[2], outerBox[2] + verticalRadii[3] };
                 PdfCanvas canvas = drawContext.GetCanvas();
                 canvas.SaveState();
+                if (considerBordersBeforeOuterClipping) {
+                    borderWidths = DecreaseBorderRadiiWithBorders(horizontalRadii, verticalRadii, outerBox, cornersX, cornersY
+                        );
+                }
                 // clip border area outside
-                // left top corner
-                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
-                    canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
-                        [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
-                    canvas.Clip().NewPath();
+                if (clipOuter) {
+                    ClipOuterArea(canvas, curv, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY);
                 }
-                // right top corner
-                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
-                    canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
-                        [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
-                    canvas.Clip().NewPath();
-                }
-                // right bottom corner
-                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
-                    canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
-                        [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
-                    canvas.Clip().NewPath();
-                }
-                // left bottom corner
-                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
-                    canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
-                         verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
-                    canvas.Clip().NewPath();
-                }
-                // we've clipped border area outside, now let's focus on inner box and clip in inside
-                Border[] borders = GetBorders();
-                float topBorderWidth = 0;
-                float rightBorderWidth = 0;
-                float bottomBorderWidth = 0;
-                float leftBorderWidth = 0;
-                if (borders[0] != null) {
-                    topBorderWidth = borders[0].GetWidth();
-                    top -= borders[0].GetWidth();
-                    if (y2 > top) {
-                        y2 = top;
-                    }
-                    if (y1 > top) {
-                        y1 = top;
-                    }
-                    verticalRadii[0] = Math.Max(0, verticalRadii[0] - borders[0].GetWidth());
-                    verticalRadii[1] = Math.Max(0, verticalRadii[1] - borders[0].GetWidth());
-                }
-                if (borders[1] != null) {
-                    rightBorderWidth = borders[1].GetWidth();
-                    right -= borders[1].GetWidth();
-                    if (x2 > right) {
-                        x2 = right;
-                    }
-                    if (x3 > right) {
-                        x3 = right;
-                    }
-                    horizontalRadii[1] = Math.Max(0, horizontalRadii[1] - borders[1].GetWidth());
-                    horizontalRadii[2] = Math.Max(0, horizontalRadii[2] - borders[1].GetWidth());
-                }
-                if (borders[2] != null) {
-                    bottomBorderWidth = borders[2].GetWidth();
-                    bottom += borders[2].GetWidth();
-                    if (y3 < bottom) {
-                        y3 = top;
-                    }
-                    if (y4 < bottom) {
-                        y4 = bottom;
-                    }
-                    verticalRadii[2] = Math.Max(0, verticalRadii[2] - borders[2].GetWidth());
-                    verticalRadii[3] = Math.Max(0, verticalRadii[3] - borders[2].GetWidth());
-                }
-                if (borders[3] != null) {
-                    leftBorderWidth = borders[3].GetWidth();
-                    left += borders[3].GetWidth();
-                    if (x4 < left) {
-                        x4 = left;
-                    }
-                    if (x1 < left) {
-                        x1 = left;
-                    }
-                    horizontalRadii[3] = Math.Max(0, horizontalRadii[3] - borders[3].GetWidth());
-                    horizontalRadii[0] = Math.Max(0, horizontalRadii[0] - borders[3].GetWidth());
+                if (considerBordersBeforeInnerClipping) {
+                    borderWidths = DecreaseBorderRadiiWithBorders(horizontalRadii, verticalRadii, outerBox, cornersX, cornersY
+                        );
                 }
                 // clip border area inside
-                // left top corner
-                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
-                    canvas.MoveTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii[0] * curv, top, x1
-                        , top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo
-                        (left, y4).LineTo(left, y1).LineTo(left - leftBorderWidth, y1).LineTo(left - leftBorderWidth, bottom -
-                         bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
-                        , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
-                        , y1);
-                    canvas.Clip().NewPath();
-                }
-                // right top corner
-                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
-                    canvas.MoveTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii[1] * curv, right
-                        , y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo
-                        (x1, top).LineTo(x2, top).LineTo(x2, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
-                        ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom -
-                         bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(x2, top + topBorderWidth
-                        );
-                    canvas.Clip().NewPath();
-                }
-                // right bottom corner
-                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
-                    canvas.MoveTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii[2] * curv, bottom
-                        , x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo
-                        (right, y2).LineTo(right, y3).LineTo(right + rightBorderWidth, y3).LineTo(right + rightBorderWidth, top
-                         + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, 
-                        bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right 
-                        + rightBorderWidth, y3);
-                    canvas.Clip().NewPath();
-                }
-                // left bottom corner
-                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
-                    canvas.MoveTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 - verticalRadii[3] * curv
-                        , left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo
-                        (x3, bottom).LineTo(x4, bottom).LineTo(x4, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
-                        , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
-                        , top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x4, bottom -
-                         bottomBorderWidth);
-                    canvas.Clip().NewPath();
+                if (clipInner) {
+                    ClipInnerArea(canvas, curv, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY, borderWidths);
                 }
             }
             return hasNotNullRadius;
         }
 
-        protected internal virtual bool ClipBackgroundArea(DrawContext drawContext, Rectangle outerBorderBox) {
-            double curv = 0.4477f;
-            // outer box
-            float top = outerBorderBox.GetTop();
-            float right = outerBorderBox.GetRight();
-            float bottom = outerBorderBox.GetBottom();
-            float left = outerBorderBox.GetLeft();
-            // radii
-            bool hasNotNullRadius = false;
-            BorderRadius[] borderRadii = GetBorderRadii();
-            float[] verticalRadii = CalculateRadii(borderRadii, outerBorderBox, false);
-            float[] horizontalRadii = CalculateRadii(borderRadii, outerBorderBox, true);
-            for (int i = 0; i < 4; i++) {
-                verticalRadii[i] = Math.Min(verticalRadii[i], outerBorderBox.GetHeight() / 2);
-                horizontalRadii[i] = Math.Min(horizontalRadii[i], outerBorderBox.GetWidth() / 2);
-                if (!hasNotNullRadius && (0 != verticalRadii[i] || 0 != horizontalRadii[i])) {
-                    hasNotNullRadius = true;
-                }
+        private void ClipOuterArea(PdfCanvas canvas, double curv, float[] horizontalRadii, float[] verticalRadii, 
+            float[] outerBox, float[] cornersX, float[] cornersY) {
+            float top = outerBox[0];
+            float right = outerBox[1];
+            float bottom = outerBox[2];
+            float left = outerBox[3];
+            float x1 = cornersX[0];
+            float y1 = cornersY[0];
+            float x2 = cornersX[1];
+            float y2 = cornersY[1];
+            float x3 = cornersX[2];
+            float y3 = cornersY[2];
+            float x4 = cornersX[3];
+            float y4 = cornersY[3];
+            // left top corner
+            if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
+                    [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                canvas.Clip().NewPath();
             }
-            if (hasNotNullRadius) {
-                // radius border bbox
-                float x1 = left + horizontalRadii[0];
-                float y1 = top - verticalRadii[0];
-                float x2 = right - horizontalRadii[1];
-                float y2 = top - verticalRadii[1];
-                float x3 = right - horizontalRadii[2];
-                float y3 = bottom + verticalRadii[2];
-                float x4 = left + horizontalRadii[3];
-                float y4 = bottom + verticalRadii[3];
-                PdfCanvas canvas = drawContext.GetCanvas();
-                canvas.SaveState();
-                // clip backgrouund area outside
-                // left top corner
-                if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
-                    canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
-                        [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
-                    canvas.Clip().NewPath();
-                }
-                // right top corner
-                if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
-                    canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
-                        [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
-                    canvas.Clip().NewPath();
-                }
-                // right bottom corner
-                if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
-                    canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
-                        [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
-                    canvas.Clip().NewPath();
-                }
-                // left bottom corner
-                if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
-                    canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
-                         verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
-                    canvas.Clip().NewPath();
-                }
+            // right top corner
+            if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
+                    [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                canvas.Clip().NewPath();
             }
-            return hasNotNullRadius;
+            // right bottom corner
+            if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
+                    [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                canvas.Clip().NewPath();
+            }
+            // left bottom corner
+            if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
+                     verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                canvas.Clip().NewPath();
+            }
+        }
+
+        private void ClipInnerArea(PdfCanvas canvas, double curv, float[] horizontalRadii, float[] verticalRadii, 
+            float[] outerBox, float[] cornersX, float[] cornersY, float[] borderWidths) {
+            float top = outerBox[0];
+            float right = outerBox[1];
+            float bottom = outerBox[2];
+            float left = outerBox[3];
+            float x1 = cornersX[0];
+            float y1 = cornersY[0];
+            float x2 = cornersX[1];
+            float y2 = cornersY[1];
+            float x3 = cornersX[2];
+            float y3 = cornersY[2];
+            float x4 = cornersX[3];
+            float y4 = cornersY[3];
+            float topBorderWidth = borderWidths[0];
+            float rightBorderWidth = borderWidths[1];
+            float bottomBorderWidth = borderWidths[2];
+            float leftBorderWidth = borderWidths[3];
+            // left top corner
+            if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
+                canvas.MoveTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii[0] * curv, top, x1
+                    , top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo
+                    (left, y4).LineTo(left, y1).LineTo(left - leftBorderWidth, y1).LineTo(left - leftBorderWidth, bottom -
+                     bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
+                    , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                    , y1);
+                canvas.Clip().NewPath();
+            }
+            // right top corner
+            if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
+                canvas.MoveTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii[1] * curv, right
+                    , y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo
+                    (x1, top).LineTo(x2, top).LineTo(x2, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
+                    ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom -
+                     bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(x2, top + topBorderWidth
+                    );
+                canvas.Clip().NewPath();
+            }
+            // right bottom corner
+            if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
+                canvas.MoveTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii[2] * curv, bottom
+                    , x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo
+                    (right, y2).LineTo(right, y3).LineTo(right + rightBorderWidth, y3).LineTo(right + rightBorderWidth, top
+                     + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, 
+                    bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right 
+                    + rightBorderWidth, y3);
+                canvas.Clip().NewPath();
+            }
+            // left bottom corner
+            if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
+                canvas.MoveTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 - verticalRadii[3] * curv
+                    , left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo
+                    (x3, bottom).LineTo(x4, bottom).LineTo(x4, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
+                    , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                    , top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x4, bottom -
+                     bottomBorderWidth);
+                canvas.Clip().NewPath();
+            }
+        }
+
+        private float[] DecreaseBorderRadiiWithBorders(float[] horizontalRadii, float[] verticalRadii, float[] outerBox
+            , float[] cornersX, float[] cornersY) {
+            Border[] borders = GetBorders();
+            float[] borderWidths = new float[] { 0, 0, 0, 0 };
+            if (borders[0] != null) {
+                borderWidths[0] = borders[0].GetWidth();
+                outerBox[0] -= borders[0].GetWidth();
+                if (cornersY[1] > outerBox[0]) {
+                    cornersY[1] = outerBox[0];
+                }
+                if (cornersY[0] > outerBox[0]) {
+                    cornersY[0] = outerBox[0];
+                }
+                verticalRadii[0] = Math.Max(0, verticalRadii[0] - borders[0].GetWidth());
+                verticalRadii[1] = Math.Max(0, verticalRadii[1] - borders[0].GetWidth());
+            }
+            if (borders[1] != null) {
+                borderWidths[1] = borders[1].GetWidth();
+                outerBox[1] -= borders[1].GetWidth();
+                if (cornersX[1] > outerBox[1]) {
+                    cornersX[1] = outerBox[1];
+                }
+                if (cornersX[2] > outerBox[1]) {
+                    cornersX[2] = outerBox[1];
+                }
+                horizontalRadii[1] = Math.Max(0, horizontalRadii[1] - borders[1].GetWidth());
+                horizontalRadii[2] = Math.Max(0, horizontalRadii[2] - borders[1].GetWidth());
+            }
+            if (borders[2] != null) {
+                borderWidths[2] = borders[2].GetWidth();
+                outerBox[2] += borders[2].GetWidth();
+                if (cornersY[2] < outerBox[2]) {
+                    cornersY[2] = outerBox[2];
+                }
+                if (cornersY[3] < outerBox[2]) {
+                    cornersY[3] = outerBox[2];
+                }
+                verticalRadii[2] = Math.Max(0, verticalRadii[2] - borders[2].GetWidth());
+                verticalRadii[3] = Math.Max(0, verticalRadii[3] - borders[2].GetWidth());
+            }
+            if (borders[3] != null) {
+                borderWidths[3] = borders[3].GetWidth();
+                outerBox[3] += borders[3].GetWidth();
+                if (cornersX[3] < outerBox[3]) {
+                    cornersX[3] = outerBox[3];
+                }
+                if (cornersX[0] < outerBox[3]) {
+                    cornersX[0] = outerBox[3];
+                }
+                horizontalRadii[3] = Math.Max(0, horizontalRadii[3] - borders[3].GetWidth());
+                horizontalRadii[0] = Math.Max(0, horizontalRadii[0] - borders[3].GetWidth());
+            }
+            return borderWidths;
         }
 
         /// <summary>
@@ -1650,8 +1660,16 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyDestination(PdfDocument document) {
             String destination = this.GetProperty<String>(Property.DESTINATION);
             if (destination != null) {
+                int pageNumber = occupiedArea.GetPageNumber();
+                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    String logMessageArg = "Property.DESTINATION, which specifies this element location as destination, see ElementPropertyContainer.setDestination.";
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                        , logMessageArg));
+                    return;
+                }
                 PdfArray array = new PdfArray();
-                array.Add(document.GetPage(occupiedArea.GetPageNumber()).GetPdfObject());
+                array.Add(document.GetPage(pageNumber).GetPdfObject());
                 array.Add(PdfName.XYZ);
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
@@ -1683,13 +1701,21 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
+                int pageNumber = occupiedArea.GetPageNumber();
+                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                        , logMessageArg));
+                    return;
+                }
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
                 if (linkAnnotation.GetPage() != null) {
                     PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
                     linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
                 }
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
-                PdfPage page = document.GetPage(occupiedArea.GetPageNumber());
+                PdfPage page = document.GetPage(pageNumber);
                 page.AddAnnotation(linkAnnotation);
             }
         }
@@ -1814,7 +1840,7 @@ namespace iText.Layout.Renderer {
         }
 
         // If parent has no resolved height, relative height declarations can be ignored
-        protected internal virtual MinMaxWidth GetMinMaxWidth() {
+        public virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
 
@@ -2180,17 +2206,24 @@ namespace iText.Layout.Renderer {
                 return (PdfFont)font;
             }
             else {
-                if (font is String) {
+                if (font is String || font is String[]) {
+                    if (font is String) {
+                        // TODO remove this if-clause before 7.2
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
+                            );
+                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
+                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
+                    }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
-                            );
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return ResolveFirstPdfFont((String)font, provider, fc);
+                    return ResolveFirstPdfFont((String[])font, provider, fc);
                 }
                 else {
-                    throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
+                    throw new InvalidOperationException("String[] or PdfFont expected as value of FONT property");
                 }
             }
         }
@@ -2200,9 +2233,8 @@ namespace iText.Layout.Renderer {
         // This method is intended to be called from previous method that deals with Font Property.
         // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         // TODO this mechanism does not take text into account
-        internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
-                ());
+        internal virtual PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc) {
+            return provider.GetPdfFont(provider.GetFontSelector(JavaUtil.ArraysAsList(font), fc).BestMatch());
         }
 
         internal static Border[] GetBorders(IRenderer renderer) {

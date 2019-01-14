@@ -39,6 +39,7 @@
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdfa\itext.pdfa.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.netstandard.csproj" />
+    <ProjectReference Include="..\..\itext\itext.forms\itext.forms.netstandard.csproj" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -103,6 +103,10 @@ namespace iText.Layout.Renderer {
             CalculateImageDimensions(layoutBox, t, xObject);
             OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
                 ) : OverflowPropertyValue.FIT;
+            bool nowrap = false;
+            if (parent is LineRenderer) {
+                nowrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
+            }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, layoutBox
                 );
@@ -123,7 +127,7 @@ namespace iText.Layout.Renderer {
             OverflowPropertyValue? overflowY = null == parent || ((null == declaredMaxHeight || declaredMaxHeight > layoutBox
                 .GetHeight()) && !layoutContext.IsClippedHeight()) ? OverflowPropertyValue.FIT : parent.GetProperty<OverflowPropertyValue?
                 >(Property.OVERFLOW_Y);
-            bool processOverflowX = !IsOverflowFit(overflowX);
+            bool processOverflowX = !IsOverflowFit(overflowX) || nowrap;
             bool processOverflowY = !IsOverflowFit(overflowY);
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutBox);
@@ -161,6 +165,8 @@ namespace iText.Layout.Renderer {
                     isPlacingForced = true;
                 }
                 else {
+                    ApplyMargins(initialOccupiedAreaBBox, true);
+                    ApplyBorderBox(initialOccupiedAreaBBox, true);
                     occupiedArea.GetBBox().SetHeight(initialOccupiedAreaBBox.GetHeight());
                     return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
@@ -223,17 +229,9 @@ namespace iText.Layout.Renderer {
                     "Drawing won't be performed."));
                 return;
             }
-            ApplyMargins(occupiedArea.GetBBox(), false);
-            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
-            }
-            if (fixedYPosition == null) {
-                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
-            }
-            if (fixedXPosition == null) {
-                fixedXPosition = occupiedArea.GetBBox().GetX();
             }
             bool isTagged = drawContext.IsTaggingEnabled();
             LayoutTaggingHelper taggingHelper = null;
@@ -258,13 +256,23 @@ namespace iText.Layout.Renderer {
             BeginTransformationIfApplied(drawContext.GetCanvas());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                fixedXPosition += rotatedDeltaX;
-                fixedYPosition -= rotatedDeltaY;
                 drawContext.GetCanvas().SaveState();
                 ApplyConcatMatrix(drawContext, angle);
             }
             base.Draw(drawContext);
+            bool clipImageInAViewOfBorderRadius = ClipBackgroundArea(drawContext, ApplyMargins(GetOccupiedAreaBBox(), 
+                false), true);
+            ApplyMargins(occupiedArea.GetBBox(), false);
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
+            if (fixedYPosition == null) {
+                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
+            }
+            if (fixedXPosition == null) {
+                fixedXPosition = occupiedArea.GetBBox().GetX();
+            }
             if (angle != null) {
+                fixedXPosition += rotatedDeltaX;
+                fixedYPosition -= rotatedDeltaY;
                 drawContext.GetCanvas().RestoreState();
             }
             PdfCanvas canvas = drawContext.GetCanvas();
@@ -287,6 +295,9 @@ namespace iText.Layout.Renderer {
             }
             if (isTagged) {
                 canvas.CloseTag();
+            }
+            if (clipImageInAViewOfBorderRadius) {
+                canvas.RestoreState();
             }
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(true);
@@ -333,7 +344,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))))).GetMinMaxWidth();
         }

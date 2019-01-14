@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,40 +41,55 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.Svg;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Exceptions;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(L) attribute of SVG's path element</summary>
     public class LineTo : AbstractPathShape {
+        protected internal String[][] coordinates;
+
         public LineTo()
             : this(false) {
         }
 
         public LineTo(bool relative) {
+            // (x y)+
             base.relative = relative;
         }
 
         public override void Draw(PdfCanvas canvas) {
-            canvas.LineTo(GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
-                .Y));
+            for (int i = 0; i < coordinates.Length; i++) {
+                float x = CssUtils.ParseAbsoluteLength(coordinates[i][0]);
+                float y = CssUtils.ParseAbsoluteLength(coordinates[i][1]);
+                canvas.LineTo(x, y);
+            }
         }
 
-        public override void SetCoordinates(String[] coordinates) {
-            IDictionary<String, String> map = new Dictionary<String, String>();
-            map.Put(SvgConstants.Attributes.X, coordinates.Length > 0 && !String.IsNullOrEmpty(coordinates[0]) ? coordinates
-                [0] : "0");
-            map.Put(SvgConstants.Attributes.Y, coordinates.Length > 1 && !String.IsNullOrEmpty(coordinates[1]) ? coordinates
-                [1] : "0");
-            SetProperties(map);
+        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+            if (coordinates.Length == 0 || coordinates.Length % 2 != 0) {
+                throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
+                    , JavaUtil.ArraysToString(coordinates)));
+            }
+            this.coordinates = new String[coordinates.Length / 2][];
+            double[] initialPoint = new double[] { startPoint.GetX(), startPoint.GetY() };
+            for (int i = 0; i < coordinates.Length; i += 2) {
+                String[] curCoordinates = new String[] { coordinates[i], coordinates[i + 1] };
+                if (IsRelative()) {
+                    curCoordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(curCoordinates, initialPoint);
+                    initialPoint[0] = (float)CssUtils.ParseFloat(curCoordinates[0]);
+                    initialPoint[1] = (float)CssUtils.ParseFloat(curCoordinates[1]);
+                }
+                this.coordinates[i / 2] = curCoordinates;
+            }
         }
 
         public override Point GetEndingPoint() {
-            float x = GetSvgCoordinate(properties, SvgConstants.Attributes.X);
-            float y = GetSvgCoordinate(properties, SvgConstants.Attributes.Y);
-            return new Point(x, y);
+            return CreatePoint(coordinates[coordinates.Length - 1][0], coordinates[coordinates.Length - 1][1]);
         }
     }
 }

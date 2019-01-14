@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,14 @@ namespace iText.Layout.Element {
         public ListItem(String text)
             : this() {
             Add(new Paragraph(text).SetMarginTop(0).SetMarginBottom(0));
+        }
+
+        /// <summary>Customizes the index of the item in the list.</summary>
+        /// <param name="ordinalValue">the custom value property of an ordered list's list item.</param>
+        /// <returns>this listItem.</returns>
+        public virtual iText.Layout.Element.ListItem SetListSymbolOrdinalValue(int ordinalValue) {
+            SetProperty(Property.LIST_SYMBOL_ORDINAL_VALUE, ordinalValue);
+            return this;
         }
 
         /// <summary>Creates a list item with an image.</summary>

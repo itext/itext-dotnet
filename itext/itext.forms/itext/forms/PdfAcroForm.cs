@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -760,8 +760,9 @@ namespace iText.Forms {
                             }
                         }
                     }
-                    // Subtype is required key, if there is no Subtype it is invalid XObject. DEVSIX-725
-                    if (xObject != null && xObject.GetPdfObject().Get(PdfName.Subtype) != null) {
+                    if (xObject != null) {
+                        //subtype is required field for FormXObject, but can be omitted in normal appearance.
+                        xObject.Put(PdfName.Subtype, PdfName.Form);
                         Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
                             throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);

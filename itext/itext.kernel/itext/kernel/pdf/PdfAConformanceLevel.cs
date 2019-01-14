@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -72,9 +72,9 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_3U = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("3", "U");
 
-        private String conformance;
+        private readonly String conformance;
 
-        private String part;
+        private readonly String part;
 
         private PdfAConformanceLevel(String part, String conformance) {
             this.conformance = conformance;

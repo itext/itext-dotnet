@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,12 +40,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(H) attribute of SVG's path element</summary>
-    public class HorizontalLineTo : OneDimensionalLineTo {
+    public class HorizontalLineTo : LineTo {
         /// <summary>Creates an absolute Horizontal LineTo.</summary>
         public HorizontalLineTo()
             : this(false) {
@@ -54,24 +55,18 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Creates a Horizontal LineTo.</summary>
         /// <remarks>Creates a Horizontal LineTo. Set argument to true to create a relative HorizontalLineTo.</remarks>
         /// <param name="relative">whether this is a relative HorizontalLineTo or not</param>
-        public HorizontalLineTo(bool relative) {
-            base.relative = relative;
+        public HorizontalLineTo(bool relative)
+            : base(relative) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            float minX = GetCoordinate(properties, MINIMUM_CHANGING_DIMENSION_VALUE);
-            float maxX = GetCoordinate(properties, MAXIMUM_CHANGING_DIMENSION_VALUE);
-            float endX = GetCoordinate(properties, ENDING_CHANGING_DIMENSION_VALUE);
-            float y = GetCoordinate(properties, CURRENT_NONCHANGING_DIMENSION_VALUE);
-            canvas.LineTo(maxX, y);
-            canvas.LineTo(minX, y);
-            canvas.LineTo(endX, y);
-        }
-
-        public override Point GetEndingPoint() {
-            float y = GetSvgCoordinate(properties, CURRENT_NONCHANGING_DIMENSION_VALUE);
-            float x = GetSvgCoordinate(properties, ENDING_CHANGING_DIMENSION_VALUE);
-            return new Point(x, y);
+        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+            String[] normalizedCoords = new String[coordinates.Length * 2];
+            // An H or h command is equivalent to an L or l command with 0 specified for the y coordinate.
+            for (int i = 0; i < coordinates.Length; i++) {
+                normalizedCoords[i * 2] = coordinates[i];
+                normalizedCoords[i * 2 + 1] = IsRelative() ? "0" : SvgCssUtils.ConvertDoubleToString(startPoint.GetY());
+            }
+            base.SetCoordinates(normalizedCoords, startPoint);
         }
     }
 }

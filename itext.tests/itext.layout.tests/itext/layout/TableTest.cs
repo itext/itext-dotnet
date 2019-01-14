@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -871,21 +871,6 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
-        }
-
-        private class RotatedDocumentRenderer : DocumentRenderer {
-            private readonly PdfDocument pdfDoc;
-
-            public RotatedDocumentRenderer(Document doc, PdfDocument pdfDoc)
-                : base(doc) {
-                this.pdfDoc = pdfDoc;
-            }
-
-            protected internal override PageSize AddNewPage(PageSize customPageSize) {
-                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
-                pdfDoc.AddNewPage(pageSize);
-                return pageSize;
-            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -2264,6 +2249,305 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TaggedTableWithCaptionTest01() {
+            String testName = "taggedTableWithCaptionTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetTagged();
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.SEPARATE, new Style
+                ().SetBorder(new SolidBorder(ColorConstants.RED, 10)));
+            Paragraph pCaption = new Paragraph("I'm a caption!").SetBackgroundColor(ColorConstants.CYAN);
+            table.SetCaption(new Div().Add(pCaption));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WideCaptionTest01() {
+            String testName = "wideCaptionTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 3, 3, 3, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
+                ().SetBorder(new SolidBorder(ColorConstants.RED, 10)));
+            // no caption
+            AddTable(table, true, true, doc);
+            // the caption as a paragraph
+            Paragraph pCaption = new Paragraph("I'm a caption!").SetBackgroundColor(ColorConstants.CYAN);
+            table.SetCaption(new Div().Add(pCaption).SetWidth(500));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a div
+            Div divCaption = new Div().Add(pCaption).Add(pCaption).Add(pCaption).SetBackgroundColor(ColorConstants.MAGENTA
+                ).SetWidth(500);
+            table.SetCaption(divCaption).SetWidth(500);
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a table
+            Table tableCaption = CreateTestTable(1, 1, 0, 0, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new 
+                Style().SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBackgroundColor(ColorConstants.YELLOW))
+                .SetWidth(500);
+            table.SetCaption(new Div().Add(tableCaption).SetWidth(500));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SplitTableWithCaptionTest01() {
+            String testName = "splitTableWithCaptionTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 30, 3, 3, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
+                ().SetBorder(new SolidBorder(ColorConstants.RED, 10)));
+            table.GetFooter().SetBorder(new SolidBorder(ColorConstants.ORANGE, 20));
+            table.GetHeader().SetBorder(new SolidBorder(ColorConstants.ORANGE, 20));
+            Paragraph pCaption = new Paragraph("I'm a caption!").SetBackgroundColor(ColorConstants.CYAN);
+            // no caption
+            AddTable(table, true, true, doc);
+            // top caption
+            table.SetCaption(new Div().Add(pCaption));
+            AddTable(table, true, true, doc);
+            // bottom caption
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CaptionedTableOfOnePageWithCollapsedBordersTest01() {
+            String testName = "captionedTableOfOnePageWithCollapsedBordersTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
+                ().SetBorder(new SolidBorder(ColorConstants.RED, 10)));
+            table.GetHeader().SetBorder(new SolidBorder(ColorConstants.ORANGE, 5f));
+            table.GetFooter().SetBorder(new SolidBorder(ColorConstants.ORANGE, 5f));
+            // no caption
+            AddTable(table, true, true, doc);
+            // the caption as a paragraph
+            Paragraph pCaption = new Paragraph("I'm a caption!").SetBackgroundColor(ColorConstants.CYAN);
+            table.SetCaption(new Div().Add(pCaption));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a div
+            Div divCaption = new Div().Add(pCaption).Add(pCaption).Add(pCaption).SetBackgroundColor(ColorConstants.MAGENTA
+                );
+            table.SetCaption(divCaption);
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a table
+            Table tableCaption = CreateTestTable(1, 1, 0, 0, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new 
+                Style().SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBackgroundColor(ColorConstants.YELLOW));
+            table.SetCaption(new Div().Add(tableCaption));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CaptionedTableOfOnePageWithSeparatedBordersTest01() {
+            String testName = "captionedTableOfOnePageWithSeparatedBordersTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.SEPARATE, new Style
+                ().SetBorder(new SolidBorder(ColorConstants.RED, 10)));
+            // no caption
+            AddTable(table, true, true, doc);
+            // the caption as a paragraph
+            Paragraph pCaption = new Paragraph("I'm a caption!").SetBackgroundColor(ColorConstants.CYAN);
+            table.SetCaption(new Div().Add(pCaption));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a div
+            Div divCaption = new Div().Add(pCaption).Add(pCaption).Add(pCaption).SetBackgroundColor(ColorConstants.MAGENTA
+                );
+            table.SetCaption(divCaption);
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            // the caption as a table
+            Table tableCaption = CreateTestTable(1, 1, 0, 0, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new 
+                Style().SetBorder(new SolidBorder(ColorConstants.BLUE, 10)).SetBackgroundColor(ColorConstants.YELLOW));
+            table.SetCaption(new Div().Add(tableCaption));
+            AddTable(table, true, true, doc);
+            table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        private void AddTable(Table table, bool addParagraphBefore, bool addParagraphAfter, Document doc) {
+            if (addParagraphBefore) {
+                doc.Add(new Paragraph("I'm the paragraph placed before the table. I'm green and have no border.").SetBackgroundColor
+                    (ColorConstants.GREEN));
+            }
+            doc.Add(table);
+            if (addParagraphAfter) {
+                doc.Add(new Paragraph("I'm the paragraph placed after the table. I'm green and have no border.").SetBackgroundColor
+                    (ColorConstants.GREEN));
+            }
+            doc.Add(new AreaBreak());
+        }
+
+        private Table CreateTestTable(int colNum, int bodyRowNum, int headerRowNum, int footerRowNum, UnitValue width
+            , BorderCollapsePropertyValue collapseValue, Style style) {
+            Table table = new Table(colNum);
+            if (null != width) {
+                table.SetWidth(width);
+            }
+            if (null != style) {
+                table.AddStyle(style);
+            }
+            if (BorderCollapsePropertyValue.SEPARATE.Equals(collapseValue)) {
+                table.SetBorderCollapse(collapseValue);
+            }
+            for (int i = 0; i < bodyRowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    table.AddCell("Body Cell row " + i + " col " + j);
+                }
+            }
+            for (int i = 0; i < headerRowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    table.AddHeaderCell("Header Cell row " + i + " col " + j);
+                }
+            }
+            for (int i = 0; i < footerRowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    table.AddFooterCell("Footer Cell row " + i + " col " + j);
+                }
+            }
+            return table;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastFooterAndProcessBigRowspanTest01() {
+            String testName = "skipLastFooterAndProcessBigRowspanTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595, 140));
+            Table table = new Table(2);
+            table.SetSkipLastFooter(true);
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Footer")));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph(JavaUtil.IntegerToString(1))));
+            for (int z = 0; z < 3; z++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(z))));
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastFooterAndProcessBigRowspanTest02() {
+            String testName = "skipLastFooterAndProcessBigRowspanTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            int numRows = 3;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(numRows);
+            table.SetSkipLastFooter(true);
+            table.AddHeaderCell(new Cell(1, numRows).Add(new Paragraph("Header")));
+            table.AddFooterCell(new Cell(1, numRows).Add(new Paragraph("Footer")));
+            for (int rows = 0; rows < 11; rows++) {
+                table.AddCell(new Cell(numRows, 1).Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", 0"
+                    )));
+                int numFillerCells = (numRows - 1) * numRows;
+                //Number of cells to complete the table rows filling up to the cell of colSpan
+                for (int cells = 0; cells < numFillerCells; cells++) {
+                    table.AddCell(new Cell().Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", " + JavaUtil.IntegerToString
+                        (cells))));
+                }
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastFooterOnShortPageTest01() {
+            String testName = "skipLastFooterOnShortPageTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595, 120));
+            Table table = new Table(2);
+            table.SetSkipLastFooter(true);
+            table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Footer")));
+            for (int z = 0; z < 2; z++) {
+                for (int i = 0; i < 2; i++) {
+                    table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(z))));
+                }
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        private class RotatedDocumentRenderer : DocumentRenderer {
+            private readonly PdfDocument pdfDoc;
+
+            public RotatedDocumentRenderer(Document doc, PdfDocument pdfDoc)
+                : base(doc) {
+                this.pdfDoc = pdfDoc;
+            }
+
+            protected internal override PageSize AddNewPage(PageSize customPageSize) {
+                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
+                pdfDoc.AddNewPage(pageSize);
+                return pageSize;
+            }
         }
 
         internal class CustomRenderer : TableRenderer {

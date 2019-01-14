@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2018 iText Group NV
+    Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,6 +49,10 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Split css font-family string into list of font-families or generic-families
     /// </summary>
+    /// <depricated>
+    /// Will be removed in iText 7.2.
+    /// </depricated>
+    [Obsolete]
     public sealed class FontFamilySplitter {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
 

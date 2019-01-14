@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
+using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -74,7 +76,42 @@ namespace iText.Layout {
         /// </summary>
         protected internal PdfPage page;
 
-        /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
+        private bool isCanvasOfPage;
+
+        /// <summary>Creates a new Canvas to manipulate a specific page content stream.</summary>
+        /// <remarks>
+        /// Creates a new Canvas to manipulate a specific page content stream. The given page shall not be flushed:
+        /// drawing on flushed pages is impossible because their content is already written to the output stream.
+        /// Use this constructor to be able to add
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// elements on it
+        /// (using any other constructor would result in inability to add PDF annotations, based on which, for example, links work).
+        /// <p>
+        /// If the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.IsTagged()"/>
+        /// is true, using this constructor would automatically enable
+        /// the tagging for the content. Regarding tagging the effect is the same as using
+        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>
+        /// .
+        /// </remarks>
+        /// <param name="page">
+        /// the page on which this canvas will be rendered, shall not be flushed (see
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.IsFlushed()"/>
+        /// ).
+        /// </param>
+        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        public Canvas(PdfPage page, Rectangle rootArea)
+            : this(InitPdfCanvasOrThrowIfPageIsFlushed(page), page.GetDocument(), rootArea) {
+            this.EnableAutoTagging(page);
+            this.isCanvasOfPage = true;
+        }
+
+        /// <summary>
+        /// Creates a new Canvas to manipulate a specific document and content stream, which might be for example a page
+        /// or
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// stream.
+        /// </summary>
         /// <param name="pdfCanvas">the low-level content stream writer</param>
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
@@ -142,8 +179,12 @@ namespace iText.Layout {
             this.rootRenderer = canvasRenderer;
         }
 
-        /// <summary>Returned value is not null only in case when autotagging is enabled.</summary>
-        /// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.</returns>
+        /// <summary>The page on which this canvas will be rendered.</summary>
+        /// <returns>
+        /// the specified
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// instance, might be null if this the page was not set.
+        /// </returns>
         public virtual PdfPage GetPage() {
             return page;
         }
@@ -152,12 +193,34 @@ namespace iText.Layout {
         /// <remarks>Enables canvas content autotagging. By default it is disabled.</remarks>
         /// <param name="page">the page, on which this canvas will be rendered.</param>
         public virtual void EnableAutoTagging(PdfPage page) {
+            if (IsCanvasOfPage() && this.page != page) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Canvas));
+                logger.Error(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
+            }
             this.page = page;
         }
 
         /// <returns>true if autotagging of canvas content is enabled. Default value - false.</returns>
         public virtual bool IsAutoTaggingEnabled() {
             return page != null;
+        }
+
+        /// <summary>Defines if the canvas is exactly the direct content of the page.</summary>
+        /// <remarks>
+        /// Defines if the canvas is exactly the direct content of the page. This is known definitely only if
+        /// this instance was created by
+        /// <see cref="Canvas(iText.Kernel.Pdf.PdfPage, iText.Kernel.Geom.Rectangle)"/>
+        /// constructor overload,
+        /// otherwise this method returns false.
+        /// </remarks>
+        /// <returns>
+        /// true if the canvas on which this instance performs drawing is directly the canvas of the page;
+        /// false if the instance of this class was created not with
+        /// <see cref="Canvas(iText.Kernel.Pdf.PdfPage, iText.Kernel.Geom.Rectangle)"/>
+        /// constructor overload.
+        /// </returns>
+        public virtual bool IsCanvasOfPage() {
+            return isCanvasOfPage;
         }
 
         /// <summary>
@@ -218,6 +281,13 @@ namespace iText.Layout {
                 rootRenderer = new CanvasRenderer(this, immediateFlush);
             }
             return rootRenderer;
+        }
+
+        private static PdfCanvas InitPdfCanvasOrThrowIfPageIsFlushed(PdfPage page) {
+            if (page.IsFlushed()) {
+                throw new PdfException(PdfException.CannotDrawElementsOnAlreadyFlushedPages);
+            }
+            return new PdfCanvas(page);
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -262,6 +262,9 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        internal override void PostDraw(SvgDrawContext context) {
+        }
+
         public abstract override ISvgNodeRenderer CreateDeepCopy();
 
         public override bool Equals(Object other) {
@@ -278,6 +281,15 @@ namespace iText.Svg.Renderers.Impl {
 
         public override int GetHashCode() {
             return base.GetHashCode() * 7 + 255 + children.GetHashCode();
+        }
+
+        internal override void SetPartOfClipPath(bool isPart) {
+            base.SetPartOfClipPath(isPart);
+            foreach (ISvgNodeRenderer child in children) {
+                if (child is AbstractSvgNodeRenderer) {
+                    ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(isPart);
+                }
+            }
         }
     }
 }

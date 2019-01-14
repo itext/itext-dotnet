@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -94,6 +94,8 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            bool? nowrapProp = this.GetPropertyAsBoolean(Property.NO_SOFT_WRAP_INLINE);
+            currentRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, nowrapProp);
             bool notAllKidsAreFloats = false;
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
@@ -202,8 +204,8 @@ namespace iText.Layout.Renderer {
                     minChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMinWidth();
                     maxChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMaxWidth();
                 }
-                widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
-                widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
+                widthHandler.UpdateMinChildWidth(minChildWidth);
+                widthHandler.UpdateMaxChildWidth(maxChildWidth);
                 LineRenderer processedRenderer = null;
                 if (result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;
@@ -233,8 +235,8 @@ namespace iText.Layout.Renderer {
                     if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
                         Rectangle actualLineLayoutBox = layoutBox.Clone();
                         FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        float deltaX = actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea().GetBBox()
-                            .GetWidth();
+                        float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
+                            ().GetBBox().GetWidth());
                         switch (textAlignment) {
                             case TextAlignment.RIGHT: {
                                 AlignStaticKids(processedRenderer, deltaX);
@@ -243,6 +245,13 @@ namespace iText.Layout.Renderer {
 
                             case TextAlignment.CENTER: {
                                 AlignStaticKids(processedRenderer, deltaX / 2);
+                                break;
+                            }
+
+                            case TextAlignment.JUSTIFIED: {
+                                if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                                    AlignStaticKids(processedRenderer, deltaX);
+                                }
                                 break;
                             }
                         }
@@ -572,7 +581,7 @@ namespace iText.Layout.Renderer {
             return CreateOverflowRenderer(parent);
         }
 
-        protected internal override MinMaxWidth GetMinMaxWidth() {
+        public override MinMaxWidth GetMinMaxWidth() {
             MinMaxWidth minMaxWidth = new MinMaxWidth();
             float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {

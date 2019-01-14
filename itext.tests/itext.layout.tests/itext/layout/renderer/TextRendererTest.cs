@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ namespace iText.Layout.Renderer {
             FontProvider fp = new FontProvider();
             fp.AddFont(fontName);
             rend.SetProperty(Property.FONT_PROVIDER, fp);
-            rend.SetProperty(Property.FONT, fontName);
+            rend.SetProperty(Property.FONT, new String[] { fontName });
             rend.SetText(val);
             NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
         }
@@ -104,7 +104,7 @@ namespace iText.Layout.Renderer {
             FontProvider fp = new FontProvider();
             fp.AddFont("Helvetica");
             txt.SetProperty(Property.FONT_PROVIDER, fp);
-            txt.SetFont("Helvetica");
+            txt.SetFontFamily("Helvetica");
             doc.Add(new Paragraph().Add(txt));
             doc.Close();
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -215,6 +216,68 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DefaultRadiobuttonFieldTest() {
+            String file = "defaultRadiobuttonFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+            Rectangle rect2 = new Rectangle(36, 680, 20, 20);
+            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup", "1");
+            PdfFormField.CreateRadioButton(pdfDoc, rect1, group, "1");
+            PdfFormField.CreateRadioButton(pdfDoc, rect2, group, "2");
+            form.AddField(group);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomizedRadiobuttonFieldTest() {
+            String file = "customizedRadiobuttonFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+            Rectangle rect2 = new Rectangle(36, 680, 20, 20);
+            PdfButtonFormField group2 = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup2", "1");
+            PdfFormField.CreateRadioButton(pdfDoc, rect1, group2, "1").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            PdfFormField.CreateRadioButton(pdfDoc, rect2, group2, "2").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            form.AddField(group2);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CustomizedRadiobuttonWithGroupRegeneratingFieldTest() {
+            String file = "customizedRadiobuttonWithGroupRegeneratingFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+            Rectangle rect2 = new Rectangle(36, 680, 20, 20);
+            PdfButtonFormField group2 = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup2", "1");
+            PdfFormField.CreateRadioButton(pdfDoc, rect1, group2, "1").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            PdfFormField.CreateRadioButton(pdfDoc, rect2, group2, "2").SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            group2.RegenerateField();
+            form.AddField(group2);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -471,6 +534,52 @@ namespace iText.Forms {
             fields.Get("Text1").SetValue("New field value");
             fields.Get("Text2").SetValue("New field value");
             fields.Get("Text3").SetValue("New field value");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultilineFormFieldNewLineTest() {
+            //DEVSIX-2393
+            //TODO change cmp file after fix
+            String testName = "multilineFormFieldNewLineTest";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            String srcPdf = sourceFolder + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(srcPdf);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFormWithSameEmptyObjsForAppearance() {
+            String outPdf = destinationFolder + "fillFormWithSameEmptyObjsForAppearance.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithSameEmptyObjsForAppearance.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "fillFormWithSameEmptyObjsForAppearance.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            acroForm.GetField("text_1").SetValue("Text 1!");
+            acroForm.GetField("text_2").SetValue("Text 2!");
+            acroForm.GetField("text.3").SetValue("Text 3!");
+            acroForm.GetField("text.4").SetValue("Text 4!");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");

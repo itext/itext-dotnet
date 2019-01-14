@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -563,7 +563,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception ex) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
+                logger.Warn(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
             ReadDecryptObj();
@@ -639,6 +639,37 @@ namespace iText.Kernel.Pdf {
             return ReadObject(readAsDirect, false);
         }
 
+        protected internal virtual PdfObject ReadReference(bool readAsDirect) {
+            int num = tokens.GetObjNr();
+            PdfXrefTable table = pdfDocument.GetXref();
+            PdfIndirectReference reference = table.Get(num);
+            if (reference != null) {
+                if (reference.IsFree()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                        (), tokens.GetGenNr()));
+                    return CreatePdfNullInstance(readAsDirect);
+                }
+                if (reference.GetGenNumber() != tokens.GetGenNr()) {
+                    if (fixedXref) {
+                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                            (), tokens.GetGenNr()));
+                        return CreatePdfNullInstance(readAsDirect);
+                    }
+                    else {
+                        throw new PdfException(PdfException.InvalidIndirectReference1, MessageFormatUtil.Format("{0} {1} R", reference
+                            .GetObjNumber(), reference.GetGenNumber()));
+                    }
+                }
+            }
+            else {
+                reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                    0).SetState(PdfObject.READING));
+            }
+            return reference;
+        }
+
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfObject ReadObject(bool readAsDirect, bool objStm) {
             tokens.NextValidToken();
@@ -697,34 +728,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case PdfTokenizer.TokenType.Ref: {
-                    int num = tokens.GetObjNr();
-                    PdfXrefTable table = pdfDocument.GetXref();
-                    PdfIndirectReference reference = table.Get(num);
-                    if (reference != null) {
-                        if (reference.IsFree()) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
-                                (), tokens.GetGenNr()));
-                            return CreatePdfNullInstance(readAsDirect);
-                        }
-                        if (reference.GetGenNumber() != tokens.GetGenNr()) {
-                            if (fixedXref) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
-                                    (), tokens.GetGenNr()));
-                                return CreatePdfNullInstance(readAsDirect);
-                            }
-                            else {
-                                throw new PdfException(PdfException.InvalidIndirectReference1, MessageFormatUtil.Format("{0} {1} R", reference
-                                    .GetObjNumber(), reference.GetGenNumber()));
-                            }
-                        }
-                    }
-                    else {
-                        reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                            0).SetState(PdfObject.READING));
-                    }
-                    return reference;
+                    return ReadReference(readAsDirect);
                 }
 
                 case PdfTokenizer.TokenType.EndOfFile: {

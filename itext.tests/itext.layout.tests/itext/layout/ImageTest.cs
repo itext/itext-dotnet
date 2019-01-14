@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -823,6 +823,25 @@ namespace iText.Layout {
             table.AddCell(cell.SetHeight(85.03937f).SetVerticalAlignment(VerticalAlignment.TOP).SetPadding(0));
             canvas.Add(table);
             pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageBorderRadiusTest01() {
+            String outFileName = destinationFolder + "imageBorderRadiusTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageBorderRadiusTest01.pdf";
+            String imageFileName = sourceFolder + "itis.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(imageFileName));
+            image.SetBorderRadius(new BorderRadius(20));
+            image.SetBorderBottomLeftRadius(new BorderRadius(35));
+            image.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));
+            doc.Add(image);
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

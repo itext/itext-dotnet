@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -162,6 +162,38 @@ namespace iText.Kernel.Pdf {
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3, 1), destDoc);
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DestCopyingTest06() {
+            String srcFile = sourceFolder + "sourceWithNamedDestination.pdf";
+            String outFile = destinationFolder + "destCopyingTest06.pdf";
+            String cmpFile = sourceFolder + "cmp_destCopyingTest06.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 1), destDoc);
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DestCopyingTest07() {
+            String srcFile = sourceFolder + "sourceStringDestWithPageNumber.pdf";
+            String outFile = destinationFolder + "destCopyingTest07.pdf";
+            String cmpFile = sourceFolder + "cmp_destCopyingTest07.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"

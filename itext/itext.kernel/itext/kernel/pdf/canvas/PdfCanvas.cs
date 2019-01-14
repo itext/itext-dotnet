@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1813,9 +1813,20 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Adds
         /// <c>PdfXObject</c>
         /// to specified rectangle on canvas.
+        /// Do note that using this method of adding an XObject <b>will scale</b> the XObject using the width and the height
+        /// of the provided Rectangle. If you don't wish to scale the XObject, use
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float)"/>
+        /// ,
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)"/>
+        /// ,
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, bool)"/>
+        /// ,
+        /// or
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float)"/>
+        /// .
         /// </summary>
-        /// <param name="xObject"/>
-        /// <param name="rect"/>
+        /// <param name="xObject">the XObject to add</param>
+        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, iText.Kernel.Geom.Rectangle
              rect) {
@@ -2123,10 +2134,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>
         /// Adds
         /// <c>PdfFormXObject</c>
-        /// to specified rectangle on canvas.
+        /// to specified rectangle on canvas and scale it using the rectangle's width and height.
         /// </summary>
-        /// <param name="form"/>
-        /// <param name="rect"/>
+        /// <param name="form">PdfFormXObject to add</param>
+        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
         /// <returns>current canvas.</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, iText.Kernel.Geom.Rectangle rect) {
             return AddForm(form, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
@@ -2227,10 +2238,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>
         /// Adds
         /// <c>PdfImageXObject</c>
-        /// to specified rectangle on canvas.
+        /// to specified rectangle on canvas and scale it using the rectangle's width and height.
         /// </summary>
-        /// <param name="image"/>
-        /// <param name="rect"/>
+        /// <param name="image">PdfImageXObject to add</param>
+        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
         /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, iText.Kernel.Geom.Rectangle rect
             ) {

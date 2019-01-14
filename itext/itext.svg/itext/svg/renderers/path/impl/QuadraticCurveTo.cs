@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,35 +41,46 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.Svg;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
     public class QuadraticCurveTo : AbstractPathShape {
-        /// <summary>Draws a quadratic Bézier curve from the current point to (x,y) using (x1,y1) as the control point
+        private String[] coordinates;
+
+        /*
+        * Implements quadratic Bezier curveTo(Q) attribute of SVG's path element
+        */
+        /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw(PdfCanvas canvas) {
-            canvas.CurveTo(GetCoordinate(properties, SvgConstants.Attributes.X1), GetCoordinate(properties, SvgConstants.Attributes
-                .Y1), GetCoordinate(properties, SvgConstants.Attributes.X), GetCoordinate(properties, SvgConstants.Attributes
-                .Y));
+            float x1 = CssUtils.ParseAbsoluteLength(coordinates[0]);
+            float y1 = CssUtils.ParseAbsoluteLength(coordinates[1]);
+            float x = CssUtils.ParseAbsoluteLength(coordinates[2]);
+            float y = CssUtils.ParseAbsoluteLength(coordinates[3]);
+            canvas.CurveTo(x1, y1, x, y);
         }
 
-        public override void SetCoordinates(String[] coordinates) {
-            IDictionary<String, String> map = new Dictionary<String, String>();
-            map.Put("x1", coordinates.Length > 0 && !String.IsNullOrEmpty(coordinates[0]) ? coordinates[0] : "0");
-            map.Put("y1", coordinates.Length > 1 && !String.IsNullOrEmpty(coordinates[1]) ? coordinates[1] : "0");
-            map.Put("x", coordinates.Length > 2 && !String.IsNullOrEmpty(coordinates[2]) ? coordinates[2] : "0");
-            map.Put("y", coordinates.Length > 3 && !String.IsNullOrEmpty(coordinates[3]) ? coordinates[3] : "0");
-            SetProperties(map);
+        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+            // startPoint will be used when relative quadratic curve is implemented
+            if (coordinates.Length == 0 || coordinates.Length % 4 != 0) {
+                throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
+                    , JavaUtil.ArraysToString(coordinates)));
+            }
+            if (coordinates.Length > 4) {
+                // (x1 y1 x y)+ parameters will be implemented in the future
+                throw new NotSupportedException();
+            }
+            else {
+                this.coordinates = new String[] { coordinates[0], coordinates[1], coordinates[2], coordinates[3] };
+            }
         }
 
         public override Point GetEndingPoint() {
-            float x = GetSvgCoordinate(properties, SvgConstants.Attributes.X);
-            float y = GetSvgCoordinate(properties, SvgConstants.Attributes.Y);
-            return new Point(x, y);
+            return CreatePoint(coordinates[2], coordinates[3]);
         }
     }
 }

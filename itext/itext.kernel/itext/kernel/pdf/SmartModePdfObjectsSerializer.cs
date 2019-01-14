@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -87,12 +87,21 @@ namespace iText.Kernel.Pdf {
             if (content == null) {
                 ByteBuffer bb = new ByteBuffer();
                 int level = 100;
-                SerObject(obj, bb, level, serializedCache);
+                try {
+                    SerObject(obj, bb, level, serializedCache);
+                }
+                catch (SmartModePdfObjectsSerializer.SelfReferenceException) {
+                    return null;
+                }
                 content = bb.ToByteArray();
             }
             return new SerializedObjectContent(content);
         }
 
+        private class SelfReferenceException : Exception {
+        }
+
+        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerObject(PdfObject obj, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             if (level <= 0) {
@@ -112,6 +121,11 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 else {
+                    if (serializedCache.Keys.Contains(reference)) {
+                        //referencing itself
+                        throw new SmartModePdfObjectsSerializer.SelfReferenceException();
+                    }
+                    serializedCache.Put(reference, null);
                     savedBb = bb;
                     bb = new ByteBuffer();
                     obj = reference.GetRefersTo();
@@ -155,6 +169,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerDic(PdfDictionary dic, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]>
              serializedCache) {
             bb.Append("$D");
@@ -171,6 +186,7 @@ namespace iText.Kernel.Pdf {
             bb.Append("$\\D");
         }
 
+        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerArray(PdfArray array, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             bb.Append("$A");

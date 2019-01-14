@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -69,6 +69,96 @@ namespace iText.Signatures {
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
             IList<String> signatureNames = signatureUtil.GetSignatureNames();
             NUnit.Framework.Assert.AreEqual(0, signatureNames.Count);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FirstBytesNotCoveredTest01() {
+            String inPdf = sourceFolder + "firstBytesNotCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void LastBytesNotCoveredTest01() {
+            String inPdf = sourceFolder + "lastBytesNotCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void LastBytesNotCoveredTest02() {
+            String inPdf = sourceFolder + "lastBytesNotCoveredTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void BytesAreNotCoveredTest01() {
+            String inPdf = sourceFolder + "bytesAreNotCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void BytesAreCoveredTest01() {
+            String inPdf = sourceFolder + "bytesAreCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void BytesAreCoveredTest02() {
+            String inPdf = sourceFolder + "bytesAreCoveredTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("sig"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TwoContentsTest01() {
+            String inPdf = sourceFolder + "twoContentsTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void SpacesBeforeContentsTest01() {
+            String inPdf = sourceFolder + "spacesBeforeContentsTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void SpacesBeforeContentsTest02() {
+            String inPdf = sourceFolder + "spacesBeforeContentsTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void NotIndirectSigDictionaryTest() {
+            String inPdf = sourceFolder + "notIndirectSigDictionaryTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -168,6 +169,8 @@ namespace iText.Kernel.Font {
 
         internal static void FillFontDescriptor(iText.Kernel.Font.DocTrueTypeFont font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
+                ILog logger = LogManager.GetLogger(typeof(FontUtil));
+                logger.Warn(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);

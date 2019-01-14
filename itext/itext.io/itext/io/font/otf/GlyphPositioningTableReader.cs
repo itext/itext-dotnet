@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -70,6 +70,16 @@ namespace iText.IO.Font.Otf {
         /// <exception cref="System.IO.IOException"/>
         protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
             ) {
+            if (lookupType == 9) {
+                for (int k = 0; k < subTableLocations.Length; ++k) {
+                    int location = subTableLocations[k];
+                    rf.Seek(location);
+                    rf.ReadUnsignedShort();
+                    lookupType = rf.ReadUnsignedShort();
+                    location += rf.ReadInt();
+                    subTableLocations[k] = location;
+                }
+            }
             switch (lookupType) {
                 case 2: {
                     return new GposLookupType2(this, lookupFlag, subTableLocations);

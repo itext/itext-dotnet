@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -86,10 +86,11 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.BORDER_TOP_RIGHT_RADIUS, "0");
             defaultValues.Put(CommonCssConstants.BOX_SHADOW, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.FLOAT, CommonCssConstants.NONE);
-            defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.FONT_FAMILY, "times");
             defaultValues.Put(CommonCssConstants.FONT_SIZE, CommonCssConstants.MEDIUM);
             defaultValues.Put(CommonCssConstants.FONT_STYLE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_VARIANT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.HYPHENS, CommonCssConstants.MANUAL);
             defaultValues.Put(CommonCssConstants.LINE_HEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants.DISC);

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -242,6 +242,17 @@ namespace iText.Layout {
         }
 
         /// <summary>Sets the font of this Element.</summary>
+        /// <remarks>
+        /// Sets the font of this Element.
+        /// <p>
+        /// This property overrides the value set by
+        /// <see cref="ElementPropertyContainer{T}.SetFontFamily(System.String[])"/>
+        /// . Font is set either via exact
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance or via font-family name that should correspond to the font in
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// , but not both.
+        /// </remarks>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont">font</see>
@@ -250,6 +261,73 @@ namespace iText.Layout {
         public virtual T SetFont(PdfFont font) {
             SetProperty(Property.FONT, font);
             return (T)(Object)this;
+        }
+
+        /// <summary>Sets the preferable font families for this Element.</summary>
+        /// <remarks>
+        /// Sets the preferable font families for this Element.
+        /// Note that
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// shall be set as well.
+        /// See
+        /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
+        /// <p>
+        /// This property overrides the value set by
+        /// <see cref="ElementPropertyContainer{T}.SetFont(iText.Kernel.Font.PdfFont)"/>
+        /// . Font is set either via exact
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance or via font-family name that should correspond to the font in
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// , but not both.
+        /// <p>
+        /// All
+        /// <see cref="System.String"/>
+        /// that are passed as argument are directly handled as a collection of font family names,
+        /// without any pre-processing. Every font family name is treated as a preferable font-family to be used
+        /// inside the element. The
+        /// <paramref name="fontFamilyNames"/>
+        /// argument is interpreted as as an ordered list,
+        /// where every next font-family should be used if font for the previous one was not found or doesn't contain required glyphs.
+        /// </remarks>
+        /// <seealso cref="iText.IO.Font.Constants.StandardFontFamilies"/>
+        /// <param name="fontFamilyNames">defines an ordered list of preferable font families for this Element.</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetFontFamily(params String[] fontFamilyNames) {
+            SetProperty(Property.FONT, fontFamilyNames);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the preferable font families for this Element.</summary>
+        /// <remarks>
+        /// Sets the preferable font families for this Element.
+        /// Note that
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// shall be set as well.
+        /// See
+        /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
+        /// <p>
+        /// This property overrides the value set by
+        /// <see cref="ElementPropertyContainer{T}.SetFont(iText.Kernel.Font.PdfFont)"/>
+        /// . Font is set either via exact
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance or via font-family name that should correspond to the font in
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// , but not both.
+        /// <p>
+        /// All
+        /// <see cref="System.String"/>
+        /// that are passed as argument are directly handled as a collection of font family names,
+        /// without any pre-processing. Every font family name is treated as a preferable font-family to be used
+        /// inside the element. The
+        /// <paramref name="fontFamilyNames"/>
+        /// argument is interpreted as as an ordered list,
+        /// where every next font-family should be used if font for the previous one was not found or doesn't contain required glyphs.
+        /// </remarks>
+        /// <seealso cref="iText.IO.Font.Constants.StandardFontFamilies"/>
+        /// <param name="fontFamilyNames">defines an ordered list of preferable font families for this Element.</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetFontFamily(IList<String> fontFamilyNames) {
+            return this.SetFontFamily(fontFamilyNames.ToArray(new String[fontFamilyNames.Count]));
         }
 
         /// <summary>Sets the font family of this Element.</summary>
@@ -266,6 +344,8 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// </param>
         /// <returns>this Element.</returns>
+        [System.ObsoleteAttribute(@"This method will be removed in 7.2. Use ElementPropertyContainer{T}.SetFontFamily(System.String[]) instead."
+            )]
         public virtual T SetFont(String font) {
             SetProperty(Property.FONT, font);
             return (T)(Object)this;

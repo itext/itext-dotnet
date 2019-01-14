@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -85,36 +85,36 @@ namespace iText.Layout {
             document.Add(new Paragraph("StandardFonts - non-breaking hyphen \\u2011").SetUnderline().SetTextAlignment(
                 TextAlignment.CENTER));
             document.Add(new Paragraph("for Standard font TIMES_ROMAN: <&#8209;> non-breaking hyphen <\u2011> 2 hyphens<\u2011\u2011>here "
-                ).SetFont(StandardFonts.TIMES_ROMAN));
+                ).SetFontFamily(StandardFonts.TIMES_ROMAN));
             document.Add(new Paragraph("for Standard font COURIER: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(StandardFonts.COURIER));
+                ).SetFontFamily(StandardFonts.COURIER));
             document.Add(new Paragraph("for Standard font HELVETICA_BOLD: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
                 ).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)));
             document.Add(new Paragraph("for Standard font SYMBOL: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
                 ).SetFont(PdfFontFactory.CreateFont(StandardFonts.SYMBOL)));
             document.Add(new Paragraph("Non-Standard fonts - non-breaking hyphen \\u2011").SetUnderline().SetTextAlignment
                 (TextAlignment.CENTER));
-            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFont("NotoSans"
-                ));
-            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFont("Puritan2"
-                ));
+            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
+                ("NotoSans"));
+            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
+                ("Puritan2"));
             sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, "FreeSans");
             document.Add(new Paragraph("AFTER adding of FreeSans font with non-breaking hyphen \\u2011 support").SetUnderline
                 ().SetTextAlignment(TextAlignment.CENTER));
             document.Add(new Paragraph("for Standard font TIMES_ROMAN: <&#8209;> non-breaking hyphen <\u2011> 2 hyphens<\u2011\u2011>here "
-                ).SetFont(StandardFonts.TIMES_ROMAN));
+                ).SetFontFamily(StandardFonts.TIMES_ROMAN));
             document.Add(new Paragraph("for Standard font COURIER: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(StandardFonts.COURIER));
+                ).SetFontFamily(StandardFonts.COURIER));
             document.Add(new Paragraph("for Standard font HELVETICA_BOLD: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
                 ).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)));
             document.Add(new Paragraph("for Standard font SYMBOL: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
                 ).SetFont(PdfFontFactory.CreateFont(StandardFonts.SYMBOL)));
-            document.Add(new Paragraph("for FreeSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFont("FreeSans"
-                ));
-            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFont("NotoSans"
-                ));
-            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFont("Puritan2"
-                ));
+            document.Add(new Paragraph("for FreeSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
+                ("FreeSans"));
+            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
+                ("NotoSans"));
+            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
+                ("Puritan2"));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , diffPrefix));

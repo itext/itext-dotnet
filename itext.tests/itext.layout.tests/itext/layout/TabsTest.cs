@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,10 +58,10 @@ using iText.Test;
 namespace iText.Layout {
     public class TabsTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/TabTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/TabsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/TabTest/";
+             + "/test/itext/layout/TabsTest/";
 
         private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
              + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"
@@ -88,6 +88,33 @@ namespace iText.Layout {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ChunkEndsAfterOrBeforeTabPosition() {
+            String outFileName = destinationFolder + "chunkEndsAfterOrBeforeTabPosition.pdf";
+            String cmpFileName = sourceFolder + "cmp_chunkEndsAfterOrBeforeTabPosition.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textBeforeTab = "a";
+            String textAfterTab = "tab stop's position = ";
+            Paragraph paragraph;
+            for (int i = 0; i < 20; i++) {
+                paragraph = new Paragraph();
+                paragraph.Add(new Text(textBeforeTab));
+                TabStop[] tabStop = new TabStop[1];
+                tabStop[0] = new TabStop(i);
+                paragraph.AddTabStops(tabStop);
+                paragraph.Add(new Tab());
+                paragraph.Add(new Text(textAfterTab));
+                paragraph.Add(JavaUtil.IntegerToString(i));
+                doc.Add(paragraph);
+            }
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -207,6 +234,45 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff" + outFileName));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TablesAndTabInsideOfParagraph() {
+            String testName = "tablesAndTabInsideOfParagraph.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            Document doc = InitDocument(outFileName, false);
+            Table leftTable = new Table(1);
+            for (int x = 0; x < 3; x++) {
+                leftTable.AddCell("Table 1, Line " + (x + 1));
+            }
+            Table rightTable = new Table(1);
+            for (int x = 0; x < 3; x++) {
+                rightTable.AddCell("Table 2, Line " + (x + 1));
+            }
+            Paragraph p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.LEFT));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: LEFT"));
+            doc.Add(p);
+            p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.CENTER));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: CENTER"));
+            doc.Add(p);
+            p = new Paragraph().Add(leftTable);
+            p.Add(new Tab());
+            p.AddTabStops(new TabStop(300, TabAlignment.RIGHT));
+            p.Add(rightTable);
+            doc.Add(new Paragraph("TabAlignment: RIGHT"));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -400,6 +466,22 @@ namespace iText.Layout {
             p.Add(new Tab()).Add("Test245454:Answer2");
             document.Add(p);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillParagraphWithTabsDifferently() {
+            String outFileName = destinationFolder + "fillParagraphWithTabsDifferently.pdf";
+            String cmpFileName = sourceFolder + "cmp_fillParagraphWithTabsDifferently.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("a\tb"));
+            doc.Add(new Paragraph().Add("a").Add("\t").Add("b"));
+            doc.Add(new Paragraph().Add(new Text("a")).Add(new Text("\t")).Add(new Text("b")));
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,15 +47,15 @@ using System.Text;
 
 namespace iText.IO.Font.Otf {
     public class GlyphLine {
-        protected internal IList<Glyph> glyphs;
-
-        protected internal IList<GlyphLine.ActualText> actualText;
-
         public int start;
 
         public int end;
 
         public int idx;
+
+        protected internal IList<Glyph> glyphs;
+
+        protected internal IList<GlyphLine.ActualText> actualText;
 
         public GlyphLine() {
             this.glyphs = new List<Glyph>();
@@ -182,17 +182,42 @@ namespace iText.IO.Font.Otf {
             actualText = null;
         }
 
+        /// <summary>Add a line to the current one.</summary>
+        /// <remarks>
+        /// Add a line to the current one.
+        /// The glyphs from the start till the end points will be copied.
+        /// The same is true for the actual text.
+        /// </remarks>
+        /// <param name="other">the line that should be added to the current one</param>
+        public virtual void Add(iText.IO.Font.Otf.GlyphLine other) {
+            if (other.actualText != null) {
+                if (actualText == null) {
+                    actualText = new List<GlyphLine.ActualText>(glyphs.Count);
+                    for (int i = 0; i < glyphs.Count; i++) {
+                        actualText.Add(null);
+                    }
+                }
+                actualText.AddAll(other.actualText.SubList(other.start, other.end));
+            }
+            glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
+        }
+
+        /// <summary>Replaces the current content with the other line's content.</summary>
+        /// <param name="other">the line with the content to be set to the current one</param>
         public virtual void ReplaceContent(iText.IO.Font.Otf.GlyphLine other) {
             glyphs.Clear();
             glyphs.AddAll(other.glyphs);
-            if (actualText != null) {
-                actualText.Clear();
-            }
             if (other.actualText != null) {
                 if (actualText == null) {
                     actualText = new List<GlyphLine.ActualText>();
                 }
+                else {
+                    actualText.Clear();
+                }
                 actualText.AddAll(other.actualText);
+            }
+            else {
+                actualText = null;
             }
             start = other.start;
             end = other.end;
@@ -362,6 +387,10 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        public interface IGlyphLineFilter {
+            bool Accept(Glyph glyph);
+        }
+
         public class GlyphLinePart {
             public int start;
 
@@ -388,16 +417,12 @@ namespace iText.IO.Font.Otf {
             }
         }
 
-        public interface IGlyphLineFilter {
-            bool Accept(Glyph glyph);
-        }
-
         protected internal class ActualText {
+            public String value;
+
             public ActualText(String value) {
                 this.value = value;
             }
-
-            public String value;
 
             public override bool Equals(Object obj) {
                 if (this == obj) {

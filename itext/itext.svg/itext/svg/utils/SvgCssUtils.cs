@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,6 +81,14 @@ namespace iText.Svg.Utils {
         ///<param name="value">to be converted float value</param>
         ///<returns>the value in a String representation</returns>   
         public static string ConvertFloatToString(float value)
+        {
+            return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
+        }
+       
+        ///<summary>Converts a double to a String.</summary>
+        ///<param name="value">to be converted double value</param>
+        ///<returns>the value in a String representation</returns>   
+        public static string ConvertDoubleToString(double value)
         {
             return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
         }

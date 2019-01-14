@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ namespace iText.Svg.Utils {
             int end = toTrim.Length;
             if (end > 0) {
                 int current = end - 1;
-                while (current > 0) {
+                while (current >= 0) {
                     char currentChar = toTrim[current];
                     if (iText.IO.Util.TextUtil.IsWhiteSpace(currentChar) && !(currentChar == '\n' || currentChar == '\r')) {
                         //if the character is whitespace and not a newline, increase current
@@ -90,7 +90,7 @@ namespace iText.Svg.Utils {
                         break;
                     }
                 }
-                if (current == 0) {
+                if (current < 0) {
                     return "";
                 }
                 else {

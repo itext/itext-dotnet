@@ -1,6 +1,6 @@
 ﻿/*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,13 +42,14 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace iText.Svg.Utils
 {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </summary>
     public class SvgRegexUtils
     {
         /// <summary>

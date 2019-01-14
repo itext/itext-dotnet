@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -62,13 +62,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 ()));
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_82());
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_81());
                 processor.ProcessPageContent(page);
             }
         }
 
-        private sealed class _IEventListener_82 : IEventListener {
-            public _IEventListener_82() {
+        private sealed class _IEventListener_81 : IEventListener {
+            public _IEventListener_81() {
             }
 
             public void EventOccurred(IEventData data, EventType type) {
@@ -120,6 +120,25 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
 
             public ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestClosingEmptyPath() {
+            String fileName = "closingEmptyPath.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
+            // Assert than no exception is thrown when an empty path is handled
+            processor.ProcessPageContent(document.GetPage(1));
+        }
+
+        private class NoOpEventListener : IEventListener {
+            public virtual void EventOccurred(IEventData data, EventType type) {
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
                 return null;
             }
         }

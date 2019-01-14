@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -79,9 +79,9 @@ namespace iText.Layout.Renderer {
         ///     </returns>
         public static bool IsRendererCreateBfc(IRenderer renderer) {
             return (renderer is RootRenderer) || (renderer is CellRenderer) || IsInlineBlock(renderer) || FloatingHelper
-                .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || AbstractRenderer
-                .IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_X) || AbstractRenderer.IsOverflowProperty
-                (OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_Y);
+                .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || IsCaption
+                (renderer) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_X
+                ) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_Y);
         }
 
         private static bool IsInlineBlock(IRenderer renderer) {
@@ -96,6 +96,10 @@ namespace iText.Layout.Renderer {
         private static bool IsFixedPosition(IRenderer renderer) {
             int? positioning = NumberUtil.AsInteger(renderer.GetProperty<Object>(Property.POSITION));
             return Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
+        }
+
+        private static bool IsCaption(IRenderer renderer) {
+            return renderer.GetParent() is TableRenderer && (renderer is DivRenderer);
         }
     }
 }

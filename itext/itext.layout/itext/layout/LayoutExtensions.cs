@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2018 iText Group NV
+    Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -126,6 +126,15 @@ namespace iText.Layout {
 
         public static void Add<T>(this IList<T> list, int index, T elem) {
             list.Insert(index, elem);
+        }
+
+        public static bool ContainsAll<T>(this ICollection<T> thisC, ICollection<T> otherC) {
+            foreach (T e in otherC) {
+                if (!thisC.Contains(e)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public static bool IsEmpty<T>(this ICollection<T> collection) {

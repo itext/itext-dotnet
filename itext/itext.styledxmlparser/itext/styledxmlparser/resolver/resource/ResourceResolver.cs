@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -77,13 +77,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// except "file" - resources url values will be resolved exactly as "new URL(baseUrl, uriString)". Otherwise base URI
         /// will be handled as path in local file system.
         /// <p>
-        /// The main difference between those two is handling of the relative URIs of resources with slashes in the beginning
-        /// of them (e.g. "/test/uri", or "//itextpdf.com/example_resources/logo.img"): if base URI is handled as local file
-        /// system path, then in those cases resources URIs will be simply concatenated to the base path, rather than processed
-        /// with URI resolution rules (See RFC 3986 "5.4.  Reference Resolution Examples"). However absolute resource URIs will
-        /// be processed correctly.
-        /// </p>
-        /// <p>
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
         /// </p>
@@ -106,41 +99,43 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>PdfImageXObject on success, otherwise null.</returns>
+        [System.ObsoleteAttribute(@"will return iText.Kernel.Pdf.Xobject.PdfXObject in pdfHTML 3.0.0")]
         public virtual PdfImageXObject RetrieveImage(String src) {
-            if (src == null) {
+            PdfXObject image = RetrieveImageExtended(src);
+            if (image is PdfImageXObject) {
+                return (PdfImageXObject)image;
+            }
+            else {
                 return null;
             }
-            if (src.Contains(BASE64IDENTIFIER)) {
-                try {
-                    String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
-                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
-                    PdfImageXObject imageXObject = imageCache.GetImage(fixedSrc);
-                    if (imageXObject == null) {
-                        imageXObject = new PdfImageXObject(ImageDataFactory.Create(Convert.FromBase64String(fixedSrc)));
-                        imageCache.PutImage(fixedSrc, imageXObject);
+        }
+
+        /// <summary>
+        /// Retrieve image as either
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// , or
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// .
+        /// </summary>
+        /// <param name="src">either link to file or base64 encoded stream.</param>
+        /// <returns>PdfImageXObject on success, otherwise null.</returns>
+        public virtual PdfXObject RetrieveImageExtended(String src) {
+            if (src != null) {
+                if (src.Contains(BASE64IDENTIFIER)) {
+                    PdfXObject imageXObject = TryResolveBase64ImageSource(src);
+                    if (imageXObject != null) {
+                        return imageXObject;
                     }
-                    return imageXObject;
                 }
-                catch (Exception) {
+                PdfXObject imageXObject_1 = TryResolveUrlImageSource(src);
+                if (imageXObject_1 != null) {
+                    return imageXObject_1;
                 }
             }
-            try {
-                Uri url = uriResolver.ResolveAgainstBaseUri(src);
-                url = UrlUtil.GetFinalURL(url);
-                String imageResolvedSrc = url.ToExternalForm();
-                PdfImageXObject imageXObject = imageCache.GetImage(imageResolvedSrc);
-                if (imageXObject == null) {
-                    imageXObject = new PdfImageXObject(ImageDataFactory.Create(url));
-                    imageCache.PutImage(imageResolvedSrc, imageXObject);
-                }
-                return imageXObject;
-            }
-            catch (Exception e) {
-                ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src), e);
-                return null;
-            }
+            ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver));
+            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                , uriResolver.GetBaseUri(), src));
+            return null;
         }
 
         /// <summary>
@@ -223,10 +218,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <param name="src">path to the resource</param>
         /// <returns>InputStream for the resource</returns>
         public virtual Stream RetrieveResourceAsInputStream(String src) {
-            if (src.Contains("base64")) {
+            if (src.Contains(BASE64IDENTIFIER)) {
                 try {
                     String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
-                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf("base64", StringComparison.Ordinal) + 7);
+                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
                     return new MemoryStream(Convert.FromBase64String(fixedSrc));
                 }
                 catch (Exception) {
@@ -271,6 +266,45 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             catch (Exception) {
                 return false;
             }
+        }
+
+        protected internal virtual PdfXObject TryResolveBase64ImageSource(String src) {
+            try {
+                String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
+                fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
+                PdfXObject imageXObject = imageCache.GetImage(fixedSrc);
+                if (imageXObject == null) {
+                    imageXObject = new PdfImageXObject(ImageDataFactory.Create(Convert.FromBase64String(fixedSrc)));
+                    imageCache.PutImage(fixedSrc, imageXObject);
+                }
+                return imageXObject;
+            }
+            catch (Exception) {
+            }
+            return null;
+        }
+
+        protected internal virtual PdfXObject TryResolveUrlImageSource(String src) {
+            try {
+                Uri url = uriResolver.ResolveAgainstBaseUri(src);
+                url = UrlUtil.GetFinalURL(url);
+                String imageResolvedSrc = url.ToExternalForm();
+                PdfXObject imageXObject = imageCache.GetImage(imageResolvedSrc);
+                if (imageXObject == null) {
+                    imageXObject = CreateImageByUrl(url);
+                    imageCache.PutImage(imageResolvedSrc, imageXObject);
+                }
+                return imageXObject;
+            }
+            catch (Exception) {
+            }
+            return null;
+        }
+
+        /// <summary>Throws exception if error occurred</summary>
+        /// <exception cref="System.Exception"/>
+        protected internal virtual PdfXObject CreateImageByUrl(Uri url) {
+            return new PdfImageXObject(ImageDataFactory.Create(url));
         }
     }
 }

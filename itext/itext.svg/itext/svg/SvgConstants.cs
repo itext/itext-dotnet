@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,7 +90,7 @@ namespace iText.Svg {
             /// <summary>Tag defining a clipping path.</summary>
             /// <remarks>Tag defining a clipping path. A clipping path defines the region where can be drawn. Anything outside the path won't be drawn.
             ///     </remarks>
-            public const String CLIP_PATH = "clipPath";
+            public const String CLIP_PATH = "clippath";
 
             /// <summary>Tag defining the color profile to be used.</summary>
             public const String COLOR_PROFILE = "color-profile";
@@ -349,6 +349,12 @@ namespace iText.Svg {
 
         /// <summary>Class containing the constant property names for the attributes of tags in the SVG spec</summary>
         public sealed class Attributes : CommonAttributeConstants {
+            /// <summary>Attribute defining the clipping path to be applied to a specific shape or group of shapes.</summary>
+            public const String CLIP_PATH = "clip-path";
+
+            /// <summary>Attribute defining the clipping rule in a clipping path (or element thereof).</summary>
+            public const String CLIP_RULE = "clip-rule";
+
             /// <summary>Attribute defining the x value of the center of a circle or ellipse.</summary>
             public const String CX = "cx";
 
@@ -445,6 +451,9 @@ namespace iText.Svg {
 
             /// <summary>MoveTo Path Operator.</summary>
             public const String PATH_DATA_MOVE_TO = "M";
+
+            /// <summary>Relative MoveTo Path Operator.</summary>
+            public const String PATH_DATA_REL_MOVE_TO = "m";
 
             /// <summary>Shorthand/smooth quadratic Bézier curveto.</summary>
             public const String PATH_DATA_SHORTHAND_CURVE_TO = "T";

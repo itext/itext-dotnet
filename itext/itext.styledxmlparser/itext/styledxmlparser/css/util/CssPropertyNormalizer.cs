@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,12 +42,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using Common.Logging;
 using iText.IO.Util;
+using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class with functionality to normalize CSS properties.</summary>
     internal class CssPropertyNormalizer {
+        private static readonly Regex URL_PATTERN = PortUtil.CreateRegexPatternWithDotMatchingNewlines("^[uU][rR][lL]\\(.*?"
+            );
+
         /// <summary>Normalize a property.</summary>
         /// <param name="str">the property</param>
         /// <returns>the normalized property</returns>
@@ -80,7 +85,8 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && str.Substring(i).Matches("^[uU][rR][lL]\\(.*?")) {
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.StringUtil.Match(URL_PATTERN, str.Substring(i)).Success
+                                ) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);
                             }

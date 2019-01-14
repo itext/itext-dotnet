@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -124,11 +124,15 @@ namespace iText.Kernel.Font {
                         if (CheckFontDictionary(fontDictionary, PdfName.Type3, false)) {
                             return new PdfType3Font(fontDictionary);
                         }
-                        else {
-                            throw new PdfException(PdfException.DictionaryDoesntHaveSupportedFontData);
-                        }
                     }
                 }
+            }
+            if (CheckFontDictionary(fontDictionary, PdfName.MMType1, false)) {
+                // this very rare font type, that's why it was moved to the bottom of the if-else.
+                return new PdfType1Font(fontDictionary);
+            }
+            else {
+                throw new PdfException(PdfException.DictionaryDoesntHaveSupportedFontData);
             }
         }
 

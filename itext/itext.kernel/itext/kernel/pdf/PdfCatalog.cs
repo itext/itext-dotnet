@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2018 iText Group NV
+Copyright (c) 1998-2019 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -464,19 +464,26 @@ namespace iText.Kernel.Pdf {
                 }
             }
             else {
-                if (dest.IsString()) {
+                if (dest.IsString() || dest.IsName()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    String srcDestName = ((PdfString)dest).ToUnicodeString();
+                    String srcDestName = dest.IsString() ? ((PdfString)dest).ToUnicodeString() : ((PdfName)dest).GetValue();
                     PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
                     if (srcDestArray != null) {
                         PdfObject pageObject = srcDestArray.Get(0);
+                        if (pageObject is PdfNumber) {
+                            pageObject = GetDocument().GetPage(((PdfNumber)pageObject).IntValue() + 1).GetPdfObject();
+                        }
                         foreach (PdfPage oldPage in page2page.Keys) {
                             if (oldPage.GetPdfObject() == pageObject) {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
                                     // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
                                     PdfArray copiedArray = (PdfArray)srcDestArray.CopyTo(toDocument, false);
+                                    // here we can safely replace first item of the array because array of NamedDestination or StringDestination
+                                    // never refers to page in another document via PdfNumber, but should always refer to page within current document
+                                    // via page object reference.
+                                    copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }
                                 break;
@@ -508,6 +515,9 @@ namespace iText.Kernel.Pdf {
 
         private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
             PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
+            if (pageObj is PdfNumber) {
+                pageObj = GetDocument().GetPage(((PdfNumber)pageObj).IntValue() + 1).GetPdfObject();
+            }
             if (pageObj != null) {
                 IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);
                 if (outs == null) {
@@ -636,11 +646,6 @@ namespace iText.Kernel.Pdf {
                 parentOutline.GetAllChildren().Add(currentOutline);
                 if (first != null) {
                     parentOutlineMap.Put(current, currentOutline);
-                }
-                else {
-                    if (current == parent.GetAsDictionary(PdfName.Last)) {
-                        parentOutlineMap.JRemove(parent);
-                    }
                 }
                 current = GetNextOutline(first, next, parent);
             }
