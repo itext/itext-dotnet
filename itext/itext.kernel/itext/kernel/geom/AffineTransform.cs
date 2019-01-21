@@ -425,10 +425,13 @@ namespace iText.Kernel.Geom {
             type = TYPE_UNKNOWN;
         }
 
-        /// <summary>Set this affine transformation to represent a rotation over the passed angle</summary>
+        /// <summary>
+        /// Set this affine transformation to represent a rotation over the passed angle,
+        /// using the passed point as the center of rotation
+        /// </summary>
         /// <param name="angle">angle to rotate over in radians</param>
-        /// <param name="px">?</param>
-        /// <param name="py">?</param>
+        /// <param name="px">x-coordinate of center of rotation</param>
+        /// <param name="py">y-coordinate of center of rotation</param>
         public virtual void SetToRotation(double angle, double px, double py) {
             SetToRotation(angle);
             m02 = px * (1 - m00) + py * m10;
