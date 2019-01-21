@@ -202,9 +202,11 @@ namespace iText.Kernel.Geom {
         /// <summary>Method returns type of affine transformation.</summary>
         /// <remarks>
         /// Method returns type of affine transformation.
+        /// <p>
         /// Transform matrix is
         /// m00 m01 m02
         /// m10 m11 m12
+        /// <p>
         /// According analytic geometry new basis vectors are (m00, m01) and (m10, m11),
         /// translation vector is (m02, m12). Original basis vectors are (1, 0) and (0, 1).
         /// Type transformations classification:
@@ -401,6 +403,8 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>Set this affine transformation to represent a rotation over the passed angle</summary>
+        /// <param name="angle">angle to rotate over in radians</param>
         public virtual void SetToRotation(double angle) {
             double sin = Math.Sin(angle);
             double cos = Math.Cos(angle);
@@ -421,6 +425,10 @@ namespace iText.Kernel.Geom {
             type = TYPE_UNKNOWN;
         }
 
+        /// <summary>Set this affine transformation to represent a rotation over the passed angle</summary>
+        /// <param name="angle">angle to rotate over in radians</param>
+        /// <param name="px">?</param>
+        /// <param name="py">?</param>
         public virtual void SetToRotation(double angle, double px, double py) {
             SetToRotation(angle);
             m02 = px * (1 - m00) + py * m10;
@@ -446,12 +454,31 @@ namespace iText.Kernel.Geom {
             return m;
         }
 
+        /// <summary>Get an affine transformation representing a counter-clockwise rotation over the passed angle</summary>
+        /// <param name="angle">angle in radians to rotate over</param>
+        /// <returns>
+        /// 
+        /// <see cref="AffineTransform"/>
+        /// representing the rotation
+        /// </returns>
         public static iText.Kernel.Geom.AffineTransform GetRotateInstance(double angle) {
             iText.Kernel.Geom.AffineTransform t = new iText.Kernel.Geom.AffineTransform();
             t.SetToRotation(angle);
             return t;
         }
 
+        /// <summary>
+        /// Get an affine transformation representing a counter-clockwise rotation over the passed angle,
+        /// using the passed point as the center of rotation
+        /// </summary>
+        /// <param name="angle">angle in radians to rotate over</param>
+        /// <param name="x">x-coordinate of center of rotation</param>
+        /// <param name="y">y-coordinate of center of rotation</param>
+        /// <returns>
+        /// 
+        /// <see cref="AffineTransform"/>
+        /// representing the rotation
+        /// </returns>
         public static iText.Kernel.Geom.AffineTransform GetRotateInstance(double angle, double x, double y) {
             iText.Kernel.Geom.AffineTransform t = new iText.Kernel.Geom.AffineTransform();
             t.SetToRotation(angle, x, y);
@@ -470,10 +497,19 @@ namespace iText.Kernel.Geom {
             Concatenate(iText.Kernel.Geom.AffineTransform.GetShearInstance(shx, shy));
         }
 
+        /// <summary>Add a counter-clockwise rotation to this transformation</summary>
+        /// <param name="angle">angle in radians to rotate over</param>
         public virtual void Rotate(double angle) {
             Concatenate(iText.Kernel.Geom.AffineTransform.GetRotateInstance(angle));
         }
 
+        /// <summary>
+        /// Add a counter-clockwise rotation to this transformation,
+        /// using the passed point as the center of rotation
+        /// </summary>
+        /// <param name="angle">angle in radians to rotate over</param>
+        /// <param name="px">x-coordinate of center of rotation</param>
+        /// <param name="py">y-coordinate of center of rotation</param>
         public virtual void Rotate(double angle, double px, double py) {
             Concatenate(iText.Kernel.Geom.AffineTransform.GetRotateInstance(angle, px, py));
         }
