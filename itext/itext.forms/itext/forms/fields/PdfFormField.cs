@@ -157,7 +157,7 @@ namespace iText.Forms.Fields {
 
         protected internal int checkType;
 
-        protected internal float borderWidth = 0;
+        protected internal float borderWidth = 1;
 
         protected internal Color backgroundColor;
 
@@ -182,6 +182,7 @@ namespace iText.Forms.Fields {
             : base(pdfObject) {
             EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
+            RetrieveStyles();
         }
 
         /// <summary>
@@ -2404,15 +2405,20 @@ namespace iText.Forms.Fields {
         /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
-            PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
-            if (mk == null) {
-                mk = new PdfDictionary();
-            }
-            if (backgroundColor == null) {
-                mk.Remove(PdfName.BG);
-            }
-            else {
-                mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+            PdfDictionary mk;
+            IList<PdfWidgetAnnotation> kids = GetWidgets();
+            foreach (PdfWidgetAnnotation kid in kids) {
+                mk = kid.GetAppearanceCharacteristics();
+                if (mk == null) {
+                    mk = new PdfDictionary();
+                }
+                if (backgroundColor == null) {
+                    mk.Remove(PdfName.BG);
+                }
+                else {
+                    mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
+                }
+                kid.SetAppearanceCharacteristics(mk);
             }
             RegenerateField();
             return this;
@@ -3025,12 +3031,21 @@ namespace iText.Forms.Fields {
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBorderColor(Color color) {
             borderColor = color;
-            PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
-            if (mk == null) {
-                mk = new PdfDictionary();
-                Put(PdfName.MK, mk);
+            PdfDictionary mk;
+            IList<PdfWidgetAnnotation> kids = GetWidgets();
+            foreach (PdfWidgetAnnotation kid in kids) {
+                mk = kid.GetAppearanceCharacteristics();
+                if (mk == null) {
+                    mk = new PdfDictionary();
+                }
+                if (borderColor == null) {
+                    mk.Remove(PdfName.BC);
+                }
+                else {
+                    mk.Put(PdfName.BC, new PdfArray(borderColor.GetColorValue()));
+                }
+                kid.SetAppearanceCharacteristics(mk);
             }
-            mk.Put(PdfName.BC, new PdfArray(color.GetColorValue()));
             RegenerateField();
             return this;
         }
@@ -3565,25 +3580,21 @@ namespace iText.Forms.Fields {
             if (borderWidth < 0) {
                 borderWidth = 0;
             }
-            if (borderColor == null) {
-                borderColor = ColorConstants.BLACK;
-            }
             if (backgroundColor != null) {
-                canvas.SetFillColor(backgroundColor).Rectangle(borderWidth / 2, borderWidth / 2, width - borderWidth, height
-                     - borderWidth).Fill();
+                canvas.SetFillColor(backgroundColor).Rectangle(0, 0, width, height).Fill();
             }
-            if (borderWidth > 0) {
+            if (borderWidth > 0 && borderColor != null) {
                 borderWidth = Math.Max(1, borderWidth);
                 canvas.SetStrokeColor(borderColor).SetLineWidth(borderWidth);
                 if (bs != null) {
                     PdfName borderType = bs.GetAsName(PdfName.S);
                     if (borderType != null && borderType.Equals(PdfName.D)) {
                         PdfArray dashArray = bs.GetAsArray(PdfName.D);
-                        if (dashArray != null) {
-                            int unitsOn = dashArray.GetAsNumber(0) != null ? dashArray.GetAsNumber(0).IntValue() : 0;
-                            int unitsOff = dashArray.GetAsNumber(1) != null ? dashArray.GetAsNumber(1).IntValue() : 0;
-                            canvas.SetLineDash(unitsOn, unitsOff, 0);
-                        }
+                        int unitsOn = dashArray != null ? (dashArray.Size() > 0 ? (dashArray.GetAsNumber(0) != null ? dashArray.GetAsNumber
+                            (0).IntValue() : 3) : 3) : 3;
+                        int unitsOff = dashArray != null ? (dashArray.Size() > 1 ? (dashArray.GetAsNumber(1) != null ? dashArray.GetAsNumber
+                            (1).IntValue() : unitsOn) : unitsOn) : unitsOn;
+                        canvas.SetLineDash(unitsOn, unitsOff, 0);
                     }
                 }
                 canvas.Rectangle(0, 0, width, height).Stroke();
@@ -4018,6 +4029,51 @@ namespace iText.Forms.Fields {
         private PdfObject GetValueFromAppearance(PdfObject appearanceDict, PdfName key) {
             if (appearanceDict is PdfDictionary) {
                 return ((PdfDictionary)appearanceDict).Get(key);
+            }
+            return null;
+        }
+
+        private void RetrieveStyles() {
+            // For now we retrieve styles only in case of merged widget with the field,
+            // for one field might contain several widgets with their own different styles
+            // and it's unclear how to handle it with the way iText processes fields with multiple widgets currently.
+            PdfName subType = GetPdfObject().GetAsName(PdfName.Subtype);
+            if (subType != null && subType.Equals(PdfName.Widget)) {
+                PdfDictionary appearanceCharacteristics = GetPdfObject().GetAsDictionary(PdfName.MK);
+                if (appearanceCharacteristics != null) {
+                    backgroundColor = GetColor(appearanceCharacteristics, PdfName.BG);
+                    Color extractedBorderColor = GetColor(appearanceCharacteristics, PdfName.BC);
+                    if (extractedBorderColor != null) {
+                        borderColor = extractedBorderColor;
+                    }
+                }
+            }
+        }
+
+        private Color GetColor(PdfDictionary appearanceCharacteristics, PdfName property) {
+            PdfArray colorData = appearanceCharacteristics.GetAsArray(property);
+            if (colorData != null) {
+                float[] backgroundFloat = new float[colorData.Size()];
+                for (int i = 0; i < colorData.Size(); i++) {
+                    backgroundFloat[i] = colorData.GetAsNumber(i).FloatValue();
+                }
+                switch (colorData.Size()) {
+                    case 0: {
+                        return null;
+                    }
+
+                    case 1: {
+                        return new DeviceGray(backgroundFloat[0]);
+                    }
+
+                    case 3: {
+                        return new DeviceRgb(backgroundFloat[0], backgroundFloat[1], backgroundFloat[2]);
+                    }
+
+                    case 4: {
+                        return new DeviceCmyk(backgroundFloat[0], backgroundFloat[1], backgroundFloat[2], backgroundFloat[3]);
+                    }
+                }
             }
             return null;
         }

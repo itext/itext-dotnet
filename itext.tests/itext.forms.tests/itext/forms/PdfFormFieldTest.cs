@@ -587,5 +587,42 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DashedBorderApearanceTest() {
+            String outPdf = destinationFolder + "dashedBorderApearanceTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_dashedBorderApearanceTest.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField[] fields = new PdfTextFormField[3];
+            String[] names = new String[] { "fieldNoPattern", "fieldEmptyPattern", "fieldSingleEntryPattern" };
+            float y = 830;
+            PdfDictionary borderDict = new PdfDictionary();
+            borderDict.Put(PdfName.S, PdfName.D);
+            PdfArray patternArray = new PdfArray();
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    patternArray.Add(new PdfNumber(10));
+                }
+                if (i > 0) {
+                    borderDict.Put(PdfName.D, patternArray);
+                }
+                fields[i] = PdfTextFormField.CreateText(pdfDoc, new Rectangle(10, y -= 70, 200, 50), names[i], names[i]);
+                acroForm.AddField(fields[i]);
+                fields[i].SetBorderStyle(borderDict);
+                fields[i].SetBorderWidth(3);
+                fields[i].SetBorderColor(ColorConstants.CYAN);
+                fields[i].SetBackgroundColor(ColorConstants.MAGENTA);
+            }
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
