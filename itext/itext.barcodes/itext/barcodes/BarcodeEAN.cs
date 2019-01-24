@@ -45,6 +45,7 @@ using System;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -146,9 +147,25 @@ namespace iText.Barcodes {
             EVEN, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, ODD, EVEN
             , ODD, EVEN } };
 
-        /// <summary>Creates new BarcodeEAN</summary>
-        /// <param name="document">The document</param>
+        /// <summary>Creates new BarcodeEAN.</summary>
+        /// <remarks>
+        /// Creates new BarcodeEAN.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="BarcodeEAN(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeEAN(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates new BarcodeEAN</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public BarcodeEAN(PdfDocument document, PdfFont font)
             : base(document) {
             // 0
             // 1
@@ -194,14 +211,14 @@ namespace iText.Barcodes {
             // 7
             // 8
             // 9
-            x = 0.8f;
-            font = document.GetDefaultFont();
-            size = 8;
-            baseline = size;
-            barHeight = size * 3;
-            guardBars = true;
-            codeType = EAN13;
-            code = "";
+            this.x = 0.8f;
+            this.font = font;
+            this.size = 8;
+            this.baseline = size;
+            this.barHeight = size * 3;
+            this.guardBars = true;
+            this.codeType = EAN13;
+            this.code = "";
         }
 
         /// <summary>Calculates the EAN parity character.</summary>

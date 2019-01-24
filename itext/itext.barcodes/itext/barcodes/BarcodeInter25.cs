@@ -45,6 +45,7 @@ using System;
 using System.Text;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -74,19 +75,35 @@ namespace iText.Barcodes {
             byte[] { 1, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 0, 1, 1 }, new byte[] { 1, 
             0, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0 } };
 
-        /// <summary>Creates new BarcodeInter25</summary>
-        /// <param name="document">The document</param>
+        /// <summary>Creates new BarcodeInter25.</summary>
+        /// <remarks>
+        /// Creates new BarcodeInter25.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="BarcodeInter25(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeInter25(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates new BarcodeInter25</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public BarcodeInter25(PdfDocument document, PdfFont font)
             : base(document) {
-            x = 0.8f;
-            n = 2;
-            font = document.GetDefaultFont();
-            size = 8;
-            baseline = size;
-            barHeight = size * 3;
-            textAlignment = ALIGN_CENTER;
-            generateChecksum = false;
-            checksumText = false;
+            this.x = 0.8f;
+            this.n = 2;
+            this.font = font;
+            this.size = 8;
+            this.baseline = size;
+            this.barHeight = size * 3;
+            this.textAlignment = ALIGN_CENTER;
+            this.generateChecksum = false;
+            this.checksumText = false;
         }
 
         /// <summary>Deletes all the non numeric characters from <CODE>text</CODE>.</summary>

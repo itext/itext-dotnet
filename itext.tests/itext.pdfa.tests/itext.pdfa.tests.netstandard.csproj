@@ -35,6 +35,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\itext\itext.barcodes\itext.barcodes.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdfa\itext.pdfa.netstandard.csproj" />

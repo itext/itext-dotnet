@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\itext\itext.barcodes\itext.barcodes.csproj">
+      <Project>{dcae8241-e391-418d-ba36-c7c064d7c413}</Project>
+      <Name>itext.barcodes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itext.io</Name>
