@@ -624,5 +624,28 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
+        public virtual void NoMaxLenWithSetCombFlagTest() {
+            String outPdf = destinationFolder + "noMaxLenWithSetCombFlagTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_noMaxLenWithSetCombFlagTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField textField = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 500, 200, 200), "text");
+            textField.SetComb(true);
+            // The line below should throw an exception, because the Comb flag may be set only if the MaxLen entry is present in the text field dictionary
+            textField.SetValue("12345678");
+            textField.SetMaxLen(1);
+            form.AddField(textField);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }

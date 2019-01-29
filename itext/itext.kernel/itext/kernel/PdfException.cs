@@ -340,6 +340,7 @@ namespace iText.Kernel {
 
         public const String NoKidWithSuchRole = "No kid with such role.";
 
+        [System.ObsoleteAttribute(@"Now we log a warning rather than throw an exception.")]
         public const String NoMaxLenPresent = "No /MaxLen has been set even though the Comb flag has been set.";
 
         public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";

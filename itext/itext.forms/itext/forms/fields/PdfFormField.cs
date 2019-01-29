@@ -3472,11 +3472,17 @@ namespace iText.Forms.Fields {
             // check if /Comb has been set
             if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
                 // calculate space per character
+                int maxLen;
                 PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
                 if (maxLenEntry == null) {
-                    throw new PdfException(PdfException.NoMaxLenPresent);
+                    maxLen = 1;
+                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                        , maxLen));
                 }
-                int maxLen = maxLenEntry.IntValue();
+                else {
+                    maxLen = maxLenEntry.IntValue();
+                }
                 float widthPerCharacter = width / maxLen;
                 Paragraph paragraph = new Paragraph().SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1);
                 if (color != null) {
