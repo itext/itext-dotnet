@@ -307,5 +307,28 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LineThroughTest() {
+            //TODO: update after DEVSIX-2623 fix
+            String outFileName = destinationFolder + "lineThrough.pdf";
+            String cmpFileName = sourceFolder + "cmp_lineThrough.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Text textUp = new Text("textRise10f_with_lineThrough");
+            textUp.SetTextRise(10f);
+            textUp.SetLineThrough();
+            Text textDown = new Text("textRise-10f_with_lineThrough");
+            textDown.SetTextRise(-10f);
+            textDown.SetLineThrough();
+            Paragraph n = new Paragraph("baseline");
+            n.Add(textUp).Add(textDown);
+            document.Add(n);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
     }
 }
