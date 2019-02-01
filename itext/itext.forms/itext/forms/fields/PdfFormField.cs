@@ -3470,19 +3470,11 @@ namespace iText.Forms.Fields {
                 0, 2 * height));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             // check if /Comb has been set
-            if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
+            if (this.GetFieldFlag(PdfTextFormField.FF_COMB) && null != this.GetPdfObject().GetAsNumber(PdfName.MaxLen)
+                ) {
                 // calculate space per character
-                int maxLen;
                 PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
-                if (maxLenEntry == null) {
-                    maxLen = 1;
-                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
-                        , maxLen));
-                }
-                else {
-                    maxLen = maxLenEntry.IntValue();
-                }
+                int maxLen = maxLenEntry.IntValue();
                 float widthPerCharacter = width / maxLen;
                 Paragraph paragraph = new Paragraph().SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1);
                 if (color != null) {
@@ -3502,6 +3494,11 @@ namespace iText.Forms.Fields {
                 }
             }
             else {
+                if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                        ));
+                }
                 Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
                     (0, X_OFFSET, 0, X_OFFSET);
                 if (color != null) {
