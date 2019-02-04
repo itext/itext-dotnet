@@ -647,5 +647,27 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MaxLenWithSetCombFlagAppearanceTest() {
+            String srcPdf = sourceFolder + "maxLenFields.pdf";
+            String outPdf = destinationFolder + "maxLenWithSetCombFlagAppearanceTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_maxLenWithSetCombFlagAppearanceTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            form.GetField("text1").SetValue("123");
+            form.GetField("text2").SetJustification(1).SetValue("123");
+            form.GetField("text3").SetJustification(2).SetValue("123");
+            form.GetField("text4").SetValue("12345678");
+            form.GetField("text5").SetValue("123456789101112131415161718");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }

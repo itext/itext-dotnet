@@ -61,6 +61,7 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 
@@ -3469,28 +3470,36 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
                 0, 2 * height));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
+            paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
             // check if /Comb has been set
             if (this.GetFieldFlag(PdfTextFormField.FF_COMB) && null != this.GetPdfObject().GetAsNumber(PdfName.MaxLen)
                 ) {
-                // calculate space per character
                 PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
                 int maxLen = maxLenEntry.IntValue();
                 float widthPerCharacter = width / maxLen;
-                Paragraph paragraph = new Paragraph().SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1);
-                if (color != null) {
-                    paragraph.SetFontColor(color);
+                int numberOfCharacters = Math.Min(maxLen, value.Length);
+                int start;
+                switch (textAlignment) {
+                    case TextAlignment.RIGHT: {
+                        start = (maxLen - numberOfCharacters);
+                        break;
+                    }
+
+                    case TextAlignment.CENTER: {
+                        start = (maxLen - numberOfCharacters) / 2;
+                        break;
+                    }
+
+                    default: {
+                        start = 0;
+                        break;
+                    }
                 }
-                int numberOfCharacters = maxLen >= value.Length ? value.Length : maxLen;
+                float startOffset = widthPerCharacter * (start + 0.5f);
                 for (int i = 0; i < numberOfCharacters; i++) {
-                    // Get width of each character
-                    String characterToPlace = value.JSubstring(i, i + 1);
-                    float characterWidth = font.GetWidth(characterToPlace, fontSize);
-                    // Find x-offset for this character so that we can place it in the center of this comb-section
-                    float xOffset = characterWidth == 0 ? characterWidth : (widthPerCharacter - characterWidth) / 2;
-                    paragraph.SetPaddings(0f, xOffset, 0f, xOffset);
-                    paragraph.Add(characterToPlace);
-                    modelCanvas.ShowTextAligned(paragraph, widthPerCharacter * i, 0, textAlignment);
-                    paragraph.GetChildren().JRemoveAt(0);
+                    modelCanvas.ShowTextAligned(new Paragraph(value.JSubstring(i, i + 1)).AddStyle(paragraphStyle), startOffset
+                         + widthPerCharacter * i, rect.GetHeight() / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE);
                 }
             }
             else {
@@ -3499,8 +3508,7 @@ namespace iText.Forms.Fields {
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
-                Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
-                    (0, X_OFFSET, 0, X_OFFSET);
+                Paragraph paragraph = new Paragraph(value).AddStyle(paragraphStyle).SetPaddings(0, X_OFFSET, 0, X_OFFSET);
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
