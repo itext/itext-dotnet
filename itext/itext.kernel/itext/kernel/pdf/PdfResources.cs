@@ -392,8 +392,15 @@ namespace iText.Kernel.Pdf {
             return isModified;
         }
 
+        [System.ObsoleteAttribute(@"Please use SetModified() .")]
         protected internal virtual void SetModified(bool isModified) {
             this.isModified = isModified;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override PdfObjectWrapper<PdfDictionary> SetModified() {
+            this.isModified = true;
+            return base.SetModified();
         }
 
         /// <summary>Sets the value of default Gray Color Space (see ISO-320001 Paragraph 8.6.5.6).</summary>
@@ -614,6 +621,7 @@ namespace iText.Kernel.Pdf {
                 GetPdfObject().Put(resType, resourceCategory = new PdfDictionary());
             }
             resourceCategory.Put(resName, resource);
+            SetModified();
         }
 
         internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {
