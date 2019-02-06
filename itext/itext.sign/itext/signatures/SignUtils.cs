@@ -72,9 +72,6 @@ namespace iText.Signatures {
     internal sealed class SignUtils {
         internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
 
-        internal static readonly int KEY_USAGE_DIGITAL_SIGNATURE = 0;
-        internal static readonly int KEY_USAGE_NON_REPUDIATION   = 1;
-
         internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
             String algorithm;
             if (cp is RsaKeyParameters) {
@@ -240,40 +237,27 @@ namespace iText.Signatures {
             return response;
         }
         
+        /// <summary>
+        /// This behavior is different in Java and .NET, because in Java we use this two-step check:
+        /// first via #hasUnsupportedCriticalExtension method, and then additionally allowing standard critical extensions;
+        /// in .NET there's only second step. However, removing first step in Java can be a breaking change for some users
+        /// and moreover we don't have any means of providing customization for unsupported extensions check as of right now.
+        ///
+        /// During major release I'd suggest changing java unsupported extensions check logic to the same as in .NET,
+        /// but only if it is possible to customize this logic.
+        /// </summary>
+        /// <param name="cert"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        [Obsolete]
         internal static bool HasUnsupportedCriticalExtension(X509Certificate cert) {
             if ( cert == null ) {
                 throw new ArgumentException("X509Certificate can't be null.");
             }
 
             foreach (String oid in cert.GetCriticalExtensionOids()) {
-                if (oid == X509Extensions.BasicConstraints.Id
-                    || oid == X509Extensions.CertificatePolicies.Id
-                    || oid == X509Extensions.CrlDistributionPoints.Id
-                    || oid == X509Extensions.DeltaCrlIndicator.Id
-                    || oid == X509Extensions.InhibitAnyPolicy.Id
-                    || oid == X509Extensions.IssuingDistributionPoint.Id
-                    || oid == X509Extensions.NameConstraints.Id
-                    || oid == X509Extensions.PolicyConstraints.Id
-                    || oid == X509Extensions.PolicyMappings.Id
-                    || oid == X509Extensions.SubjectAlternativeName.Id) {
+                if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
                     continue;
-                }
-
-                if (oid == X509Extensions.KeyUsage.Id) {
-                    bool[] keyUsageFlags = cert.GetKeyUsage();
-
-                    if (keyUsageFlags[KEY_USAGE_DIGITAL_SIGNATURE] || keyUsageFlags[KEY_USAGE_NON_REPUDIATION]) {
-                        continue;
-                    }
-                }
-
-                try {
-                    // EXTENDED KEY USAGE and TIMESTAMPING is ALLOWED
-                    if (oid == X509Extensions.ExtendedKeyUsage.Id && cert.GetExtendedKeyUsage().Contains(OID.X509Extensions.ID_KP_TIMESTAMPING)) {
-                        continue;
-                    }
-                } catch (CertificateParsingException) {
-                    // DO NOTHING;
                 }
                 return true;
             }

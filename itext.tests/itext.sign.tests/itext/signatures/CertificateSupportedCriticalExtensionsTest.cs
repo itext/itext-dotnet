@@ -118,7 +118,7 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            NUnit.Framework.Assert.True(SignUtils.HasUnsupportedCriticalExtension(cert));
+            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
         [NUnit.Framework.Test]

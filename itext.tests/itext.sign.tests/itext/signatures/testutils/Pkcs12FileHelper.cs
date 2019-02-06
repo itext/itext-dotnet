@@ -92,8 +92,10 @@ namespace iText.Signatures.Testutils {
 
             foreach (var a in pk12.Aliases) {
                 alias = ((string)a);
-                if (pk12.IsCertificateEntry(alias)) {
-                    certStore.Add(pk12.GetCertificate(alias).Certificate);
+                X509CertificateEntry x509CertificateEntry;
+                if ((pk12.IsCertificateEntry(alias) || pk12.IsKeyEntry(alias)) 
+                    && (x509CertificateEntry = pk12.GetCertificate(alias)) != null) {
+                    certStore.Add(x509CertificateEntry.Certificate);
                 }
             }
             return certStore;

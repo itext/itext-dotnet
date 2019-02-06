@@ -86,6 +86,16 @@ namespace iText.Signatures.Sign {
         /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
         /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
+        public virtual void PadesRsaSigTestWithChain01() {
+            SignApproval(certsSrc + "signCertRsaWithChain.p12", destinationFolder + "padesRsaSigTestWithChain01.pdf");
+            BasicCheckSignedDoc(destinationFolder + "padesRsaSigTestWithChain01.pdf", "Signature1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
+        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1620: For some reason signatures created with the given cert (either by iText or acrobat) are considered invalid"
             )]
         public virtual void PadesDsaSigTest01() {

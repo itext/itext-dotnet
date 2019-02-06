@@ -99,7 +99,7 @@ namespace iText.Signatures {
         /// <param name="keystore">the <CODE>KeyStore</CODE></param>
         /// <param name="crls">the certificate revocation list or <CODE>null</CODE></param>
         /// <returns>
-        /// <CODE>null</CODE> if the certificate chain could be validated or a
+        /// empty list if the certificate chain could be validated or a
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
@@ -114,7 +114,7 @@ namespace iText.Signatures {
         /// <param name="crls">the certificate revocation list or <CODE>null</CODE></param>
         /// <param name="calendar">the date, shall not be null</param>
         /// <returns>
-        /// <CODE>null</CODE> if the certificate chain could be validated or a
+        /// empty list if the certificate chain could be validated or a
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
