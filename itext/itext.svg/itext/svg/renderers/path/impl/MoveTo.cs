@@ -53,6 +53,8 @@ namespace iText.Svg.Renderers.Path.Impl {
     public class MoveTo : AbstractPathShape {
         private String[] coordinates;
 
+        private LineTo additionalLines;
+
         public MoveTo()
             : this(false) {
         }
@@ -65,6 +67,9 @@ namespace iText.Svg.Renderers.Path.Impl {
             float x = CssUtils.ParseAbsoluteLength(coordinates[0]);
             float y = CssUtils.ParseAbsoluteLength(coordinates[1]);
             canvas.MoveTo(x, y);
+            if (additionalLines != null) {
+                additionalLines.Draw(canvas);
+            }
         }
 
         public override void SetCoordinates(String[] coordinates, Point startPoint) {
@@ -72,14 +77,16 @@ namespace iText.Svg.Renderers.Path.Impl {
                 throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
                     , JavaUtil.ArraysToString(coordinates)));
             }
-            if (coordinates.Length > 2) {
-                // (x y)+ parameters will be implemented in the future
-                throw new NotSupportedException();
-            }
             this.coordinates = new String[] { coordinates[0], coordinates[1] };
             if (IsRelative()) {
                 this.coordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(coordinates, new double[] { 
                     startPoint.x, startPoint.y });
+            }
+            // If a moveto is followed by multiple pairs of coordinates, the subsequent pairs are treated as implicit lineto commands
+            if (coordinates.Length > 2) {
+                additionalLines = new LineTo(IsRelative());
+                additionalLines.SetCoordinates(JavaUtil.ArraysCopyOfRange(coordinates, 2, coordinates.Length), GetEndingPoint
+                    ());
             }
         }
 

@@ -420,6 +420,20 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void MoveToRelativeMultipleTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "moveToRelativeMultiple");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MoveToAbsoluteMultipleTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "moveToAbsoluteMultiple");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void ITextLogoTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "iTextLogo");
         }
