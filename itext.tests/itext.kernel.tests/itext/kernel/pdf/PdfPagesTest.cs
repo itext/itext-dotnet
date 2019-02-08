@@ -437,6 +437,25 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(TestPageTreeParentsValid(src) && TestPageTreeParentsValid(dest));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PdfNumberInPageContentArrayTest() {
+            String src = sourceFolder + "pdfNumberInPageContentArray.pdf";
+            String dest = destinationFolder + "pdfNumberInPageContentArray_saved.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            pdfDoc.Close();
+            // test is mainly to ensure document is successfully opened-and-closed without exceptions
+            pdfDoc = new PdfDocument(new PdfReader(dest));
+            PdfObject pageDictWithInvalidContents = pdfDoc.GetPdfObject(10);
+            PdfArray invalidContentsArray = ((PdfDictionary)pageDictWithInvalidContents).GetAsArray(PdfName.Contents);
+            NUnit.Framework.Assert.AreEqual(5, invalidContentsArray.Size());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(0).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(1).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(2).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(3).IsStream());
+            NUnit.Framework.Assert.IsTrue(invalidContentsArray.Get(4).IsStream());
+        }
+
         /// <exception cref="iText.IO.IOException"/>
         /// <exception cref="System.IO.IOException"/>
         private bool TestPageTreeParentsValid(String src) {

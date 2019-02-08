@@ -190,7 +190,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// 
         /// <see cref="PdfStream"/>
-        /// object at specified index.
+        /// object at specified index;
+        /// will return null in case page dictionary doesn't adhere to the specification, meaning that the document is an invalid PDF.
         /// </returns>
         /// <exception cref="System.IndexOutOfRangeException">if the index is out of range</exception>
         public virtual PdfStream GetContentStream(int index) {
@@ -205,7 +206,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (contents is PdfArray) {
                     PdfArray a = (PdfArray)contents;
-                    return (PdfStream)a.Get(index);
+                    return a.GetAsStream(index);
                 }
                 else {
                     return null;
@@ -618,7 +619,10 @@ namespace iText.Kernel.Pdf {
             }
             int contentStreamCount = GetContentStreamCount();
             for (int i = 0; i < contentStreamCount; i++) {
-                GetContentStream(i).Flush(false);
+                PdfStream contentStream = GetContentStream(i);
+                if (contentStream != null) {
+                    contentStream.Flush(false);
+                }
             }
             resources = null;
             base.Flush();
