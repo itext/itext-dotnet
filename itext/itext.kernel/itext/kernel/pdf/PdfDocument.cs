@@ -1696,7 +1696,7 @@ namespace iText.Kernel.Pdf {
             if (defaultFont == null) {
                 try {
                     defaultFont = PdfFontFactory.CreateFont();
-                    AddFont(defaultFont);
+                    defaultFont.MakeIndirect(this);
                 }
                 catch (System.IO.IOException e) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
