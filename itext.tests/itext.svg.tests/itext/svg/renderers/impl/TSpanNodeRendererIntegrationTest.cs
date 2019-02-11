@@ -182,5 +182,13 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TSpanAbsolutePositionAndRelativeMoveFunctionalTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-absolutePositionAndRelativeMove");
         }
+
+        //Text-anchor test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TSpanTextAnchorFunctionalTest() {
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor");
+        }
     }
 }

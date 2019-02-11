@@ -152,6 +152,7 @@ namespace iText.Svg.Renderers.Impl {
                     ResolveFont(context);
                     currentCanvas.SetFontAndSize(font, fontSize);
                     foreach (ISvgTextNodeRenderer c in children) {
+                        float childLength = c.GetTextContentLength(fontSize, font);
                         if (c.ContainsAbsolutePositionChange()) {
                             //TODO(DEVSIX-2507) support rotate and other attributes
                             float[][] absolutePositions = c.GetAbsolutePositionChanges();
@@ -163,6 +164,11 @@ namespace iText.Svg.Renderers.Impl {
                             //Absolute position changes requires resetting the current text move in the context
                             context.ResetTextMove();
                         }
+                        //Handle Text-Anchor declarations
+                        float textAnchorCorrection = GetTextAnchorAlignmentCorrection(childLength);
+                        if (!CssUtils.CompareFloats(0f, textAnchorCorrection)) {
+                            context.AddTextMove(textAnchorCorrection, 0);
+                        }
                         //Move needs to happen before the saving of the state in order for it to cascade beyond
                         if (c.ContainsRelativeMove()) {
                             float[] childMove = c.GetRelativeTranslation();
@@ -171,8 +177,7 @@ namespace iText.Svg.Renderers.Impl {
                         //-y to account for the text-matrix transform we do in the text root to account for the coordinates
                         currentCanvas.SaveState();
                         c.Draw(context);
-                        float length = c.GetTextContentLength(fontSize, font);
-                        context.AddTextMove(length, 0);
+                        context.AddTextMove(childLength, 0);
                         currentCanvas.RestoreState();
                         //Restore transformation matrix
                         if (!context.GetLastTextTransform().IsIdentity()) {
@@ -305,6 +310,29 @@ namespace iText.Svg.Renderers.Impl {
                 child.SetParent(deepCopy);
                 deepCopy.AddChild(newChild);
             }
+        }
+
+        private float GetTextAnchorAlignmentCorrection(float childContentLength) {
+            // Resolve text anchor
+            //TODO DEVSIX-2631 properly resolve text-anchor by taking entire line into account, not only children of the current TextSvgBranchRenderer
+            float textAnchorXCorrection = 0.0f;
+            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_ANCHOR
+                )) {
+                String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
+                //Middle
+                if (textAnchorValue.Equals(SvgConstants.Values.TEXT_ANCHOR_MIDDLE)) {
+                    if (xPos != null && xPos.Length > 0) {
+                        textAnchorXCorrection -= childContentLength / 2;
+                    }
+                }
+                //End
+                if (textAnchorValue.Equals(SvgConstants.Values.TEXT_ANCHOR_END)) {
+                    if (xPos != null && xPos.Length > 0) {
+                        textAnchorXCorrection -= childContentLength;
+                    }
+                }
+            }
+            return textAnchorXCorrection;
         }
     }
 }
