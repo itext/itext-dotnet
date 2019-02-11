@@ -142,15 +142,5 @@ namespace iText.Svg.Renderers.Impl {
             AffineTransform actual = root.CalculateTransformation(context);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
-
-        [NUnit.Framework.Test]
-        public virtual void DeepCopyTest() {
-            SvgTagSvgNodeRenderer subTree = new SvgTagSvgNodeRenderer();
-            subTree.AddChild(new CircleSvgNodeRenderer());
-            PdfRootSvgNodeRenderer expected = new PdfRootSvgNodeRenderer(subTree);
-            ISvgNodeRenderer actual = expected.CreateDeepCopy();
-            expected.Equals(actual);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
     }
 }

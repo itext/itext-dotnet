@@ -130,16 +130,5 @@ namespace iText.Svg.Renderers.Impl {
                 (subTreeRoot.CreateDeepCopy());
             return copy;
         }
-
-        public override int GetHashCode() {
-            return 42 + subTreeRoot.GetHashCode();
-        }
-
-        public override bool Equals(Object other) {
-            if (other == null || this.GetType() != other.GetType()) {
-                return false;
-            }
-            return ((iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer)other).subTreeRoot.Equals(subTreeRoot);
-        }
     }
 }

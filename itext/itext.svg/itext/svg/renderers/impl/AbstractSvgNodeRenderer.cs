@@ -62,11 +62,11 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
-        private bool doFill = false;
-
-        private bool doStroke = false;
-
         internal bool partOfClipPath;
+
+        internal bool doFill = false;
+
+        internal bool doStroke = false;
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
@@ -282,35 +282,6 @@ namespace iText.Svg.Renderers.Impl {
             }
             copy.AddAll(attributesAndStyles);
             return copy;
-        }
-
-        public override bool Equals(Object other) {
-            if (other == null || this.GetType() != other.GetType()) {
-                return false;
-            }
-            AbstractSvgNodeRenderer oar = (AbstractSvgNodeRenderer)other;
-            //Compare attribute and style map
-            bool attributesAndStylesEqual = true;
-            if (attributesAndStyles != null && oar.attributesAndStyles != null) {
-                attributesAndStylesEqual &= (attributesAndStyles.Count == oar.attributesAndStyles.Count);
-                foreach (KeyValuePair<String, String> kvp in attributesAndStyles) {
-                    String value = oar.attributesAndStyles.Get(kvp.Key);
-                    if (value == null || !kvp.Value.Equals(value)) {
-                        return false;
-                    }
-                }
-            }
-            else {
-                attributesAndStylesEqual = (attributesAndStyles == null && oar.attributesAndStyles == null);
-            }
-            return attributesAndStylesEqual && doFill == oar.doFill && doStroke == oar.doStroke;
-        }
-
-        public override int GetHashCode() {
-            //No particular reasoning behind this hashing
-            int hash = 112;
-            hash = hash * 3 + attributesAndStyles.GetHashCode();
-            return hash;
         }
 
         /// <summary>

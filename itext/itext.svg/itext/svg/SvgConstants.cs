@@ -364,6 +364,12 @@ namespace iText.Svg {
             /// <summary>Attribute defining the outline of a shape.</summary>
             public const String D = "d";
 
+            /// <summary>Attribute defining the relative x-translation of a text-element</summary>
+            public const String DX = "dx";
+
+            /// <summary>Attribute defining the relative y-translation of a text-element</summary>
+            public const String DY = "dy";
+
             /// <summary>Attribute defining the fill color.</summary>
             public const String FILL = "fill";
 

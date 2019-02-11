@@ -45,7 +45,6 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
-using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -66,15 +65,6 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetParent(parent);
             Rectangle actual = renderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DeepCopyTest() {
-            SvgTagSvgNodeRenderer expected = new SvgTagSvgNodeRenderer();
-            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
-            expected.AddChild(new CircleSvgNodeRenderer());
-            ISvgNodeRenderer actual = expected.CreateDeepCopy();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]

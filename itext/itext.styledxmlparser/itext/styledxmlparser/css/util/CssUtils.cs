@@ -59,7 +59,7 @@ namespace iText.StyledXmlParser.Css.Util {
         private static readonly String[] RELATIVE_MEASUREMENTS = new String[] { CommonCssConstants.PERCENTAGE, CommonCssConstants
             .EM, CommonCssConstants.EX, CommonCssConstants.REM };
 
-        private const float EPSILON = 0.000000000000001f;
+        private const float EPSILON = 1e-6f;
 
         /// <summary>
         /// Creates a new
@@ -480,8 +480,18 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Helper method for comparing floating point numbers</summary>
-        /// <returns>true if both floating point numbers are close enough to be considered equal</returns>
-        public static bool CompareFloats(double f1, double f2) {
+        /// <param name="d1">first float to compare</param>
+        /// <param name="d2">second float to compare</param>
+        /// <returns>True if both floats are equal within a Epsilon defined in this class, false otherwise</returns>
+        public static bool CompareFloats(double d1, double d2) {
+            return (Math.Abs(d1 - d2) < EPSILON);
+        }
+
+        /// <summary>Helper method for comparing floating point numbers</summary>
+        /// <param name="f1">first float to compare</param>
+        /// <param name="f2">second float to compare</param>
+        /// <returns>True if both floats are equal within a Epsilon defined in this class, false otherwise</returns>
+        public static bool CompareFloats(float f1, float f2) {
             return (Math.Abs(f1 - f2) < EPSILON);
         }
 

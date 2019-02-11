@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Svg;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Utils {
     public class SvgTextUtilTest {
@@ -177,6 +179,69 @@ namespace iText.Svg.Utils {
             String toTrim = "A";
             String actual = SvgTextUtil.TrimTrailingWhitespace(toTrim);
             String expected = "A";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessWhiteSpaceBreakLine() {
+            //Create tree
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            TextLeafSvgNodeRenderer textBefore = new TextLeafSvgNodeRenderer();
+            textBefore.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "            text\n" + "            "
+                );
+            root.AddChild(textBefore);
+            TextSvgBranchRenderer span = new TextSvgBranchRenderer();
+            TextLeafSvgNodeRenderer textInSpan = new TextLeafSvgNodeRenderer();
+            textInSpan.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "                tspan text\n" + "            "
+                );
+            span.AddChild(textInSpan);
+            root.AddChild(span);
+            TextLeafSvgNodeRenderer textAfter = new TextLeafSvgNodeRenderer();
+            textAfter.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "            after text\n" + "        "
+                );
+            root.AddChild(textAfter);
+            //Run
+            SvgTextUtil.ProcessWhiteSpace(root, true);
+            root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
+            //Create result array
+            String[] actual = new String[] { root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT), 
+                ((TextSvgBranchRenderer)root.GetChildren()[1]).GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT
+                ), root.GetChildren()[2].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT) };
+            //Create expected
+            String[] expected = new String[] { "text", " tspan text", " after text" };
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessWhiteSpaceAbsPositionChange() {
+            //Create tree
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            TextLeafSvgNodeRenderer textBefore = new TextLeafSvgNodeRenderer();
+            textBefore.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "            text\n" + "            "
+                );
+            root.AddChild(textBefore);
+            TextSvgBranchRenderer span = new TextSvgBranchRenderer();
+            span.SetAttribute(SvgConstants.Attributes.X, "10");
+            span.SetAttribute(SvgConstants.Attributes.Y, "20");
+            TextLeafSvgNodeRenderer textInSpan = new TextLeafSvgNodeRenderer();
+            textInSpan.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "                tspan text\n" + "            "
+                );
+            span.AddChild(textInSpan);
+            root.AddChild(span);
+            TextLeafSvgNodeRenderer textAfter = new TextLeafSvgNodeRenderer();
+            textAfter.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "\n" + "            after text\n" + "        "
+                );
+            root.AddChild(textAfter);
+            //Run
+            SvgTextUtil.ProcessWhiteSpace(root, true);
+            root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
+            //Create result array
+            String[] actual = new String[] { root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT), 
+                ((TextSvgBranchRenderer)root.GetChildren()[1]).GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT
+                ), root.GetChildren()[2].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT) };
+            //Create expected
+            String[] expected = new String[] { "text", "tspan text", " after text" };
+            //No preceding whitespace on the second element
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
