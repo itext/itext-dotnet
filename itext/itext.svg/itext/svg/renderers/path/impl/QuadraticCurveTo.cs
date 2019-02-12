@@ -48,12 +48,10 @@ using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
+    /// <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
     public class QuadraticCurveTo : AbstractPathShape {
         private String[] coordinates;
 
-        /*
-        * Implements quadratic Bezier curveTo(Q) attribute of SVG's path element
-        */
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw(PdfCanvas canvas) {

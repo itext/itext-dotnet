@@ -95,13 +95,11 @@ namespace iText.Svg.Renderers.Impl {
         /// The
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// representing the current point in the path to be used for relative pathing operations.
-        /// The original value is
-        /// <see langword="null"/>
-        /// , and must be set via a
+        /// The original value is the origin, and should be set via a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
         /// operation before it may be referenced.
         /// </summary>
-        private Point currentPoint = null;
+        private Point currentPoint = new Point(0, 0);
 
         /// <summary>
         /// The
@@ -267,7 +265,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
         /// that should be drawn to represent the path.
         /// </returns>
-        private ICollection<IPathShape> GetShapes() {
+        internal virtual ICollection<IPathShape> GetShapes() {
             ICollection<String> parsedResults = ParsePropertiesAndStyles();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {

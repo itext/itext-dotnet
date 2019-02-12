@@ -72,6 +72,8 @@ namespace iText.Svg.Renderers.Path.Impl {
             result.Put(SvgConstants.Attributes.PATH_DATA_REL_CURVE_TO, new CurveTo(true));
             result.Put(SvgConstants.Attributes.PATH_DATA_QUAD_CURVE_TO, new QuadraticCurveTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_ELLIPTICAL_ARC_A, new EllipticalCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_ELLIPTICAL_ARC_A, new EllipticalCurveTo(true));
             return result;
         }
     }
