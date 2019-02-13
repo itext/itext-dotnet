@@ -416,6 +416,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
             public const String RY = "ry";
 
+            /// <summary>Attribute defining the opacity of a group or graphic element.</summary>
+            public const String OPACITY = "opacity";
+
             /// <summary>Close Path Operator.</summary>
             public const String PATH_DATA_CLOSE_PATH = "Z";
 

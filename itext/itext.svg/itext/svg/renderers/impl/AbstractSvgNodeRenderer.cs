@@ -133,6 +133,27 @@ namespace iText.Svg.Renderers.Impl {
             return name.Replace("url(#", "").Replace(")", "").Trim();
         }
 
+        private static float GetAlphaFromRGBA(String value) {
+            try {
+                return WebColors.GetRGBAColor(value)[3];
+            }
+            catch (Exception) {
+                return 1f;
+            }
+        }
+
+        private float GetOpacity() {
+            float result = 1f;
+            String opacityValue = GetAttribute(SvgConstants.Attributes.OPACITY);
+            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                result = float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            if (parent != null && parent is AbstractSvgNodeRenderer) {
+                result *= ((AbstractSvgNodeRenderer)parent).GetOpacity();
+            }
+            return result;
+        }
+
         /// <summary>Operations to perform before drawing an element.</summary>
         /// <remarks>
         /// Operations to perform before drawing an element.
@@ -142,25 +163,45 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual void PreDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                PdfExtGState opacityGraphicsState = new PdfExtGState();
                 if (!partOfClipPath) {
+                    float generalOpacity = GetOpacity();
  {
                         // fill
                         String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
                         this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
                         if (doFill && CanElementFill()) {
-                            Color color = ColorConstants.BLACK;
-                            if (fillRawValue != null) {
-                                color = WebColors.GetRGBColor(fillRawValue);
+                            Color rgbColor = ColorConstants.BLACK;
+                            float fillOpacity = generalOpacity;
+                            String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
+                            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                                fillOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
                             }
-                            currentCanvas.SetFillColor(color);
+                            if (fillRawValue != null) {
+                                fillOpacity *= GetAlphaFromRGBA(fillRawValue);
+                                rgbColor = WebColors.GetRGBColor(fillRawValue);
+                            }
+                            if (!CssUtils.CompareFloats(fillOpacity, 1f)) {
+                                opacityGraphicsState.SetFillOpacity(fillOpacity);
+                            }
+                            currentCanvas.SetFillColor(rgbColor);
                         }
                     }
  {
                         // stroke
                         String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
                         if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
-                            DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
-                            if (strokeRawValue != null && rgbColor != null) {
+                            if (strokeRawValue != null) {
+                                Color rgbColor = WebColors.GetRGBColor(strokeRawValue);
+                                float strokeOpacity = generalOpacity;
+                                String opacityValue = GetAttribute(SvgConstants.Attributes.STROKE_OPACITY);
+                                if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                                    strokeOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+                                }
+                                strokeOpacity *= GetAlphaFromRGBA(strokeRawValue);
+                                if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
+                                    opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
+                                }
                                 currentCanvas.SetStrokeColor(rgbColor);
                                 String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                                 float strokeWidth = 1f;
@@ -174,11 +215,8 @@ namespace iText.Svg.Renderers.Impl {
                     }
  {
                         // opacity
-                        String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
-                        if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                            PdfExtGState gs1 = new PdfExtGState();
-                            gs1.SetFillOpacity(float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture));
-                            currentCanvas.SetExtGState(gs1);
+                        if (!opacityGraphicsState.GetPdfObject().IsEmpty()) {
+                            currentCanvas.SetExtGState(opacityGraphicsState);
                         }
                     }
                 }
