@@ -57,8 +57,6 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
-        private ISvgNodeRenderer parent;
-
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
@@ -67,6 +65,8 @@ namespace iText.Svg.Renderers.Impl {
         internal bool doFill = false;
 
         internal bool doStroke = false;
+
+        private ISvgNodeRenderer parent;
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
@@ -78,6 +78,26 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
             this.attributesAndStyles = attributesAndStyles;
+        }
+
+        public virtual String GetAttribute(String key) {
+            return attributesAndStyles.Get(key);
+        }
+
+        public virtual void SetAttribute(String key, String value) {
+            if (this.attributesAndStyles == null) {
+                this.attributesAndStyles = new Dictionary<String, String>();
+            }
+            this.attributesAndStyles.Put(key, value);
+        }
+
+        public virtual IDictionary<String, String> GetAttributeMapCopy() {
+            Dictionary<String, String> copy = new Dictionary<String, String>();
+            if (attributesAndStyles == null) {
+                return copy;
+            }
+            copy.AddAll(attributesAndStyles);
+            return copy;
         }
 
         /// <summary>
@@ -114,26 +134,36 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private bool DrawInClipPath(SvgDrawContext context) {
-            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
-                String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
-                ISvgNodeRenderer template = context.GetNamedObject(NormalizeName(clipPathName));
-                //Clone template to avoid muddying the state
-                if (template is ClipPathSvgNodeRenderer) {
-                    ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
-                    clipPath.SetClippedRenderer(this);
-                    clipPath.Draw(context);
-                    return !clipPath.GetChildren().IsEmpty();
-                }
-            }
+        /// <summary>Method to see if a certain renderer can use fill.</summary>
+        /// <returns>true if the renderer can use fill</returns>
+        protected internal virtual bool CanElementFill() {
+            return true;
+        }
+
+        /// <summary>Method to see if the renderer can create a viewport</summary>
+        /// <returns>true if the renderer can construct a viewport</returns>
+        public virtual bool CanConstructViewPort() {
             return false;
         }
 
-        private String NormalizeName(String name) {
-            return name.Replace("url(#", "").Replace(")", "").Trim();
+        /// <summary>
+        /// Make a deep copy of the styles and attributes of this renderer
+        /// Helper method for deep copying logic
+        /// </summary>
+        /// <param name="deepCopy">renderer to insert the deep copied attributes into</param>
+        protected internal virtual void DeepCopyAttributesAndStyles(ISvgNodeRenderer deepCopy) {
+            IDictionary<String, String> stylesDeepCopy = new Dictionary<String, String>();
+            if (this.attributesAndStyles != null) {
+                stylesDeepCopy.AddAll(this.attributesAndStyles);
+                deepCopy.SetAttributesAndStyles(stylesDeepCopy);
+            }
         }
 
-        private static float GetAlphaFromRGBA(String value) {
+        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
+        protected internal abstract void DoDraw(SvgDrawContext context);
+
+        internal static float GetAlphaFromRGBA(String value) {
             try {
                 return WebColors.GetRGBAColor(value)[3];
             }
@@ -142,16 +172,71 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private float GetOpacity() {
-            float result = 1f;
-            String opacityValue = GetAttribute(SvgConstants.Attributes.OPACITY);
-            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                result = float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+        /// <summary>Calculate the transformation for the viewport based on the context.</summary>
+        /// <remarks>Calculate the transformation for the viewport based on the context. Only used by elements that can create viewports
+        ///     </remarks>
+        /// <param name="context">the SVG draw context</param>
+        /// <returns>the transformation that needs to be applied to this renderer</returns>
+        internal virtual AffineTransform CalculateViewPortTranslation(SvgDrawContext context) {
+            Rectangle viewPort = context.GetCurrentViewPort();
+            AffineTransform transform;
+            transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());
+            return transform;
+        }
+
+        /// <summary>Operations to be performed after drawing the element.</summary>
+        /// <remarks>
+        /// Operations to be performed after drawing the element.
+        /// This includes filling, stroking.
+        /// </remarks>
+        /// <param name="context">the svg draw context</param>
+        internal virtual void PostDraw(SvgDrawContext context) {
+            if (this.attributesAndStyles != null) {
+                PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                // fill-rule
+                if (partOfClipPath) {
+                    if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(this.GetAttribute(SvgConstants.Attributes.CLIP_RULE
+                        ))) {
+                        currentCanvas.EoClip();
+                    }
+                    else {
+                        currentCanvas.Clip();
+                    }
+                    currentCanvas.NewPath();
+                }
+                else {
+                    if (doFill && CanElementFill()) {
+                        String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
+                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                            if (doStroke) {
+                                currentCanvas.EoFillStroke();
+                            }
+                            else {
+                                currentCanvas.EoFill();
+                            }
+                        }
+                        else {
+                            if (doStroke) {
+                                currentCanvas.FillStroke();
+                            }
+                            else {
+                                currentCanvas.Fill();
+                            }
+                        }
+                    }
+                    else {
+                        if (doStroke) {
+                            currentCanvas.Stroke();
+                        }
+                    }
+                    currentCanvas.ClosePath();
+                }
             }
-            if (parent != null && parent is AbstractSvgNodeRenderer) {
-                result *= ((AbstractSvgNodeRenderer)parent).GetOpacity();
-            }
-            return result;
+        }
+
+        // TODO: see if this is necessary DEVSIX-2583
+        internal virtual void SetPartOfClipPath(bool value) {
+            partOfClipPath = value;
         }
 
         /// <summary>Operations to perform before drawing an element.</summary>
@@ -223,120 +308,35 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        /// <summary>Method to see if a certain renderer can use fill.</summary>
-        /// <returns>true if the renderer can use fill</returns>
-        protected internal virtual bool CanElementFill() {
-            return true;
-        }
-
-        /// <summary>Method to see if the renderer can create a viewport</summary>
-        /// <returns>true if the renderer can construct a viewport</returns>
-        public virtual bool CanConstructViewPort() {
+        private bool DrawInClipPath(SvgDrawContext context) {
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
+                String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
+                ISvgNodeRenderer template = context.GetNamedObject(NormalizeClipPathName(clipPathName));
+                //Clone template to avoid muddying the state
+                if (template is ClipPathSvgNodeRenderer) {
+                    ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
+                    clipPath.SetClippedRenderer(this);
+                    clipPath.Draw(context);
+                    return !clipPath.GetChildren().IsEmpty();
+                }
+            }
             return false;
         }
 
-        /// <summary>Calculate the transformation for the viewport based on the context.</summary>
-        /// <remarks>Calculate the transformation for the viewport based on the context. Only used by elements that can create viewports
-        ///     </remarks>
-        /// <param name="context">the SVG draw context</param>
-        /// <returns>the transformation that needs to be applied to this renderer</returns>
-        internal virtual AffineTransform CalculateViewPortTranslation(SvgDrawContext context) {
-            Rectangle viewPort = context.GetCurrentViewPort();
-            AffineTransform transform;
-            transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());
-            return transform;
+        private String NormalizeClipPathName(String name) {
+            return name.Replace("url(#", "").Replace(")", "").Trim();
         }
 
-        /// <summary>Operations to be performed after drawing the element.</summary>
-        /// <remarks>
-        /// Operations to be performed after drawing the element.
-        /// This includes filling, stroking.
-        /// </remarks>
-        /// <param name="context">the svg draw context</param>
-        internal virtual void PostDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null) {
-                PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                // fill-rule
-                if (partOfClipPath) {
-                    if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(this.GetAttribute(SvgConstants.Attributes.CLIP_RULE
-                        ))) {
-                        currentCanvas.EoClip();
-                    }
-                    else {
-                        currentCanvas.Clip();
-                    }
-                    currentCanvas.NewPath();
-                }
-                else {
-                    if (doFill && CanElementFill()) {
-                        String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
-                            if (doStroke) {
-                                currentCanvas.EoFillStroke();
-                            }
-                            else {
-                                currentCanvas.EoFill();
-                            }
-                        }
-                        else {
-                            if (doStroke) {
-                                currentCanvas.FillStroke();
-                            }
-                            else {
-                                currentCanvas.Fill();
-                            }
-                        }
-                    }
-                    else {
-                        if (doStroke) {
-                            currentCanvas.Stroke();
-                        }
-                    }
-                    currentCanvas.ClosePath();
-                }
+        private float GetOpacity() {
+            float result = 1f;
+            String opacityValue = GetAttribute(SvgConstants.Attributes.OPACITY);
+            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                result = float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
             }
-        }
-
-        // TODO: see if this is necessary DEVSIX-2583
-        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
-        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
-        protected internal abstract void DoDraw(SvgDrawContext context);
-
-        public virtual String GetAttribute(String key) {
-            return attributesAndStyles.Get(key);
-        }
-
-        public virtual void SetAttribute(String key, String value) {
-            if (this.attributesAndStyles == null) {
-                this.attributesAndStyles = new Dictionary<String, String>();
+            if (parent != null && parent is AbstractSvgNodeRenderer) {
+                result *= ((AbstractSvgNodeRenderer)parent).GetOpacity();
             }
-            this.attributesAndStyles.Put(key, value);
-        }
-
-        public virtual IDictionary<String, String> GetAttributeMapCopy() {
-            Dictionary<String, String> copy = new Dictionary<String, String>();
-            if (attributesAndStyles == null) {
-                return copy;
-            }
-            copy.AddAll(attributesAndStyles);
-            return copy;
-        }
-
-        /// <summary>
-        /// Make a deep copy of the styles and attributes of this renderer
-        /// Helper method for deep copying logic
-        /// </summary>
-        /// <param name="deepCopy">renderer to insert the deep copied attributes into</param>
-        protected internal virtual void DeepCopyAttributesAndStyles(ISvgNodeRenderer deepCopy) {
-            IDictionary<String, String> stylesDeepCopy = new Dictionary<String, String>();
-            if (this.attributesAndStyles != null) {
-                stylesDeepCopy.AddAll(this.attributesAndStyles);
-                deepCopy.SetAttributesAndStyles(stylesDeepCopy);
-            }
-        }
-
-        internal virtual void SetPartOfClipPath(bool value) {
-            partOfClipPath = value;
+            return result;
         }
 
         public abstract ISvgNodeRenderer CreateDeepCopy();
