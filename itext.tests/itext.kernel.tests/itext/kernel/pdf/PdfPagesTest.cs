@@ -46,6 +46,7 @@ using System.IO;
 using iText.IO.Image;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
@@ -477,6 +478,27 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return valid;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestExcessiveXrefEntriesForCopyXObject() {
+            PdfDocument inputPdf = new PdfDocument(new PdfReader(sourceFolder + "input500.pdf"));
+            PdfDocument outputPdf = new PdfDocument(new PdfWriter(destinationFolder + "output500.pdf"));
+            float scaleX = 595f / 612f;
+            float scaleY = 842f / 792f;
+            for (int i = 1; i <= inputPdf.GetNumberOfPages(); ++i) {
+                PdfPage sourcePage = inputPdf.GetPage(i);
+                PdfFormXObject pageCopy = sourcePage.CopyAsFormXObject(outputPdf);
+                PdfPage page = outputPdf.AddNewPage(PageSize.A4);
+                PdfCanvas outputCanvas = new PdfCanvas(page);
+                outputCanvas.AddXObject(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
+                page.Flush();
+            }
+            outputPdf.Close();
+            inputPdf.Close();
+            NUnit.Framework.Assert.IsNotNull(outputPdf.GetXref());
+            NUnit.Framework.Assert.AreEqual(500, outputPdf.GetXref().Size() - inputPdf.GetXref().Size());
         }
     }
 }

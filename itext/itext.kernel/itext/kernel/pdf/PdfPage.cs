@@ -534,9 +534,17 @@ namespace iText.Kernel.Pdf {
             IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
                 .Contents));
             excludedKeys.AddAll(this.excludedKeys);
-            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
+            foreach (PdfName key in GetPdfObject().KeySet()) {
+                if (excludedKeys.Contains(key)) {
+                    continue;
+                }
+                PdfObject obj = GetPdfObject().Get(key);
+                if (!xObject.GetPdfObject().ContainsKey(key)) {
+                    PdfObject copyObj = obj.CopyTo(toDocument, false);
+                    xObject.GetPdfObject().Put(key, copyObj);
+                }
+            }
             xObject.GetPdfObject().GetOutputStream().Write(GetContentBytes());
-            xObject.GetPdfObject().MergeDifferent(dictionary);
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
                 PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true);
