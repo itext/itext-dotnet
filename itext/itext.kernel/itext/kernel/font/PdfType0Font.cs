@@ -681,6 +681,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Generates the CIDFontTyte2 dictionary.</summary>
+        /// <param name="ttf"/>
         /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
         /// <param name="fontName">a name of the font</param>
         /// <param name="metrics">the horizontal width metrics</param>
@@ -887,6 +888,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Generates the CIDFontTyte2 dictionary.</summary>
+        /// <param name="ttf"/>
         /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
         /// <param name="fontName">a name of the font</param>
         /// <param name="metrics">the horizontal width metrics</param>

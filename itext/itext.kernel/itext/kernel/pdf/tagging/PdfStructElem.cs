@@ -292,8 +292,10 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </summary>
         /// <returns>
         /// a
-        /// <see>List&lt;  PdfStructElem  &gt;</see>
-        /// containing zero, one or more structure elements.
+        /// <see cref="System.Collections.IList{E}"/>
+        /// &lt;
+        /// <see cref="PdfStructElem"/>
+        /// &gt; containing zero, one or more structure elements.
         /// </returns>
         public virtual IList<iText.Kernel.Pdf.Tagging.PdfStructElem> GetRefsList() {
             PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);

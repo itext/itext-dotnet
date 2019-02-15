@@ -352,6 +352,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Indicates that the existing appearances needs to be reused as layer 0.</summary>
+        /// <param name="reuseAppearance"/>
         public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;
             return this;

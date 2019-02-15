@@ -180,6 +180,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
         /// .
         /// </summary>
+        /// <param name="status"/>
         public virtual void SetStatus(int status) {
             this.status = status;
         }
@@ -220,6 +221,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
         /// .
         /// </summary>
+        /// <param name="splitRenderer"/>
         public virtual void SetSplitRenderer(IRenderer splitRenderer) {
             this.splitRenderer = splitRenderer;
         }
@@ -242,6 +244,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
         /// .
         /// </summary>
+        /// <param name="overflowRenderer"/>
         public virtual void SetOverflowRenderer(IRenderer overflowRenderer) {
             this.overflowRenderer = overflowRenderer;
         }

@@ -405,6 +405,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// See also
         /// <see cref="ConcatMatrix(double, double, double, double, double, double)"/>
         /// </remarks>
+        /// <param name="transform"/>
         /// <returns>current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(AffineTransform transform) {
             float[] matrix = new float[6];

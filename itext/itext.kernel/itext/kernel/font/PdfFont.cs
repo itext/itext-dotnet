@@ -493,6 +493,9 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subset.</summary>
+        /// <param name="fontName"/>
+        /// <param name="isSubset"/>
+        /// <param name="isEmbedded"/>
         /// <returns>the font name with subset prefix if isSubset and isEmbedded are true.s</returns>
         protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
             if (isSubset && isEmbedded) {

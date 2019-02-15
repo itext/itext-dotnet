@@ -59,7 +59,7 @@ namespace iText.Kernel.Counter {
     /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Kernel.Counter.Event.IMetaInfo, System.Type{T})
     ///     "/>
     /// method.
-    /// <br/>
+    /// <p>
     /// You can implement your own
     /// <see cref="IEventCounterFactory"/>
     /// and register them with
@@ -103,6 +103,9 @@ namespace iText.Kernel.Counter {
         /// instance
         /// and count the event.
         /// </summary>
+        /// <param name="event"/>
+        /// <param name="metaInfo"/>
+        /// <param name="caller"/>
         public virtual void OnEvent(IEvent @event, IMetaInfo metaInfo, Type caller) {
             IContext context = null;
             bool contextInitialized = false;

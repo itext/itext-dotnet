@@ -49,6 +49,10 @@ namespace iText.Kernel.Crypto {
         protected internal ARCFOUREncryption arcfour;
 
         /// <summary>Creates a new instance of OutputStreamStandardEncryption</summary>
+        /// <param name="out"/>
+        /// <param name="key"/>
+        /// <param name="off"/>
+        /// <param name="len"/>
         public OutputStreamStandardEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
             arcfour = new ARCFOUREncryption();

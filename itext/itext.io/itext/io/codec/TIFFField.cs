@@ -148,6 +148,10 @@ namespace iText.IO.Codec {
         /// <td><tt>TIFF_DOUBLE</tt></td>    <td><tt>double</tt></td>
         /// </table>
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <param name="type"/>
+        /// <param name="count"/>
+        /// <param name="data"/>
         public TIFFField(int tag, int type, int count, Object data) {
             this.tag = tag;
             this.type = type;
@@ -307,6 +311,7 @@ namespace iText.IO.Codec {
         /// type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT,
         /// TIFF_SSHORT, or TIFF_SLONG.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual int GetAsInt(int index) {
             switch (type) {
                 case TIFF_BYTE:
@@ -351,6 +356,7 @@ namespace iText.IO.Codec {
         /// type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT,
         /// TIFF_SSHORT, TIFF_SLONG, or TIFF_LONG.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual long GetAsLong(int index) {
             switch (type) {
                 case TIFF_BYTE:
@@ -395,6 +401,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is
         /// of type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual float GetAsFloat(int index) {
             switch (type) {
                 case TIFF_BYTE: {
@@ -454,6 +461,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is of
         /// type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual double GetAsDouble(int index) {
             switch (type) {
                 case TIFF_BYTE: {
@@ -510,6 +518,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_ASCII.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual String GetAsString(int index) {
             return ((String[])data)[index];
         }
@@ -524,6 +533,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SRATIONAL.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual int[] GetAsSRational(int index) {
             return ((int[][])data)[index];
         }
@@ -538,6 +548,7 @@ namespace iText.IO.Codec {
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_RATIONAL.
         /// </remarks>
+        /// <param name="index">The index</param>
         public virtual long[] GetAsRational(int index) {
             if (type == TIFF_LONG) {
                 return GetAsLongs();

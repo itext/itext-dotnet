@@ -50,7 +50,7 @@ namespace iText.Kernel.Font {
     /// <summary>FontProgram class for Type 3 font.</summary>
     /// <remarks>
     /// FontProgram class for Type 3 font. Contains map of
-    /// <Link>Type3Glyph</Link>
+    /// <see cref="Type3Glyph"/>
     /// .
     /// Type3Glyphs belong to a particular pdf document.
     /// Note, an instance of Type3Font can not be reused for multiple pdf documents.
@@ -98,7 +98,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets the PostScript name of the font.</summary>
         /// <remarks>
         /// Sets the PostScript name of the font.
-        /// <br />
+        /// <p>
         /// If full name is null, it will be set as well.
         /// </remarks>
         /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
@@ -139,7 +139,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets the PostScript italic angel.</summary>
         /// <remarks>
         /// Sets the PostScript italic angel.
-        /// <br/>
+        /// <p>
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>

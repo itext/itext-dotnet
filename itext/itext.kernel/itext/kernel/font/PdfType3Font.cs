@@ -156,7 +156,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets the PostScript italic angle.</summary>
         /// <remarks>
         /// Sets the PostScript italic angle.
-        /// <br/>
+        /// <p>
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>

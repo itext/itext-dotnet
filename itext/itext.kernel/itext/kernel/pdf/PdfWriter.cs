@@ -315,8 +315,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
         /// <param name="forbiddenToFlush">
         /// 
-        /// <see>Set<PdfIndirectReference></see>
-        /// of references that are forbidden to be flushed automatically.
+        /// <see cref="Java.Util.Set{E}"/>
+        /// &lt;
+        /// <see cref="PdfIndirectReference"/>
+        /// &gt; of references that are forbidden to be flushed automatically.
         /// </param>
         protected internal virtual void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
             PdfXrefTable xref = document.GetXref();
@@ -345,8 +347,10 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
         /// <param name="forbiddenToFlush">
         /// 
-        /// <see>Set<PdfIndirectReference></see>
-        /// of references that are forbidden to be flushed automatically.
+        /// <see cref="Java.Util.Set{E}"/>
+        /// &lt;
+        /// <see cref="PdfIndirectReference"/>
+        /// &gt; of references that are forbidden to be flushed automatically.
         /// </param>
         protected internal virtual void FlushModifiedWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush
             ) {

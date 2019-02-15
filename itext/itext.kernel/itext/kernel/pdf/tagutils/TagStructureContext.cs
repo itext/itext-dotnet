@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Do not use this constructor, instead use
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
         /// method.
-        /// <br/><br/>
+        /// <p>
         /// Creates
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this

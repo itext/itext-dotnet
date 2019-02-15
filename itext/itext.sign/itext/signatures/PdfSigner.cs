@@ -387,11 +387,13 @@ namespace iText.Signatures {
         }
 
         /// <summary>Sets the PdfDocument.</summary>
+        /// <param name="document">The PdfDocument</param>
         protected internal virtual void SetDocument(PdfDocument document) {
             this.document = document;
         }
 
         /// <summary>Setter for the OutputStream.</summary>
+        /// <param name="originalOS">OutputStream for the bytes of the document</param>
         public virtual void SetOriginalOutputStream(Stream originalOS) {
             this.originalOS = originalOS;
         }
@@ -1048,6 +1050,7 @@ namespace iText.Signatures {
         /// This method is only used for signatures that lock fields.
         /// </remarks>
         /// <param name="crypto">the signature dictionary</param>
+        /// <param name="fieldLock"/>
         protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLock fieldLock) {
             PdfDictionary reference = new PdfDictionary();
             PdfDictionary transformParams = new PdfDictionary();

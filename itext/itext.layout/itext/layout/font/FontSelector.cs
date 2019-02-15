@@ -66,6 +66,7 @@ namespace iText.Layout.Font {
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
         /// <param name="fontFamilies">Sorted list of preferred font families.</param>
+        /// <param name="fc"/>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual protected member in constructor.

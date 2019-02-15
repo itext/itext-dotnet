@@ -393,7 +393,7 @@ namespace iText.Kernel.Pdf.Tagging {
         ///     </summary>
         /// <remarks>
         /// Moves structure associated with specified page and insert it in a specified position in the document.
-        /// <br/><br/>
+        /// <p>
         /// NOTE: Works only for document with not flushed pages.
         /// </remarks>
         /// <param name="fromPage">page which tag structure will be moved</param>

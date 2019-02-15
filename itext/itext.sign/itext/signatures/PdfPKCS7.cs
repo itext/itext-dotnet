@@ -667,6 +667,9 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
         /// <param name="tsaClient">TSAClient - null or an optional time stamp authority client</param>
+        /// <param name="ocsp"/>
+        /// <param name="crlBytes"/>
+        /// <param name="sigtype"/>
         /// <returns>byte[] the bytes for the PKCS7SignedData object</returns>
         public virtual byte[] GetEncodedPKCS7(byte[] secondDigest, ITSAClient tsaClient, byte[] ocsp, ICollection<
             byte[]> crlBytes, PdfSigner.CryptoStandard sigtype) {
@@ -840,6 +843,9 @@ namespace iText.Signatures {
         /// </pre>
         /// </remarks>
         /// <param name="secondDigest">the content digest</param>
+        /// <param name="ocsp"/>
+        /// <param name="crlBytes"/>
+        /// <param name="sigtype"/>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
         public virtual byte[] GetAuthenticatedAttributeBytes(byte[] secondDigest, byte[] ocsp, ICollection<byte[]>
              crlBytes, PdfSigner.CryptoStandard sigtype) {

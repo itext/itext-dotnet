@@ -163,6 +163,8 @@ namespace iText.IO.Font {
             return Object.Equals(cmap, this.cmap);
         }
 
+        /// <param name="cid">a CID</param>
+        /// <returns>CMAP code as an int</returns>
         [System.ObsoleteAttribute(@"Will be removed in 7.2. Use GetCmapBytes(int) instead.")]
         public virtual int GetCmapCode(int cid) {
             if (isDirect) {

@@ -1027,7 +1027,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <br/>
+        /// the added annotation will be autotagged. <p>
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )

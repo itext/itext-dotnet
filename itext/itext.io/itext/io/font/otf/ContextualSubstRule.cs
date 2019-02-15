@@ -59,6 +59,7 @@ namespace iText.IO.Font.Otf {
         /// NOTE: rules do not contain the first element of the input sequence, the first element is defined by rule
         /// position in substitution table. Therefore atIdx shall not be 0.
         /// </remarks>
+        /// <param name="glyphId"/>
         /// <param name="atIdx">index in the rule sequence. Shall be: 0 &lt; atIdx &lt; ContextualSubstRule.getContextLength().
         ///     </param>
         public abstract bool IsGlyphMatchesInput(int glyphId, int atIdx);
@@ -74,6 +75,7 @@ namespace iText.IO.Font.Otf {
         }
 
         /// <summary>Checks if glyph line element matches element from lookahead sequence of the rule.</summary>
+        /// <param name="glyphId"/>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getLookaheadContextLength().
         ///     </param>
         public virtual bool IsGlyphMatchesLookahead(int glyphId, int atIdx) {
@@ -81,6 +83,7 @@ namespace iText.IO.Font.Otf {
         }
 
         /// <summary>Checks if glyph line element matches element from backtrack sequence of the rule.</summary>
+        /// <param name="glyphId"/>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getBacktrackContextLength().
         ///     </param>
         public virtual bool IsGlyphMatchesBacktrack(int glyphId, int atIdx) {

@@ -68,6 +68,7 @@ namespace iText.Layout.Font {
         }
 
         /// <summary>Binary search over ordered segments.</summary>
+        /// <param name="n"/>
         public virtual bool Contains(int n) {
             int low = 0;
             int high = ranges.Length - 1;

@@ -424,6 +424,7 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
+        /// <param name="pdfAConformanceLevel"/>
         /// <returns>
         /// a new
         /// <see cref="PdfTextFormField"/>
@@ -808,6 +809,7 @@ namespace iText.Forms.Fields {
         /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
         /// flags you require.
         /// </param>
+        /// <param name="font"/>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1413,6 +1415,7 @@ namespace iText.Forms.Fields {
         /// a two-dimensional array of Strings which will be converted
         /// to a PdfArray.
         /// </param>
+        /// <param name="font"/>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1476,6 +1479,7 @@ namespace iText.Forms.Fields {
         /// <param name="name">the name of the form field</param>
         /// <param name="value">the initial value</param>
         /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
+        /// <param name="font"/>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1545,6 +1549,7 @@ namespace iText.Forms.Fields {
         /// a two-dimensional array of Strings which will be converted
         /// to a PdfArray.
         /// </param>
+        /// <param name="font"/>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1607,6 +1612,7 @@ namespace iText.Forms.Fields {
         /// <param name="name">the name of the form field</param>
         /// <param name="value">the initial value</param>
         /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
+        /// <param name="font"/>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -3280,6 +3286,8 @@ namespace iText.Forms.Fields {
         /// is valid,
         /// it will be used instead.
         /// </param>
+        /// <param name="color"/>
+        /// <param name="res"/>
         /// <returns>generated string</returns>
         protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, float fontSize, Color color
             , PdfResources res) {
@@ -3762,6 +3770,10 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
+        /// <param name="width"/>
+        /// <param name="height"/>
+        /// <param name="selectedValue"/>
+        /// <param name="checkType"/>
         [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
             int checkType) {

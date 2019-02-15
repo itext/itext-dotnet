@@ -562,6 +562,10 @@ namespace iText.IO.Source {
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
+        /// <param name="content"/>
+        /// <param name="from"/>
+        /// <param name="to"/>
+        /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>
@@ -683,6 +687,8 @@ namespace iText.IO.Source {
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
+        /// <param name="content"/>
+        /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>

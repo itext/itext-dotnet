@@ -90,6 +90,8 @@ namespace iText.IO.Font.Otf {
         /// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
         /// or -1 if context doesn't match.
         /// </returns>
+        /// <param name="line"/>
+        /// <param name="rule"/>
         protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();

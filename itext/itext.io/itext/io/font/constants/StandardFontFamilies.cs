@@ -47,9 +47,7 @@ namespace iText.IO.Font.Constants {
     /// Class containing families for
     /// <see cref="StandardFonts"/>
     /// .
-    /// This class was made for
-    /// <see cref="iText.IO.Font.FontRegisterProvider"/>
-    /// .
+    /// This class was made for com.itextpdf.io.font.FontRegisterProvider.
     /// </summary>
     public sealed class StandardFontFamilies {
         private StandardFontFamilies() {

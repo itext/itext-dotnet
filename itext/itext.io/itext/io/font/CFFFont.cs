@@ -704,6 +704,7 @@ namespace iText.IO.Font {
         /// a PDF restriction) and to subset the CharStrings glyph
         /// description.
         /// </remarks>
+        /// <param name="fontName"/>
         public virtual byte[] GetCID(String fontName) {
             //throws java.io.FileNotFoundException
             int j;

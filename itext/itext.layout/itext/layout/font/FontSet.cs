@@ -531,6 +531,7 @@ namespace iText.Layout.Font {
         /// <p>
         /// Note, the collection is unmodifiable.
         /// </remarks>
+        /// <param name="tempFonts"/>
         public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet tempFonts) {
             return new FontSetCollection(fonts, tempFonts != null ? tempFonts.fonts : null);
         }

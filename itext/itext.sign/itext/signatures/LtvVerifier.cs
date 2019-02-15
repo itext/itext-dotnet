@@ -114,6 +114,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
+        /// <param name="verifyRootCertificate"/>
         public virtual void SetVerifyRootCertificate(bool verifyRootCertificate) {
             this.verifyRootCertificate = verifyRootCertificate;
         }
@@ -131,6 +132,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
+        /// <param name="result"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual IList<VerificationOK> Verify(IList<VerificationOK> result) {
