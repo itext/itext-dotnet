@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
@@ -317,8 +318,19 @@ namespace iText.IO.Source {
                             if (TokenValueEqualsTo(R)) {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
-                                reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                try {
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                }
+                                catch (Exception) {
+                                    //warn about incorrect reference number
+                                    //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
+                                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.PdfTokenizer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
+                                        (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
+                                    reference = -1;
+                                    generation = 0;
+                                }
                                 return;
                             }
                             else {

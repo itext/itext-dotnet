@@ -1417,6 +1417,36 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
+        public virtual void WrongTagStructureFlushingTest() {
+            //wrong /Pg number
+            String source = sourceFolder + "wrongTagStructureFlushingTest.pdf";
+            String dest = destinationFolder + "wrongTagStructureFlushingTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(source), new PdfWriter(dest));
+            pdfDoc.SetTagged();
+            NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, ((PdfDictionary)pdfDoc.GetPdfObject(12)).Get(PdfName.Pg)
+                );
+            pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2649")]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        public virtual void WrongStructureFlushingTest() {
+            //TODO: update after DEVSIX-2649 fix
+            //wrong /key number
+            String source = sourceFolder + "wrongStructureFlushingTest.pdf";
+            String dest = destinationFolder + "wrongStructureFlushingTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(source), new PdfWriter(dest));
+            pdfDoc.Close();
+        }
+
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {
             PdfName objectType = ((PdfDictionary)@object).GetAsName(PdfName.Type);
             return type.Equals(objectType);

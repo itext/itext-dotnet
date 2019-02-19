@@ -641,6 +641,9 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual PdfObject ReadReference(bool readAsDirect) {
             int num = tokens.GetObjNr();
+            if (num < 0) {
+                return CreatePdfNullInstance(readAsDirect);
+            }
             PdfXrefTable table = pdfDocument.GetXref();
             PdfIndirectReference reference = table.Get(num);
             if (reference != null) {
