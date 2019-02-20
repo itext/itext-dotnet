@@ -157,49 +157,11 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "insignificantSpaces");
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DecimalPointParsingTest() {
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            String input = "2.35.96";
-            String expected = "2.35 .96";
-            String actual = path.SeparateDecimalPoints(input);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DecimalPointParsingSpaceTest() {
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            String input = "2.35.96 3.25 .25";
-            String expected = "2.35 .96 3.25 .25";
-            String actual = path.SeparateDecimalPoints(input);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DecimalPointParsingTabTest() {
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            String input = "2.35.96 3.25\t.25";
-            String expected = "2.35 .96 3.25\t.25";
-            String actual = path.SeparateDecimalPoints(input);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DecimalPointParsingMinusTest() {
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            String input = "2.35.96 3.25-.25";
-            String expected = "2.35 .96 3.25 -.25";
-            String actual = path.SeparateDecimalPoints(input);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NegativeAfterPositiveTest() {
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            String input = "40-50";
-            String expected = "40 -50";
-            String actual = path.SeparateDecimalPoints(input);
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+        public virtual void PrecedingSpacesTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "precedingSpaces");
         }
     }
 }

@@ -61,8 +61,6 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;path&gt; tag.
     /// </summary>
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
-        private const String SEPARATOR = "";
-
         private const String SPACE_CHAR = " ";
 
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PathSvgNodeRenderer));
@@ -85,7 +83,7 @@ namespace iText.Svg.Renderers.Impl {
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>
         /// is called before the use of this expression in
-        /// <see cref="ParsePropertiesAndStyles()"/>
+        /// <see cref="ParsePathOperations()"/>
         /// the attribute to be split is valid.
         /// The regex splits at each letter.
         /// </summary>
@@ -207,7 +205,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         private IList<IPathShape> ProcessPathOperator(String[] pathProperties, IPathShape previousShape) {
             IList<IPathShape> shapes = new List<IPathShape>();
-            if (pathProperties.Length == 0 || pathProperties[0].Equals(SEPARATOR)) {
+            if (pathProperties.Length == 0 || String.IsNullOrEmpty(pathProperties[0])) {
                 return shapes;
             }
             //Implements (absolute) command value only
@@ -266,7 +264,7 @@ namespace iText.Svg.Renderers.Impl {
         /// that should be drawn to represent the path.
         /// </returns>
         internal virtual ICollection<IPathShape> GetShapes() {
-            ICollection<String> parsedResults = ParsePropertiesAndStyles();
+            ICollection<String> parsedResults = ParsePathOperations();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {
                 String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, " +");
@@ -288,9 +286,12 @@ namespace iText.Svg.Renderers.Impl {
             return SvgRegexUtils.ContainsAtLeastOneMatch(invalidRegexPattern, attributes);
         }
 
-        private ICollection<String> ParsePropertiesAndStyles() {
-            StringBuilder result = new StringBuilder();
+        internal virtual ICollection<String> ParsePathOperations() {
+            ICollection<String> result = new List<String>();
             String attributes = attributesAndStyles.Get(SvgConstants.Attributes.D);
+            if (attributes == null) {
+                throw new SvgProcessingException(SvgExceptionMessageConstant.PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE);
+            }
             if (ContainsInvalidAttributes(attributes)) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
                     (attributes);
@@ -298,19 +299,16 @@ namespace iText.Svg.Renderers.Impl {
             String[] coordinates = iText.IO.Util.StringUtil.Split(attributes, SPLIT_REGEX);
             //gets an array attributesAr of {M 100 100, L 300 100, L200, 300, z}
             foreach (String inst in coordinates) {
-                if (!inst.Equals(SEPARATOR)) {
-                    String instTrim = inst.Trim();
-                    String instruction = instTrim[0] + SPACE_CHAR;
-                    String temp = instruction + instTrim.Replace(instTrim[0] + SEPARATOR, SEPARATOR).Replace(",", SPACE_CHAR).
-                        Trim();
+                String instTrim = inst.Trim();
+                if (!String.IsNullOrEmpty(instTrim)) {
+                    char instruction = instTrim[0];
+                    String temp = instruction + SPACE_CHAR + instTrim.Substring(1).Replace(",", SPACE_CHAR).Trim();
                     //Do a run-through for decimal point separation
                     temp = SeparateDecimalPoints(temp);
-                    result.Append(SPACE_CHAR);
-                    result.Append(temp);
+                    result.Add(temp);
                 }
             }
-            String[] resultArray = iText.IO.Util.StringUtil.Split(result.ToString(), SPLIT_REGEX);
-            return new List<String>(JavaUtil.ArraysAsList(resultArray));
+            return result;
         }
 
         /// <summary>Iterate over the input string and to seperate</summary>
