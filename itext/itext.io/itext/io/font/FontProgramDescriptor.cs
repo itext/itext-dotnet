@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
@@ -64,7 +65,20 @@ namespace iText.IO.Font {
 
         private readonly bool isMonospace;
 
+        private readonly ICollection<String> fullNamesAllLangs;
+
+        private readonly ICollection<String> fullNamesEnglishOpenType;
+
+        private readonly String familyNameEnglishOpenType;
+
+        private static readonly String[] TT_FAMILY_ORDER = new String[] { "3", "1", "1033", "3", "0", "1033", "1", 
+            "0", "0", "0", "3", "0" };
+
         internal FontProgramDescriptor(FontNames fontNames, float italicAngle, bool isMonospace) {
+            // Initially needed for open type fonts only.
+            // The following sequence represents four triplets.
+            // In each triplet items sequentially stand for platformID encodingID languageID (see open type naming table spec).
+            // Each triplet is used further to determine whether the font name item is represented in English
             this.fontName = fontNames.GetFontName();
             this.fontNameLowerCase = this.fontName.ToLowerInvariant();
             this.fullNameLowerCase = fontNames.GetFullName()[0][3].ToLowerInvariant();
@@ -75,6 +89,9 @@ namespace iText.IO.Font {
             this.macStyle = fontNames.GetMacStyle();
             this.italicAngle = italicAngle;
             this.isMonospace = isMonospace;
+            this.familyNameEnglishOpenType = ExtractFamilyNameEnglishOpenType(fontNames);
+            this.fullNamesAllLangs = ExtractFullFontNames(fontNames);
+            this.fullNamesEnglishOpenType = ExtractFullNamesEnglishOpenType(fontNames);
         }
 
         internal FontProgramDescriptor(FontNames fontNames, FontMetrics fontMetrics)
@@ -119,6 +136,58 @@ namespace iText.IO.Font {
 
         public virtual String GetFamilyNameLowerCase() {
             return familyNameLowerCase;
+        }
+
+        public virtual ICollection<String> GetFullNameAllLangs() {
+            return fullNamesAllLangs;
+        }
+
+        public virtual ICollection<String> GetFullNamesEnglishOpenType() {
+            return fullNamesEnglishOpenType;
+        }
+
+        internal virtual String GetFamilyNameEnglishOpenType() {
+            return familyNameEnglishOpenType;
+        }
+
+        private ICollection<String> ExtractFullFontNames(FontNames fontNames) {
+            ICollection<String> uniqueFullNames = new HashSet<String>();
+            foreach (String[] fullName in fontNames.GetFullName()) {
+                uniqueFullNames.Add(fullName[3].ToLowerInvariant());
+            }
+            return uniqueFullNames;
+        }
+
+        private String ExtractFamilyNameEnglishOpenType(FontNames fontNames) {
+            if (fontNames.GetFamilyName() != null) {
+                for (int k = 0; k < TT_FAMILY_ORDER.Length; k += 3) {
+                    foreach (String[] name in fontNames.GetFamilyName()) {
+                        if (TT_FAMILY_ORDER[k].Equals(name[0]) && TT_FAMILY_ORDER[k + 1].Equals(name[1]) && TT_FAMILY_ORDER[k + 2]
+                            .Equals(name[2])) {
+                            return name[3].ToLowerInvariant();
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private ICollection<String> ExtractFullNamesEnglishOpenType(FontNames fontNames) {
+            if (familyNameEnglishOpenType != null) {
+                ICollection<String> uniqueTtfSuitableFullNames = new HashSet<String>();
+                String[][] names = fontNames.GetFullName();
+                foreach (String[] name in names) {
+                    for (int k = 0; k < TT_FAMILY_ORDER.Length; k += 3) {
+                        if (TT_FAMILY_ORDER[k].Equals(name[0]) && TT_FAMILY_ORDER[k + 1].Equals(name[1]) && TT_FAMILY_ORDER[k + 2]
+                            .Equals(name[2])) {
+                            uniqueTtfSuitableFullNames.Add(name[3]);
+                            break;
+                        }
+                    }
+                }
+                return uniqueTtfSuitableFullNames;
+            }
+            return new HashSet<String>();
         }
     }
 }
