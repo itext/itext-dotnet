@@ -706,8 +706,8 @@ namespace iText.Kernel.Pdf.Canvas {
                                         break;
                                     }
                                     else {
-                                        currentGlyph = text.Get(currentGlyphIndex + currentGlyph.GetAnchorDelta());
                                         currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                        currentGlyph = text.Get(currentGlyphIndex);
                                     }
                                 }
                                 yPlacement = -GetSubrangeYDelta(text, currentGlyphIndex, i) + yPlacementAddition * fontSize;
