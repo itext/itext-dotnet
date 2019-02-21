@@ -898,6 +898,12 @@ namespace iText.Kernel.Pdf {
             return structTreeRoot != null;
         }
 
+        /// <summary>Specifies that document shall contain tag structure.</summary>
+        /// <remarks>
+        /// Specifies that document shall contain tag structure.
+        /// See ISO 32000-1, section 14.8 "Tagged PDF"
+        /// </remarks>
+        /// <returns>this PdfDocument</returns>
         public virtual iText.Kernel.Pdf.PdfDocument SetTagged() {
             CheckClosingStatus();
             if (structTreeRoot == null) {
