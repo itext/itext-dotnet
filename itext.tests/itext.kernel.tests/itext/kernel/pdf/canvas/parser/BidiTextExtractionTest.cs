@@ -69,8 +69,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [NUnit.Framework.Test]
         public virtual void Test02() {
             // Again not completely correct. see test04()
+            //TODO DEVSIX-2648
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in02.pdf"));
-            String[] expectedText = new String[] { "1879 ", "\u05D4\u05D0\u05D5\u05E4\u05E0\u05D5\u05E2", ")\u05D2\u05D5\u05D8\u05DC\u05D9\u05D1 \u05D3\u05D9\u05D9\u05DE\u05DC\u05E8 \u05D5\u05D5\u05D9\u05DC\u05D4\u05DC\u05DD \u05DE\u05D9\u05D9\u05D1\u05D0\u05DA, 1885 (,"
+            String[] expectedText = new String[] { "1879 ", "\u05D4\u05D0\u05D5\u05E4\u05E0\u05D5\u05E2", ")\u05D2\u05D5\u05D8\u05DC\u05D9\u05D1 \u05D3\u05D9\u05D9\u05DE\u05DC\u05E8 \u05D5\u05D5\u05D9\u05DC\u05D4\u05DC\u05DD \u05DE\u05D9\u05D9\u05D1\u05D0\u05DA,1885 (,"
                  };
             Rectangle[] regions = new Rectangle[] { new Rectangle(493, 765, 23, 11), new Rectangle(522, 784, 38, 12), 
                 new Rectangle(332, 784, 185, 12) };
