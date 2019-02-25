@@ -537,14 +537,19 @@ namespace iText.Signatures {
             }
             Stream data = GetRangeStream();
             byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm));
-            byte[] ocsp = null;
-            if (chain.Length >= 2 && ocspClient != null) {
-                ocsp = ocspClient.GetEncoded((X509Certificate)chain[0], (X509Certificate)chain[1], null);
+            IList<byte[]> ocspList = new List<byte[]>();
+            if (chain.Length > 1 && ocspClient != null) {
+                for (int j = 0; j < chain.Length - 1; ++j) {
+                    byte[] ocsp = ocspClient.GetEncoded((X509Certificate)chain[j], (X509Certificate)chain[j + 1], null);
+                    if (ocsp != null) {
+                        ocspList.Add(ocsp);
+                    }
+                }
             }
-            byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, ocsp, crlBytes, sigtype);
+            byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, sigtype, ocspList, crlBytes);
             byte[] extSignature = externalSignature.Sign(sh);
             sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm());
-            byte[] encodedSig = sgn.GetEncodedPKCS7(hash, tsaClient, ocsp, crlBytes, sigtype);
+            byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException("Not enough space");
             }

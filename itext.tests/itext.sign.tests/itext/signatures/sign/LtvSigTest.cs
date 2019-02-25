@@ -101,6 +101,37 @@ namespace iText.Signatures.Sign {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
+        public virtual void LtvEnabledSingleSignatureTest01() {
+            String signCertFileName = certsSrc + "signCertRsaWithChain.p12";
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            String intermediateCertFileName = certsSrc + "intermediateRsa.p12";
+            String caCertFileName = certsSrc + "rootRsa.p12";
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String ltvFileName = destinationFolder + "ltvEnabledSingleSignatureTest01.pdf";
+            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
+            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            X509Certificate intermediateCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(intermediateCertFileName
+                , password)[0];
+            ICipherParameters intermediatePrivateKey = Pkcs12FileHelper.ReadFirstKey(intermediateCertFileName, password
+                , password);
+            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(intermediateCert, intermediatePrivateKey
+                ).AddBuilderForCertIssuer(caCert, caPrivateKey);
+            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
+                new StampingProperties());
+            signer.SetFieldName("Signature1");
+            signer.SignDetached(pks, signChain, null, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard.CADES);
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "ltvEnabledSingleSignatureTest01.pdf", "Signature1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
         public virtual void SecondLtvOriginalHasNoVri01() {
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";
             String caCertFileName = certsSrc + "rootRsa.p12";

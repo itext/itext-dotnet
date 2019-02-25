@@ -71,10 +71,10 @@ namespace iText.Signatures.Testutils.Builder {
         public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey) {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
-            X509Name issuerDN = issuerCert.IssuerDN;
+            X509Name subjectDN = issuerCert.SubjectDN;
             thisUpdate = thisUpdate.AddDays(-1);
             nextUpdate = nextUpdate.AddDays(30);
-            responseBuilder = new BasicOcspRespGenerator(new RespID(issuerDN));
+            responseBuilder = new BasicOcspRespGenerator(new RespID(subjectDN));
         }
 
         public X509Certificate GetIssuerCert() {

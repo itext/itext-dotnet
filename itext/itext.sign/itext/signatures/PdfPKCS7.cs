@@ -662,17 +662,43 @@ namespace iText.Signatures {
         /// <summary>Gets the bytes for the PKCS7SignedData object.</summary>
         /// <remarks>
         /// Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
-        /// in the signerInfo can also be set, OR a time-stamp-authority client
+        /// in the signerInfo can also be set, and/or a time-stamp-authority client
         /// may be provided.
         /// </remarks>
         /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
         /// <param name="tsaClient">TSAClient - null or an optional time stamp authority client</param>
-        /// <param name="ocsp"/>
-        /// <param name="crlBytes"/>
-        /// <param name="sigtype"/>
+        /// <param name="ocsp">DER-encoded OCSP response for the first certificate in the signature certificates chain, or null if OCSP revocation data is not to be added.
+        ///     </param>
+        /// <param name="crlBytes">collection of DER-encoded CRL for certificates from the signature certificates chain, or null if CRL revocation data is not to be added.
+        ///     </param>
+        /// <param name="sigtype">specifies the PKCS7 standard flavor to which created PKCS7SignedData object will adhere: either basic CMS or CAdES
+        ///     </param>
         /// <returns>byte[] the bytes for the PKCS7SignedData object</returns>
+        [System.ObsoleteAttribute(@"This overload is deprecated, use GetEncodedPKCS7(byte[], CryptoStandard, ITSAClient, System.Collections.Generic.ICollection{E}, System.Collections.Generic.ICollection{E}) instead."
+            )]
         public virtual byte[] GetEncodedPKCS7(byte[] secondDigest, ITSAClient tsaClient, byte[] ocsp, ICollection<
             byte[]> crlBytes, PdfSigner.CryptoStandard sigtype) {
+            return GetEncodedPKCS7(secondDigest, sigtype, tsaClient, ocsp != null ? JavaCollectionsUtil.Singleton(ocsp
+                ) : null, crlBytes);
+        }
+
+        /// <summary>Gets the bytes for the PKCS7SignedData object.</summary>
+        /// <remarks>
+        /// Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
+        /// in the signerInfo can also be set, and/or a time-stamp-authority client
+        /// may be provided.
+        /// </remarks>
+        /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
+        /// <param name="sigtype">specifies the PKCS7 standard flavor to which created PKCS7SignedData object will adhere: either basic CMS or CAdES
+        ///     </param>
+        /// <param name="tsaClient">TSAClient - null or an optional time stamp authority client</param>
+        /// <param name="ocsp">collection of DER-encoded OCSP responses for the  certificate in the signature certificates chain, or null if OCSP revocation data is not to be added.
+        ///     </param>
+        /// <param name="crlBytes">collection of DER-encoded CRL for certificates from the signature certificates chain, or null if CRL revocation data is not to be added.
+        ///     </param>
+        /// <returns>byte[] the bytes for the PKCS7SignedData object</returns>
+        public virtual byte[] GetEncodedPKCS7(byte[] secondDigest, PdfSigner.CryptoStandard sigtype, ITSAClient tsaClient
+            , ICollection<byte[]> ocsp, ICollection<byte[]> crlBytes) {
             try {
                 if (externalDigest != null) {
                     digest = externalDigest;
@@ -843,12 +869,58 @@ namespace iText.Signatures {
         /// </pre>
         /// </remarks>
         /// <param name="secondDigest">the content digest</param>
-        /// <param name="ocsp"/>
-        /// <param name="crlBytes"/>
-        /// <param name="sigtype"/>
+        /// <param name="ocsp">collection of DER-encoded OCSP responses for the  certificate in the signature certificates chain, or null if OCSP revocation data is not to be added.
+        ///     </param>
+        /// <param name="crlBytes">collection of DER-encoded CRL for certificates from the signature certificates chain, or null if CRL revocation data is not to be added.
+        ///     </param>
+        /// <param name="sigtype">specifies the PKCS7 standard flavor to which created PKCS7SignedData object will adhere: either basic CMS or CAdES
+        ///     </param>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
+        [System.ObsoleteAttribute(@"This method overload is deprecated. Please use GetAuthenticatedAttributeBytes(byte[], CryptoStandard, System.Collections.Generic.ICollection{E}, System.Collections.Generic.ICollection{E})"
+            )]
         public virtual byte[] GetAuthenticatedAttributeBytes(byte[] secondDigest, byte[] ocsp, ICollection<byte[]>
              crlBytes, PdfSigner.CryptoStandard sigtype) {
+            return GetAuthenticatedAttributeBytes(secondDigest, sigtype, ocsp != null ? JavaCollectionsUtil.Singleton(
+                ocsp) : null, crlBytes);
+        }
+
+        /// <summary>When using authenticatedAttributes the authentication process is different.</summary>
+        /// <remarks>
+        /// When using authenticatedAttributes the authentication process is different.
+        /// The document digest is generated and put inside the attribute. The signing is done over the DER encoded
+        /// authenticatedAttributes. This method provides that encoding and the parameters must be
+        /// exactly the same as in
+        /// <see cref="GetEncodedPKCS7(byte[])"/>
+        /// .
+        /// <p>
+        /// A simple example:
+        /// <p>
+        /// <pre>
+        /// Calendar cal = Calendar.getInstance();
+        /// PdfPKCS7 pk7 = new PdfPKCS7(key, chain, null, "SHA1", null, false);
+        /// MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+        /// byte[] buf = new byte[8192];
+        /// int n;
+        /// InputStream inp = sap.getRangeStream();
+        /// while ((n = inp.read(buf)) &gt; 0) {
+        /// messageDigest.update(buf, 0, n);
+        /// }
+        /// byte[] hash = messageDigest.digest();
+        /// byte[] sh = pk7.getAuthenticatedAttributeBytes(hash, cal);
+        /// pk7.update(sh, 0, sh.length);
+        /// byte[] sg = pk7.getEncodedPKCS7(hash, cal);
+        /// </pre>
+        /// </remarks>
+        /// <param name="secondDigest">the content digest</param>
+        /// <param name="sigtype">specifies the PKCS7 standard flavor to which created PKCS7SignedData object will adhere: either basic CMS or CAdES
+        ///     </param>
+        /// <param name="ocsp">collection of DER-encoded OCSP responses for the  certificate in the signature certificates chain, or null if OCSP revocation data is not to be added.
+        ///     </param>
+        /// <param name="crlBytes">collection of DER-encoded CRL for certificates from the signature certificates chain, or null if CRL revocation data is not to be added.
+        ///     </param>
+        /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
+        public virtual byte[] GetAuthenticatedAttributeBytes(byte[] secondDigest, PdfSigner.CryptoStandard sigtype
+            , ICollection<byte[]> ocsp, ICollection<byte[]> crlBytes) {
             try {
                 return GetAuthenticatedAttributeSet(secondDigest, ocsp, crlBytes, sigtype).GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der
                     );
@@ -866,8 +938,8 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="secondDigest">the content digest</param>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
-        private DerSet GetAuthenticatedAttributeSet(byte[] secondDigest, byte[] ocsp, ICollection<byte[]> crlBytes
-            , PdfSigner.CryptoStandard sigtype) {
+        private DerSet GetAuthenticatedAttributeSet(byte[] secondDigest, ICollection<byte[]> ocsp, ICollection<byte
+            []> crlBytes, PdfSigner.CryptoStandard sigtype) {
             try {
                 Asn1EncodableVector attribute = new Asn1EncodableVector();
                 Asn1EncodableVector v = new Asn1EncodableVector();
@@ -887,7 +959,7 @@ namespace iText.Signatures {
                         }
                     }
                 }
-                if (ocsp != null || haveCrl) {
+                if (ocsp != null && !ocsp.IsEmpty() || haveCrl) {
                     v = new Asn1EncodableVector();
                     v.Add(new DerObjectIdentifier(SecurityIDs.ID_ADBE_REVOCATION));
                     Asn1EncodableVector revocationV = new Asn1EncodableVector();
@@ -902,17 +974,19 @@ namespace iText.Signatures {
                         }
                         revocationV.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
                     }
-                    if (ocsp != null) {
-                        DerOctetString doctet = new DerOctetString(ocsp);
+                    if (ocsp != null && !ocsp.IsEmpty()) {
                         Asn1EncodableVector vo1 = new Asn1EncodableVector();
-                        Asn1EncodableVector v2 = new Asn1EncodableVector();
-                        v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
-                        v2.Add(doctet);
-                        DerEnumerated den = new DerEnumerated(0);
-                        Asn1EncodableVector v3 = new Asn1EncodableVector();
-                        v3.Add(den);
-                        v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
-                        vo1.Add(new DerSequence(v3));
+                        foreach (byte[] ocspBytes in ocsp) {
+                            DerOctetString doctet = new DerOctetString(ocspBytes);
+                            Asn1EncodableVector v2 = new Asn1EncodableVector();
+                            v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
+                            v2.Add(doctet);
+                            DerEnumerated den = new DerEnumerated(0);
+                            Asn1EncodableVector v3 = new Asn1EncodableVector();
+                            v3.Add(den);
+                            v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
+                            vo1.Add(new DerSequence(v3));
+                        }
                         revocationV.Add(new DerTaggedObject(true, 1, new DerSequence(vo1)));
                     }
                     v.Add(new DerSet(new DerSequence(revocationV)));
