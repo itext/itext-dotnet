@@ -83,7 +83,7 @@ namespace iText.Signatures.Sign {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient(caCert, caPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
                 ().UseAppendMode());
@@ -112,7 +112,7 @@ namespace iText.Signatures.Sign {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient(caCert, caPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
                 ().UseAppendMode());

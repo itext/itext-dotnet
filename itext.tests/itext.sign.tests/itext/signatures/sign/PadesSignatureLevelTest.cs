@@ -106,7 +106,7 @@ namespace iText.Signatures.Sign {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             ICrlClient crlClient = new TestCrlClient(caCert, caPrivateKey);
-            TestOcspClient ocspClient = new TestOcspClient(caCert, caPrivateKey);
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName), new StampingProperties
                 ().UseAppendMode());

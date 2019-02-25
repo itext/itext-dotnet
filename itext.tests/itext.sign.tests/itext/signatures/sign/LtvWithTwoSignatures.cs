@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -72,20 +71,21 @@ namespace iText.Signatures.Sign {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AddLtvInfo() {
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
             String caCertFileName = certsSrc + "rootRsa.p12";
-            String srcFileName = sourceFolder + "signedDoc.pdf";
+            String interCertFileName = certsSrc + "intermediateRsa.p12";
+            String srcFileName = sourceFolder + "signedTwice.pdf";
             String ltvFileName = destinationFolder + "ltvEnabledTest01.pdf";
             String ltvFileName2 = destinationFolder + "ltvEnabledTest02.pdf";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient(caCert, caPrivateKey);
+            X509Certificate interCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(interCertFileName, password)[
+                0];
+            ICipherParameters interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(interCert, interPrivateKey).AddBuilderForCertIssuer
+                (caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
-            AddLtvInfo(srcFileName, ltvFileName, "sig", testOcspClient, testCrlClient);
-            AddLtvInfo(ltvFileName, ltvFileName2, "sig2", testOcspClient, testCrlClient);
+            AddLtvInfo(srcFileName, ltvFileName, "Signature1", testOcspClient, testCrlClient);
+            AddLtvInfo(ltvFileName, ltvFileName2, "Signature2", testOcspClient, testCrlClient);
             PdfReader reader = new PdfReader(ltvFileName2);
             PdfDocument document = new PdfDocument(reader);
             PdfDictionary catalogDictionary = document.GetCatalog().GetPdfObject();
@@ -95,10 +95,10 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual(2, vri.Size());
             PdfArray ocsps = dssDictionary.GetAsArray(PdfName.OCSPs);
             NUnit.Framework.Assert.IsNotNull(ocsps);
-            NUnit.Framework.Assert.AreEqual(2, ocsps.Size());
+            NUnit.Framework.Assert.AreEqual(5, ocsps.Size());
             PdfArray certs = dssDictionary.GetAsArray(PdfName.Certs);
             NUnit.Framework.Assert.IsNotNull(certs);
-            NUnit.Framework.Assert.AreEqual(2, certs.Size());
+            NUnit.Framework.Assert.AreEqual(5, certs.Size());
             PdfArray crls = dssDictionary.GetAsArray(PdfName.CRLs);
             NUnit.Framework.Assert.IsNotNull(crls);
             NUnit.Framework.Assert.AreEqual(1, crls.Size());
@@ -112,7 +112,7 @@ namespace iText.Signatures.Sign {
                 ());
             LtvVerification ltvVerification = new LtvVerification(document);
             ltvVerification.AddVerification(sigName, testOcspClient, testCrlClient, LtvVerification.CertificateOption.
-                SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
+                WHOLE_CHAIN, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
         }
