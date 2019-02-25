@@ -246,7 +246,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// style was used for the annotation border style (see
         /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
         /// .
-        /// See ISO-320001 8.4.3.6, “Line Dash Pattern” for the format in which dash pattern shall be specified.
+        /// See ISO-320001 8.4.3.6, "Line Dash Pattern" for the format in which dash pattern shall be specified.
         /// </remarks>
         /// <param name="dashPattern">
         /// a dash array defining a pattern of dashes and gaps that
