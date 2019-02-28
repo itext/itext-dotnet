@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -499,6 +500,32 @@ namespace iText.Kernel.Pdf {
             inputPdf.Close();
             NUnit.Framework.Assert.IsNotNull(outputPdf.GetXref());
             NUnit.Framework.Assert.AreEqual(500, outputPdf.GetXref().Size() - inputPdf.GetXref().Size());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
+        public virtual void PageGetMediaBoxTooManyArgumentsTest() {
+            PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxTooManyArguments.pdf");
+            Rectangle expected = new Rectangle(0, 0, 375, 300);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfPage pageOne = pdfDoc.GetPage(1);
+            Rectangle actual = pageOne.GetPageSize();
+            NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PageGetMediaBoxNotEnoughArgumentsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxNotEnoughArguments.pdf");
+                PdfDocument pdfDoc = new PdfDocument(reader);
+                PdfPage pageOne = pdfDoc.GetPage(1);
+                Rectangle actual = pageOne.GetPageSize();
+                NUnit.Framework.Assert.Fail("Exception was not thrown");
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)))
+;
         }
     }
 }

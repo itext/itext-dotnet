@@ -506,7 +506,10 @@ namespace iText.Kernel {
 
         public const String WrongFormFieldAddAnnotationToTheField = "Wrong form field. Add annotation to the field.";
 
+        [System.ObsoleteAttribute(@"in favour of more informative named constant")]
         public const String WrongMediaBoxSize1 = "Wrong media box size: {0}.";
+
+        public const String WRONGMEDIABOXSIZETOOFEWARGUMENTS = "Wrong media box size: {0}. Need at least 4 arguments";
 
         public const String XrefSubsectionNotFound = "xref subsection not found.";
 

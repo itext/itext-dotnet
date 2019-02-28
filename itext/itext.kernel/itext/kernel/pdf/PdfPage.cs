@@ -656,8 +656,18 @@ namespace iText.Kernel.Pdf {
             if (mediaBox == null) {
                 throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
             }
-            if (mediaBox.Size() != 4) {
-                throw new PdfException(PdfException.WrongMediaBoxSize1).SetMessageParams(mediaBox.Size());
+            int mediaBoxSize;
+            if ((mediaBoxSize = mediaBox.Size()) != 4) {
+                if (mediaBoxSize > 4) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                    if (logger.IsErrorEnabled) {
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, 
+                            mediaBoxSize));
+                    }
+                }
+                if (mediaBoxSize < 4) {
+                    throw new PdfException(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS).SetMessageParams(mediaBox.Size());
+                }
             }
             PdfNumber llx = mediaBox.GetAsNumber(0);
             PdfNumber lly = mediaBox.GetAsNumber(1);
