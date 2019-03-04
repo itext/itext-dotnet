@@ -137,15 +137,15 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_159(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_157(extGStateDict);
                     CheckExtGState(gState);
                 }
             }
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
-        private sealed class _CanvasGraphicsState_159 : CanvasGraphicsState {
-            public _CanvasGraphicsState_159(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_157 : CanvasGraphicsState {
+            public _CanvasGraphicsState_157(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
