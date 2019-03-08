@@ -95,6 +95,31 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void BackgroundOpacityTest02() {
+            String outFileName = destinationFolder + "backgroundOpacityTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_backgroundOpacityTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (0.0) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 0.0f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (0.3) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 0.3f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (0.5) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 0.5f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (0.7) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 0.7f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (1.0) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 1.0f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with background"
+                ).SetBackgroundColor(ColorConstants.WHITE)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BorderOpacityTest01() {
             String outFileName = destinationFolder + "borderOpacityTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_borderOpacityTest01.pdf";
