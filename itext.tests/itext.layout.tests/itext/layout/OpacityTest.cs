@@ -110,6 +110,12 @@ namespace iText.Layout {
                 ).SetBackgroundColor(ColorConstants.WHITE, 0.7f)));
             document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (1.0) background"
                 ).SetBackgroundColor(ColorConstants.WHITE, 1.0f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (-1.0) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, -1.0f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (100.0) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, 100.0f)));
+            document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (NaN) background"
+                ).SetBackgroundColor(ColorConstants.WHITE, float.NaN)));
             document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with background"
                 ).SetBackgroundColor(ColorConstants.WHITE)));
             document.Close();
