@@ -406,6 +406,9 @@ namespace iText.Kernel.Pdf.Annot {
                                                                                                 if (PdfName.Watermark.Equals(subtype)) {
                                                                                                     annotation = new PdfWatermarkAnnotation((PdfDictionary)pdfObject);
                                                                                                 }
+                                                                                                else {
+                                                                                                    annotation = new PdfAnnotation.PdfUnknownAnnotation((PdfDictionary)pdfObject);
+                                                                                                }
                                                                                             }
                                                                                         }
                                                                                     }
@@ -1595,6 +1598,17 @@ namespace iText.Kernel.Pdf.Annot {
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
+        }
+
+        internal class PdfUnknownAnnotation : PdfAnnotation {
+            protected internal PdfUnknownAnnotation(PdfDictionary pdfObject)
+                : base(pdfObject) {
+            }
+
+            // Created as a private static class in order to facilitate autoport.
+            public override PdfName GetSubtype() {
+                return GetPdfObject().GetAsName(PdfName.Subtype);
+            }
         }
     }
 }
