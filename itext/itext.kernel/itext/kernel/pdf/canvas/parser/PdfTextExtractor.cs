@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Extract text from a specified page using an extraction strategy.
         /// Also allows registration of custom IContentOperators that can influence
         /// how (and whether or not) the PDF instructions will be parsed.
+        /// Extraction strategy must be passed as a new object for every single page.
         /// </remarks>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <param name="strategy">the strategy to use for extracting text</param>
@@ -73,6 +74,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Extract text from a specified page using an extraction strategy.</summary>
+        /// <remarks>
+        /// Extract text from a specified page using an extraction strategy.
+        /// Extraction strategy must be passed as a new object for every single page.
+        /// </remarks>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <param name="strategy">the strategy to use for extracting text</param>
         /// <returns>the extracted text</returns>
