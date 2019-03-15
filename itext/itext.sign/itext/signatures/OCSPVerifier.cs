@@ -126,7 +126,8 @@ namespace iText.Signatures {
         /// <summary>Verifies a certificate against a single OCSP response</summary>
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="signCert">the certificate that needs to be checked</param>
-        /// <param name="issuerCert">the certificate of CA</param>
+        /// <param name="issuerCert">the certificate of CA (certificate that issued signCert). This certificate is considered trusted and valid by this method.
+        ///     </param>
         /// <param name="signDate">sign date</param>
         /// <returns>
         /// 
@@ -179,7 +180,7 @@ namespace iText.Signatures {
                 Object status = resp[i].GetCertStatus();
                 if (status == CertificateStatus.Good) {
                     // check if the OCSP response was genuine
-                    IsValidResponse(ocspResp, issuerCert);
+                    IsValidResponse(ocspResp, issuerCert, signDate);
                     return true;
                 }
             }
@@ -192,19 +193,36 @@ namespace iText.Signatures {
         /// using a trusted anchor or cert.
         /// </summary>
         /// <param name="ocspResp">the OCSP response</param>
-        /// <param name="issuerCert">the issuer certificate</param>
+        /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
+        ///     </param>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. Use IsValidResponse(Org.BouncyCastle.Ocsp.BasicOcspResp, Org.BouncyCastle.X509.X509Certificate, System.DateTime) instead"
+            )]
         public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert) {
-            //OCSP response might be signed by the issuer certificate or
-            //the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension
+            IsValidResponse(ocspResp, issuerCert, DateTimeUtil.GetCurrentUtcTime());
+        }
+
+        /// <summary>
+        /// Verifies if an OCSP response is genuine
+        /// If it doesn't verify against the issuer certificate and response's certificates, it may verify
+        /// using a trusted anchor or cert.
+        /// </summary>
+        /// <param name="ocspResp">the OCSP response</param>
+        /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
+        ///     </param>
+        /// <param name="signDate">sign date</param>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert, DateTime signDate) {
+            // OCSP response might be signed by the issuer certificate or
+            // the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension
             X509Certificate responderCert = null;
-            //first check if the issuer certificate signed the response
-            //since it is expected to be the most common case
+            // first check if the issuer certificate signed the response
+            // since it is expected to be the most common case
             if (IsSignatureValid(ocspResp, issuerCert)) {
                 responderCert = issuerCert;
             }
-            //if the issuer certificate didn't sign the ocsp response, look for authorized ocsp responses
+            // if the issuer certificate didn't sign the ocsp response, look for authorized ocsp responses
             // from properties or from certificate chain received with response
             if (responderCert == null) {
                 if (ocspResp.GetCerts() != null) {
@@ -227,14 +245,56 @@ namespace iText.Signatures {
                     if (responderCert == null) {
                         throw new VerificationException(issuerCert, "OCSP response could not be verified");
                     }
+                    // RFC 6960 4.2.2.2. Authorized Responders:
+                    // "Systems relying on OCSP responses MUST recognize a delegation certificate as being issued
+                    // by the CA that issued the certificate in question only if the delegation certificate and the
+                    // certificate being checked for revocation were signed by the same key."
+                    // and
+                    // "This certificate MUST be issued directly by the CA that is identified in the request"
+                    responderCert.Verify(issuerCert.GetPublicKey());
+                    // check if lifetime of certificate is ok
+                    responderCert.CheckValidity(signDate);
+                    // validating ocsp signers certificate
+                    // Check if responders certificate has id-pkix-ocsp-nocheck extension,
+                    // in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
+                    if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == null) {
+                        X509Crl crl;
+                        try {
+                            // TODO should also check for Authority Information Access according to RFC6960 4.2.2.2.1. "Revocation Checking of an Authorized Responder"
+                            // TODO should also respect onlineCheckingAllowed property?
+                            crl = CertificateUtil.GetCRL(responderCert);
+                        }
+                        catch (Exception) {
+                            crl = (X509Crl)null;
+                        }
+                        if (crl != null && crl is X509Crl) {
+                            CRLVerifier crlVerifier = new CRLVerifier(null, null);
+                            crlVerifier.SetRootStore(rootStore);
+                            crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
+                            if (!crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, signDate)) {
+                                throw new VerificationException(issuerCert, "Authorized OCSP responder certificate was revoked.");
+                            }
+                        }
+                        else {
+                            ILog logger = LogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier));
+                            logger.Error("Authorized OCSP responder certificate revocation status cannot be checked");
+                        }
+                    }
                 }
                 else {
-                    //certificate chain is not present in response received
-                    //try to verify using rootStore
+                    // TODO throw exception starting from iText version 7.2, but only after OCSPVerifier would allow explicit setting revocation check end points/provide revocation data
+                    // throw new VerificationException(issuerCert, "Authorized OCSP responder certificate revocation status cannot be checked.");
+                    // certificate chain is not present in response received
+                    // try to verify using rootStore according to RFC 6960 2.2. Response:
+                    // "The key used to sign the response MUST belong to one of the following:
+                    // - ...
+                    // - a Trusted Responder whose public key is trusted by the requestor;
+                    // - ..."
                     if (rootStore != null) {
                         try {
                             foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore)) {
                                 if (IsSignatureValid(ocspResp, anchor)) {
+                                    // certificate from the root store is considered trusted and valid by this method
                                     responderCert = anchor;
                                     break;
                                 }
@@ -244,36 +304,12 @@ namespace iText.Signatures {
                             responderCert = (X509Certificate)null;
                         }
                     }
-                    // OCSP Response does not contain certificate chain, and response is not signed by any
-                    // of the rootStore or the issuer certificate.
                     if (responderCert == null) {
-                        throw new VerificationException(issuerCert, "OCSP response could not be verified");
+                        throw new VerificationException(issuerCert, "OCSP response could not be verified: it does not contain certificate chain and response is not signed by issuer certificate or any from the root store."
+                            );
                     }
                 }
             }
-            //check "This certificate MUST be issued directly by the CA that issued the certificate in question".
-            responderCert.Verify(issuerCert.GetPublicKey());
-            // validating ocsp signers certificate
-            // Check if responders certificate has id-pkix-ocsp-nocheck extension,
-            // in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
-            if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == null) {
-                X509Crl crl;
-                try {
-                    crl = CertificateUtil.GetCRL(responderCert);
-                }
-                catch (Exception) {
-                    crl = (X509Crl)null;
-                }
-                if (crl != null && crl is X509Crl) {
-                    CRLVerifier crlVerifier = new CRLVerifier(null, null);
-                    crlVerifier.SetRootStore(rootStore);
-                    crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-                    crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, DateTimeUtil.GetCurrentUtcTime());
-                    return;
-                }
-            }
-            //check if lifetime of certificate is ok
-            responderCert.CheckValidity();
         }
 
         /// <summary>Checks if an OCSP response is genuine</summary>
