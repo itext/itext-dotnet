@@ -12,6 +12,8 @@ The **iText 7 Core/Community** release contains:
 - ```hyph.dll```: use this if you want text to be hyphenated
 - ```font-asian.dll```: use this is you need CJK functionality (Chinese / Japanese / Korean)
 - ```sign.dll```: use this if you need support for digital signatures
+- ```styled-xml-parser.dll```: use this if you need support for SVG or html2pdf
+- ```svg.dll```: SVG support
 
 The **iText 7 Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
 
