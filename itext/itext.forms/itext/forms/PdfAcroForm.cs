@@ -797,10 +797,15 @@ namespace iText.Forms {
                 PdfDictionary parent = fieldObject.GetAsDictionary(PdfName.Parent);
                 if (parent != null) {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                    kids.Remove(fieldObject);
-                    // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
-                    // shouldn't we remove them recursively? check it
-                    if (kids.IsEmpty()) {
+                    if (kids != null) {
+                        kids.Remove(fieldObject);
+                        // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
+                        // shouldn't we remove them recursively? check it
+                        if (kids.IsEmpty()) {
+                            fFields.Remove(parent);
+                        }
+                    }
+                    else {
                         fFields.Remove(parent);
                     }
                 }
