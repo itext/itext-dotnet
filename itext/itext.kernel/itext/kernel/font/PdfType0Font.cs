@@ -941,7 +941,9 @@ namespace iText.Kernel.Font {
                 }
             }
             else {
-                throw new NotSupportedException("Vertical writing has not implemented yet.");
+                //The implementation should be realized in DEVSIX-2730
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                logger.Warn("Vertical writing has not been implemented yet.");
             }
             return cidFont;
         }
