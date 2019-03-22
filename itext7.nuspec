@@ -15,7 +15,7 @@
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2019 iText Group NV</copyright>
     <language>en-US</language>
-    <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
+    <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core</tags>
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Common.Logging" version="3.4.1" />
