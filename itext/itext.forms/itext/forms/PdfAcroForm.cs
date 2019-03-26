@@ -173,7 +173,8 @@ namespace iText.Forms {
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDocument">document</see>
-        /// 's AcroForm, or a new one
+        /// 's AcroForm,
+        /// or a new one provided that <code>createIfNotExist</code> parameter is <code>true</code>, otherwise <code>null</code>.
         /// </returns>
         public static iText.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {
             PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
