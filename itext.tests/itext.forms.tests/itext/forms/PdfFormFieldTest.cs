@@ -669,5 +669,49 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PreserveFontPropsTest() {
+            String srcPdf = sourceFolder + "preserveFontPropsTest.pdf";
+            String outPdf = destinationFolder + "preserveFontPropsTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_preserveFontPropsTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfFormField field1 = form.GetField("emptyField");
+            field1.SetValue("Do fields on the left look the same?", field1.GetFont() != null ? field1.GetFont() : PdfFontFactory
+                .CreateFont(), field1.GetFontSize());
+            PdfFormField field2 = form.GetField("emptyField2");
+            field2.SetValue("Do fields on the right look the same?", field2.GetFont() != null ? field2.GetFont() : PdfFontFactory
+                .CreateFont(), field2.GetFontSize());
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FontAutoSizeButtonFieldTest() {
+            String outPdf = destinationFolder + "fontAutoSizeButtonFieldTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_fontAutoSizeButtonFieldTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String itext = "itextpdf";
+            PdfButtonFormField button = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 500, 200, 200), itext, 
+                itext);
+            button.SetFontSize(0);
+            button.SetBackgroundColor(ColorConstants.GRAY);
+            button.SetValue(itext);
+            button.SetVisibility(PdfFormField.VISIBLE_BUT_DOES_NOT_PRINT);
+            form.AddField(button);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
     }
 }

@@ -600,7 +600,9 @@ namespace iText.Forms.Fields {
             }
             field.SetMultiline(multiline);
             field.font = font;
-            field.fontSize = fontSize;
+            if (fontSize != -1) {
+                field.fontSize = fontSize;
+            }
             field.SetValue(value);
             field.SetFieldName(name);
             return field;
@@ -1715,8 +1717,12 @@ namespace iText.Forms.Fields {
                     for (int i = 0; i < kids.Size(); i++) {
                         PdfObject kid = kids.Get(i);
                         iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
-                        field.font = font;
-                        field.fontSize = fontSize;
+                        if (field.font == null) {
+                            field.font = font;
+                        }
+                        if (field.fontSize == -1) {
+                            field.fontSize = fontSize;
+                        }
                         field.SetValue(value);
                     }
                 }
@@ -1774,6 +1780,8 @@ namespace iText.Forms.Fields {
         /// <param name="fontSize">the size of the font</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, PdfFont font, float fontSize) {
+            this.fontSize = fontSize;
+            this.font = font;
             PdfName formType = GetFormType();
             if (!formType.Equals(PdfName.Tx) && !formType.Equals(PdfName.Ch)) {
                 return SetValue(value);
@@ -2332,6 +2340,12 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Gets the current fontSize of the form field.</summary>
+        /// <returns>the current fontSize</returns>
+        public virtual float GetFontSize() {
+            return fontSize;
+        }
+
         /// <summary>Gets the current font of the form field.</summary>
         /// <returns>
         /// the current
@@ -2567,8 +2581,9 @@ namespace iText.Forms.Fields {
                     }
                     Object[] fontAndSize = GetFontAndSize(asNormal);
                     PdfFont localFont = (PdfFont)fontAndSize[0];
-                    PdfName localFontName = (PdfName)fontAndSize[2];
-                    float fontSize = NormalizeFontSize((float)fontAndSize[1], localFont, bBox, value);
+                    PdfName localFontName = (PdfName)fontAndSize[1];
+                    float normalizedFontSize = NormalizeFontSize(this.fontSize >= 0 ? this.fontSize : (float)DEFAULT_FONT_SIZE
+                        , localFont, bBox, value);
                     //Apply Page rotation
                     int pageRotation = 0;
                     if (page != null) {
@@ -2660,10 +2675,10 @@ namespace iText.Forms.Fields {
                     //Create text appearance
                     if (PdfName.Tx.Equals(type)) {
                         if (!IsMultiline()) {
-                            DrawTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
+                            DrawTextAppearance(bBox.ToRectangle(), localFont, normalizedFontSize, value, appearance);
                         }
                         else {
-                            DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
+                            DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, normalizedFontSize, value, appearance);
                         }
                     }
                     else {
@@ -2676,7 +2691,7 @@ namespace iText.Forms.Fields {
                                 value = OptionsArrayToString(visibleOptions);
                             }
                         }
-                        DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
+                        DrawMultiLineTextAppearance(bBox.ToRectangle(), localFont, normalizedFontSize, value, appearance);
                     }
                     appearance.GetResources().AddFont(GetDocument(), localFont);
                     appearance.SetModified();
@@ -2718,10 +2733,19 @@ namespace iText.Forms.Fields {
                                 //TODO DEVSIX-2528 what if PdfName.N is PdfDictionary?
                                 Object[] fontAndSize = GetFontAndSize(apDic.GetAsStream(PdfName.N));
                                 PdfFont localFont = (PdfFont)fontAndSize[0];
-                                PdfName localFontName = (PdfName)fontAndSize[2];
-                                float fontSize = (float)fontAndSize[1];
+                                PdfName localFontName = (PdfName)fontAndSize[1];
+                                PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);
+                                if (bBox == null) {
+                                    PdfArray kids = GetKids();
+                                    if (kids == null) {
+                                        throw new PdfException(PdfException.WrongFormFieldAddAnnotationToTheField);
+                                    }
+                                    bBox = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
+                                }
+                                float normalizedFontSize = NormalizeFontSize(this.fontSize >= 0 ? this.fontSize : (float)DEFAULT_FONT_SIZE
+                                    , localFont, bBox, value);
                                 appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), value, localFont, localFontName, 
-                                    fontSize);
+                                    normalizedFontSize);
                             }
                             apDic.Put(PdfName.N, appearance.GetPdfObject());
                             if (pdfAConformanceLevel != null) {
@@ -2850,7 +2874,7 @@ namespace iText.Forms.Fields {
             return value;
         }
 
-        /// <summary>According to spec (ISO-32000-1, 12.7.3.3) zero font size should interpretaded as auto size.</summary>
+        /// <summary>According to spec (ISO-32000-1, 12.7.3.3) zero font size should interpreted as auto size.</summary>
         private float NormalizeFontSize(float fs, PdfFont localFont, PdfArray bBox, String value) {
             if (fs == 0) {
                 if (IsMultiline()) {
@@ -3308,7 +3332,7 @@ namespace iText.Forms.Fields {
 
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual Object[] GetFontAndSize(PdfDictionary asNormal) {
-            Object[] fontAndSize = new Object[3];
+            Object[] fontAndSize = new Object[2];
             PdfDictionary normalResources = null;
             PdfDictionary defaultResources = null;
             PdfDocument document = GetDocument();
@@ -3349,21 +3373,10 @@ namespace iText.Forms.Fields {
                 if (daFontDict != null) {
                     PdfFont daFont = document != null ? document.GetFont(daFontDict) : PdfFontFactory.CreateFont(daFontDict);
                     fontAndSize[0] = daFont;
-                    fontAndSize[2] = daFontName;
+                    fontAndSize[1] = daFontName;
                 }
                 else {
                     fontAndSize[0] = PdfFontFactory.CreateFont();
-                }
-            }
-            if (fontSize >= 0) {
-                fontAndSize[1] = fontSize;
-            }
-            else {
-                if (dab[DA_SIZE] != null) {
-                    fontAndSize[1] = dab[DA_SIZE];
-                }
-                else {
-                    fontAndSize[1] = (float)DEFAULT_FONT_SIZE;
                 }
             }
             if (color == null) {
@@ -4069,6 +4082,14 @@ namespace iText.Forms.Fields {
                     if (extractedBorderColor != null) {
                         borderColor = extractedBorderColor;
                     }
+                }
+            }
+            PdfString fontCharacteristics = GetDefaultAppearance();
+            if (fontCharacteristics != null) {
+                Object[] fontData = SplitDAelements(fontCharacteristics.GetValue());
+                if (fontData[DA_SIZE] != null && fontData[DA_FONT] != null) {
+                    color = (Color)fontData[DA_COLOR];
+                    fontSize = (float)fontData[DA_SIZE];
                 }
             }
         }
