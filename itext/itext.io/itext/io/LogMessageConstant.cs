@@ -76,6 +76,8 @@ namespace iText.IO {
 
         public const String CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS = "Cannot resolve \"{0}\" role mapping to standard role, because of the too much transitive mappings.";
 
+        public const String CHARACTER_DIRECTION_HAS_NOT_BEEN_DETECTED = "The direction for this character has not been detected: code point {0}. The Other Neutrals algorithm will be used.";
+
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
         public const String COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED = "Collection dictionary already exists. It will be modified.";
