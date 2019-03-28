@@ -3493,11 +3493,9 @@ namespace iText.Forms.Fields {
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
+            int maxLen = new PdfTextFormField(GetPdfObject()).GetMaxLen();
             // check if /Comb has been set
-            if (this.GetFieldFlag(PdfTextFormField.FF_COMB) && null != this.GetPdfObject().GetAsNumber(PdfName.MaxLen)
-                ) {
-                PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
-                int maxLen = maxLenEntry.IntValue();
+            if (this.GetFieldFlag(PdfTextFormField.FF_COMB) && 0 != maxLen) {
                 float widthPerCharacter = width / maxLen;
                 int numberOfCharacters = Math.Min(maxLen, value.Length);
                 int start;

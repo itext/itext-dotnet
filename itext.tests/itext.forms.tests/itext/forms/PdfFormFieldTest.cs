@@ -713,5 +713,38 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MaxLenInheritanceTest() {
+            String srcPdf = sourceFolder + "maxLenInheritanceTest.pdf";
+            String outPdf = destinationFolder + "maxLenInheritanceTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_maxLenInheritanceTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.GetField("text").SetValue("iText!");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MaxLenDeepInheritanceTest() {
+            String srcFilename = sourceFolder + "maxLenDeepInheritanceTest.pdf";
+            String destFilename = destinationFolder + "maxLenDeepInheritanceTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_maxLenDeepInheritanceTest.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(destFilename));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text.1").SetValue("WoOooOw");
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFilename, destinationFolder
+                , "diff_"));
+        }
     }
 }
