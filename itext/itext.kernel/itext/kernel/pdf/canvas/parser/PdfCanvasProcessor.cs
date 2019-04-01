@@ -849,7 +849,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 float e = ((PdfNumber)operands[4]).FloatValue();
                 float f = ((PdfNumber)operands[5]).FloatValue();
                 Matrix matrix = new Matrix(a, b, c, d, e, f);
-                processor.GetGraphicsState().UpdateCtm(matrix);
+                try {
+                    processor.GetGraphicsState().UpdateCtm(matrix);
+                }
+                catch (PdfException exception) {
+                    if (!(exception.InnerException is NoninvertibleTransformException)) {
+                        throw;
+                    }
+                    else {
+                        ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
+                            ));
+                    }
+                }
             }
         }
 

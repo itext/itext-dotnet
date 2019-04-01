@@ -343,6 +343,8 @@ namespace iText.Kernel {
         [System.ObsoleteAttribute(@"Now we log a warning rather than throw an exception.")]
         public const String NoMaxLenPresent = "No /MaxLen has been set even though the Comb flag has been set.";
 
+        public const String NoninvertibleMatrixCannotBeProcessed = "A noninvertible matrix has been parsed. The behaviour is unpredictable.";
+
         public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";
 
         public const String NotAValidPkcs7ObjectNotASequence = "Not a valid PKCS#7 object - not a sequence";

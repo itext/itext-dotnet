@@ -62,13 +62,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 ()));
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_81());
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_83());
                 processor.ProcessPageContent(page);
             }
         }
 
-        private sealed class _IEventListener_81 : IEventListener {
-            public _IEventListener_81() {
+        private sealed class _IEventListener_83 : IEventListener {
+            public _IEventListener_83() {
             }
 
             public void EventOccurred(IEventData data, EventType type) {
@@ -132,6 +132,22 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
             // Assert than no exception is thrown when an empty path is handled
             processor.ProcessPageContent(document.GetPage(1));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
+        public virtual void TestNoninvertibleMatrix() {
+            String fileName = "noninvertibleMatrix.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
+            LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(strategy);
+            PdfPage page = pdfDocument.GetFirstPage();
+            processor.ProcessPageContent(page);
+            String resultantText = strategy.GetResultantText();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.AreEqual("Hello World!\nHello World!\nHello World!\nHello World! Hello World! Hello World!"
+                , resultantText);
         }
 
         private class NoOpEventListener : IEventListener {

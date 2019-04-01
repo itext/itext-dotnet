@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
@@ -70,19 +70,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             if (source.clippingPath != null) {
                 clippingPath = new Path(source.clippingPath);
             }
-        }
-
-        /// <summary>Sets the current clipping path to the specified path.</summary>
-        /// <remarks>
-        /// Sets the current clipping path to the specified path.
-        /// <strong>Note:</strong>This method doesn't modify existing clipping path,
-        /// it simply replaces it with the new one instead.
-        /// </remarks>
-        /// <param name="clippingPath">New clipping path.</param>
-        public virtual void SetClippingPath(Path clippingPath) {
-            Path pathCopy = new Path(clippingPath);
-            pathCopy.CloseAllSubpaths();
-            this.clippingPath = pathCopy;
         }
 
         public override void UpdateCtm(Matrix newCtm) {
@@ -134,6 +121,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             return clippingPath;
         }
 
+        /// <summary>Sets the current clipping path to the specified path.</summary>
+        /// <remarks>
+        /// Sets the current clipping path to the specified path.
+        /// <strong>Note:</strong>This method doesn't modify existing clipping path,
+        /// it simply replaces it with the new one instead.
+        /// </remarks>
+        /// <param name="clippingPath">New clipping path.</param>
+        public virtual void SetClippingPath(Path clippingPath) {
+            Path pathCopy = new Path(clippingPath);
+            pathCopy.CloseAllSubpaths();
+            this.clippingPath = pathCopy;
+        }
+
         private void TransformClippingPath(Matrix newCtm) {
             Path path = new Path();
             foreach (Subpath subpath in clippingPath.GetSubpaths()) {
@@ -177,7 +177,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 return transformed;
             }
             catch (NoninvertibleTransformException e) {
-                throw new Exception(e.Message, e);
+                throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
             }
         }
     }
