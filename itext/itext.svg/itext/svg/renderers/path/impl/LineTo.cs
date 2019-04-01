@@ -46,50 +46,36 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(L) attribute of SVG's path element</summary>
     public class LineTo : AbstractPathShape {
-        protected internal String[][] coordinates;
+        internal const int ARGUMENT_SIZE = 2;
 
         public LineTo()
             : this(false) {
         }
 
-        public LineTo(bool relative) {
-            // (x y)+
-            base.relative = relative;
+        public LineTo(bool relative)
+            : base(relative) {
         }
 
         public override void Draw(PdfCanvas canvas) {
-            for (int i = 0; i < coordinates.Length; i++) {
-                float x = CssUtils.ParseAbsoluteLength(coordinates[i][0]);
-                float y = CssUtils.ParseAbsoluteLength(coordinates[i][1]);
-                canvas.LineTo(x, y);
-            }
+            float x = CssUtils.ParseAbsoluteLength(coordinates[0]);
+            float y = CssUtils.ParseAbsoluteLength(coordinates[1]);
+            canvas.LineTo(x, y);
         }
 
-        public override void SetCoordinates(String[] coordinates, Point startPoint) {
-            if (coordinates.Length == 0 || coordinates.Length % 2 != 0) {
+        public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
+            if (inputCoordinates.Length != ARGUMENT_SIZE) {
                 throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
-                    , JavaUtil.ArraysToString(coordinates)));
+                    , JavaUtil.ArraysToString(inputCoordinates)));
             }
-            this.coordinates = new String[coordinates.Length / 2][];
-            double[] initialPoint = new double[] { startPoint.GetX(), startPoint.GetY() };
-            for (int i = 0; i < coordinates.Length; i += 2) {
-                String[] curCoordinates = new String[] { coordinates[i], coordinates[i + 1] };
-                if (IsRelative()) {
-                    curCoordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(curCoordinates, initialPoint);
-                    initialPoint[0] = (float)CssUtils.ParseFloat(curCoordinates[0]);
-                    initialPoint[1] = (float)CssUtils.ParseFloat(curCoordinates[1]);
-                }
-                this.coordinates[i / 2] = curCoordinates;
+            this.coordinates = new String[] { inputCoordinates[0], inputCoordinates[1] };
+            if (IsRelative()) {
+                this.coordinates = copier.MakeCoordinatesAbsolute(coordinates, new double[] { startPoint.x, startPoint.y }
+                    );
             }
-        }
-
-        public override Point GetEndingPoint() {
-            return CreatePoint(coordinates[coordinates.Length - 1][0], coordinates[coordinates.Length - 1][1]);
         }
     }
 }

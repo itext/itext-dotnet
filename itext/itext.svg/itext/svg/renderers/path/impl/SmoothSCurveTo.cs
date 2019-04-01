@@ -43,5 +43,14 @@ address: sales@itextpdf.com
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements shorthand/smooth curveTo (S) attribute of SVG's path element</summary>
     public class SmoothSCurveTo : CurveTo {
+        internal const int ARGUMENT_SIZE = 4;
+
+        public SmoothSCurveTo()
+            : this(false) {
+        }
+
+        public SmoothSCurveTo(bool relative)
+            : base(relative, new SmoothOperatorConverter()) {
+        }
     }
 }

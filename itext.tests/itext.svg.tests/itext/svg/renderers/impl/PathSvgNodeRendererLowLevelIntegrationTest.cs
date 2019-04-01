@@ -144,26 +144,52 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestMoveNoArgsOperator() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                String instructions = "M";
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "M";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
         }
 
         [NUnit.Framework.Test]
         public virtual void TestMoveOddArgsOperator() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                String instructions = "M 500";
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "M 500";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddMultipleArgsOperator() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "M 500 500 200 200 300 300";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.AreEqual(3, path.GetShapes().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddMultipleOddArgsOperator() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "L 500 500 200 200 300";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.AreEqual(2, path.GetShapes().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddMultipleOddArgsOperatorThenOtherStuff() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "M 500 500 200 200 300 z";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.AreEqual(3, path.GetShapes().Count);
+            NUnit.Framework.Assert.IsTrue(((IList<IPathShape>)path.GetShapes())[2] is ClosePath);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddDoubleArgsOperator() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "M 500 500 S 200 100 100 200 300 300 400 400";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.AreEqual(3, path.GetShapes().Count);
+            NUnit.Framework.Assert.IsTrue(((IList<IPathShape>)path.GetShapes())[2] is SmoothSCurveTo);
         }
     }
 }

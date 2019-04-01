@@ -40,26 +40,17 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.Collections.Generic;
+namespace iText.Svg.Renderers.Path.Impl {
+    /// <summary>Implements shorthand/smooth quadraticCurveTo (T) attribute of SVG's path element</summary>
+    public class QuadraticSmoothCurveTo : QuadraticCurveTo {
+        internal const int ARGUMENT_SIZE = 2;
 
-namespace iText.Svg.Renderers.Path {
-    /// <summary>
-    /// Interface that will provide a mapping from path element-data  instruction names to
-    /// <see cref="IPathShape"/>
-    /// .
-    /// </summary>
-    public interface IPathShapeMapper {
-        /// <summary>Provides a mapping of Path-data instructions' names to path shape classes.</summary>
-        /// <returns>
-        /// a
-        /// <see cref="System.Collections.IDictionary{K, V}"/>
-        /// with Strings as keys and {link @
-        /// <see cref="IPathShape"/>
-        /// implementations as values
-        /// </returns>
-        IDictionary<String, IPathShape> GetMapping();
+        public QuadraticSmoothCurveTo()
+            : this(false) {
+        }
 
-        IDictionary<String, int?> GetArgumentCount();
+        public QuadraticSmoothCurveTo(bool relative)
+            : base(relative, new SmoothOperatorConverter()) {
+        }
     }
 }

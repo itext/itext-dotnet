@@ -40,26 +40,25 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.Collections.Generic;
+using iText.Kernel.Geom;
 
-namespace iText.Svg.Renderers.Path {
-    /// <summary>
-    /// Interface that will provide a mapping from path element-data  instruction names to
-    /// <see cref="IPathShape"/>
-    /// .
-    /// </summary>
-    public interface IPathShapeMapper {
-        /// <summary>Provides a mapping of Path-data instructions' names to path shape classes.</summary>
-        /// <returns>
-        /// a
-        /// <see cref="System.Collections.IDictionary{K, V}"/>
-        /// with Strings as keys and {link @
-        /// <see cref="IPathShape"/>
-        /// implementations as values
-        /// </returns>
-        IDictionary<String, IPathShape> GetMapping();
-
-        IDictionary<String, int?> GetArgumentCount();
+namespace iText.Svg.Renderers.Path.Impl {
+    /// <summary>Interface that describes a Path object which is defined by control points.</summary>
+    /// <remarks>
+    /// Interface that describes a Path object which is defined by control points. In practice this only means Bézier curves,
+    /// both quadratic (one control point) and cubic (two control points). This interface is relevant in the context of
+    /// Smooth (Shorthand) Bézier curves, which omit a control point from their arguments list because it can be calculated
+    /// from the last control point of the previous curve. Therefore, the last control point of a curve must be exposed to
+    /// the
+    /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer"/>
+    /// algorithm.
+    /// </remarks>
+    public interface IControlPointCurve {
+        /// <summary>
+        /// Returns coordinates of the last control point (the one closest to the ending point)
+        /// in the Bezier curve, in SVG space coordinates
+        /// </summary>
+        /// <returns>coordinates of the last control point in SVG space coordinates</returns>
+        Point GetLastControlPoint();
     }
 }

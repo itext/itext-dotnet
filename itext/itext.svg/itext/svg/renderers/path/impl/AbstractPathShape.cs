@@ -56,6 +56,24 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Whether this is a relative operator or not.</summary>
         protected internal bool relative;
 
+        protected internal readonly IOperatorConverter copier;
+
+        protected internal String[] coordinates;
+
+        public AbstractPathShape()
+            : this(false) {
+        }
+
+        public AbstractPathShape(bool relative)
+            : this(relative, new DefaultOperatorConverter()) {
+        }
+
+        public AbstractPathShape(bool relative, IOperatorConverter copier) {
+            // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
+            this.relative = relative;
+            this.copier = copier;
+        }
+
         public virtual bool IsRelative() {
             return this.relative;
         }
@@ -64,9 +82,11 @@ namespace iText.Svg.Renderers.Path.Impl {
             return new Point((float)CssUtils.ParseFloat(coordX), (float)CssUtils.ParseFloat(coordY));
         }
 
-        public abstract void Draw(PdfCanvas arg1);
+        public virtual Point GetEndingPoint() {
+            return CreatePoint(coordinates[coordinates.Length - 2], coordinates[coordinates.Length - 1]);
+        }
 
-        public abstract Point GetEndingPoint();
+        public abstract void Draw(PdfCanvas arg1);
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);
     }

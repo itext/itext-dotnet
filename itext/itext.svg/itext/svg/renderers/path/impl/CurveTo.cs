@@ -46,64 +46,49 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements curveTo(L) attribute of SVG's path element</summary>
-    public class CurveTo : AbstractPathShape {
-        private String[][] coordinates;
+    /// <summary>Implements curveTo(C) attribute of SVG's path element</summary>
+    public class CurveTo : AbstractPathShape, IControlPointCurve {
+        internal const int ARGUMENT_SIZE = 6;
 
         public CurveTo()
             : this(false) {
         }
 
-        public CurveTo(bool relative) {
-            // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
-            this.relative = relative;
+        public CurveTo(bool relative)
+            : this(relative, new DefaultOperatorConverter()) {
+        }
+
+        public CurveTo(bool relative, IOperatorConverter copier)
+            : base(relative, copier) {
         }
 
         public override void Draw(PdfCanvas canvas) {
-            for (int i = 0; i < coordinates.Length; i++) {
-                float x1 = CssUtils.ParseAbsoluteLength(coordinates[i][0]);
-                float y1 = CssUtils.ParseAbsoluteLength(coordinates[i][1]);
-                float x2 = CssUtils.ParseAbsoluteLength(coordinates[i][2]);
-                float y2 = CssUtils.ParseAbsoluteLength(coordinates[i][3]);
-                float x = CssUtils.ParseAbsoluteLength(coordinates[i][4]);
-                float y = CssUtils.ParseAbsoluteLength(coordinates[i][5]);
-                canvas.CurveTo(x1, y1, x2, y2, x, y);
-            }
+            float x1 = CssUtils.ParseAbsoluteLength(coordinates[0]);
+            float y1 = CssUtils.ParseAbsoluteLength(coordinates[1]);
+            float x2 = CssUtils.ParseAbsoluteLength(coordinates[2]);
+            float y2 = CssUtils.ParseAbsoluteLength(coordinates[3]);
+            float x = CssUtils.ParseAbsoluteLength(coordinates[4]);
+            float y = CssUtils.ParseAbsoluteLength(coordinates[5]);
+            canvas.CurveTo(x1, y1, x2, y2, x, y);
         }
 
-        public override void SetCoordinates(String[] coordinates, Point startPoint) {
-            if (coordinates.Length == 0 || coordinates.Length % 6 != 0) {
+        public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
+            if (inputCoordinates.Length < ARGUMENT_SIZE) {
                 throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
-                    , JavaUtil.ArraysToString(coordinates)));
+                    , JavaUtil.ArraysToString(inputCoordinates)));
             }
-            this.coordinates = new String[coordinates.Length / 6][];
+            coordinates = new String[ARGUMENT_SIZE];
+            Array.Copy(inputCoordinates, 0, coordinates, 0, ARGUMENT_SIZE);
             double[] initialPoint = new double[] { startPoint.GetX(), startPoint.GetY() };
-            for (int i = 0; i < coordinates.Length; i += 6) {
-                String[] curCoordinates = new String[] { coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates
-                    [i + 3], coordinates[i + 4], coordinates[i + 5] };
-                if (IsRelative()) {
-                    curCoordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(curCoordinates, initialPoint);
-                    initialPoint[0] = (float)CssUtils.ParseFloat(curCoordinates[4]);
-                    initialPoint[1] = (float)CssUtils.ParseFloat(curCoordinates[5]);
-                }
-                this.coordinates[i / 6] = curCoordinates;
+            if (IsRelative()) {
+                coordinates = copier.MakeCoordinatesAbsolute(coordinates, initialPoint);
             }
         }
 
-        /// <summary>
-        /// Returns coordinates of the last control point (the one closer to the ending point)
-        /// in the series of Bezier curves (possibly, one curve), in SVG space coordinates
-        /// </summary>
-        /// <returns>coordinates of the last control points in SVG space coordinates</returns>
         public virtual Point GetLastControlPoint() {
-            return CreatePoint(coordinates[coordinates.Length - 1][2], coordinates[coordinates.Length - 1][3]);
-        }
-
-        public override Point GetEndingPoint() {
-            return CreatePoint(coordinates[coordinates.Length - 1][4], coordinates[coordinates.Length - 1][5]);
+            return CreatePoint(coordinates[2], coordinates[3]);
         }
     }
 }

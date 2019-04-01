@@ -42,13 +42,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements elliptical curveTo (A) segment of SVG's path element.</summary>
@@ -59,7 +57,7 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// However, float comparison is used instead of double comparison, because close coordinates can be considered equal.
     /// </remarks>
     public class EllipticalCurveTo : AbstractPathShape {
-        private String[][] coordinates;
+        internal const int ARGUMENT_SIZE = 7;
 
         private Point startPoint;
 
@@ -71,104 +69,86 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Creates a Elliptical curveTo.</summary>
         /// <remarks>Creates a Elliptical curveTo. Set argument to true to create a relative EllipticalCurveTo.</remarks>
         /// <param name="relative">whether this is a relative EllipticalCurveTo or not</param>
-        public EllipticalCurveTo(bool relative) {
-            base.relative = relative;
+        public EllipticalCurveTo(bool relative)
+            : base(relative) {
         }
 
-        public override void SetCoordinates(String[] coordinates, Point previous) {
+        public override void SetCoordinates(String[] inputCoordinates, Point previous) {
             startPoint = previous;
-            if (coordinates.Length == 0 || coordinates.Length % 7 != 0) {
-                LogManager.GetLogger(typeof(iText.Svg.Renderers.Path.Impl.EllipticalCurveTo)).Warn(MessageFormatUtil.Format
-                    (SvgLogMessageConstant.ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0, JavaUtil.ArraysToString(coordinates)
-                    ));
+            if (inputCoordinates.Length < ARGUMENT_SIZE) {
+                throw new ArgumentException(MessageFormatUtil.Format(SvgLogMessageConstant.ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
+                    , JavaUtil.ArraysToString(inputCoordinates)));
             }
-            this.coordinates = new String[coordinates.Length / 7][];
+            coordinates = new String[ARGUMENT_SIZE];
+            Array.Copy(inputCoordinates, 0, coordinates, 0, ARGUMENT_SIZE);
             double[] initialPoint = new double[] { previous.GetX(), previous.GetY() };
             // ignore partial argument groups, which do not form a fixed set of 7 elements
-            for (int i = 0; i / 7 < coordinates.Length / 7; i += 7) {
-                String[] curCoordinates = new String[] { coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates
-                    [i + 3], coordinates[i + 4], coordinates[i + 5], coordinates[i + 6] };
-                if (IsRelative()) {
-                    String[] relativeEndPoint = new String[] { coordinates[i + 5], coordinates[i + 6] };
-                    String[] absoluteEndPoint = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(relativeEndPoint, initialPoint
-                        );
-                    curCoordinates[i + 5] = absoluteEndPoint[0];
-                    curCoordinates[i + 6] = absoluteEndPoint[1];
-                    initialPoint[0] = Double.Parse(curCoordinates[i + 5], System.Globalization.CultureInfo.InvariantCulture);
-                    initialPoint[1] = Double.Parse(curCoordinates[i + 6], System.Globalization.CultureInfo.InvariantCulture);
-                }
-                this.coordinates[i / 7] = curCoordinates;
+            if (IsRelative()) {
+                String[] relativeEndPoint = new String[] { inputCoordinates[5], inputCoordinates[6] };
+                String[] absoluteEndPoint = copier.MakeCoordinatesAbsolute(relativeEndPoint, initialPoint);
+                coordinates[5] = absoluteEndPoint[0];
+                coordinates[6] = absoluteEndPoint[1];
             }
         }
 
         public override void Draw(PdfCanvas canvas) {
-            Point previousPoint = startPoint;
-            foreach (String[] coordinate in coordinates) {
-                Point start = new Point(previousPoint.x * .75, previousPoint.y * .75);
-                // pixels to points
-                double rx = Math.Abs(CssUtils.ParseAbsoluteLength(coordinate[0]));
-                double ry = Math.Abs(CssUtils.ParseAbsoluteLength(coordinate[1]));
-                // φ is taken mod 360 degrees.
-                double rotation = Double.Parse(coordinate[2], System.Globalization.CultureInfo.InvariantCulture) % 360.0;
-                // rotation argument is given in degrees, but we need radians for easier trigonometric calculations
-                rotation = MathUtil.ToRadians(rotation);
-                // binary flags (Value correction: any nonzero value for either of the flags fA or fS is taken to mean the value 1.)
-                bool largeArc = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinate[3]), 0);
-                bool sweep = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinate[4]), 0);
-                Point end = new Point(CssUtils.ParseAbsoluteLength(coordinate[5]), CssUtils.ParseAbsoluteLength(coordinate
-                    [6]));
-                if (CssUtils.CompareFloats(start.x, end.x) && CssUtils.CompareFloats(start.y, end.y)) {
-                    /* edge case: If the endpoints (x1, y1) and (x2, y2) are identical,
-                    * then this is equivalent to omitting the elliptical arc segment entirely.
-                    */
-                    continue;
+            Point start = new Point(startPoint.x * .75, startPoint.y * .75);
+            // pixels to points
+            double rx = Math.Abs(CssUtils.ParseAbsoluteLength(coordinates[0]));
+            double ry = Math.Abs(CssUtils.ParseAbsoluteLength(coordinates[1]));
+            // φ is taken mod 360 degrees.
+            double rotation = Double.Parse(coordinates[2], System.Globalization.CultureInfo.InvariantCulture) % 360.0;
+            // rotation argument is given in degrees, but we need radians for easier trigonometric calculations
+            rotation = MathUtil.ToRadians(rotation);
+            // binary flags (Value correction: any nonzero value for either of the flags fA or fS is taken to mean the value 1.)
+            bool largeArc = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinates[3]), 0);
+            bool sweep = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinates[4]), 0);
+            Point end = new Point(CssUtils.ParseAbsoluteLength(coordinates[5]), CssUtils.ParseAbsoluteLength(coordinates
+                [6]));
+            if (CssUtils.CompareFloats(start.x, end.x) && CssUtils.CompareFloats(start.y, end.y)) {
+                /* edge case: If the endpoints (x1, y1) and (x2, y2) are identical,
+                * then this is equivalent to omitting the elliptical arc segment entirely.
+                */
+                return;
+            }
+            if (CssUtils.CompareFloats(rx, 0) || CssUtils.CompareFloats(ry, 0)) {
+                /* edge case: If rx = 0 or ry = 0 then this arc is treated as a straight line segment (a "lineto")
+                * joining the endpoints.
+                */
+                canvas.LineTo(end.x, end.y);
+            }
+            else {
+                /* This is the first step of calculating a rotated elliptical path.
+                We must simulate a transformation on the end-point in order to calculate appropriate EllipseArc angles;
+                if we don't do this, then the EllipseArc class will calculate the correct bounding rectangle,
+                but an incorrect starting angle and/or extent.
+                */
+                EllipticalCurveTo.EllipseArc arc;
+                if (CssUtils.CompareFloats(rotation, 0)) {
+                    arc = EllipticalCurveTo.EllipseArc.GetEllipse(start, end, rx, ry, sweep, largeArc);
                 }
                 else {
-                    if (CssUtils.CompareFloats(rx, 0) || CssUtils.CompareFloats(ry, 0)) {
-                        /* edge case: If rx = 0 or ry = 0 then this arc is treated as a straight line segment (a "lineto")
-                        * joining the endpoints.
-                        */
-                        canvas.LineTo(end.x, end.y);
-                    }
-                    else {
-                        /* This is the first step of calculating a rotated elliptical path.
-                        We must simulate a transformation on the end-point in order to calculate appropriate EllipseArc angles;
-                        if we don't do this, then the EllipseArc class will calculate the correct bounding rectangle,
-                        but an incorrect starting angle and/or extent.
-                        */
-                        EllipticalCurveTo.EllipseArc arc;
-                        if (CssUtils.CompareFloats(rotation, 0)) {
-                            arc = EllipticalCurveTo.EllipseArc.GetEllipse(start, end, rx, ry, sweep, largeArc);
-                        }
-                        else {
-                            AffineTransform normalizer = AffineTransform.GetRotateInstance(-rotation);
-                            normalizer.Translate(-start.x, -start.y);
-                            Point newArcEnd = normalizer.Transform(end, null);
-                            newArcEnd.Translate(start.x, start.y);
-                            arc = EllipticalCurveTo.EllipseArc.GetEllipse(start, newArcEnd, rx, ry, sweep, largeArc);
-                        }
-                        Point[][] points = MakePoints(PdfCanvas.BezierArc(arc.ll.x, arc.ll.y, arc.ur.x, arc.ur.y, arc.startAng, arc
-                            .extent));
-                        if (sweep) {
-                            points = Rotate(points, rotation, points[0][0]);
-                            for (int i = 0; i < points.Length; i++) {
-                                DrawCurve(canvas, points[i][1], points[i][2], points[i][3]);
-                            }
-                        }
-                        else {
-                            points = Rotate(points, rotation, points[points.Length - 1][3]);
-                            for (int i = points.Length - 1; i >= 0; i--) {
-                                DrawCurve(canvas, points[i][2], points[i][1], points[i][0]);
-                            }
-                        }
+                    AffineTransform normalizer = AffineTransform.GetRotateInstance(-rotation);
+                    normalizer.Translate(-start.x, -start.y);
+                    Point newArcEnd = normalizer.Transform(end, null);
+                    newArcEnd.Translate(start.x, start.y);
+                    arc = EllipticalCurveTo.EllipseArc.GetEllipse(start, newArcEnd, rx, ry, sweep, largeArc);
+                }
+                Point[][] points = MakePoints(PdfCanvas.BezierArc(arc.ll.x, arc.ll.y, arc.ur.x, arc.ur.y, arc.startAng, arc
+                    .extent));
+                if (sweep) {
+                    points = Rotate(points, rotation, points[0][0]);
+                    for (int i = 0; i < points.Length; i++) {
+                        DrawCurve(canvas, points[i][1], points[i][2], points[i][3]);
                     }
                 }
-                previousPoint = CreatePoint(coordinate[5], coordinate[6]);
+                else {
+                    points = Rotate(points, rotation, points[points.Length - 1][3]);
+                    for (int i = points.Length - 1; i >= 0; i--) {
+                        DrawCurve(canvas, points[i][2], points[i][1], points[i][0]);
+                    }
+                }
             }
-        }
-
-        public override Point GetEndingPoint() {
-            return CreatePoint(coordinates[coordinates.Length - 1][5], coordinates[coordinates.Length - 1][6]);
         }
 
         /// <summary>This convenience method rotates a given set of points around a given point</summary>
@@ -193,7 +173,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             return list;
         }
 
-        internal virtual String[][] GetCoordinates() {
+        internal virtual String[] GetCoordinates() {
             return coordinates;
         }
 

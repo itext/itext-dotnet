@@ -107,8 +107,18 @@ namespace iText.Svg.Renderers.Path {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestExistsQuadRel() {
+            NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("q"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestExistsSmoothCubicAbs() {
             NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("S"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExistsSmoothCubicRel() {
+            NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("s"));
         }
 
         [NUnit.Framework.Test]
@@ -131,28 +141,14 @@ namespace iText.Svg.Renderers.Path {
             NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("Z"));
         }
 
-        /* TODO: implement currently unsupported operator
-        * DEVSIX-2267: relative alternatives for existing absolute operators
-        * DEVSIX-2611: smooth quadratic curves (absolute and relative)
-        */
         [NUnit.Framework.Test]
-        public virtual void TestNotExistsQuadRel() {
-            NUnit.Framework.Assert.IsNull(mapper.GetMapping().Get("q"));
+        public virtual void TestExistsSmoothQuadAbs() {
+            NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("T"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestNotExistsSmoothCubicRel() {
-            NUnit.Framework.Assert.IsNull(mapper.GetMapping().Get("s"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestNotExistsSmoothQuadRel() {
-            NUnit.Framework.Assert.IsNull(mapper.GetMapping().Get("t"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestNotExistsSmoothQuadAbs() {
-            NUnit.Framework.Assert.IsNull(mapper.GetMapping().Get("T"));
+        public virtual void TestExistsSmoothQuadRel() {
+            NUnit.Framework.Assert.IsNotNull(mapper.GetMapping().Get("t"));
         }
 
         // nonsensical operators

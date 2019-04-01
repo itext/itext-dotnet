@@ -90,11 +90,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MissingOperandArgument() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompareVisually(sourceFolder, destinationFolder, "missingOperandArgument");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "missingOperandArgument");
         }
 
         /// <exception cref="System.IO.IOException"/>

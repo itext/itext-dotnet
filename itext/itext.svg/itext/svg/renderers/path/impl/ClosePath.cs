@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements closePath(Z) attribute of SVG's path element</summary>
     public class ClosePath : LineTo {
+        internal const int ARGUMENT_SIZE = 0;
+
         public ClosePath()
             : this(false) {
         }
