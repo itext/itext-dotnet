@@ -66,8 +66,18 @@ namespace iText.Kernel.Pdf {
 
         internal PdfPages parentPages;
 
-        private IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.Parent, PdfName.Annots
-            , PdfName.StructParents, PdfName.B));
+        private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
+            .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
+
+        private static readonly IList<PdfName> XOBJECT_EXCLUDED_KEYS;
+
+        static PdfPage() {
+            // This key contains reference to all articles, while this articles could reference to lots of pages.
+            // See DEVSIX-191
+            XOBJECT_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
+                .TrimBox, PdfName.Contents));
+            XOBJECT_EXCLUDED_KEYS.AddAll(PAGE_EXCLUDED_KEYS);
+        }
 
         /// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )</summary>
         private bool ignorePageRotationForContent = false;
@@ -81,8 +91,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfPage(PdfDictionary pdfObject)
             : base(pdfObject) {
-            // This key contains reference to all articles, while this articles could reference to lots of pages.
-            // See DEVSIX-191
             SetForbidRelease();
             EnsureObjectIsAddedToDocument(pdfObject);
         }
@@ -490,7 +498,7 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
-            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
+            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
             iText.Kernel.Pdf.PdfPage page = new iText.Kernel.Pdf.PdfPage(dictionary);
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
@@ -531,11 +539,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
-            IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
-                .Contents));
-            excludedKeys.AddAll(this.excludedKeys);
             foreach (PdfName key in GetPdfObject().KeySet()) {
-                if (excludedKeys.Contains(key)) {
+                if (XOBJECT_EXCLUDED_KEYS.Contains(key)) {
                     continue;
                 }
                 PdfObject obj = GetPdfObject().Get(key);
