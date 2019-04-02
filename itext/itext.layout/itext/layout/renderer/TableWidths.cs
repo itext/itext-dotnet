@@ -515,6 +515,11 @@ namespace iText.Layout.Renderer {
                     firtsRow = null;
                 }
             }
+            float[] columnWidthIfPercent = new float[columnWidths.Length];
+            for (int i = 0; i < columnWidthIfPercent.Length; i++) {
+                columnWidthIfPercent[i] = -1;
+            }
+            float sumOfPercents = 0;
             if (firtsRow != null && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count) {
                 // only for not large tables
                 for (int i = 0; i < numberOfColumns; i++) {
@@ -524,7 +529,15 @@ namespace iText.Layout.Renderer {
                             UnitValue cellWidth = GetCellWidth(cell, true);
                             if (cellWidth != null) {
                                 System.Diagnostics.Debug.Assert(cellWidth.GetValue() >= 0);
-                                float width = cellWidth.IsPercentValue() ? tableWidth * cellWidth.GetValue() / 100 : cellWidth.GetValue();
+                                float width = 0;
+                                if (cellWidth.IsPercentValue()) {
+                                    width = tableWidth * cellWidth.GetValue() / 100;
+                                    columnWidthIfPercent[i] = cellWidth.GetValue();
+                                    sumOfPercents += columnWidthIfPercent[i];
+                                }
+                                else {
+                                    width = cellWidth.GetValue();
+                                }
                                 int colspan = ((Cell)cell.GetModelElement()).GetColspan();
                                 for (int j = 0; j < colspan; j++) {
                                     columnWidths[i + j] = width / colspan;
@@ -548,6 +561,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            if (sumOfPercents > 100) {
+                Warn100percent();
+            }
             if (remainWidth > 0) {
                 if (numberOfColumns == processedColumns) {
                     //Set remaining width to all columns.
@@ -555,26 +571,22 @@ namespace iText.Layout.Renderer {
                         columnWidths[i] = tableWidth * columnWidths[i] / (tableWidth - remainWidth);
                     }
                 }
-                else {
-                    // Set remaining width to the unprocessed columns.
-                    for (int i = 0; i < numberOfColumns; i++) {
-                        if (columnWidths[i] == -1) {
-                            columnWidths[i] = remainWidth / (numberOfColumns - processedColumns);
-                        }
-                    }
-                }
             }
             else {
-                if (numberOfColumns != processedColumns) {
-                    //            Logger logger = LoggerFactory.getLogger(TableWidths.class);
-                    //            logger.warn(LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_TABLE_WIDTH);
+                if (remainWidth < 0) {
+                    //Only columns with a width of percentage type should suffer.
                     for (int i = 0; i < numberOfColumns; i++) {
-                        if (columnWidths[i] == -1) {
-                            columnWidths[i] = 0;
-                        }
+                        columnWidths[i] += -1 != columnWidthIfPercent[i] ? remainWidth * columnWidthIfPercent[i] / sumOfPercents : 
+                            0;
                     }
                 }
             }
+            for (int i = 0; i < numberOfColumns; i++) {
+                if (columnWidths[i] == -1) {
+                    columnWidths[i] = Math.Max(0, remainWidth / (numberOfColumns - processedColumns));
+                }
+            }
+            // Set remaining width to the unprocessed columns.
             if (tableRenderer.bordersHandler is SeparatedTableBorders) {
                 for (int i = 0; i < numberOfColumns; i++) {
                     columnWidths[i] += horizontalBorderSpacing;
