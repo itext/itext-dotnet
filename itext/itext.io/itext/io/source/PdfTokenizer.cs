@@ -512,12 +512,27 @@ namespace iText.IO.Source {
                             // as we need to know that fact only in case if there are any minuses.
                             ch = file.Read();
                         }
-                        while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.')) {
-                            if (ch == '.') {
-                                isReal = true;
-                            }
+                        while (ch >= '0' && ch <= '9') {
                             outBuf.Append(ch);
                             ch = file.Read();
+                        }
+                        if (ch == '.') {
+                            isReal = true;
+                            outBuf.Append(ch);
+                            ch = file.Read();
+                            //verify if there is minus after '.'
+                            //In that case just ignore minus chars and everything after as Adobe Reader does
+                            int numberOfMinusesAfterDot = 0;
+                            if (ch == '-') {
+                                numberOfMinusesAfterDot++;
+                                ch = file.Read();
+                            }
+                            while (ch >= '0' && ch <= '9') {
+                                if (numberOfMinusesAfterDot == 0) {
+                                    outBuf.Append(ch);
+                                }
+                                ch = file.Read();
+                            }
                         }
                         if (numberOfMinuses > 1 && !isReal) {
                             // Numbers of integer type and with more than one minus before them
