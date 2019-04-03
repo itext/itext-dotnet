@@ -255,11 +255,15 @@ namespace iText.Forms.Fields {
             }
         }
 
-        /// <summary>Sets the maximum length of the field?s text, in characters.</summary>
+        /// <summary>Sets the maximum length of the field's text, in characters.</summary>
         /// <param name="maxLen">the maximum text length</param>
         /// <returns>current</returns>
         public virtual iText.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen) {
-            return (iText.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber(maxLen));
+            Put(PdfName.MaxLen, new PdfNumber(maxLen));
+            if (GetFieldFlag(FF_COMB)) {
+                RegenerateField();
+            }
+            return this;
         }
     }
 }

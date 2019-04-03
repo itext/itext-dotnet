@@ -2073,7 +2073,13 @@ namespace iText.Forms.Fields {
         /// <param name="flags">an <code>int</code> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
-            return Put(PdfName.Ff, new PdfNumber(flags));
+            int oldFlags = GetFieldFlags();
+            Put(PdfName.Ff, new PdfNumber(flags));
+            if (((oldFlags ^ flags) & PdfTextFormField.FF_COMB) != 0 && PdfName.Tx.Equals(GetFormType()) && new PdfTextFormField
+                (GetPdfObject()).GetMaxLen() != 0) {
+                RegenerateField();
+            }
+            return this;
         }
 
         /// <summary>Gets the current list of PDF form field flags.</summary>
@@ -3493,6 +3499,9 @@ namespace iText.Forms.Fields {
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
+            if (color != null) {
+                paragraphStyle.SetProperty(Property.FONT_COLOR, new TransparentColor(color));
+            }
             int maxLen = new PdfTextFormField(GetPdfObject()).GetMaxLen();
             // check if /Comb has been set
             if (this.GetFieldFlag(PdfTextFormField.FF_COMB) && 0 != maxLen) {
@@ -3527,11 +3536,8 @@ namespace iText.Forms.Fields {
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
-                Paragraph paragraph = new Paragraph(value).AddStyle(paragraphStyle).SetPaddings(0, X_OFFSET, 0, X_OFFSET);
-                if (color != null) {
-                    paragraph.SetFontColor(color);
-                }
-                modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+                modelCanvas.ShowTextAligned(new Paragraph(value).AddStyle(paragraphStyle).SetPaddings(0, X_OFFSET, 0, X_OFFSET
+                    ), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
             }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());

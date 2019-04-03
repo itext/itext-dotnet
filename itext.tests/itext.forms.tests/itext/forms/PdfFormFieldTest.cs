@@ -746,5 +746,50 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFilename, destinationFolder
                 , "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MaxLenColoredTest() {
+            String srcPdf = sourceFolder + "maxLenColoredTest.pdf";
+            String outPdf = destinationFolder + "maxLenColoredTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_maxLenColoredTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            form.GetField("magenta").SetColor(ColorConstants.MAGENTA);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
+        public virtual void RegenerateMaxLenCombTest() {
+            String srcPdf = sourceFolder + "regenerateMaxLenCombTest.pdf";
+            String outPdf = destinationFolder + "regenerateMaxLenCombTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_regenerateMaxLenCombTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            for (int i = 0; i < 12; i++) {
+                PdfTextFormField field = (PdfTextFormField)form.GetField("field " + i);
+                if (i < 8) {
+                    field.SetMaxLen(i < 4 ? 7 : 0);
+                }
+                if (i % 6 > 1) {
+                    field.SetFieldFlag(PdfTextFormField.FF_COMB, i % 2 == 0 ? true : false);
+                }
+            }
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
