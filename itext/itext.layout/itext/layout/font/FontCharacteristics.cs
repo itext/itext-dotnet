@@ -131,7 +131,7 @@ namespace iText.Layout.Font {
         }
 
         public bool IsBold() {
-            return isBold || fontWeight > 600;
+            return isBold || fontWeight > 500;
         }
 
         public bool IsMonospace() {
