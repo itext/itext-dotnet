@@ -720,6 +720,7 @@ namespace iText.Forms {
                 PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.Resources);
                 initialPageResourceClones.Put(i, resources == null ? null : resources.Clone());
             }
+            ICollection<PdfPage> wrappedPages = new LinkedHashSet<PdfPage>();
             PdfPage page;
             foreach (PdfFormField field in fields) {
                 PdfDictionary fieldObject = field.GetPdfObject();
@@ -768,7 +769,8 @@ namespace iText.Forms {
                         if (page.IsFlushed()) {
                             throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                         }
-                        PdfCanvas canvas = new PdfCanvas(page);
+                        PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
+                        wrappedPages.Add(page);
                         // Here we avoid circular reference which might occur when page resources and the appearance xObject's
                         // resources are the same object
                         PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);

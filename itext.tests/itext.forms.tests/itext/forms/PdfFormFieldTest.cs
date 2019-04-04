@@ -791,5 +791,37 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WrapPrecedingContentOnFlattenTest() {
+            String filename = destinationFolder + "wrapPrecedingContentOnFlattenTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.SetFillColor(ColorConstants.MAGENTA);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField[] fields = new PdfTextFormField[4];
+            for (int i = 0; i < 4; i++) {
+                fields[i] = PdfFormField.CreateText(pdfDoc, new Rectangle(90, 700 - i * 100, 150, 22), "black" + i, "black"
+                    );
+            }
+            form.AddField(fields[0]);
+            form.AddField(fields[1]);
+            Document doc = new Document(pdfDoc);
+            doc.Add(new AreaBreak());
+            canvas = new PdfCanvas(pdfDoc.GetPage(2));
+            canvas.SetFillColor(ColorConstants.CYAN);
+            form.AddField(fields[2]);
+            form.AddField(fields[3], pdfDoc.GetFirstPage());
+            form.FlattenFields();
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_wrapPrecedingContentOnFlattenTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
