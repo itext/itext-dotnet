@@ -2361,6 +2361,15 @@ namespace iText.Forms.Fields {
             return font;
         }
 
+        /// <summary>Gets the current color of the form field.</summary>
+        /// <returns>
+        /// the current
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
+        public virtual Color GetColor() {
+            return color;
+        }
+
         /// <summary>Basic setter for the <code>font</code> property.</summary>
         /// <remarks>
         /// Basic setter for the <code>font</code> property. Regenerates the field
@@ -4081,8 +4090,8 @@ namespace iText.Forms.Fields {
             if (subType != null && subType.Equals(PdfName.Widget)) {
                 PdfDictionary appearanceCharacteristics = GetPdfObject().GetAsDictionary(PdfName.MK);
                 if (appearanceCharacteristics != null) {
-                    backgroundColor = GetColor(appearanceCharacteristics, PdfName.BG);
-                    Color extractedBorderColor = GetColor(appearanceCharacteristics, PdfName.BC);
+                    backgroundColor = AppearancePropToColor(appearanceCharacteristics, PdfName.BG);
+                    Color extractedBorderColor = AppearancePropToColor(appearanceCharacteristics, PdfName.BC);
                     if (extractedBorderColor != null) {
                         borderColor = extractedBorderColor;
                     }
@@ -4098,7 +4107,7 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private Color GetColor(PdfDictionary appearanceCharacteristics, PdfName property) {
+        private Color AppearancePropToColor(PdfDictionary appearanceCharacteristics, PdfName property) {
             PdfArray colorData = appearanceCharacteristics.GetAsArray(property);
             if (colorData != null) {
                 float[] backgroundFloat = new float[colorData.Size()];
