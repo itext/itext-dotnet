@@ -103,7 +103,7 @@ namespace iText.IO.Font {
 
         private void Outval(int n) {
             output.Write(' ');
-            output.Write(n);
+            output.Write(n.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         /*

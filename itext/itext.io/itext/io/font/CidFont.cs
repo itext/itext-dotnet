@@ -115,13 +115,13 @@ namespace iText.IO.Font {
             fontMetrics.SetItalicAngle(Convert.ToInt32((String)fontDesc.Get("ItalicAngle")));
             fontMetrics.SetCapHeight(Convert.ToInt32((String)fontDesc.Get("CapHeight")));
             fontMetrics.SetTypoAscender(Convert.ToInt32((String)fontDesc.Get("Ascent")));
-            fontMetrics.SetTypoDescender(Convert.ToInt32((String)fontDesc.Get("Descent")));
+            fontMetrics.SetTypoDescender(Convert.ToInt32((String)fontDesc.Get("Descent"), System.Globalization.CultureInfo.InvariantCulture));
             fontMetrics.SetStemV(Convert.ToInt32((String)fontDesc.Get("StemV")));
             pdfFontFlags = Convert.ToInt32((String)fontDesc.Get("Flags"));
             String fontBBox = (String)fontDesc.Get("FontBBox");
             StringTokenizer tk = new StringTokenizer(fontBBox, " []\r\n\t\f");
-            int llx = Convert.ToInt32(tk.NextToken());
-            int lly = Convert.ToInt32(tk.NextToken());
+            int llx = Convert.ToInt32(tk.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
+            int lly = Convert.ToInt32(tk.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
             int urx = Convert.ToInt32(tk.NextToken());
             int ury = Convert.ToInt32(tk.NextToken());
             fontMetrics.UpdateBbox(llx, lly, urx, ury);
