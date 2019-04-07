@@ -1037,9 +1037,45 @@ namespace iText.Signatures {
         // verification
         /// <summary>Verify the digest.</summary>
         /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
-        /// <exception cref="Java.Security.SignatureException">on error</exception>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
+        /// if this signature object is not initialized properly,
+        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
+        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
+        /// are not recognized, etc.
+        /// </exception>
+        [System.ObsoleteAttribute(@"This method will be removed in future versions. Please use VerifySignatureIntegrityAndAuthenticity() instead."
+            )]
         public virtual bool Verify() {
+            return VerifySignatureIntegrityAndAuthenticity();
+        }
+
+        /// <summary>
+        /// Verifies that signature integrity is intact (or in other words that signed data wasn't modified)
+        /// by checking that embedded data digest corresponds to the calculated one.
+        /// </summary>
+        /// <remarks>
+        /// Verifies that signature integrity is intact (or in other words that signed data wasn't modified)
+        /// by checking that embedded data digest corresponds to the calculated one. Also ensures that signature
+        /// is genuine and is created by the owner of private key that corresponds to the declared public certificate.
+        /// <p>
+        /// Even though signature can be authentic and signed data integrity can be intact,
+        /// one shall also always check that signed data is not only a part of PDF contents but is actually a complete PDF file.
+        /// In order to check that given signature covers the current
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// please
+        /// use
+        /// <see cref="SignatureUtil.SignatureCoversWholeDocument(System.String)"/>
+        /// method.
+        /// </p>
+        /// </remarks>
+        /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
+        /// if this signature object is not initialized properly,
+        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
+        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
+        /// are not recognized, etc.
+        /// </exception>
+        public virtual bool VerifySignatureIntegrityAndAuthenticity() {
             if (verified) {
                 return verifyResult;
             }

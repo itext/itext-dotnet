@@ -20,8 +20,8 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
             String signatureName = "Signature1";
             PdfDocument document = new PdfDocument(new PdfReader(filePath));
             SignatureUtil sigUtil = new SignatureUtil(document);
-            PdfPKCS7 pdfPKCS7 = sigUtil.VerifySignature(signatureName);
-            NUnit.Framework.Assert.IsTrue(pdfPKCS7.Verify());
+            PdfPKCS7 pdfPKCS7 = sigUtil.ReadSignatureData(signatureName);
+            NUnit.Framework.Assert.IsTrue(pdfPKCS7.VerifySignatureIntegrityAndAuthenticity());
             NUnit.Framework.Assert.IsFalse(sigUtil.SignatureCoversWholeDocument(signatureName));
             document.Close();
         }

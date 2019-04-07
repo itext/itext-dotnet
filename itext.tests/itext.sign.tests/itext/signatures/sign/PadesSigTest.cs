@@ -165,8 +165,8 @@ namespace iText.Signatures.Sign {
         internal static void BasicCheckSignedDoc(String filePath, String signatureName) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(filePath));
             SignatureUtil sigUtil = new SignatureUtil(outDocument);
-            PdfPKCS7 pdfPKCS7 = sigUtil.VerifySignature(signatureName);
-            NUnit.Framework.Assert.IsTrue(pdfPKCS7.Verify());
+            PdfPKCS7 signatureData = sigUtil.ReadSignatureData(signatureName);
+            NUnit.Framework.Assert.IsTrue(signatureData.VerifySignatureIntegrityAndAuthenticity());
             outDocument.Close();
         }
     }

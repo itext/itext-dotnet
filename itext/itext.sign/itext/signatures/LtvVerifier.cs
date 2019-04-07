@@ -348,14 +348,14 @@ namespace iText.Signatures {
         /// <returns>a PdfPKCS7 object</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         protected internal virtual PdfPKCS7 CoversWholeDocument() {
-            PdfPKCS7 pkcs7 = sgnUtil.VerifySignature(signatureName);
+            PdfPKCS7 pkcs7 = sgnUtil.ReadSignatureData(signatureName);
             if (sgnUtil.SignatureCoversWholeDocument(signatureName)) {
                 LOGGER.Info("The timestamp covers whole document.");
             }
             else {
                 throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
             }
-            if (pkcs7.Verify()) {
+            if (pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
                 LOGGER.Info("The signed document has not been modified.");
                 return pkcs7;
             }

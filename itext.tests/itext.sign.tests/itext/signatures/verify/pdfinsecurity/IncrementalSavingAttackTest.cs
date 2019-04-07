@@ -24,8 +24,8 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
             String signatureName = "Signature1";
             PdfDocument document = new PdfDocument(new PdfReader(filePath));
             SignatureUtil sigUtil = new SignatureUtil(document);
-            PdfPKCS7 pdfPKCS7 = sigUtil.VerifySignature(signatureName);
-            NUnit.Framework.Assert.IsTrue(pdfPKCS7.Verify());
+            PdfPKCS7 pdfPKCS7 = sigUtil.ReadSignatureData(signatureName);
+            NUnit.Framework.Assert.IsTrue(pdfPKCS7.VerifySignatureIntegrityAndAuthenticity());
             NUnit.Framework.Assert.IsFalse(sigUtil.SignatureCoversWholeDocument(signatureName));
             document.Close();
         }
@@ -38,8 +38,8 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
             String signatureName = "Signature1";
             PdfDocument document = new PdfDocument(new PdfReader(filePath));
             SignatureUtil sigUtil = new SignatureUtil(document);
-            PdfPKCS7 pdfPKCS7 = sigUtil.VerifySignature(signatureName);
-            NUnit.Framework.Assert.IsTrue(pdfPKCS7.Verify());
+            PdfPKCS7 pdfPKCS7 = sigUtil.ReadSignatureData(signatureName);
+            NUnit.Framework.Assert.IsTrue(pdfPKCS7.VerifySignatureIntegrityAndAuthenticity());
             NUnit.Framework.Assert.IsFalse(sigUtil.SignatureCoversWholeDocument(signatureName));
             String textFromPage = PdfTextExtractor.GetTextFromPage(document.GetPage(1));
             // We are working with the latest revision of the document, that's why we should get amended page text.
@@ -51,8 +51,8 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
             Stream sigInputStream = sigUtil.ExtractRevision(signatureName);
             PdfDocument sigRevDocument = new PdfDocument(new PdfReader(sigInputStream));
             SignatureUtil sigRevUtil = new SignatureUtil(sigRevDocument);
-            PdfPKCS7 sigRevSignatureData = sigRevUtil.VerifySignature(signatureName);
-            NUnit.Framework.Assert.IsTrue(sigRevSignatureData.Verify());
+            PdfPKCS7 sigRevSignatureData = sigRevUtil.ReadSignatureData(signatureName);
+            NUnit.Framework.Assert.IsTrue(sigRevSignatureData.VerifySignatureIntegrityAndAuthenticity());
             NUnit.Framework.Assert.IsTrue(sigRevUtil.SignatureCoversWholeDocument(signatureName));
             sigRevDocument.Close();
             document.Close();
