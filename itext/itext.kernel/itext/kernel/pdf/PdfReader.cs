@@ -563,7 +563,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception ex) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                logger.Warn(iText.IO.LogMessageConstant.XREF_ERROR, ex);
+                logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
             ReadDecryptObj();
