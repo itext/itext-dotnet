@@ -42,7 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Forms.Fields;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -539,6 +541,145 @@ namespace iText.Forms {
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFieldWithHebrewCase1() {
+            //DEVSIX-2069
+            //Create a document with formfields and paragraphs in both fonts, and fill them before closing the document
+            String testName = "fillFieldWithHebrewCase1";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                , true);
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String text = "שלום וברכה";
+            CreateAcroForm(pdfDoc, form, hebrew, text, 0);
+            CreateAcroForm(pdfDoc, form, sileot, text, 3);
+            AddParagraph(document, text, hebrew);
+            AddParagraph(document, text, sileot);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFieldWithHebrewCase2() {
+            //DEVSIX-2069, cmp_file will have to be changed after fix
+            //Create a document with formfields and paragraphs in both fonts, and fill them after closing and reopening the document
+            String testName = "fillFieldWithHebrewCase2";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                , true);
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            CreateAcroForm(pdfDoc, form, hebrew, null, 0);
+            CreateAcroForm(pdfDoc, form, sileot, null, 3);
+            String text = "שלום וברכה";
+            AddParagraph(document, text, hebrew);
+            AddParagraph(document, text, sileot);
+            pdfDoc.Close();
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
+                ));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFieldWithHebrewCase3() {
+            //DEVSIX-2069
+            //Create a document with formfields in both fonts, and fill them before closing the document
+            String testName = "fillFieldWithHebrewCase3";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                , true);
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String text = "שלום וברכה";
+            CreateAcroForm(pdfDoc, form, hebrew, text, 0);
+            CreateAcroForm(pdfDoc, form, sileot, text, 3);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFieldWithHebrewCase4() {
+            //DEVSIX-2069, cmp_file will have to be changed after fix
+            //Create a document with formfields in both fonts, and fill them after closing and reopening the document
+            String testName = "fillFieldWithHebrewCase4";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                , true);
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            CreateAcroForm(pdfDoc, form, hebrew, null, 0);
+            CreateAcroForm(pdfDoc, form, sileot, null, 3);
+            pdfDoc.Close();
+            String text = "שלום וברכה";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
+                ));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
+        }
+
+        private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
+            for (int x = offSet; x < (offSet + 3); x++) {
+                Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
+                PdfFormField field = PdfFormField.CreateText(pdfDoc, rect, "f-" + x, "", font, 12.0f);
+                field.SetJustification(PdfFormField.ALIGN_RIGHT);
+                if (text != null) {
+                    field.SetValue(text);
+                }
+                form.AddField(field);
+            }
+        }
+
+        private void AddParagraph(Document document, String text, PdfFont font) {
+            document.Add(new Paragraph("Hello world ").Add(text).SetFont(font));
+        }
+
+        private void FillAcroForm(PdfDocument pdfDocument, String text) {
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            foreach (PdfFormField field in acroForm.GetFormFields().Values) {
+                field.SetValue(text);
             }
         }
 
