@@ -3369,13 +3369,12 @@ namespace iText.Forms.Fields {
                     if (fontNameObj != null) {
                         daFontName = new PdfName(fontNameObj.ToString());
                         // according to spec, DA font shall be taken from the DR
-                        if (defaultFontDic != null && null != defaultFontDic.GetAsDictionary(daFontName)) {
-                            daFontDict = defaultFontDic.GetAsDictionary(daFontName);
+                        if (normalFontDic != null && null != normalFontDic.GetAsDictionary(daFontName)) {
+                            daFontDict = normalFontDic.GetAsDictionary(daFontName);
                         }
                         else {
-                            if (normalFontDic != null) {
-                                // search normal appearance as a fall back in case it was not found in DR
-                                daFontDict = normalFontDic.GetAsDictionary(daFontName);
+                            if (defaultFontDic != null) {
+                                daFontDict = defaultFontDic.GetAsDictionary(daFontName);
                             }
                         }
                     }
