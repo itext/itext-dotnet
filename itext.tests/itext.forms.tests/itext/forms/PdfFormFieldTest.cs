@@ -548,7 +548,6 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase1() {
-            //DEVSIX-2069
             //Create a document with formfields and paragraphs in both fonts, and fill them before closing the document
             String testName = "fillFieldWithHebrewCase1";
             String outPdf = destinationFolder + testName + ".pdf";
@@ -576,7 +575,6 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase2() {
-            //DEVSIX-2069, cmp_file will have to be changed after fix
             //Create a document with formfields and paragraphs in both fonts, and fill them after closing and reopening the document
             String testName = "fillFieldWithHebrewCase2";
             String outPdf = destinationFolder + testName + ".pdf";
@@ -609,7 +607,6 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase3() {
-            //DEVSIX-2069
             //Create a document with formfields in both fonts, and fill them before closing the document
             String testName = "fillFieldWithHebrewCase3";
             String outPdf = destinationFolder + testName + ".pdf";
@@ -634,7 +631,6 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase4() {
-            //DEVSIX-2069, cmp_file will have to be changed after fix
             //Create a document with formfields in both fonts, and fill them after closing and reopening the document
             String testName = "fillFieldWithHebrewCase4";
             String outPdf = destinationFolder + testName + ".pdf";

@@ -3368,7 +3368,9 @@ namespace iText.Forms.Fields {
                     Object fontNameObj = dab[DA_FONT];
                     if (fontNameObj != null) {
                         daFontName = new PdfName(fontNameObj.ToString());
-                        // according to spec, DA font shall be taken from the DR
+                        // according to spec, if the DR and Resources dictionaries contain resources with the same name,
+                        // the one already in the Resources dictionary shall be left intact, not replaced with
+                        // the corresponding value from the DR dictionary.
                         if (normalFontDic != null && null != normalFontDic.GetAsDictionary(daFontName)) {
                             daFontDict = normalFontDic.GetAsDictionary(daFontName);
                         }
