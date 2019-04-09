@@ -172,6 +172,8 @@ namespace iText.IO {
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
+        public const String IMAGE_MASK_CLEAN_UP_NOT_SUPPORTED = "Partial clean up of transparent images with mask encoded with one of the following filters is not supported: JBIG2Decode, DCTDecode, JPXDecode. Image will become non-transparent.";
+
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
         public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances for form fields";
@@ -199,8 +201,6 @@ namespace iText.IO {
         public const String METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED = "Method {0} is not implemented by default: please, override and implement it. {1} will be used instead.";
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
-
-        public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
@@ -281,6 +281,8 @@ namespace iText.IO {
         public const String TYPE3_FONT_CANNOT_BE_ADDED = "Type 3 font cannot be added to FontSet. Custom FontProvider class may be created for this purpose.";
 
         public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
+
+        public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
 
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 
