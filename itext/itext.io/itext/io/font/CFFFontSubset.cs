@@ -350,6 +350,15 @@ namespace iText.IO.Font {
 
         // empty on purpose
         /// <summary>
+        /// The Process function extracts one font out of the CFF file and returns a
+        /// subset version of the original with the first name.
+        /// </summary>
+        /// <returns>The new font stream</returns>
+        public virtual byte[] Process() {
+            return Process(GetNames()[0]);
+        }
+
+        /// <summary>
         /// Function calcs bias according to the CharString type and the count
         /// of the subrs
         /// </summary>
