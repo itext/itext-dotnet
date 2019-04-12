@@ -23,9 +23,6 @@
     <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-base.properties" />
     <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-full.properties" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
