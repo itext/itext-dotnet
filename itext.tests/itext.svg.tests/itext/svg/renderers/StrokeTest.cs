@@ -76,5 +76,13 @@ namespace iText.Svg.Renderers {
         public virtual void NoLineStrokeWidthTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Advanced_stroke_Test() {
+            //TODO: update cmp-file after DEVSIX-2258
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke_advanced");
+        }
     }
 }
