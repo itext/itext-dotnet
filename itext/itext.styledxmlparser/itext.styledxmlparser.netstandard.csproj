@@ -23,6 +23,9 @@
     <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-base.properties" />
     <EmbeddedResource Include="itext\styledxmlparser\jsoup\nodes\entities-full.properties" />
   </ItemGroup>
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+  </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
