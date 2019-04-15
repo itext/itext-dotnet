@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Text;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -186,6 +187,31 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("Preface", text);
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void testType3FontWithDifferences()
+        {
+            String sourcePdf = sourceFolder + "DocumentWithType3FontWithDifferences.pdf";
+            String comparedTextFile = sourceFolder + "textFromDocWithType3FontWithDifferences.txt";
+
+            PdfDocument pdf = new PdfDocument(new PdfReader(sourcePdf));
+            String result = PdfTextExtractor.GetTextFromPage(pdf.GetPage(1), new LocationTextExtractionStrategy());
+
+            PdfDictionary pdfType3FontDict = (PdfDictionary) pdf.GetPdfObject(292);
+            PdfType3Font pdfType3Font = (PdfType3Font) PdfFontFactory.CreateFont(pdfType3FontDict);
+
+            pdf.Close();
+
+            NUnit.Framework.Assert.AreEqual(File.ReadAllText(comparedTextFile, Encoding.UTF8), result);
+
+            NUnit.Framework.Assert.AreEqual(83, pdfType3Font.GetNumberOfGlyphs());
+
+            NUnit.Framework.Assert.AreEqual("gA", pdfType3Font.GetFontEncoding().GetDifference(10));
+            NUnit.Framework.Assert.AreEqual(41, pdfType3Font.GetFontProgram().GetGlyphByCode(10).GetUnicode());
+
+            NUnit.Framework.Assert.AreEqual(".notdef", pdfType3Font.GetFontEncoding().GetDifference(210));
+            NUnit.Framework.Assert.AreEqual(928, pdfType3Font.GetFontProgram().GetGlyphByCode(210).GetUnicode());
         }
 
         /// <exception cref="System.Exception"/>
