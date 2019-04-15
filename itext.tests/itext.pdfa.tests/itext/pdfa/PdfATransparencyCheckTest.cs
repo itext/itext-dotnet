@@ -1,0 +1,164 @@
+using System;
+using System.IO;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Test;
+
+namespace iText.Pdfa {
+    public class PdfATransparencyCheckTest : ExtendedITextTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
+
+        public static readonly String cmpFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfATransparencyCheckTest/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/pdfa/PdfATransparencyCheckTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TextTransparencyNoOutputIntentTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfWriter writer = new PdfWriter(new MemoryStream());
+                PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+                PdfPage page1 = pdfDocument.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                canvas.SaveState();
+                canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1 without transparency").EndText
+                    ().RestoreState();
+                PdfPage page2 = pdfDocument.AddNewPage();
+                canvas = new PdfCanvas(page2);
+                canvas.SaveState();
+                PdfExtGState state = new PdfExtGState();
+                state.SetFillOpacity(0.6f);
+                canvas.SetExtGState(state);
+                canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 with transparency").EndText
+                    ().RestoreState();
+                pdfDocument.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TransparentTextWithGroupColorSpaceTest() {
+            String outPdf = destinationFolder + "transparencyAndCS.pdf";
+            String cmpPdf = cmpFolder + "cmp_transparencyAndCS.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            PdfExtGState state = new PdfExtGState();
+            state.SetFillOpacity(0.6f);
+            canvas.SetExtGState(state);
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1 with transparency").EndText
+                ().RestoreState();
+            PdfDictionary groupObj = new PdfDictionary();
+            groupObj.Put(PdfName.CS, new PdfCieBasedCs.CalGray(GetCalGrayArray()).GetPdfObject());
+            groupObj.Put(PdfName.Type, PdfName.Group);
+            groupObj.Put(PdfName.S, PdfName.Transparency);
+            page.GetPdfObject().Put(PdfName.Group, groupObj);
+            PdfPage page2 = pdfDocument.AddNewPage();
+            canvas = new PdfCanvas(page2);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 without transparency").EndText
+                ().RestoreState();
+            pdfDocument.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTransparencyTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfADocument(new PdfWriter(new MemoryStream()), PdfAConformanceLevel.PDF_A_3B, null
+                    );
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
+                canvas.SaveState();
+                canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 0, 0, page.GetPageSize().GetWidth() /
+                     2, false);
+                canvas.RestoreState();
+                pdfDoc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedXObjectWithTransparencyTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfWriter writer = new PdfWriter(new MemoryStream());
+                PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+                PdfFormXObject form1 = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
+                PdfCanvas canvas1 = new PdfCanvas(form1, pdfDocument);
+                canvas1.SaveState();
+                PdfExtGState state = new PdfExtGState();
+                state.SetFillOpacity(0.6f);
+                canvas1.SetExtGState(state);
+                canvas1.Circle(25, 25, 10);
+                canvas1.Fill();
+                canvas1.RestoreState();
+                canvas1.Release();
+                form1.Flush();
+                //Create form XObject and flush to document.
+                PdfFormXObject form = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
+                PdfCanvas canvas = new PdfCanvas(form, pdfDocument);
+                canvas.Rectangle(10, 10, 30, 30);
+                canvas.Stroke();
+                canvas.AddXObject(form1, 0, 0);
+                canvas.Release();
+                form.Flush();
+                //Create page1 and add forms to the page.
+                PdfPage page1 = pdfDocument.AddNewPage();
+                canvas = new PdfCanvas(page1);
+                canvas.AddXObject(form, 0, 0);
+                canvas.Release();
+                pdfDocument.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void CompareResult(String outPdf, String cmpPdf) {
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (result != null) {
+                NUnit.Framework.Assert.Fail(result);
+            }
+        }
+
+        private PdfArray GetCalGrayArray() {
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.Gamma, new PdfNumber(2.2));
+            PdfArray whitePointArray = new PdfArray();
+            whitePointArray.Add(new PdfNumber(0.9505));
+            whitePointArray.Add(new PdfNumber(1.0));
+            whitePointArray.Add(new PdfNumber(1.089));
+            dictionary.Put(PdfName.WhitePoint, whitePointArray);
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.CalGray);
+            array.Add(dictionary);
+            return array;
+        }
+    }
+}

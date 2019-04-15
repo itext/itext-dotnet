@@ -646,6 +646,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
             > iterator) {
+            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
@@ -800,6 +801,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray) {
+            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             if (currentGs.GetFont() == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
             }
@@ -1455,7 +1457,8 @@ namespace iText.Kernel.Pdf.Canvas {
                     }
                 }
             }
-            document.CheckIsoConformance(currentGs, fill ? IsoKey.FILL_COLOR : IsoKey.STROKE_COLOR, resources);
+            document.CheckIsoConformance(currentGs, fill ? IsoKey.FILL_COLOR : IsoKey.STROKE_COLOR, resources, contentStream
+                );
             return this;
         }
 
@@ -1904,7 +1907,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);
-            document.CheckIsoConformance(currentGs, IsoKey.EXTENDED_GRAPHICS_STATE);
+            document.CheckIsoConformance(currentGs, IsoKey.EXTENDED_GRAPHICS_STATE, null, contentStream);
             return this;
         }
 
@@ -2070,7 +2073,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="f">an element of the transformation matrix</param>
         protected internal virtual void AddInlineImage(PdfImageXObject imageXObject, float a, float b, float c, float
              d, float e, float f) {
-            document.CheckIsoConformance(imageXObject.GetPdfObject(), IsoKey.INLINE_IMAGE, resources);
+            document.CheckIsoConformance(imageXObject.GetPdfObject(), IsoKey.INLINE_IMAGE, resources, contentStream);
             SaveState();
             ConcatMatrix(a, b, c, d, e, f);
             PdfOutputStream os = contentStream.GetOutputStream();
@@ -2306,6 +2309,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </summary>
         /// <param name="text">the text to write.</param>
         private void ShowTextInt(String text) {
+            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             if (currentGs.GetFont() == null) {
                 throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
             }

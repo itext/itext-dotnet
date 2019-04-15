@@ -127,6 +127,11 @@ namespace iText.Pdfa.Checker {
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
+        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
+            ) {
+            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
+        }
+
         public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
             , bool? fill) {
             if (colorSpace is PdfSpecialCs.Separation) {
@@ -188,6 +193,10 @@ namespace iText.Pdfa.Checker {
         }
 
         public override void CheckExtGState(CanvasGraphicsState extGState) {
+            CheckExtGState(extGState, null);
+        }
+
+        public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
             if (extGState.GetTransferFunction() != null) {
                 throw new PdfAConformanceException(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
                     );

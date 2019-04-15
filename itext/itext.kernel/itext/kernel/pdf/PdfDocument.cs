@@ -1405,7 +1405,26 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfResources"/>
         /// associated with an object to check.
         /// </param>
+        [System.ObsoleteAttribute(@"This method will be replaced by CheckIsoConformance(System.Object, IsoKey, PdfResources, PdfStream) checkIsoConformance in  7.2 release"
+            )]
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources) {
+        }
+
+        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
+        /// <remarks>
+        /// Checks whether PDF document conforms a specific standard.
+        /// Shall be override.
+        /// </remarks>
+        /// <param name="obj">an object to conform.</param>
+        /// <param name="key">type of object to conform.</param>
+        /// <param name="resources">
+        /// 
+        /// <see cref="PdfResources"/>
+        /// associated with an object to check.
+        /// </param>
+        /// <param name="contentStream">current content stream</param>
+        public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            ) {
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
