@@ -229,12 +229,10 @@ namespace iText.Svg.Renderers.Impl {
                             currentCanvas.Stroke();
                         }
                     }
-                    currentCanvas.ClosePath();
                 }
             }
         }
 
-        // TODO: see if this is necessary DEVSIX-2583
         internal virtual void SetPartOfClipPath(bool value) {
             partOfClipPath = value;
         }
