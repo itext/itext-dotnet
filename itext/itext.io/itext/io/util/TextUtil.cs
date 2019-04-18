@@ -260,9 +260,26 @@ namespace iText.IO.Util {
         public static bool IsNewLine(Glyph glyph)
         {
             int unicode = glyph.GetUnicode();
+            return IsNewLine(unicode);
+        }
+
+        /// <summary>
+        /// Determines if represented Glyph is '\n' or '\r' character.
+        /// </summary>
+        public static bool IsNewLine(char c)
+        {
+            int unicode = (int) c;
+            return IsNewLine(unicode);
+        }
+
+        /// <summary>
+        /// Determines if represented Glyph is '\n' or '\r' character.
+        /// </summary>
+        public static bool IsNewLine(int unicode)
+        {
             return unicode == '\n' || unicode == '\r';
         }
-        
+
         public static bool IsCarriageReturnFollowedByLineFeed(GlyphLine glyphLine, int carriageReturnPosition)
         {
             return glyphLine.Size() > 1
