@@ -2295,6 +2295,7 @@ namespace iText.Kernel.Pdf {
                 names.MakeIndirect(this);
             }
             names.Put(treeType, treeRoot);
+            names.SetModified();
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
