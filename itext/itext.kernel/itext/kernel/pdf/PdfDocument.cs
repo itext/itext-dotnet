@@ -1842,6 +1842,9 @@ namespace iText.Kernel.Pdf {
             try {
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 if (reader != null) {
+                    if (reader.pdfDocument != null) {
+                        throw new PdfException(PdfException.PdfReaderHasBeenAlreadyUtilized);
+                    }
                     reader.pdfDocument = this;
                     reader.ReadPdf();
                     foreach (ICounter counter in GetCounters()) {

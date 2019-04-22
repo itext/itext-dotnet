@@ -389,6 +389,8 @@ namespace iText.Kernel {
 
         public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
 
+        public const String PdfReaderHasBeenAlreadyUtilized = "Given PdfReader instance has already been utilized. The PdfReader cannot be reused, please create a new instance.";
+
         public const String PdfStartxrefIsNotFollowedByANumber = "PDF startxref is not followed by a number.";
 
         public const String PdfStartxrefNotFound = "PDF startxref not found.";

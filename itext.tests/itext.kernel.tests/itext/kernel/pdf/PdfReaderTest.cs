@@ -1447,6 +1447,19 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ReaderReuseTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String filename = sourceFolder + "hello.pdf";
+                PdfReader reader = new PdfReader(filename);
+                PdfDocument pdfDoc1 = new PdfDocument(reader);
+                PdfDocument pdfDoc2 = new PdfDocument(reader);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.PdfReaderHasBeenAlreadyUtilized))
+;
+        }
+
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {
             PdfName objectType = ((PdfDictionary)@object).GetAsName(PdfName.Type);
             return type.Equals(objectType);
