@@ -970,11 +970,19 @@ namespace iText.Kernel.Pdf {
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
+                    if (annot == null) {
+                        continue;
+                    }
                     PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(annot);
-                    // PdfAnnotation.makeAnnotation returns null if annotation SubType is not recognized or not present at all
-                    // (although SubType is required according to the spec)
-                    if (annotation != null) {
-                        annotations.Add(annotation.SetPage(this));
+                    if (annotation == null) {
+                        continue;
+                    }
+                    bool hasBeenNotModified = annot.GetIndirectReference() != null && !annot.GetIndirectReference().CheckState
+                        (PdfObject.MODIFIED);
+                    annotations.Add(annotation.SetPage(this));
+                    if (hasBeenNotModified) {
+                        annot.GetIndirectReference().ClearState(PdfObject.MODIFIED);
+                        annot.GetIndirectReference().ClearState(PdfObject.FORBID_RELEASE);
                     }
                 }
             }
