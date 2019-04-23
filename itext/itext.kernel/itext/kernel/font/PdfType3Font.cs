@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -120,10 +121,37 @@ namespace iText.Kernel.Font {
                 fontMatrix[i] = ((PdfNumber)fontMatrixArray.Get(i)).GetValue();
             }
             SetFontMatrix(fontMatrix);
+            if (toUnicode != null && toUnicode.HasByteMappings() && fontEncoding.HasDifferences()) {
+                for (int i = 0; i < 256; i++) {
+                    int unicode = fontEncoding.GetUnicode(i);
+                    PdfName glyphName = new PdfName(fontEncoding.GetDifference(i));
+                    if (unicode != -1 && !glyphName.GetValue().Equals(FontEncoding.NOTDEF) && charProcsDic.ContainsKey(glyphName
+                        )) {
+                        ((Type3Font)GetFontProgram()).AddGlyph(i, unicode, widths[i], null, new Type3Glyph(charProcsDic.GetAsStream
+                            (glyphName), GetDocument()));
+                    }
+                }
+            }
+            IDictionary<int, int?> unicodeToCode = null;
+            if (toUnicode != null) {
+                try {
+                    unicodeToCode = toUnicode.CreateReverseMapping();
+                }
+                catch (Exception) {
+                }
+            }
             foreach (PdfName glyphName in charProcsDic.KeySet()) {
                 int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
-                if (unicode != -1 && fontEncoding.CanEncode(unicode)) {
-                    int code = fontEncoding.ConvertToByte(unicode);
+                int code = -1;
+                if (fontEncoding.CanEncode(unicode)) {
+                    code = fontEncoding.ConvertToByte(unicode);
+                }
+                else {
+                    if (unicodeToCode != null && unicodeToCode.ContainsKey(unicode)) {
+                        code = (int)unicodeToCode.Get(unicode);
+                    }
+                }
+                if (code != -1 && GetFontProgram().GetGlyphByCode(code) == null) {
                     ((Type3Font)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic.GetAsStream
                         (glyphName), GetDocument()));
                 }
@@ -156,7 +184,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets the PostScript italic angle.</summary>
         /// <remarks>
         /// Sets the PostScript italic angle.
-        /// <br/>
+        /// <p>
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>

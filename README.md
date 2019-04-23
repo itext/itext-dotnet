@@ -1,4 +1,4 @@
-**[iText 7 Community][itext]** for .NET consists of several dlls.
+**[iText 7 Community for .NET][itext]** (former iTextSharp) consists of several dlls.
 
 The **iText 7 Core/Community** release contains:
 
@@ -12,6 +12,8 @@ The **iText 7 Core/Community** release contains:
 - ```hyph.dll```: use this if you want text to be hyphenated
 - ```font-asian.dll```: use this is you need CJK functionality (Chinese / Japanese / Korean)
 - ```sign.dll```: use this if you need support for digital signatures
+- ```styled-xml-parser.dll```: use this if you need support for SVG or html2pdf
+- ```svg.dll```: SVG support
 
 The **iText 7 Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
 
@@ -21,11 +23,10 @@ The **iText 7 Community** source code is hosted on [Github][github], where you c
 
 You can also [build iText 7 Community from source][building].
 
-We also have a Java tool that can help you debug PDFs:
-
-- ```itext-rups-x.y.z.jar```
-
-RUPS is also hosted on [Github][github-rups].
+We also provide opensource add-ons and tools to complement the core functionality:
+- [pdfHTML][pdfhtml] — allows you to easily convert HTML to PDF or iText objects
+- [pdfSweep][pdfsweep] — a highly efficient PDF tool to merge, split and redact data
+- [RUPS][rups] — a Java tool that can help you debug PDFs
 
 If you have an idea on how to improve **iText 7 Community** and you want to submit code,
 please read our [Contribution Guidelines][contributing].
@@ -50,10 +51,12 @@ Contact [sales] for more info.
 [agpl]: LICENSE.md
 [building]: BUILDING.md
 [contributing]: CONTRIBUTING.md
-[itext]: http://itextpdf.com/
+[itext]: https://itextpdf.com/
 [github]: https://github.com/itext/itext7-dotnet
-[github-rups]: http://github.com/itext/rups
 [latest]: https://github.com/itext/itext7-dotnet/releases/latest
 [nuget]: https://www.nuget.org/packages/itext7
-[sales]: http://itextpdf.com/sales
+[sales]: https://itextpdf.com/sales
 [gratis]: https://en.wikipedia.org/wiki/Gratis_versus_libre
+[rups]: https://github.com/itext/rups
+[pdfhtml]: https://github.com/itext/i7n-pdfhtml
+[pdfsweep]: https://github.com/itext/i7n-pdfsweep

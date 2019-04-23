@@ -47,6 +47,8 @@ using iText.IO.Util;
 using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Test;
@@ -1208,6 +1210,35 @@ namespace iText.Kernel.Pdf {
             pdfDocOutput.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "stampingStreamNoEndingWhitespace01.pdf"
                 , sourceFolder + "cmp_stampingStreamNoEndingWhitespace01.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StampingInAppendModeCreatesNewResourceDictionary() {
+            // with some PDFs, when adding content to an existing PDF in append mode, the resource dictionary didn't get written as a new version
+            StampingProperties stampProps = new StampingProperties();
+            stampProps.UseAppendMode();
+            stampProps.PreserveEncryption();
+            PdfFont font = PdfFontFactory.CreateFont();
+            ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "hello-d.pdf"), new PdfWriter(resultStream
+                ), stampProps);
+            PdfPage page = pdfDoc.GetPage(1);
+            PdfCanvas canvas = new PdfCanvas(page.NewContentStreamAfter(), page.GetResources(), pdfDoc);
+            canvas.BeginText();
+            canvas.SetTextRenderingMode(2);
+            canvas.SetFontAndSize(font, 42);
+            canvas.SetTextMatrix(1, 0, 0, -1, 100, 100);
+            canvas.ShowText("TEXT TO STAMP");
+            canvas.EndText();
+            pdfDoc.Close();
+            // parse text
+            pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(resultStream.ToArray())));
+            LocationTextExtractionStrategy strat = new LocationTextExtractionStrategy();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(strat);
+            processor.ProcessPageContent(pdfDoc.GetPage(1));
+            // this fails with an NPE b/c the /F1 font isn't in the fonts dictionary
+            NUnit.Framework.Assert.IsTrue(strat.GetResultantText().Contains("TEXT TO STAMP"));
         }
 
         internal static void VerifyPdfPagesCount(PdfObject root) {

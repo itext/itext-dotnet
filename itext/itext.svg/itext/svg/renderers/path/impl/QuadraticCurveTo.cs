@@ -48,12 +48,22 @@ using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    public class QuadraticCurveTo : AbstractPathShape {
-        private String[] coordinates;
+    /// <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
+    public class QuadraticCurveTo : AbstractPathShape, IControlPointCurve {
+        internal const int ARGUMENT_SIZE = 4;
 
-        /*
-        * Implements quadratic Bezier curveTo(Q) attribute of SVG's path element
-        */
+        public QuadraticCurveTo()
+            : this(false) {
+        }
+
+        public QuadraticCurveTo(bool relative)
+            : this(relative, new DefaultOperatorConverter()) {
+        }
+
+        public QuadraticCurveTo(bool relative, IOperatorConverter copier)
+            : base(relative, copier) {
+        }
+
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw(PdfCanvas canvas) {
@@ -64,23 +74,22 @@ namespace iText.Svg.Renderers.Path.Impl {
             canvas.CurveTo(x1, y1, x, y);
         }
 
-        public override void SetCoordinates(String[] coordinates, Point startPoint) {
+        public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
             // startPoint will be used when relative quadratic curve is implemented
-            if (coordinates.Length == 0 || coordinates.Length % 4 != 0) {
+            if (inputCoordinates.Length < ARGUMENT_SIZE) {
                 throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
                     , JavaUtil.ArraysToString(coordinates)));
             }
-            if (coordinates.Length > 4) {
-                // (x1 y1 x y)+ parameters will be implemented in the future
-                throw new NotSupportedException();
-            }
-            else {
-                this.coordinates = new String[] { coordinates[0], coordinates[1], coordinates[2], coordinates[3] };
+            coordinates = new String[ARGUMENT_SIZE];
+            Array.Copy(inputCoordinates, 0, coordinates, 0, ARGUMENT_SIZE);
+            double[] initialPoint = new double[] { startPoint.GetX(), startPoint.GetY() };
+            if (IsRelative()) {
+                coordinates = copier.MakeCoordinatesAbsolute(coordinates, initialPoint);
             }
         }
 
-        public override Point GetEndingPoint() {
-            return CreatePoint(coordinates[2], coordinates[3]);
+        public virtual Point GetLastControlPoint() {
+            return CreatePoint(coordinates[0], coordinates[1]);
         }
     }
 }

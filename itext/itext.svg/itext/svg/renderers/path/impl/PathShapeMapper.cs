@@ -70,8 +70,29 @@ namespace iText.Svg.Renderers.Path.Impl {
             result.Put(SvgConstants.Attributes.PATH_DATA_REL_MOVE_TO, new MoveTo(true));
             result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO, new CurveTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_REL_CURVE_TO, new CurveTo(true));
-            result.Put(SvgConstants.Attributes.PATH_DATA_QUAD_CURVE_TO, new QuadraticCurveTo());
             result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO_S, new SmoothSCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_CURVE_TO_S, new SmoothSCurveTo(true));
+            result.Put(SvgConstants.Attributes.PATH_DATA_QUAD_CURVE_TO, new QuadraticCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_QUAD_CURVE_TO, new QuadraticCurveTo(true));
+            result.Put(SvgConstants.Attributes.PATH_DATA_SHORTHAND_CURVE_TO, new QuadraticSmoothCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_SHORTHAND_CURVE_TO, new QuadraticSmoothCurveTo(true));
+            result.Put(SvgConstants.Attributes.PATH_DATA_ELLIPTICAL_ARC_A, new EllipticalCurveTo());
+            result.Put(SvgConstants.Attributes.PATH_DATA_REL_ELLIPTICAL_ARC_A, new EllipticalCurveTo(true));
+            return result;
+        }
+
+        public virtual IDictionary<String, int?> GetArgumentCount() {
+            IDictionary<String, int?> result = new Dictionary<String, int?>();
+            result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO, LineTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO_V, VerticalLineTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_LINE_TO_H, HorizontalLineTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_CLOSE_PATH, ClosePath.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_MOVE_TO, MoveTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO, CurveTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_CURVE_TO_S, SmoothSCurveTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_QUAD_CURVE_TO, QuadraticCurveTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_SHORTHAND_CURVE_TO, QuadraticSmoothCurveTo.ARGUMENT_SIZE);
+            result.Put(SvgConstants.Attributes.PATH_DATA_ELLIPTICAL_ARC_A, EllipticalCurveTo.ARGUMENT_SIZE);
             return result;
         }
     }

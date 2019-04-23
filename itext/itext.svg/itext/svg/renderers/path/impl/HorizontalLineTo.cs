@@ -47,6 +47,8 @@ using iText.Svg.Utils;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(H) attribute of SVG's path element</summary>
     public class HorizontalLineTo : LineTo {
+        internal const int ARGUMENT_SIZE = 1;
+
         /// <summary>Creates an absolute Horizontal LineTo.</summary>
         public HorizontalLineTo()
             : this(false) {
@@ -59,13 +61,11 @@ namespace iText.Svg.Renderers.Path.Impl {
             : base(relative) {
         }
 
-        public override void SetCoordinates(String[] coordinates, Point startPoint) {
-            String[] normalizedCoords = new String[coordinates.Length * 2];
+        public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
+            String[] normalizedCoords = new String[LineTo.ARGUMENT_SIZE];
             // An H or h command is equivalent to an L or l command with 0 specified for the y coordinate.
-            for (int i = 0; i < coordinates.Length; i++) {
-                normalizedCoords[i * 2] = coordinates[i];
-                normalizedCoords[i * 2 + 1] = IsRelative() ? "0" : SvgCssUtils.ConvertDoubleToString(startPoint.GetY());
-            }
+            normalizedCoords[0] = inputCoordinates[0];
+            normalizedCoords[1] = IsRelative() ? "0" : SvgCssUtils.ConvertDoubleToString(startPoint.GetY());
             base.SetCoordinates(normalizedCoords, startPoint);
         }
     }

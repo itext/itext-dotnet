@@ -52,6 +52,7 @@ namespace iText.Kernel.Pdf {
         PDF_OBJECT,
         RENDERING_INTENT,
         STROKE_COLOR,
-        TAG_STRUCTURE_ELEMENT
+        TAG_STRUCTURE_ELEMENT,
+        FONT_GLYPHS
     }
 }

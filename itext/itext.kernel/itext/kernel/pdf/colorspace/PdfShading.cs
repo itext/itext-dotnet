@@ -572,7 +572,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </summary>
             /// <param name="domain">
             /// the
-            /// <PdfArray/>
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// that represents domain
             /// </param>
             public virtual void SetDomain(PdfArray domain) {
@@ -873,7 +873,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </summary>
             /// <param name="domain">
             /// the
-            /// <PdfArray/>
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// that represents domain
             /// </param>
             public virtual void SetDomain(PdfArray domain) {

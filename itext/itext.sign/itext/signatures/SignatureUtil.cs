@@ -94,17 +94,67 @@ namespace iText.Signatures {
             this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
         }
 
-        /// <summary>Verifies a signature.</summary>
-        /// <remarks>
-        /// Verifies a signature. Further verification can be done on the returned
+        /// <summary>
+        /// Prepares an
         /// <see cref="PdfPKCS7"/>
-        /// object.
-        /// </remarks>
+        /// instance for the given signature.
+        /// This method handles signature parsing and might throw an exception if
+        /// signature is malformed.
+        /// <p>
+        /// The returned
+        /// <see cref="PdfPKCS7"/>
+        /// can be used to fetch additional info about the signature
+        /// and also to perform integrity check of data signed by the given signature field.
+        /// </p>
+        /// In order to check that given signature covers the current PdfDocument revision please
+        /// use
+        /// <see cref="SignatureCoversWholeDocument(System.String)"/>
+        /// method.
+        /// </summary>
         /// <param name="name">the signature field name</param>
-        /// <param name="provider">the provider or null for the default provider</param>
-        /// <returns>PdfPKCS7 object to continue the verification</returns>
+        /// <param name="provider">the security provider or null for the default provider</param>
+        /// <returns>
+        /// a
+        /// <see cref="PdfPKCS7"/>
+        /// instance which can be used to fetch additional info about the signature
+        /// and also to perform integrity check of data signed by the given signature field.
+        /// </returns>
+        [System.ObsoleteAttribute(@"This method is deprecated and will be removed in future versions. Please use ReadSignatureData(System.String, System.String) instead."
+            )]
         public virtual PdfPKCS7 VerifySignature(String name) {
-            PdfSignature signature = GetSignature(name);
+            return ReadSignatureData(name);
+        }
+
+        /// <summary>
+        /// Prepares an
+        /// <see cref="PdfPKCS7"/>
+        /// instance for the given signature.
+        /// This method handles signature parsing and might throw an exception if
+        /// signature is malformed.
+        /// <p>
+        /// The returned
+        /// <see cref="PdfPKCS7"/>
+        /// can be used to fetch additional info about the signature
+        /// and also to perform integrity check of data signed by the given signature field.
+        /// </p>
+        /// Prepared
+        /// <see cref="PdfPKCS7"/>
+        /// instance calculates digest based on signature's /ByteRange entry.
+        /// In order to check that /ByteRange is properly defined and given signature indeed covers the current PDF document
+        /// revision please use
+        /// <see cref="SignatureCoversWholeDocument(System.String)"/>
+        /// method.
+        /// </summary>
+        /// <param name="signatureFieldName">the signature field name</param>
+        /// <param name="securityProvider">the security provider or null for the default provider</param>
+        /// <returns>
+        /// a
+        /// <see cref="PdfPKCS7"/>
+        /// instance which can be used to fetch additional info about the signature
+        /// and also to perform integrity check of data signed by the given signature field.
+        /// </returns>
+        public virtual PdfPKCS7 ReadSignatureData(String signatureFieldName) {
+            PdfSignature signature = GetSignature(signatureFieldName);
             if (signature == null) {
                 return null;
             }
@@ -268,6 +318,18 @@ namespace iText.Signatures {
 
         /// <summary>Checks if the signature covers the entire document (except for signature's Contents) or just a part of it.
         ///     </summary>
+        /// <remarks>
+        /// Checks if the signature covers the entire document (except for signature's Contents) or just a part of it.
+        /// <p>
+        /// If this method does not return
+        /// <see langword="true"/>
+        /// it means that signature in question does not cover the entire
+        /// contents of current
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// . Such signatures cannot be considered as verifying the PDF document,
+        /// because content that is not covered by signature might have been modified since the signature creation.
+        /// </p>
+        /// </remarks>
         /// <param name="name">the signature field name</param>
         /// <returns>true if the signature covers the entire document, false if it doesn't</returns>
         public virtual bool SignatureCoversWholeDocument(String name) {

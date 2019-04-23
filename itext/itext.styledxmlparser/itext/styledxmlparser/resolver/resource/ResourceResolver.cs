@@ -301,8 +301,14 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             return null;
         }
 
-        /// <summary>Throws exception if error occurred</summary>
-        /// <exception cref="System.Exception"/>
+        /// <summary>Create a iText XObject based on the image stored at the passed location</summary>
+        /// <param name="url">location of the Image file</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// containing the Image loaded in
+        /// </returns>
+        /// <exception cref="System.Exception">thrown if error occurred during fetching or constructing the image</exception>
         protected internal virtual PdfXObject CreateImageByUrl(Uri url) {
             return new PdfImageXObject(ImageDataFactory.Create(url));
         }

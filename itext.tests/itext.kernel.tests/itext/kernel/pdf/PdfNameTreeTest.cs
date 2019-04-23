@@ -42,12 +42,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Xobject;
 using iText.Test;
 
@@ -75,6 +77,42 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(1, objs.Count);
             NUnit.Framework.Assert.AreEqual(1, objs2.Count);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void EmbeddedFileAddedInAppendModeTest() {
+            //Create input document
+            MemoryStream boasEmpty = new MemoryStream();
+            PdfWriter emptyDocWriter = new PdfWriter(boasEmpty);
+            PdfDocument emptyDoc = new PdfDocument(emptyDocWriter);
+            emptyDoc.AddNewPage();
+            PdfDictionary emptyNamesDic = new PdfDictionary();
+            emptyNamesDic.MakeIndirect(emptyDoc);
+            emptyDoc.GetCatalog().GetPdfObject().Put(PdfName.Names, emptyNamesDic);
+            emptyDoc.Close();
+            //Create input document
+            MemoryStream boasAttached = new MemoryStream();
+            PdfWriter attachDocWriter = new PdfWriter(boasAttached);
+            PdfDocument attachDoc = new PdfDocument(attachDocWriter);
+            attachDoc.AddNewPage();
+            attachDoc.Close();
+            //Attach file in append mode
+            PdfReader appendReader = new PdfReader(new MemoryStream(boasEmpty.ToArray()));
+            MemoryStream boasAppend = new MemoryStream();
+            PdfWriter appendWriter = new PdfWriter(boasAppend);
+            PdfDocument appendDoc = new PdfDocument(appendReader, appendWriter, new StampingProperties().UseAppendMode
+                ());
+            appendDoc.AddFileAttachment("Test File", PdfFileSpec.CreateEmbeddedFileSpec(appendDoc, boasAttached.ToArray
+                (), "Append Embedded File test", "Test file", null));
+            appendDoc.Close();
+            //Check final result
+            PdfReader finalReader = new PdfReader(new MemoryStream(boasAppend.ToArray()));
+            PdfDocument finalDoc = new PdfDocument(finalReader);
+            PdfNameTree embeddedFilesNameTree = finalDoc.GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
+            IDictionary<String, PdfObject> embeddedFilesMap = embeddedFilesNameTree.GetNames();
+            NUnit.Framework.Assert.IsTrue(embeddedFilesMap.Count > 0);
+            NUnit.Framework.Assert.IsTrue(embeddedFilesMap.ContainsKey("Test File"));
         }
 
         /// <exception cref="System.IO.IOException"/>

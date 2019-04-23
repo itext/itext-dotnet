@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -66,8 +67,24 @@ namespace iText.Barcodes {
             0, 0, 1, 0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
 
         /// <summary>Creates a new BarcodeCodabar.</summary>
-        /// <param name="document">The document</param>
+        /// <remarks>
+        /// Creates a new BarcodeCodabar.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="BarcodeCodabar(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeCodabar(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates a new BarcodeCodabar.</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public BarcodeCodabar(PdfDocument document, PdfFont font)
             : base(document) {
             // 0
             // 1
@@ -89,16 +106,16 @@ namespace iText.Barcodes {
             // b
             // c
             // d
-            x = 0.8f;
-            n = 2;
-            font = document.GetDefaultFont();
-            size = 8;
-            baseline = size;
-            barHeight = size * 3;
-            textAlignment = ALIGN_CENTER;
-            generateChecksum = false;
-            checksumText = false;
-            startStopText = false;
+            this.x = 0.8f;
+            this.n = 2;
+            this.font = font;
+            this.size = 8;
+            this.baseline = size;
+            this.barHeight = size * 3;
+            this.textAlignment = ALIGN_CENTER;
+            this.generateChecksum = false;
+            this.checksumText = false;
+            this.startStopText = false;
         }
 
         /// <summary>Creates the bars.</summary>

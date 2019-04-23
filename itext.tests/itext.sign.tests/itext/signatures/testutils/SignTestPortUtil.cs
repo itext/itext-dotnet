@@ -52,6 +52,9 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Kernel.Pdf;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Prng;
+using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Testutils {
     public class SignTestPortUtil {
@@ -82,10 +85,16 @@ namespace iText.Signatures.Testutils {
             return DigestUtilities.GetDigest(hashAlgorithm);
         }
 
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
+        /// <exception cref="CertificateException"/>
         /// <exception cref="Java.Security.Cert.CRLException"/>
         public static X509Crl ParseCrlFromStream(Stream input) {
             return new X509CrlParser().ReadCrl(input);
+        }
+        
+        public static RsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
+            RsaKeyPairGenerator keyGen = new RsaKeyPairGenerator();
+            keyGen.Init(new KeyGenerationParameters(new SecureRandom(new VmpcRandomGenerator()), 2048));
+            return keyGen;
         }
     }
 }

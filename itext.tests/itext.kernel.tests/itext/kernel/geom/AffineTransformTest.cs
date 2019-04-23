@@ -84,5 +84,19 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.AreNotEqual(hash1, hash2);
             NUnit.Framework.Assert.IsFalse(affineTransform1.Equals(affineTransform2));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RotateTest() {
+            AffineTransform rotateOne = AffineTransform.GetRotateInstance(Math.PI / 2);
+            AffineTransform expected = new AffineTransform(0, 1, -1, 0, 0, 0);
+            NUnit.Framework.Assert.AreEqual(rotateOne, expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RotateTranslateTest() {
+            AffineTransform rotateTranslate = AffineTransform.GetRotateInstance(Math.PI / 2, 10, 5);
+            AffineTransform expected = new AffineTransform(0, 1, -1, 0, 15, -5);
+            NUnit.Framework.Assert.AreEqual(rotateTranslate, expected);
+        }
     }
 }

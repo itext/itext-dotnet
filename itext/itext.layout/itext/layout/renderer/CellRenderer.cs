@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
                     transform = transform.CreateInverse();
                 }
                 catch (NoninvertibleTransformException e) {
-                    throw new Exception(e.Message, e);
+                    throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);

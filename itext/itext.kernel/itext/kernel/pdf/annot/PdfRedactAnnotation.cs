@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>The default appearance string that shall be used in formatting the text.</summary>
-        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, "Variable Text".
         ///     </remarks>
         /// <returns>
         /// a
@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>The default appearance string that shall be used in formatting the text.</summary>
-        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, “Variable Text”.
+        /// <remarks>The default appearance string that shall be used in formatting the text. See ISO-32001 12.7.3.3, "Variable Text".
         ///     </remarks>
         /// <param name="appearanceString">
         /// a

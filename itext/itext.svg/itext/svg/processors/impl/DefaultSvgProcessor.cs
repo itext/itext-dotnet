@@ -180,8 +180,16 @@ namespace iText.Svg.Processors.Impl {
                             namedObjects.Put(attribute, renderer);
                         }
                         // don't add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
-                        if (processorState.Top() is IBranchSvgNodeRenderer && !(renderer is NoDrawOperationSvgNodeRenderer)) {
-                            ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
+                        if (!(renderer is NoDrawOperationSvgNodeRenderer)) {
+                            if (processorState.Top() is IBranchSvgNodeRenderer) {
+                                ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
+                            }
+                            else {
+                                if (processorState.Top() is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
+                                    //Text branch node renderers only accept ISvgTextNodeRenderers
+                                    ((TextSvgBranchRenderer)processorState.Top()).AddChild((ISvgTextNodeRenderer)renderer);
+                                }
+                            }
                         }
                         processorState.Push(renderer);
                     }
@@ -219,17 +227,14 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="textNode">node containing text to process</param>
         private void ProcessText(ITextNode textNode) {
             ISvgNodeRenderer parentRenderer = this.processorState.Top();
-            if (parentRenderer is TextSvgNodeRenderer) {
-                // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
-                // tab/space indented xml files will retain their tabs and spaces.
-                // The following regex replaces all whitespace with a single space.
-                //TODO(RND-906) evaluate regex and trim methods
-                String trimmedText = iText.IO.Util.StringUtil.ReplaceAll(textNode.WholeText(), "\\s+", " ");
-                //Trim leading whitespace
-                trimmedText = SvgTextUtil.TrimLeadingWhitespace(trimmedText);
-                //Trim trailing whitespace
-                trimmedText = SvgTextUtil.TrimTrailingWhitespace(trimmedText);
-                parentRenderer.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, trimmedText);
+            if (parentRenderer is TextSvgBranchRenderer) {
+                String wholeText = textNode.WholeText();
+                if (!wholeText.Equals("") && !SvgTextUtil.IsOnlyWhiteSpace(wholeText)) {
+                    TextLeafSvgNodeRenderer textLeaf = new TextLeafSvgNodeRenderer();
+                    textLeaf.SetParent(parentRenderer);
+                    textLeaf.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, wholeText);
+                    ((TextSvgBranchRenderer)parentRenderer).AddChild(textLeaf);
+                }
             }
         }
 

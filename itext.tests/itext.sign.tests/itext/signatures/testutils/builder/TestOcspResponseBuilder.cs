@@ -58,7 +58,8 @@ namespace iText.Signatures.Testutils.Builder {
 
         private BasicOcspRespGenerator responseBuilder;
 
-        private X509Certificate caCert;
+        private X509Certificate issuerCert;
+        private ICipherParameters issuerPrivateKey;
 
         private CertificateStatus certificateStatus = CertificateStatus.Good;
 
@@ -67,12 +68,17 @@ namespace iText.Signatures.Testutils.Builder {
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
-        public TestOcspResponseBuilder(X509Certificate caCert) {
-            this.caCert = caCert;
-            X509Name issuerDN = caCert.IssuerDN;
+        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey) {
+            this.issuerCert = issuerCert;
+            this.issuerPrivateKey = issuerPrivateKey;
+            X509Name subjectDN = issuerCert.SubjectDN;
             thisUpdate = thisUpdate.AddDays(-1);
             nextUpdate = nextUpdate.AddDays(30);
-            responseBuilder = new BasicOcspRespGenerator(new RespID(issuerDN));
+            responseBuilder = new BasicOcspRespGenerator(new RespID(subjectDN));
+        }
+
+        public X509Certificate GetIssuerCert() {
+            return issuerCert;
         }
 
         public virtual void SetCertificateStatus(CertificateStatus certificateStatus) {
@@ -91,7 +97,7 @@ namespace iText.Signatures.Testutils.Builder {
         /// <exception cref="CertificateException"/>
         /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
-        public virtual byte[] MakeOcspResponse(byte[] requestBytes, ICipherParameters caPrivateKey) {
+        public virtual byte[] MakeOcspResponse(byte[] requestBytes) {
             OcspReq ocspRequest = new OcspReq(requestBytes);
             Req[] requestList = ocspRequest.GetRequestList();
 
@@ -106,7 +112,7 @@ namespace iText.Signatures.Testutils.Builder {
                 responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), null);
             }
             DateTime time = DateTimeUtil.GetCurrentUtcTime();
-            BasicOcspResp ocspResponse = responseBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter)caPrivateKey), new X509Certificate[] { caCert }, time);
+            BasicOcspResp ocspResponse = responseBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter)issuerPrivateKey), new X509Certificate[] { issuerCert }, time);
             // return new OCSPRespBuilder().build(ocspResult, ocspResponse).getEncoded();
             return ocspResponse.GetEncoded();
         }

@@ -52,6 +52,10 @@ namespace iText.Kernel.Crypto {
         private bool finished;
 
         /// <summary>Creates a new instance of OutputStreamCounter</summary>
+        /// <param name="out"/>
+        /// <param name="key"/>
+        /// <param name="off"/>
+        /// <param name="len"/>
         public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
             byte[] iv = IVGenerator.GetIV();

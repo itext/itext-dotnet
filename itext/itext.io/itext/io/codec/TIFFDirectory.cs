@@ -461,6 +461,9 @@ namespace iText.IO.Codec {
         /// present and has type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED,
         /// TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG or TIFF_LONG.
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <param name="index">The index</param>
+        /// <returns>The value of the given index of the given tag as a long</returns>
         public virtual long GetFieldAsLong(int tag, int index) {
             int? i = fieldIndex.Get(tag);
             return fields[(int)i].GetAsLong(index);
@@ -476,6 +479,8 @@ namespace iText.IO.Codec {
         /// present and has type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED,
         /// TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG or TIFF_LONG.
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <returns>The value of index 0 of the given tag as a long</returns>
         public virtual long GetFieldAsLong(int tag) {
             return GetFieldAsLong(tag, 0);
         }
@@ -490,6 +495,9 @@ namespace iText.IO.Codec {
         /// present and has numeric type (all but TIFF_UNDEFINED and
         /// TIFF_ASCII).
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <param name="index">The index</param>
+        /// <returns>The value of the given index of the given tag as a float</returns>
         public virtual float GetFieldAsFloat(int tag, int index) {
             int? i = fieldIndex.Get(tag);
             return fields[(int)i].GetAsFloat(index);
@@ -501,6 +509,8 @@ namespace iText.IO.Codec {
         /// caller is responsible for ensuring that the tag is present and
         /// has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <returns>The value of index 0 of the given tag as a float</returns>
         public virtual float GetFieldAsFloat(int tag) {
             return GetFieldAsFloat(tag, 0);
         }
@@ -515,6 +525,9 @@ namespace iText.IO.Codec {
         /// present and has numeric type (all but TIFF_UNDEFINED and
         /// TIFF_ASCII).
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <param name="index">The index</param>
+        /// <returns>The value of the given index of the given tag as a double</returns>
         public virtual double GetFieldAsDouble(int tag, int index) {
             int? i = fieldIndex.Get(tag);
             return fields[(int)i].GetAsDouble(index);
@@ -526,6 +539,8 @@ namespace iText.IO.Codec {
         /// caller is responsible for ensuring that the tag is present and
         /// has numeric type (all but TIFF_UNDEFINED and TIFF_ASCII).
         /// </remarks>
+        /// <param name="tag">The tag</param>
+        /// <returns>The value of index 0 of the given tag as a double</returns>
         public virtual double GetFieldAsDouble(int tag) {
             return GetFieldAsDouble(tag, 0);
         }
@@ -626,6 +641,11 @@ namespace iText.IO.Codec {
         /// Returns the number of image directories (subimages) stored in a
         /// given TIFF file, represented by a <code>SeekableStream</code>.
         /// </summary>
+        /// <param name="stream">RandomAccessFileOrArray</param>
+        /// <returns>
+        /// The number of image directories (subimages) stored
+        /// in a given TIFF file
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static int GetNumDirectories(RandomAccessFileOrArray stream) {
             long pointer = stream.GetPosition();

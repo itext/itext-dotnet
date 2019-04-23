@@ -51,6 +51,10 @@ namespace iText.Svg.Utils {
         /// an array of coordinates with length proportional to the length of current coordinates array,
         /// so that current coordinates array is applied in segments to the relative coordinates array
         /// </remarks>
+        /// <param name="relativeCoordinates">the initial set of coordinates</param>
+        /// <param name="currentCoordinates">an array representing the point relative to which the relativeCoordinates are defined
+        ///     </param>
+        /// <returns>a String array of absolute coordinates, with the same length as the input array</returns>
         public static String[] MakeRelativeOperatorCoordinatesAbsolute(String[] relativeCoordinates, double[] currentCoordinates
             ) {
             if (relativeCoordinates.Length % currentCoordinates.Length != 0) {

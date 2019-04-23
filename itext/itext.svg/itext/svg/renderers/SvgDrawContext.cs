@@ -72,6 +72,10 @@ namespace iText.Svg.Renderers {
 
         private FontSet tempFonts;
 
+        private AffineTransform lastTextTransform = new AffineTransform();
+
+        private float[] textMove = new float[] { 0.0f, 0.0f };
+
         public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider) {
             if (resourceResolver == null) {
                 resourceResolver = new ResourceResolver("");
@@ -211,6 +215,44 @@ namespace iText.Svg.Renderers {
         /// <param name="elementId">referenced element ID</param>
         public virtual void RemoveUsedId(String elementId) {
             this.useIds.Pop();
+        }
+
+        /// <summary>Get the text transformation that was last applied</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// representing the last text transformation
+        /// </returns>
+        public virtual AffineTransform GetLastTextTransform() {
+            if (lastTextTransform == null) {
+                lastTextTransform = new AffineTransform();
+            }
+            return this.lastTextTransform;
+        }
+
+        /// <summary>Set the last text transformation</summary>
+        /// <param name="newTransform">last text transformation</param>
+        public virtual void SetLastTextTransform(AffineTransform newTransform) {
+            this.lastTextTransform = newTransform;
+        }
+
+        /// <summary>Get the stored current text move</summary>
+        /// <returns>[horizontal text move, vertical text move]</returns>
+        public virtual float[] GetTextMove() {
+            return textMove;
+        }
+
+        /// <summary>Reset the stored text move to [0f,0f]</summary>
+        public virtual void ResetTextMove() {
+            textMove = new float[] { 0.0f, 0.0f };
+        }
+
+        /// <summary>Increment the stored text move</summary>
+        /// <param name="additionalMoveX">horizontal value to add</param>
+        /// <param name="additionalMoveY">vertical value to add</param>
+        public virtual void AddTextMove(float additionalMoveX, float additionalMoveY) {
+            textMove[0] += additionalMoveX;
+            textMove[1] += additionalMoveY;
         }
     }
 }

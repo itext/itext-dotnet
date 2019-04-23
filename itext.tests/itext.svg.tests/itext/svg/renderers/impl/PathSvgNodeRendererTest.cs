@@ -48,7 +48,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
-using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -94,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
-            //This test should fail when RND-904 (relative line operator l ) is implemented.
+            //TODO (RND-904) This test should fail when RND-904 (relative line operator l ) is implemented.
             String filename = "pathNodeRendererMoveToTest1.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
@@ -273,14 +272,6 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "curves");
         }
 
-        [NUnit.Framework.Test]
-        public virtual void DeepCopyTest() {
-            PathSvgNodeRenderer expected = new PathSvgNodeRenderer();
-            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
-            ISvgNodeRenderer actual = expected.CreateDeepCopy();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -415,6 +406,20 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void MultipleRelativeVerticalLineToTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "multipleRelativeVerticalLineTo");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MoveToRelativeMultipleTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "moveToRelativeMultiple");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MoveToAbsoluteMultipleTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "moveToAbsoluteMultiple");
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -57,16 +57,16 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
-        private ISvgNodeRenderer parent;
-
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
-        private bool doFill = false;
-
-        private bool doStroke = false;
-
         internal bool partOfClipPath;
+
+        internal bool doFill = false;
+
+        internal bool doStroke = false;
+
+        private ISvgNodeRenderer parent;
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
             this.parent = parent;
@@ -78,6 +78,26 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
             this.attributesAndStyles = attributesAndStyles;
+        }
+
+        public virtual String GetAttribute(String key) {
+            return attributesAndStyles.Get(key);
+        }
+
+        public virtual void SetAttribute(String key, String value) {
+            if (this.attributesAndStyles == null) {
+                this.attributesAndStyles = new Dictionary<String, String>();
+            }
+            this.attributesAndStyles.Put(key, value);
+        }
+
+        public virtual IDictionary<String, String> GetAttributeMapCopy() {
+            Dictionary<String, String> copy = new Dictionary<String, String>();
+            if (attributesAndStyles == null) {
+                return copy;
+            }
+            copy.AddAll(attributesAndStyles);
+            return copy;
         }
 
         /// <summary>
@@ -114,77 +134,6 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private bool DrawInClipPath(SvgDrawContext context) {
-            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
-                String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
-                ISvgNodeRenderer template = context.GetNamedObject(NormalizeName(clipPathName));
-                //Clone template to avoid muddying the state
-                if (template is ClipPathSvgNodeRenderer) {
-                    ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
-                    clipPath.SetClippedRenderer(this);
-                    clipPath.Draw(context);
-                    return !clipPath.GetChildren().IsEmpty();
-                }
-            }
-            return false;
-        }
-
-        private String NormalizeName(String name) {
-            return name.Replace("url(#", "").Replace(")", "").Trim();
-        }
-
-        /// <summary>Operations to perform before drawing an element.</summary>
-        /// <remarks>
-        /// Operations to perform before drawing an element.
-        /// This includes setting stroke color and width, fill color.
-        /// </remarks>
-        /// <param name="context">the svg draw context</param>
-        internal virtual void PreDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null) {
-                PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                if (!partOfClipPath) {
- {
-                        // fill
-                        String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
-                        this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
-                        if (doFill && CanElementFill()) {
-                            Color color = ColorConstants.BLACK;
-                            if (fillRawValue != null) {
-                                color = WebColors.GetRGBColor(fillRawValue);
-                            }
-                            currentCanvas.SetFillColor(color);
-                        }
-                    }
- {
-                        // stroke
-                        String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
-                        if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
-                            DeviceRgb rgbColor = WebColors.GetRGBColor(strokeRawValue);
-                            if (strokeRawValue != null && rgbColor != null) {
-                                currentCanvas.SetStrokeColor(rgbColor);
-                                String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                                float strokeWidth = 1f;
-                                if (strokeWidthRawValue != null) {
-                                    strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
-                                }
-                                currentCanvas.SetLineWidth(strokeWidth);
-                                doStroke = true;
-                            }
-                        }
-                    }
- {
-                        // opacity
-                        String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
-                        if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                            PdfExtGState gs1 = new PdfExtGState();
-                            gs1.SetFillOpacity(float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture));
-                            currentCanvas.SetExtGState(gs1);
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>Method to see if a certain renderer can use fill.</summary>
         /// <returns>true if the renderer can use fill</returns>
         protected internal virtual bool CanElementFill() {
@@ -195,6 +144,32 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>true if the renderer can construct a viewport</returns>
         public virtual bool CanConstructViewPort() {
             return false;
+        }
+
+        /// <summary>
+        /// Make a deep copy of the styles and attributes of this renderer
+        /// Helper method for deep copying logic
+        /// </summary>
+        /// <param name="deepCopy">renderer to insert the deep copied attributes into</param>
+        protected internal virtual void DeepCopyAttributesAndStyles(ISvgNodeRenderer deepCopy) {
+            IDictionary<String, String> stylesDeepCopy = new Dictionary<String, String>();
+            if (this.attributesAndStyles != null) {
+                stylesDeepCopy.AddAll(this.attributesAndStyles);
+                deepCopy.SetAttributesAndStyles(stylesDeepCopy);
+            }
+        }
+
+        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
+        protected internal abstract void DoDraw(SvgDrawContext context);
+
+        internal static float GetAlphaFromRGBA(String value) {
+            try {
+                return WebColors.GetRGBAColor(value)[3];
+            }
+            catch (Exception) {
+                return 1f;
+            }
         }
 
         /// <summary>Calculate the transformation for the viewport based on the context.</summary>
@@ -254,80 +229,112 @@ namespace iText.Svg.Renderers.Impl {
                             currentCanvas.Stroke();
                         }
                     }
-                    currentCanvas.ClosePath();
                 }
-            }
-        }
-
-        // TODO: see if this is necessary DEVSIX-2583
-        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
-        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
-        protected internal abstract void DoDraw(SvgDrawContext context);
-
-        public virtual String GetAttribute(String key) {
-            return attributesAndStyles.Get(key);
-        }
-
-        public virtual void SetAttribute(String key, String value) {
-            if (this.attributesAndStyles == null) {
-                this.attributesAndStyles = new Dictionary<String, String>();
-            }
-            this.attributesAndStyles.Put(key, value);
-        }
-
-        public virtual IDictionary<String, String> GetAttributeMapCopy() {
-            Dictionary<String, String> copy = new Dictionary<String, String>();
-            if (attributesAndStyles == null) {
-                return copy;
-            }
-            copy.AddAll(attributesAndStyles);
-            return copy;
-        }
-
-        public override bool Equals(Object other) {
-            if (other == null || this.GetType() != other.GetType()) {
-                return false;
-            }
-            AbstractSvgNodeRenderer oar = (AbstractSvgNodeRenderer)other;
-            //Compare attribute and style map
-            bool attributesAndStylesEqual = true;
-            if (attributesAndStyles != null && oar.attributesAndStyles != null) {
-                attributesAndStylesEqual &= (attributesAndStyles.Count == oar.attributesAndStyles.Count);
-                foreach (KeyValuePair<String, String> kvp in attributesAndStyles) {
-                    String value = oar.attributesAndStyles.Get(kvp.Key);
-                    if (value == null || !kvp.Value.Equals(value)) {
-                        return false;
-                    }
-                }
-            }
-            else {
-                attributesAndStylesEqual = (attributesAndStyles == null && oar.attributesAndStyles == null);
-            }
-            return attributesAndStylesEqual && doFill == oar.doFill && doStroke == oar.doStroke;
-        }
-
-        public override int GetHashCode() {
-            //No particular reasoning behind this hashing
-            int hash = 112;
-            hash = hash * 3 + attributesAndStyles.GetHashCode();
-            return hash;
-        }
-
-        /// <summary>
-        /// Make a deep copy of the styles and attributes of this renderer
-        /// Helper method for deep copying logic
-        /// </summary>
-        /// <param name="deepCopy">renderer to insert the deep copied attributes into</param>
-        protected internal virtual void DeepCopyAttributesAndStyles(ISvgNodeRenderer deepCopy) {
-            IDictionary<String, String> stylesDeepCopy = new Dictionary<String, String>();
-            if (this.attributesAndStyles != null) {
-                stylesDeepCopy.AddAll(this.attributesAndStyles);
-                deepCopy.SetAttributesAndStyles(stylesDeepCopy);
             }
         }
 
         internal virtual void SetPartOfClipPath(bool value) {
             partOfClipPath = value;
+        }
+
+        /// <summary>Operations to perform before drawing an element.</summary>
+        /// <remarks>
+        /// Operations to perform before drawing an element.
+        /// This includes setting stroke color and width, fill color.
+        /// </remarks>
+        /// <param name="context">the svg draw context</param>
+        internal virtual void PreDraw(SvgDrawContext context) {
+            if (this.attributesAndStyles != null) {
+                PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                PdfExtGState opacityGraphicsState = new PdfExtGState();
+                if (!partOfClipPath) {
+                    float generalOpacity = GetOpacity();
+ {
+                        // fill
+                        String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
+                        this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
+                        if (doFill && CanElementFill()) {
+                            Color rgbColor = ColorConstants.BLACK;
+                            float fillOpacity = generalOpacity;
+                            String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
+                            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                                fillOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+                            }
+                            if (fillRawValue != null) {
+                                fillOpacity *= GetAlphaFromRGBA(fillRawValue);
+                                rgbColor = WebColors.GetRGBColor(fillRawValue);
+                            }
+                            if (!CssUtils.CompareFloats(fillOpacity, 1f)) {
+                                opacityGraphicsState.SetFillOpacity(fillOpacity);
+                            }
+                            currentCanvas.SetFillColor(rgbColor);
+                        }
+                    }
+ {
+                        // stroke
+                        String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
+                        if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
+                            if (strokeRawValue != null) {
+                                Color rgbColor = WebColors.GetRGBColor(strokeRawValue);
+                                float strokeOpacity = generalOpacity;
+                                String opacityValue = GetAttribute(SvgConstants.Attributes.STROKE_OPACITY);
+                                if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                                    strokeOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+                                }
+                                strokeOpacity *= GetAlphaFromRGBA(strokeRawValue);
+                                if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
+                                    opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
+                                }
+                                currentCanvas.SetStrokeColor(rgbColor);
+                                String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
+                                float strokeWidth = 1f;
+                                if (strokeWidthRawValue != null) {
+                                    strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                                }
+                                currentCanvas.SetLineWidth(strokeWidth);
+                                doStroke = true;
+                            }
+                        }
+                    }
+ {
+                        // opacity
+                        if (!opacityGraphicsState.GetPdfObject().IsEmpty()) {
+                            currentCanvas.SetExtGState(opacityGraphicsState);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool DrawInClipPath(SvgDrawContext context) {
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
+                String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
+                ISvgNodeRenderer template = context.GetNamedObject(NormalizeClipPathName(clipPathName));
+                //Clone template to avoid muddying the state
+                if (template is ClipPathSvgNodeRenderer) {
+                    ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
+                    clipPath.SetClippedRenderer(this);
+                    clipPath.Draw(context);
+                    return !clipPath.GetChildren().IsEmpty();
+                }
+            }
+            return false;
+        }
+
+        private String NormalizeClipPathName(String name) {
+            return name.Replace("url(#", "").Replace(")", "").Trim();
+        }
+
+        private float GetOpacity() {
+            float result = 1f;
+            String opacityValue = GetAttribute(SvgConstants.Attributes.OPACITY);
+            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                result = float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            if (parent != null && parent is AbstractSvgNodeRenderer) {
+                result *= ((AbstractSvgNodeRenderer)parent).GetOpacity();
+            }
+            return result;
         }
 
         public abstract ISvgNodeRenderer CreateDeepCopy();

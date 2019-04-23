@@ -55,12 +55,12 @@ namespace iText.Svg.Renderers.Path {
         /// This method sets the coordinates for the path painting operator and does internal
         /// preprocessing, if necessary
         /// </summary>
-        /// <param name="coordinates">an array containing point values for path coordinates</param>
+        /// <param name="inputCoordinates">an array containing point values for path coordinates</param>
         /// <param name="startPoint">
         /// the ending point of the previous operator, or, in broader terms,
         /// the point that the coordinates should be absolutized against, for relative operators
         /// </param>
-        void SetCoordinates(String[] coordinates, Point startPoint);
+        void SetCoordinates(String[] inputCoordinates, Point startPoint);
 
         /// <summary>
         /// Gets the ending point on the canvas after the path shape has been drawn

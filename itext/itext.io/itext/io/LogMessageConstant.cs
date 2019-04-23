@@ -76,6 +76,8 @@ namespace iText.IO {
 
         public const String CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS = "Cannot resolve \"{0}\" role mapping to standard role, because of the too much transitive mappings.";
 
+        public const String CHARACTER_DIRECTION_HAS_NOT_BEEN_DETECTED = "The direction for this character has not been detected: code point {0}. The Other Neutrals algorithm will be used.";
+
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
         public const String COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED = "Collection dictionary already exists. It will be modified.";
@@ -85,6 +87,8 @@ namespace iText.IO {
         public const String COLOR_ALPHA_CHANNEL_IS_IGNORED = "Alpha channel {0} was ignored during color creation. Note that opacity can be achieved in some places by using 'setOpacity' method or 'TransparentColor' class";
 
         public const String COLOR_NOT_PARSED = "Color \"{0}\" was not parsed. It has invalid value. Defaulting to black color.";
+
+        public const String COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT = "The Comb flag may be set only if the MaxLen entry is present in the text field dictionary and if the Multiline, Password, and FileSelect flags are clear.";
 
         public const String COULD_NOT_FIND_GLYPH_WITH_CODE = "Could not find glyph with the following code: {0}";
 
@@ -122,6 +126,8 @@ namespace iText.IO {
         public const String FAILED_TO_DETERMINE_CID_FONT_SUBTYPE = "Failed to determine CIDFont subtype. The type of CIDFont shall be CIDFontType0 or CIDFontType2.";
 
         public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
+
+        public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
 
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
 
@@ -166,6 +172,8 @@ namespace iText.IO {
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
+        public const String IMAGE_MASK_CLEAN_UP_NOT_SUPPORTED = "Partial clean up of transparent images with mask encoded with one of the following filters is not supported: JBIG2Decode, DCTDecode, JPXDecode. Image will become non-transparent.";
+
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
         public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances for form fields";
@@ -193,8 +201,6 @@ namespace iText.IO {
         public const String METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED = "Method {0} is not implemented by default: please, override and implement it. {1} will be used instead.";
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
-
-        public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
@@ -276,6 +282,8 @@ namespace iText.IO {
 
         public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
 
+        public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
+
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 
         public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in unexpected way";
@@ -297,6 +305,8 @@ namespace iText.IO {
         public const String WRITER_ENCRYPTION_IS_IGNORED_APPEND = "Writer encryption will be ignored, because append mode is used. Document will preserve the original encryption (or will stay unencrypted)";
 
         public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
+
+        public const String WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS = "Wrong media box size: {0}. The arguments beyond the 4th will be ignored";
 
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }

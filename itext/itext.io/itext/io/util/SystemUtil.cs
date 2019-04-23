@@ -53,12 +53,16 @@ namespace iText.IO.Util {
     /// </summary>
     public class SystemUtil {
 
-        [Obsolete]
+        [System.ObsoleteAttribute(@"To be removed in iText version 7.2. For time-based seed, please use {@link #getTimeBasedSeed()} instead.")]
         public static long GetSystemTimeTicks() {
             return DateTime.Now.Ticks / 10000 + Environment.TickCount;
         }
 
-        public static int GetTimeBasedSeed() {
+        public static long GetTimeBasedSeed() {
+            return DateTime.Now.Ticks + Environment.TickCount;
+        }
+
+        public static int GetTimeBasedIntSeed() {
             return unchecked((int)DateTime.Now.Ticks) + Environment.TickCount;
         }
 

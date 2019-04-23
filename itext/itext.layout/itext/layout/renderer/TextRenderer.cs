@@ -832,6 +832,8 @@ namespace iText.Layout.Renderer {
                 }
                 bool backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                 canvas.SaveState().SetFillColor(background.GetColor());
+                TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
+                backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
                 canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise - background.GetExtraBottom
                     (), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea
                     .GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());

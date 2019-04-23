@@ -157,6 +157,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Write out the string just uncompressed.</summary>
+        /// <param name="str"/>
         public virtual void WriteString(byte[] str) {
             // Fix for broken tiff files
             int max = uncompData.Length - dstIndex;
@@ -168,6 +169,8 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Add a new string to the string table.</summary>
+        /// <param name="oldString"/>
+        /// <param name="newString"/>
         public virtual void AddStringToTable(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];
@@ -191,6 +194,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Add a new string to the string table.</summary>
+        /// <param name="str"/>
         public virtual void AddStringToTable(byte[] str) {
             // Add this new String to the table
             stringTable[tableIndex++] = str;
@@ -210,6 +214,8 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Append <code>newString</code> to the end of <code>oldString</code>.</summary>
+        /// <param name="oldString"/>
+        /// <param name="newString"/>
         public virtual byte[] ComposeString(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];

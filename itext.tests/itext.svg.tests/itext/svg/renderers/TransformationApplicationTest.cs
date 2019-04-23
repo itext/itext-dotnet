@@ -53,7 +53,7 @@ namespace iText.Svg.Renderers {
     public class TransformationApplicationTest {
         [NUnit.Framework.Test]
         public virtual void NormalDrawTest() {
-            byte[] expected = "1 0 0 1 7.5 0 cm\n0 0 0 rg\nf\nh\n".GetBytes(Encoding.UTF8);
+            byte[] expected = "1 0 0 1 7.5 0 cm\n0 0 0 rg\nf\n".GetBytes(Encoding.UTF8);
             ISvgNodeRenderer nodeRenderer = new _AbstractSvgNodeRenderer_68();
             // do nothing
             IDictionary<String, String> attributeMap = new Dictionary<String, String>();

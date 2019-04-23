@@ -155,10 +155,16 @@ namespace iText.Pdfa {
         }
 
         public override void CheckIsoConformance(Object obj, IsoKey key) {
-            CheckIsoConformance(obj, key, null);
+            CheckIsoConformance(obj, key, null, null);
         }
 
+        [Obsolete]
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources) {
+            CheckIsoConformance(obj, key, resources, null);
+        }
+
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            ) {
             CanvasGraphicsState gState;
             PdfDictionary currentColorSpaces = null;
             if (resources != null) {
@@ -187,13 +193,13 @@ namespace iText.Pdfa {
 
                 case IsoKey.EXTENDED_GRAPHICS_STATE: {
                     gState = (CanvasGraphicsState)obj;
-                    checker.CheckExtGState(gState);
+                    checker.CheckExtGState(gState, contentStream);
                     break;
                 }
 
                 case IsoKey.FILL_COLOR: {
                     gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
+                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true, contentStream);
                     break;
                 }
 
@@ -204,12 +210,17 @@ namespace iText.Pdfa {
 
                 case IsoKey.STROKE_COLOR: {
                     gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
+                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
                     break;
                 }
 
                 case IsoKey.TAG_STRUCTURE_ELEMENT: {
                     checker.CheckTagStructureElement((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT_GLYPHS: {
+                    checker.CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
                     break;
                 }
             }

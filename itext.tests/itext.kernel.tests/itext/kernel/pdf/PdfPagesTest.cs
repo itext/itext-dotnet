@@ -44,8 +44,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
@@ -437,6 +439,25 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(TestPageTreeParentsValid(src) && TestPageTreeParentsValid(dest));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PdfNumberInPageContentArrayTest() {
+            String src = sourceFolder + "pdfNumberInPageContentArray.pdf";
+            String dest = destinationFolder + "pdfNumberInPageContentArray_saved.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            pdfDoc.Close();
+            // test is mainly to ensure document is successfully opened-and-closed without exceptions
+            pdfDoc = new PdfDocument(new PdfReader(dest));
+            PdfObject pageDictWithInvalidContents = pdfDoc.GetPdfObject(10);
+            PdfArray invalidContentsArray = ((PdfDictionary)pageDictWithInvalidContents).GetAsArray(PdfName.Contents);
+            NUnit.Framework.Assert.AreEqual(5, invalidContentsArray.Size());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(0).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(1).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(2).IsStream());
+            NUnit.Framework.Assert.IsFalse(invalidContentsArray.Get(3).IsStream());
+            NUnit.Framework.Assert.IsTrue(invalidContentsArray.Get(4).IsStream());
+        }
+
         /// <exception cref="iText.IO.IOException"/>
         /// <exception cref="System.IO.IOException"/>
         private bool TestPageTreeParentsValid(String src) {
@@ -458,6 +479,53 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return valid;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestExcessiveXrefEntriesForCopyXObject() {
+            PdfDocument inputPdf = new PdfDocument(new PdfReader(sourceFolder + "input500.pdf"));
+            PdfDocument outputPdf = new PdfDocument(new PdfWriter(destinationFolder + "output500.pdf"));
+            float scaleX = 595f / 612f;
+            float scaleY = 842f / 792f;
+            for (int i = 1; i <= inputPdf.GetNumberOfPages(); ++i) {
+                PdfPage sourcePage = inputPdf.GetPage(i);
+                PdfFormXObject pageCopy = sourcePage.CopyAsFormXObject(outputPdf);
+                PdfPage page = outputPdf.AddNewPage(PageSize.A4);
+                PdfCanvas outputCanvas = new PdfCanvas(page);
+                outputCanvas.AddXObject(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
+                page.Flush();
+            }
+            outputPdf.Close();
+            inputPdf.Close();
+            NUnit.Framework.Assert.IsNotNull(outputPdf.GetXref());
+            NUnit.Framework.Assert.AreEqual(500, outputPdf.GetXref().Size() - inputPdf.GetXref().Size());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
+        public virtual void PageGetMediaBoxTooManyArgumentsTest() {
+            PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxTooManyArguments.pdf");
+            Rectangle expected = new Rectangle(0, 0, 375, 300);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfPage pageOne = pdfDoc.GetPage(1);
+            Rectangle actual = pageOne.GetPageSize();
+            NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PageGetMediaBoxNotEnoughArgumentsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxNotEnoughArguments.pdf");
+                PdfDocument pdfDoc = new PdfDocument(reader);
+                PdfPage pageOne = pdfDoc.GetPage(1);
+                Rectangle actual = pageOne.GetPageSize();
+                NUnit.Framework.Assert.Fail("Exception was not thrown");
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)))
+;
         }
     }
 }

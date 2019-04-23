@@ -41,6 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Util;
+using iText.Svg;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Utils {
     /// <summary>Class containing utility methods for text operations in the context of SVG processing</summary>
@@ -71,7 +76,7 @@ namespace iText.Svg.Utils {
         }
 
         /// <summary>Trim all the trailing whitespace characters from the passed string</summary>
-        /// <param name="toTrim">string to trom</param>
+        /// <param name="toTrim">string to trim</param>
         /// <returns>string with al trailing whitespace characters removed</returns>
         public static String TrimTrailingWhitespace(String toTrim) {
             if (toTrim == null) {
@@ -100,6 +105,91 @@ namespace iText.Svg.Utils {
             else {
                 return toTrim;
             }
+        }
+
+        /// <summary>Process the whitespace inside the Text Tree.</summary>
+        /// <remarks>
+        /// Process the whitespace inside the Text Tree.
+        /// Whitespace is collapsed and new lines are handled
+        /// A leading element in each subtree is handled different: the preceding whitespace is trimmed instead of kept
+        /// </remarks>
+        /// <param name="root">root of the text-renderer subtree</param>
+        /// <param name="isLeadingElement">true if this element is a leading element(either the first child or the first element after an absolute position change)
+        ///     </param>
+        public static void ProcessWhiteSpace(TextSvgBranchRenderer root, bool isLeadingElement) {
+            // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
+            // tab/space indented xml files will retain their tabs and spaces.
+            // The following regex replaces all whitespace with a single space.
+            bool performLeadingTrim = isLeadingElement;
+            foreach (ISvgTextNodeRenderer child in root.GetChildren()) {
+                //If leaf, process contents, if branch, call function again
+                if (child is TextSvgBranchRenderer) {
+                    //Branch processing
+                    ProcessWhiteSpace((TextSvgBranchRenderer)child, child.ContainsAbsolutePositionChange());
+                    ((TextSvgBranchRenderer)child).MarkWhiteSpaceProcessed();
+                }
+                if (child is TextLeafSvgNodeRenderer) {
+                    //Leaf processing
+                    TextLeafSvgNodeRenderer leafRend = (TextLeafSvgNodeRenderer)child;
+                    //Process text
+                    String toProcess = leafRend.GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
+                    toProcess = iText.IO.Util.StringUtil.ReplaceAll(toProcess, "\\s+", " ");
+                    toProcess = WhiteSpaceUtil.CollapseConsecutiveSpaces(toProcess);
+                    if (performLeadingTrim) {
+                        //Trim leading white spaces
+                        toProcess = TrimLeadingWhitespace(toProcess);
+                        toProcess = TrimTrailingWhitespace(toProcess);
+                        performLeadingTrim = false;
+                    }
+                    else {
+                        //only collapse whitespace
+                        toProcess = TrimTrailingWhitespace(toProcess);
+                    }
+                    leafRend.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, toProcess);
+                }
+            }
+        }
+
+        /// <summary>Check if the String is only composed of whitespace characters</summary>
+        /// <param name="s">string to check</param>
+        /// <returns>true if the string only contains whitespace characters, false otherwise</returns>
+        public static bool IsOnlyWhiteSpace(String s) {
+            String trimmedText = iText.IO.Util.StringUtil.ReplaceAll(s, "\\s+", " ");
+            //Trim leading whitespace
+            trimmedText = iText.Svg.Utils.SvgTextUtil.TrimLeadingWhitespace(trimmedText);
+            //Trim trailing whitespace
+            trimmedText = iText.Svg.Utils.SvgTextUtil.TrimTrailingWhitespace(trimmedText);
+            return trimmedText.Equals("");
+        }
+
+        /// <summary>Resolve the font size stored inside the passed renderer</summary>
+        /// <param name="renderer">renderer containing the font size declaration</param>
+        /// <param name="parentFontSize">parent font size to fall back on if the renderer does not contain a font size declarations or if the stored declaration is invalid
+        ///     </param>
+        /// <returns>float containing the font-size, or the parent font size if the renderer's declaration cannot be resolved
+        ///     </returns>
+        public static float ResolveFontSize(ISvgTextNodeRenderer renderer, float parentFontSize) {
+            //Use own font-size declaration if it is present, parent's otherwise
+            float fontSize = iText.Svg.Utils.SvgTextUtil.ExtractFontSize(renderer);
+            if ((float.IsNaN(fontSize)) || fontSize < 0f) {
+                fontSize = parentFontSize;
+            }
+            return fontSize;
+        }
+
+        /// <summary>Extract and parse the font-size declaration stored inside the attributes of the passed renderer</summary>
+        /// <param name="renderer">renderer to extract font-size declaration from</param>
+        /// <returns>a float containing the font-size interpreted as pt, or NaN if the font-size was not specified in the passed renderer
+        ///     </returns>
+        private static float ExtractFontSize(ISvgTextNodeRenderer renderer) {
+            float fontSize = float.NaN;
+            if (renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE) != null) {
+                String fontSizeRawValue = renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE);
+                if (fontSizeRawValue != null && !String.IsNullOrEmpty(fontSizeRawValue)) {
+                    fontSize = CssUtils.ParseAbsoluteLength(fontSizeRawValue, CommonCssConstants.PT);
+                }
+            }
+            return fontSize;
         }
     }
 }

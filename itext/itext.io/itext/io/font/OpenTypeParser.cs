@@ -425,9 +425,9 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
-            TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs, directoryOffset, true, 
-                !subset);
+        internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
+            TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs, directoryOffset, subset
+                );
             return sb.Process();
         }
 

@@ -96,10 +96,19 @@ namespace iText.IO.Font.Otf {
                     continue;
                 }
                 int markClass = omr.markClass;
+                int xPlacement = 0;
+                int yPlacement = 0;
                 GposAnchor baseAnchor = gpas[markClass];
+                if (baseAnchor != null) {
+                    xPlacement = baseAnchor.XCoordinate;
+                    yPlacement = baseAnchor.YCoordinate;
+                }
                 GposAnchor markAnchor = omr.anchor;
-                line.Set(line.idx, new Glyph(line.Get(line.idx), -markAnchor.XCoordinate + baseAnchor.XCoordinate, -markAnchor
-                    .YCoordinate + baseAnchor.YCoordinate, 0, 0, gi.idx - line.idx));
+                if (markAnchor != null) {
+                    xPlacement -= markAnchor.XCoordinate;
+                    yPlacement -= markAnchor.YCoordinate;
+                }
+                line.Set(line.idx, new Glyph(line.Get(line.idx), xPlacement, yPlacement, 0, 0, gi.idx - line.idx));
                 changed = true;
                 break;
             }

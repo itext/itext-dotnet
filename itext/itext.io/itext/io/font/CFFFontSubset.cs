@@ -294,7 +294,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Read the FDArray count, offsize and Offset array</summary>
-        /// <param name="Font"/>
+        /// <param name="Font">the Number of font being processed</param>
         protected internal virtual void ReadFDArray(int Font) {
             Seek(fonts[Font].fdarrayOffset);
             fonts[Font].FDArrayCount = GetCard16();
@@ -349,6 +349,15 @@ namespace iText.IO.Font {
         }
 
         // empty on purpose
+        /// <summary>
+        /// The Process function extracts one font out of the CFF file and returns a
+        /// subset version of the original with the first name.
+        /// </summary>
+        /// <returns>The new font stream</returns>
+        public virtual byte[] Process() {
+            return Process(GetNames()[0]);
+        }
+
         /// <summary>
         /// Function calcs bias according to the CharString type and the count
         /// of the subrs
@@ -590,6 +599,7 @@ namespace iText.IO.Font {
         /// <param name="LBias">the bias of the Local Subrs</param>
         /// <param name="hSubr">the Map for the lSubrs</param>
         /// <param name="lSubr">the list for the lSubrs</param>
+        /// <param name="LSubrsOffsets"/>
         protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias, ICollection<int> hSubr
             , IList<int> lSubr, int[] LSubrsOffsets) {
             // Clear the stack for the subrs

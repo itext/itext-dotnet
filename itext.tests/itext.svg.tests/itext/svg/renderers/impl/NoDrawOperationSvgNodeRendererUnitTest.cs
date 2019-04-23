@@ -41,9 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg;
 using iText.Svg.Exceptions;
-using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     public class NoDrawOperationSvgNodeRendererUnitTest {
@@ -55,14 +53,6 @@ namespace iText.Svg.Renderers.Impl {
             }
             , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgLogMessageConstant.DRAW_NO_DRAW))
 ;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DeepCopyTest() {
-            NoDrawOperationSvgNodeRenderer expected = new NoDrawOperationSvgNodeRenderer();
-            expected.SetAttribute(SvgConstants.Attributes.FILL, "blue");
-            ISvgNodeRenderer actual = expected.CreateDeepCopy();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }
 }

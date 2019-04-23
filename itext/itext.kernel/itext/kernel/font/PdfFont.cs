@@ -390,13 +390,11 @@ namespace iText.Kernel.Font {
         /// <remarks>
         /// Indicates if all the glyphs and widths for that particular
         /// encoding should be included in the document. When set to <CODE>true</CODE>
-        /// only the glyphs used will be included in the font. When set to <CODE>false</CODE>
-        /// and
-        /// <see cref="AddSubsetRange(int[])"/>
-        /// was not called the full font will be included
-        /// otherwise just the characters ranges will be included.
+        /// only the glyphs used will be included in the font. When set to <CODE>false&lt;/CODE
+        /// the full font will be included and all subset ranges will be removed.
         /// </remarks>
         /// <param name="subset">new value of property subset</param>
+        /// <seealso cref="AddSubsetRange(int[])"/>
         public virtual void SetSubset(bool subset) {
             this.subset = subset;
         }
@@ -406,6 +404,8 @@ namespace iText.Kernel.Font {
         /// Adds a character range when subsetting. The range is an <CODE>int</CODE> array
         /// where the first element is the start range inclusive and the second element is the
         /// end range inclusive. Several ranges are allowed in the same array.
+        /// Note, #setSubset(true) will be called implicitly
+        /// therefore this range is an addition to the used glyphs.
         /// </remarks>
         /// <param name="range">the character range</param>
         public virtual void AddSubsetRange(int[] range) {
@@ -413,6 +413,7 @@ namespace iText.Kernel.Font {
                 subsetRanges = new List<int[]>();
             }
             subsetRanges.Add(range);
+            SetSubset(true);
         }
 
         public virtual IList<String> SplitString(String text, float fontSize, float maxWidth) {
@@ -493,6 +494,9 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subset.</summary>
+        /// <param name="fontName"/>
+        /// <param name="isSubset"/>
+        /// <param name="isEmbedded"/>
         /// <returns>the font name with subset prefix if isSubset and isEmbedded are true.s</returns>
         protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
             if (isSubset && isEmbedded) {
@@ -542,6 +546,7 @@ namespace iText.Kernel.Font {
             return fontStream;
         }
 
+        [System.ObsoleteAttribute(@"The logic has been moved to iText.IO.Font.TrueTypeFont .")]
         protected internal static int[] CompactRanges(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
             foreach (int[] range in ranges) {

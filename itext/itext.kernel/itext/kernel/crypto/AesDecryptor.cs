@@ -56,6 +56,9 @@ namespace iText.Kernel.Crypto {
         private int ivptr;
 
         /// <summary>Creates a new instance of AesDecryption</summary>
+        /// <param name="key"/>
+        /// <param name="off"/>
+        /// <param name="len"/>
         public AesDecryptor(byte[] key, int off, int len) {
             this.key = new byte[len];
             Array.Copy(key, off, this.key, 0, len);

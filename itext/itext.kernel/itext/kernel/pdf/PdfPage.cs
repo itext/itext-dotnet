@@ -66,8 +66,18 @@ namespace iText.Kernel.Pdf {
 
         internal PdfPages parentPages;
 
-        private IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.Parent, PdfName.Annots
-            , PdfName.StructParents, PdfName.B));
+        private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
+            .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
+
+        private static readonly IList<PdfName> XOBJECT_EXCLUDED_KEYS;
+
+        static PdfPage() {
+            // This key contains reference to all articles, while this articles could reference to lots of pages.
+            // See DEVSIX-191
+            XOBJECT_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
+                .TrimBox, PdfName.Contents));
+            XOBJECT_EXCLUDED_KEYS.AddAll(PAGE_EXCLUDED_KEYS);
+        }
 
         /// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )</summary>
         private bool ignorePageRotationForContent = false;
@@ -81,8 +91,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfPage(PdfDictionary pdfObject)
             : base(pdfObject) {
-            // This key contains reference to all articles, while this articles could reference to lots of pages.
-            // See DEVSIX-191
             SetForbidRelease();
             EnsureObjectIsAddedToDocument(pdfObject);
         }
@@ -190,7 +198,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// 
         /// <see cref="PdfStream"/>
-        /// object at specified index.
+        /// object at specified index;
+        /// will return null in case page dictionary doesn't adhere to the specification, meaning that the document is an invalid PDF.
         /// </returns>
         /// <exception cref="System.IndexOutOfRangeException">if the index is out of range</exception>
         public virtual PdfStream GetContentStream(int index) {
@@ -205,7 +214,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (contents is PdfArray) {
                     PdfArray a = (PdfArray)contents;
-                    return (PdfStream)a.Get(index);
+                    return a.GetAsStream(index);
                 }
                 else {
                     return null;
@@ -489,7 +498,7 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
-            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
+            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
             iText.Kernel.Pdf.PdfPage page = new iText.Kernel.Pdf.PdfPage(dictionary);
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
@@ -530,12 +539,17 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
-            IList<PdfName> excludedKeys = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
-                .Contents));
-            excludedKeys.AddAll(this.excludedKeys);
-            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
+            foreach (PdfName key in GetPdfObject().KeySet()) {
+                if (XOBJECT_EXCLUDED_KEYS.Contains(key)) {
+                    continue;
+                }
+                PdfObject obj = GetPdfObject().Get(key);
+                if (!xObject.GetPdfObject().ContainsKey(key)) {
+                    PdfObject copyObj = obj.CopyTo(toDocument, false);
+                    xObject.GetPdfObject().Put(key, copyObj);
+                }
+            }
             xObject.GetPdfObject().GetOutputStream().Write(GetContentBytes());
-            xObject.GetPdfObject().MergeDifferent(dictionary);
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
                 PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true);
@@ -618,7 +632,10 @@ namespace iText.Kernel.Pdf {
             }
             int contentStreamCount = GetContentStreamCount();
             for (int i = 0; i < contentStreamCount; i++) {
-                GetContentStream(i).Flush(false);
+                PdfStream contentStream = GetContentStream(i);
+                if (contentStream != null) {
+                    contentStream.Flush(false);
+                }
             }
             resources = null;
             base.Flush();
@@ -644,8 +661,18 @@ namespace iText.Kernel.Pdf {
             if (mediaBox == null) {
                 throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
             }
-            if (mediaBox.Size() != 4) {
-                throw new PdfException(PdfException.WrongMediaBoxSize1).SetMessageParams(mediaBox.Size());
+            int mediaBoxSize;
+            if ((mediaBoxSize = mediaBox.Size()) != 4) {
+                if (mediaBoxSize > 4) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                    if (logger.IsErrorEnabled) {
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, 
+                            mediaBoxSize));
+                    }
+                }
+                if (mediaBoxSize < 4) {
+                    throw new PdfException(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS).SetMessageParams(mediaBox.Size());
+                }
             }
             PdfNumber llx = mediaBox.GetAsNumber(0);
             PdfNumber lly = mediaBox.GetAsNumber(1);
@@ -943,11 +970,19 @@ namespace iText.Kernel.Pdf {
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
+                    if (annot == null) {
+                        continue;
+                    }
                     PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(annot);
-                    // PdfAnnotation.makeAnnotation returns null if annotation SubType is not recognized or not present at all
-                    // (although SubType is required according to the spec)
-                    if (annotation != null) {
-                        annotations.Add(annotation.SetPage(this));
+                    if (annotation == null) {
+                        continue;
+                    }
+                    bool hasBeenNotModified = annot.GetIndirectReference() != null && !annot.GetIndirectReference().CheckState
+                        (PdfObject.MODIFIED);
+                    annotations.Add(annotation.SetPage(this));
+                    if (hasBeenNotModified) {
+                        annot.GetIndirectReference().ClearState(PdfObject.MODIFIED);
+                        annot.GetIndirectReference().ClearState(PdfObject.FORBID_RELEASE);
                     }
                 }
             }
@@ -1015,7 +1050,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <br/>
+        /// the added annotation will be autotagged. <p>
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )

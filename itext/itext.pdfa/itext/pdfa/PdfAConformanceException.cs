@@ -176,7 +176,8 @@ namespace iText.Pdfa {
         public const String IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
              = "If specified rendering shall be one of the following relativecolorimetric absolutecolorimetric perceptual or saturation";
 
-        public const String IF_THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_TRANSPARENCY_IS_FORBIDDEN = "If the document does not contain a pdfa outputintent transparency is forbidden";
+        public const String THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+             = "If the document does not contain a OutputIntent, then page with transparency shall include the dictionary with Group key that include a CS with blending colour space";
 
         public const String JPEG2000_ENUMERATED_COLOUR_SPACE_19_CIEJAB_SHALL_NOT_BE_USED = "jpeg2000 enumerated colour space 19 (CIEJab) shall not be used";
 
@@ -263,6 +264,9 @@ namespace iText.Pdfa {
              = "Value of name entry shall be unique among all optional content configuration dictionaries";
 
         public const String WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY = "Widget annotation dictionary or field dictionary shall not include a or aa entry";
+
+        [Obsolete]
+        public const String IF_THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_TRANSPARENCY_IS_FORBIDDEN = "If the document does not contain a pdfa outputintent transparency is forbidden";
 
         /// <summary>Creates a PdfAConformanceException.</summary>
         /// <param name="message">the error message</param>

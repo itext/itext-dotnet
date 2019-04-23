@@ -93,7 +93,4 @@
       <LogicalName>iText.Hyph.External.classes.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
-  </ItemGroup>
 </Project>

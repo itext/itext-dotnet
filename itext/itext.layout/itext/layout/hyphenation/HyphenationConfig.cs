@@ -103,6 +103,7 @@ namespace iText.Layout.Hyphenation {
         /// <see langword="null"/>
         /// if no hyphenation points are found.
         /// </returns>
+        /// <param name="word">Tee word to hyphenate</param>
         public virtual iText.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
             return hyphenator != null ? hyphenator.Hyphenate(word) : null;
         }

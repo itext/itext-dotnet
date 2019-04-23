@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7.font-asian</id>
-    <version>7.1.5</version>
+    <version>7.1.6</version>
     <title>iText 7 Asian Font</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -16,11 +16,6 @@
     <copyright>Copyright (c) 1998-2019 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf asian font-asian</tags>
-    <dependencies>
-      <group targetFramework="netstandard1.6">
-        <dependency id="NETStandard.Library" version="1.6.1" />
-      </group>
-    </dependencies>
   </metadata>
   <files>
 	<file src="bin\Release\net40\itext.font_asian.dll" target="lib\net40" />

@@ -46,19 +46,18 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements moveTo(M) attribute of SVG's path element</summary>
     public class MoveTo : AbstractPathShape {
-        private String[] coordinates;
+        internal const int ARGUMENT_SIZE = 2;
 
         public MoveTo()
             : this(false) {
         }
 
-        public MoveTo(bool relative) {
-            this.relative = relative;
+        public MoveTo(bool relative)
+            : base(relative) {
         }
 
         public override void Draw(PdfCanvas canvas) {
@@ -67,24 +66,16 @@ namespace iText.Svg.Renderers.Path.Impl {
             canvas.MoveTo(x, y);
         }
 
-        public override void SetCoordinates(String[] coordinates, Point startPoint) {
-            if (coordinates.Length == 0 || coordinates.Length % 2 != 0) {
+        public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
+            if (inputCoordinates.Length != ARGUMENT_SIZE) {
                 throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
                     , JavaUtil.ArraysToString(coordinates)));
             }
-            if (coordinates.Length > 2) {
-                // (x y)+ parameters will be implemented in the future
-                throw new NotSupportedException();
-            }
-            this.coordinates = new String[] { coordinates[0], coordinates[1] };
+            this.coordinates = new String[] { inputCoordinates[0], inputCoordinates[1] };
             if (IsRelative()) {
-                this.coordinates = SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(coordinates, new double[] { 
-                    startPoint.x, startPoint.y });
+                this.coordinates = copier.MakeCoordinatesAbsolute(coordinates, new double[] { startPoint.x, startPoint.y }
+                    );
             }
-        }
-
-        public override Point GetEndingPoint() {
-            return CreatePoint(coordinates[0], coordinates[1]);
         }
     }
 }

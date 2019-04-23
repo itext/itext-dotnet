@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.1.5</version>
+    <version>7.1.6</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -15,7 +15,7 @@
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2019 iText Group NV</copyright>
     <language>en-US</language>
-    <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
+    <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core</tags>
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Common.Logging" version="3.4.1" />
@@ -24,7 +24,6 @@
       <group targetFramework="netstandard1.6">
         <dependency id="Common.Logging" version="3.4.1" />
         <dependency id="Portable.BouncyCastle" version="1.8.1.3" />
-        <dependency id="NETStandard.Library" version="1.6.1" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />

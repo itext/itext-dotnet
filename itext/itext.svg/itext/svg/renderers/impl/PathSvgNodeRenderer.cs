@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -61,13 +60,7 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;path&gt; tag.
     /// </summary>
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
-        private const String SEPARATOR = "";
-
         private const String SPACE_CHAR = " ";
-
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PathSvgNodeRenderer));
-
-        private const int MOVETOARGUMENTNR = 2;
 
         /// <summary>
         /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
@@ -85,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>
         /// is called before the use of this expression in
-        /// <see cref="ParsePropertiesAndStyles()"/>
+        /// <see cref="ParsePathOperations()"/>
         /// the attribute to be split is valid.
         /// The regex splits at each letter.
         /// </summary>
@@ -95,13 +88,11 @@ namespace iText.Svg.Renderers.Impl {
         /// The
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// representing the current point in the path to be used for relative pathing operations.
-        /// The original value is
-        /// <see langword="null"/>
-        /// , and must be set via a
+        /// The original value is the origin, and should be set via a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
         /// operation before it may be referenced.
         /// </summary>
-        private Point currentPoint = null;
+        private Point currentPoint = new Point(0, 0);
 
         /// <summary>
         /// The
@@ -113,7 +104,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <see langword="null"/>
         /// , and must be set via a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
-        /// operation before it may drawn.
+        /// operation before it may be drawn.
         /// </summary>
         private ClosePath zOperator = null;
 
@@ -154,14 +145,13 @@ namespace iText.Svg.Renderers.Impl {
                 return null;
             }
             String[] shapeCoordinates = null;
-            String[] operatorArgs = JavaUtil.ArraysCopyOfRange(pathProperties, 1, pathProperties.Length);
-            if (shape is SmoothSCurveTo) {
+            if (shape is SmoothSCurveTo || shape is QuadraticSmoothCurveTo) {
                 String[] startingControlPoint = new String[2];
                 if (previousShape != null) {
                     Point previousEndPoint = previousShape.GetEndingPoint();
-                    //if the previous command was a C or S use its last control point
-                    if (((previousShape is CurveTo))) {
-                        Point lastControlPoint = ((CurveTo)previousShape).GetLastControlPoint();
+                    //if the previous command was a Bézier curve, use its last control point
+                    if (previousShape is IControlPointCurve) {
+                        Point lastControlPoint = ((IControlPointCurve)previousShape).GetLastControlPoint();
                         float reflectedX = (float)(2 * previousEndPoint.GetX() - lastControlPoint.GetX());
                         float reflectedY = (float)(2 * previousEndPoint.GetY() - lastControlPoint.GetY());
                         startingControlPoint[0] = SvgCssUtils.ConvertFloatToString(reflectedX);
@@ -174,13 +164,13 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 else {
                     // TODO RND-951
-                    startingControlPoint[0] = pathProperties[1];
-                    startingControlPoint[1] = pathProperties[2];
+                    startingControlPoint[0] = pathProperties[0];
+                    startingControlPoint[1] = pathProperties[1];
                 }
-                shapeCoordinates = Concatenate(startingControlPoint, operatorArgs);
+                shapeCoordinates = Concatenate(startingControlPoint, pathProperties);
             }
             if (shapeCoordinates == null) {
-                shapeCoordinates = operatorArgs;
+                shapeCoordinates = pathProperties;
             }
             return shapeCoordinates;
         }
@@ -209,39 +199,68 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         private IList<IPathShape> ProcessPathOperator(String[] pathProperties, IPathShape previousShape) {
             IList<IPathShape> shapes = new List<IPathShape>();
-            if (pathProperties.Length == 0 || pathProperties[0].Equals(SEPARATOR)) {
+            if (pathProperties.Length == 0 || String.IsNullOrEmpty(pathProperties[0]) || SvgPathShapeFactory.GetArgumentCount
+                (pathProperties[0]) < 0) {
                 return shapes;
             }
-            //Implements (absolute) command value only
-            //TODO implement relative values e. C(absolute), c(relative)
-            IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0]);
-            String[] shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, pathProperties);
-            if (pathShape is ClosePath) {
-                if (previousShape != null) {
-                    pathShape = zOperator;
-                }
-                else {
+            int argumentCount = SvgPathShapeFactory.GetArgumentCount(pathProperties[0]);
+            if (argumentCount == 0) {
+                // closePath operator
+                if (previousShape == null) {
                     throw new SvgProcessingException(SvgLogMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
                 }
+                shapes.Add(zOperator);
+                currentPoint = zOperator.GetEndingPoint();
+                return shapes;
             }
-            else {
+            for (int index = 1; index < pathProperties.Length; index += argumentCount) {
+                if (index + argumentCount > pathProperties.Length) {
+                    break;
+                }
+                IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0]);
                 if (pathShape is MoveTo) {
-                    zOperator = new ClosePath(pathShape.IsRelative());
-                    if (shapeCoordinates != null && shapeCoordinates.Length != MOVETOARGUMENTNR) {
-                        LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATH_WRONG_NUMBER_OF_ARGUMENTS, pathProperties[
-                            0], shapeCoordinates.Length, MOVETOARGUMENTNR, MOVETOARGUMENTNR));
+                    shapes.AddAll(AddMoveToShapes(pathShape, pathProperties));
+                    return shapes;
+                }
+                String[] shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, JavaUtil.ArraysCopyOfRange(pathProperties
+                    , index, index + argumentCount));
+                if (pathShape != null) {
+                    if (shapeCoordinates != null) {
+                        pathShape.SetCoordinates(shapeCoordinates, currentPoint);
                     }
-                    zOperator.SetCoordinates(shapeCoordinates, currentPoint);
+                    currentPoint = pathShape.GetEndingPoint();
+                    // unsupported operators are ignored.
+                    shapes.Add(pathShape);
                 }
+                previousShape = pathShape;
             }
-            if (pathShape != null) {
-                if (shapeCoordinates != null) {
-                    // Cast will be removed when the method is introduced in the interface
-                    pathShape.SetCoordinates(shapeCoordinates, currentPoint);
+            return shapes;
+        }
+
+        private IList<IPathShape> AddMoveToShapes(IPathShape pathShape, String[] pathProperties) {
+            IList<IPathShape> shapes = new List<IPathShape>();
+            int argumentCount = 2;
+            String[] shapeCoordinates = GetShapeCoordinates(pathShape, null, JavaUtil.ArraysCopyOfRange(pathProperties
+                , 1, 3));
+            zOperator = new ClosePath(pathShape.IsRelative());
+            zOperator.SetCoordinates(shapeCoordinates, currentPoint);
+            pathShape.SetCoordinates(shapeCoordinates, currentPoint);
+            currentPoint = pathShape.GetEndingPoint();
+            shapes.Add(pathShape);
+            IPathShape previousShape = pathShape;
+            if (pathProperties.Length > 3) {
+                for (int index = 3; index < pathProperties.Length; index += argumentCount) {
+                    if (index + 2 > pathProperties.Length) {
+                        break;
+                    }
+                    pathShape = pathShape.IsRelative() ? SvgPathShapeFactory.CreatePathShape("l") : SvgPathShapeFactory.CreatePathShape
+                        ("L");
+                    shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, JavaUtil.ArraysCopyOfRange(pathProperties
+                        , index, index + 2));
+                    pathShape.SetCoordinates(shapeCoordinates, previousShape.GetEndingPoint());
+                    shapes.Add(pathShape);
+                    previousShape = pathShape;
                 }
-                currentPoint = pathShape.GetEndingPoint();
-                // unsupported operators are ignored.
-                shapes.Add(pathShape);
             }
             return shapes;
         }
@@ -267,8 +286,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
         /// that should be drawn to represent the path.
         /// </returns>
-        private ICollection<IPathShape> GetShapes() {
-            ICollection<String> parsedResults = ParsePropertiesAndStyles();
+        internal virtual ICollection<IPathShape> GetShapes() {
+            ICollection<String> parsedResults = ParsePathOperations();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {
                 String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, " +");
@@ -290,9 +309,12 @@ namespace iText.Svg.Renderers.Impl {
             return SvgRegexUtils.ContainsAtLeastOneMatch(invalidRegexPattern, attributes);
         }
 
-        private ICollection<String> ParsePropertiesAndStyles() {
-            StringBuilder result = new StringBuilder();
+        internal virtual ICollection<String> ParsePathOperations() {
+            ICollection<String> result = new List<String>();
             String attributes = attributesAndStyles.Get(SvgConstants.Attributes.D);
+            if (attributes == null) {
+                throw new SvgProcessingException(SvgExceptionMessageConstant.PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE);
+            }
             if (ContainsInvalidAttributes(attributes)) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
                     (attributes);
@@ -300,19 +322,16 @@ namespace iText.Svg.Renderers.Impl {
             String[] coordinates = iText.IO.Util.StringUtil.Split(attributes, SPLIT_REGEX);
             //gets an array attributesAr of {M 100 100, L 300 100, L200, 300, z}
             foreach (String inst in coordinates) {
-                if (!inst.Equals(SEPARATOR)) {
-                    String instTrim = inst.Trim();
-                    String instruction = instTrim[0] + SPACE_CHAR;
-                    String temp = instruction + instTrim.Replace(instTrim[0] + SEPARATOR, SEPARATOR).Replace(",", SPACE_CHAR).
-                        Trim();
+                String instTrim = inst.Trim();
+                if (!String.IsNullOrEmpty(instTrim)) {
+                    char instruction = instTrim[0];
+                    String temp = instruction + SPACE_CHAR + instTrim.Substring(1).Replace(",", SPACE_CHAR).Trim();
                     //Do a run-through for decimal point separation
                     temp = SeparateDecimalPoints(temp);
-                    result.Append(SPACE_CHAR);
-                    result.Append(temp);
+                    result.Add(temp);
                 }
             }
-            String[] resultArray = iText.IO.Util.StringUtil.Split(result.ToString(), SPLIT_REGEX);
-            return new List<String>(JavaUtil.ArraysAsList(resultArray));
+            return result;
         }
 
         /// <summary>Iterate over the input string and to seperate</summary>

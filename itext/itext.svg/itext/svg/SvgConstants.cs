@@ -364,6 +364,12 @@ namespace iText.Svg {
             /// <summary>Attribute defining the outline of a shape.</summary>
             public const String D = "d";
 
+            /// <summary>Attribute defining the relative x-translation of a text-element</summary>
+            public const String DX = "dx";
+
+            /// <summary>Attribute defining the relative y-translation of a text-element</summary>
+            public const String DY = "dy";
+
             /// <summary>Attribute defining the fill color.</summary>
             public const String FILL = "fill";
 
@@ -409,6 +415,9 @@ namespace iText.Svg {
 
             /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
             public const String RY = "ry";
+
+            /// <summary>Attribute defining the opacity of a group or graphic element.</summary>
+            public const String OPACITY = "opacity";
 
             /// <summary>Close Path Operator.</summary>
             public const String PATH_DATA_CLOSE_PATH = "Z";
@@ -512,6 +521,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the text content of a text node.</summary>
             public const String TEXT_CONTENT = "text_content";
 
+            /// <summary>Attribute defining the text anchor used by the text</summary>
+            public const String TEXT_ANCHOR = "text-anchor";
+
             /// <summary>Attribute defining a transformation that needs to be applied.</summary>
             public const String TRANSFORM = "transform";
 
@@ -560,14 +572,23 @@ namespace iText.Svg {
             /// <summary>Value representing how to preserve the aspect ratio when dealing with images.</summary>
             public const String DEFER = "defer";
 
+            /// <summary>Value representing the text-alignment end for text objects</summary>
+            public const String TEXT_ANCHOR_END = "end";
+
             /// <summary>Value representing the fill rule "even odd".</summary>
             public const String FILL_RULE_EVEN_ODD = "evenodd";
 
             /// <summary>Value representing the fill rule "nonzero".</summary>
             public const String FILL_RULE_NONZERO = "nonzero";
 
+            /// <summary>Value representing the text-alignment middle for text objects</summary>
+            public const String TEXT_ANCHOR_MIDDLE = "middle";
+
             /// <summary>Value representing the "none" value".</summary>
             public const String NONE = "none";
+
+            /// <summary>Value representing the text-alignment start for text objects</summary>
+            public const String TEXT_ANCHOR_START = "start";
 
             /// <summary>The value corresponding with the namespace url for SVG</summary>
             public const String SVGNAMESPACEURL = "http://www.w3.org/2000/svg";

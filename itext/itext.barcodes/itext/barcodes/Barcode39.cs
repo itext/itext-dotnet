@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -83,19 +84,35 @@ namespace iText.Barcodes {
              + "+A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z" + "%P%Q%R%S%T";
 
         /// <summary>Creates a new Barcode39.</summary>
-        /// <param name="document">The document</param>
+        /// <remarks>
+        /// Creates a new Barcode39.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="Barcode39(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public Barcode39(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates a new Barcode39.</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public Barcode39(PdfDocument document, PdfFont font)
             : base(document) {
-            x = 0.8f;
-            n = 2;
-            font = document.GetDefaultFont();
-            size = 8;
-            baseline = size;
-            barHeight = size * 3;
-            generateChecksum = false;
-            checksumText = false;
-            startStopText = true;
-            extended = false;
+            this.x = 0.8f;
+            this.n = 2;
+            this.font = font;
+            this.size = 8;
+            this.baseline = size;
+            this.barHeight = size * 3;
+            this.generateChecksum = false;
+            this.checksumText = false;
+            this.startStopText = true;
+            this.extended = false;
         }
 
         /// <summary>Creates the bars.</summary>

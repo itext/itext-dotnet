@@ -105,6 +105,7 @@ namespace iText.Pdfa {
             doc.Add(p);
             doc.Add(p2);
             group.SetValue("v1");
+            PdfAcroForm.GetAcroForm(pdf, true).AddField(group);
             pdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
                 , "diff_"));
@@ -129,8 +130,6 @@ namespace iText.Pdfa {
                 PdfFormField chk = PdfFormField.CreateRadioButton(pdf, bbox, _group, _value, PdfAConformanceLevel.PDF_A_1B
                     );
                 chk.SetPage(pageNumber);
-                chk.SetValue("Off");
-                chk.RegenerateField();
                 chk.SetVisibility(PdfFormField.VISIBLE);
                 chk.SetBorderColor(ColorConstants.BLACK);
                 chk.SetBackgroundColor(ColorConstants.WHITE);
@@ -141,6 +140,7 @@ namespace iText.Pdfa {
                     (bbox.GetRight(), bbox.GetTop()).LineTo(bbox.GetLeft(), bbox.GetTop()).LineTo(bbox.GetLeft(), bbox.GetBottom
                     ()).SetLineWidth(1f).Stroke().RestoreState();
                 form.AddFieldAppearanceToPage(chk, pdf.GetPage(pageNumber));
+                //appearance stream was set, while AS has kept as is, i.e. in Off state.
                 chk.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
             }
         }

@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 
@@ -66,6 +68,42 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected");
             fp.SetBold(false);
             NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) == 0, "Not Bold expected");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontCacheTest()
+        {
+            FontProgramFactory.ClearRegisteredFonts();
+            FontProgramFactory.ClearRegisteredFontFamilies();
+            int cacheSize = -1;
+            try
+            {
+                FieldInfo f = typeof(FontCache).GetField("fontCache", BindingFlags.NonPublic | BindingFlags.Static);
+                IDictionary<FontCacheKey, FontProgram> cachedFonts = (IDictionary<FontCacheKey, FontProgram>)f.GetValue(null);
+                cachedFonts.Clear();
+                FontProgramFactory.RegisterFontDirectory(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                                                             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/");
+                cacheSize = cachedFonts.Count;
+            }
+            catch (Exception) { }
+
+            foreach (String s in FontProgramFactory.GetRegisteredFonts())
+                Console.WriteLine(s);
+
+            NUnit.Framework.Assert.AreEqual(43, FontProgramFactory.GetRegisteredFonts().Count);
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.GetRegisteredFonts().Contains("free sans lihavoitu"));
+            NUnit.Framework.Assert.AreEqual(0, cacheSize);
+        }
+
+        [NUnit.Framework.Test]
+        public void RegisterDirectoryType1Test()
+        {
+            FontProgramFactory.RegisterFontDirectory(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                                                         .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/");
+            FontProgram computerModern = FontProgramFactory.CreateRegisteredFont("computer modern");
+            FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
+            NUnit.Framework.Assert.NotNull(computerModern);
+            NUnit.Framework.Assert.NotNull(cmr10);
         }
     }
 }

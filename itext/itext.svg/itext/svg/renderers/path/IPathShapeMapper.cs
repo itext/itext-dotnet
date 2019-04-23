@@ -59,5 +59,7 @@ namespace iText.Svg.Renderers.Path {
         /// implementations as values
         /// </returns>
         IDictionary<String, IPathShape> GetMapping();
+
+        IDictionary<String, int?> GetArgumentCount();
     }
 }

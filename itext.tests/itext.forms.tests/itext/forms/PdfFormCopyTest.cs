@@ -114,24 +114,19 @@ namespace iText.Forms {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-#if !NETSTANDARD1_6
-        [NUnit.Framework.Timeout(100000)]
-#endif
         [NUnit.Framework.Test]
-        public virtual void LargeFilePerformanceTest() {
+        public virtual void LargeFileTest() {
             String srcFilename1 = sourceFolder + "frontpage.pdf";
             String srcFilename2 = sourceFolder + "largeFile.pdf";
             String filename = destinationFolder + "copyLargeFile.pdf";
-            long timeStart = System.DateTime.Now.Ticks;
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
             PdfPageFormCopier formCopier = new PdfPageFormCopier();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, formCopier);
-            doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, formCopier);
+            doc2.CopyPagesTo(1, 10, pdfDoc, formCopier);
             pdfDoc.Close();
-            System.Console.Out.WriteLine(((System.DateTime.Now.Ticks - timeStart) / 1000 / 1000));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_copyLargeFile.pdf"
                 , destinationFolder, "diff_"));
         }

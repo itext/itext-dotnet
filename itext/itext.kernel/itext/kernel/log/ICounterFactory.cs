@@ -48,10 +48,10 @@ namespace iText.Kernel.Log {
     /// Factory that can be registered in
     /// <see cref="CounterManager"/>
     /// and creates a counter for every reader or writer class.
-    /// <br/>
+    /// <p>
     /// You can implement your own counter factory and register it like this:
     /// <code>CounterManager.getInstance().registerCounter(new SystemOutCounterFactory());</code>
-    /// <br/>
+    /// <p>
     /// <see cref="SystemOutCounterFactory"/>
     /// is just an example of
     /// <see cref="ICounterFactory"/>

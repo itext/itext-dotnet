@@ -53,7 +53,7 @@ namespace iText.Kernel.Log {
     /// for each registered
     /// <see cref="ICounterFactory"/>
     /// and send corresponding events on document read and write.
-    /// <br/>
+    /// <p>
     /// You can implement your own
     /// <see cref="ICounterFactory"/>
     /// and register them with

@@ -106,6 +106,10 @@ namespace iText.Signatures {
             return value;
         }
 
+        public static bool IsEmpty<T>(this ICollection<T> collection) {
+            return collection.Count == 0;
+        }
+
         public static int Read(this Stream stream, byte[] buffer) {
             return stream.Read(buffer, 0, buffer.Length);
         }

@@ -60,6 +60,7 @@ namespace iText.Layout.Layout {
         }
 
         /// <summary>Defines whether the area already has some placed content or not.</summary>
+        /// <param name="emptyArea"/>
         public virtual void SetEmptyArea(bool emptyArea) {
             this.emptyArea = emptyArea;
         }

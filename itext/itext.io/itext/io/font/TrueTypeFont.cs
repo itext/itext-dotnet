@@ -74,36 +74,35 @@ namespace iText.IO.Font {
 
         private byte[] fontStreamBytes;
 
+        /// <exception cref="System.IO.IOException"/>
+        private TrueTypeFont(OpenTypeParser fontParser) {
+            this.fontParser = fontParser;
+            this.fontParser.LoadTables(true);
+            InitializeFontProperties();
+        }
+
         protected internal TrueTypeFont() {
             fontNames = new FontNames();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeFont(String path) {
-            fontParser = new OpenTypeParser(path);
-            fontParser.LoadTables(true);
-            InitializeFontProperties();
+        public TrueTypeFont(String path)
+            : this(new OpenTypeParser(path)) {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeFont(byte[] ttf) {
-            fontParser = new OpenTypeParser(ttf);
-            fontParser.LoadTables(true);
-            InitializeFontProperties();
+        public TrueTypeFont(byte[] ttf)
+            : this(new OpenTypeParser(ttf)) {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal TrueTypeFont(String ttcPath, int ttcIndex) {
-            fontParser = new OpenTypeParser(ttcPath, ttcIndex);
-            fontParser.LoadTables(true);
-            InitializeFontProperties();
+        internal TrueTypeFont(String ttcPath, int ttcIndex)
+            : this(new OpenTypeParser(ttcPath, ttcIndex)) {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal TrueTypeFont(byte[] ttc, int ttcIndex) {
-            fontParser = new OpenTypeParser(ttc, ttcIndex);
-            fontParser.LoadTables(true);
-            InitializeFontProperties();
+        internal TrueTypeFont(byte[] ttc, int ttcIndex)
+            : this(new OpenTypeParser(ttc, ttcIndex)) {
         }
 
         public override bool HasKernPairs() {
@@ -371,6 +370,68 @@ namespace iText.IO.Font {
                 fontParser.Close();
             }
             fontParser = null;
+        }
+
+        /// <summary>The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+        ///     </summary>
+        /// <remarks>
+        /// The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+        /// usedGlyphs can be used for width array and ToUnicode CMAP.
+        /// </remarks>
+        /// <param name="usedGlyphs">used glyphs that will be updated if needed.</param>
+        /// <param name="subset">subset status</param>
+        /// <param name="subsetRanges">additional subset ranges</param>
+        public virtual void UpdateUsedGlyphs(SortedSet<int> usedGlyphs, bool subset, IList<int[]> subsetRanges) {
+            int[] compactRange;
+            if (subsetRanges != null) {
+                compactRange = ToCompactRange(subsetRanges);
+            }
+            else {
+                if (!subset) {
+                    compactRange = new int[] { 0, 0xFFFF };
+                }
+                else {
+                    compactRange = new int[] {  };
+                }
+            }
+            for (int k = 0; k < compactRange.Length; k += 2) {
+                int from = compactRange[k];
+                int to = compactRange[k + 1];
+                for (int glyphId = from; glyphId <= to; glyphId++) {
+                    if (GetGlyphByCode(glyphId) != null) {
+                        usedGlyphs.Add(glyphId);
+                    }
+                }
+            }
+        }
+
+        private static int[] ToCompactRange(IList<int[]> ranges) {
+            IList<int[]> simp = new List<int[]>();
+            foreach (int[] range in ranges) {
+                for (int j = 0; j < range.Length; j += 2) {
+                    simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff, Math.Max(range[j], range
+                        [j + 1])) });
+                }
+            }
+            for (int k1 = 0; k1 < simp.Count - 1; ++k1) {
+                for (int k2 = k1 + 1; k2 < simp.Count; ++k2) {
+                    int[] r1 = simp[k1];
+                    int[] r2 = simp[k2];
+                    if (r1[0] >= r2[0] && r1[0] <= r2[1] || r1[1] >= r2[0] && r1[0] <= r2[1]) {
+                        r1[0] = Math.Min(r1[0], r2[0]);
+                        r1[1] = Math.Max(r1[1], r2[1]);
+                        simp.JRemoveAt(k2);
+                        --k2;
+                    }
+                }
+            }
+            int[] s = new int[simp.Count * 2];
+            for (int k = 0; k < simp.Count; ++k) {
+                int[] r = simp[k];
+                s[k * 2] = r[0];
+                s[k * 2 + 1] = r[1];
+            }
+            return s;
         }
     }
 }

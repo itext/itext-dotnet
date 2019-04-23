@@ -414,6 +414,7 @@ namespace iText.Kernel.Font {
         /// instance by the bytes of the underlying font program.
         /// </summary>
         /// <param name="fontProgram">the bytes of the underlying font program</param>
+        /// <param name="encoding"/>
         /// <returns>
         /// created
         /// <see cref="PdfFont"/>
@@ -517,6 +518,12 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <param name="encoding"/>
+        /// <param name="embedded"/>
+        /// <param name="style"/>
+        /// <param name="cached"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -524,7 +531,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, int style, bool
              cached) {
             FontProgram fp = FontProgramFactory.CreateRegisteredFont(fontName, style, cached);
@@ -538,6 +544,11 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <param name="encoding"/>
+        /// <param name="embedded"/>
+        /// <param name="cached"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -545,7 +556,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, bool cached) {
             return CreateRegisteredFont(fontName, encoding, embedded, FontStyles.UNDEFINED, cached);
         }
@@ -557,6 +567,10 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <param name="encoding"/>
+        /// <param name="embedded"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -564,7 +578,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded) {
             return CreateRegisteredFont(fontName, encoding, embedded, FontStyles.UNDEFINED);
         }
@@ -576,6 +589,11 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <param name="encoding"/>
+        /// <param name="embedded"/>
+        /// <param name="style"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -583,7 +601,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, int style) {
             return CreateRegisteredFont(fontName, encoding, embedded, style, DEFAULT_CACHED);
         }
@@ -595,6 +612,9 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <param name="encoding"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -602,7 +622,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName, String encoding) {
             return CreateRegisteredFont(fontName, encoding, false, FontStyles.UNDEFINED);
         }
@@ -614,6 +633,8 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <param name="fontName"/>
+        /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -621,7 +642,6 @@ namespace iText.Kernel.Font {
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName) {
             return CreateRegisteredFont(fontName, null, false, FontStyles.UNDEFINED);
         }

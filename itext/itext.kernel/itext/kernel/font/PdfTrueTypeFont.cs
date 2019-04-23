@@ -131,31 +131,10 @@ namespace iText.Kernel.Font {
             base.Flush();
         }
 
+        [System.ObsoleteAttribute(@"use iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(Java.Util.SortedSet{E}, bool, System.Collections.Generic.IList{E})"
+            )]
         protected internal virtual void AddRangeUni(ICollection<int> longTag) {
-            if (!subset && (subsetRanges != null || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() > 0)) {
-                int[] rg = subsetRanges == null && ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() > 0 ? new int[] { 
-                    0, 0xffff } : CompactRanges(subsetRanges);
-                IDictionary<int, int[]> usemap = ((TrueTypeFont)GetFontProgram()).GetActiveCmap();
-                System.Diagnostics.Debug.Assert(usemap != null);
-                foreach (KeyValuePair<int, int[]> e in usemap) {
-                    int[] v = e.Value;
-                    int gi = v[0];
-                    if (longTag.Contains(gi)) {
-                        continue;
-                    }
-                    int c = (int)e.Key;
-                    bool skip = true;
-                    for (int k = 0; k < rg.Length; k += 2) {
-                        if (c >= rg[k] && c <= rg[k + 1]) {
-                            skip = false;
-                            break;
-                        }
-                    }
-                    if (!skip) {
-                        longTag.Add(gi);
-                    }
-                }
-            }
+            ((TrueTypeFont)GetFontProgram()).UpdateUsedGlyphs((SortedSet<int>)longTag, subset, subsetRanges);
         }
 
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
@@ -182,7 +161,7 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         fontFileName = PdfName.FontFile2;
-                        ICollection<int> glyphs = new HashSet<int>();
+                        SortedSet<int> glyphs = new SortedSet<int>();
                         for (int k = 0; k < shortTag.Length; k++) {
                             if (shortTag[k] != 0) {
                                 int uni = fontEncoding.GetUnicode(k);
@@ -192,12 +171,12 @@ namespace iText.Kernel.Font {
                                 }
                             }
                         }
-                        AddRangeUni(glyphs);
+                        ((TrueTypeFont)GetFontProgram()).UpdateUsedGlyphs(glyphs, subset, subsetRanges);
                         try {
                             byte[] fontStreamBytes;
-                            if (subset || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() != 0 || subsetRanges != null) {
-                                //clone glyphs due to possible cache issue
-                                fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(new HashSet<int>(glyphs), subset);
+                            //getDirectoryOffset() > 0 means ttc, which shall be subset anyway.
+                            if (subset || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() > 0) {
+                                fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(glyphs, subset);
                             }
                             else {
                                 fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetFontStreamBytes();

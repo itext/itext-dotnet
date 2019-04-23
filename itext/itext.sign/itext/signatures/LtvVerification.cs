@@ -130,7 +130,7 @@ namespace iText.Signatures {
             if (used) {
                 throw new InvalidOperationException(PdfException.VerificationAlreadyOutput);
             }
-            PdfPKCS7 pk = sgnUtil.VerifySignature(signatureName);
+            PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.Info("Adding verification for " + signatureName);
             X509Certificate[] xc = pk.GetCertificates();
             X509Certificate cert;
@@ -317,6 +317,9 @@ namespace iText.Signatures {
             }
             if (certs == null) {
                 certs = new PdfArray();
+            }
+            if (vrim == null) {
+                vrim = new PdfDictionary();
             }
             OutputDss(dss, vrim, ocsps, crls, certs);
         }

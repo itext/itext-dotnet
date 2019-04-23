@@ -48,6 +48,8 @@ namespace iText.Svg.Exceptions {
         private SvgLogMessageConstant() {
         }
 
+        public const String ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(rx ry rot largearc sweep x y)+ parameters are expected for elliptical arcs. Got: {0}";
+
         public const String ATTRIBUTES_NULL = "The attributes of this element are null.";
 
         public const String COORDINATE_VALUE_ABSENT = "The coordinate value is empty or null.";

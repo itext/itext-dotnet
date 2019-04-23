@@ -49,7 +49,6 @@ using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Renderer implementing the use tag.</summary>
@@ -84,7 +83,7 @@ namespace iText.Svg.Renderers.Impl {
                                 y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
                             }
                             AffineTransform inverseMatrix = null;
-                            if (!SvgMathUtils.CompareFloats(x, 0) || !SvgMathUtils.CompareFloats(y, 0)) {
+                            if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
                                 currentCanvas.ConcatMatrix(translation);
                                 if (partOfClipPath) {

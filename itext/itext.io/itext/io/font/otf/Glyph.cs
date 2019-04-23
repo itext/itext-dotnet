@@ -273,7 +273,7 @@ namespace iText.IO.Font.Otf {
         }
 
         /// <summary>Two Glyphs are equal if their unicode characters, code and normalized width are equal.</summary>
-        /// <param name="obj"/>
+        /// <param name="obj">The object</param>
         /// <returns>True if this equals obj cast to Glyph, false otherwise.</returns>
         public override bool Equals(Object obj) {
             if (this == obj) {

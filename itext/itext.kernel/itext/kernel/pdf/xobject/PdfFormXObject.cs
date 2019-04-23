@@ -79,6 +79,9 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <seealso cref="PdfXObject.MakeXObject(iText.Kernel.Pdf.PdfStream)"/>
         public PdfFormXObject(PdfStream pdfStream)
             : base(pdfStream) {
+            if (!GetPdfObject().ContainsKey(PdfName.Subtype)) {
+                GetPdfObject().Put(PdfName.Subtype, PdfName.Form);
+            }
         }
 
         /// <summary>Creates form XObject from page content.</summary>

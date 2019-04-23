@@ -371,6 +371,24 @@ namespace iText.IO.Font.Otf {
             return true;
         }
 
+        public override int GetHashCode() {
+            int result = 0;
+            result = 31 * result + start;
+            result = 31 * result + end;
+            for (int i = start; i < end; i++) {
+                result = 31 * result + glyphs[i].GetHashCode();
+            }
+            if (null != actualText) {
+                for (int i = start; i < end; i++) {
+                    result = 31 * result;
+                    if (null != actualText[i]) {
+                        result += actualText[i].GetHashCode();
+                    }
+                }
+            }
+            return result;
+        }
+
         private void RemoveGlyph(int index) {
             glyphs.JRemoveAt(index);
             if (actualText != null) {
@@ -433,6 +451,10 @@ namespace iText.IO.Font.Otf {
                 }
                 GlyphLine.ActualText other = (GlyphLine.ActualText)obj;
                 return value == null && other.value == null || value.Equals(other.value);
+            }
+
+            public override int GetHashCode() {
+                return 31 * value.GetHashCode();
             }
         }
     }

@@ -54,6 +54,8 @@ namespace iText.Kernel.Crypto {
         private IBlockCipher cbc;
 
         /// <summary>Creates a new instance of AESCipher</summary>
+        /// <param name="forEncryption"/>
+        /// <param name="key"/>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key) {
             IBlockCipher aes = new AesFastEngine();
             cbc = new CbcBlockCipher(aes);

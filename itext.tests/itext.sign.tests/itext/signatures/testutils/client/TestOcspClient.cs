@@ -41,28 +41,32 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 
 namespace iText.Signatures.Testutils.Client {
     public class TestOcspClient : IOcspClient {
-        private readonly TestOcspResponseBuilder builder;
+        private readonly IDictionary<String, TestOcspResponseBuilder> issuerIdToResponseBuilder = new LinkedDictionary
+            <String, TestOcspResponseBuilder>();
 
-        private readonly ICipherParameters caPrivateKey;
-
-        public TestOcspClient(TestOcspResponseBuilder builder, ICipherParameters caPrivateKey) {
-            this.builder = builder;
-            this.caPrivateKey = caPrivateKey;
+        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
+        public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, ICipherParameters privateKey) {
+            issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), new TestOcspResponseBuilder(cert, privateKey
+                ));
+            return this;
         }
 
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
-        public TestOcspClient(X509Certificate caCert, ICipherParameters caPrivateKey) {
-            this.builder = new TestOcspResponseBuilder(caCert);
-            this.caPrivateKey = caPrivateKey;
+        public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, TestOcspResponseBuilder builder
+            ) {
+            issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), builder);
+            return this;
         }
 
         public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url) {
@@ -70,10 +74,17 @@ namespace iText.Signatures.Testutils.Client {
             try {
                 CertificateID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.SerialNumber, Org.BouncyCastle.Ocsp.CertificateID.HashSha1
                     );
-                bytes = builder.MakeOcspResponse(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded(), caPrivateKey
-                    );
+                TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.SerialNumber.ToString(16));
+                if (builder == null) {
+                    throw new ArgumentException("This TestOcspClient instance is not capable of providing OCSP response for the given issuerCert:"
+                         + issuerCert.SubjectDN.ToString());
+                }
+                bytes = builder.MakeOcspResponse(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded());
             }
-            catch (Exception) {
+            catch (Exception ignored) {
+                if (ignored is Exception) {
+                    throw (Exception)ignored;
+                }
             }
             return bytes;
         }

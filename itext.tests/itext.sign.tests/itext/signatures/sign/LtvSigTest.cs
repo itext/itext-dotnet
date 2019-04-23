@@ -71,8 +71,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void LtvEnabledTest01() {
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";
@@ -85,7 +83,7 @@ namespace iText.Signatures.Sign {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient(caCert, caPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
                 ().UseAppendMode());
@@ -98,6 +96,66 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void LtvEnabledSingleSignatureTest01() {
+            String signCertFileName = certsSrc + "signCertRsaWithChain.p12";
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            String intermediateCertFileName = certsSrc + "intermediateRsa.p12";
+            String caCertFileName = certsSrc + "rootRsa.p12";
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String ltvFileName = destinationFolder + "ltvEnabledSingleSignatureTest01.pdf";
+            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
+            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            X509Certificate intermediateCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(intermediateCertFileName
+                , password)[0];
+            ICipherParameters intermediatePrivateKey = Pkcs12FileHelper.ReadFirstKey(intermediateCertFileName, password
+                , password);
+            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(intermediateCert, intermediatePrivateKey
+                ).AddBuilderForCertIssuer(caCert, caPrivateKey);
+            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
+                new StampingProperties());
+            signer.SetFieldName("Signature1");
+            signer.SignDetached(pks, signChain, null, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard.CADES);
+            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "ltvEnabledSingleSignatureTest01.pdf", "Signature1");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void SecondLtvOriginalHasNoVri01() {
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            String caCertFileName = certsSrc + "rootRsa.p12";
+            String srcFileName = sourceFolder + "ltvEnabledNoVriEntry.pdf";
+            String ltvFileName = destinationFolder + "secondLtvOriginalHasNoVri01.pdf";
+            String ltvTsFileName = destinationFolder + "secondLtvOriginalHasNoVriTs01.pdf";
+            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
+            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
+            TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
+            PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
+                ().UseAppendMode());
+            LtvVerification ltvVerification = new LtvVerification(document);
+            ltvVerification.AddVerification("timestampSig1", testOcspClient, testCrlClient, LtvVerification.CertificateOption
+                .SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
+            ltvVerification.Merge();
+            document.Close();
+            PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), new FileStream(ltvTsFileName, FileMode.Create
+                ), new StampingProperties().UseAppendMode());
+            signer.Timestamp(testTsa, "timestampSig2");
+            BasicCheckLtvDoc("secondLtvOriginalHasNoVriTs01.pdf", "timestampSig2");
         }
 
         /// <exception cref="System.IO.IOException"/>

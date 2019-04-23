@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -266,22 +265,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public abstract override ISvgNodeRenderer CreateDeepCopy();
-
-        public override bool Equals(Object other) {
-            if (other == null || this.GetType() != other.GetType()) {
-                return false;
-            }
-            AbstractBranchSvgNodeRenderer oabr = (AbstractBranchSvgNodeRenderer)other;
-            bool result = base.Equals(oabr);
-            if (result) {
-                result &= Enumerable.SequenceEqual(children, oabr.GetChildren());
-            }
-            return result;
-        }
-
-        public override int GetHashCode() {
-            return base.GetHashCode() * 7 + 255 + children.GetHashCode();
-        }
 
         internal override void SetPartOfClipPath(bool isPart) {
             base.SetPartOfClipPath(isPart);

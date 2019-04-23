@@ -120,8 +120,8 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Read hyphenation patterns from an XML file.</summary>
         /// <param name="filename">the filename</param>
         /// <exception cref="HyphenationException">In case the parsing fails</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         /// <exception cref="System.IO.FileNotFoundException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void LoadPatterns(String filename) {
             LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
         }

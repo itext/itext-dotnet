@@ -235,19 +235,35 @@ namespace iText.Forms.Fields {
         /// <summary>Gets the maximum length of the field's text, in characters.</summary>
         /// <remarks>
         /// Gets the maximum length of the field's text, in characters.
-        /// This is an optional parameter, so if it is not specified, <code>null</code> will be returned.
+        /// This is an optional parameter, so if it is not specified, 0 value will be returned.
         /// </remarks>
         /// <returns>the current maximum text length</returns>
         public virtual int GetMaxLen() {
-            PdfNumber number = GetPdfObject().GetAsNumber(PdfName.MaxLen);
-            return number != null ? number.IntValue() : 0;
+            PdfNumber maxLenEntry = this.GetPdfObject().GetAsNumber(PdfName.MaxLen);
+            if (maxLenEntry != null) {
+                return maxLenEntry.IntValue();
+            }
+            else {
+                PdfDictionary parent = GetParent();
+                // MaxLen is an inherited form field property, therefore we try to recursively extract it from the ancestors
+                if (parent != null) {
+                    return new iText.Forms.Fields.PdfTextFormField(parent).GetMaxLen();
+                }
+                else {
+                    return 0;
+                }
+            }
         }
 
-        /// <summary>Sets the maximum length of the field?s text, in characters.</summary>
+        /// <summary>Sets the maximum length of the field's text, in characters.</summary>
         /// <param name="maxLen">the maximum text length</param>
         /// <returns>current</returns>
         public virtual iText.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen) {
-            return (iText.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber(maxLen));
+            Put(PdfName.MaxLen, new PdfNumber(maxLen));
+            if (GetFieldFlag(FF_COMB)) {
+                RegenerateField();
+            }
+            return this;
         }
     }
 }

@@ -55,11 +55,14 @@ namespace iText.Svg.Css.Impl {
         /// and "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference"
         /// </summary>
         private static readonly ICollection<String> inheritableProperties = new HashSet<String>(JavaUtil.ArraysAsList
-            (SvgConstants.Attributes.STROKE, SvgConstants.Attributes.FILL, SvgConstants.Attributes.CLIP_RULE));
+            (SvgConstants.Attributes.STROKE, SvgConstants.Attributes.FILL, SvgConstants.Attributes.FILL_RULE, SvgConstants.Attributes
+            .CLIP_RULE, SvgConstants.Attributes.TEXT_ANCHOR));
 
         //Stroke
         //Fill
+        //Fill
         //clip-rule
+        //text-anchor
         public virtual bool IsInheritable(String cssProperty) {
             return inheritableProperties.Contains(cssProperty);
         }

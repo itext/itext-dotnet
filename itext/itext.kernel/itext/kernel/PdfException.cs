@@ -340,7 +340,10 @@ namespace iText.Kernel {
 
         public const String NoKidWithSuchRole = "No kid with such role.";
 
+        [System.ObsoleteAttribute(@"Now we log a warning rather than throw an exception.")]
         public const String NoMaxLenPresent = "No /MaxLen has been set even though the Comb flag has been set.";
+
+        public const String NoninvertibleMatrixCannotBeProcessed = "A noninvertible matrix has been parsed. The behaviour is unpredictable.";
 
         public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";
 
@@ -385,6 +388,8 @@ namespace iText.Kernel {
         public const String PdfObjectStreamReachMaxSize = "PdfObjectStream reach max size.";
 
         public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
+
+        public const String PdfReaderHasBeenAlreadyUtilized = "Given PdfReader instance has already been utilized. The PdfReader cannot be reused, please create a new instance.";
 
         public const String PdfStartxrefIsNotFollowedByANumber = "PDF startxref is not followed by a number.";
 
@@ -505,7 +510,10 @@ namespace iText.Kernel {
 
         public const String WrongFormFieldAddAnnotationToTheField = "Wrong form field. Add annotation to the field.";
 
+        [System.ObsoleteAttribute(@"in favour of more informative named constant")]
         public const String WrongMediaBoxSize1 = "Wrong media box size: {0}.";
+
+        public const String WRONGMEDIABOXSIZETOOFEWARGUMENTS = "Wrong media box size: {0}. Need at least 4 arguments";
 
         public const String XrefSubsectionNotFound = "xref subsection not found.";
 

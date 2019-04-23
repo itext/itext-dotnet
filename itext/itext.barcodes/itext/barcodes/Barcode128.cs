@@ -47,6 +47,7 @@ using System.Text;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -147,17 +148,33 @@ namespace iText.Barcodes {
 
         private static IDictionary<int, int?> ais = new Dictionary<int, int?>();
 
-        /// <summary>Creates new Barcode128</summary>
-        /// <param name="document">The document</param>
+        /// <summary>Creates new Barcode128.</summary>
+        /// <remarks>
+        /// Creates new Barcode128.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="Barcode128(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public Barcode128(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates new Barcode128, which will use the provided font</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public Barcode128(PdfDocument document, PdfFont font)
             : base(document) {
-            x = 0.8f;
-            font = document.GetDefaultFont();
-            size = 8;
-            baseline = size;
-            barHeight = size * 3;
-            textAlignment = ALIGN_CENTER;
-            codeType = CODE128;
+            this.x = 0.8f;
+            this.font = font;
+            this.size = 8;
+            this.baseline = size;
+            this.barHeight = size * 3;
+            this.textAlignment = ALIGN_CENTER;
+            this.codeType = CODE128;
         }
 
         public enum Barcode128CodeSet {

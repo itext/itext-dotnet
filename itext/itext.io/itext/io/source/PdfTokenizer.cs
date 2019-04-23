@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
@@ -317,8 +318,19 @@ namespace iText.IO.Source {
                             if (TokenValueEqualsTo(R)) {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
-                                reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                try {
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                }
+                                catch (Exception) {
+                                    //warn about incorrect reference number
+                                    //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
+                                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.PdfTokenizer));
+                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
+                                        (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
+                                    reference = -1;
+                                    generation = 0;
+                                }
                                 return;
                             }
                             else {
@@ -500,12 +512,27 @@ namespace iText.IO.Source {
                             // as we need to know that fact only in case if there are any minuses.
                             ch = file.Read();
                         }
-                        while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.')) {
-                            if (ch == '.') {
-                                isReal = true;
-                            }
+                        while (ch >= '0' && ch <= '9') {
                             outBuf.Append(ch);
                             ch = file.Read();
+                        }
+                        if (ch == '.') {
+                            isReal = true;
+                            outBuf.Append(ch);
+                            ch = file.Read();
+                            //verify if there is minus after '.'
+                            //In that case just ignore minus chars and everything after as Adobe Reader does
+                            int numberOfMinusesAfterDot = 0;
+                            if (ch == '-') {
+                                numberOfMinusesAfterDot++;
+                                ch = file.Read();
+                            }
+                            while (ch >= '0' && ch <= '9') {
+                                if (numberOfMinusesAfterDot == 0) {
+                                    outBuf.Append(ch);
+                                }
+                                ch = file.Read();
+                            }
                         }
                         if (numberOfMinuses > 1 && !isReal) {
                             // Numbers of integer type and with more than one minus before them
@@ -562,6 +589,10 @@ namespace iText.IO.Source {
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
+        /// <param name="content"/>
+        /// <param name="from"/>
+        /// <param name="to"/>
+        /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>
@@ -683,6 +714,8 @@ namespace iText.IO.Source {
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
+        /// <param name="content"/>
+        /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>

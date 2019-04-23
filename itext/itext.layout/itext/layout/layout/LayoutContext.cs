@@ -123,6 +123,7 @@ namespace iText.Layout.Layout {
         }
 
         /// <summary>Defines whether the layout area's height is clipped or not.</summary>
+        /// <param name="clippedHeight"/>
         public virtual void SetClippedHeight(bool clippedHeight) {
             this.clippedHeight = clippedHeight;
         }

@@ -78,7 +78,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private const String release = "7.1.5";
+        private const String release = "7.1.6";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -94,12 +94,7 @@ namespace iText.Kernel {
 
         private bool expired;
 
-        /// <depricated>
-        /// Use
-        /// <see cref="GetInstance()"/>
-        /// instead. Will be removed in next major release.
-        /// </depricated>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"Use GetInstance() instead. Will be removed in next major release.")]
         public Version() {
             this.info = new VersionInfo(iTextProductName, release, producerLine, null);
         }

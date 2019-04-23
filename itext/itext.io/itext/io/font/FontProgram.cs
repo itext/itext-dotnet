@@ -210,7 +210,7 @@ namespace iText.IO.Font {
         /// <summary>Sets the PostScript italic angel.</summary>
         /// <remarks>
         /// Sets the PostScript italic angel.
-        /// <br/>
+        /// <p>
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
@@ -272,7 +272,7 @@ namespace iText.IO.Font {
         /// <summary>Sets the PostScript name of the font.</summary>
         /// <remarks>
         /// Sets the PostScript name of the font.
-        /// <br />
+        /// <p>
         /// If full name is null, it will be set as well.
         /// </remarks>
         /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>

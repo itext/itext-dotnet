@@ -226,7 +226,7 @@ namespace iText.IO.Font {
         /// <summary>Sets Open Type head.macStyle.</summary>
         /// <remarks>
         /// Sets Open Type head.macStyle.
-        /// <br/>
+        /// <p>
         /// <see cref="iText.IO.Font.Constants.FontMacStyleFlags"/>
         /// </remarks>
         /// <param name="macStyle"/>

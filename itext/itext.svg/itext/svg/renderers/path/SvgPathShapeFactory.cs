@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Svg.Renderers.Path.Impl;
 
 namespace iText.Svg.Renderers.Path {
@@ -62,6 +63,19 @@ namespace iText.Svg.Renderers.Path {
         /// <returns>IPathShape implementation</returns>
         public static IPathShape CreatePathShape(String name) {
             return new PathShapeMapper().GetMapping().Get(name);
+        }
+
+        /// <summary>Finds the appropriate number of arguments for a path command, based on the passed Svg path data instruction tag.
+        ///     </summary>
+        /// <param name="name">svg path element's path-data instruction name.</param>
+        /// <returns>an integer value with the required number of arguments or null if there is no mapping for the given value
+        ///     </returns>
+        public static int GetArgumentCount(String name) {
+            IDictionary<String, int?> map = new PathShapeMapper().GetArgumentCount();
+            if (map.ContainsKey(name.ToUpperInvariant())) {
+                return (int)map.Get(name.ToUpperInvariant());
+            }
+            return -1;
         }
     }
 }

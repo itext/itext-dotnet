@@ -57,19 +57,24 @@ namespace iText.Layout.Font {
     /// and collection of
     /// <see cref="iText.Kernel.Font.PdfFont"/>
     /// s.
-    /// FontProvider depends from
+    /// FontProvider depends on
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-    /// , due to
+    /// due to
     /// <see cref="iText.Kernel.Font.PdfFont"/>
-    /// , it cannot be reused for different documents,
-    /// but a new instance of FontProvider could be created with
+    /// , so it cannot be reused for different documents
+    /// unless reset with
+    /// <see cref="Reset()"/>
+    /// or recreated with
     /// <see cref="GetFontSet()"/>
     /// .
+    /// In the former case the
+    /// <see cref="FontSelectorCache"/>
+    /// is reused and in the latter it's reinitialised.
     /// FontProvider the only end point for creating
     /// <see cref="iText.Kernel.Font.PdfFont"/>
     /// .
     /// <p>
-    /// It is recommended to use only one
+    /// It is allowed to use only one
     /// <see cref="FontProvider"/>
     /// per document. If temporary fonts per element needed,
     /// additional
@@ -412,6 +417,18 @@ namespace iText.Layout.Font {
                 pdfFonts.Put(fontInfo, pdfFont);
                 return pdfFont;
             }
+        }
+
+        /// <summary>
+        /// Resets
+        /// <see cref="pdfFonts">PdfFont cache</see>
+        /// . After calling that method
+        /// <see cref="FontProvider"/>
+        /// can be reused with another
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// </summary>
+        public virtual void Reset() {
+            pdfFonts.Clear();
         }
     }
 }

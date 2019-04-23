@@ -173,7 +173,8 @@ namespace iText.Forms {
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDocument">document</see>
-        /// 's AcroForm, or a new one
+        /// 's AcroForm,
+        /// or a new one provided that <code>createIfNotExist</code> parameter is <code>true</code>, otherwise <code>null</code>.
         /// </returns>
         public static iText.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {
             PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
@@ -719,6 +720,7 @@ namespace iText.Forms {
                 PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.Resources);
                 initialPageResourceClones.Put(i, resources == null ? null : resources.Clone());
             }
+            ICollection<PdfPage> wrappedPages = new LinkedHashSet<PdfPage>();
             PdfPage page;
             foreach (PdfFormField field in fields) {
                 PdfDictionary fieldObject = field.GetPdfObject();
@@ -767,7 +769,8 @@ namespace iText.Forms {
                         if (page.IsFlushed()) {
                             throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                         }
-                        PdfCanvas canvas = new PdfCanvas(page);
+                        PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
+                        wrappedPages.Add(page);
                         // Here we avoid circular reference which might occur when page resources and the appearance xObject's
                         // resources are the same object
                         PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
@@ -797,10 +800,15 @@ namespace iText.Forms {
                 PdfDictionary parent = fieldObject.GetAsDictionary(PdfName.Parent);
                 if (parent != null) {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                    kids.Remove(fieldObject);
-                    // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
-                    // shouldn't we remove them recursively? check it
-                    if (kids.IsEmpty()) {
+                    if (kids != null) {
+                        kids.Remove(fieldObject);
+                        // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
+                        // shouldn't we remove them recursively? check it
+                        if (kids.IsEmpty()) {
+                            fFields.Remove(parent);
+                        }
+                    }
+                    else {
                         fFields.Remove(parent);
                     }
                 }

@@ -41,22 +41,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.IO;
-using iText.Kernel.Utils;
 using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Processors.Impl.Font {
     public class FontSizeTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/font/FontSizeTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/processors/impl/font/FontSizeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -64,7 +62,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontSize01Test() {
             String name = "fontSizeTest01";
-            RunTest(name);
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -72,7 +70,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontSize02Test() {
             String name = "fontSizeTest02";
-            RunTest(name);
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -80,7 +78,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontAbsoluteKeywords() {
             String name = "fontAbsoluteKeywords";
-            RunTest(name);
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -88,18 +86,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontRelativeKeywords() {
             String name = "fontRelativeKeywords";
-            RunTest(name);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        private void RunTest(String fileName) {
-            Convert(new FileStream(sourceFolder + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(destinationFolder
-                 + fileName + ".pdf", FileMode.Create));
-            CompareTool compareTool = new CompareTool();
-            String compareResult = compareTool.CompareByContent(destinationFolder + fileName + ".pdf", sourceFolder + 
-                "cmp_" + fileName + ".pdf", destinationFolder, "diff_");
-            NUnit.Framework.Assert.IsNull(compareResult);
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
     }
 }

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -77,8 +78,25 @@ namespace iText.Barcodes {
         /// <summary>The number of individual bars either drawn or not drawn per character of the <CODE>code</CODE></summary>
         private const int BARS_PER_CHARACTER = 12;
 
-        /// <summary>Creates a new BarcodeMSI</summary>
+        /// <summary>Creates a new BarcodeMSI.</summary>
+        /// <remarks>
+        /// Creates a new BarcodeMSI.
+        /// To generate the font the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// will be implicitly called.
+        /// If you want to use this barcode in PDF/A documents, please consider using
+        /// <see cref="BarcodeMSI(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
+        /// .
+        /// </remarks>
+        /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeMSI(PdfDocument document)
+            : this(document, document.GetDefaultFont()) {
+        }
+
+        /// <summary>Creates a new BarcodeMSI</summary>
+        /// <param name="document">The document to which the barcode will be added</param>
+        /// <param name="font">The font to use</param>
+        public BarcodeMSI(PdfDocument document, PdfFont font)
             : base(document) {
             // 0
             // 1
@@ -92,7 +110,7 @@ namespace iText.Barcodes {
             // 9
             this.x = 0.8f;
             this.n = 2.0f;
-            this.font = document.GetDefaultFont();
+            this.font = font;
             this.size = 8.0f;
             this.baseline = this.size;
             this.barHeight = this.size * 3.0f;
@@ -137,9 +155,11 @@ namespace iText.Barcodes {
         /// <remarks>
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
-        /// translation matrix to move it elsewhere.<p>
-        /// The bars and text are written in the following colors:<p>
-        /// <P><TABLE BORDER=1>
+        /// translation matrix to move it elsewhere.
+        /// <p>
+        /// The bars and text are written in the following colors:
+        /// <p>
+        /// <P><TABLE BORDER=1 summary="">
         /// <TR>
         /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>

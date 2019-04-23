@@ -112,7 +112,7 @@ namespace iText.Kernel.XMP.Impl
 			minute = date.Minute;
 			second = date.Second;
 			nanoSeconds = date.Millisecond * 1000000;
-			timeZone = timeZone;
+			this.timeZone = timeZone;
 
 			// object contains all date components
 			hasDate = hasTime = hasTimeZone = true;

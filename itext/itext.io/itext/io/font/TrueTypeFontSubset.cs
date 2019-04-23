@@ -50,33 +50,32 @@ namespace iText.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
     /// <author>Paulo Soares</author>
     internal class TrueTypeFontSubset {
-        internal static readonly String[] tableNamesSimple = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea"
-            , "hmtx", "loca", "maxp", "prep" };
+        private static readonly String[] TABLE_NAMES_SUBSET = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea"
+            , "hmtx", "loca", "maxp", "prep", "cmap", "OS/2" };
 
-        internal static readonly String[] tableNamesCmap = new String[] { "cmap", "OS/2" };
+        private static readonly String[] TABLE_NAMES = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea", "hmtx"
+            , "loca", "maxp", "prep", "cmap", "OS/2", "name", "post" };
 
-        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name", "post" };
+        private static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 
+            4, 4, 4, 4, 4 };
 
-        internal static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3
-            , 4, 4, 4, 4, 4 };
+        private const int TABLE_CHECKSUM = 0;
 
-        internal const int TABLE_CHECKSUM = 0;
+        private const int TABLE_OFFSET = 1;
 
-        internal const int TABLE_OFFSET = 1;
+        private const int TABLE_LENGTH = 2;
 
-        internal const int TABLE_LENGTH = 2;
+        private const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
-        internal const int HEAD_LOCA_FORMAT_OFFSET = 51;
+        private const int ARG_1_AND_2_ARE_WORDS = 1;
 
-        internal const int ARG_1_AND_2_ARE_WORDS = 1;
+        private const int WE_HAVE_A_SCALE = 8;
 
-        internal const int WE_HAVE_A_SCALE = 8;
+        private const int MORE_COMPONENTS = 32;
 
-        internal const int MORE_COMPONENTS = 32;
+        private const int WE_HAVE_AN_X_AND_Y_SCALE = 64;
 
-        internal const int WE_HAVE_AN_X_AND_Y_SCALE = 64;
-
-        internal const int WE_HAVE_A_TWO_BY_TWO = 128;
+        private const int WE_HAVE_A_TWO_BY_TWO = 128;
 
         /// <summary>Contains the location of the several tables.</summary>
         /// <remarks>
@@ -87,68 +86,69 @@ namespace iText.IO.Font {
         /// is the checksum, position 1 is the offset from the start of the file
         /// and position 2 is the length of the table.
         /// </remarks>
-        protected internal IDictionary<String, int[]> tableDirectory;
+        private IDictionary<String, int[]> tableDirectory;
 
         /// <summary>The file in use.</summary>
         protected internal RandomAccessFileOrArray rf;
 
         /// <summary>The file name.</summary>
-        protected internal String fileName;
+        private String fileName;
 
-        protected internal bool includeCmap;
+        private bool locaShortTable;
 
-        protected internal bool includeExtras;
+        private int[] locaTable;
 
-        protected internal bool locaShortTable;
+        private ICollection<int> glyphsUsed;
 
-        protected internal int[] locaTable;
+        private IList<int> glyphsInList;
 
-        protected internal ICollection<int> glyphsUsed;
+        private int tableGlyphOffset;
 
-        protected internal IList<int> glyphsInList;
+        private int[] newLocaTable;
 
-        protected internal int tableGlyphOffset;
+        private byte[] newLocaTableOut;
 
-        protected internal int[] newLocaTable;
+        private byte[] newGlyfTable;
 
-        protected internal byte[] newLocaTableOut;
+        private int glyfTableRealSize;
 
-        protected internal byte[] newGlyfTable;
+        private int locaTableRealSize;
 
-        protected internal int glyfTableRealSize;
+        private byte[] outFont;
 
-        protected internal int locaTableRealSize;
+        private int fontPtr;
 
-        protected internal byte[] outFont;
+        private int directoryOffset;
 
-        protected internal int fontPtr;
-
-        protected internal int directoryOffset;
+        private readonly String[] tableNames;
 
         /// <summary>Creates a new TrueTypeFontSubSet</summary>
         /// <param name="directoryOffset">The offset from the start of the file to the table directory</param>
         /// <param name="fileName">the file name of the font</param>
         /// <param name="glyphsUsed">the glyphs used</param>
-        /// <param name="includeCmap">
-        /// 
-        /// <see langword="true"/>
-        /// if the table cmap is to be included in the generated font
-        /// </param>
         internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection<int> glyphsUsed, int 
-            directoryOffset, bool includeCmap, bool includeExtras) {
+            directoryOffset, bool subset) {
+            // If it's a regular font subset, we should not add `name` and `post`,
+            // because information in these tables maybe irrelevant for a subset.
+            // In case ttc file with subset = false (#directoryOffset > 0) `name` and `post` shall be included,
+            // because it's actually a full font.
             this.fileName = fileName;
             this.rf = rf;
-            this.glyphsUsed = glyphsUsed;
-            this.includeCmap = includeCmap;
-            this.includeExtras = includeExtras;
+            this.glyphsUsed = new HashSet<int>(glyphsUsed);
             this.directoryOffset = directoryOffset;
+            // subset = false is possible with directoryOffset > 0, i.e. ttc font without subset.
+            if (subset) {
+                tableNames = TABLE_NAMES_SUBSET;
+            }
+            else {
+                tableNames = TABLE_NAMES;
+            }
             glyphsInList = new List<int>(glyphsUsed);
         }
 
         /// <summary>Does the actual work of subsetting the font.</summary>
         /// <returns>the subset font</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
-        /// <on>error</on>
         internal virtual byte[] Process() {
             try {
                 CreateTableDirectory();
@@ -169,19 +169,9 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void AssembleFont() {
+        private void AssembleFont() {
             int[] tableLocation;
             int fullFontSize = 0;
-            IList<String> tableNames = new List<String>();
-            tableNames.AddAll(tableNamesSimple);
-            if (includeExtras) {
-                tableNames.AddAll(tableNamesExtra);
-            }
-            else {
-                if (includeCmap) {
-                    tableNames.AddAll(tableNamesCmap);
-                }
-            }
             int tablesUsed = 2;
             foreach (String name in tableNames) {
                 if (name.Equals("glyf") || name.Equals("loca")) {
@@ -267,7 +257,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CreateTableDirectory() {
+        private void CreateTableDirectory() {
             tableDirectory = new Dictionary<String, int[]>();
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
@@ -287,7 +277,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadLoca() {
+        private void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
                 throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
@@ -318,7 +308,7 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CreateNewGlyphTables() {
+        private void CreateNewGlyphTables() {
             newLocaTable = new int[locaTable.Length];
             int[] activeGlyphs = new int[glyphsInList.Count];
             for (int k = 0; k < activeGlyphs.Length; ++k) {
@@ -350,7 +340,7 @@ namespace iText.IO.Font {
             }
         }
 
-        protected internal virtual void LocaToBytes() {
+        private void LocaToBytes() {
             if (locaShortTable) {
                 locaTableRealSize = newLocaTable.Length * 2;
             }
@@ -360,18 +350,18 @@ namespace iText.IO.Font {
             newLocaTableOut = new byte[locaTableRealSize + 3 & ~3];
             outFont = newLocaTableOut;
             fontPtr = 0;
-            for (int k = 0; k < newLocaTable.Length; ++k) {
+            foreach (int location in newLocaTable) {
                 if (locaShortTable) {
-                    WriteFontShort(newLocaTable[k] / 2);
+                    WriteFontShort(location / 2);
                 }
                 else {
-                    WriteFontInt(newLocaTable[k]);
+                    WriteFontInt(location);
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void FlatGlyphs() {
+        private void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
                 throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
@@ -384,14 +374,14 @@ namespace iText.IO.Font {
             }
             tableGlyphOffset = tableLocation[TABLE_OFFSET];
             // Do not replace with foreach. ConcurrentModificationException will arise.
-            for (int k = 0; k < glyphsInList.Count; ++k) {
-                int glyph = (int)glyphsInList[k];
-                CheckGlyphComposite(glyph);
+            // noinspection ForLoopReplaceableByForEach
+            for (int i = 0; i < glyphsInList.Count; i++) {
+                CheckGlyphComposite((int)glyphsInList[i]);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CheckGlyphComposite(int glyph) {
+        private void CheckGlyphComposite(int glyph) {
             int start = locaTable[glyph];
             if (start == locaTable[glyph + 1]) {
                 // no contour
@@ -447,7 +437,7 @@ namespace iText.IO.Font {
         /// read
         /// </returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        protected internal virtual String ReadStandardString(int length) {
+        private String ReadStandardString(int length) {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);
             try {
@@ -458,25 +448,25 @@ namespace iText.IO.Font {
             }
         }
 
-        protected internal virtual void WriteFontShort(int n) {
+        private void WriteFontShort(int n) {
             outFont[fontPtr++] = (byte)(n >> 8);
             outFont[fontPtr++] = (byte)n;
         }
 
-        protected internal virtual void WriteFontInt(int n) {
+        private void WriteFontInt(int n) {
             outFont[fontPtr++] = (byte)(n >> 24);
             outFont[fontPtr++] = (byte)(n >> 16);
             outFont[fontPtr++] = (byte)(n >> 8);
             outFont[fontPtr++] = (byte)n;
         }
 
-        protected internal virtual void WriteFontString(String s) {
+        private void WriteFontString(String s) {
             byte[] b = PdfEncodings.ConvertToBytes(s, PdfEncodings.WINANSI);
             Array.Copy(b, 0, outFont, fontPtr, b.Length);
             fontPtr += b.Length;
         }
 
-        protected internal virtual int CalculateChecksum(byte[] b) {
+        private int CalculateChecksum(byte[] b) {
             int len = b.Length / 4;
             int v0 = 0;
             int v1 = 0;

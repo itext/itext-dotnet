@@ -271,7 +271,30 @@ namespace iText.Pdfa.Checker {
         /// containing the color spaces used in the document
         /// </param>
         /// <param name="fill">whether the color is used for fill or stroke operations</param>
+        [System.ObsoleteAttribute(@"This method will be replaced by CheckColor(iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfDictionary, bool?, iText.Kernel.Pdf.PdfStream) checkColor in 7.2 release"
+            )]
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
+
+        /// <summary>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// </summary>
+        /// <remarks>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// This method will be abstract in update 7.2
+        /// </remarks>
+        /// <param name="color">the color to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="fill">whether the color is used for fill or stroke operations</param>
+        /// <param name="contentStream">current content stream</param>
+        public virtual void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
+            ) {
+        }
 
         /// <summary>
         /// This method performs a range of checks on the given color space, depending
@@ -305,7 +328,23 @@ namespace iText.Pdfa.Checker {
         /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
         /// </summary>
         /// <param name="extGState">the graphics state to be checked</param>
+        [System.ObsoleteAttribute(@"This method will be replaced by CheckExtGState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Pdf.PdfStream) checkExtGState in 7.2 release"
+            )]
         public abstract void CheckExtGState(CanvasGraphicsState extGState);
+
+        /// <summary>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// </summary>
+        /// <remarks>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// This method will be abstract in the update 7.2
+        /// </remarks>
+        /// <param name="extGState">the graphics state to be checked</param>
+        /// <param name="contentStream">current content stream</param>
+        public virtual void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
+        }
 
         /// <summary>Performs a number of checks on the font.</summary>
         /// <remarks>
@@ -316,6 +355,24 @@ namespace iText.Pdfa.Checker {
         /// </remarks>
         /// <param name="pdfFont">font to be checked</param>
         public abstract void CheckFont(PdfFont pdfFont);
+
+        /// <summary>Performs a check of the each font glyph as a Form XObject.</summary>
+        /// <remarks>
+        /// Performs a check of the each font glyph as a Form XObject. See ISO 19005-2 Annex A.5.
+        /// This only applies to type 3 fonts.
+        /// This method will be abstract in update 7.2
+        /// </remarks>
+        /// <param name="font">
+        /// 
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// to be checked
+        /// </param>
+        /// <param name="contentStream">stream containing checked font</param>
+        public virtual void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
+        }
+
+        protected internal virtual void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources) {
+        }
 
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
@@ -457,6 +514,7 @@ namespace iText.Pdfa.Checker {
             CheckResources(pageResources);
             CheckAnnotations(pageDict);
             CheckPageSize(pageDict);
+            CheckPageTransparency(pageDict, page.GetResources().GetPdfObject());
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
                 checkedObjects.Add(page.GetContentStream(j));

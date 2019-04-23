@@ -67,7 +67,7 @@ namespace iText.Layout.Font {
 
         /// <summary>Sets preferred font weight</summary>
         /// <param name="fw">font weight in css notation.</param>
-        /// <seealso>com.itextpdf.io.font.constants.FontWeights.</seealso>
+        /// <seealso cref="iText.IO.Font.Constants.FontWeights"/>
         /// <returns>this instance.</returns>
         public iText.Layout.Font.FontCharacteristics SetFontWeight(short fw) {
             if (fw > 0) {
@@ -131,7 +131,7 @@ namespace iText.Layout.Font {
         }
 
         public bool IsBold() {
-            return isBold || fontWeight > 600;
+            return isBold || fontWeight > 500;
         }
 
         public bool IsMonospace() {

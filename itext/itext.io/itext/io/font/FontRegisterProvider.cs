@@ -59,9 +59,6 @@ namespace iText.IO.Font {
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
         private readonly IDictionary<String, String> fontNames = new Dictionary<String, String>();
 
-        private static String[] TTFamilyOrder = new String[] { "3", "1", "1033", "3", "0", "1033", "1", "0", "0", 
-            "0", "3", "0" };
-
         /// <summary>This is a map of fontfamilies.</summary>
         private readonly IDictionary<String, IList<String>> fontFamilies = new Dictionary<String, IList<String>>();
 
@@ -232,10 +229,8 @@ namespace iText.IO.Font {
             try {
                 if (path.ToLowerInvariant().EndsWith(".ttf") || path.ToLowerInvariant().EndsWith(".otf") || path.ToLowerInvariant
                     ().IndexOf(".ttc,", StringComparison.Ordinal) > 0) {
-                    FontProgram fontProgram = FontProgramFactory.CreateFont(path);
-                    Object[] allNames = new Object[] { fontProgram.GetFontNames().GetFontName(), fontProgram.GetFontNames().GetFamilyName
-                        (), fontProgram.GetFontNames().GetFullName() };
-                    fontNames.Put(((String)allNames[0]).ToLowerInvariant(), path);
+                    FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(path);
+                    fontNames.Put(descriptor.GetFontNameLowerCase(), path);
                     if (alias != null) {
                         String lcAlias = alias.ToLowerInvariant();
                         fontNames.Put(lcAlias, path);
@@ -245,47 +240,16 @@ namespace iText.IO.Font {
                         }
                     }
                     // register all the font names with all the locales
-                    String[][] names = (String[][])allNames[2];
-                    //full name
-                    foreach (String[] name in names) {
-                        String lcName = name[3].ToLowerInvariant();
-                        fontNames.Put(lcName, path);
-                        if (lcName.EndsWith("regular")) {
+                    foreach (String name in descriptor.GetFullNameAllLangs()) {
+                        fontNames.Put(name, path);
+                        if (name.EndsWith("regular")) {
                             //do this job to give higher priority to regular fonts in comparison with light, narrow, etc
-                            SaveCopyOfRegularFont(lcName, path);
+                            SaveCopyOfRegularFont(name, path);
                         }
                     }
-                    String fullName;
-                    String familyName = null;
-                    names = (String[][])allNames[1];
-                    //family name
-                    for (int k = 0; k < TTFamilyOrder.Length; k += 3) {
-                        foreach (String[] name in names) {
-                            if (TTFamilyOrder[k].Equals(name[0]) && TTFamilyOrder[k + 1].Equals(name[1]) && TTFamilyOrder[k + 2].Equals
-                                (name[2])) {
-                                familyName = name[3].ToLowerInvariant();
-                                k = TTFamilyOrder.Length;
-                                break;
-                            }
-                        }
-                    }
-                    if (familyName != null) {
-                        String lastName = "";
-                        names = (String[][])allNames[2];
-                        //full name
-                        foreach (String[] name in names) {
-                            for (int k = 0; k < TTFamilyOrder.Length; k += 3) {
-                                if (TTFamilyOrder[k].Equals(name[0]) && TTFamilyOrder[k + 1].Equals(name[1]) && TTFamilyOrder[k + 2].Equals
-                                    (name[2])) {
-                                    fullName = name[3];
-                                    if (fullName.Equals(lastName)) {
-                                        continue;
-                                    }
-                                    lastName = fullName;
-                                    RegisterFontFamily(familyName, fullName, null);
-                                    break;
-                                }
-                            }
+                    if (descriptor.GetFamilyNameEnglishOpenType() != null) {
+                        foreach (String fullName in descriptor.GetFullNamesEnglishOpenType()) {
+                            RegisterFontFamily(descriptor.GetFamilyNameEnglishOpenType(), fullName, null);
                         }
                     }
                 }
@@ -304,13 +268,10 @@ namespace iText.IO.Font {
                     }
                     else {
                         if (path.ToLowerInvariant().EndsWith(".afm") || path.ToLowerInvariant().EndsWith(".pfm")) {
-                            FontProgram fontProgram = FontProgramFactory.CreateFont(path);
-                            String fullName = fontProgram.GetFontNames().GetFullName()[0][3].ToLowerInvariant();
-                            String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLowerInvariant();
-                            String psName = fontProgram.GetFontNames().GetFontName().ToLowerInvariant();
-                            RegisterFontFamily(familyName, fullName, null);
-                            fontNames.Put(psName, path);
-                            fontNames.Put(fullName, path);
+                            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(path);
+                            RegisterFontFamily(descriptor.GetFamilyNameLowerCase(), descriptor.GetFullNameLowerCase(), null);
+                            fontNames.Put(descriptor.GetFontNameLowerCase(), path);
+                            fontNames.Put(descriptor.GetFullNameLowerCase(), path);
                         }
                     }
                 }

@@ -62,13 +62,5 @@ namespace iText.Svg.Renderers.Impl {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsFalse(renderer.IsDrawn());
         }
-
-        [NUnit.Framework.Test]
-        public virtual void DeepCopyTest() {
-            UseSvgNodeRenderer expected = new UseSvgNodeRenderer();
-            expected.SetAttribute(SvgConstants.Attributes.HREF, "#blue.svg");
-            ISvgNodeRenderer actual = expected.CreateDeepCopy();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
     }
 }

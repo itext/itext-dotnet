@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Text;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -171,6 +172,49 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestFontSpacingEqualsCharSpacing() {
+            byte[] content = CreatePdfWithFontSpacingEqualsCharSpacing();
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
+            NUnit.Framework.Assert.AreEqual("Preface", text);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestLittleFontSize() {
+            byte[] content = CreatePdfWithLittleFontSize();
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
+            NUnit.Framework.Assert.AreEqual("Preface", text);
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void testType3FontWithDifferences()
+        {
+            String sourcePdf = sourceFolder + "DocumentWithType3FontWithDifferences.pdf";
+            String comparedTextFile = sourceFolder + "textFromDocWithType3FontWithDifferences.txt";
+
+            PdfDocument pdf = new PdfDocument(new PdfReader(sourcePdf));
+            String result = PdfTextExtractor.GetTextFromPage(pdf.GetPage(1), new LocationTextExtractionStrategy());
+
+            PdfDictionary pdfType3FontDict = (PdfDictionary) pdf.GetPdfObject(292);
+            PdfType3Font pdfType3Font = (PdfType3Font) PdfFontFactory.CreateFont(pdfType3FontDict);
+
+            pdf.Close();
+
+            NUnit.Framework.Assert.AreEqual(File.ReadAllText(comparedTextFile, Encoding.UTF8), result);
+
+            NUnit.Framework.Assert.AreEqual(83, pdfType3Font.GetNumberOfGlyphs());
+
+            NUnit.Framework.Assert.AreEqual("gA", pdfType3Font.GetFontEncoding().GetDifference(10));
+            NUnit.Framework.Assert.AreEqual(41, pdfType3Font.GetFontProgram().GetGlyphByCode(10).GetUnicode());
+
+            NUnit.Framework.Assert.AreEqual(".notdef", pdfType3Font.GetFontEncoding().GetDifference(210));
+            NUnit.Framework.Assert.AreEqual(928, pdfType3Font.GetFontProgram().GetGlyphByCode(210).GetUnicode());
+        }
+
+        /// <exception cref="System.Exception"/>
         private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String str2) {
             MemoryStream baos = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
@@ -268,6 +312,62 @@ namespace iText.Layout {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
             document.Add(new Paragraph(regularText).Add(new Text(superscriptText).SetTextRise(7)));
+            document.Close();
+            return byteStream.ToArray();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private byte[] CreatePdfWithFontSpacingEqualsCharSpacing() {
+            MemoryStream byteStream = new MemoryStream();
+            PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            PdfFont font = PdfFontFactory.CreateFont();
+            PdfTextArray textArray = new PdfTextArray();
+            textArray.Add(font.ConvertToBytes("P"));
+            textArray.Add(-226.2f);
+            textArray.Add(font.ConvertToBytes("r"));
+            textArray.Add(-231.8f);
+            textArray.Add(font.ConvertToBytes("e"));
+            textArray.Add(-230.8f);
+            textArray.Add(font.ConvertToBytes("f"));
+            textArray.Add(-238);
+            textArray.Add(font.ConvertToBytes("a"));
+            textArray.Add(-238.9f);
+            textArray.Add(font.ConvertToBytes("c"));
+            textArray.Add(-228.9f);
+            textArray.Add(font.ConvertToBytes("e"));
+            float charSpace = font.GetWidth(' ', 12);
+            canvas.SaveState().BeginText().SetFontAndSize(font, 12).SetCharacterSpacing(-charSpace).ShowText(textArray
+                ).EndText().RestoreState();
+            canvas.Release();
+            document.Close();
+            return byteStream.ToArray();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private byte[] CreatePdfWithLittleFontSize() {
+            MemoryStream byteStream = new MemoryStream();
+            PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
+            PdfPage page1 = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            PdfTextArray textArray = new PdfTextArray();
+            PdfFont font = PdfFontFactory.CreateFont();
+            textArray.Add(font.ConvertToBytes("P"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("r"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("e"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("f"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("a"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("c"));
+            textArray.Add(1);
+            textArray.Add(font.ConvertToBytes("e"));
+            canvas.SaveState().BeginText().SetFontAndSize(font, 0.2f).ShowText(textArray).EndText().RestoreState();
+            canvas.Release();
             document.Close();
             return byteStream.ToArray();
         }
