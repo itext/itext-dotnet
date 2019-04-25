@@ -566,6 +566,7 @@ namespace iText.Kernel.Pdf {
                 logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
+            pdfDocument.GetXref().MarkReadingCompleted();
             ReadDecryptObj();
         }
 
@@ -667,8 +668,16 @@ namespace iText.Kernel.Pdf {
                 }
             }
             else {
-                reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                    0).SetState(PdfObject.READING));
+                if (table.IsReadingCompleted()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                        (), tokens.GetGenNr()));
+                    return CreatePdfNullInstance(readAsDirect);
+                }
+                else {
+                    reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                        0).SetState(PdfObject.READING));
+                }
             }
             return reference;
         }
@@ -923,7 +932,7 @@ namespace iText.Kernel.Pdf {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
                     }
                     else {
-                        if (reference.CheckState(PdfObject.READING) && reference.GetGenNumber() == gen) {
+                        if (refReadingState) {
                             reference.SetOffset(pos);
                             reference.ClearState(PdfObject.READING);
                         }
