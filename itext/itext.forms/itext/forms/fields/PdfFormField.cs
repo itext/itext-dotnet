@@ -3495,7 +3495,7 @@ namespace iText.Forms.Fields {
             }
             canvas.BeginVariableText().SaveState().NewPath();
             TextAlignment? textAlignment = ConvertJustificationToTextAlignment();
-            float x = X_OFFSET;
+            float x = 0;
             if (textAlignment == TextAlignment.RIGHT) {
                 x = rect.GetWidth();
             }

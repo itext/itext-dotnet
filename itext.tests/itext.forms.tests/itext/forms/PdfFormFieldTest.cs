@@ -748,9 +748,9 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DashedBorderApearanceTest() {
-            String outPdf = destinationFolder + "dashedBorderApearanceTest.pdf";
-            String cmpPdf = sourceFolder + "cmp_dashedBorderApearanceTest.pdf";
+        public virtual void DashedBorderAppearanceTest() {
+            String outPdf = destinationFolder + "dashedBorderAppearanceTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_dashedBorderAppearanceTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
