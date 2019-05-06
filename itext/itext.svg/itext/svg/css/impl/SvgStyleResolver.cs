@@ -57,7 +57,7 @@ using iText.Svg.Processors.Impl;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
-    /// <summary>Default CSS resolver implementation.</summary>
+    /// <summary>Default implementation of SVG`s styles and attribute resolver .</summary>
     public class SvgStyleResolver : ICssResolver {
         private CssStyleSheet css;
 
@@ -71,6 +71,9 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>The style-resolver util responsible for resolving inheritance rules</summary>
         private StyleResolverUtil sru = new StyleResolverUtil();
+
+        /// <summary>The resource resolver</summary>
+        private ResourceResolver resourceResolver = new ResourceResolver("");
 
         /// <summary>
         /// Creates a
@@ -107,6 +110,7 @@ namespace iText.Svg.Css.Impl {
         public SvgStyleResolver(INode rootNode, SvgProcessorContext context) {
             // TODO DEVSIX-2060. Fetch default styles first.
             this.deviceDescription = context.GetDeviceDescription();
+            this.resourceResolver = context.GetResourceResolver();
             CollectCssDeclarations(rootNode, context.GetResourceResolver());
             CollectFonts();
         }
@@ -147,6 +151,33 @@ namespace iText.Svg.Css.Impl {
             return styles;
         }
 
+        /// <summary>
+        /// Resolves the full path of Link href attribute,
+        /// thanks to the resource resolver.
+        /// </summary>
+        /// <param name="attr">attribute to process</param>
+        /// <param name="attributesMap"/>
+        private void ProcessXLink(IAttribute attr, IDictionary<String, String> attributesMap) {
+            String xlinkValue = attr.GetValue();
+            if (!IsStartedWithHash(xlinkValue)) {
+                try {
+                    xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
+                }
+                catch (UriFormatException mue) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
+                    logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, mue);
+                }
+            }
+            attributesMap.Put(attr.GetKey(), xlinkValue);
+        }
+
+        /// <summary>Checks if string starts with #.</summary>
+        /// <param name="s">test string</param>
+        /// <returns/>
+        private bool IsStartedWithHash(String s) {
+            return s != null && s.StartsWith("#");
+        }
+
         private void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
             this.css = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
@@ -154,13 +185,12 @@ namespace iText.Svg.Css.Impl {
                 q.Add(rootNode);
             }
             while (!q.IsEmpty()) {
-                INode currentNode = q.JGetFirst();
-                q.RemoveFirst();
+                INode currentNode = q.JRemoveFirst();
                 if (currentNode is IElementNode) {
                     IElementNode headChildElement = (IElementNode)currentNode;
-                    if (headChildElement.Name().Equals(SvgConstants.Attributes.STYLE)) {
+                    if (SvgConstants.Attributes.STYLE.Equals(headChildElement.Name())) {
                         //XML parser will parse style tag contents as text nodes
-                        if (currentNode.ChildNodes().Count > 0 && (currentNode.ChildNodes()[0] is IDataNode || currentNode.ChildNodes
+                        if (!currentNode.ChildNodes().IsEmpty() && (currentNode.ChildNodes()[0] is IDataNode || currentNode.ChildNodes
                             ()[0] is ITextNode)) {
                             String styleData;
                             if (currentNode.ChildNodes()[0] is IDataNode) {
@@ -238,15 +268,25 @@ namespace iText.Svg.Css.Impl {
         }
 
         private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
-            //Style attribute needs to be parsed further
-            if (attr.GetKey().Equals(SvgConstants.Attributes.STYLE)) {
-                IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
-                foreach (KeyValuePair<String, String> style in parsed) {
-                    styles.Put(style.Key, style.Value);
+            switch (attr.GetKey()) {
+                case SvgConstants.Attributes.STYLE: {
+                    //Style attribute needs to be parsed further
+                    IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
+                    foreach (KeyValuePair<String, String> style in parsed) {
+                        styles.Put(style.Key, style.Value);
+                    }
+                    break;
                 }
-            }
-            else {
-                styles.Put(attr.GetKey(), attr.GetValue());
+
+                case SvgConstants.Attributes.XLINK_HREF: {
+                    ProcessXLink(attr, styles);
+                    break;
+                }
+
+                default: {
+                    styles.Put(attr.GetKey(), attr.GetValue());
+                    break;
+                }
             }
         }
 

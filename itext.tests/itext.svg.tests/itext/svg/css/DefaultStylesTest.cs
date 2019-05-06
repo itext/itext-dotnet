@@ -118,17 +118,6 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        public virtual void OverrideDefaultStyleTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
-            iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("svg"), "");
-            svg.Attributes().Put(SvgConstants.Attributes.STROKE, "white");
-            INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
-            NUnit.Framework.Assert.AreEqual("white", resolvedStyles.Get(SvgConstants.Attributes.STROKE));
-        }
-
-        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("RND-1089")]
         public virtual void InheritedDefaultStyleTest() {
             ICssResolver styleResolver = new SvgStyleResolver();

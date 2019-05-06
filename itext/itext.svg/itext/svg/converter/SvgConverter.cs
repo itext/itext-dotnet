@@ -611,6 +611,14 @@ namespace iText.Svg.Converter {
             }
         }
 
+        /// <summary>Copies properties from custom ISvgConverterProperties into new SvgConverterProperties.</summary>
+        /// <remarks>
+        /// Copies properties from custom ISvgConverterProperties into new SvgConverterProperties.
+        /// Since ISvgConverterProperties itself is immutable we have to do it.
+        /// </remarks>
+        /// <param name="props"/>
+        /// <param name="baseUri"/>
+        /// <returns/>
         private static SvgConverterProperties ConvertToSvgConverterProps(ISvgConverterProperties props, String baseUri
             ) {
             return new SvgConverterProperties().SetBaseUri(baseUri).SetMediaDeviceDescription(props.GetMediaDeviceDescription
@@ -702,7 +710,7 @@ namespace iText.Svg.Converter {
             //process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
             ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
-            String baseUri = props != null ? props.GetBaseUri() : "";
+            String baseUri = TryToExtractBaseUri(props);
             SvgDrawContext drawContext = new SvgDrawContext(new ResourceResolver(baseUri), processorResult.GetFontProvider
                 ());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
@@ -1196,7 +1204,8 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException">when the Stream cannot be read correctly</exception>
         public static ISvgProcessorResult ParseAndProcess(Stream svgStream, ISvgConverterProperties props) {
             IXmlParser parser = new JsoupXmlParser();
-            INode nodeTree = parser.Parse(svgStream, props != null ? props.GetCharset() : null);
+            String charset = TryToExtractCharset(props);
+            INode nodeTree = parser.Parse(svgStream, charset);
             return new DefaultSvgProcessor().Process(nodeTree, props);
         }
 
@@ -1296,7 +1305,7 @@ namespace iText.Svg.Converter {
             CheckNull(stream);
             // props is allowed to be null
             IXmlParser xmlParser = new JsoupXmlParser();
-            return xmlParser.Parse(stream, props != null ? props.GetCharset() : null);
+            return xmlParser.Parse(stream, TryToExtractCharset(props));
         }
 
         /// <summary>
@@ -1356,6 +1365,32 @@ namespace iText.Svg.Converter {
             res[0] = width;
             res[1] = height;
             return res;
+        }
+
+        /// <summary>
+        /// Tries to extract charset from
+        /// <seealso>ISvgConverterProperties</seealso>
+        /// .
+        /// </summary>
+        /// <param name="props">converter properties</param>
+        /// <returns>charset  | null</returns>
+        private static String TryToExtractCharset(ISvgConverterProperties props) {
+            return props != null ? props.GetCharset() : null;
+        }
+
+        /// <summary>
+        /// Tries to extract baseUri from
+        /// <seealso>ISvgConverterProperties</seealso>
+        /// .
+        /// </summary>
+        /// <param name="props">converter properties</param>
+        /// <returns>baseUrl  | null</returns>
+        private static String TryToExtractBaseUri(ISvgConverterProperties props) {
+            if (props == null || props.GetBaseUri() == null) {
+                return null;
+            }
+            String baseUrl = props.GetBaseUri().Trim();
+            return String.IsNullOrEmpty(baseUrl) ? null : baseUrl;
         }
     }
 }

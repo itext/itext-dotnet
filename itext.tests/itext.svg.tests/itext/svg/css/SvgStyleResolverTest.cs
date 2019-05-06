@@ -42,15 +42,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     public class SvgStyleResolverTest : SvgIntegrationTest {
@@ -94,6 +97,62 @@ namespace iText.Svg.Css {
             expected.Put("stroke-width", "1.5");
             expected.Put("stroke", "#da0000");
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgCssResolverXlinkTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("image"), "");
+            Attributes imageAttributes = jsoupImage.Attributes();
+            imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "itis.jpg"));
+            JsoupElementNode node = new JsoupElementNode(jsoupImage);
+            SvgConverterProperties scp = new SvgConverterProperties();
+            scp.SetBaseUri(sourceFolder);
+            SvgProcessorContext processorContext = new SvgProcessorContext(scp);
+            SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            String fileName = sourceFolder + "itis.jpg";
+            String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
+            NUnit.Framework.Assert.AreEqual(expectedURL, attr.Get("xlink:href"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgCssResolveHashXlinkTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("image"), "");
+            Attributes imageAttributes = jsoupImage.Attributes();
+            imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "#testid"));
+            JsoupElementNode node = new JsoupElementNode(jsoupImage);
+            SvgConverterProperties scp = new SvgConverterProperties();
+            scp.SetBaseUri(sourceFolder);
+            SvgProcessorContext processorContext = new SvgProcessorContext(scp);
+            SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            NUnit.Framework.Assert.AreEqual("#testid", attr.Get("xlink:href"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, Count = 1)]
+        public virtual void SvgCssResolveMalformedXlinkTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("image"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes imageAttributes = jsoupImage.Attributes();
+            imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "htt://are/"));
+            JsoupElementNode node = new JsoupElementNode(jsoupImage);
+            SvgStyleResolver sr = new SvgStyleResolver();
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            NUnit.Framework.Assert.AreEqual("htt://are/", attr.Get("xlink:href"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverrideDefaultStyleTest() {
+            ICssResolver styleResolver = new SvgStyleResolver();
+            iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("svg"), "");
+            svg.Attributes().Put(SvgConstants.Attributes.STROKE, "white");
+            INode svgNode = new JsoupElementNode(svg);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
+            NUnit.Framework.Assert.AreEqual("white", resolvedStyles.Get(SvgConstants.Attributes.STROKE));
         }
 
         [NUnit.Framework.Test]

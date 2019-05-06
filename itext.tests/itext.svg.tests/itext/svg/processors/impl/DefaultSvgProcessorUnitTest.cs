@@ -41,14 +41,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
+using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.Svg;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Processors.Impl {
     public class DefaultSvgProcessorUnitTest {
@@ -244,16 +248,6 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.IsNull(rootActual);
         }
 
-        private class EmptySvgConverterProperties : SvgConverterProperties {
-            public override ISvgNodeRendererFactory GetRendererFactory() {
-                return null;
-            }
-
-            public override String GetCharset() {
-                return null;
-            }
-        }
-
         [NUnit.Framework.Test]
         public virtual void FindFirstElementNullTest() {
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
@@ -283,6 +277,64 @@ namespace iText.Svg.Processors.Impl {
             dsp.PerformSetup(root, scp);
             // below method must not throw a NullPointerException
             dsp.ExecuteDepthFirstTraversal(root);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void XLinkAttributeBaseDirDoesNotExistTest() {
+            INode root = CreateSvgContainingImage();
+            String resolvedBaseUrl = "/i7j/itextcore";
+            String baseUrl = resolvedBaseUrl + "/wrongDirName";
+            ISvgConverterProperties props = new SvgConverterProperties().SetBaseUri(baseUrl);
+            SvgTagSvgNodeRenderer rootActual = (SvgTagSvgNodeRenderer)Processor().Process(root, props).GetRootRenderer
+                ();
+            String fileName = resolvedBaseUrl + "/img.png";
+            String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
+            ISvgNodeRenderer imageRendered = rootActual.GetChildren()[0];
+            String url = imageRendered.GetAttribute(SvgConstants.Attributes.XLINK_HREF);
+            NUnit.Framework.Assert.AreEqual(expectedURL, url);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void XLinkAttributeResolveNonEmptyBaseUrlTest() {
+            INode root = CreateSvgContainingImage();
+            String baseUrl = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext.
+                TestDirectory) + "/resources/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest";
+            ISvgConverterProperties props = new SvgConverterProperties().SetBaseUri(baseUrl);
+            SvgTagSvgNodeRenderer rootActual = (SvgTagSvgNodeRenderer)Processor().Process(root, props).GetRootRenderer
+                ();
+            String fileName = baseUrl + "/img.png";
+            String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
+            ISvgNodeRenderer imageRendered = rootActual.GetChildren()[0];
+            String url = imageRendered.GetAttribute(SvgConstants.Attributes.XLINK_HREF);
+            NUnit.Framework.Assert.AreEqual(expectedURL, url);
+        }
+
+        private INode CreateSvgContainingImage() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("svg"), "");
+            Attributes attr = new Attributes();
+            attr.Put(SvgConstants.Attributes.XLINK_HREF, "img.png");
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("image"), "", attr);
+            INode root = new JsoupElementNode(jsoupSVGRoot);
+            root.AddChild(new JsoupElementNode(jsoupSVGImage));
+            return root;
+        }
+
+        private static ISvgProcessor Processor() {
+            return new DefaultSvgProcessor();
+        }
+
+        private class EmptySvgConverterProperties : SvgConverterProperties {
+            public override ISvgNodeRendererFactory GetRendererFactory() {
+                return null;
+            }
+
+            public override String GetCharset() {
+                return null;
+            }
         }
     }
 }

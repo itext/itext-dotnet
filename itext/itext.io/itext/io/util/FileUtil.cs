@@ -180,5 +180,9 @@ namespace iText.IO.Util {
                 return false;
             }
         }
+        
+        public static String ParentDirectory(Uri url) {
+            return new Uri(url, ".").ToString();
+        }
     }
 }

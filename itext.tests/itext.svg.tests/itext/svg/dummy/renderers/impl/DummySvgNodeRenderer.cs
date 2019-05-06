@@ -52,6 +52,8 @@ namespace iText.Svg.Dummy.Renderers.Impl {
     /// for testing purposes
     /// </summary>
     public class DummySvgNodeRenderer : ISvgNodeRenderer {
+        internal IDictionary<String, String> attributes;
+
         internal ISvgNodeRenderer parent;
 
         internal String name;
@@ -62,8 +64,13 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             : this("dummy") {
         }
 
-        public DummySvgNodeRenderer(String name) {
+        public DummySvgNodeRenderer(String name)
+            : this(name, new Dictionary<String, String>()) {
+        }
+
+        public DummySvgNodeRenderer(String name, IDictionary<String, String> attr) {
             this.name = name;
+            this.attributes = attr;
         }
 
         public virtual void SetParent(ISvgNodeRenderer parent) {
@@ -80,6 +87,7 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         }
 
         public virtual void SetAttributesAndStyles(IDictionary<String, String> attributesAndStyles) {
+            this.attributes = attributesAndStyles;
         }
 
         public virtual String GetAttribute(String key) {
@@ -87,10 +95,11 @@ namespace iText.Svg.Dummy.Renderers.Impl {
                 (key)) {
                 return "10";
             }
-            return "";
+            return this.attributes.Get(key);
         }
 
         public virtual void SetAttribute(String key, String value) {
+            this.attributes.Put(key, value);
         }
 
         public virtual IDictionary<String, String> GetAttributeMapCopy() {
