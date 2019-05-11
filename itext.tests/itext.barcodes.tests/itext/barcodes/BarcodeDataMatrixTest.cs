@@ -49,11 +49,11 @@ using iText.Test;
 
 namespace iText.Barcodes {
     public class BarcodeDataMatrixTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/barcodes/BarcodeDataMatrix/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -271,6 +271,23 @@ namespace iText.Barcodes {
             byte[] str = "AbcdFFghijklmnop".GetBytes();
             int result = barcodeDataMatrix.SetCode(str, str.Length, 0);
             NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_NO_ERROR, result);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode16Test() {
+            String filename = "barcode16Test.pdf";
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
+            BarcodeDataMatrix barcode = new BarcodeDataMatrix();
+            barcode.SetCode("999999DILLERT XANG LIMITON 18               000");
+            canvas.ConcatMatrix(1, 0, 0, 1, 100, 600);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLACK, 3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder));
         }
     }
 }
