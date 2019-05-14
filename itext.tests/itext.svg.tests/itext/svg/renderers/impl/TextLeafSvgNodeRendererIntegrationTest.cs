@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Font;
-using iText.StyledXmlParser.Exceptions;
 using iText.Svg;
 
 namespace iText.Svg.Renderers.Impl {
@@ -72,17 +71,13 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthNaNTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();
-                toTest.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "Hello");
-                toTest.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "spice");
-                PdfFont font = PdfFontFactory.CreateFont();
-                float actual = toTest.GetTextContentLength(12, font);
-                float expected = 27.336f;
-                NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();
+            toTest.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, "Hello");
+            toTest.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "spice");
+            PdfFont font = PdfFontFactory.CreateFont();
+            float actual = toTest.GetTextContentLength(12, font);
+            float expected = 0.0f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
         }
 
         /// <exception cref="System.Exception"/>
