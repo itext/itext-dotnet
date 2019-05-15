@@ -740,13 +740,13 @@ namespace iText.Kernel.Utils {
                 byte[] cmpBytes = cmpDocument.GetXmpMetadata();
                 byte[] outBytes = outDocument.GetXmpMetadata();
                 if (ignoreDateAndProducerProperties) {
-                    XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
+                    XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes, new ParseOptions().SetOmitNormalization(true));
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
                     cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
-                    xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes);
+                    xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes, new ParseOptions().SetOmitNormalization(true));
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);

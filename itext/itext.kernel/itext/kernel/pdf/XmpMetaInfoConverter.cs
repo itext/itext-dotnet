@@ -130,7 +130,8 @@ namespace iText.Kernel.Pdf {
                         if (PdfName.Author.Equals(key)) {
                             foreach (String v in iText.IO.Util.StringUtil.Split(value, ",|;")) {
                                 if (v.Trim().Length > 0) {
-                                    AppendArrayItemIfDoesNotExist(xmpMeta, XMPConst.NS_DC, PdfConst.Creator, v.Trim());
+                                    AppendArrayItemIfDoesNotExist(xmpMeta, XMPConst.NS_DC, PdfConst.Creator, v.Trim(), PropertyOptions.ARRAY_ORDERED
+                                        );
                                 }
                             }
                         }
@@ -143,7 +144,7 @@ namespace iText.Kernel.Pdf {
                                 if (PdfName.Keywords.Equals(key)) {
                                     foreach (String v in iText.IO.Util.StringUtil.Split(value, ",|;")) {
                                         if (v.Trim().Length > 0) {
-                                            AppendArrayItemIfDoesNotExist(xmpMeta, XMPConst.NS_DC, PdfConst.Subject, v.Trim());
+                                            AppendArrayItemIfDoesNotExist(xmpMeta, XMPConst.NS_DC, PdfConst.Subject, v.Trim(), PropertyOptions.ARRAY);
                                         }
                                     }
                                     xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Keywords, value);
@@ -181,7 +182,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        private static void AppendArrayItemIfDoesNotExist(XMPMeta meta, String ns, String arrayName, String value) {
+        private static void AppendArrayItemIfDoesNotExist(XMPMeta meta, String ns, String arrayName, String value, 
+            int arrayOption) {
             int currentCnt = meta.CountArrayItems(ns, arrayName);
             for (int i = 0; i < currentCnt; i++) {
                 XMPProperty item = meta.GetArrayItem(ns, arrayName, i + 1);
@@ -189,7 +191,7 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
             }
-            meta.AppendArrayItem(ns, arrayName, new PropertyOptions(PropertyOptions.ARRAY_ORDERED), value, null);
+            meta.AppendArrayItem(ns, arrayName, new PropertyOptions(arrayOption), value, null);
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
