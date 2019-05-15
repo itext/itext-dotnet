@@ -40,9 +40,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Util;
+using System;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
@@ -79,7 +78,7 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.That(() =>  {
                 TransformUtils.ParseTransform("matrix(a b c d e f)");
             }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "a")))
+            , NUnit.Framework.Throws.InstanceOf<FormatException>())
 ;
         }
 
@@ -122,14 +121,14 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void CommasWithWhitespaceTest() {
-            AffineTransform expected = new AffineTransform(7.5d, 15d, 22.5d, 30d, 37.5d, 45d);
+            AffineTransform expected = new AffineTransform(10d, 20d, 30d, 40d, 37.5d, 45d);
             AffineTransform actual = TransformUtils.ParseTransform("matrix(10, 20, 30, 40, 50, 60)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void CommasTest() {
-            AffineTransform expected = new AffineTransform(7.5d, 15d, 22.5d, 30d, 37.5d, 45d);
+            AffineTransform expected = new AffineTransform(10d, 20d, 30d, 40d, 37.5d, 45d);
             AffineTransform actual = TransformUtils.ParseTransform("matrix(10,20,30,40,50,60)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

@@ -217,5 +217,16 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100", CommonCssConstants.PX), EPS);
             NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100px"), EPS);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidFloat() {
+            String value = "invalidFloat";
+            try {
+                NUnit.Framework.Assert.IsNull(CssUtils.ParseFloat(value));
+            }
+            catch (Exception) {
+                NUnit.Framework.Assert.Fail();
+            }
+        }
     }
 }
