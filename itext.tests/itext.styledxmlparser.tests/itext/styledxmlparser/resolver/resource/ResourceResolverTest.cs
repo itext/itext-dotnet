@@ -108,18 +108,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(bLogo);
             NUnit.Framework.Assert.NotNull(stream);
         }
-        
-        [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, Count = 1)]
-        public virtual void retrieveBytesExceptionTest() {
-            String fileName = "resourceResolverTest.png";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            using (File.Open(baseUri+fileName,FileMode.Open,FileAccess.Read,FileShare.None))
-            {
-                byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
-                NUnit.Framework.Assert.Null(bytes);        
-            }
-        }
 
         [NUnit.Framework.Test]
         public void retrieveBytesTest()
