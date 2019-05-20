@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Forms;
@@ -205,6 +206,53 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignaturesOnRotatedPages() {
+            StringBuilder assertionResults = new StringBuilder();
+            for (int i = 1; i <= 4; i++) {
+                TestSignatureOnRotatedPage(i, PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION, assertionResults
+                    );
+                TestSignatureOnRotatedPage(i, PdfSignatureAppearance.RenderingMode.GRAPHIC, assertionResults);
+                TestSignatureOnRotatedPage(i, PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION, assertionResults);
+                TestSignatureOnRotatedPage(i, PdfSignatureAppearance.RenderingMode.DESCRIPTION, assertionResults);
+            }
+            NUnit.Framework.Assert.AreEqual("", assertionResults.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.Exception"/>
+        private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder
+             assertionResults) {
+            String fileName = "signaturesOnRotatedPages" + pageNum + "_mode_" + renderingMode.ToString() + ".pdf";
+            String src = sourceFolder + "documentWithRotatedPages.pdf";
+            String dest = destinationFolder + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ().UseAppendMode());
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetLayer2Text("Digitally signed by Test User. All rights reserved. Take care!").SetPageRect(new 
+                Rectangle(100, 100, 100, 50)).SetRenderingMode(renderingMode).SetSignatureGraphic(ImageDataFactory.Create
+                (sourceFolder + "itext.png")).SetPageNumber(pageNum);
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            // Make sure iText can open the document
+            new PdfDocument(new PdfReader(dest)).Close();
+            try {
+                String testResult = new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                    , "diff_");
+                if (null != testResult) {
+                    assertionResults.Append(testResult);
+                }
+            }
+            catch (CompareTool.CompareToolExecutionException e) {
+                assertionResults.Append(e.Message);
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -185,12 +185,19 @@ namespace iText.Signatures {
         /// Sets the page number of the signature field which this signature
         /// appearance is associated with.
         /// </summary>
+        /// <remarks>
+        /// Sets the page number of the signature field which this signature
+        /// appearance is associated with. Implicitly calls
+        /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
+        /// which considers page number to process the rectangle correctly.
+        /// </remarks>
         /// <param name="pageNumber">
         /// The page number of the signature field which
         /// this signature appearance is associated with.
         /// </param>
         public virtual iText.Signatures.PdfSignatureAppearance SetPageNumber(int pageNumber) {
             this.page = pageNumber;
+            SetPageRect(pageRect);
             return this;
         }
 
@@ -475,6 +482,22 @@ namespace iText.Signatures {
             if (n2 == null) {
                 n2 = new PdfFormXObject(rect);
                 n2.MakeIndirect(document);
+                canvas = new PdfCanvas(n2, document);
+                int rotation = document.GetPage(page).GetRotation();
+                if (rotation == 90) {
+                    canvas.ConcatMatrix(0, 1, -1, 0, rect.GetWidth(), 0);
+                }
+                else {
+                    if (rotation == 180) {
+                        canvas.ConcatMatrix(-1, 0, 0, -1, rect.GetWidth(), rect.GetHeight());
+                    }
+                    else {
+                        if (rotation == 270) {
+                            canvas.ConcatMatrix(0, -1, 1, 0, 0, rect.GetHeight());
+                        }
+                    }
+                }
+                Rectangle rotatedRect = RotateRectangle(this.rect, document.GetPage(page).GetRotation());
                 String text;
                 if (layer2Text == null) {
                     StringBuilder buf = new StringBuilder();
@@ -506,17 +529,18 @@ namespace iText.Signatures {
                 if (image != null) {
                     if (imageScale == 0) {
                         canvas = new PdfCanvas(n2, document);
-                        canvas.AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), 0, 0);
+                        canvas.AddImage(image, rotatedRect.GetWidth(), 0, 0, rotatedRect.GetHeight(), 0, 0);
                     }
                     else {
                         float usableScale = imageScale;
                         if (imageScale < 0) {
-                            usableScale = Math.Min(rect.GetWidth() / image.GetWidth(), rect.GetHeight() / image.GetHeight());
+                            usableScale = Math.Min(rotatedRect.GetWidth() / image.GetWidth(), rotatedRect.GetHeight() / image.GetHeight
+                                ());
                         }
                         float w = image.GetWidth() * usableScale;
                         float h = image.GetHeight() * usableScale;
-                        float x = (rect.GetWidth() - w) / 2;
-                        float y = (rect.GetHeight() - h) / 2;
+                        float x = (rotatedRect.GetWidth() - w) / 2;
+                        float y = (rotatedRect.GetHeight() - h) / 2;
                         canvas = new PdfCanvas(n2, document);
                         canvas.AddImage(image, w, 0, 0, h, x, y);
                     }
@@ -532,17 +556,18 @@ namespace iText.Signatures {
                 Rectangle signatureRect = null;
                 if (renderingMode == PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION || renderingMode == PdfSignatureAppearance.RenderingMode
                     .GRAPHIC_AND_DESCRIPTION && this.signatureGraphic != null) {
-                    if (rect.GetHeight() > rect.GetWidth()) {
-                        signatureRect = new Rectangle(MARGIN, rect.GetHeight() / 2, rect.GetWidth() - 2 * MARGIN, rect.GetHeight()
-                             / 2);
-                        dataRect = new Rectangle(MARGIN, MARGIN, rect.GetWidth() - 2 * MARGIN, rect.GetHeight() / 2 - 2 * MARGIN);
+                    if (rotatedRect.GetHeight() > rotatedRect.GetWidth()) {
+                        signatureRect = new Rectangle(MARGIN, rotatedRect.GetHeight() / 2, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect
+                            .GetHeight() / 2);
+                        dataRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight() / 2 
+                            - 2 * MARGIN);
                     }
                     else {
                         // origin is the bottom-left
-                        signatureRect = new Rectangle(MARGIN, MARGIN, rect.GetWidth() / 2 - 2 * MARGIN, rect.GetHeight() - 2 * MARGIN
-                            );
-                        dataRect = new Rectangle(rect.GetWidth() / 2 + MARGIN / 2, MARGIN, rect.GetWidth() / 2 - MARGIN, rect.GetHeight
+                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() / 2 - 2 * MARGIN, rotatedRect.GetHeight
                             () - 2 * MARGIN);
+                        dataRect = new Rectangle(rotatedRect.GetWidth() / 2 + MARGIN / 2, MARGIN, rotatedRect.GetWidth() / 2 - MARGIN
+                            , rotatedRect.GetHeight() - 2 * MARGIN);
                     }
                 }
                 else {
@@ -551,12 +576,13 @@ namespace iText.Signatures {
                             throw new InvalidOperationException("A signature image must be present when rendering mode is graphic. Use setSignatureGraphic()"
                                 );
                         }
-                        signatureRect = new Rectangle(MARGIN, MARGIN, rect.GetWidth() - 2 * MARGIN, rect.GetHeight() - 2 * MARGIN);
+                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight()
+                             - 2 * MARGIN);
                     }
                     else {
                         // take all space available
-                        dataRect = new Rectangle(MARGIN, MARGIN, rect.GetWidth() - 2 * MARGIN, rect.GetHeight() * (1 - TOP_SECTION
-                            ) - 2 * MARGIN);
+                        dataRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight() * (1
+                             - TOP_SECTION) - 2 * MARGIN);
                     }
                 }
                 switch (renderingMode) {
@@ -622,25 +648,10 @@ namespace iText.Signatures {
                     AddTextToCanvas(text, font, dataRect);
                 }
             }
-            int rotation = document.GetPage(page).GetRotation();
             Rectangle rotated = new Rectangle(rect);
             if (topLayer == null) {
                 topLayer = new PdfFormXObject(rotated);
                 topLayer.MakeIndirect(document);
-                canvas = new PdfCanvas(topLayer, document);
-                if (rotation == 90) {
-                    canvas.ConcatMatrix(0, 1, -1, 0, rect.GetHeight(), 0);
-                }
-                else {
-                    if (rotation == 180) {
-                        canvas.ConcatMatrix(-1, 0, 0, -1, rect.GetWidth(), rect.GetHeight());
-                    }
-                    else {
-                        if (rotation == 270) {
-                            canvas.ConcatMatrix(0, -1, 1, 0, 0, rect.GetWidth());
-                        }
-                    }
-                }
                 if (reuseAppearance) {
                     PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
                     PdfFormField field = acroForm.GetField(fieldName);
@@ -693,6 +704,15 @@ namespace iText.Signatures {
         protected internal virtual iText.Signatures.PdfSignatureAppearance SetFieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
+        }
+
+        private static Rectangle RotateRectangle(Rectangle rect, int angle) {
+            if (0 == (angle / 90) % 2) {
+                return new Rectangle(rect.GetWidth(), rect.GetHeight());
+            }
+            else {
+                return new Rectangle(rect.GetHeight(), rect.GetWidth());
+            }
         }
 
         private void CreateBlankN0() {
