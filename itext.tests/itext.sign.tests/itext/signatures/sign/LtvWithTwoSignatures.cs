@@ -101,7 +101,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual(5, certs.Size());
             PdfArray crls = dssDictionary.GetAsArray(PdfName.CRLs);
             NUnit.Framework.Assert.IsNotNull(crls);
-            NUnit.Framework.Assert.AreEqual(1, crls.Size());
+            NUnit.Framework.Assert.AreEqual(2, crls.Size());
         }
 
         /// <exception cref="System.IO.IOException"/>

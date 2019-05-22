@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Signatures;
 using iText.Signatures.Testutils.Builder;
 
@@ -72,7 +73,8 @@ namespace iText.Signatures.Testutils.Client {
                 byte[] crl = crlBuilder.MakeCrl(caPrivateKey);
                 crls = JavaCollectionsUtil.SingletonList(crl);
             }
-            catch (Exception) {
+            catch (Exception ignore) {
+                throw new PdfException(ignore);
             }
             return crls;
         }

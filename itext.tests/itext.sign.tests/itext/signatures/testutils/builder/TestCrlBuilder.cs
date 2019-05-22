@@ -77,7 +77,6 @@ namespace iText.Signatures.Testutils.Builder {
         public virtual byte[] MakeCrl(ICipherParameters caPrivateKey) {
             crlBuilder.SetNextUpdate(nextUpdate);
             X509Crl crl = crlBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter) caPrivateKey));
-            crlBuilder = null;
             return crl.GetEncoded();
         }
     }
