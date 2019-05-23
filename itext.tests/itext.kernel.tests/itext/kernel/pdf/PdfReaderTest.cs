@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -1487,6 +1488,25 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(pdfObject.IsDictionary());
             NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, ((PdfDictionary)pdfObject).Get(PdfName.Pg));
             pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2133")]
+        public virtual void TestFileIsNotLockedOnException() {
+            FileInfo nonPdfFileName = new FileInfo(sourceFolder + "text_file.txt");
+            NUnit.Framework.Assert.IsTrue(nonPdfFileName.Exists);
+            bool exceptionThrown = false;
+            try {
+                PdfReader reader = new PdfReader(nonPdfFileName);
+            }
+            catch (iText.IO.IOException) {
+                exceptionThrown = true;
+                // File should be available for writing
+                Stream stream = FileUtil.GetFileOutputStream(nonPdfFileName);
+                stream.Write(new byte[] { 0 });
+            }
+            NUnit.Framework.Assert.IsTrue(exceptionThrown);
         }
 
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {
