@@ -1417,20 +1417,14 @@ namespace iText.Kernel.Pdf.Canvas {
                 return this;
             }
             else {
-                if (oldColor.GetColorSpace().Equals(colorSpace)) {
-                    oldColor.SetColorValue(colorValue);
-                    if (oldColor is PatternColor) {
-                        ((PatternColor)oldColor).SetPattern(pattern);
-                    }
-                    setColorValueOnly = true;
+                if (fill) {
+                    currentGs.SetFillColor(newColor);
                 }
                 else {
-                    if (fill) {
-                        currentGs.SetFillColor(newColor);
-                    }
-                    else {
-                        currentGs.SetStrokeColor(newColor);
-                    }
+                    currentGs.SetStrokeColor(newColor);
+                }
+                if (oldColor.GetColorSpace().GetPdfObject().Equals(colorSpace.GetPdfObject())) {
+                    setColorValueOnly = true;
                 }
             }
             if (colorSpace is PdfDeviceCs.Gray) {

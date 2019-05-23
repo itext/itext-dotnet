@@ -78,6 +78,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvas() {
             String author = "Alexander Chingarev";
@@ -1525,6 +1526,51 @@ namespace iText.Kernel.Pdf {
                 ("simple text").EndText().RestoreState();
             canvas.SaveState().BeginText().MoveText(50, 550).SetFontAndSize(PdfFontFactory.CreateFont(), 12).ShowText(
                 "simple text").EndText().RestoreState();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SetColorsSameColorSpaces() {
+            SetColorTest("setColorsSameColorSpaces.pdf", false);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SetColorsSameColorSpacesPattern() {
+            SetColorTest("setColorsSameColorSpacesPattern.pdf", true);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void SetColorTest(String pdfName, bool pattern) {
+            String cmpFile = sourceFolder + "cmp_" + pdfName;
+            String destFile = destinationFolder + pdfName;
+            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfColorSpace space = pattern ? new PdfSpecialCs.Pattern() : PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB
+                );
+            float[] colorValue1 = pattern ? null : new float[] { 1.0f, 0.6f, 0.7f };
+            float[] colorValue2 = pattern ? null : new float[] { 0.1f, 0.9f, 0.9f };
+            PdfPattern pattern1 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 750
+                , ColorConstants.PINK.GetColorValue(), 100, 760, ColorConstants.MAGENTA.GetColorValue())) : null;
+            PdfPattern pattern2 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 690
+                , ColorConstants.BLUE.GetColorValue(), 100, 710, ColorConstants.CYAN.GetColorValue())) : null;
+            canvas.SetColor(space, colorValue1, pattern1, true);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(50, 750).SetFontAndSize(PdfFontFactory.CreateFont(), 16).ShowText("pinkish").EndText
+                ();
+            canvas.SaveState().BeginText().SetColor(space, colorValue2, pattern2, true).MoveText(50, 720).SetFontAndSize
+                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
+            canvas.RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 690).SetColor(space, colorValue2, pattern2, true).SetFontAndSize
+                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
             canvas.Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
