@@ -507,7 +507,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             ApplyBorderBox(backgroundArea, true);
-                            drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
+                            drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
                             float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
                                 .GetX();
                             float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
@@ -617,25 +617,25 @@ namespace iText.Layout.Renderer {
             if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
                 canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
                     [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // right top corner
             if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
                 canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
                     [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // right bottom corner
             if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
                 canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
                     [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // left bottom corner
             if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
                 canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
                      verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
         }
 
@@ -665,7 +665,7 @@ namespace iText.Layout.Renderer {
                      bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
                     , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
                     , y1);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // right top corner
             if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
@@ -675,7 +675,7 @@ namespace iText.Layout.Renderer {
                     ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom -
                      bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(x2, top + topBorderWidth
                     );
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // right bottom corner
             if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
@@ -685,7 +685,7 @@ namespace iText.Layout.Renderer {
                      + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, 
                     bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right 
                     + rightBorderWidth, y3);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
             // left bottom corner
             if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
@@ -695,7 +695,7 @@ namespace iText.Layout.Renderer {
                     , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
                     , top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x4, bottom -
                      bottomBorderWidth);
-                canvas.Clip().NewPath();
+                canvas.Clip().EndPath();
             }
         }
 

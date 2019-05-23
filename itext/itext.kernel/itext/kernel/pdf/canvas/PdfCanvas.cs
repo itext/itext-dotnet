@@ -1104,9 +1104,20 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
+        /// <returns>
+        /// current canvas.
+        /// Ends the path without filling or stroking it.
+        /// </returns>
+        [System.ObsoleteAttribute(@"in favour of endPath(), which does exactly the same thing but is better named"
+            )]
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewPath() {
+            contentStream.GetOutputStream().WriteBytes(n);
+            return this;
+        }
+
         /// <summary>Ends the path without filling or stroking it.</summary>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewPath() {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EndPath() {
             contentStream.GetOutputStream().WriteBytes(n);
             return this;
         }

@@ -546,7 +546,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                         float l = state.TransformX(@in.ReadShort());
                         cb.Rectangle(l, b, r - l, t - b);
                         cb.EoClip();
-                        cb.NewPath();
+                        cb.EndPath();
                         break;
                     }
 
@@ -671,7 +671,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             cb.SaveState();
                             cb.Rectangle(xDest, yDest, destWidth, destHeight);
                             cb.Clip();
-                            cb.NewPath();
+                            cb.EndPath();
                             ImageData bmpImage = ImageDataFactory.CreateBmp(b, true, b.Length);
                             PdfImageXObject imageXObject = new PdfImageXObject(bmpImage);
                             float width = destWidth * bmpImage.GetWidth() / srcWidth;

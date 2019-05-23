@@ -3493,7 +3493,7 @@ namespace iText.Forms.Fields {
             if (IsPassword()) {
                 value = ObfuscatePassword(value);
             }
-            canvas.BeginVariableText().SaveState().NewPath();
+            canvas.BeginVariableText().SaveState().EndPath();
             TextAlignment? textAlignment = ConvertJustificationToTextAlignment();
             float x = 0;
             if (textAlignment == TextAlignment.RIGHT) {
@@ -3575,7 +3575,7 @@ namespace iText.Forms.Fields {
             IList<String> strings = font.SplitString(value, fontSize, width - widthBorder);
             DrawBorder(canvas, appearance, width, height);
             canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - widthBorder, height - heightBorder).Clip().
-                NewPath();
+                EndPath();
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
                 Max(0, width - widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);

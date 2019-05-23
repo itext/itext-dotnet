@@ -91,33 +91,11 @@ namespace iText.Layout.Borders {
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
             float adjustedGap = GetDotsGap(borderLength, initialGap);
-            float widthHalf = width / 2;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
-            switch (borderSide) {
-                case Border.Side.TOP: {
-                    y1 += widthHalf;
-                    y2 += widthHalf;
-                    break;
-                }
-
-                case Border.Side.RIGHT: {
-                    x1 += widthHalf;
-                    x2 += widthHalf;
-                    break;
-                }
-
-                case Border.Side.BOTTOM: {
-                    y1 -= widthHalf;
-                    y2 -= widthHalf;
-                    break;
-                }
-
-                case Border.Side.LEFT: {
-                    x1 -= widthHalf;
-                    x2 -= widthHalf;
-                    break;
-                }
-            }
+            float[] startingPoints = GetStartingPointsForBorderSide(x1, y1, x2, y2, defaultSide);
+            x1 = startingPoints[0];
+            y1 = startingPoints[1];
+            x2 = startingPoints[2];
+            y2 = startingPoints[3];
             canvas.SaveState().SetStrokeColor(transparentColor.GetColor()).SetLineWidth(width).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
                 .ROUND);
             transparentColor.ApplyStrokeTransparency(canvas);
@@ -152,181 +130,20 @@ namespace iText.Layout.Borders {
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float horizontalRadius1
             , float verticalRadius1, float horizontalRadius2, float verticalRadius2, Border.Side defaultSide, float
              borderWidthBefore, float borderWidthAfter) {
-            float curv = 0.447f;
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
             float adjustedGap = GetDotsGap(borderLength, initialGap);
-            // Points (x0, y0) and (x3, y3) are used to produce Bezier curve
-            float x0 = x1;
-            float y0 = y1;
-            float x3 = x2;
-            float y3 = y2;
-            float innerRadiusBefore;
-            float innerRadiusFirst;
-            float innerRadiusSecond;
-            float innerRadiusAfter;
-            float widthHalf = width / 2;
             canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
             transparentColor.ApplyStrokeTransparency(canvas);
             canvas.SetLineWidth(width).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND).SetLineDash(0, adjustedGap
                 , adjustedGap / 2);
-            Point clipPoint1;
-            Point clipPoint2;
-            Point clipPoint;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
-            switch (borderSide) {
-                case Border.Side.TOP: {
-                    innerRadiusBefore = Math.Max(0, horizontalRadius1 - borderWidthBefore);
-                    innerRadiusFirst = Math.Max(0, verticalRadius1 - width);
-                    innerRadiusSecond = Math.Max(0, verticalRadius2 - width);
-                    innerRadiusAfter = Math.Max(0, horizontalRadius2 - borderWidthAfter);
-                    x0 -= borderWidthBefore / 2;
-                    y0 -= innerRadiusFirst;
-                    x3 += borderWidthAfter / 2;
-                    y3 -= innerRadiusSecond;
-                    clipPoint1 = GetIntersectionPoint(new Point(x1 - borderWidthBefore, y1 + width), new Point(x1, y1), new Point
-                        (x0, y0), new Point(x0 + 10, y0));
-                    clipPoint2 = GetIntersectionPoint(new Point(x2 + borderWidthAfter, y2 + width), new Point(x2, y2), new Point
-                        (x3, y3), new Point(x3 - 10, y3));
-                    if (clipPoint1.x > clipPoint2.x) {
-                        clipPoint = GetIntersectionPoint(new Point(x1 - borderWidthBefore, y1 + width), clipPoint1, clipPoint2, new 
-                            Point(x2 + borderWidthAfter, y2 + width));
-                        canvas.MoveTo(x1 - borderWidthBefore, y1 + width).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 + borderWidthAfter
-                            , y2 + width).LineTo(x1 - borderWidthBefore, y1 + width);
-                    }
-                    else {
-                        canvas.MoveTo(x1 - borderWidthBefore, y1 + width).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
-                            clipPoint2.y).LineTo(x2 + borderWidthAfter, y2 + width).LineTo(x1 - borderWidthBefore, y1 + width);
-                    }
-                    canvas.Clip().NewPath();
-                    x1 += innerRadiusBefore;
-                    y1 += widthHalf;
-                    x2 -= innerRadiusAfter;
-                    y2 += widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 + innerRadiusFirst * curv, x1 - innerRadiusBefore * curv, y1, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2 + innerRadiusAfter * curv, y2, x3, y3 + innerRadiusSecond * curv, x3, y3);
-                    break;
-                }
-
-                case Border.Side.RIGHT: {
-                    innerRadiusBefore = Math.Max(0, verticalRadius1 - borderWidthBefore);
-                    innerRadiusFirst = Math.Max(0, horizontalRadius1 - width);
-                    innerRadiusSecond = Math.Max(0, horizontalRadius2 - width);
-                    innerRadiusAfter = Math.Max(0, verticalRadius2 - borderWidthAfter);
-                    x0 -= innerRadiusFirst;
-                    y0 += borderWidthBefore / 2;
-                    x3 -= innerRadiusSecond;
-                    y3 -= borderWidthAfter / 2;
-                    clipPoint1 = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), new Point(x1, y1), new Point
-                        (x0, y0), new Point(x0, y0 - 10));
-                    clipPoint2 = GetIntersectionPoint(new Point(x2 + width, y2 - borderWidthAfter), new Point(x2, y2), new Point
-                        (x3, y3), new Point(x3, y3 - 10));
-                    if (clipPoint1.y < clipPoint2.y) {
-                        clipPoint = GetIntersectionPoint(new Point(x1 + width, y1 + borderWidthBefore), clipPoint1, clipPoint2, new 
-                            Point(x2 + width, y2 - borderWidthAfter));
-                        canvas.MoveTo(x1 + width, y1 + borderWidthBefore).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 + width, y2 -
-                             borderWidthAfter).LineTo(x1 + width, y1 + borderWidthBefore).Clip().NewPath();
-                    }
-                    else {
-                        canvas.MoveTo(x1 + width, y1 + borderWidthBefore).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
-                            clipPoint2.y).LineTo(x2 + width, y2 - borderWidthAfter).LineTo(x1 + width, y1 + borderWidthBefore).Clip
-                            ().NewPath();
-                    }
-                    canvas.Clip().NewPath();
-                    x1 += widthHalf;
-                    y1 -= innerRadiusBefore;
-                    x2 += widthHalf;
-                    y2 += innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 + innerRadiusFirst * curv, y0, x1, y1 + innerRadiusBefore * curv, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2, y2 - innerRadiusAfter * curv, x3 + innerRadiusSecond * curv, y3, x3, y3);
-                    break;
-                }
-
-                case Border.Side.BOTTOM: {
-                    innerRadiusBefore = Math.Max(0, horizontalRadius1 - borderWidthBefore);
-                    innerRadiusFirst = Math.Max(0, verticalRadius1 - width);
-                    innerRadiusSecond = Math.Max(0, verticalRadius2 - width);
-                    innerRadiusAfter = Math.Max(0, horizontalRadius2 - borderWidthAfter);
-                    x0 += borderWidthBefore / 2;
-                    y0 += innerRadiusFirst;
-                    x3 -= borderWidthAfter / 2;
-                    y3 += innerRadiusSecond;
-                    clipPoint1 = GetIntersectionPoint(new Point(x1 + borderWidthBefore, y1 - width), new Point(x1, y1), new Point
-                        (x0, y0), new Point(x0 - 10, y0));
-                    clipPoint2 = GetIntersectionPoint(new Point(x2 - borderWidthAfter, y2 - width), new Point(x2, y2), new Point
-                        (x3, y3), new Point(x3 + 10, y3));
-                    if (clipPoint1.x < clipPoint2.x) {
-                        clipPoint = GetIntersectionPoint(new Point(x1 + borderWidthBefore, y1 - width), clipPoint1, clipPoint2, new 
-                            Point(x2 - borderWidthAfter, y2 - width));
-                        canvas.MoveTo(x1 + borderWidthBefore, y1 - width).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 - borderWidthAfter
-                            , y2 - width).LineTo(x1 + borderWidthBefore, y1 - width);
-                    }
-                    else {
-                        canvas.MoveTo(x1 + borderWidthBefore, y1 - width).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
-                            clipPoint2.y).LineTo(x2 - borderWidthAfter, y2 - width).LineTo(x1 + borderWidthBefore, y1 - width);
-                    }
-                    canvas.Clip().NewPath();
-                    x1 -= innerRadiusBefore;
-                    y1 -= widthHalf;
-                    x2 += innerRadiusAfter;
-                    y2 -= widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 - innerRadiusFirst * curv, x1 + innerRadiusBefore * curv, y1, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2 - innerRadiusAfter * curv, y2, x3, y3 - innerRadiusSecond * curv, x3, y3);
-                    break;
-                }
-
-                case Border.Side.LEFT: {
-                    innerRadiusBefore = Math.Max(0, verticalRadius1 - borderWidthBefore);
-                    innerRadiusFirst = Math.Max(0, horizontalRadius1 - width);
-                    innerRadiusSecond = Math.Max(0, horizontalRadius2 - width);
-                    innerRadiusAfter = Math.Max(0, verticalRadius2 - borderWidthAfter);
-                    x0 += innerRadiusFirst;
-                    y0 -= borderWidthBefore / 2;
-                    x3 += innerRadiusSecond;
-                    y3 += borderWidthAfter / 2;
-                    clipPoint1 = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), new Point(x1, y1), new Point
-                        (x0, y0), new Point(x0, y0 + 10));
-                    clipPoint2 = GetIntersectionPoint(new Point(x2 - width, y2 + borderWidthAfter), new Point(x2, y2), new Point
-                        (x3, y3), new Point(x3, y3 + 10));
-                    if (clipPoint1.y > clipPoint2.y) {
-                        clipPoint = GetIntersectionPoint(new Point(x1 - width, y1 - borderWidthBefore), clipPoint1, clipPoint2, new 
-                            Point(x2 - width, y2 + borderWidthAfter));
-                        canvas.MoveTo(x1 - width, y1 - borderWidthBefore).LineTo(clipPoint.x, clipPoint.y).LineTo(x2 - width, y2 +
-                             borderWidthAfter).LineTo(x1 - width, y1 - borderWidthBefore);
-                    }
-                    else {
-                        canvas.MoveTo(x1 - width, y1 - borderWidthBefore).LineTo(clipPoint1.x, clipPoint1.y).LineTo(clipPoint2.x, 
-                            clipPoint2.y).LineTo(x2 - width, y2 + borderWidthAfter).LineTo(x1 - width, y1 - borderWidthBefore);
-                    }
-                    canvas.Clip().NewPath();
-                    x1 -= widthHalf;
-                    y1 += innerRadiusBefore;
-                    x2 -= widthHalf;
-                    y2 -= innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 - innerRadiusFirst * curv, y0, x1, y1 - innerRadiusBefore * curv, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2, y2 + innerRadiusAfter * curv, x3 - innerRadiusSecond * curv, y3, x3, y3);
-                    break;
-                }
-            }
-            canvas.Stroke().RestoreState();
-        }
-
-        /// <summary>Adjusts the size of the gap between dots</summary>
-        /// <param name="distance">
-        /// the
-        /// <see cref="Border">border</see>
-        /// length
-        /// </param>
-        /// <param name="initialGap">the initial size of the gap</param>
-        /// <returns>the adjusted size of the gap</returns>
-        protected internal virtual float GetDotsGap(double distance, float initialGap) {
-            double gapsNum = Math.Ceiling(distance / initialGap);
-            if (gapsNum == 0) {
-                return initialGap;
-            }
-            return (float)(distance / gapsNum);
+            Rectangle boundingRectangle = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            float[] horizontalRadii = new float[] { horizontalRadius1, horizontalRadius2 };
+            float[] verticalRadii = new float[] { verticalRadius1, verticalRadius2 };
+            DrawDiscontinuousBorders(canvas, boundingRectangle, horizontalRadii, verticalRadii, defaultSide, borderWidthBefore
+                , borderWidthAfter);
         }
     }
 }

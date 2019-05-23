@@ -148,5 +148,12 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ComplexRectangleTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "complexRectangle");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NoFillRectangleTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "noFillRectangle");
+        }
     }
 }

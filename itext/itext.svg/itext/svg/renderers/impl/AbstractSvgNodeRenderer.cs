@@ -202,7 +202,7 @@ namespace iText.Svg.Renderers.Impl {
                     else {
                         currentCanvas.Clip();
                     }
-                    currentCanvas.NewPath();
+                    currentCanvas.EndPath();
                 }
                 else {
                     if (doFill && CanElementFill()) {
@@ -227,6 +227,11 @@ namespace iText.Svg.Renderers.Impl {
                     else {
                         if (doStroke) {
                             currentCanvas.Stroke();
+                        }
+                        else {
+                            if (!typeof(TextSvgBranchRenderer).IsInstanceOfType(this)) {
+                                currentCanvas.EndPath();
+                            }
                         }
                     }
                 }
