@@ -261,7 +261,7 @@ namespace iText.Kernel.Geom {
         /// <seealso cref="System.Object.ToString()"/>
         public override String ToString() {
             return vals[I11] + "\t" + vals[I12] + "\t" + vals[I13] + "\n" + vals[I21] + "\t" + vals[I22] + "\t" + vals
-                [I13] + "\n" + vals[I31] + "\t" + vals[I32] + "\t" + vals[I33];
+                [I23] + "\n" + vals[I31] + "\t" + vals[I32] + "\t" + vals[I33];
         }
     }
 }
