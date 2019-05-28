@@ -316,6 +316,25 @@ namespace iText.Forms {
         }
 
         /// <summary>
+        /// Gets a collection of
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s, prepared for flattening using
+        /// <see cref="PartialFormFlattening(System.String)"/>
+        /// method.
+        /// If returned collection is empty, all form fields will be flattened on
+        /// <see cref="FlattenFields()">flattenFields</see>
+        /// call.
+        /// </summary>
+        /// <returns>
+        /// a collection of
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s for flattening
+        /// </returns>
+        public virtual ICollection<PdfFormField> GetFieldsForFlattening() {
+            return JavaCollectionsUtil.UnmodifiableCollection(fieldsForFlattening);
+        }
+
+        /// <summary>
         /// Gets the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// this
@@ -691,7 +710,9 @@ namespace iText.Forms {
         /// Flattens interactive
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s in the document. If
-        /// no fields have been explicitly included via {#link #partialFormFlattening},
+        /// no fields have been explicitly included via
+        /// <see cref="PartialFormFlattening(System.String)"/>
+        /// ,
         /// then all fields are flattened. Otherwise only the included fields are
         /// flattened.
         /// </summary>
