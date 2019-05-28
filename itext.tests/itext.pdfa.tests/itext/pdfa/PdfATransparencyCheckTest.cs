@@ -182,6 +182,26 @@ namespace iText.Pdfa {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestTransparencyObjectsAbsence() {
+            String outPdf = destinationFolder + "transparencyObjectsAbsence.pdf";
+            String cmpPdf = cmpFolder + "cmp_transparencyObjectsAbsence.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1").EndText();
+            PdfDictionary groupObj = new PdfDictionary();
+            groupObj.Put(PdfName.Type, PdfName.Group);
+            groupObj.Put(PdfName.S, PdfName.Transparency);
+            page.GetPdfObject().Put(PdfName.Group, groupObj);
+            page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
+            pdfDocument.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {
