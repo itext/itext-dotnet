@@ -89,6 +89,10 @@ namespace iText.IO.Util {
                 return srcStr.TrimEnd().Split(splitSequence.ToCharArray());
 
             Regex regex = new Regex(splitSequence);
+            return Split(regex, srcStr);
+        }
+
+        public static String[] Split(Regex regex, String srcStr) {
             Match match = regex.Match(srcStr);
             String[] result;
             if (!match.Success)
@@ -100,7 +104,7 @@ namespace iText.IO.Util {
             List<String> al = new List<String>();
             int prevat = 0;
 
-            for (;;)
+            for (; ; )
             {
                 if (match.Index != 0)
                     al.Add(srcStr.Substring(prevat, match.Index - prevat));
