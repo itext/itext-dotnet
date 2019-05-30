@@ -1217,7 +1217,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>set of classnames, empty if no class attribute</returns>
         public virtual ICollection<String> ClassNames() {
-            String[] names = classSplit.Split(ClassName());
+            String[] names = iText.IO.Util.StringUtil.Split(classSplit, ClassName());
             ICollection<String> classNames = new LinkedHashSet<String>(JavaUtil.ArraysAsList(names));
             classNames.Remove("");
             // if classNames() was empty, would include an empty class
@@ -1254,7 +1254,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (classAttr.Equals("") || classAttr.Length < className.Length) {
                 return false;
             }
-            String[] classes = classSplit.Split(classAttr);
+            String[] classes = iText.IO.Util.StringUtil.Split(classSplit, classAttr);
             foreach (String name in classes) {
                 if (className.EqualsIgnoreCase(name)) {
                     return true;
