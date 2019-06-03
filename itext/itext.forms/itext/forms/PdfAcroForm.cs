@@ -768,48 +768,54 @@ namespace iText.Forms {
                         appDic = fieldObject.GetAsDictionary(PdfName.AP);
                     }
                 }
-                if (appDic != null) {
+                if (null != appDic) {
                     PdfObject normal = appDic.Get(PdfName.N);
-                    PdfFormXObject xObject = null;
-                    if (normal.IsStream()) {
-                        xObject = new PdfFormXObject((PdfStream)normal);
+                    if (null == normal) {
+                        ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
+                        logger.Error(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                     }
                     else {
-                        if (normal.IsDictionary()) {
-                            PdfName @as = fieldObject.GetAsName(PdfName.AS);
-                            if (((PdfDictionary)normal).GetAsStream(@as) != null) {
-                                xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
-                                xObject.MakeIndirect(document);
+                        PdfFormXObject xObject = null;
+                        if (normal.IsStream()) {
+                            xObject = new PdfFormXObject((PdfStream)normal);
+                        }
+                        else {
+                            if (normal.IsDictionary()) {
+                                PdfName @as = fieldObject.GetAsName(PdfName.AS);
+                                if (((PdfDictionary)normal).GetAsStream(@as) != null) {
+                                    xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
+                                    xObject.MakeIndirect(document);
+                                }
                             }
                         }
-                    }
-                    if (xObject != null) {
-                        //subtype is required field for FormXObject, but can be omitted in normal appearance.
-                        xObject.Put(PdfName.Subtype, PdfName.Form);
-                        Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
-                        if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
-                        }
-                        PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
-                        wrappedPages.Add(page);
-                        // Here we avoid circular reference which might occur when page resources and the appearance xObject's
-                        // resources are the same object
-                        PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
-                        PdfObject pageResources = page.GetResources().GetPdfObject();
-                        if (xObjectResources != null && pageResources != null && xObjectResources == pageResources) {
-                            xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
-                        }
-                        if (tagPointer != null) {
-                            tagPointer.SetPageForTagging(page);
-                            TagReference tagRef = tagPointer.GetTagReference();
-                            canvas.OpenTag(tagRef);
-                        }
-                        AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
-                        float[] m = new float[6];
-                        at.GetMatrix(m);
-                        canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
-                        if (tagPointer != null) {
-                            canvas.CloseTag();
+                        if (xObject != null) {
+                            //subtype is required field for FormXObject, but can be omitted in normal appearance.
+                            xObject.Put(PdfName.Subtype, PdfName.Form);
+                            Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
+                            if (page.IsFlushed()) {
+                                throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                            }
+                            PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
+                            wrappedPages.Add(page);
+                            // Here we avoid circular reference which might occur when page resources and the appearance xObject's
+                            // resources are the same object
+                            PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
+                            PdfObject pageResources = page.GetResources().GetPdfObject();
+                            if (xObjectResources != null && pageResources != null && xObjectResources == pageResources) {
+                                xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
+                            }
+                            if (tagPointer != null) {
+                                tagPointer.SetPageForTagging(page);
+                                TagReference tagRef = tagPointer.GetTagReference();
+                                canvas.OpenTag(tagRef);
+                            }
+                            AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
+                            float[] m = new float[6];
+                            at.GetMatrix(m);
+                            canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
+                            if (tagPointer != null) {
+                                canvas.CloseTag();
+                            }
                         }
                     }
                 }
