@@ -179,8 +179,7 @@ namespace iText.Svg.Utils {
                     fontSize = CssUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
                 }
                 else {
-                    // TODO DEVSIX-2882 Switch to PX
-                    fontSize = CssUtils.ParseAbsoluteFontSize(elementFontSize, CommonCssConstants.PT);
+                    fontSize = CssUtils.ParseAbsoluteFontSize(elementFontSize, CommonCssConstants.PX);
                 }
             }
             if ((float.IsNaN(fontSize)) || fontSize < 0f) {

@@ -53,7 +53,7 @@ namespace iText.Svg.Renderers.Impl {
             toTest.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "10");
             PdfFont font = PdfFontFactory.CreateFont();
             float actual = toTest.GetTextContentLength(12, font);
-            float expected = 22.78f;
+            float expected = 17.085f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
         }
 
