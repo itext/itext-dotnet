@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.layout\itext.layout.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.netstandard.csproj" />
+    <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.netstandard.csproj" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

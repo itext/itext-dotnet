@@ -1533,5 +1533,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestDefaultFontWithReader() {
+            String inputFileName = sourceFolder + "type3Font.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFileName))) {
+                NUnit.Framework.Assert.IsNotNull(pdfDoc.GetDefaultFont());
+                NUnit.Framework.Assert.IsNull(pdfDoc.GetDefaultFont().GetPdfObject().GetIndirectReference());
+            }
+        }
     }
 }

@@ -837,11 +837,9 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             PdfFormField field1 = form.GetField("emptyField");
-            field1.SetValue("Do fields on the left look the same?", field1.GetFont() != null ? field1.GetFont() : PdfFontFactory
-                .CreateFont(), field1.GetFontSize());
+            field1.SetValue("Do fields on the left look the same?", field1.GetFont(), field1.GetFontSize());
             PdfFormField field2 = form.GetField("emptyField2");
-            field2.SetValue("Do fields on the right look the same?", field2.GetFont() != null ? field2.GetFont() : PdfFontFactory
-                .CreateFont(), field2.GetFontSize());
+            field2.SetValue("Do fields on the right look the same?", field2.GetFont(), field2.GetFontSize());
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
@@ -938,7 +936,7 @@ namespace iText.Forms {
                     field.SetMaxLen(i < 4 ? 7 : 0);
                 }
                 if (i % 6 > 1) {
-                    field.SetFieldFlag(PdfTextFormField.FF_COMB, i % 2 == 0 ? true : false);
+                    field.SetFieldFlag(PdfTextFormField.FF_COMB, i % 2 == 0);
                 }
             }
             pdfDoc.Close();
@@ -979,6 +977,77 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PdfWithDifferentFieldsTest() {
+            String fileName = destinationFolder + "pdfWithDifferentFieldsTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            pdfDoc.AddNewPage();
+            PdfFormField emptyField = PdfFormField.CreateEmptyField(pdfDoc).SetFieldName("empty");
+            form.AddField(emptyField);
+            PdfArray options = new PdfArray();
+            options.Add(new PdfString("1"));
+            options.Add(new PdfString("2"));
+            form.AddField(PdfFormField.CreateChoice(pdfDoc, new Rectangle(36, 696, 20, 20), "choice", "1", options, 0)
+                );
+            // combo
+            form.AddField(PdfFormField.CreateComboBox(pdfDoc, new Rectangle(36, 666, 20, 20), "list", "1", new String[
+                ] { "1", "2", "3" }));
+            // list
+            PdfChoiceFormField f = PdfFormField.CreateList(pdfDoc, new Rectangle(36, 556, 50, 100), "combo", "9", new 
+                String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" });
+            f.SetValue("4");
+            f.SetTopIndex(2);
+            f.SetListSelected(new String[] { "3", "5" });
+            form.AddField(f);
+            // push button
+            form.AddField(PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 526, 80, 20), "push button", "push")
+                );
+            // radio button
+            PdfButtonFormField radioGroup = PdfFormField.CreateRadioGroup(pdfDoc, "radio group", "1");
+            form.AddField(PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(36, 496, 20, 20), radioGroup, "1").SetFieldName
+                ("radio 1"));
+            form.AddField(PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(66, 496, 20, 20), radioGroup, "2").SetFieldName
+                ("radio 2"));
+            // signature
+            form.AddField(PdfFormField.CreateSignature(pdfDoc).SetFieldName("signature").SetValue("Signature").SetFontSize
+                (20));
+            // text
+            form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(36, 466, 80, 20), "text", "text").SetValue("la la land"
+                ));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_pdfWithDifferentFieldsTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestMakeField() {
+            NUnit.Framework.Assert.IsNull(PdfFormField.MakeFormField(new PdfNumber(1), null));
+            NUnit.Framework.Assert.IsNull(PdfFormField.MakeFormField(new PdfArray(), null));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestDaInAppendMode() {
+            String testName = "testDaInAppendMode.pdf";
+            String srcPdf = sourceFolder + testName;
+            ByteArrayOutputStream outPdf = new ByteArrayOutputStream();
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf), new StampingProperties(
+                ).UseAppendMode());
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfFormField field = form.GetField("magenta");
+            field.SetDefaultAppearance("/F1 25 Tf");
+            int objectNumer = field.GetPdfObject().GetIndirectReference().GetObjNumber();
+            pdfDoc.Close();
+            pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(outPdf.ToArray())));
+            PdfString da = ((PdfDictionary)pdfDoc.GetPdfObject(objectNumer)).GetAsString(PdfName.DA);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual("/F1 25 Tf", da.ToString());
         }
     }
 }

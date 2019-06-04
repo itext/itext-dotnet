@@ -406,6 +406,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfFormXObject Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
     }

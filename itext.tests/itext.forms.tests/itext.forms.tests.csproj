@@ -68,6 +68,10 @@
       <Project>{F9880DC4-F015-4413-AF86-66D0E9512774}</Project>
       <Name>itext.pdftest</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj">
+      <Project>{0F10190C-7611-4378-A157-03BF2ED78E30}</Project>
+      <Name>itext.font-asian</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

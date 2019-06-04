@@ -66,6 +66,8 @@ namespace iText.IO {
 
         public const String CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT = "Layout tagging hints addition failed: cannot add a kid hint to a new parent if it is already added to another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method instead.";
 
+        public const String CANNOT_CREATE_FORMFIELD = "Cannot create form field from a given PDF object: {0}";
+
         public const String CANNOT_MOVE_FINISHED_HINT = "Layout tagging hints modification failed: cannot move kid hint for which both itself and it's parent are already marked as finished.";
 
         public const String CANNOT_MOVE_HINT_TO_FINISHED_PARENT = "Layout tagging hints modification failed: cannot move kid hint to a parent that is already marked as finished.";
@@ -301,6 +303,8 @@ namespace iText.IO {
         public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
+
+        public const String UNSUPPORTED_COLOR_IN_DA = "Unsupported color in FormField's DA";
 
         public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the current {3} version.";
 

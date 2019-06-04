@@ -113,14 +113,13 @@ namespace iText.Forms {
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
 
-        private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
-            , PdfName.Pattern };
-
         private PdfDictionary defaultResources;
 
         private ICollection<PdfFormField> fieldsForFlattening = new LinkedHashSet<PdfFormField>();
 
         private XfaForm xfaForm;
+
+        private static ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         /// <summary>Creates a PdfAcroForm as a wrapper of a dictionary.</summary>
         /// <remarks>
@@ -241,18 +240,6 @@ namespace iText.Forms {
             fields.Put(field.GetFieldName().ToUnicodeString(), field);
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
-            }
-            //There's an issue described in DEVSIX-573. When you create multiple fields with different fonts those font may
-            // have same names (F1, F2, etc). So only first of them will be save in default resources.
-            if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field.GetFormType().Equals(PdfName
-                .Ch))) {
-                IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
-                foreach (PdfDictionary resDict in resources) {
-                    MergeResources(defaultResources, resDict);
-                }
-                if (!defaultResources.IsEmpty()) {
-                    Put(PdfName.DR, defaultResources);
-                }
             }
             if (fieldDic.ContainsKey(PdfName.Subtype) && page != null) {
                 PdfAnnotation annot = PdfAnnotation.MakeAnnotation(fieldDic);
@@ -768,56 +755,53 @@ namespace iText.Forms {
                         appDic = fieldObject.GetAsDictionary(PdfName.AP);
                     }
                 }
-                if (null != appDic) {
-                    PdfObject normal = appDic.Get(PdfName.N);
-                    if (null == normal) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
-                        logger.Error(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                PdfObject normal = appDic != null ? appDic.Get(PdfName.N) : null;
+                if (null != normal) {
+                    PdfFormXObject xObject = null;
+                    if (normal.IsStream()) {
+                        xObject = new PdfFormXObject((PdfStream)normal);
                     }
                     else {
-                        PdfFormXObject xObject = null;
-                        if (normal.IsStream()) {
-                            xObject = new PdfFormXObject((PdfStream)normal);
-                        }
-                        else {
-                            if (normal.IsDictionary()) {
-                                PdfName @as = fieldObject.GetAsName(PdfName.AS);
-                                if (((PdfDictionary)normal).GetAsStream(@as) != null) {
-                                    xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
-                                    xObject.MakeIndirect(document);
-                                }
-                            }
-                        }
-                        if (xObject != null) {
-                            //subtype is required field for FormXObject, but can be omitted in normal appearance.
-                            xObject.Put(PdfName.Subtype, PdfName.Form);
-                            Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
-                            if (page.IsFlushed()) {
-                                throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
-                            }
-                            PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
-                            wrappedPages.Add(page);
-                            // Here we avoid circular reference which might occur when page resources and the appearance xObject's
-                            // resources are the same object
-                            PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
-                            PdfObject pageResources = page.GetResources().GetPdfObject();
-                            if (xObjectResources != null && pageResources != null && xObjectResources == pageResources) {
-                                xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
-                            }
-                            if (tagPointer != null) {
-                                tagPointer.SetPageForTagging(page);
-                                TagReference tagRef = tagPointer.GetTagReference();
-                                canvas.OpenTag(tagRef);
-                            }
-                            AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
-                            float[] m = new float[6];
-                            at.GetMatrix(m);
-                            canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
-                            if (tagPointer != null) {
-                                canvas.CloseTag();
+                        if (normal.IsDictionary()) {
+                            PdfName @as = fieldObject.GetAsName(PdfName.AS);
+                            if (((PdfDictionary)normal).GetAsStream(@as) != null) {
+                                xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
+                                xObject.MakeIndirect(document);
                             }
                         }
                     }
+                    if (xObject != null) {
+                        //subtype is required field for FormXObject, but can be omitted in normal appearance.
+                        xObject.Put(PdfName.Subtype, PdfName.Form);
+                        Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
+                        if (page.IsFlushed()) {
+                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                        }
+                        PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
+                        wrappedPages.Add(page);
+                        // Here we avoid circular reference which might occur when page resources and the appearance xObject's
+                        // resources are the same object
+                        PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
+                        PdfObject pageResources = page.GetResources().GetPdfObject();
+                        if (xObjectResources != null && xObjectResources == pageResources) {
+                            xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
+                        }
+                        if (tagPointer != null) {
+                            tagPointer.SetPageForTagging(page);
+                            TagReference tagRef = tagPointer.GetTagReference();
+                            canvas.OpenTag(tagRef);
+                        }
+                        AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
+                        float[] m = new float[6];
+                        at.GetMatrix(m);
+                        canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
+                        if (tagPointer != null) {
+                            canvas.CloseTag();
+                        }
+                    }
+                }
+                else {
+                    logger.Error(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);
@@ -943,9 +927,7 @@ namespace iText.Forms {
         public virtual PdfFormField CopyField(String name) {
             PdfFormField oldField = GetField(name);
             if (oldField != null) {
-                PdfFormField field = new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document
-                    ));
-                return field;
+                return new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document));
             }
             return null;
         }
@@ -980,7 +962,6 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
                 logger.Warn(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
@@ -997,7 +978,6 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
                     logger.Warn(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
@@ -1100,70 +1080,6 @@ namespace iText.Forms {
             page.AddAnnotation(annot);
             if (tagged) {
                 tagPointer.MoveToParent();
-            }
-        }
-
-        private IList<PdfDictionary> GetResources(PdfDictionary field) {
-            IList<PdfDictionary> resources = new List<PdfDictionary>();
-            PdfDictionary ap = field.GetAsDictionary(PdfName.AP);
-            if (ap != null && !ap.IsFlushed()) {
-                PdfObject normal = ap.Get(PdfName.N);
-                if (normal != null && !normal.IsFlushed()) {
-                    if (normal.IsDictionary()) {
-                        foreach (PdfName key in ((PdfDictionary)normal).KeySet()) {
-                            PdfStream appearance = ((PdfDictionary)normal).GetAsStream(key);
-                            PdfDictionary resDict = appearance.GetAsDictionary(PdfName.Resources);
-                            if (resDict != null) {
-                                resources.Add(resDict);
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        if (normal.IsStream()) {
-                            PdfDictionary resDict = ((PdfStream)normal).GetAsDictionary(PdfName.Resources);
-                            if (resDict != null) {
-                                resources.Add(resDict);
-                            }
-                        }
-                    }
-                }
-            }
-            PdfArray kids = field.GetAsArray(PdfName.Kids);
-            if (kids != null) {
-                foreach (PdfObject kid in kids) {
-                    resources.AddAll(GetResources((PdfDictionary)kid));
-                }
-            }
-            return resources;
-        }
-
-        /// <summary>Merges two dictionaries.</summary>
-        /// <remarks>
-        /// Merges two dictionaries. When both dictionaries contain the same key,
-        /// the value from the first dictionary is kept.
-        /// </remarks>
-        /// <param name="result">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// which may get extra entries from source
-        /// </param>
-        /// <param name="source">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// whose entries may be merged into result
-        /// </param>
-        private void MergeResources(PdfDictionary result, PdfDictionary source) {
-            foreach (PdfName name in resourceNames) {
-                PdfDictionary dic = source.IsFlushed() ? null : source.GetAsDictionary(name);
-                PdfDictionary res = result.GetAsDictionary(name);
-                if (res == null) {
-                    res = new PdfDictionary();
-                }
-                if (dic != null) {
-                    res.MergeDifferent(dic);
-                    result.Put(name, res);
-                }
             }
         }
 
