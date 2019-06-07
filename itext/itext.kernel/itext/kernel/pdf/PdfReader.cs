@@ -386,6 +386,25 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+            if (null != streamDictionary.GetIndirectReference()) {
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
+            }
+            if (null != memoryLimitsAwareHandler) {
+                HashSet<PdfName> filterSet = new HashSet<PdfName>();
+                int index;
+                for (index = 0; index < filters.Size(); index++) {
+                    PdfName filterName = filters.GetAsName(index);
+                    if (!filterSet.Add(filterName)) {
+                        memoryLimitsAwareHandler.BeginDecompressedPdfStreamProcessing();
+                        break;
+                    }
+                }
+                if (index == filters.Size()) {
+                    // The stream isn't suspicious. We shouldn't process it.
+                    memoryLimitsAwareHandler = null;
+                }
+            }
             PdfArray dp = new PdfArray();
             PdfObject dpo = streamDictionary.Get(PdfName.DecodeParms);
             if (dpo == null || (dpo.GetObjectType() != PdfObject.DICTIONARY && dpo.GetObjectType() != PdfObject.ARRAY)
@@ -432,6 +451,12 @@ namespace iText.Kernel.Pdf {
                     decodeParams = null;
                 }
                 b = filterHandler.Decode(b, filterName, decodeParams, streamDictionary);
+                if (null != memoryLimitsAwareHandler) {
+                    memoryLimitsAwareHandler.ConsiderBytesOccupiedByDecompressedPdfStream(b.Length);
+                }
+            }
+            if (null != memoryLimitsAwareHandler) {
+                memoryLimitsAwareHandler.EndDecompressedPdfStreamProcessing();
             }
             return b;
         }

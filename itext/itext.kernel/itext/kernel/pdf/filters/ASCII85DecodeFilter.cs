@@ -48,10 +48,12 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles ASCII85Decode filter</summary>
-    public class ASCII85DecodeFilter : IFilterHandler {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+    public class ASCII85DecodeFilter : MemoryLimitsAwareFilter {
+        /// <summary><inheritDoc/></summary>
+        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            b = ASCII85Decode(b);
+            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
+            b = ASCII85Decode(b, outputStream);
             return b;
         }
 
@@ -59,7 +61,14 @@ namespace iText.Kernel.Pdf.Filters {
         /// <param name="in">the byte[] to be decoded</param>
         /// <returns>the decoded byte[]</returns>
         public static byte[] ASCII85Decode(byte[] @in) {
-            MemoryStream @out = new MemoryStream();
+            return ASCII85Decode(@in, new MemoryStream());
+        }
+
+        /// <summary>Decodes the input bytes according to ASCII85.</summary>
+        /// <param name="in">the byte[] to be decoded</param>
+        /// <param name="out">the out stream which will be used to write the bytes.</param>
+        /// <returns>the decoded byte[]</returns>
+        private static byte[] ASCII85Decode(byte[] @in, MemoryStream @out) {
             int state = 0;
             int[] chn = new int[5];
             for (int k = 0; k < @in.Length; ++k) {

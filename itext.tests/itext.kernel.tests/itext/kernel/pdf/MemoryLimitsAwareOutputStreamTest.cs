@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2019 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,37 +40,47 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.IO;
-using iText.Kernel.Pdf;
+using System;
 
-namespace iText.Kernel.Pdf.Filters {
-    /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : MemoryLimitsAwareFilter {
-        /// <summary><inheritDoc/></summary>
-        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            ) {
-            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
-            byte dupCount;
-            for (int i = 0; i < b.Length; i++) {
-                dupCount = b[i];
-                if (dupCount == (byte)0x80) {
-                    // this is implicit end of data
-                    break;
-                }
-                if ((dupCount & 0x80) == 0) {
-                    int bytesToCopy = dupCount + 1;
-                    outputStream.Write(b, i + 1, bytesToCopy);
-                    i += bytesToCopy;
-                }
-                else {
-                    // make dupcount copies of the next byte
-                    i++;
-                    for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
-                        outputStream.Write(b[i]);
-                    }
-                }
+namespace iText.Kernel.Pdf {
+    public class MemoryLimitsAwareOutputStreamTest {
+        [NUnit.Framework.Test]
+        public virtual void TestMaxSize() {
+            NUnit.Framework.Assert.That(() =>  {
+                byte[] bigArray = new byte[70];
+                byte[] smallArray = new byte[31];
+                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+                stream.SetMaxStreamSize(100);
+                NUnit.Framework.Assert.AreEqual(100, stream.GetMaxStreamSize());
+                stream.Write(bigArray, 0, bigArray.Length);
+                NUnit.Framework.Assert.AreEqual(bigArray.Length, stream.Length);
+                stream.Write(smallArray, 0, smallArray.Length);
             }
-            return outputStream.ToArray();
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestNegativeSize() {
+            NUnit.Framework.Assert.That(() =>  {
+                byte[] zeroArray = new byte[0];
+                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+                stream.SetMaxStreamSize(-100);
+                NUnit.Framework.Assert.AreEqual(-100, stream.GetMaxStreamSize());
+                stream.Write(zeroArray, 0, zeroArray.Length);
+            }
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIncorrectLength() {
+            NUnit.Framework.Assert.That(() =>  {
+                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+                stream.Write(new byte[1], 0, -1);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
         }
     }
 }

@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2019 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,36 +41,42 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filters;
 
-namespace iText.Kernel.Pdf.Filters {
-    /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : MemoryLimitsAwareFilter {
-        /// <summary><inheritDoc/></summary>
-        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            ) {
-            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
-            byte dupCount;
-            for (int i = 0; i < b.Length; i++) {
-                dupCount = b[i];
-                if (dupCount == (byte)0x80) {
-                    // this is implicit end of data
-                    break;
-                }
-                if ((dupCount & 0x80) == 0) {
-                    int bytesToCopy = dupCount + 1;
-                    outputStream.Write(b, i + 1, bytesToCopy);
-                    i += bytesToCopy;
-                }
-                else {
-                    // make dupcount copies of the next byte
-                    i++;
-                    for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
-                        outputStream.Write(b[i]);
-                    }
-                }
+namespace iText.Kernel.Pdf {
+    /// <summary>Handles memory limits aware processing.</summary>
+    /// <seealso>
+    /// 
+    /// <see cref="MemoryLimitsAwareHandler"/>
+    /// </seealso>
+    public abstract class MemoryLimitsAwareFilter : IFilterHandler {
+        /// <summary>
+        /// Creates a
+        /// <see cref="MemoryLimitsAwareOutputStream"/>
+        /// which will be used for decompression of the passed pdf stream.
+        /// </summary>
+        /// <param name="streamDictionary">the pdf stream which is going to be decompressed.</param>
+        /// <returns>
+        /// the
+        /// <see cref="System.IO.MemoryStream"/>
+        /// which will be used for decompression of the passed pdf stream
+        /// </returns>
+        public virtual MemoryStream EnableMemoryLimitsAwareHandler(PdfDictionary streamDictionary) {
+            MemoryLimitsAwareOutputStream outputStream = new MemoryLimitsAwareOutputStream();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+            if (null != streamDictionary.GetIndirectReference()) {
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
             }
-            return outputStream.ToArray();
+            else {
+                // We do not reuse some static instance because one can process pdfs in different threads.
+                memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            }
+            if (null != memoryLimitsAwareHandler && memoryLimitsAwareHandler.considerCurrentPdfStream) {
+                outputStream.SetMaxStreamSize(memoryLimitsAwareHandler.GetMaxSizeOfSingleDecompressedPdfStream());
+            }
+            return outputStream;
         }
+
+        public abstract byte[] Decode(byte[] arg1, PdfName arg2, PdfObject arg3, PdfDictionary arg4);
     }
 }

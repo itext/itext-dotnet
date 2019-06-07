@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
@@ -916,11 +915,17 @@ namespace iText.Kernel.Pdf {
         /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
-                MemoryStream baos = new MemoryStream();
+                MemoryLimitsAwareHandler handler = GetDocument().memoryLimitsAwareHandler;
+                long usedMemory = null == handler ? -1 : handler.GetAllMemoryUsedForDecompression();
+                MemoryLimitsAwareOutputStream baos = new MemoryLimitsAwareOutputStream();
                 int streamCount = GetContentStreamCount();
                 byte[] streamBytes;
                 for (int i = 0; i < streamCount; i++) {
                     streamBytes = GetStreamBytes(i);
+                    // usedMemory has changed, that means that some of currently processed pdf streams are suspicious
+                    if (null != handler && usedMemory < handler.GetAllMemoryUsedForDecompression()) {
+                        baos.SetMaxStreamSize(handler.GetMaxSizeOfSingleDecompressedPdfStream());
+                    }
                     baos.Write(streamBytes);
                     if (0 != streamBytes.Length && !iText.IO.Util.TextUtil.IsWhiteSpace((char)streamBytes[streamBytes.Length -
                          1])) {

@@ -167,6 +167,9 @@ namespace iText.Kernel.Pdf {
         internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
             , byte[]>();
 
+        /// <summary>Handler which will be used for decompression of pdf streams.</summary>
+        internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader)
@@ -1847,6 +1850,10 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(PdfException.PdfReaderHasBeenAlreadyUtilized);
                     }
                     reader.pdfDocument = this;
+                    memoryLimitsAwareHandler = reader.properties.memoryLimitsAwareHandler;
+                    if (null == memoryLimitsAwareHandler) {
+                        memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(reader.tokens.GetSafeFile().Length());
+                    }
                     reader.ReadPdf();
                     foreach (ICounter counter in GetCounters()) {
                         counter.OnDocumentRead(reader.GetFileLength());

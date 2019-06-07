@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2019 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,37 +40,46 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
+using System.util.zlib;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
-    /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : MemoryLimitsAwareFilter {
+    /// <summary>Handles strict FlateDecode filter.</summary>
+    public class FlateDecodeStrictFilter : FlateDecodeFilter {
         /// <summary><inheritDoc/></summary>
         public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
             MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
-            byte dupCount;
-            for (int i = 0; i < b.Length; i++) {
-                dupCount = b[i];
-                if (dupCount == (byte)0x80) {
-                    // this is implicit end of data
-                    break;
+            byte[] res = FlateDecode(b, outputStream);
+            b = DecodePredictor(res, decodeParams);
+            return b;
+        }
+
+        /// <summary>A helper to flateDecode.</summary>
+        /// <param name="in">the input data</param>
+        /// <param name="out">the out stream which will be used to write the bytes.</param>
+        /// <returns>the decoded data</returns>
+        private static byte[] FlateDecode(byte[] @in, MemoryStream @out) {
+            MemoryStream stream = new MemoryStream(@in);
+            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
+            byte[] b = new byte[4092];
+            try {
+                int n;
+                while ((n = zip.Read(b)) >= 0) {
+                    @out.Write(b, 0, n);
                 }
-                if ((dupCount & 0x80) == 0) {
-                    int bytesToCopy = dupCount + 1;
-                    outputStream.Write(b, i + 1, bytesToCopy);
-                    i += bytesToCopy;
-                }
-                else {
-                    // make dupcount copies of the next byte
-                    i++;
-                    for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
-                        outputStream.Write(b[i]);
-                    }
-                }
+                zip.Dispose();
+                @out.Dispose();
+                return @out.ToArray();
             }
-            return outputStream.ToArray();
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception) {
+                return null;
+            }
         }
     }
 }

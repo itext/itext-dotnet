@@ -52,6 +52,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal X509Certificate certificate;
 
+        protected internal MemoryLimitsAwareHandler memoryLimitsAwareHandler;
+
         //added by ujihara for decryption
         //added by Aiken Sam for certificate decryption
         //added by Aiken Sam for certificate decryption
@@ -90,6 +92,20 @@ namespace iText.Kernel.Pdf {
             this.password = null;
             this.certificate = null;
             this.certificateKey = null;
+        }
+
+        /// <summary>Sets the memory handler which will be used to handle decompressed pdf streams.</summary>
+        /// <param name="memoryLimitsAwareHandler">the memory handler which will be used to handle decompressed pdf streams
+        ///     </param>
+        /// <returns>
+        /// this
+        /// <see cref="ReaderProperties"/>
+        /// instance.
+        /// </returns>
+        public virtual ReaderProperties SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler memoryLimitsAwareHandler
+            ) {
+            this.memoryLimitsAwareHandler = memoryLimitsAwareHandler;
+            return this;
         }
     }
 }

@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2019 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,37 +40,37 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.IO;
-using iText.Kernel.Pdf;
+using System;
+using iText.Kernel;
 
-namespace iText.Kernel.Pdf.Filters {
-    /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : MemoryLimitsAwareFilter {
-        /// <summary><inheritDoc/></summary>
-        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            ) {
-            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
-            byte dupCount;
-            for (int i = 0; i < b.Length; i++) {
-                dupCount = b[i];
-                if (dupCount == (byte)0x80) {
-                    // this is implicit end of data
-                    break;
-                }
-                if ((dupCount & 0x80) == 0) {
-                    int bytesToCopy = dupCount + 1;
-                    outputStream.Write(b, i + 1, bytesToCopy);
-                    i += bytesToCopy;
-                }
-                else {
-                    // make dupcount copies of the next byte
-                    i++;
-                    for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
-                        outputStream.Write(b[i]);
-                    }
-                }
-            }
-            return outputStream.ToArray();
+namespace iText.Kernel.Pdf {
+    /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
+    public class MemoryLimitsAwareException : PdfException {
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        public MemoryLimitsAwareException(String message)
+            : base(message) {
+        }
+
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(Exception cause)
+            : this(UnknownPdfException, cause) {
+        }
+
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(String message, Exception cause)
+            : base(message, cause) {
         }
     }
 }

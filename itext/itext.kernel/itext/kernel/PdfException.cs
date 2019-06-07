@@ -223,6 +223,12 @@ namespace iText.Kernel {
 
         public const String DocumentForCopyToCannotBeNull = "Document for copyTo cannot be null.";
 
+        public const String DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed = "During decompression multiple streams in sum occupied more memory than allowed. Please either check your pdf or increase the allowed single decompressed pdf stream maximum size value by setting the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
+
+        public const String DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed = "During decompression a single stream occupied more memory than allowed. Please either check your pdf or increase the allowed multiple decompressed pdf streams maximum size value by setting the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
+
+        public const String DuringDecompressionSingleStreamOccupiedMoreThanMaxIntegerValue = "During decompression a single stream occupied more than a maximum integer value. Please check your pdf.";
+
         public const String EndOfContentStreamReachedBeforeEndOfImageData = "End of content stream reached before end of image data.";
 
         public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
