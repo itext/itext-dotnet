@@ -2302,18 +2302,16 @@ namespace iText.Forms.Fields {
             byte[] Tf = new byte[] { (byte)'T', (byte)'f' };
             pdfStream.Write(font).WriteSpace().WriteFloat(fontSize).WriteSpace().WriteBytes(Tf);
             if (textColor != null) {
-                pdfStream.WriteSpace();
-                pdfStream.WriteFloats(textColor.GetColorValue()).WriteSpace();
                 if (textColor is DeviceGray) {
-                    pdfStream.WriteBytes(g);
+                    pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(g);
                 }
                 else {
                     if (textColor is DeviceRgb) {
-                        pdfStream.WriteBytes(rg);
+                        pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(rg);
                     }
                     else {
                         if (textColor is DeviceCmyk) {
-                            pdfStream.WriteBytes(k);
+                            pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
                         }
                         else {
                             ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
