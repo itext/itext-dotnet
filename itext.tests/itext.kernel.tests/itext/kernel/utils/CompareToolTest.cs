@@ -71,8 +71,8 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
-            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report01.xml", destinationFolder
-                 + "simple_pdf.report.xml"), "CompareTool report differs from the reference one");
+            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
+                 + "cmp_report01.xml"), "CompareTool report differs from the reference one");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -90,8 +90,8 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
-            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report02.xml", destinationFolder
-                 + "tagged_pdf.report.xml"), "CompareTool report differs from the reference one");
+            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "tagged_pdf.report.xml", sourceFolder
+                 + "cmp_report02.xml"), "CompareTool report differs from the reference one");
         }
 
         /// <exception cref="System.Exception"/>
@@ -109,8 +109,8 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
-            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report03.xml", destinationFolder
-                 + "screenAnnotation.report.xml"), "CompareTool report differs from the reference one");
+            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "screenAnnotation.report.xml", sourceFolder
+                 + "cmp_report03.xml"), "CompareTool report differs from the reference one");
         }
 
         /// <exception cref="System.Exception"/>
@@ -129,8 +129,8 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine(result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
             // Comparing the report to the reference one.
-            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report01.xml", destinationFolder
-                 + "simple_pdf.report.xml"), "CompareTool report differs from the reference one");
+            NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
+                 + "cmp_report01.xml"), "CompareTool report differs from the reference one");
         }
 
         /// <exception cref="System.IO.IOException"/>

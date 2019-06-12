@@ -783,14 +783,17 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>Utility method that provides simple comparison of the two xml files.</summary>
-        /// <param name="xmlFilePath1">absolute path to the first xml file to compare.</param>
-        /// <param name="xmlFilePath2">absolute path to the second xml file to compare.</param>
+        /// <param name="outXmlFile">absolute path to the out xml file to compare.</param>
+        /// <param name="cmpXmlFile">absolute path to the cmp xml file to compare.</param>
         /// <returns>true if xml structures are identical, false otherwise.</returns>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool CompareXmls(String xmlFilePath1, String xmlFilePath2) {
-            return XmlUtils.CompareXmls(new FileStream(xmlFilePath1, FileMode.Open, FileAccess.Read), new FileStream(xmlFilePath2
+        public virtual bool CompareXmls(String outXmlFile, String cmpXmlFile) {
+            System.Console.Out.WriteLine("Out xml: file:///" + UrlUtil.ToNormalizedURI(outXmlFile).AbsolutePath);
+            System.Console.Out.WriteLine("Cmp xml: file:///" + UrlUtil.ToNormalizedURI(cmpXmlFile).AbsolutePath + "\n"
+                );
+            return XmlUtils.CompareXmls(new FileStream(outXmlFile, FileMode.Open, FileAccess.Read), new FileStream(cmpXmlFile
                 , FileMode.Open, FileAccess.Read));
         }
 
