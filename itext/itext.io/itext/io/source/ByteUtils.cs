@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
@@ -130,6 +131,11 @@ namespace iText.IO.Source {
         }
 
         internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision) {
+            if (double.IsNaN(d)) {
+                ILog logger = LogManager.GetLogger(typeof(ByteUtils));
+                logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
+                d = 0;
+            }
             if (highPrecision) {
                 if (Math.Abs(d) < 0.000001) {
                     if (buffer != null) {

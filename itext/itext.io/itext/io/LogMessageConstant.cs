@@ -54,6 +54,8 @@ namespace iText.IO {
 
         public const String ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP = "For associated files their associated file specification dictionaries shall include the AFRelationship key.";
 
+        public const String ATTEMPT_PROCESS_NAN = "Attempt to process NaN in PdfNumber or when writing to PDF. Zero value will be used as a fallback.";
+
         public const String ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT = "Attempt to create a tag for a hint which is already marked as finished, tag will not be created.";
 
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
@@ -204,13 +206,13 @@ namespace iText.IO {
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
-        public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
-
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
         public const String NO_FIELDS_IN_ACROFORM = "Required AcroForm entry /Fields does not exist in the document. Empty array /Fields will be created.";
 
         public const String NUM_TREE_SHALL_NOT_END_WITH_KEY = "Number tree ends with a key which is invalid according to the PDF specification.";
+
+        public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
 
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";
 
