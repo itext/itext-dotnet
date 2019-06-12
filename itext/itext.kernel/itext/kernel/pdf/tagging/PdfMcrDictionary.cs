@@ -53,7 +53,8 @@ namespace iText.Kernel.Pdf.Tagging {
             : base(new PdfDictionary(), parent) {
             PdfDictionary dict = (PdfDictionary)GetPdfObject();
             dict.Put(PdfName.Type, PdfName.MCR);
-            dict.Put(PdfName.Pg, page.GetPdfObject());
+            // Explicitly using object indirect reference here in order to correctly process released objects.
+            dict.Put(PdfName.Pg, page.GetPdfObject().GetIndirectReference());
             dict.Put(PdfName.MCID, new PdfNumber(page.GetNextMcid()));
         }
 

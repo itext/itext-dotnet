@@ -70,6 +70,7 @@ namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
         /// <summary>Currently active page.</summary>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.2")]
         protected internal PdfPage currentPage = null;
 
         /// <summary>Default page size.</summary>
@@ -413,7 +414,7 @@ namespace iText.Kernel.Pdf {
             currentPage = page;
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
-            return currentPage;
+            return page;
         }
 
         /// <summary>Adds page to the end of document.</summary>
@@ -445,7 +446,7 @@ namespace iText.Kernel.Pdf {
             CheckAndAddPage(index, page);
             currentPage = page;
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
-            return currentPage;
+            return page;
         }
 
         /// <summary>Gets number of pages of the document.</summary>
@@ -1743,6 +1744,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>the same PdfFont instance.</returns>
         public virtual PdfFont AddFont(PdfFont font) {
             font.MakeIndirect(this);
+            font.SetForbidRelease();
+            // forbid release for font dictionaries that are stored in #documentFonts collection
             documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
             return font;
         }
@@ -1773,6 +1776,10 @@ namespace iText.Kernel.Pdf {
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
+        }
+
+        internal virtual bool IsDocumentFont(PdfIndirectReference indRef) {
+            return indRef != null && documentFonts.ContainsKey(indRef);
         }
 
         /// <summary>

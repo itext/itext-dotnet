@@ -4130,8 +4130,7 @@ namespace iText.Forms.Fields {
             if (fontName != null && defaultFontDic != null) {
                 PdfDictionary daFontDict = defaultFontDic.GetAsDictionary(new PdfName(fontName));
                 if (daFontDict != null) {
-                    PdfFont daFont = GetDocument().GetFont(daFontDict);
-                    return daFont != null ? daFont : PdfFontFactory.CreateFont(daFontDict);
+                    return GetDocument().GetFont(daFontDict);
                 }
             }
             return null;

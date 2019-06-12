@@ -978,7 +978,7 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    logger.Warn(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    logger.Info(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);

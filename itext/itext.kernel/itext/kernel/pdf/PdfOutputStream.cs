@@ -219,7 +219,8 @@ namespace iText.Kernel.Pdf {
                 Write(PdfNull.PDF_NULL);
             }
             else {
-                if (indirectReference.GetRefersTo() == null) {
+                if (indirectReference.refersTo == null && (indirectReference.CheckState(PdfObject.MODIFIED) || indirectReference
+                    .GetReader() == null || !(indirectReference.GetOffset() > 0 || indirectReference.GetIndex() >= 0))) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
                     logger.Error(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT);
                     Write(PdfNull.PDF_NULL);

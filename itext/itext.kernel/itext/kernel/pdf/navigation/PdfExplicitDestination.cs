@@ -184,7 +184,8 @@ namespace iText.Kernel.Pdf.Navigation {
         }
 
         private iText.Kernel.Pdf.Navigation.PdfExplicitDestination Add(PdfPage page) {
-            ((PdfArray)GetPdfObject()).Add(page.GetPdfObject());
+            // Explicitly using object indirect reference here in order to correctly process released objects.
+            ((PdfArray)GetPdfObject()).Add(page.GetPdfObject().GetIndirectReference());
             return this;
         }
 

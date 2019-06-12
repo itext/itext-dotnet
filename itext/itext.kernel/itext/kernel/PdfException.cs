@@ -259,6 +259,8 @@ namespace iText.Kernel {
 
         public const String FlushedPageCannotBeAddedOrInserted = "Flushed page cannot be added or inserted.";
 
+        public const String FlushingHelperFLushingModeIsNotForDocReadingMode = "Flushing writes the object to the output stream and releases it from memory. It is only possible for documents that have a PdfWriter associated with them. Use PageFlushingHelper#releaseDeep method instead.";
+
         public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
 
         public const String FontEmbeddingIssue = "Font embedding issue.";
