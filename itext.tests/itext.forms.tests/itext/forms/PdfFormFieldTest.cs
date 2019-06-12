@@ -1024,6 +1024,30 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TextFieldWithWideUnicodeRange() {
+            String filename = "textFieldWithWideUnicodeRange.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            pdfDoc.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(36, 400, 100, 40), "text_helvetica", "Helvetica"
+                ));
+            PdfFont noto = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
+            noto.SetSubset(false);
+            String value = "aAáÁàÀăĂắẮằẰẵẴẳẲâÂấẤầẦẫẪǎǍåÅǻǺäÄǟǞãÃą" + "ĄāĀảẢạẠặẶẬæÆǽǼbBḃḂcCćĆčČċĊçÇdDd̂D̂ďĎḋḊḑḐđĐðÐeE" 
+                + "éÉèÈĕĔêÊếẾềỀễỄěĚëËẽẼėĖęĘēĒẻẺẹẸệỆəƏfFḟḞgGǵǴğĞ" + "ǧǦġĠģĢḡḠǥǤhHȟȞḧḦħĦḥḤiIíÍìÌĭĬîÎǐǏïÏĩĨİįĮīĪỉỈị" + "ỊıjJĵĴǰJ̌kKḱḰǩǨķĶlLĺĹl̂L̂ľĽļĻłŁŀĿmMm̂M̂ṁṀnNńŃn̂N̂ňŇ"
+                 + "ñÑṅṄņŅŋŊoOóÓòÒŏŎôÔốỐồỒỗỖǒǑöÖȫȪőŐõÕȯȮȱȰøØǿǾǫǪ" + "ǭǬōŌỏỎơƠớỚờỜọỌộỘœŒpPṗṖqQĸrRŕŔřŘŗŖsSśŚšŠṡṠşŞṣ" + "ṢșȘßẞtTťŤṫṪţŢțȚŧŦuUúÚùÙûÛǔǓůŮüÜűŰũŨųŲūŪủỦưƯứ"
+                 + "ỨừỪữỮửỬựỰụỤvVwWẃẂẁẀŵŴẅẄxXẍẌyYýÝỳỲŷŶÿŸỹỸẏẎȳȲỷỶ" + "ỵỴzZźŹẑẐžŽżŻẓẒʒƷǯǮþÞŉ";
+            PdfFormField textField = PdfFormField.CreateText(pdfDoc, new Rectangle(36, 500, 400, 300), "text", value, 
+                noto, 12, true);
+            form.AddField(textField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestMakeField() {
             NUnit.Framework.Assert.IsNull(PdfFormField.MakeFormField(new PdfNumber(1), null));
