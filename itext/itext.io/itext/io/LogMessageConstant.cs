@@ -106,6 +106,8 @@ namespace iText.IO {
 
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
 
+        public const String DOCUMENT_IDS_ARE_CORRUPTED = "The document original and/or modified id is corrupted";
+
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";

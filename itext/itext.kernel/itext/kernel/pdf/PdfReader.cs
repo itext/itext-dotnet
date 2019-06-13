@@ -528,19 +528,38 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Gets file ID, either
+        /// Gets original file ID, the first element in
         /// <see cref="PdfName.ID"/>
-        /// key of trailer or a newly generated id.
+        /// key of trailer.
+        /// If the size of ID array does not equal 2, an empty array will be returned.
         /// </summary>
-        /// <returns>byte array represents file ID.</returns>
-        /// <seealso cref="PdfEncryption.GenerateNewDocumentId()"/>
+        /// <returns>byte array represents original file ID.</returns>
+        /// <seealso>PdfDocument#getOriginalDocumentId(). The ultimate document id should be taken from PdfDocument</seealso>
         public virtual byte[] GetOriginalFileId() {
             PdfArray id = trailer.GetAsArray(PdfName.ID);
-            if (id != null) {
+            if (id != null && id.Size() == 2) {
                 return ByteUtils.GetIsoBytes(id.GetAsString(0).GetValue());
             }
             else {
-                return PdfEncryption.GenerateNewDocumentId();
+                return new byte[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets modified file ID, the second element in
+        /// <see cref="PdfName.ID"/>
+        /// key of trailer.
+        /// If the size of ID array does not equal 2, an empty array will be returned.
+        /// </summary>
+        /// <returns>byte array represents modified file ID.</returns>
+        /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>
+        public virtual byte[] GetModifiedFileId() {
+            PdfArray id = trailer.GetAsArray(PdfName.ID);
+            if (id != null && id.Size() == 2) {
+                return ByteUtils.GetIsoBytes(id.GetAsString(1).GetValue());
+            }
+            else {
+                return new byte[0];
             }
         }
 

@@ -112,8 +112,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
-        /// <summary>The original second id when the document is read initially.</summary>
-        private PdfString originalModifiedDocumentId;
+        /// <summary>The original (first) id when the document is read initially.</summary>
+        private PdfString originalDocumentId;
+
+        /// <summary>The original modified (second) id when the document is read initially.</summary>
+        private PdfString modifiedDocumentId;
 
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
@@ -567,6 +570,28 @@ namespace iText.Kernel.Pdf {
             return info;
         }
 
+        /// <summary>
+        /// Gets original document id
+        /// In order to set originalDocumentId
+        /// <see cref="WriterProperties.SetInitialDocumentId(PdfString)"/>
+        /// should be used
+        /// </summary>
+        /// <returns>original dccument id</returns>
+        public virtual PdfString GetOriginalDocumentId() {
+            return originalDocumentId;
+        }
+
+        /// <summary>
+        /// Gets modified document id
+        /// In order to set modifiedDocumentId
+        /// <see cref="WriterProperties.SetModifiedDocumentId(PdfString)"/>
+        /// should be used
+        /// </summary>
+        /// <returns>modified document id</returns>
+        public virtual PdfString GetModifiedDocumentId() {
+            return modifiedDocumentId;
+        }
+
         /// <summary>Gets default page size.</summary>
         /// <returns>default page size.</returns>
         public virtual PageSize GetDefaultPageSize() {
@@ -712,7 +737,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     CheckIsoConformance();
-                    PdfObject fileId = GetFileId();
                     PdfObject crypto = null;
                     ICollection<PdfIndirectReference> forbiddenToFlush = new HashSet<PdfIndirectReference>();
                     if (properties.appendMode) {
@@ -816,6 +840,10 @@ namespace iText.Kernel.Pdf {
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
                     trailer.Put(PdfName.Info, info.GetPdfObject());
+                    //By this time original and modified document ids should always be not null due to initializing in
+                    // either writer properties, or in the writer init section on document open or from pdfreader. So we shouldn't worry about it being null next
+                    PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
+                        .GetIsoBytes(modifiedDocumentId.GetValue()));
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     foreach (ICounter counter in GetCounters()) {
@@ -849,42 +877,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
             closed = true;
-        }
-
-        private PdfObject GetFileId() {
-            bool documentIsModified = false;
-            byte[] originalFileId = null;
-            if (writer.properties.initialDocumentId != null) {
-                originalFileId = ByteUtils.GetIsoBytes(writer.properties.initialDocumentId.GetValue());
-            }
-            if (originalFileId == null && !properties.appendMode && writer.crypto != null) {
-                // TODO why only not in append mode when encrypted?
-                originalFileId = writer.crypto.GetDocumentId();
-            }
-            if (originalFileId == null && GetReader() != null) {
-                originalFileId = GetReader().GetOriginalFileId();
-                documentIsModified = true;
-            }
-            if (originalFileId == null) {
-                originalFileId = PdfEncryption.GenerateNewDocumentId();
-            }
-            byte[] secondId = null;
-            if (writer.properties.modifiedDocumentId != null) {
-                secondId = ByteUtils.GetIsoBytes(writer.properties.modifiedDocumentId.GetValue());
-            }
-            if (secondId == null && originalModifiedDocumentId != null) {
-                PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
-                if (!originalModifiedDocumentId.Equals(newModifiedId)) {
-                    secondId = ByteUtils.GetIsoBytes(newModifiedId.GetValue());
-                }
-                else {
-                    secondId = PdfEncryption.GenerateNewDocumentId();
-                }
-            }
-            if (secondId == null) {
-                secondId = (documentIsModified) ? PdfEncryption.GenerateNewDocumentId() : originalFileId;
-            }
-            return PdfEncryption.CreateInfoId(originalFileId, secondId);
         }
 
         /// <summary>Gets close status of the document.</summary>
@@ -1863,7 +1855,14 @@ namespace iText.Kernel.Pdf {
                     trailer = new PdfDictionary(reader.trailer);
                     PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
                     if (id != null) {
-                        originalModifiedDocumentId = id.GetAsString(1);
+                        if (id.Size() == 2) {
+                            originalDocumentId = id.GetAsString(0);
+                            modifiedDocumentId = id.GetAsString(1);
+                        }
+                        if (originalDocumentId == null || modifiedDocumentId == null) {
+                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                            logger.Error(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED);
+                        }
                     }
                     catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
                     if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
@@ -1923,6 +1922,30 @@ namespace iText.Kernel.Pdf {
                             trailer.Put(PdfName.ID, reader.trailer.Get(PdfName.ID));
                         }
                     }
+                    if (writer.properties != null) {
+                        PdfString readerModifiedId = modifiedDocumentId;
+                        if (writer.properties.initialDocumentId != null && !(reader != null && reader.decrypt != null && (properties
+                            .appendMode || properties.preserveEncryption))) {
+                            originalDocumentId = writer.properties.initialDocumentId;
+                        }
+                        if (writer.properties.modifiedDocumentId != null) {
+                            modifiedDocumentId = writer.properties.modifiedDocumentId;
+                        }
+                        if (originalDocumentId == null && modifiedDocumentId != null) {
+                            originalDocumentId = modifiedDocumentId;
+                        }
+                        if (modifiedDocumentId == null) {
+                            if (originalDocumentId == null) {
+                                originalDocumentId = new PdfString(PdfEncryption.GenerateNewDocumentId());
+                            }
+                            modifiedDocumentId = originalDocumentId;
+                        }
+                        if (writer.properties.modifiedDocumentId == null && modifiedDocumentId.Equals(readerModifiedId)) {
+                            modifiedDocumentId = new PdfString(PdfEncryption.GenerateNewDocumentId());
+                        }
+                    }
+                    System.Diagnostics.Debug.Assert(originalDocumentId != null);
+                    System.Diagnostics.Debug.Assert(modifiedDocumentId != null);
                 }
                 if (properties.appendMode) {
                     // Due to constructor reader and writer not null.
