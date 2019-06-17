@@ -104,6 +104,22 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ParseAboluteLengthExponential01() {
+            String value = "1e2pt";
+            float actual = CssUtils.ParseAbsoluteLength(value);
+            float expected = 1e2f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAboluteLengthExponential02() {
+            String value = "1e2px";
+            float actual = CssUtils.ParseAbsoluteLength(value);
+            float expected = 1e2f * 0.75f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 1)]
         public virtual void ParseAbsoluteLengthFromUnknownType() {
             String value = "10pateekes";

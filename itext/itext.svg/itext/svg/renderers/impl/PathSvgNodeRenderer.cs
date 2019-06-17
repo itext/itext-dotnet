@@ -65,7 +65,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>
         /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
         /// <p>
-        /// Find any occurence of a letter that is not an operator
+        /// Find any occurrence of a letter that is not an operator
         /// </summary>
         private const String INVALID_OPERATOR_REGEX = "(?:(?![mzlhvcsqtae])\\p{L})";
 
@@ -80,9 +80,16 @@ namespace iText.Svg.Renderers.Impl {
         /// is called before the use of this expression in
         /// <see cref="ParsePathOperations()"/>
         /// the attribute to be split is valid.
-        /// The regex splits at each letter.
+        /// SVG defines 6 types of path commands, for a total of 20 commands:
+        /// MoveTo: M, m
+        /// LineTo: L, l, H, h, V, v
+        /// Cubic Bezier Curve: C, c, S, s
+        /// Quadratic Bezier Curve: Q, q, T, t
+        /// Elliptical Arc Curve: A, a
+        /// ClosePath: Z, z
         /// </summary>
-        private const String SPLIT_REGEX = "(?=[\\p{L}])";
+        private static readonly Regex SPLIT_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(?=[mlhvcsqtaz])", System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
 
         /// <summary>
         /// The
@@ -149,7 +156,7 @@ namespace iText.Svg.Renderers.Impl {
                 String[] startingControlPoint = new String[2];
                 if (previousShape != null) {
                     Point previousEndPoint = previousShape.GetEndingPoint();
-                    //if the previous command was a Bézier curve, use its last control point
+                    //if the previous command was a Bezier curve, use its last control point
                     if (previousShape is IControlPointCurve) {
                         Point lastControlPoint = ((IControlPointCurve)previousShape).GetLastControlPoint();
                         float reflectedX = (float)(2 * previousEndPoint.GetX() - lastControlPoint.GetX());
@@ -319,9 +326,8 @@ namespace iText.Svg.Renderers.Impl {
                 throw new SvgProcessingException(SvgLogMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
                     (attributes);
             }
-            String[] coordinates = iText.IO.Util.StringUtil.Split(attributes, SPLIT_REGEX);
-            //gets an array attributesAr of {M 100 100, L 300 100, L200, 300, z}
-            foreach (String inst in coordinates) {
+            String[] operators = SplitPathStringIntoOperators(attributes);
+            foreach (String inst in operators) {
                 String instTrim = inst.Trim();
                 if (!String.IsNullOrEmpty(instTrim)) {
                     char instruction = instTrim[0];
@@ -334,38 +340,51 @@ namespace iText.Svg.Renderers.Impl {
             return result;
         }
 
-        /// <summary>Iterate over the input string and to seperate</summary>
+        /// <summary>Iterate over the input string and separate numbers from each other with space chars</summary>
         internal virtual String SeparateDecimalPoints(String input) {
             //If a space or minus sign is found reset
             //If a another point is found, add an extra space on before the point
             StringBuilder res = new StringBuilder();
-            //Iterate over string
-            bool decimalPointEncountered = false;
+            // We are now among the digits to the right of the decimal point
+            bool fractionalPartAfterDecimalPoint = false;
+            // We are now among the exponent magnitude part
+            bool exponentSignMagnitude = false;
             for (int i = 0; i < input.Length; i++) {
                 char c = input[i];
-                //If it's a whitespace or a minus sign and a point was previously found, reset the decimal point flag
-                if (decimalPointEncountered && (c == '-' || iText.IO.Util.TextUtil.IsWhiteSpace(c))) {
-                    decimalPointEncountered = false;
+                // Resetting flags
+                if (c == '-' || iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                    fractionalPartAfterDecimalPoint = false;
                 }
-                //If a point is found, mark and continue
+                if (iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                    exponentSignMagnitude = false;
+                }
+                // Add extra space before the next number starting from '.', or before the next number starting with '-'
+                if (EndsWithNonWhitespace(res) && (c == '.' && fractionalPartAfterDecimalPoint || c == '-' && !exponentSignMagnitude
+                    )) {
+                    res.Append(" ");
+                }
                 if (c == '.') {
-                    //If it's the second point, add an extra space
-                    if (decimalPointEncountered) {
-                        res.Append(" ");
-                    }
-                    else {
-                        decimalPointEncountered = true;
-                    }
+                    fractionalPartAfterDecimalPoint = true;
                 }
                 else {
-                    if (c == '-') {
-                        // If a minus is found, add an extra space
-                        res.Append(" ");
+                    if (c == 'e') {
+                        exponentSignMagnitude = true;
                     }
                 }
                 res.Append(c);
             }
             return res.ToString();
+        }
+
+        /// <summary>Gets an array of strings representing operators with their arguments, e.g.</summary>
+        /// <remarks>Gets an array of strings representing operators with their arguments, e.g. {"M 100 100", "L 300 100", "L200, 300", "z"}
+        ///     </remarks>
+        internal static String[] SplitPathStringIntoOperators(String path) {
+            return iText.IO.Util.StringUtil.Split(SPLIT_PATTERN, path);
+        }
+
+        private static bool EndsWithNonWhitespace(StringBuilder sb) {
+            return sb.Length > 0 && !iText.IO.Util.TextUtil.IsWhiteSpace(sb[sb.Length - 1]);
         }
     }
 }

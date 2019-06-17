@@ -424,8 +424,8 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             int pos = 0;
             while (pos < @string.Length) {
-                if (@string[pos] == '+' || @string[pos] == '-' || @string[pos] == '.' || @string[pos] >= '0' && @string[pos
-                    ] <= '9') {
+                if (@string[pos] == '+' || @string[pos] == '-' || @string[pos] == '.' || IsDigit(@string[pos]) || IsExponentNotation
+                    (@string, pos)) {
                     pos++;
                 }
                 else {
@@ -630,5 +630,16 @@ namespace iText.StyledXmlParser.Css.Util {
             builder.AddRange(l, r);
             return true;
         }
+
+        private static bool IsDigit(char ch) {
+            return ch >= '0' && ch <= '9';
+        }
+
+        private static bool IsExponentNotation(String s, int index) {
+            return index < s.Length && s[index] == 'e' && (index + 1 < s.Length && IsDigit(s[index + 1]) || index + 2 
+                < s.Length && (s[index + 1] == '-' || s[index + 1] == '+') && IsDigit(s[index + 2]));
+        }
+        // e.g. 12e5
+        // e.g. 12e-5, 12e+5
     }
 }
