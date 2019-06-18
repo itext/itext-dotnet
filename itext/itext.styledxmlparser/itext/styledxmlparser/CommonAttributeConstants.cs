@@ -44,19 +44,22 @@ using System;
 
 namespace iText.StyledXmlParser {
     public class CommonAttributeConstants {
-        /// <summary>The Constant ID.</summary>
-        public const String ID = "id";
-
         /// <summary>The Constant CLASS.</summary>
         public const String CLASS = "class";
+
+        /// <summary>The Constant DISABLED.</summary>
+        public const String DISABLED = "disabled";
+
+        /// <summary>The Constant ID.</summary>
+        public const String ID = "id";
 
         /// <summary>The Constant LANG.</summary>
         public const String LANG = "lang";
 
-        /// <summary>The Constant LANG.</summary>
-        public const String STYLESHEET = "stylesheet";
-
-        /// <summary>The Constant LANG.</summary>
+        /// <summary>The Constant REL.</summary>
         public const String REL = "rel";
+
+        /// <summary>The Constant STYLESHEET.</summary>
+        public const String STYLESHEET = "stylesheet";
     }
 }
