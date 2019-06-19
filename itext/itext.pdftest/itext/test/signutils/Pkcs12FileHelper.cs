@@ -48,7 +48,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.X509;
 
-namespace iText.Signatures.Testutils {
+namespace iText.Test.Signutils {
     public sealed class Pkcs12FileHelper {
         private Pkcs12FileHelper() {
         }

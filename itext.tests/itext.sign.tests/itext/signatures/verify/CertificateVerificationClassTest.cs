@@ -44,8 +44,8 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.X509;
 using iText.Signatures;
-using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     public class CertificateVerificationClassTest : ExtendedITextTest {

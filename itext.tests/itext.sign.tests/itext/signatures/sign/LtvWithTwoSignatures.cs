@@ -45,9 +45,9 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Kernel.Pdf;
 using iText.Signatures;
-using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     public class LtvWithTwoSignatures : ExtendedITextTest {

@@ -55,6 +55,7 @@ using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Cert;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     public class OcspVerifierTest : ExtendedITextTest {
