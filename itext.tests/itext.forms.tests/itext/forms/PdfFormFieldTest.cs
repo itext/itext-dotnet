@@ -60,11 +60,11 @@ using iText.Test.Attributes;
 
 namespace iText.Forms {
     public class PdfFormFieldTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldTest/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/PdfFormFieldTest/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -656,29 +656,6 @@ namespace iText.Forms {
                  + testName + "_"));
         }
 
-        private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
-            for (int x = offSet; x < (offSet + 3); x++) {
-                Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
-                PdfFormField field = PdfFormField.CreateText(pdfDoc, rect, "f-" + x, "", font, 12.0f);
-                field.SetJustification(PdfFormField.ALIGN_RIGHT);
-                if (text != null) {
-                    field.SetValue(text);
-                }
-                form.AddField(field);
-            }
-        }
-
-        private void AddParagraph(Document document, String text, PdfFont font) {
-            document.Add(new Paragraph("Hello world ").Add(text).SetFont(font));
-        }
-
-        private void FillAcroForm(PdfDocument pdfDocument, String text) {
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
-            foreach (PdfFormField field in acroForm.GetFormFields().Values) {
-                field.SetValue(text);
-            }
-        }
-
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -1072,6 +1049,65 @@ namespace iText.Forms {
             PdfString da = ((PdfDictionary)pdfDoc.GetPdfObject(objectNumer)).GetAsString(PdfName.DA);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual("/F1 25 Tf", da.ToString());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void SetPageNewField() {
+            String filename = destinationFolder + "setPageNewField.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage();
+            pdfDoc.AddNewPage();
+            pdfDoc.AddNewPage();
+            String fieldName = "field1";
+            int pageNum = 2;
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField field1 = PdfFormField.CreateText(pdfDoc, new Rectangle(90, 700, 150, 22), fieldName, "new field"
+                );
+            field1.SetPage(pageNum);
+            form.AddField(field1);
+            pdfDoc.Close();
+            // -------------------------------------------
+            PrintOutputPdfNameAndDir(filename);
+            PdfDocument resPdf = new PdfDocument(new PdfReader(filename));
+            PdfArray fieldsArr = resPdf.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsArray(PdfName
+                .Fields);
+            NUnit.Framework.Assert.AreEqual(1, fieldsArr.Size());
+            PdfDictionary field = fieldsArr.GetAsDictionary(0);
+            PdfDictionary fieldP = field.GetAsDictionary(PdfName.P);
+            // TODO DEVSIX-2912: shall be equal to second page object
+            NUnit.Framework.Assert.AreEqual(resPdf.GetPage(3).GetPdfObject(), fieldP);
+            NUnit.Framework.Assert.IsNull(resPdf.GetPage(1).GetPdfObject().GetAsArray(PdfName.Annots));
+            PdfArray secondPageAnnots = resPdf.GetPage(2).GetPdfObject().GetAsArray(PdfName.Annots);
+            NUnit.Framework.Assert.AreEqual(1, secondPageAnnots.Size());
+            NUnit.Framework.Assert.AreEqual(field, secondPageAnnots.Get(0));
+            // TODO DEVSIX-2912: third page annotations array shall be null
+            PdfArray thirdPageAnnots = resPdf.GetPage(3).GetPdfObject().GetAsArray(PdfName.Annots);
+            NUnit.Framework.Assert.AreEqual(1, thirdPageAnnots.Size());
+            NUnit.Framework.Assert.AreEqual(field, thirdPageAnnots.Get(0));
+        }
+
+        private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
+            for (int x = offSet; x < (offSet + 3); x++) {
+                Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
+                PdfFormField field = PdfFormField.CreateText(pdfDoc, rect, "f-" + x, "", font, 12.0f);
+                field.SetJustification(PdfFormField.ALIGN_RIGHT);
+                if (text != null) {
+                    field.SetValue(text);
+                }
+                form.AddField(field);
+            }
+        }
+
+        private void AddParagraph(Document document, String text, PdfFont font) {
+            document.Add(new Paragraph("Hello world ").Add(text).SetFont(font));
+        }
+
+        private void FillAcroForm(PdfDocument pdfDocument, String text) {
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            foreach (PdfFormField field in acroForm.GetFormFields().Values) {
+                field.SetValue(text);
+            }
         }
     }
 }
