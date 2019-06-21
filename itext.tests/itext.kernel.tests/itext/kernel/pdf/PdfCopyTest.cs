@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Utils;
@@ -226,6 +227,34 @@ namespace iText.Kernel.Pdf {
             sourceDoc.Close();
             outputDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void CopySelfContainedObject() {
+            ByteArrayOutputStream inputBytes = new ByteArrayOutputStream();
+            PdfDocument prepInputDoc = new PdfDocument(new PdfWriter(inputBytes));
+            PdfDictionary selfContainedDict = new PdfDictionary();
+            PdfName randDictName = PdfName.Sound;
+            PdfName randEntry1 = PdfName.R;
+            PdfName randEntry2 = PdfName.S;
+            selfContainedDict.Put(randEntry1, selfContainedDict);
+            selfContainedDict.Put(randEntry2, selfContainedDict);
+            prepInputDoc.AddNewPage().Put(randDictName, selfContainedDict.MakeIndirect(prepInputDoc));
+            prepInputDoc.Close();
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(new MemoryStream(inputBytes.ToArray())));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destinationFolder + "copySelfContainedObject.pdf"));
+            srcDoc.CopyPagesTo(1, 1, destDoc);
+            PdfDictionary destPageObj = destDoc.GetFirstPage().GetPdfObject();
+            PdfDictionary destSelfContainedDict = destPageObj.GetAsDictionary(randDictName);
+            PdfDictionary destSelfContainedDictR = destSelfContainedDict.GetAsDictionary(randEntry1);
+            PdfDictionary destSelfContainedDictS = destSelfContainedDict.GetAsDictionary(randEntry2);
+            NUnit.Framework.Assert.AreEqual(destSelfContainedDict.GetIndirectReference(), destSelfContainedDictR.GetIndirectReference
+                ());
+            NUnit.Framework.Assert.AreEqual(destSelfContainedDict.GetIndirectReference(), destSelfContainedDictS.GetIndirectReference
+                ());
+            destDoc.Close();
+            srcDoc.Close();
         }
     }
 }

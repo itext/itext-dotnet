@@ -1198,7 +1198,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flush all copied objects and remove them from copied cache.</summary>
         /// <remarks>
         /// Flush all copied objects and remove them from copied cache.
-        /// Note, if you will copy objects from the same document, doublicated objects will be created.
+        /// <p>
+        /// Note, if you will copy objects from the same document, duplicated objects will be created.
+        /// That's why usually this method is meant to be used when all copying from source document is finished.
+        /// For other cases one can also consider other flushing mechanisms, e.g. pages-based flushing.
         /// </remarks>
         /// <param name="sourceDoc">source document</param>
         public virtual void FlushCopiedObjects(iText.Kernel.Pdf.PdfDocument sourceDoc) {
