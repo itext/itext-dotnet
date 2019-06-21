@@ -131,11 +131,6 @@ namespace iText.IO.Source {
         }
 
         internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision) {
-            if (double.IsNaN(d)) {
-                ILog logger = LogManager.GetLogger(typeof(ByteUtils));
-                logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
-                d = 0;
-            }
             if (highPrecision) {
                 if (Math.Abs(d) < 0.000001) {
                     if (buffer != null) {
@@ -145,6 +140,11 @@ namespace iText.IO.Source {
                     else {
                         return zero;
                     }
+                }
+                if (double.IsNaN(d)) {
+                    ILog logger = LogManager.GetLogger(typeof(ByteUtils));
+                    logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
+                    d = 0;
                 }
                 byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
                     );
@@ -268,10 +268,16 @@ namespace iText.IO.Source {
                     d += 0.5;
                     long v;
                     if (d > long.MaxValue) {
-                        //by default cast logic do the same, but not in .NET
+                        // by default cast logic do the same, but not in .NET
                         v = long.MaxValue;
                     }
                     else {
+                        if (double.IsNaN(d)) {
+                            ILog logger = LogManager.GetLogger(typeof(ByteUtils));
+                            logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
+                            // in java NaN casted to long results in 0, but in .NET it results in long.MIN_VALUE
+                            d = 0;
+                        }
                         v = (long)d;
                     }
                     int intLen = LongSize(v);
