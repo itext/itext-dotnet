@@ -186,7 +186,7 @@ namespace iText.Kernel.Pdf {
             EncryptionProperties encryptProps = properties.encryptionProperties;
             if (properties.IsStandardEncryptionUsed()) {
                 crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
-                    , encryptProps.encryptionAlgorithm, ByteUtils.GetIsoBytes(this.document.GetOriginalDocumentId().ToString
+                    , encryptProps.encryptionAlgorithm, ByteUtils.GetIsoBytes(this.document.GetOriginalDocumentId().GetValue
                     ()), version);
             }
             else {

@@ -611,6 +611,27 @@ namespace iText.Kernel.Crypto {
             CompareEncryptedPdf(filename);
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptWithPasswordAes128NoMetadataCompression() {
+            String srcFilename = "srcEncryptWithPasswordAes128NoMetadataCompression.pdf";
+            PdfReader reader = new PdfReader(sourceFolder + srcFilename, new ReaderProperties());
+            WriterProperties props = new WriterProperties().SetStandardEncryption("superuser".GetBytes(), "superowner"
+                .GetBytes(), EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants
+                .DO_NOT_ENCRYPT_METADATA);
+            String outFilename = "encryptWithPasswordAes128NoMetadataCompression.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + outFilename, props);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            compareTool.EnableEncryptionCompare();
+            compareTool.GetOutReaderProperties().SetPassword("superowner".GetBytes());
+            compareTool.GetCmpReaderProperties().SetPassword("superowner".GetBytes());
+            String outPdf = destinationFolder + outFilename;
+            String cmpPdf = sourceFolder + "cmp_" + outFilename;
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"));
+        }
+
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
