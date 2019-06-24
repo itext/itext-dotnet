@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.pdftest</id>
     <version>7.1.7-SNAPSHOT</version>
@@ -18,9 +18,11 @@
     <tags>itext itext7 itextsharp c# .net csharp pdf tests</tags>
   </metadata>
   <files>
-	<file src="bin\Release\net40\itext.pdftest.dll" target="lib\net40" />
-	<file src="bin\Release\net40\itext.pdftest.xml" target="lib\net40" />
-	<file src="bin\Release\netstandard1.6\itext.pdftest.dll" target="lib\netstandard1.6" />
-	<file src="bin\Release\netstandard1.6\itext.pdftest.xml" target="lib\netstandard1.6" />
+    <file src="bin\Release\net40\itext.pdftest.dll" target="lib\net40" />
+    <file src="bin\Release\net40\itext.pdftest.xml" target="lib\net40" />
+    <file src="bin\Release\netstandard1.6\itext.pdftest.dll" target="lib\netstandard1.6" />
+    <file src="bin\Release\netstandard1.6\itext.pdftest.xml" target="lib\netstandard1.6" />
+    <file src="..\..\gnu-agpl-v3.0.md" target="" />
+    <file src="..\..\LICENSE.md" target="" />
   </files>
 </package>
