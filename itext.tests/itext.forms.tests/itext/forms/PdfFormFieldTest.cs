@@ -1109,5 +1109,32 @@ namespace iText.Forms {
                 field.SetValue(text);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SetFont3Ways() {
+            String filename = destinationFolder + "setFont3Ways.pdf";
+            String cmpFilename = sourceFolder + "cmp_setFont3Ways.pdf";
+            String testString = "Don't cry over spilt milk";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
+            Rectangle rect1 = new Rectangle(10, 700, 200, 25);
+            Rectangle rect2 = new Rectangle(30, 600, 200, 25);
+            Rectangle rect3 = new Rectangle(50, 500, 200, 25);
+            PdfButtonFormField pushButton1 = PdfFormField.CreatePushButton(pdfDocument, rect1, "Name1", testString, font
+                , 12);
+            form.AddField(pushButton1);
+            PdfButtonFormField pushButton2 = PdfFormField.CreatePushButton(pdfDocument, rect2, "Name2", testString);
+            pushButton2.SetFontAndSize(font, 12f);
+            form.AddField(pushButton2);
+            PdfButtonFormField pushButton3 = PdfFormField.CreatePushButton(pdfDocument, rect3, "Name3", testString);
+            pushButton3.SetFont(font).SetFontSize(12);
+            form.AddField(pushButton3);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
     }
 }
