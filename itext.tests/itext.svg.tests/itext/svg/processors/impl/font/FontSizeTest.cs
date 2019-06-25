@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Processors.Impl.Font {
     public class FontSizeTest : SvgIntegrationTest {
@@ -68,8 +69,17 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void FontSize02Test() {
             String name = "fontSizeTest02";
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FontSize03Test() {
+            String name = "fontSizeTest03";
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 

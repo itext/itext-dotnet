@@ -1327,6 +1327,7 @@ namespace iText.Svg.Converter {
                 for (int i = 0; i < values.Length; i++) {
                     values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
                 }
+                viewBoxPresent = true;
             }
             float width;
             float height;
@@ -1334,12 +1335,12 @@ namespace iText.Svg.Converter {
             String hString;
             wString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH);
             if (wString == null) {
-                //Log Warning
-                LOGGER.Warn(SvgLogMessageConstant.MISSING_WIDTH);
                 if (viewBoxPresent) {
                     width = values[2];
                 }
                 else {
+                    //Log Warning
+                    LOGGER.Warn(SvgLogMessageConstant.MISSING_WIDTH);
                     //Set to browser default
                     width = CssUtils.ParseAbsoluteLength("300px");
                 }
@@ -1349,12 +1350,12 @@ namespace iText.Svg.Converter {
             }
             hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
             if (hString == null) {
-                //Log Warning
-                LOGGER.Warn(SvgLogMessageConstant.MISSING_HEIGHT);
                 if (viewBoxPresent) {
                     height = values[3];
                 }
                 else {
+                    //Log Warning
+                    LOGGER.Warn(SvgLogMessageConstant.MISSING_HEIGHT);
                     //Set to browser default
                     height = CssUtils.ParseAbsoluteLength("150px");
                 }

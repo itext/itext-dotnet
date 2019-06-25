@@ -51,22 +51,12 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
-using iText.Svg.Renderers;
-using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
-    public class SvgStyleResolverTest : SvgIntegrationTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+    public class SvgStyleResolverTest {
+        private static readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
-
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/css/SvgStyleResolver/";
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
-        }
 
         //Single element test
         //Inherits values from parent?
@@ -107,11 +97,11 @@ namespace iText.Svg.Css {
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "itis.jpg"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(sourceFolder);
+            scp.SetBaseUri(baseUri);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
-            String fileName = sourceFolder + "itis.jpg";
+            String fileName = baseUri + "itis.jpg";
             String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
             NUnit.Framework.Assert.AreEqual(expectedURL, attr.Get("xlink:href"));
         }
@@ -124,7 +114,7 @@ namespace iText.Svg.Css {
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "#testid"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(sourceFolder);
+            scp.SetBaseUri(baseUri);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
@@ -190,40 +180,6 @@ namespace iText.Svg.Css {
             IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
             NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void FontResolverIntegrationTest() {
-            //TODO DEVSIX-2058
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void ValidLocalFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void FontWeightTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontWeightTest");
-        }
-
-        /// <summary>The following test should fail when RND-1042 is resolved</summary>
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void GoogleFontsTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
         }
     }
 }

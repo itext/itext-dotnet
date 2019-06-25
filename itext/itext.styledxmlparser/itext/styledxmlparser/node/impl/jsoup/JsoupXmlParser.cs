@@ -120,9 +120,10 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 resultNode = new JsoupDocumentTypeNode((DocumentType)jsoupNode);
                             }
                             else {
-                                if (jsoupNode is Comment) {
+                                if (jsoupNode is Comment || jsoupNode is XmlDeclaration) {
                                 }
                                 else {
+                                    // Ignore. We should do this to avoid redundant log message
                                     logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
                                         , jsoupNode.GetType()));
                                 }

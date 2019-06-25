@@ -135,5 +135,39 @@ namespace iText.Svg.Css {
             expected.Put("d", "M0 100 L0 50 L70 50");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontResolverIntegrationTest() {
+            //TODO DEVSIX-2058
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ValidLocalFontTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontWeightTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontWeightTest");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GoogleFontsTest() {
+            //TODO DEVSIX-2264: that test shall fail after the fix.
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
+        }
     }
 }

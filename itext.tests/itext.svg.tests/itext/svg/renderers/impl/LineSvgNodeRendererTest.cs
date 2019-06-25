@@ -53,7 +53,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
-    public class LineSvgNodeRendererTest {
+    public class LineSvgNodeRendererTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/LineSvgNodeRendererTest/";
 
@@ -132,7 +132,7 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
         public virtual void InvalidAttributeTest02() {
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");

@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Font;
 using iText.Svg;
+using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
-    public class TextLeafSvgNodeRendererIntegrationTest {
+    public class TextLeafSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthBaseTest() {
