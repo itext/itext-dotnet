@@ -3905,8 +3905,8 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// of the page to draw on.
         /// </param>
-        /// <param name="x">the x coordinate of the lower left corner of the button rectangle</param>
-        /// <param name="y">the y coordinate of the lower left corner of the button rectangle</param>
+        /// <param name="x">will be ignored, according to spec it shall be 0</param>
+        /// <param name="y">will be ignored, according to spec it shall be 0</param>
         /// <param name="width">the width of the button</param>
         /// <param name="height">the width of the button</param>
         /// <param name="text">the text to display on the button</param>
