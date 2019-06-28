@@ -672,11 +672,11 @@ namespace iText.Layout.Borders {
             canvas.Stroke().RestoreState();
         }
 
-        /// <summary>Calculate adjusted starting points for non-continuous borders, given two opposing points (A and B) that define the bounding rectangle
+        /// <summary>Calculate adjusted starting points for discontinuous borders, given two opposing points (A and B) that define the bounding rectangle
         ///     </summary>
-        /// <param name="x1">x-ordinate of point A</param>
+        /// <param name="x1">x-coordinate of point A</param>
         /// <param name="y1">y-ordinate of point A</param>
-        /// <param name="x2">x-ordinate of point B</param>
+        /// <param name="x2">x-coordinate of point B</param>
         /// <param name="y2">y-ordinate of point B</param>
         /// <param name="defaultSide">default side of the border used to determine the side given by points A and B</param>
         /// <returns>float[] containing the adjusted starting points in the form {x1,y1,x2,y2}</returns>

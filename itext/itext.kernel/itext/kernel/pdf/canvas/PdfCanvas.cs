@@ -1111,8 +1111,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [System.ObsoleteAttribute(@"in favour of endPath(), which does exactly the same thing but is better named"
             )]
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewPath() {
-            contentStream.GetOutputStream().WriteBytes(n);
-            return this;
+            return this.EndPath();
         }
 
         /// <summary>Ends the path without filling or stroking it.</summary>
