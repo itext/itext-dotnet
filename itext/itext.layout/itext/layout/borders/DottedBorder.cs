@@ -93,7 +93,7 @@ namespace iText.Layout.Borders {
             float dx = x2 - x1;
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
-            float adjustedGap = GetDotsGap(borderLength, initialGap + width);
+            float adjustedGap = base.GetDotsGap(borderLength, initialGap + width);
             if (adjustedGap > width) {
                 adjustedGap -= width;
             }
@@ -116,7 +116,7 @@ namespace iText.Layout.Borders {
             float dx = x2 - x1;
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
-            float adjustedGap = GetDotsGap(borderLength, initialGap);
+            float adjustedGap = base.GetDotsGap(borderLength, initialGap);
             if (adjustedGap > width) {
                 adjustedGap -= width;
             }
@@ -137,7 +137,7 @@ namespace iText.Layout.Borders {
             float dx = x2 - x1;
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
-            float adjustedGap = GetDotsGap(borderLength, initialGap + width);
+            float adjustedGap = base.GetDotsGap(borderLength, initialGap + width);
             if (adjustedGap > width) {
                 adjustedGap -= width;
             }
@@ -155,6 +155,7 @@ namespace iText.Layout.Borders {
         /// </param>
         /// <param name="initialGap">the initial size of the gap</param>
         /// <returns>the adjusted size of the gap</returns>
+        [System.ObsoleteAttribute(@"logic moved to super-class")]
         protected internal override float GetDotsGap(double distance, float initialGap) {
             return base.GetDotsGap(distance, initialGap);
         }

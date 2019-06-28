@@ -1576,5 +1576,20 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EndPathNewPathTest() {
+            ByteArrayOutputStream boasEndPath = new ByteArrayOutputStream();
+            PdfDocument pdfDocEndPath = new PdfDocument(new PdfWriter(boasEndPath));
+            pdfDocEndPath.AddNewPage();
+            PdfCanvas endPathCanvas = new PdfCanvas(pdfDocEndPath.GetPage(1));
+            endPathCanvas.EndPath();
+            ByteArrayOutputStream boasNewPath = new ByteArrayOutputStream();
+            PdfDocument pdfDocNewPath = new PdfDocument(new PdfWriter(boasNewPath));
+            pdfDocNewPath.AddNewPage();
+            PdfCanvas newPathCanvas = new PdfCanvas(pdfDocNewPath.GetPage(1));
+            newPathCanvas.NewPath();
+            NUnit.Framework.Assert.AreEqual(boasNewPath.ToArray(), boasEndPath.ToArray());
+        }
     }
 }
