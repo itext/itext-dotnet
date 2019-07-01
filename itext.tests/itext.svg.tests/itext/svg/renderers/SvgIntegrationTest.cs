@@ -70,6 +70,15 @@ namespace iText.Svg.Renderers {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        public static PdfDocument ConvertWithResult(String svg, String output) {
+            PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
+            doc.AddNewPage();
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
+            SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
+            return doc;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream) {
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
             SvgConverter.CreatePdf(svg, pdfOutputStream, writerprops);
