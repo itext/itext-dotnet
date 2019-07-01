@@ -172,5 +172,30 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             NUnit.Framework.Assert.AreEqual(20, rect.GetHeight(), 0.0001);
             pdfDocument.Close();
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestRotatedText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "rotatedText.pdf"));
+            // build strategy
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("abc");
+            // get locations
+            IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
+            for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
+                foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
+                    if (location != null) {
+                        locationList.Add(location);
+                    }
+                }
+            }
+            // compare
+            NUnit.Framework.Assert.AreEqual(2, locationList.Count);
+            NUnit.Framework.Assert.IsTrue(locationList[0].GetRectangle().EqualsWithEpsilon(new Rectangle(188.512f, 450f
+                , 14.800003f, 25.791992f)));
+            NUnit.Framework.Assert.IsTrue(locationList[1].GetRectangle().EqualsWithEpsilon(new Rectangle(36f, 746.688f
+                , 25.792f, 14.799988f)));
+            pdfDocument.Close();
+        }
     }
 }

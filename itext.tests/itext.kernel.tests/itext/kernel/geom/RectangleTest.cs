@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using System.IO;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -405,6 +407,66 @@ namespace iText.Kernel.Geom {
                 exception = true;
             }
             NUnit.Framework.Assert.IsTrue(exception);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TranslateOnRotatedPageTest01() {
+            // we need a page with set rotation and page size to test Rectangle#getRectangleOnRotatedPage
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfPage page = pdfDocument.AddNewPage();
+            NUnit.Framework.Assert.IsTrue(PageSize.A4.EqualsWithEpsilon(page.GetPageSize()));
+            // Test rectangle
+            Rectangle testRectangle = new Rectangle(200, 200, 100, 200);
+            NUnit.Framework.Assert.AreEqual(0, page.GetRotation());
+            NUnit.Framework.Assert.IsTrue(new Rectangle(200, 200, 100, 200).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle, page)));
+            page.SetRotation(90);
+            NUnit.Framework.Assert.AreEqual(90, page.GetRotation());
+            NUnit.Framework.Assert.IsTrue(new Rectangle(195, 200, 200, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle, page)));
+            page.SetRotation(180);
+            NUnit.Framework.Assert.AreEqual(180, page.GetRotation());
+            NUnit.Framework.Assert.IsTrue(new Rectangle(295, 442, 100, 200).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle, page)));
+            page.SetRotation(270);
+            NUnit.Framework.Assert.AreEqual(270, page.GetRotation());
+            NUnit.Framework.Assert.IsTrue(new Rectangle(200, 542, 200, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle, page)));
+            page.SetRotation(360);
+            NUnit.Framework.Assert.AreEqual(0, page.GetRotation());
+            NUnit.Framework.Assert.IsTrue(new Rectangle(200, 200, 100, 200).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle, page)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateBBoxTest() {
+            Point a = new Point(100, 100);
+            Point b = new Point(200, 100);
+            Point c = new Point(200, 200);
+            Point d = new Point(100, 200);
+            // Zero rotation
+            Rectangle.CalculateBBox(JavaUtil.ArraysAsList(a, b, c, d));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(100, 100, 100, 100).EqualsWithEpsilon(Rectangle.CalculateBBox(
+                JavaUtil.ArraysAsList(a, b, c, d))));
+            // 270 degree rotation
+            a = new Point(200, 100);
+            b = new Point(200, 200);
+            c = new Point(100, 200);
+            d = new Point(100, 100);
+            NUnit.Framework.Assert.IsTrue(new Rectangle(100, 100, 100, 100).EqualsWithEpsilon(Rectangle.CalculateBBox(
+                JavaUtil.ArraysAsList(a, b, c, d))));
+            // it looks as follows:
+            // dxxxxxx
+            // xxxxxxx
+            // cxxxxxa
+            // xxxxxxx
+            // xxxxxxb
+            a = new Point(200, 100);
+            b = new Point(200, 0);
+            c = new Point(0, 100);
+            d = new Point(0, 200);
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0, 200, 200).EqualsWithEpsilon(Rectangle.CalculateBBox(JavaUtil.ArraysAsList
+                (a, b, c, d))));
         }
     }
 }
