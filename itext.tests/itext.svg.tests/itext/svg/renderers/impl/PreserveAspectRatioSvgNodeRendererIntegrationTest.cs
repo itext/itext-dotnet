@@ -111,5 +111,13 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestDoNotPreserveAspectMetricDimensionsAll"
                 );
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DifferentAspectRatios() {
+            //TODO: update cmp_ when DEVSIX-2250 fixed
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "differentAspectRatios");
+        }
     }
 }

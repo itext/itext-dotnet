@@ -44,6 +44,7 @@ using System;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class PathParsingIntegrationTest : SvgIntegrationTest {
@@ -158,6 +159,24 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PrecedingSpacesTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "precedingSpaces");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        public virtual void Text_path_Test() {
+            //TODO: update cmp-file after DEVSIX-2255
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "textpath");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        public virtual void TextPathExample() {
+            //TODO: update when DEVSIX-2255 implemented
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "textPathExample");
         }
     }
 }

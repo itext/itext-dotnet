@@ -207,5 +207,13 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void MissingHashtagTest() {
             ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "missingHashtag", properties);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void UseInDifferentFilesExampleTest() {
+            //TODO: update when DEVSIX-2252 fixed
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "useInDifferentFilesExampleTest");
+        }
     }
 }

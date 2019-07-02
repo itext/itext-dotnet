@@ -156,9 +156,17 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-876")]
+        [NUnit.Framework.Ignore("DEVSIX-2240")]
         public virtual void DifferentDimensionsTest() {
             ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "differentDimensions", properties);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageWithTransparencyTest() {
+            //TODO: update cmp_ when DEVSIX-2250, DEVSIX-2258 fixed
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "imageWithTransparency", properties);
         }
     }
 }

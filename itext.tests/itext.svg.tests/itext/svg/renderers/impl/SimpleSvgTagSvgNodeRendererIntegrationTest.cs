@@ -206,5 +206,14 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NegativeY() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeY");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        public virtual void PercentInMeasurement() {
+            //TODO: update after DEVSIX-2377
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "percentInMeasurement");
+        }
     }
 }

@@ -98,5 +98,14 @@ namespace iText.Svg.Processors.Impl.Font {
             String name = "fontRelativeKeywords";
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Diff_units_of_measure() {
+            //TODO: update cmp-file after DEVSIX-2785
+            String name = "diff_units_of_measure";
+            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+        }
     }
 }
