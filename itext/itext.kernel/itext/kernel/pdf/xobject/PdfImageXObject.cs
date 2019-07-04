@@ -145,7 +145,6 @@ namespace iText.Kernel.Pdf.Xobject {
         /// Note, that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>
         public override void Flush() {
-            // TODO to be removed in iText 7.2
             base.Flush();
         }
 
