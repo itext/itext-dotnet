@@ -44,6 +44,7 @@ using System;
 using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class TSpanNodeRendererIntegrationTest : SvgIntegrationTest {
@@ -231,6 +232,32 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void TSpanTextAnchorFunctionalTest() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void TspanBasicExample() {
+            //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBasicExample");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void TspanNestedExample() {
+            //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedExample");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Text_decoration_Test() {
+            //TODO: update cmp-file after DEVSIX-2270 fixed
+            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "text_decoration");
         }
     }
 }
