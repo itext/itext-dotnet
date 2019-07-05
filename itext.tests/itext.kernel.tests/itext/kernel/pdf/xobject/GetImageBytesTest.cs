@@ -100,12 +100,14 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+		[NUnit.Framework.Ignore("Ignored during the latest release. Please unignore after DEVSIX-3021")]
         public virtual void TestFlateCmyk() {
             TestFile("img_cmyk.pdf", "Im1", "tif");
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+		[NUnit.Framework.Ignore("Ignored during the latest release. Please unignore after DEVSIX-3021")]
         public virtual void TestFlateCmykIcc() {
             TestFile("img_cmyk_icc.pdf", "Im1", "tif");
         }
