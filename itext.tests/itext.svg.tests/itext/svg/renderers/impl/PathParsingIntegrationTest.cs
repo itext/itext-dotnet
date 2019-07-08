@@ -137,7 +137,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest01() {
-            //TODO update after DEVSIX-2331 - several (negative) line operators
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "negativeAfterPositiveHandling");
         }
 
@@ -145,7 +144,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest02() {
-            //TODO update after DEVSIX-2333 (negative viewbox) fix
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "negativeAfterPositiveHandlingExtendedViewbox");
         }
 
@@ -179,45 +177,6 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TextPathExample() {
             //TODO: update when DEVSIX-2255 implemented
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "textPathExample");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PathH() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathH");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PathV() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathV");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PathHV() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathHV");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PathRelativeAbsoluteCombinedTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathRelativeAbsoluteCombined");
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void PathHVExponential() {
-            // TODO DEVSIX-2906 This file has large numbers (2e+10) in it. At the moment we do not post-process such big numbers
-            // and simply print them to the output PDF. Not all the viewers are able to process such large numbers
-            // and hence different results in different viewers. Acrobat is not able to process the numbers
-            // and the result is garbled visual representation. GhostScript, however, renders the PDF just fine
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pathHVExponential");
         }
     }
 }
