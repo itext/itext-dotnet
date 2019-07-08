@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.StyledXmlParser.Exceptions;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class SimpleSvgTagSvgNodeRendererIntegrationTest : SvgIntegrationTest {
@@ -69,6 +71,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentHeight() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
         }
@@ -76,6 +79,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
         public virtual void AbsentWidth() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
         }
@@ -83,6 +87,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
+        [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentWidthAndHeight() {
             ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
         }

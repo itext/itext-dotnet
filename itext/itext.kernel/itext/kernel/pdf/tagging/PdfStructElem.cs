@@ -70,7 +70,8 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public PdfStructElem(PdfDocument document, PdfName role, PdfPage page)
             : this(document, role) {
-            GetPdfObject().Put(PdfName.Pg, page.GetPdfObject());
+            // Explicitly using object indirect reference here in order to correctly process released objects.
+            GetPdfObject().Put(PdfName.Pg, page.GetPdfObject().GetIndirectReference());
         }
 
         public PdfStructElem(PdfDocument document, PdfName role, PdfAnnotation annot)
@@ -78,7 +79,8 @@ namespace iText.Kernel.Pdf.Tagging {
             if (annot.GetPage() == null) {
                 throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
             }
-            GetPdfObject().Put(PdfName.Pg, annot.GetPage().GetPdfObject());
+            // Explicitly using object indirect reference here in order to correctly process released objects.
+            GetPdfObject().Put(PdfName.Pg, annot.GetPage().GetPdfObject().GetIndirectReference());
         }
 
         public PdfStructElem(PdfDocument document, PdfName role)

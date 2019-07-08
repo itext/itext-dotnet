@@ -63,6 +63,8 @@ namespace iText.Kernel.Pdf {
 
         private int count = 0;
 
+        private bool readingCompleted;
+
         /// <summary>
         /// Free references linked list is stored in a form of a map, where:
         /// key - free reference obj number;
@@ -105,6 +107,14 @@ namespace iText.Kernel.Pdf {
                 return null;
             }
             return xref[index];
+        }
+
+        internal virtual void MarkReadingCompleted() {
+            readingCompleted = true;
+        }
+
+        internal virtual bool IsReadingCompleted() {
+            return readingCompleted;
         }
 
         internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {

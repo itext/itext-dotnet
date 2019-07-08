@@ -47,9 +47,10 @@ using iText.Kernel.Utils;
 using iText.Svg.Converter;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
+using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class SvgIntegrationTest {
+    public class SvgIntegrationTest : ExtendedITextTest {
         /// <exception cref="System.IO.IOException"/>
         public virtual void Convert(Stream svg, Stream pdfOutputStream) {
             PdfDocument doc = new PdfDocument(new PdfWriter(pdfOutputStream, new WriterProperties().SetCompressionLevel

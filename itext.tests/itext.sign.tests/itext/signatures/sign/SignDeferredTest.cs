@@ -52,6 +52,7 @@ using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     public class SignDeferredTest : ExtendedITextTest {

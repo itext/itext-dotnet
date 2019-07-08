@@ -54,6 +54,8 @@ namespace iText.IO {
 
         public const String ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP = "For associated files their associated file specification dictionaries shall include the AFRelationship key.";
 
+        public const String ATTEMPT_PROCESS_NAN = "Attempt to process NaN in PdfNumber or when writing to PDF. Zero value will be used as a fallback.";
+
         public const String ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT = "Attempt to create a tag for a hint which is already marked as finished, tag will not be created.";
 
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
@@ -65,6 +67,8 @@ namespace iText.IO {
         public const String CANNOT_ADD_HINTS_TO_FINISHED_PARENT = "Layout tagging hints addition failed: cannot add new kid hints to a parent which hint is already marked as finished. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#replaceKidHint method for replacing not yet finished kid hint of a finished parent hint.";
 
         public const String CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT = "Layout tagging hints addition failed: cannot add a kid hint to a new parent if it is already added to another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method instead.";
+
+        public const String CANNOT_CREATE_FORMFIELD = "Cannot create form field from a given PDF object: {0}";
 
         public const String CANNOT_MOVE_FINISHED_HINT = "Layout tagging hints modification failed: cannot move kid hint for which both itself and it's parent are already marked as finished.";
 
@@ -101,6 +105,8 @@ namespace iText.IO {
         public const String DOCFONT_HAS_ILLEGAL_DIFFERENCES = "Document Font has illegal differences array. Entry {0} references a glyph ID over 255 and will be ignored.";
 
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
+
+        public const String DOCUMENT_IDS_ARE_CORRUPTED = "The document original and/or modified id is corrupted";
 
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
@@ -208,6 +214,8 @@ namespace iText.IO {
 
         public const String NUM_TREE_SHALL_NOT_END_WITH_KEY = "Number tree ends with a key which is invalid according to the PDF specification.";
 
+        public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
+
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";
 
         public const String OCSP_STATUS_IS_REVOKED = "OCSP status is revoked.";
@@ -299,6 +307,8 @@ namespace iText.IO {
         public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
+
+        public const String UNSUPPORTED_COLOR_IN_DA = "Unsupported color in FormField's DA";
 
         public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the current {3} version.";
 

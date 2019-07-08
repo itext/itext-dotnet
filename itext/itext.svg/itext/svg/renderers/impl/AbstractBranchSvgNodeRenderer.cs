@@ -134,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 currentCanvas.Rectangle(context.GetCurrentViewPort());
                 currentCanvas.Clip();
-                currentCanvas.NewPath();
+                currentCanvas.EndPath();
                 if (parent.CanConstructViewPort()) {
                     currentCanvas.ConcatMatrix(parent.CalculateViewPortTranslation(context));
                 }

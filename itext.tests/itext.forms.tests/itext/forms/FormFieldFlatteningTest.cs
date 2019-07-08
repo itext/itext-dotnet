@@ -63,6 +63,29 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GetFieldsForFlatteningTest() {
+            String outPdfName = destinationFolder + "flattenedFormField.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), new PdfWriter(outPdfName
+                ));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            NUnit.Framework.Assert.AreEqual(0, form.GetFieldsForFlattening().Count);
+            form.PartialFormFlattening("radioName");
+            form.PartialFormFlattening("Text1");
+            PdfFormField radioNameField = form.GetField("radioName");
+            PdfFormField text1Field = form.GetField("Text1");
+            NUnit.Framework.Assert.AreEqual(2, form.GetFieldsForFlattening().Count);
+            NUnit.Framework.Assert.IsTrue(form.GetFieldsForFlattening().Contains(radioNameField));
+            NUnit.Framework.Assert.IsTrue(form.GetFieldsForFlattening().Contains(text1Field));
+            form.FlattenFields();
+            pdfDoc.Close();
+            PdfDocument outPdfDoc = new PdfDocument(new PdfReader(outPdfName));
+            PdfAcroForm outPdfForm = PdfAcroForm.GetAcroForm(outPdfDoc, false);
+            NUnit.Framework.Assert.AreEqual(2, outPdfForm.GetFormFields().Count);
+            outPdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest01() {

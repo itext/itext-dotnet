@@ -44,6 +44,7 @@ using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
     public class FlatteningTest : ExtendedITextTest {
@@ -63,6 +64,21 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTestWithAPWithoutSubtype() {
             String filename = "job_application_filled";
+            String src = sourceFolder + filename + ".pdf";
+            String dest = destinationFolder + filename + "_flattened.pdf";
+            String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfAcroForm.GetAcroForm(doc, false).FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY)]
+        public virtual void FormFlatteningTestWithoutNEntry() {
+            String filename = "formFlatteningTestWithoutNEntry";
             String src = sourceFolder + filename + ".pdf";
             String dest = destinationFolder + filename + "_flattened.pdf";
             String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";

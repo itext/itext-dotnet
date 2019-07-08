@@ -412,7 +412,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfObjRef kid = new PdfObjRef(annotation, GetCurrentStructElem(), GetDocument().GetNextStructParentIndex()
                 );
             if (!EnsureElementPageEqualsKidPage(GetCurrentStructElem(), currentPage.GetPdfObject())) {
-                ((PdfDictionary)kid.GetPdfObject()).Put(PdfName.Pg, currentPage.GetPdfObject());
+                // Explicitly using object indirect reference here in order to correctly process released objects.
+                ((PdfDictionary)kid.GetPdfObject()).Put(PdfName.Pg, currentPage.GetPdfObject().GetIndirectReference());
             }
             AddNewKid(kid);
             return this;
@@ -1024,7 +1025,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                         mcrDict.Put(PdfName.Type, PdfName.MCR);
                         mcrDict.Put(PdfName.MCID, mcrKid.GetPdfObject());
                     }
-                    mcrDict.Put(PdfName.Pg, mcrPage);
+                    // Explicitly using object indirect reference here in order to correctly process released objects.
+                    mcrDict.Put(PdfName.Pg, mcrPage.GetIndirectReference());
                 }
             }
             if (mcrDict != null) {
@@ -1047,8 +1049,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfObject pageObject = elem.GetPdfObject().Get(PdfName.Pg);
             if (pageObject == null) {
                 pageObject = kidPage;
-                elem.GetPdfObject().Put(PdfName.Pg, kidPage);
-                elem.SetModified();
+                // Explicitly using object indirect reference here in order to correctly process released objects.
+                elem.Put(PdfName.Pg, kidPage.GetIndirectReference());
             }
             return kidPage.Equals(pageObject);
         }

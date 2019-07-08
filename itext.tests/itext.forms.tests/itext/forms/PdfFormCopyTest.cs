@@ -345,7 +345,6 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 84)]
         public virtual void CopyFieldsTest10() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields10.pdf";
@@ -365,7 +364,6 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 28)]
         public virtual void CopyFieldsTest11() {
             String srcFilename1 = sourceFolder + "datasheet.pdf";
             String srcFilename2 = sourceFolder + "datasheet2.pdf";
@@ -387,7 +385,6 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED, Count = 28)]
         public virtual void CopyFieldsTest12() {
             String srcFilename1 = sourceFolder + "datasheet.pdf";
             String srcFilename2 = sourceFolder + "datasheet2.pdf";

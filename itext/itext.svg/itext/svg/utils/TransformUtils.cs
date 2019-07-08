@@ -282,10 +282,10 @@ namespace iText.Svg.Utils {
             if (values.Count != 6) {
                 throw new SvgProcessingException(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            float a = CssUtils.ParseAbsoluteLength(values[0]);
-            float b = CssUtils.ParseAbsoluteLength(values[1]);
-            float c = CssUtils.ParseAbsoluteLength(values[2]);
-            float d = CssUtils.ParseAbsoluteLength(values[3]);
+            float a = (float)float.Parse(values[0], System.Globalization.CultureInfo.InvariantCulture);
+            float b = (float)float.Parse(values[1], System.Globalization.CultureInfo.InvariantCulture);
+            float c = (float)float.Parse(values[2], System.Globalization.CultureInfo.InvariantCulture);
+            float d = (float)float.Parse(values[3], System.Globalization.CultureInfo.InvariantCulture);
             float e = CssUtils.ParseAbsoluteLength(values[4]);
             float f = CssUtils.ParseAbsoluteLength(values[5]);
             return new AffineTransform(a, b, c, d, e, f);

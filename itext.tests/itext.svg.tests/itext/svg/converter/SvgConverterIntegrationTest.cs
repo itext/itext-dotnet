@@ -52,11 +52,13 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Svg.Dummy.Sdk;
+using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Converter {
     public class SvgConverterIntegrationTest : SvgIntegrationTest {
@@ -110,6 +112,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void NonExistingTagIntegrationTest() {
             String contents = "<svg width='100pt' height='100pt'> <nonExistingTag/> </svg>";
             PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -119,6 +122,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 14)]
         public virtual void CaseSensitiveTagTest() {
             String contents = "<svg width='100pt' height='100pt'>" + "<altGlyph /><altglyph />" + "<feMergeNode /><femergeNode /><feMergenode /><femergenode />"
                  + "<foreignObject /><foreignobject />" + "<glyphRef /><glyphref />" + "<linearGradient /><lineargradient />"

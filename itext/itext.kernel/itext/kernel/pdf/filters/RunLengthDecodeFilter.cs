@@ -46,10 +46,11 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : IFilterHandler {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+    public class RunLengthDecodeFilter : MemoryLimitsAwareFilter {
+        /// <summary><inheritDoc/></summary>
+        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            MemoryStream baos = new MemoryStream();
+            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
             byte dupCount;
             for (int i = 0; i < b.Length; i++) {
                 dupCount = b[i];
@@ -59,18 +60,18 @@ namespace iText.Kernel.Pdf.Filters {
                 }
                 if ((dupCount & 0x80) == 0) {
                     int bytesToCopy = dupCount + 1;
-                    baos.Write(b, i + 1, bytesToCopy);
+                    outputStream.Write(b, i + 1, bytesToCopy);
                     i += bytesToCopy;
                 }
                 else {
                     // make dupcount copies of the next byte
                     i++;
                     for (int j = 0; j < 257 - (dupCount & 0xff); j++) {
-                        baos.Write(b[i]);
+                        outputStream.Write(b[i]);
                     }
                 }
             }
-            return baos.ToArray();
+            return outputStream.ToArray();
         }
     }
 }

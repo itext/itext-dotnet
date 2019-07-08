@@ -386,6 +386,25 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+            if (null != streamDictionary.GetIndirectReference()) {
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
+            }
+            if (null != memoryLimitsAwareHandler) {
+                HashSet<PdfName> filterSet = new HashSet<PdfName>();
+                int index;
+                for (index = 0; index < filters.Size(); index++) {
+                    PdfName filterName = filters.GetAsName(index);
+                    if (!filterSet.Add(filterName)) {
+                        memoryLimitsAwareHandler.BeginDecompressedPdfStreamProcessing();
+                        break;
+                    }
+                }
+                if (index == filters.Size()) {
+                    // The stream isn't suspicious. We shouldn't process it.
+                    memoryLimitsAwareHandler = null;
+                }
+            }
             PdfArray dp = new PdfArray();
             PdfObject dpo = streamDictionary.Get(PdfName.DecodeParms);
             if (dpo == null || (dpo.GetObjectType() != PdfObject.DICTIONARY && dpo.GetObjectType() != PdfObject.ARRAY)
@@ -432,6 +451,12 @@ namespace iText.Kernel.Pdf {
                     decodeParams = null;
                 }
                 b = filterHandler.Decode(b, filterName, decodeParams, streamDictionary);
+                if (null != memoryLimitsAwareHandler) {
+                    memoryLimitsAwareHandler.ConsiderBytesOccupiedByDecompressedPdfStream(b.Length);
+                }
+            }
+            if (null != memoryLimitsAwareHandler) {
+                memoryLimitsAwareHandler.EndDecompressedPdfStreamProcessing();
             }
             return b;
         }
@@ -528,19 +553,38 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Gets file ID, either
+        /// Gets original file ID, the first element in
         /// <see cref="PdfName.ID"/>
-        /// key of trailer or a newly generated id.
+        /// key of trailer.
+        /// If the size of ID array does not equal 2, an empty array will be returned.
         /// </summary>
-        /// <returns>byte array represents file ID.</returns>
-        /// <seealso cref="PdfEncryption.GenerateNewDocumentId()"/>
+        /// <returns>byte array represents original file ID.</returns>
+        /// <seealso>PdfDocument#getOriginalDocumentId(). The ultimate document id should be taken from PdfDocument</seealso>
         public virtual byte[] GetOriginalFileId() {
             PdfArray id = trailer.GetAsArray(PdfName.ID);
-            if (id != null) {
+            if (id != null && id.Size() == 2) {
                 return ByteUtils.GetIsoBytes(id.GetAsString(0).GetValue());
             }
             else {
-                return PdfEncryption.GenerateNewDocumentId();
+                return new byte[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets modified file ID, the second element in
+        /// <see cref="PdfName.ID"/>
+        /// key of trailer.
+        /// If the size of ID array does not equal 2, an empty array will be returned.
+        /// </summary>
+        /// <returns>byte array represents modified file ID.</returns>
+        /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>
+        public virtual byte[] GetModifiedFileId() {
+            PdfArray id = trailer.GetAsArray(PdfName.ID);
+            if (id != null && id.Size() == 2) {
+                return ByteUtils.GetIsoBytes(id.GetAsString(1).GetValue());
+            }
+            else {
+                return new byte[0];
             }
         }
 
@@ -566,6 +610,7 @@ namespace iText.Kernel.Pdf {
                 logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
+            pdfDocument.GetXref().MarkReadingCompleted();
             ReadDecryptObj();
         }
 
@@ -667,8 +712,16 @@ namespace iText.Kernel.Pdf {
                 }
             }
             else {
-                reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                    0).SetState(PdfObject.READING));
+                if (table.IsReadingCompleted()) {
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
+                        (), tokens.GetGenNr()));
+                    return CreatePdfNullInstance(readAsDirect);
+                }
+                else {
+                    reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                        0).SetState(PdfObject.READING));
+                }
             }
             return reference;
         }
@@ -923,7 +976,7 @@ namespace iText.Kernel.Pdf {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
                     }
                     else {
-                        if (reference.CheckState(PdfObject.READING) && reference.GetGenNumber() == gen) {
+                        if (refReadingState) {
                             reference.SetOffset(pos);
                             reference.ClearState(PdfObject.READING);
                         }

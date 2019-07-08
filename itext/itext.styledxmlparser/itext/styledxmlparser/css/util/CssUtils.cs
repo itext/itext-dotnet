@@ -290,6 +290,81 @@ namespace iText.StyledXmlParser.Css.Util {
             return null;
         }
 
+        /// <summary>Parses the absolute font size.</summary>
+        /// <remarks>
+        /// Parses the absolute font size.
+        /// <p>
+        /// A numeric value (without px, pt, etc in the given length string) is considered to be in the default metric that
+        /// was given.
+        /// </remarks>
+        /// <param name="fontSizeValue">
+        /// the font size value as a
+        /// <see cref="System.String"/>
+        /// </param>
+        /// <param name="defaultMetric">
+        /// the string containing the metric if it is possible that the length string does not contain
+        /// one. If null the length is considered to be in px as is default in HTML/CSS.
+        /// </param>
+        /// <returns>
+        /// the font size value as a
+        /// <c>float</c>
+        /// </returns>
+        public static float ParseAbsoluteFontSize(String fontSizeValue, String defaultMetric) {
+            if (null != fontSizeValue && CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.ContainsKey(fontSizeValue
+                )) {
+                fontSizeValue = CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.Get(fontSizeValue);
+            }
+            try {
+                /* Styled XML Parser will throw an exception when it can't parse the given value
+                but in html2pdf, we want to fall back to the default value of 0
+                */
+                return iText.StyledXmlParser.Css.Util.CssUtils.ParseAbsoluteLength(fontSizeValue, defaultMetric);
+            }
+            catch (StyledXMLParserException) {
+                return 0f;
+            }
+        }
+
+        /// <summary>Parses the absolute font size.</summary>
+        /// <remarks>
+        /// Parses the absolute font size.
+        /// <p>
+        /// A numeric value (without px, pt, etc in the given length string) is considered to be in the px.
+        /// </remarks>
+        /// <param name="fontSizeValue">
+        /// the font size value as a
+        /// <see cref="System.String"/>
+        /// </param>
+        /// <returns>
+        /// the font size value as a
+        /// <c>float</c>
+        /// </returns>
+        public static float ParseAbsoluteFontSize(String fontSizeValue) {
+            return ParseAbsoluteFontSize(fontSizeValue, CommonCssConstants.PX);
+        }
+
+        /// <summary>Parses the relative font size.</summary>
+        /// <param name="relativeFontSizeValue">
+        /// the relative font size value as a
+        /// <see cref="System.String"/>
+        /// </param>
+        /// <param name="baseValue">the base value</param>
+        /// <returns>
+        /// the relative font size value as a
+        /// <c>float</c>
+        /// </returns>
+        public static float ParseRelativeFontSize(String relativeFontSizeValue, float baseValue) {
+            if (CommonCssConstants.SMALLER.Equals(relativeFontSizeValue)) {
+                return (float)(baseValue / 1.2);
+            }
+            else {
+                if (CommonCssConstants.LARGER.Equals(relativeFontSizeValue)) {
+                    return (float)(baseValue * 1.2);
+                }
+            }
+            return iText.StyledXmlParser.Css.Util.CssUtils.ParseRelativeValue(relativeFontSizeValue, baseValue);
+        }
+
         /// <summary>Parses the border radius of specific corner.</summary>
         /// <param name="specificBorderRadius">string that defines the border radius of specific corner.</param>
         /// <param name="emValue">the em value</param>
@@ -349,8 +424,8 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             int pos = 0;
             while (pos < @string.Length) {
-                if (@string[pos] == '+' || @string[pos] == '-' || @string[pos] == '.' || @string[pos] >= '0' && @string[pos
-                    ] <= '9') {
+                if (@string[pos] == '+' || @string[pos] == '-' || @string[pos] == '.' || IsDigit(@string[pos]) || IsExponentNotation
+                    (@string, pos)) {
                     pos++;
                 }
                 else {
@@ -555,5 +630,16 @@ namespace iText.StyledXmlParser.Css.Util {
             builder.AddRange(l, r);
             return true;
         }
+
+        private static bool IsDigit(char ch) {
+            return ch >= '0' && ch <= '9';
+        }
+
+        private static bool IsExponentNotation(String s, int index) {
+            return index < s.Length && s[index] == 'e' && (index + 1 < s.Length && IsDigit(s[index + 1]) || index + 2 
+                < s.Length && (s[index + 1] == '-' || s[index + 1] == '+') && IsDigit(s[index + 2]));
+        }
+        // e.g. 12e5
+        // e.g. 12e-5, 12e+5
     }
 }

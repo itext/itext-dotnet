@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
@@ -350,23 +349,35 @@ namespace iText.Kernel.Pdf {
         /// wrapper of the page.
         /// </returns>
         public virtual PdfResources GetResources() {
-            if (this.resources == null) {
-                bool readOnly = false;
-                PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
-                if (resources == null) {
-                    resources = (PdfDictionary)GetInheritedValue(PdfName.Resources, PdfObject.DICTIONARY);
-                    if (resources != null) {
-                        readOnly = true;
-                    }
+            return GetResources(true);
+        }
+
+        internal virtual PdfResources GetResources(bool initResourcesField) {
+            if (this.resources == null && initResourcesField) {
+                InitResources(true);
+            }
+            return this.resources;
+        }
+
+        internal virtual PdfDictionary InitResources(bool initResourcesField) {
+            bool readOnly = false;
+            PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
+            if (resources == null) {
+                resources = (PdfDictionary)GetInheritedValue(PdfName.Resources, PdfObject.DICTIONARY);
+                if (resources != null) {
+                    readOnly = true;
                 }
-                if (resources == null) {
-                    resources = new PdfDictionary();
-                    Put(PdfName.Resources, resources);
-                }
+            }
+            if (resources == null) {
+                resources = new PdfDictionary();
+                GetPdfObject().Put(PdfName.Resources, resources);
+            }
+            // not marking page as modified because of this change
+            if (initResourcesField) {
                 this.resources = new PdfResources(resources);
                 this.resources.SetReadOnly(readOnly);
             }
-            return this.resources;
+            return resources;
         }
 
         /// <summary>
@@ -579,34 +590,42 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
-        /// <summary>Flushes page and it's content stream.</summary>
+        /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
-        /// Flushes page and it's content stream.
-        /// <br />
-        /// <br />
+        /// Flushes page dictionary, its content streams, annotations and thumb image.
+        /// <p>
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
         /// to the page is the following: if all the marked content references (dictionary or number references), that are the
         /// descendants of the given structure element, belong to the current page - the tag is considered
         /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
+        /// </p>
         /// </remarks>
         public override void Flush() {
             Flush(false);
         }
 
-        /// <summary>Flushes page and its content stream.</summary>
+        /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
-        /// Flushes page and its content stream. If <code>flushResourcesContentStreams</code> is true, all content streams that are
-        /// rendered on this page (like FormXObjects, annotation appearance streams, patterns) and also all images associated
-        /// with this page will also be flushed.
-        /// <br />
+        /// Flushes page dictionary, its content streams, annotations and thumb image. If <code>flushResourcesContentStreams</code> is true,
+        /// all content streams that are rendered on this page (like FormXObjects, annotation appearance streams, patterns)
+        /// and also all images associated with this page will also be flushed.
+        /// <p>
         /// For notes about tag structure flushing see
         /// <see cref="Flush()">PdfPage#flush() method</see>
         /// .
-        /// <br />
-        /// <br />
+        /// </p>
+        /// <p>
         /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushResourcesContentStreams</code> is true.
+        /// </p>
+        /// <p>
+        /// Be careful with handling document in which some of the pages are flushed. Keep in mind that flushed objects are
+        /// finalized and are completely written to the output stream. This frees their memory but makes
+        /// it impossible to modify or read data from them. Whenever there is an attempt to modify or to fetch
+        /// flushed object inner contents an exception will be thrown. Flushing is only possible for objects in the writing
+        /// and stamping modes, also its possible to flush modified objects in append mode.
+        /// </p>
         /// </remarks>
         /// <param name="flushResourcesContentStreams">
         /// if true all content streams that are rendered on this page (like form xObjects,
@@ -622,22 +641,44 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
                 TryFlushPageTags();
             }
-            GetResources();
-            if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
-                GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
+            if (resources == null) {
+                // ensure that either resources are inherited or add empty resources dictionary
+                InitResources(false);
+            }
+            else {
+                if (resources.IsModified() && !resources.IsReadOnly()) {
+                    Put(PdfName.Resources, resources.GetPdfObject());
+                }
             }
             if (flushResourcesContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
                 FlushResourcesContentStreams();
             }
-            int contentStreamCount = GetContentStreamCount();
-            for (int i = 0; i < contentStreamCount; i++) {
-                PdfStream contentStream = GetContentStream(i);
-                if (contentStream != null) {
-                    contentStream.Flush(false);
+            PdfArray annots = GetAnnots(false);
+            if (annots != null && !annots.IsFlushed()) {
+                for (int i = 0; i < annots.Size(); ++i) {
+                    PdfObject a = annots.Get(i);
+                    if (a != null) {
+                        a.MakeIndirect(GetDocument()).Flush();
+                    }
                 }
             }
-            resources = null;
+            PdfStream thumb = GetPdfObject().GetAsStream(PdfName.Thumb);
+            if (thumb != null) {
+                thumb.Flush();
+            }
+            PdfObject contentsObj = GetPdfObject().Get(PdfName.Contents);
+            // avoid trying to operate with flushed /Contents array
+            if (contentsObj != null && !contentsObj.IsFlushed()) {
+                int contentStreamCount = GetContentStreamCount();
+                for (int i = 0; i < contentStreamCount; i++) {
+                    PdfStream contentStream = GetContentStream(i);
+                    if (contentStream != null) {
+                        contentStream.Flush(false);
+                    }
+                }
+            }
+            ReleaseInstanceFields();
             base.Flush();
         }
 
@@ -874,11 +915,17 @@ namespace iText.Kernel.Pdf {
         /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
-                MemoryStream baos = new MemoryStream();
+                MemoryLimitsAwareHandler handler = GetDocument().memoryLimitsAwareHandler;
+                long usedMemory = null == handler ? -1 : handler.GetAllMemoryUsedForDecompression();
+                MemoryLimitsAwareOutputStream baos = new MemoryLimitsAwareOutputStream();
                 int streamCount = GetContentStreamCount();
                 byte[] streamBytes;
                 for (int i = 0; i < streamCount; i++) {
                     streamBytes = GetStreamBytes(i);
+                    // usedMemory has changed, that means that some of currently processed pdf streams are suspicious
+                    if (null != handler && usedMemory < handler.GetAllMemoryUsedForDecompression()) {
+                        baos.SetMaxStreamSize(handler.GetMaxSizeOfSingleDecompressedPdfStream());
+                    }
                     baos.Write(streamBytes);
                     if (0 != streamBytes.Length && !iText.IO.Util.TextUtil.IsWhiteSpace((char)streamBytes[streamBytes.Length -
                          1])) {
@@ -982,7 +1029,7 @@ namespace iText.Kernel.Pdf {
                     annotations.Add(annotation.SetPage(this));
                     if (hasBeenNotModified) {
                         annot.GetIndirectReference().ClearState(PdfObject.MODIFIED);
-                        annot.GetIndirectReference().ClearState(PdfObject.FORBID_RELEASE);
+                        annot.ClearState(PdfObject.FORBID_RELEASE);
                     }
                 }
             }
@@ -1506,6 +1553,23 @@ namespace iText.Kernel.Pdf {
             return afArray;
         }
 
+        internal virtual void TryFlushPageTags() {
+            try {
+                if (!GetDocument().isClosing) {
+                    GetDocument().GetTagStructureContext().FlushPageTags(this);
+                }
+                GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
+            }
+            catch (Exception ex) {
+                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
+            }
+        }
+
+        internal virtual void ReleaseInstanceFields() {
+            resources = null;
+            parentPages = null;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
@@ -1546,7 +1610,13 @@ namespace iText.Kernel.Pdf {
             PdfArray array;
             if (contents is PdfStream) {
                 array = new PdfArray();
-                array.Add(contents);
+                if (contents.GetIndirectReference() != null) {
+                    // Explicitly using object indirect reference here in order to correctly process released objects.
+                    array.Add(contents.GetIndirectReference());
+                }
+                else {
+                    array.Add(contents);
+                }
                 Put(PdfName.Contents, array);
             }
             else {
@@ -1578,22 +1648,10 @@ namespace iText.Kernel.Pdf {
             return contentStream;
         }
 
-        private void TryFlushPageTags() {
-            try {
-                if (!GetDocument().isClosing) {
-                    GetDocument().GetTagStructureContext().FlushPageTags(this);
-                }
-                GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
-            }
-            catch (Exception ex) {
-                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
-            }
-        }
-
         private void FlushResourcesContentStreams() {
             FlushResourcesContentStreams(GetResources().GetPdfObject());
             PdfArray annots = GetAnnots(false);
-            if (annots != null) {
+            if (annots != null && !annots.IsFlushed()) {
                 for (int i = 0; i < annots.Size(); ++i) {
                     PdfDictionary apDict = annots.GetAsDictionary(i).GetAsDictionary(PdfName.AP);
                     if (apDict != null) {
@@ -1604,7 +1662,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void FlushResourcesContentStreams(PdfDictionary resources) {
-            if (resources != null) {
+            if (resources != null && !resources.IsFlushed()) {
                 FlushWithResources(resources.GetAsDictionary(PdfName.XObject));
                 FlushWithResources(resources.GetAsDictionary(PdfName.Pattern));
                 FlushWithResources(resources.GetAsDictionary(PdfName.Shading));
@@ -1612,7 +1670,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void FlushWithResources(PdfDictionary objsCollection) {
-            if (objsCollection == null) {
+            if (objsCollection == null || objsCollection.IsFlushed()) {
                 return;
             }
             foreach (PdfObject obj in objsCollection.Values()) {
@@ -1625,6 +1683,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private void FlushAppearanceStreams(PdfDictionary appearanceStreamsDict) {
+            if (appearanceStreamsDict.IsFlushed()) {
+                return;
+            }
             foreach (PdfObject val in appearanceStreamsDict.Values()) {
                 if (val is PdfDictionary) {
                     PdfDictionary ap = (PdfDictionary)val;

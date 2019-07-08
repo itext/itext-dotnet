@@ -1104,9 +1104,19 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
+        /// <returns>
+        /// current canvas.
+        /// Ends the path without filling or stroking it.
+        /// </returns>
+        [System.ObsoleteAttribute(@"in favour of endPath(), which does exactly the same thing but is better named"
+            )]
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewPath() {
+            return this.EndPath();
+        }
+
         /// <summary>Ends the path without filling or stroking it.</summary>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewPath() {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EndPath() {
             contentStream.GetOutputStream().WriteBytes(n);
             return this;
         }
@@ -1406,20 +1416,14 @@ namespace iText.Kernel.Pdf.Canvas {
                 return this;
             }
             else {
-                if (oldColor.GetColorSpace().Equals(colorSpace)) {
-                    oldColor.SetColorValue(colorValue);
-                    if (oldColor is PatternColor) {
-                        ((PatternColor)oldColor).SetPattern(pattern);
-                    }
-                    setColorValueOnly = true;
+                if (fill) {
+                    currentGs.SetFillColor(newColor);
                 }
                 else {
-                    if (fill) {
-                        currentGs.SetFillColor(newColor);
-                    }
-                    else {
-                        currentGs.SetStrokeColor(newColor);
-                    }
+                    currentGs.SetStrokeColor(newColor);
+                }
+                if (oldColor.GetColorSpace().GetPdfObject().Equals(colorSpace.GetPdfObject())) {
+                    setColorValueOnly = true;
                 }
             }
             if (colorSpace is PdfDeviceCs.Gray) {

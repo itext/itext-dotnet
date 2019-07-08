@@ -137,6 +137,7 @@ namespace iText.Svg.Processors.Impl {
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
                 if (startingRenderer != null) {
                     IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
+                    rootElementNode.SetStyles(attributesAndStyles);
                     startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                     processorState.Push(startingRenderer);
                     foreach (INode rootChild in startingNode.ChildNodes()) {

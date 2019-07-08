@@ -393,7 +393,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 filters.Put(PdfName.DCTDecode, stubfilter);
                 filters.Put(PdfName.JBIG2Decode, stubfilter);
                 filters.Put(PdfName.JPXDecode, stubfilter);
-                ((FlateDecodeFilter)filters.Get(PdfName.FlateDecode)).SetStrictDecoding(true);
+                filters.Put(PdfName.FlateDecode, new FlateDecodeStrictFilter());
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
             }
             catch (Exception) {

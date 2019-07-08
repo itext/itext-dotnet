@@ -58,7 +58,8 @@ namespace iText.IO.Util {
         private static int tempFileCounter = 0;
 
         public static String GetFontsDir() {
-            return Path.Combine(Environment.GetEnvironmentVariable("windir"), "fonts");
+            String windir = Environment.GetEnvironmentVariable("windir");
+            return windir != null ? Path.Combine(windir, "fonts") : "";
         }
 
         public static bool FileExists(String path) {
@@ -179,6 +180,10 @@ namespace iText.IO.Util {
             } catch (Exception) {
                 return false;
             }
+        }
+        
+        public static String ParentDirectory(Uri url) {
+            return new Uri(url, ".").ToString();
         }
     }
 }

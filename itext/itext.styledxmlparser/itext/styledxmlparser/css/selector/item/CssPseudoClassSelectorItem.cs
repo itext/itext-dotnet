@@ -145,10 +145,13 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     return new CssPseudoClassSelectorItem.AlwaysNotApplySelectorItem(pseudoClass, arguments);
                 }
 
+                case CommonCssConstants.DISABLED: {
+                    return CssPseudoClassDisabledSelectorItem.GetInstance();
+                }
+
                 default: {
                     //Still unsupported, should be addressed in DEVSIX-1440
                     //case CommonCssConstants.CHECKED:
-                    //case CommonCssConstants.DISABLED:
                     //case CommonCssConstants.ENABLED:
                     //case CommonCssConstants.IN_RANGE:
                     //case CommonCssConstants.INVALID:

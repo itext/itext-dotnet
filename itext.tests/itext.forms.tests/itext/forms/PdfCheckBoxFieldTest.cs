@@ -90,6 +90,7 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 0, 730, 7, 7);
+            // fallback to default fontsize — 12 is expected.
             AddCheckBox(pdfDoc, -1, 710, 7, 7);
             AddCheckBox(pdfDoc, 0, 640, 20, 20);
             AddCheckBox(pdfDoc, 0, 600, 40, 20);

@@ -50,8 +50,8 @@ using Org.BouncyCastle.X509;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
-using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     public class PadesSigTest : ExtendedITextTest {

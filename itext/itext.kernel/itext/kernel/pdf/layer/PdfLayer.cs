@@ -81,6 +81,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
         public PdfLayer(PdfDictionary layerDictionary)
             : base(layerDictionary) {
+            SetForbidRelease();
             EnsureObjectIsAddedToDocument(layerDictionary);
         }
 

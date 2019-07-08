@@ -228,9 +228,11 @@ namespace iText.Kernel.Pdf {
                 indirectReference.SetRefersTo(this);
             }
             else {
+                reference.SetState(MODIFIED);
                 indirectReference = reference;
                 indirectReference.SetRefersTo(this);
             }
+            SetState(FORBID_RELEASE);
             ClearState(MUST_BE_INDIRECT);
             return this;
         }

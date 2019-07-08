@@ -51,6 +51,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
+using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     public class CrlVerifierTest : ExtendedITextTest {

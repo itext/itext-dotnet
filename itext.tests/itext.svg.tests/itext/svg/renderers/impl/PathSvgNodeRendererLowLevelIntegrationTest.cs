@@ -45,11 +45,12 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 using iText.Svg.Renderers.Path;
 using iText.Svg.Renderers.Path.Impl;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PathSvgNodeRendererLowLevelIntegrationTest {
+    public class PathSvgNodeRendererLowLevelIntegrationTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
         public virtual void TestRelativeArcOperatorShapes() {
             PathSvgNodeRenderer path = new PathSvgNodeRenderer();

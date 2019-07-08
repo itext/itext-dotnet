@@ -2382,6 +2382,26 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TableWithDifferentStylesOfCollapsedBordersTest() {
+            String testName = "tableWithDifferentStylesOfCollapsedBordersTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
+                ().SetBorder(new DashedBorder(ColorConstants.RED, 10)));
+            table.GetHeader().SetBorder(new DottedBorder(ColorConstants.ORANGE, 5f));
+            table.GetFooter().SetBorder(new RoundDotsBorder(ColorConstants.ORANGE, 5f));
+            // no caption
+            AddTable(table, true, true, doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CaptionedTableOfOnePageWithSeparatedBordersTest01() {
             String testName = "captionedTableOfOnePageWithSeparatedBordersTest01.pdf";
             String outFileName = destinationFolder + testName;

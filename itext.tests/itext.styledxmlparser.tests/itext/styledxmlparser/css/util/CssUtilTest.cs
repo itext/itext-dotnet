@@ -49,6 +49,8 @@ using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
     public class CssUtilTest : ExtendedITextTest {
+        public static float EPS = 0.0001f;
+
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFromNAN() {
             NUnit.Framework.Assert.That(() =>  {
@@ -98,6 +100,22 @@ namespace iText.StyledXmlParser.Css.Util {
             String value = "10pt";
             float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.PT);
             float expected = 10.0f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAboluteLengthExponential01() {
+            String value = "1e2pt";
+            float actual = CssUtils.ParseAbsoluteLength(value);
+            float expected = 1e2f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAboluteLengthExponential02() {
+            String value = "1e2px";
+            float actual = CssUtils.ParseAbsoluteLength(value);
+            float expected = 1e2f * 0.75f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
         }
 
@@ -193,6 +211,38 @@ namespace iText.StyledXmlParser.Css.Util {
             // wrong syntax
             NUnit.Framework.Assert.IsNull(CssUtils.ParseUnicodeRange("U+7-"));
         }
+
         // wrong syntax
+        [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteFontSizeTest() {
+            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteFontSize("100", CommonCssConstants.PX), EPS);
+            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteFontSize("100px"), EPS);
+            NUnit.Framework.Assert.AreEqual(12, CssUtils.ParseAbsoluteFontSize(CommonCssConstants.MEDIUM), EPS);
+            NUnit.Framework.Assert.AreEqual(0, CssUtils.ParseAbsoluteFontSize("", ""), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseRelativeFontSizeTest() {
+            NUnit.Framework.Assert.AreEqual(120, CssUtils.ParseRelativeFontSize("10em", 12), EPS);
+            NUnit.Framework.Assert.AreEqual(12.5f, CssUtils.ParseRelativeFontSize(CommonCssConstants.SMALLER, 15), EPS
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteLengthTest() {
+            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100", CommonCssConstants.PX), EPS);
+            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100px"), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidFloat() {
+            String value = "invalidFloat";
+            try {
+                NUnit.Framework.Assert.IsNull(CssUtils.ParseFloat(value));
+            }
+            catch (Exception) {
+                NUnit.Framework.Assert.Fail();
+            }
+        }
     }
 }

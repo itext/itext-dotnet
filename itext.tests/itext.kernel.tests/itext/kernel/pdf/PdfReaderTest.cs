@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -674,6 +675,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorrectSimpleDoc4() {
             String filename = sourceFolder + "correctSimpleDoc4.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1022,6 +1024,21 @@ namespace iText.Kernel.Pdf {
                 String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
+            document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        public virtual void FixPdfTest18() {
+            String filename = sourceFolder + "noXrefAndTrailerWithInfo.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument document = new PdfDocument(reader);
+            NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
+            int pageCount = document.GetNumberOfPages();
+            NUnit.Framework.Assert.AreEqual(1, pageCount);
+            NUnit.Framework.Assert.IsTrue(document.GetDocumentInfo().GetProducer().Contains("iText Group NV (AGPL-version)"
+                ));
             document.Close();
         }
 
@@ -1458,6 +1475,38 @@ namespace iText.Kernel.Pdf {
             }
             , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.PdfReaderHasBeenAlreadyUtilized))
 ;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        public virtual void HugeInvalidIndRefObjNumberTest() {
+            String filename = sourceFolder + "hugeIndRefObjNum.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfObject pdfObject = pdfDoc.GetPdfObject(4);
+            NUnit.Framework.Assert.IsTrue(pdfObject.IsDictionary());
+            NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, ((PdfDictionary)pdfObject).Get(PdfName.Pg));
+            pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2133")]
+        public virtual void TestFileIsNotLockedOnException() {
+            FileInfo nonPdfFileName = new FileInfo(sourceFolder + "text_file.txt");
+            NUnit.Framework.Assert.IsTrue(nonPdfFileName.Exists);
+            bool exceptionThrown = false;
+            try {
+                PdfReader reader = new PdfReader(nonPdfFileName);
+            }
+            catch (iText.IO.IOException) {
+                exceptionThrown = true;
+                // File should be available for writing
+                Stream stream = FileUtil.GetFileOutputStream(nonPdfFileName);
+                stream.Write(new byte[] { 0 });
+            }
+            NUnit.Framework.Assert.IsTrue(exceptionThrown);
         }
 
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {

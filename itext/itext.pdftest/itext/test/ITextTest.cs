@@ -87,6 +87,15 @@ namespace iText.Test {
             DeleteDirectoryContents(path, true);
         }
 
+        public static void PrintOutputPdfNameAndDir(String pdfName) {
+            PrintPathToConsole(pdfName, "Output PDF: ");
+            PrintPathToConsole(new FileInfo(pdfName).DirectoryName, "Output PDF folder: ");
+        }
+
+        public static void PrintPathToConsole(String path, String comment) {
+            Console.Out.WriteLine(comment + "file:///" + UrlUtil.ToNormalizedURI(new FileInfo(path)).AbsolutePath);
+        }
+
         protected virtual byte[] ReadFile(String filename) {
             return File.ReadAllBytes(filename);
         }

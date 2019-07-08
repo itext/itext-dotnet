@@ -575,7 +575,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetPage(PdfPage page) {
             this.page = page;
-            return Put(PdfName.P, page.GetPdfObject());
+            // Explicitly using object indirect reference here in order to correctly process released objects.
+            return Put(PdfName.P, page.GetPdfObject().GetIndirectReference());
         }
 
         /// <summary>

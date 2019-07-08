@@ -111,7 +111,6 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI)]
         public virtual void FontFaceGrammarTest() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontFaceGrammarTest");
         }

@@ -628,7 +628,6 @@ namespace iText.Pdfa.Checker {
             }
             if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
                 ).GetAsName(PdfName.S))) {
-                transparencyObjects.Add(pageDict);
                 PdfObject cs = pageDict.GetAsDictionary(PdfName.Group).Get(PdfName.CS);
                 if (cs != null) {
                     PdfDictionary currentColorSpaces = pageResources.GetAsDictionary(PdfName.ColorSpace);

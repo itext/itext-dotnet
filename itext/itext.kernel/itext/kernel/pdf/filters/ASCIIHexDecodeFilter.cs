@@ -48,10 +48,12 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles ASCIIHexDecode filter</summary>
-    public class ASCIIHexDecodeFilter : IFilterHandler {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+    public class ASCIIHexDecodeFilter : MemoryLimitsAwareFilter {
+        /// <summary><inheritDoc/></summary>
+        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            b = ASCIIHexDecode(b);
+            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
+            b = ASCIIHexDecode(b, outputStream);
             return b;
         }
 
@@ -59,7 +61,14 @@ namespace iText.Kernel.Pdf.Filters {
         /// <param name="in">byte[] to be decoded</param>
         /// <returns>decoded byte[]</returns>
         public static byte[] ASCIIHexDecode(byte[] @in) {
-            MemoryStream @out = new MemoryStream();
+            return ASCIIHexDecode(@in, new MemoryStream());
+        }
+
+        /// <summary>Decodes a byte[] according to ASCII Hex encoding.</summary>
+        /// <param name="in">byte[] to be decoded</param>
+        /// <param name="out">the out stream which will be used to write the bytes.</param>
+        /// <returns>decoded byte[]</returns>
+        private static byte[] ASCIIHexDecode(byte[] @in, MemoryStream @out) {
             bool first = true;
             int n1 = 0;
             for (int k = 0; k < @in.Length; ++k) {

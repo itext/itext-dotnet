@@ -525,7 +525,7 @@ namespace iText.Layout.Renderer {
                 if (overflowYHidden) {
                     clippedArea.SetY(area.GetY()).SetHeight(area.GetHeight());
                 }
-                drawContext.GetCanvas().Rectangle(clippedArea).Clip().NewPath();
+                drawContext.GetCanvas().Rectangle(clippedArea).Clip().EndPath();
             }
             DrawChildren(drawContext);
             DrawPositionedChildren(drawContext);

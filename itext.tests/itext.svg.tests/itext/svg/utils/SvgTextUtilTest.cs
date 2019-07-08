@@ -46,6 +46,8 @@ using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Utils {
     public class SvgTextUtilTest {
+        public static float EPS = 0.0001f;
+
         //Trim leading tests
         [NUnit.Framework.Test]
         public virtual void TrimLeadingTest() {
@@ -243,6 +245,51 @@ namespace iText.Svg.Utils {
             String[] expected = new String[] { "text", "tspan text", " after text" };
             //No preceding whitespace on the second element
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessFontSizeInEM() {
+            float expected = 120;
+            // Create a renderer
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            root.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "12em");
+            //Run
+            float actual = SvgTextUtil.ResolveFontSize(root, 10);
+            NUnit.Framework.Assert.AreEqual(expected, actual, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessFontSizeInPX() {
+            float expected = 24;
+            // Create a renderer
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            root.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "32px");
+            //Run
+            float actual = SvgTextUtil.ResolveFontSize(root, 10);
+            NUnit.Framework.Assert.AreEqual(expected, actual, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessFontSizeInPT() {
+            float expected = 24;
+            // Create a renderer
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            root.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "24pt");
+            //Run
+            float actual = SvgTextUtil.ResolveFontSize(root, 10);
+            NUnit.Framework.Assert.AreEqual(expected, actual, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessKeywordedFontSize() {
+            float expected = 24;
+            // Create a renderer
+            TextSvgBranchRenderer root = new TextSvgBranchRenderer();
+            root.SetAttribute(SvgConstants.Attributes.FONT_SIZE, "xx-large");
+            //Run
+            // Parent's font-size doesn't impact the result in this test
+            float actual = SvgTextUtil.ResolveFontSize(root, 10);
+            NUnit.Framework.Assert.AreEqual(expected, actual, EPS);
         }
     }
 }

@@ -48,6 +48,7 @@ using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     /// <author>Michael Demey</author>
@@ -67,10 +68,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest() {
             MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument pdfDocument = new PdfDocument(writer);
             String value = "Modified ID 1234";
-            writer.properties.SetModifiedDocumentId(new PdfString(value));
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.SetModifiedDocumentId(new PdfString((value)));
+            PdfWriter writer = new PdfWriter(baos, writerProperties);
+            PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             pdfDocument.Close();
             byte[] documentBytes = baos.ToArray();
@@ -156,5 +158,200 @@ namespace iText.Kernel.Pdf {
             extractedModifiedValue = idArray.GetAsString(1);
             NUnit.Framework.Assert.AreNotEqual(modifiedId, extractedModifiedValue);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FetchReaderIdTest() {
+            MemoryStream baos = new MemoryStream();
+            IDigest md5;
+            try {
+                md5 = DigestUtilities.GetDigest("MD5");
+            }
+            catch (Exception e) {
+                throw new PdfException(e);
+            }
+            PdfString initialId = new PdfString(md5.Digest("Initial ID 56789".GetBytes()));
+            PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(initialId));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.AddNewPage();
+            pdfDocument.Close();
+            byte[] documentBytes = baos.ToArray();
+            baos.Dispose();
+            PdfReader reader = new PdfReader(new MemoryStream(documentBytes));
+            pdfDocument = new PdfDocument(reader);
+            String firstOriginalId = iText.IO.Util.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
+            String secondOriginalId = iText.IO.Util.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
+            String firstModifiedId = iText.IO.Util.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
+            String secondModifiedId = iText.IO.Util.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
+            NUnit.Framework.Assert.AreEqual(firstOriginalId, secondOriginalId);
+            NUnit.Framework.Assert.AreEqual(firstModifiedId, secondModifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void WriterPropertiesPriorityTest() {
+            MemoryStream baos = new MemoryStream();
+            IDigest md5;
+            try {
+                md5 = DigestUtilities.GetDigest("MD5");
+            }
+            catch (Exception e) {
+                throw new PdfException(e);
+            }
+            PdfString originalId = new PdfString(md5.Digest("Initial ID 01234".GetBytes()));
+            PdfString modifiedId = new PdfString(md5.Digest("Modified ID 56789".GetBytes()));
+            PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(originalId).SetModifiedDocumentId
+                (modifiedId));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.AddNewPage();
+            pdfDocument.Close();
+            byte[] documentBytes = baos.ToArray();
+            baos.Dispose();
+            PdfString newOriginalId = new PdfString(md5.Digest("Initial ID 98765".GetBytes()));
+            PdfString newModifiedId = new PdfString(md5.Digest("Modified ID 43210".GetBytes()));
+            PdfReader reader = new PdfReader(new MemoryStream(documentBytes));
+            PdfWriter newWriter = new PdfWriter(new MemoryStream(), new WriterProperties().SetInitialDocumentId(newOriginalId
+                ).SetModifiedDocumentId(newModifiedId));
+            pdfDocument = new PdfDocument(reader, newWriter);
+            String extractedOriginalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            String extractedModifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.AreEqual(extractedOriginalId, newOriginalId.GetValue());
+            NUnit.Framework.Assert.AreEqual(extractedModifiedId, newModifiedId.GetValue());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ReadPdfWithTwoStringIdsTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithTwoStringIds.pdf"));
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(originalId);
+            NUnit.Framework.Assert.IsNotNull(modifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        public virtual void ReadPdfWithTwoNumberIdsTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithTwoNumberIds.pdf"));
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(originalId);
+            NUnit.Framework.Assert.IsNull(modifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        public virtual void ReadPdfWithOneNumberOneStringIdsTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneNumberOneStringIds.pdf")
+                );
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(originalId);
+            NUnit.Framework.Assert.IsNotNull(modifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        public virtual void ReadPdfWithOneStringIdValueTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneStringId.pdf"));
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(originalId);
+            NUnit.Framework.Assert.IsNull(modifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        public virtual void ReadPdfWithOneNumberIdValueTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneNumberId.pdf"));
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(originalId);
+            NUnit.Framework.Assert.IsNull(modifiedId);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        public virtual void ReadPdfWithNoIdTest() {
+            PdfReader reader = new PdfReader(sourceFolder + "pdfWithNoId.pdf");
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            String originalId = null;
+            String modifiedId = null;
+            if (pdfDocument.GetOriginalDocumentId() != null) {
+                originalId = pdfDocument.GetOriginalDocumentId().GetValue();
+            }
+            if (pdfDocument.GetModifiedDocumentId() != null) {
+                modifiedId = pdfDocument.GetModifiedDocumentId().GetValue();
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(originalId);
+            NUnit.Framework.Assert.IsNull(modifiedId);
+            NUnit.Framework.Assert.AreEqual(0, reader.GetOriginalFileId().Length);
+            NUnit.Framework.Assert.AreEqual(0, reader.GetModifiedFileId().Length);
+        }
+        //    @Test
+        //    public void appendModeTest() {
+        //        String originalId;
+        //        String newOriginalId;
+        //        String appendModeNewOriginalId;
+        //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //        PdfWriter initialWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
+        //        PdfWriter newWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(newOriginalId));
+        //        PdfWriter appendModeWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(appendModeNewOriginalId));
+        //
+        //
+        //    }
+        //
+        //    @Test
+        //    public void encryptionAes128Test() {
+        //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //        PdfString originalId = new PdfString("Original ID 56789");
+        //        PdfWriter initialWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
+        //
+        //        Assert.assertNotEquals();
+        //        Assert.assertEquals();
+        //
+        //    }
     }
 }

@@ -50,6 +50,18 @@ namespace iText.StyledXmlParser.Css {
     /// units of measurement, and so on.
     /// </summary>
     public class CommonCssConstants {
+        static CommonCssConstants() {
+            IDictionary<String, String> keywordValues = new Dictionary<String, String>();
+            keywordValues.Put(CommonCssConstants.XX_SMALL, "9px");
+            keywordValues.Put(CommonCssConstants.X_SMALL, "10px");
+            keywordValues.Put(CommonCssConstants.SMALL, "13px");
+            keywordValues.Put(CommonCssConstants.MEDIUM, "16px");
+            keywordValues.Put(CommonCssConstants.LARGE, "18px");
+            keywordValues.Put(CommonCssConstants.X_LARGE, "24px");
+            keywordValues.Put(CommonCssConstants.XX_LARGE, "32px");
+            FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES = JavaCollectionsUtil.UnmodifiableMap(keywordValues);
+        }
+
         /// <summary>The Constant BACKGROUND.</summary>
         public const String BACKGROUND = "background";
 
@@ -708,6 +720,9 @@ namespace iText.StyledXmlParser.Css {
         public static readonly ICollection<String> BORDER_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(new String[] { NONE, HIDDEN, DOTTED, DASHED, SOLID, DOUBLE, GROOVE, RIDGE
             , INSET, OUTSET })));
+
+        /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
+        public static readonly IDictionary<String, String> FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES;
 
         /// <summary>The Constant ACTIVE.</summary>
         public const String ACTIVE = "active";

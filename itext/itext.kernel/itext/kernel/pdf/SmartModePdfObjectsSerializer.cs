@@ -98,9 +98,6 @@ namespace iText.Kernel.Pdf {
             return new SerializedObjectContent(content);
         }
 
-        private class SelfReferenceException : Exception {
-        }
-
         /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerObject(PdfObject obj, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
@@ -165,7 +162,7 @@ namespace iText.Kernel.Pdf {
             // PdfNull case is also here
             if (savedBb != null) {
                 serializedCache.Put(reference, bb.ToByteArray());
-                savedBb.Append(bb.GetInternalBuffer());
+                savedBb.Append(bb.GetInternalBuffer(), 0, bb.Size());
             }
         }
 
@@ -204,6 +201,9 @@ namespace iText.Kernel.Pdf {
             // ignore recursive call
             return key.Equals(PdfName.P) && (dic.Get(key).IsIndirectReference() || dic.Get(key).IsDictionary()) || key
                 .Equals(PdfName.Parent);
+        }
+
+        private class SelfReferenceException : Exception {
         }
     }
 }

@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf {
     internal class PdfPagesTree {
         private readonly int leafSize = 10;
 
-        private IList<PdfDictionary> pageRefs;
+        private IList<PdfIndirectReference> pageRefs;
 
         private IList<PdfPages> parents;
 
@@ -75,7 +75,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public PdfPagesTree(PdfCatalog pdfCatalog) {
             this.document = pdfCatalog.GetDocument();
-            this.pageRefs = new List<PdfDictionary>();
+            this.pageRefs = new List<PdfIndirectReference>();
             this.parents = new List<PdfPages>();
             this.pages = new List<PdfPage>();
             if (pdfCatalog.GetPdfObject().ContainsKey(PdfName.Pages)) {
@@ -120,7 +120,7 @@ namespace iText.Kernel.Pdf {
                 LoadPage(pageNum);
                 if (pageRefs[pageNum] != null) {
                     int parentIndex = FindPageParent(pageNum);
-                    pdfPage = new PdfPage(pageRefs[pageNum]);
+                    pdfPage = new PdfPage((PdfDictionary)pageRefs[pageNum].GetRefersTo());
                     pdfPage.parentPages = parents[parentIndex];
                 }
                 else {
@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf {
         /// specified by it's PdfDictionary, or 0 if this tree does not contain the page.
         /// </summary>
         public virtual int GetPageNumber(PdfDictionary pageDictionary) {
-            int pageNum = pageRefs.IndexOf(pageDictionary);
+            int pageNum = pageRefs.IndexOf(pageDictionary.GetIndirectReference());
             if (pageNum >= 0) {
                 return pageNum + 1;
             }
@@ -180,7 +180,7 @@ namespace iText.Kernel.Pdf {
                 if (pageRefs[i] == null) {
                     LoadPage(i);
                 }
-                if (pageRefs[i].Equals(pageDictionary)) {
+                if (pageRefs[i].Equals(pageDictionary.GetIndirectReference())) {
                     return i + 1;
                 }
             }
@@ -218,7 +218,7 @@ namespace iText.Kernel.Pdf {
             pdfPage.MakeIndirect(document);
             pdfPages.AddPage(pdfPage.GetPdfObject());
             pdfPage.parentPages = pdfPages;
-            pageRefs.Add(pdfPage.GetPdfObject());
+            pageRefs.Add(pdfPage.GetPdfObject().GetIndirectReference());
             pages.Add(pdfPage);
         }
 
@@ -249,7 +249,7 @@ namespace iText.Kernel.Pdf {
             parentPages.AddPage(index, pdfPage);
             pdfPage.parentPages = parentPages;
             CorrectPdfPagesFromProperty(parentIndex + 1, +1);
-            pageRefs.Add(index, pdfPage.GetPdfObject());
+            pageRefs.Add(index, pdfPage.GetPdfObject().GetIndirectReference());
             pages.Add(index, pdfPage);
         }
 
@@ -272,6 +272,15 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 return null;
+            }
+        }
+
+        internal virtual void ReleasePage(int pageNumber) {
+            --pageNumber;
+            if (pageRefs[pageNumber] != null && !pageRefs[pageNumber].CheckState(PdfObject.FLUSHED) && !pageRefs[pageNumber
+                ].CheckState(PdfObject.MODIFIED) && (pageRefs[pageNumber].GetOffset() > 0 || pageRefs[pageNumber].GetIndex
+                () >= 0)) {
+                pages[pageNumber] = null;
             }
         }
 
@@ -338,7 +347,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void LoadPage(int pageNum) {
-            PdfDictionary targetPage = pageRefs[pageNum];
+            PdfIndirectReference targetPage = pageRefs[pageNum];
             if (targetPage != null) {
                 return;
             }
@@ -418,7 +427,11 @@ namespace iText.Kernel.Pdf {
                 // In any case parent.getCount() has higher priority.
                 // NOTE optimization? when we already found needed index
                 for (int i = 0; i < parent.GetCount(); i++) {
-                    pageRefs[from + i] = kids.GetAsDictionary(i);
+                    PdfDictionary kid = kids.GetAsDictionary(i);
+                    if (kid != null) {
+                        // make sure it's a dictionary
+                        pageRefs[from + i] = kid.GetIndirectReference();
+                    }
                 }
             }
         }

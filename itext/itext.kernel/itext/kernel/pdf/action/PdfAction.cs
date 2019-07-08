@@ -567,15 +567,19 @@ namespace iText.Kernel.Pdf.Action {
              action) {
             PdfDictionary dic;
             PdfObject obj = wrapper.GetPdfObject().Get(PdfName.AA);
-            if (obj != null && obj.IsDictionary()) {
+            bool aaExists = obj != null && obj.IsDictionary();
+            if (aaExists) {
                 dic = (PdfDictionary)obj;
             }
             else {
                 dic = new PdfDictionary();
             }
             dic.Put(key, action.GetPdfObject());
+            dic.SetModified();
             wrapper.GetPdfObject().Put(PdfName.AA, dic);
-            wrapper.GetPdfObject().SetModified();
+            if (!aaExists || !dic.IsIndirect()) {
+                wrapper.GetPdfObject().SetModified();
+            }
         }
 
         /// <summary>Adds a chained action.</summary>
@@ -615,6 +619,7 @@ namespace iText.Kernel.Pdf.Action {
         /// </returns>
         public virtual iText.Kernel.Pdf.Action.PdfAction Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 

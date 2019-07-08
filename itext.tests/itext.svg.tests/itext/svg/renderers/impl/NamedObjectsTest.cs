@@ -45,11 +45,14 @@ using iText.StyledXmlParser.Node;
 using iText.Svg.Converter;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
+using iText.Svg.Renderers;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
-    public class NamedObjectsTest {
+    public class NamedObjectsTest : SvgIntegrationTest {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.RULE_IS_NOT_SUPPORTED)]
         public virtual void AddNamedObject() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/NamedObjectsTest/names.svg", FileMode.Open

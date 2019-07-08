@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Source;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class PdfArrayTest {
+    public class PdfArrayTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestValuesIndirectContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));

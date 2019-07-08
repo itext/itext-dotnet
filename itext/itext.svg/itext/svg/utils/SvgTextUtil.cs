@@ -170,24 +170,20 @@ namespace iText.Svg.Utils {
         ///     </returns>
         public static float ResolveFontSize(ISvgTextNodeRenderer renderer, float parentFontSize) {
             //Use own font-size declaration if it is present, parent's otherwise
-            float fontSize = iText.Svg.Utils.SvgTextUtil.ExtractFontSize(renderer);
+            float fontSize = float.NaN;
+            String elementFontSize = renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE);
+            if (null != elementFontSize && !String.IsNullOrEmpty(elementFontSize)) {
+                if (CssUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize) || CommonCssConstants
+                    .SMALLER.Equals(elementFontSize)) {
+                    // TODO DEVSIX-2866 Support rem value for svgs
+                    fontSize = CssUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
+                }
+                else {
+                    fontSize = CssUtils.ParseAbsoluteFontSize(elementFontSize, CommonCssConstants.PX);
+                }
+            }
             if ((float.IsNaN(fontSize)) || fontSize < 0f) {
                 fontSize = parentFontSize;
-            }
-            return fontSize;
-        }
-
-        /// <summary>Extract and parse the font-size declaration stored inside the attributes of the passed renderer</summary>
-        /// <param name="renderer">renderer to extract font-size declaration from</param>
-        /// <returns>a float containing the font-size interpreted as pt, or NaN if the font-size was not specified in the passed renderer
-        ///     </returns>
-        private static float ExtractFontSize(ISvgTextNodeRenderer renderer) {
-            float fontSize = float.NaN;
-            if (renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE) != null) {
-                String fontSizeRawValue = renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE);
-                if (fontSizeRawValue != null && !String.IsNullOrEmpty(fontSizeRawValue)) {
-                    fontSize = CssUtils.ParseAbsoluteLength(fontSizeRawValue, CommonCssConstants.PT);
-                }
             }
             return fontSize;
         }

@@ -52,7 +52,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PolygonSvgNodeRendererTest {
+    public class PolygonSvgNodeRendererTest : SvgIntegrationTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PolygonSvgNoderendererTest/";
 

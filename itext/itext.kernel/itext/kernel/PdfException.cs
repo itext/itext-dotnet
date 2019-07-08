@@ -223,6 +223,12 @@ namespace iText.Kernel {
 
         public const String DocumentForCopyToCannotBeNull = "Document for copyTo cannot be null.";
 
+        public const String DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed = "During decompression multiple streams in sum occupied more memory than allowed. Please either check your pdf or increase the allowed single decompressed pdf stream maximum size value by setting the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
+
+        public const String DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed = "During decompression a single stream occupied more memory than allowed. Please either check your pdf or increase the allowed multiple decompressed pdf streams maximum size value by setting the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
+
+        public const String DuringDecompressionSingleStreamOccupiedMoreThanMaxIntegerValue = "During decompression a single stream occupied more than a maximum integer value. Please check your pdf.";
+
         public const String EndOfContentStreamReachedBeforeEndOfImageData = "End of content stream reached before end of image data.";
 
         public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
@@ -258,6 +264,8 @@ namespace iText.Kernel {
         public const String FilterIsNotANameOrArray = "filter is not a name or array.";
 
         public const String FlushedPageCannotBeAddedOrInserted = "Flushed page cannot be added or inserted.";
+
+        public const String FlushingHelperFLushingModeIsNotForDocReadingMode = "Flushing writes the object to the output stream and releases it from memory. It is only possible for documents that have a PdfWriter associated with them. Use PageFlushingHelper#releaseDeep method instead.";
 
         public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
 

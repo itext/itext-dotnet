@@ -46,6 +46,7 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Css {
@@ -108,6 +109,65 @@ namespace iText.Svg.Css {
             expected.Put("stroke", "#da0000");
             expected.Put("stroke-opacity", "1");
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StylesOfSvgTagProcessingTest() {
+            String svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
+                 + "        \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" + "<svg width=\"400\" height=\"200\"\n"
+                 + "     viewBox=\"0 0 400 200\" version=\"1.1\"\n" + "     xmlns=\"http://www.w3.org/2000/svg\"\n" + 
+                "     xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n" + "     xmlns:v=\"http://schemas.microsoft.com/visio/2003/SVGExtensions/\"\n"
+                 + "     class=\"st11\">\n" + "    <style type=\"text/css\">\n" + "        .st11 {fill:none;stroke:black;stroke-width:6}\n"
+                 + "    </style>\n" + "    <g >\n" + "        <path d=\"M0 100 L0 50 L70 50\"/>\n" + "    </g>\n" + "</svg>";
+            JsoupXmlParser xmlParser = new JsoupXmlParser();
+            IDocumentNode root = xmlParser.Parse(svg);
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
+                ();
+            PathSvgNodeRenderer pathSvgNodeRenderer = (PathSvgNodeRenderer)((IBranchSvgNodeRenderer)nodeRenderer.GetChildren
+                ()[0]).GetChildren()[0];
+            IDictionary<String, String> actual = new Dictionary<String, String>();
+            actual.Put("stroke", pathSvgNodeRenderer.GetAttribute("stroke"));
+            actual.Put("fill", pathSvgNodeRenderer.GetAttribute("fill"));
+            actual.Put("d", pathSvgNodeRenderer.GetAttribute("d"));
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("stroke", "black");
+            expected.Put("fill", "none");
+            expected.Put("d", "M0 100 L0 50 L70 50");
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontResolverIntegrationTest() {
+            //TODO DEVSIX-2058
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ValidLocalFontTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void FontWeightTest() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontWeightTest");
+        }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GoogleFontsTest() {
+            //TODO DEVSIX-2264: that test shall fail after the fix.
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
         }
     }
 }
