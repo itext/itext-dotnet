@@ -178,5 +178,50 @@ namespace iText.Svg.Renderers.Impl {
             //TODO: update when DEVSIX-2255 implemented
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "textPathExample");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathABasic() {
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "pathABasic");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathAFlags() {
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "pathAFlags");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathAAxisRotation() {
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "pathAAxisRotation");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PathAOutOfRange() {
+            //TODO: update cmp when DEVSIX-3010 and DEVSIX-3011 fixed
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "pathAOutOfRange");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Arcs_end_point() {
+            //TODO: update cmp when DEVSIX-3010 fixed
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "arcsEndPoint");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Flags_out_of_range() {
+            //TODO: update cmp when DEVSIX-3011 fixed
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "flags_out_of_range");
+        }
     }
 }
