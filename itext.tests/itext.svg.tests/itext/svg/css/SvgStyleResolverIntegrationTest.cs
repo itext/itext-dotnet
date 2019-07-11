@@ -169,5 +169,46 @@ namespace iText.Svg.Css {
             //TODO DEVSIX-2264: that test shall fail after the fix.
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SvgWithExternalCSStoSingleDefaultPage() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "externalCss");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SvgWithInternalCSStoSingleDefaultPage() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SvgWithExternalCSStoCustomPage() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            // Take a note this method differs from the one used in Default Page test
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SvgWithInternalCSStoCustomPage() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss_custom");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "externalCss_palette");
+        }
     }
 }
