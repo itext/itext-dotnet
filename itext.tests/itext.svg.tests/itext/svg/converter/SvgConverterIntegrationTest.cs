@@ -121,6 +121,25 @@ namespace iText.Svg.Converter {
             doc.Close();
         }
 
+        /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
+        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 32)]
+        public virtual void ConvertFileWithAllIgnoredTags() {
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "ignored_tags");
+        }
+
+        /// <summary>Convert a SVG file of a chart which contains some currently ignored tags.</summary>
+        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertChartWithSomeIgnoredTags() {
+            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "chart_snippet");
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 14)]
         public virtual void CaseSensitiveTagTest() {
