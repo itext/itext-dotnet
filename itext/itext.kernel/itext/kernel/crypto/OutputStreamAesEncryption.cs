@@ -51,11 +51,18 @@ namespace iText.Kernel.Crypto {
 
         private bool finished;
 
-        /// <summary>Creates a new instance of OutputStreamCounter</summary>
-        /// <param name="out"/>
-        /// <param name="key"/>
-        /// <param name="off"/>
-        /// <param name="len"/>
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="OutputStreamAesEncryption"/>
+        /// </summary>
+        /// <param name="out">
+        /// the
+        /// <see cref="System.IO.Stream"/>
+        /// instance to be used as the destination for the encrypted content
+        /// </param>
+        /// <param name="key">the byte array containing the key for encryption</param>
+        /// <param name="off">offset of the key in the byte array</param>
+        /// <param name="len">the length of the key in the byte array</param>
         public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
             byte[] iv = IVGenerator.GetIV();
@@ -70,6 +77,16 @@ namespace iText.Kernel.Crypto {
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="OutputStreamAesEncryption"/>
+        /// </summary>
+        /// <param name="out">
+        /// the
+        /// <see cref="System.IO.Stream"/>
+        /// instance to be used as the destination for the encrypted content
+        /// </param>
+        /// <param name="key">the byte array which is the key for encryption</param>
         public OutputStreamAesEncryption(Stream @out, byte[] key)
             : this(@out, key, 0, key.Length) {
         }

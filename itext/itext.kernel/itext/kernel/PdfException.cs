@@ -607,6 +607,7 @@ namespace iText.Kernel {
         }
 
         /// <summary>Gets additional params for Exception message.</summary>
+        /// <returns>array of additional params</returns>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {

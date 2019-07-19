@@ -53,9 +53,12 @@ namespace iText.Kernel.Crypto {
     public class AESCipherCBCnoPad {
         private IBlockCipher cbc;
 
-        /// <summary>Creates a new instance of AESCipher</summary>
-        /// <param name="forEncryption"/>
-        /// <param name="key"/>
+        /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
+        /// <param name="forEncryption">
+        /// if true the cipher is initialised for
+        /// encryption, if false for decryption
+        /// </param>
+        /// <param name="key">the key to be used in the cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key) {
             IBlockCipher aes = new AesFastEngine();
             cbc = new CbcBlockCipher(aes);
@@ -63,6 +66,13 @@ namespace iText.Kernel.Crypto {
             cbc.Init(forEncryption, kp);
         }
 
+        /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
+        /// <param name="forEncryption">
+        /// if true the cipher is initialised for
+        /// encryption, if false for decryption
+        /// </param>
+        /// <param name="key">the key to be used in the cipher</param>
+        /// <param name="initVector">initialization vector to be used in cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key, byte[] initVector) {
             IBlockCipher aes = new AesFastEngine();
             cbc = new CbcBlockCipher(aes);

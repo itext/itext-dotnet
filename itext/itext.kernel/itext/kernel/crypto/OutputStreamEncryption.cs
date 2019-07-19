@@ -44,17 +44,17 @@ address: sales@itextpdf.com
 
 using System.IO;
 
-namespace iText.Kernel.Crypto
-{
-	public abstract class OutputStreamEncryption : Stream
-	{
+namespace iText.Kernel.Crypto {
+	public abstract class OutputStreamEncryption : Stream {
 		protected internal Stream @out;
 
 		private byte[] sb = new byte[1];
 
-		/// <summary>Creates a new instance of OutputStreamCounter</summary>
-		protected internal OutputStreamEncryption(Stream @out)
-		{
+        /// <summary>
+        /// Creates a new instance of <see cref="OutputStreamEncryption"/>
+        /// </summary>
+        /// <param name="out">the target <see cref="Stream"/> to write encrypted content to</param>
+        protected internal OutputStreamEncryption(Stream @out) {
 			this.@out = @out;
 		}
 
@@ -105,8 +105,7 @@ namespace iText.Kernel.Crypto
 		/// does nothing.
 		/// </remarks>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
-		public override void Flush()
-		{
+		public override void Flush() {
 			@out.Flush();
 		}
 
@@ -123,8 +122,7 @@ namespace iText.Kernel.Crypto
 		/// <param name="b">the data.</param>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <seealso cref="System.IO.Stream.Write(byte[], int, int)"/>
-		public virtual void Write(byte[] b)
-		{
+		public virtual void Write(byte[] b) {
 			Write(b, 0, b.Length);
 		}
 
@@ -158,8 +156,7 @@ namespace iText.Kernel.Crypto
 		/// may be thrown if the
 		/// output stream has been closed.
 		/// </exception>
-		public virtual void Write(int b)
-		{
+		public virtual void Write(int b) {
 			sb[0] = (byte)b;
 			Write(sb, 0, 1);
 		}
