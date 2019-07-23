@@ -155,6 +155,63 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void PdfFromSvgString() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgString.pdf");
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.AddNewPage();
+            String svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
+                 + "        \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" + "<svg width=\"500\" height=\"400\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n"
+                 + "    <rect width=\"500\" height=\"400\" fill=\"none\" stroke=\"black\"/>\n" + "    <line x1=\"0\" y1=\"0\" x2=\"20\" y2=\"135\" stroke=\"black\"/>\n"
+                 + "    <circle cx=\"20\" cy=\"135\" r=\"5\" fill=\"none\" stroke=\"black\"/>\n" + "    <text x=\"20\" y=\"135\" font-family=\"Verdana\" font-size=\"35\">\n"
+                 + "        Hello world\n" + "    </text>\n" + "</svg>";
+            int pagenr = 1;
+            SvgConverter.DrawOnDocument(svg, pdfDoc, pagenr);
+            String output = destinationFolder + "pdfFromSvgString.pdf";
+            String cmp_file = sourceFolder + "cmp_pdfFromSvgString.pdf";
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FromFile() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgFile.pdf");
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.AddNewPage();
+            String svg = "eclipse.svg";
+            String output = destinationFolder + "pdfFromSvgFile.pdf";
+            String cmp_file = sourceFolder + "cmp_pdfFromSvgFile.pdf";
+            int pagenr = 1;
+            FileStream fis = new FileStream(sourceFolder + svg, FileMode.Open, FileAccess.Read);
+            SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AddToExistingDoc() {
+            PdfReader reader = new PdfReader(sourceFolder + "cmp_eclipse.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "addToExistingDoc.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            pdfDoc.AddNewPage();
+            String output = destinationFolder + "addToExistingDoc.pdf";
+            String cmp_file = sourceFolder + "cmp_addToExistingDoc.pdf";
+            int pagenr = 1;
+            FileStream fis = new FileStream(sourceFolder + "minimal.svg", FileMode.Open, FileAccess.Read);
+            SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SinglePageHelloWorldTest() {
             ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "hello_world");
         }
