@@ -69,7 +69,7 @@ namespace iText.Test {
             IList<TestFixtureData> parametersList = new List<TestFixtureData>();
             foreach (Type type in assembly.GetTypes()) {
                 WrappedSamplesRunner.RunnerParams runnerParams = CheckIfTestAndCreateParams(type, searchConfig);
-                if (runnerParams != null) {
+                if (runnerParams != null && !type.IsNested) {
                     parametersList.Add(new TestFixtureData(runnerParams));
                 }
             }
@@ -177,7 +177,7 @@ namespace iText.Test {
         private void RunMain() {
             MethodInfo mainMethod = GetMain(sampleClassParams.sampleType);
             if (mainMethod == null) {
-                throw new ArgumentException("Class marked with WrapToTest annotation must have main method.");
+                throw new ArgumentException("Class must have main method.");
             }
             mainMethod.Invoke(null, new Object[] { null });
         }
@@ -201,24 +201,8 @@ namespace iText.Test {
 
             WrappedSamplesRunner.RunnerParams runnerParams = new WrappedSamplesRunner.RunnerParams();
             runnerParams.sampleType = classType;
-            Attribute attribute = classType.GetCustomAttribute(typeof(WrapToTestAttribute));
-            if (attribute == null) {
-                if (searchConfig.IsToMarkTestsWithoutAnnotationAsIgnored() && IsLookLikeTest(classType)) {
-                    runnerParams.ignoreMessage = String.Format("Class {0} seems to be a test but it doesn't have WrapToTest annotation."
-                        , classType.FullName);
-                    return runnerParams;
-                }
-                return null;
-            }
-            WrapToTestAttribute wrapToTestAttribute = (WrapToTestAttribute) attribute;
-            if (!String.IsNullOrEmpty(wrapToTestAttribute.IgnoreWithMessage)) {
-                runnerParams.ignoreMessage = wrapToTestAttribute.IgnoreWithMessage;
-            }
+            
             return runnerParams;
-        }
-
-        private static bool IsLookLikeTest(Type c) {
-            return GetStringField(c, "DEST") != null && GetMain(c) != null;
         }
 
         private static bool IsIgnoredClassOrPackage(String fullName, RunnerSearchConfig searchConfig) {
