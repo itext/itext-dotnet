@@ -1227,6 +1227,23 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void WmfImageTest05() {
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest05.pdf"));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "example2.wmf"));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            StreamUtil.TransferBytes(stream, baos);
+            ImageData img = new WmfImageData(baos.ToArray());
+            canvas.AddImage(img, 0, 0, 1, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest05.pdf", 
+                sourceFolder + "cmp_wmfImageTest05.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void GifImageTest01() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest01.pdf"));
             PdfPage page = document.AddNewPage();
