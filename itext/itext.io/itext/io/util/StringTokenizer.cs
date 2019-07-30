@@ -76,10 +76,6 @@ namespace iText.IO.Util {
             return pos < len;
         }
 
-        public virtual bool HasMoreElements() {
-            return HasMoreTokens();
-        }
-
         public virtual String NextToken(String delim) {
             this.delim = delim;
             return NextToken();
