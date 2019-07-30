@@ -78,6 +78,7 @@ namespace iText.Kernel.Colors {
         /// All color value components will be initialised with zeroes.
         /// </remarks>
         /// <param name="colorSpace">the color space to which the returned Color object relates</param>
+        /// <returns>the created Color object.</returns>
         public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace) {
             return MakeColor(colorSpace, null);
         }
@@ -89,6 +90,7 @@ namespace iText.Kernel.Colors {
         /// </remarks>
         /// <param name="colorSpace">the color space to which the returned Color object relates</param>
         /// <param name="colorValue">the color value of the returned Color object</param>
+        /// <returns>the created Color object.</returns>
         public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue) {
             iText.Kernel.Colors.Color c = null;
             bool unknownColorSpace = false;

@@ -55,9 +55,12 @@ namespace iText.Kernel.Crypto {
         private PaddedBufferedBlockCipher bp;
 
         /// <summary>Creates a new instance of AESCipher</summary>
-        /// <param name="forEncryption"/>
-        /// <param name="key"/>
-        /// <param name="iv"/>
+        /// <param name="forEncryption">
+        /// if true the cipher is initialised for
+        /// encryption, if false for decryption
+        /// </param>
+        /// <param name="key">the key to be used in the cipher</param>
+        /// <param name="iv">initialization vector to be used in cipher</param>
         public AESCipher(bool forEncryption, byte[] key, byte[] iv) {
             IBlockCipher aes = new AesFastEngine();
             IBlockCipher cbc = new CbcBlockCipher(aes);
