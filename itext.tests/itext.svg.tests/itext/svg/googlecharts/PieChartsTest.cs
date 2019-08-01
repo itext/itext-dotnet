@@ -88,5 +88,13 @@ namespace iText.Svg.Googlecharts {
         public virtual void Rotating_pie_chart() {
             ConvertAndCompareVisually(sourceFolder, destinationFolder, "rotating_pie_chart");
         }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void PieChart() {
+            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pieChart");
+        }
     }
 }
