@@ -1729,15 +1729,15 @@ namespace iText.Layout.Renderer {
                 bBox.MoveDown(shift);
                 try {
                     cell.Move(0, -(cumulativeShift - rowspanOffset));
+                    bBox.SetHeight(height);
+                    cell.ApplyVerticalAlignment();
                 }
                 catch (NullReferenceException) {
-                    // TODO Remove try-catch when DEVSIX-1001 is resolved.
+                    // TODO Remove try-catch when DEVSIX-1655 is resolved.
                     ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                         "Some of the cell's content might not end up placed correctly."));
                 }
-                bBox.SetHeight(height);
-                cell.ApplyVerticalAlignment();
             }
         }
 
