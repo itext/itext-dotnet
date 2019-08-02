@@ -425,7 +425,14 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
-        /// <param name="pdfAConformanceLevel"/>
+        /// <param name="pdfAConformanceLevel">
+        /// the desired
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// of the field. Must match the conformance
+        /// level of the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// this field will eventually be added into
+        /// </param>
         /// <returns>
         /// a new
         /// <see cref="PdfTextFormField"/>
@@ -803,7 +810,7 @@ namespace iText.Forms.Fields {
         /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
         /// flags you require.
         /// </param>
-        /// <param name="font"/>
+        /// <param name="font">the desired font to be used when displaying the text</param>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1408,7 +1415,7 @@ namespace iText.Forms.Fields {
         /// a two-dimensional array of Strings which will be converted
         /// to a PdfArray.
         /// </param>
-        /// <param name="font"/>
+        /// <param name="font">the desired font to be used when displaying the text</param>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1467,7 +1474,7 @@ namespace iText.Forms.Fields {
         /// <param name="name">the name of the form field</param>
         /// <param name="value">the initial value</param>
         /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
-        /// <param name="font"/>
+        /// <param name="font">the desired font to be used when displaying the text</param>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1532,7 +1539,7 @@ namespace iText.Forms.Fields {
         /// a two-dimensional array of Strings which will be converted
         /// to a PdfArray.
         /// </param>
-        /// <param name="font"/>
+        /// <param name="font">the desired font to be used when displaying the text</param>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -1590,7 +1597,7 @@ namespace iText.Forms.Fields {
         /// <param name="name">the name of the form field</param>
         /// <param name="value">the initial value</param>
         /// <param name="options">an array of Strings which will be converted to a PdfArray.</param>
-        /// <param name="font"/>
+        /// <param name="font">the desired font to be used when displaying the text</param>
         /// <param name="pdfAConformanceLevel">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -3786,7 +3793,28 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
-        //Actually it's just PdfA check appearance. According to corrigendum there is no difference between them
+        /// <summary>Draws PDF/A-2 compliant check appearance.</summary>
+        /// <remarks>
+        /// Draws PDF/A-2 compliant check appearance.
+        /// Actually it's just PdfA check appearance. According to corrigendum there is no difference between them
+        /// </remarks>
+        /// <param name="width">width of the checkbox</param>
+        /// <param name="height">height of the checkbox</param>
+        /// <param name="onStateName">name that corresponds to the "On" state of the checkbox</param>
+        /// <param name="checkType">
+        /// the type that determines how the checkbox will look like. Allowed values are
+        /// <value>TYPE_CHECK</value>
+        /// ,
+        /// <value>TYPE_CIRCLE</value>
+        /// ,
+        /// <value>TYPE_CROSS</value>
+        /// ,
+        /// <value>TYPE_DIAMOND</value>
+        /// ,
+        /// <value>TYPE_SQUARE</value>
+        /// ,
+        /// <value>TYPE_STAR</value>
+        /// </param>
         protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String onStateName, int
              checkType) {
             this.checkType = checkType;
@@ -3814,13 +3842,29 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
-        /// <param name="width"/>
-        /// <param name="height"/>
-        /// <param name="selectedValue"/>
-        /// <param name="checkType"/>
+        /// <param name="width">width of the checkbox</param>
+        /// <param name="height">height of the checkbox</param>
+        /// <param name="selectedValue">the selected value of the checkbox which determines the appearance of the checkbox
+        ///     </param>
+        /// <param name="checkType">
+        /// the type that determines how the checkbox will look like. Allowed values are
+        /// <value>TYPE_CHECK</value>
+        /// ,
+        /// <value>TYPE_CIRCLE</value>
+        /// ,
+        /// <value>TYPE_CROSS</value>
+        /// ,
+        /// <value>TYPE_DIAMOND</value>
+        /// ,
+        /// <value>TYPE_SQUARE</value>
+        /// ,
+        /// <value>TYPE_STAR</value>
+        /// </param>
         [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
             int checkType) {
+            // TODO when removing the method: check {@link #drawCheckBox(PdfCanvas, float, float, float, boolean)} and consider
+            //  removing last redundant "on" parameter
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);
