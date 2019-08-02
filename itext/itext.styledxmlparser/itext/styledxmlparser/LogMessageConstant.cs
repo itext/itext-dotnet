@@ -48,6 +48,9 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
         public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";
 
+        /// <summary>The Constant ERROR_ADDING_CHILD_NODE.</summary>
+        public const String ERROR_ADDING_CHILD_NODE = "Error adding child node.";
+
         /// <summary>The Constant ERROR_PARSING_COULD_NOT_MAP_NODE</summary>
         public const String ERROR_PARSING_COULD_NOT_MAP_NODE = "Could not map node type: {0}";
 
