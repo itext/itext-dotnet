@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Util;
-using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
@@ -53,9 +52,11 @@ using iText.Svg.Processors;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Processors.Impl {
-    public class DefaultSvgProcessorUnitTest {
+    public class DefaultSvgProcessorUnitTest : ExtendedITextTest {
         //Main success scenario
         /// <summary>Simple correct example</summary>
         [NUnit.Framework.Test]
@@ -116,6 +117,7 @@ namespace iText.Svg.Processors.Impl {
 
         //Edge cases
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE)]
         public virtual void DummyProcessingTestNodeHasNullChild() {
             /*
             Invalid input: null
@@ -138,6 +140,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void DummyProcessingSvgTagIsNotRootOfInput() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRandomElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("body"), "");
@@ -268,6 +271,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void DepthFirstNullRendererTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupNonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("nonExisting"), "");
@@ -314,7 +318,7 @@ namespace iText.Svg.Processors.Impl {
         private INode CreateSvgContainingImage() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
-            Attributes attr = new Attributes();
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes attr = new iText.StyledXmlParser.Jsoup.Nodes.Attributes();
             attr.Put(SvgConstants.Attributes.XLINK_HREF, "img.png");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("image"), "", attr);

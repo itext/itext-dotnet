@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Test;
 
 namespace iText.Svg.Css.Impl {
-    public class StyleResolverUtilUnitTest {
+    public class StyleResolverUtilUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MergeParentDeclarationsFillTest() {
             IDictionary<String, String> styles = new Dictionary<String, String>();

@@ -46,9 +46,10 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
+using iText.Test;
 
 namespace iText.Svg.Processors.Impl.Font {
-    public class SvgFontProcessorTest {
+    public class SvgFontProcessorTest : ExtendedITextTest {
         /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AddFontFaceFontsTest() {

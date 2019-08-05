@@ -50,7 +50,7 @@ using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Processors {
-    public class DefaultSvgProcessorIntegrationTest {
+    public class DefaultSvgProcessorIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";
 

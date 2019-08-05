@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Factories {
-    public class DefaultSvgNodeRendererFactoryTest {
+    public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateSvgNodeRenderer() {
             NUnit.Framework.Assert.That(() =>  {

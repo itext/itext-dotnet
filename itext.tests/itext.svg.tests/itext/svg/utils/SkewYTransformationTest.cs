@@ -44,9 +44,10 @@ using System;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class SkewYTransformationTest {
+    public class SkewYTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalSkewYTest() {
             AffineTransform expected = new AffineTransform(1d, Math.Tan(MathUtil.ToRadians(143)), 0d, 1d, 0d, 0d);

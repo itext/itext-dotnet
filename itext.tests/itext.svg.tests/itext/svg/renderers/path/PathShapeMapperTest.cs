@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Svg.Renderers.Path.Impl;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Path {
-    public class PathShapeMapperTest {
+    public class PathShapeMapperTest : ExtendedITextTest {
         private static IPathShapeMapper mapper;
 
         [NUnit.Framework.OneTimeSetUp]

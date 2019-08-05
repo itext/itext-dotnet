@@ -45,9 +45,10 @@ using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class RotateTransformationTest {
+    public class RotateTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalRotateTest() {
             AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(10), CssUtils.ParseAbsoluteLength

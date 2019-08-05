@@ -40,8 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.Svg.Renderers.Impl {
-    public class RectangleSvgNodeRendererUnitTest {
+    public class RectangleSvgNodeRendererUnitTest : ExtendedITextTest {
         private const float EPSILON = 0.00001f;
 
         internal RectangleSvgNodeRenderer renderer;

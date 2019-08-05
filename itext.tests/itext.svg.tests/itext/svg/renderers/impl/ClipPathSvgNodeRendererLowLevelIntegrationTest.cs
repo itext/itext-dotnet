@@ -51,7 +51,7 @@ using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
-    public class ClipPathSvgNodeRendererLowLevelIntegrationTest {
+    public class ClipPathSvgNodeRendererLowLevelIntegrationTest : SvgIntegrationTest {
         private PdfCanvas cv;
 
         private SvgDrawContext sdc;

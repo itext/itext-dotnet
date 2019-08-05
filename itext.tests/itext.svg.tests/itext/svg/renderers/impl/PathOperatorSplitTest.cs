@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PathOperatorSplitTest {
+    public class PathOperatorSplitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestNumbersContainingExponent01() {
             String path = "M10,9.999999999999972C203.33333333333334,9.999999999999972,396.6666666666667,1.4210854715202004e-14,590,1.4210854715202004e-14L590,41.666666666666686C396.6666666666667,41.666666666666686,203.33333333333334,51.66666666666664,10,51.66666666666664Z";

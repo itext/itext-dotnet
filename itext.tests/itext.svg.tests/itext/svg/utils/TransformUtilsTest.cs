@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class TransformUtilsTest {
+    public class TransformUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullStringTest() {
             NUnit.Framework.Assert.That(() =>  {

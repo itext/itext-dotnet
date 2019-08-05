@@ -52,9 +52,10 @@ using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
 
 namespace iText.Svg.Converter {
-    public class SvgConverterUnitTest {
+    public class SvgConverterUnitTest : ExtendedITextTest {
         private PdfDocument doc;
 
         private readonly String content = "<svg width=\"10\" height=\"10\"/>";

@@ -41,27 +41,26 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Renderers.Factories;
+using System.Collections.Generic;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.Svg.Css.Impl;
+using iText.Test.Attributes;
 using iText.Test;
 
-namespace iText.Svg.Renderers {
-    public class DefaultRendererMapperTest : ExtendedITextTest {
+namespace iText.Svg.Css
+{
+    public class XLinkTest : ExtendedITextTest
+    {
         [NUnit.Framework.Test]
-        public virtual void MapperNotEmptyTest() {
-            DefaultSvgNodeRendererMapper mapper = new DefaultSvgNodeRendererMapper();
-            NUnit.Framework.Assert.IsFalse(mapper.GetMapping().IsEmpty());
-        }
-
-        /// <exception cref="Java.Lang.InstantiationException"/>
-        /// <exception cref="System.MemberAccessException"/>
-        [NUnit.Framework.Test]
-        public virtual void CreateAllRenderersTest() {
-            DefaultSvgNodeRendererMapper mapper = new DefaultSvgNodeRendererMapper();
-            foreach (Type rendererClazz in mapper.GetMapping().Values) {
-                // the test is that this method does not throw an exception on any class here
-                // meaning that every (non-abstract) implementation must have a public no-args constructor
-                System.Activator.CreateInstance(rendererClazz);
-            }
+        public virtual void SvgCssResolveMalformedXlinkTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("image"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes imageAttributes = jsoupImage.Attributes();
+            imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "htt://are/"));
+            JsoupElementNode node = new JsoupElementNode(jsoupImage);
+            SvgStyleResolver sr = new SvgStyleResolver();
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            NUnit.Framework.Assert.AreEqual("htt://are/", attr.Get("xlink:href"));
         }
     }
 }

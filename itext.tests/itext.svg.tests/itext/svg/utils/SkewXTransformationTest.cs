@@ -45,9 +45,10 @@ using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class SkewXTransformationTest {
+    public class SkewXTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalSkewXTest() {
             AffineTransform expected = new AffineTransform(1d, 0d, Math.Tan(MathUtil.ToRadians((float)CssUtils.ParseFloat

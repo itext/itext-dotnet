@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Geom;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    public class EllipticalPathOperatorTest {
+    public class EllipticalPathOperatorTest : ExtendedITextTest {
         // tests for coordinates
         [NUnit.Framework.Test]
         public virtual void TestBasicParameterSet() {

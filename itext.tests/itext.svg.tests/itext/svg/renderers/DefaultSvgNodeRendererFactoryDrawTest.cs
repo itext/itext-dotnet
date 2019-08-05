@@ -45,9 +45,10 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Dummy.Factories;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Renderers.Factories;
+using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class DefaultSvgNodeRendererFactoryDrawTest {
+    public class DefaultSvgNodeRendererFactoryDrawTest : ExtendedITextTest {
         private ISvgNodeRendererFactory fact;
 
         [NUnit.Framework.SetUp]

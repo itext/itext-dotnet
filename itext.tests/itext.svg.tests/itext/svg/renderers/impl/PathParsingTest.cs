@@ -44,9 +44,10 @@ using System;
 using System.Collections.Generic;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PathParsingTest {
+    public class PathParsingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PathParsingNoDOperatorTest() {
             NUnit.Framework.Assert.That(() =>  {

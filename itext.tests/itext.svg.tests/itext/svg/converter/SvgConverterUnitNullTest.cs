@@ -49,6 +49,7 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Converter {
     /// <summary>
@@ -65,7 +66,7 @@ namespace iText.Svg.Converter {
     /// parameter is null, this
     /// should NOT throw an exception as this is caught in the library.
     /// </remarks>
-    public class SvgConverterUnitNullTest {
+    public class SvgConverterUnitNullTest : ExtendedITextTest {
         private PdfDocument doc;
 
         private readonly String content = "<svg width=\"10\" height=\"10\"/>";

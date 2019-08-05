@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class SvgCssUtilsTest {
+    public class SvgCssUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CommaSplitValueTest() {
             String input = "a,b,c,d";

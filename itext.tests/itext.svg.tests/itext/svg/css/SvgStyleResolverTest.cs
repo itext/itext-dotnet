@@ -51,10 +51,10 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
-using iText.Test.Attributes;
+using iText.Test;
 
 namespace iText.Svg.Css {
-    public class SvgStyleResolverTest {
+    public class SvgStyleResolverTest : ExtendedITextTest {
         private static readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
 
@@ -119,19 +119,6 @@ namespace iText.Svg.Css {
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("#testid", attr.Get("xlink:href"));
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, Count = 1)]
-        public virtual void SvgCssResolveMalformedXlinkTest() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("image"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Attributes imageAttributes = jsoupImage.Attributes();
-            imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "htt://are/"));
-            JsoupElementNode node = new JsoupElementNode(jsoupImage);
-            SvgStyleResolver sr = new SvgStyleResolver();
-            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
-            NUnit.Framework.Assert.AreEqual("htt://are/", attr.Get("xlink:href"));
         }
 
         [NUnit.Framework.Test]
