@@ -70,7 +70,6 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ShouldAddBackgroundColorAttributeToAccessiblityWhenBackgroundColorIsSet() {
