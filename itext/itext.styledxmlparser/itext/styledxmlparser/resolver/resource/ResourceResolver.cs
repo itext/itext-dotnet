@@ -322,7 +322,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         /// <summary>Checks if source is under data URI scheme.</summary>
-        /// <remarks>Checks if source is under data URI scheme. (eg data:[<media type>][;base64],<data>)</remarks>
+        /// <remarks>Checks if source is under data URI scheme. (eg data:[&lt;media type&gt;][;base64],&lt;data&gt;)</remarks>
         /// <param name="src">String to test</param>
         /// <returns/>
         public virtual bool IsDataSrc(String src) {
