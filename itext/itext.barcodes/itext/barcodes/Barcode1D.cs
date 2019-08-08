@@ -329,7 +329,7 @@ namespace iText.Barcodes {
         /// <br />
         /// <TABLE BORDER="1" SUMMARY="barcode properties">
         /// <TR>
-        /// <TH><P></&gt;&lt;CODE>barColor</CODE></TH>
+        /// <TH><P><CODE>barColor</CODE></TH>
         /// <TH><P><CODE>textColor</CODE></TH>
         /// <TH><P>Result</TH>
         /// </TR>
