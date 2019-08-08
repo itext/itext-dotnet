@@ -42,6 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Text;
+using iText.IO.Codec;
+using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -100,14 +104,12 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Ignored during the latest release. Please unignore after DEVSIX-3021")]
         public virtual void TestFlateCmyk() {
             TestFile("img_cmyk.pdf", "Im1", "tif");
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Ignored during the latest release. Please unignore after DEVSIX-3021")]
         public virtual void TestFlateCmykIcc() {
             TestFile("img_cmyk_icc.pdf", "Im1", "tif");
         }
@@ -153,11 +155,145 @@ namespace iText.Kernel.Pdf.Xobject {
                 byte[] result = img.GetImageBytes(true);
                 byte[] cmpBytes = File.ReadAllBytes(Path.Combine(sourceFolder, filename.JSubstring(0, filename.Length - 4)
                      + "." + expectedImageFormat));
-                NUnit.Framework.Assert.AreEqual(cmpBytes, result);
+                if (img.IdentifyImageFileExtension().Equals("tif")) {
+                    CompareTiffImages(cmpBytes, result);
+                }
+                else {
+                    NUnit.Framework.Assert.AreEqual(cmpBytes, result);
+                }
             }
             finally {
                 pdfDocument.Close();
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void CompareTiffImages(byte[] cmpBytes, byte[] resultBytes) {
+            int cmpNumDirectories = TIFFDirectory.GetNumDirectories(new RandomAccessFileOrArray(new RandomAccessSourceFactory
+                ().CreateSource(cmpBytes)));
+            int resultNumDirectories = TIFFDirectory.GetNumDirectories(new RandomAccessFileOrArray(new RandomAccessSourceFactory
+                ().CreateSource(resultBytes)));
+            NUnit.Framework.Assert.AreEqual(cmpNumDirectories, resultNumDirectories);
+            for (int dirNum = 0; dirNum < cmpNumDirectories; ++dirNum) {
+                TIFFDirectory cmpDir = new TIFFDirectory(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                    (cmpBytes)), dirNum);
+                TIFFDirectory resultDir = new TIFFDirectory(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                    (resultBytes)), dirNum);
+                NUnit.Framework.Assert.AreEqual(cmpDir.GetNumEntries(), resultDir.GetNumEntries());
+                NUnit.Framework.Assert.AreEqual(cmpDir.GetIFDOffset(), resultDir.GetIFDOffset());
+                NUnit.Framework.Assert.AreEqual(cmpDir.GetNextIFDOffset(), resultDir.GetNextIFDOffset());
+                NUnit.Framework.Assert.AreEqual(cmpDir.GetTags(), resultDir.GetTags());
+                foreach (int tag in cmpDir.GetTags()) {
+                    NUnit.Framework.Assert.AreEqual(cmpDir.IsTagPresent(tag), resultDir.IsTagPresent(tag));
+                    TIFFField cmpField = cmpDir.GetField(tag);
+                    TIFFField resultField = resultDir.GetField(tag);
+                    if (tag == TIFFConstants.TIFFTAG_SOFTWARE) {
+                        CompareSoftwareVersion(cmpField, resultField);
+                    }
+                    else {
+                        CompareFields(cmpField, resultField);
+                    }
+                }
+                CompareImageData(cmpDir, resultDir, cmpBytes, resultBytes);
+            }
+        }
+
+        private void CompareSoftwareVersion(TIFFField cmpField, TIFFField resultField) {
+            byte[] versionBytes = resultField.GetAsString(0).GetBytes(Encoding.ASCII);
+            byte[] versionToCompare = SubArray(versionBytes, 0, versionBytes.Length - 2);
+            //drop last always zero byte
+            NUnit.Framework.Assert.AreEqual(iText.Kernel.Version.GetInstance().GetVersion().GetBytes(Encoding.ASCII), 
+                versionToCompare);
+        }
+
+        private void CompareFields(TIFFField cmpField, TIFFField resultField) {
+            if (cmpField.GetFieldType() == TIFFField.TIFF_LONG) {
+                NUnit.Framework.Assert.AreEqual(cmpField.GetAsLongs(), resultField.GetAsLongs());
+            }
+            else {
+                if (cmpField.GetFieldType() == TIFFField.TIFF_BYTE) {
+                    NUnit.Framework.Assert.AreEqual(cmpField.GetAsBytes(), resultField.GetAsBytes());
+                }
+                else {
+                    if (cmpField.GetFieldType() == TIFFField.TIFF_SBYTE) {
+                        NUnit.Framework.Assert.AreEqual(cmpField.GetAsBytes(), resultField.GetAsBytes());
+                    }
+                    else {
+                        if (cmpField.GetFieldType() == TIFFField.TIFF_SHORT) {
+                            NUnit.Framework.Assert.AreEqual(cmpField.GetAsChars(), resultField.GetAsChars());
+                        }
+                        else {
+                            if (cmpField.GetFieldType() == TIFFField.TIFF_SLONG) {
+                                NUnit.Framework.Assert.AreEqual(cmpField.GetAsInts(), resultField.GetAsInts());
+                            }
+                            else {
+                                if (cmpField.GetFieldType() == TIFFField.TIFF_SSHORT) {
+                                    NUnit.Framework.Assert.AreEqual(cmpField.GetAsChars(), resultField.GetAsChars());
+                                }
+                                else {
+                                    if (cmpField.GetFieldType() == TIFFField.TIFF_UNDEFINED) {
+                                        NUnit.Framework.Assert.AreEqual(cmpField.GetAsBytes(), resultField.GetAsBytes());
+                                    }
+                                    else {
+                                        if (cmpField.GetFieldType() == TIFFField.TIFF_DOUBLE) {
+                                            NUnit.Framework.Assert.AreEqual(cmpField.GetAsDoubles(), resultField.GetAsDoubles());
+                                        }
+                                        else {
+                                            if (cmpField.GetFieldType() == TIFFField.TIFF_FLOAT) {
+                                                NUnit.Framework.Assert.AreEqual(cmpField.GetAsFloats(), resultField.GetAsFloats());
+                                            }
+                                            else {
+                                                if (cmpField.GetFieldType() == TIFFField.TIFF_RATIONAL) {
+                                                    NUnit.Framework.Assert.AreEqual(cmpField.GetAsRationals(), resultField.GetAsRationals());
+                                                }
+                                                else {
+                                                    if (cmpField.GetFieldType() == TIFFField.TIFF_SRATIONAL) {
+                                                        NUnit.Framework.Assert.AreEqual(cmpField.GetAsSRationals(), resultField.GetAsSRationals());
+                                                    }
+                                                    else {
+                                                        if (cmpField.GetFieldType() == TIFFField.TIFF_ASCII) {
+                                                            NUnit.Framework.Assert.AreEqual(cmpField.GetAsStrings(), resultField.GetAsStrings());
+                                                        }
+                                                        else {
+                                                            NUnit.Framework.Assert.AreEqual(cmpField.GetAsBytes(), resultField.GetAsBytes());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CompareImageData(TIFFDirectory cmpDir, TIFFDirectory resultDir, byte[] cmpBytes, byte[] resultBytes
+            ) {
+            NUnit.Framework.Assert.IsTrue(cmpDir.IsTagPresent(TIFFConstants.TIFFTAG_STRIPOFFSETS));
+            NUnit.Framework.Assert.IsTrue(cmpDir.IsTagPresent(TIFFConstants.TIFFTAG_STRIPBYTECOUNTS));
+            NUnit.Framework.Assert.IsTrue(resultDir.IsTagPresent(TIFFConstants.TIFFTAG_STRIPOFFSETS));
+            NUnit.Framework.Assert.IsTrue(resultDir.IsTagPresent(TIFFConstants.TIFFTAG_STRIPBYTECOUNTS));
+            long[] cmpImageOffsets = cmpDir.GetField(TIFFConstants.TIFFTAG_STRIPOFFSETS).GetAsLongs();
+            long[] cmpStripByteCountsArray = cmpDir.GetField(TIFFConstants.TIFFTAG_STRIPOFFSETS).GetAsLongs();
+            long[] resultImageOffsets = resultDir.GetField(TIFFConstants.TIFFTAG_STRIPOFFSETS).GetAsLongs();
+            long[] resultStripByteCountsArray = resultDir.GetField(TIFFConstants.TIFFTAG_STRIPOFFSETS).GetAsLongs();
+            NUnit.Framework.Assert.AreEqual(cmpImageOffsets.Length, resultImageOffsets.Length);
+            NUnit.Framework.Assert.AreEqual(cmpStripByteCountsArray.Length, resultStripByteCountsArray.Length);
+            for (int i = 0; i < cmpImageOffsets.Length; ++i) {
+                int cmpOffset = (int)cmpImageOffsets[i];
+                int cmpCounts = (int)cmpStripByteCountsArray[i];
+                int resultOffset = (int)resultImageOffsets[i];
+                int resultCounts = (int)resultStripByteCountsArray[i];
+                NUnit.Framework.Assert.AreEqual(SubArray(cmpBytes, cmpOffset, (cmpOffset + cmpCounts - 1)), SubArray(resultBytes
+                    , resultOffset, (resultOffset + resultCounts - 1)));
+            }
+        }
+
+        private byte[] SubArray(byte[] array, int beg, int end) {
+            return JavaUtil.ArraysCopyOfRange(array, beg, end + 1);
         }
     }
 }

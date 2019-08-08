@@ -289,6 +289,16 @@ namespace iText.IO.Codec {
             return (double[])data;
         }
 
+        /// <summary>Returns TIFF_ASCII data as an array of strings.</summary>
+        /// <remarks>
+        /// Returns TIFF_ASCII data as an array of strings.
+        /// <p> A ClassCastException will be thrown if the field is not
+        /// of type TIFF_ASCII.
+        /// </remarks>
+        public virtual String[] GetAsStrings() {
+            return (String[])data;
+        }
+
         /// <summary>Returns TIFF_SRATIONAL data as an array of 2-element arrays of ints.</summary>
         /// <remarks>
         /// Returns TIFF_SRATIONAL data as an array of 2-element arrays of ints.

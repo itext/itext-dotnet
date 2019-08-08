@@ -41,6 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO.Codec;
+using iText.IO.Source;
 
 namespace iText.IO.Image {
     public class TiffTest {
@@ -99,6 +102,17 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GetStringDataFromTiff() {
+            byte[] bytes = File.ReadAllBytes(Path.Combine(sourceFolder, "img_cmyk.tif"));
+            TIFFDirectory dir = new TIFFDirectory(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                (bytes)), 0);
+            String[] stringArray = new String[] { "iText? 7.1.7-SNAPSHOT ?2000-2019 iText Group NV (AGPL-version)\u0000"
+                 };
+            NUnit.Framework.Assert.AreEqual(stringArray, dir.GetField(305).GetAsStrings());
         }
     }
 }
