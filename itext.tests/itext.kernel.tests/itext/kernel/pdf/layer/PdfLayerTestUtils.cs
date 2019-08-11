@@ -41,12 +41,53 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Layer {
     internal class PdfLayerTestUtils {
-        public static void AddTextInsideLayer(IPdfOCG layer, PdfCanvas canvas, String text, float x, float y) {
-            canvas.BeginLayer(layer).BeginText().MoveText(x, y).ShowText(text).EndText().EndLayer();
+        internal static void AddTextInsideLayer(IPdfOCG layer, PdfCanvas canvas, String text, float x, float y) {
+            if (layer != null) {
+                canvas.BeginLayer(layer);
+            }
+            canvas.BeginText().MoveText(x, y).ShowText(text).EndText();
+            if (layer != null) {
+                canvas.EndLayer();
+            }
+        }
+
+        internal static PdfLayer PrepareNewLayer() {
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            return new PdfLayer("layer1", dummyDoc);
+        }
+
+        internal static PdfLayer PrepareLayerDesignIntent() {
+            PdfLayer pdfLayer = PrepareNewLayer();
+            pdfLayer.SetIntents(JavaCollectionsUtil.SingletonList(PdfName.Design));
+            return pdfLayer;
+        }
+
+        internal static PdfLayer PrepareLayerDesignAndCustomIntent(PdfName custom) {
+            PdfLayer pdfLayer = PrepareNewLayer();
+            pdfLayer.SetIntents(JavaUtil.ArraysAsList(PdfName.Design, custom));
+            return pdfLayer;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        internal static void CompareLayers(String outPdf, String cmpPdf) {
+            ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
+            System.Console.Out.WriteLine();
+            using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
+                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
+                    PdfDictionary outOCP = outDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
+                    PdfDictionary cmpOCP = cmpDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
+                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outOCP, cmpOCP));
+                }
+            }
         }
     }
 }

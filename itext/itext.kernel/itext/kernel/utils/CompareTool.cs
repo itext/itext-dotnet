@@ -654,6 +654,112 @@ namespace iText.Kernel.Utils {
             return CompareDictionariesExtended(outDict, cmpDict, null, null);
         }
 
+        /// <summary>Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents.
+        ///     </summary>
+        /// <remarks>
+        /// Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents. You can roughly
+        /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
+        /// <p>
+        /// Both out and cmp
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// shall have indirect references.
+        /// <p>
+        /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
+        /// simply comparing their page numbers. This behavior can be disabled by calling
+        /// <see cref="DisableCachedPagesComparison()"/>
+        /// .
+        /// <p>
+        /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outDict">
+        /// an indirect
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from the output file, which is to be compared to cmp-file dictionary.
+        /// </param>
+        /// <param name="cmpDict">
+        /// an indirect
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from the cmp-file file, which is to be compared to output file dictionary.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="CompareResult"/>
+        /// instance containing differences between the two dictionaries,
+        /// or
+        /// <see langword="null"/>
+        /// if dictionaries are equal.
+        /// </returns>
+        public virtual CompareTool.CompareResult CompareDictionariesStructure(PdfDictionary outDict, PdfDictionary
+             cmpDict) {
+            return CompareDictionariesStructure(outDict, cmpDict, null);
+        }
+
+        /// <summary>Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents.
+        ///     </summary>
+        /// <remarks>
+        /// Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents. You can roughly
+        /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
+        /// <p>
+        /// Both out and cmp
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// shall have indirect references.
+        /// <p>
+        /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
+        /// simply comparing their page numbers. This behavior can be disabled by calling
+        /// <see cref="DisableCachedPagesComparison()"/>
+        /// .
+        /// <p>
+        /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outDict">
+        /// an indirect
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from the output file, which is to be compared to cmp-file dictionary.
+        /// </param>
+        /// <param name="cmpDict">
+        /// an indirect
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from the cmp-file file, which is to be compared to output file dictionary.
+        /// </param>
+        /// <param name="excludedKeys">
+        /// a
+        /// <see cref="Java.Util.Set{E}"/>
+        /// of names that designate entries from
+        /// <paramref name="outDict"/>
+        /// and
+        /// <paramref name="cmpDict"/>
+        /// dictionaries
+        /// which are to be skipped during comparison.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="CompareResult"/>
+        /// instance containing differences between the two dictionaries,
+        /// or
+        /// <see langword="null"/>
+        /// if dictionaries are equal.
+        /// </returns>
+        public virtual CompareTool.CompareResult CompareDictionariesStructure(PdfDictionary outDict, PdfDictionary
+             cmpDict, ICollection<PdfName> excludedKeys) {
+            if (outDict.GetIndirectReference() == null || cmpDict.GetIndirectReference() == null) {
+                throw new ArgumentException("The 'outDict' and 'cmpDict' objects shall have indirect references.");
+            }
+            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpDict.GetIndirectReference(), outDict.GetIndirectReference
+                ());
+            if (!CompareDictionariesExtended(outDict, cmpDict, currentPath, compareResult, excludedKeys)) {
+                System.Diagnostics.Debug.Assert(!compareResult.IsOk());
+                System.Console.Out.WriteLine(compareResult.GetReport());
+                return compareResult;
+            }
+            System.Diagnostics.Debug.Assert(compareResult.IsOk());
+            return null;
+        }
+
         /// <summary>Simple method that compares two given PdfStreams by content.</summary>
         /// <remarks>
         /// Simple method that compares two given PdfStreams by content. This is "deep" comparing, which means that all

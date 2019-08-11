@@ -87,6 +87,14 @@ namespace iText.Test {
             DeleteDirectoryContents(path, true);
         }
 
+        public static void PrintOutCmpPdfNameAndDir(String outPdf, String cmpPdf) {
+            PrintPathToConsole(outPdf, "Out pdf: ");
+            PrintPathToConsole(cmpPdf, "Cmp pdf: ");
+            Console.WriteLine();
+            PrintPathToConsole(new FileInfo(outPdf).DirectoryName, "Out file folder: ");
+            PrintPathToConsole(new FileInfo(cmpPdf).DirectoryName, "Cmp file folder: ");
+        }
+
         public static void PrintOutputPdfNameAndDir(String pdfName) {
             PrintPathToConsole(pdfName, "Output PDF: ");
             PrintPathToConsole(new FileInfo(pdfName).DirectoryName, "Output PDF folder: ");
@@ -100,16 +108,15 @@ namespace iText.Test {
             return File.ReadAllBytes(filename);
         }
 
-        protected virtual String CreateStringByEscaped(byte[] bytes)
-        {
+        protected virtual String CreateStringByEscaped(byte[] bytes) {
             String[] chars = PdfEncodings.ConvertToString(bytes, null).Substring(1).Split('#');
             StringBuilder buf = new StringBuilder(chars.Length);
-            foreach (String ch in chars)
-            {
+            foreach (String ch in chars) {
                 if (ch.Length == 0) continue;
                 int b = Convert.ToInt32(ch, 16);
                 buf.Append((char) b);
             }
+
             return buf.ToString();
         }
 
@@ -119,9 +126,11 @@ namespace iText.Test {
                     DeleteDirectoryContents(d, false);
                     Directory.Delete(d);
                 }
+
                 foreach (string f in Directory.GetFiles(path)) {
                     File.Delete(f);
                 }
+
                 if (removeParentDirectory) {
                     Directory.Delete(path);
                 }
