@@ -289,6 +289,15 @@ namespace iText.Layout.Renderer {
                     , e.Message));
             }
             catch (Exception e) {
+                // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
+                //
+                // If typography utils throws an exception at this point, we consider it as unrecoverable situation for
+                // its callers (layouting methods). Presence of typography module in class path is checked before.
+                // It's might be more suitable to wrap checked exceptions at a bit higher level, but we do it here for
+                // the sake of convenience.
+                //
+                // The RuntimeException exception is used instead of, for example, PdfException, because failure here is
+                // unexpected and is not connected to PDF documents processing.
                 throw new Exception(e.ToString(), e);
             }
             return null;
@@ -306,6 +315,15 @@ namespace iText.Layout.Renderer {
                 logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (Exception exc) {
+                // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
+                //
+                // If typography utils throws an exception at this point, we consider it as unrecoverable situation for
+                // its callers (layouting methods). Presence of typography module in class path is checked before.
+                // It's might be more suitable to wrap checked exceptions at a bit higher level, but we do it here for
+                // the sake of convenience.
+                //
+                // The RuntimeException exception is used instead of, for example, PdfException, because failure here is
+                // unexpected and is not connected to PDF documents processing.
                 throw new Exception(exc.ToString(), exc);
             }
             return null;
