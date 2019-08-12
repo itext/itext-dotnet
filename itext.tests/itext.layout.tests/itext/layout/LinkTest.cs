@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -276,6 +278,29 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LinkWithCustomRectangleTest01() {
+            String outFileName = destinationFolder + "linkWithCustomRectangleTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkWithCustomRectangleTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            String text = "Hello World";
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
+            Link linkByAnnotation = new Link(text, annotation);
+            doc.Add(new Paragraph(linkByAnnotation));
+            annotation.SetRectangle(new PdfArray(new Rectangle(100, 100, 20, 20)));
+            Link linkByChangedAnnotation = new Link(text, annotation);
+            doc.Add(new Paragraph(linkByChangedAnnotation));
+            Link linkByAction = new Link(text, action);
+            doc.Add(new Paragraph(linkByAction));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
     }
 }
