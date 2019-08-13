@@ -1344,18 +1344,19 @@ namespace iText.Layout.Renderer {
         }
 
         public override MinMaxWidth GetMinMaxWidth() {
-            InitializeTableLayoutBorders();
+            if (isOriginalNonSplitRenderer) {
+                InitializeTableLayoutBorders();
+            }
             float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
             TableWidths tableWidths = new TableWidths(this, MinMaxWidthUtils.GetInfWidth(), true, rightMaxBorder, leftMaxBorder
                 );
-            float[] columns = tableWidths.Layout();
-            float minWidth = tableWidths.GetMinWidth();
-            CleanTableLayoutBorders();
             float maxColTotalWidth = 0;
+            float[] columns = isOriginalNonSplitRenderer ? tableWidths.Layout() : countedColumnWidth;
             foreach (float column in columns) {
                 maxColTotalWidth += column;
             }
+            float minWidth = isOriginalNonSplitRenderer ? tableWidths.GetMinWidth() : maxColTotalWidth;
             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
             if (!marginRightUV.IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
@@ -1396,17 +1397,6 @@ namespace iText.Layout.Renderer {
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);
             CorrectRowRange();
-        }
-
-        private void CleanTableLayoutBorders() {
-            footerRenderer = null;
-            headerRenderer = null;
-            // we may have deleted empty rows and now need to update table's rowrange
-            this.rowRange = new Table.RowRange(rowRange.GetStartRow(), bordersHandler.GetFinishRow());
-            //TODO do we need it?
-            // delete set properties
-            DeleteOwnProperty(Property.BORDER_BOTTOM);
-            DeleteOwnProperty(Property.BORDER_TOP);
         }
 
         private void CorrectRowRange() {

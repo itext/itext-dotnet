@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -50,6 +51,8 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Test;
@@ -2191,6 +2194,45 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void SplitTableMinMaxWidthTest01() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2);
+            for (int i = 0; i < 26; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("abba a")));
+                table.AddCell(new Cell().Add(new Paragraph("ab ab ab")));
+            }
+            // not enough to place even if min-width approach is used
+            float areaWidth = 20;
+            LayoutResult result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(
+                new LayoutArea(1, new Rectangle(areaWidth, 100))));
+            TableRenderer overflowRenderer = (TableRenderer)result.GetOverflowRenderer();
+            MinMaxWidth minMaxWidth = overflowRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(result.GetOccupiedArea().GetBBox().GetWidth(), minMaxWidth.GetMaxWidth(), 
+                0.0001);
+            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMaxWidth(), minMaxWidth.GetMinWidth(), 0.0001);
+            // not enough to place using max-width approach, but more than required for min-width approach
+            areaWidth = 70;
+            result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(new LayoutArea
+                (1, new Rectangle(areaWidth, 100))));
+            overflowRenderer = (TableRenderer)result.GetOverflowRenderer();
+            minMaxWidth = overflowRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(result.GetOccupiedArea().GetBBox().GetWidth(), minMaxWidth.GetMaxWidth(), 
+                0.0001);
+            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMaxWidth(), minMaxWidth.GetMinWidth(), 0.0001);
+            // enough to place using max-width approach
+            areaWidth = 400f;
+            result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(new LayoutArea
+                (1, new Rectangle(areaWidth, 100))));
+            overflowRenderer = (TableRenderer)result.GetOverflowRenderer();
+            minMaxWidth = overflowRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(result.GetOccupiedArea().GetBBox().GetWidth(), minMaxWidth.GetMaxWidth(), 
+                0.0001);
+            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMaxWidth(), minMaxWidth.GetMinWidth(), 0.0001);
         }
 
         /// <exception cref="System.IO.IOException"/>
