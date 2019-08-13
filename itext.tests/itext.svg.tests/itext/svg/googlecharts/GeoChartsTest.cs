@@ -65,7 +65,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Geo_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "geo_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "geo_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -74,7 +74,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Geo_colored_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "geo_colored_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "geo_colored_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -83,7 +83,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Geo_marker_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "geo_marker_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "geo_marker_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -92,7 +92,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Geo_propontional_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "geo_propontional_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "geo_propontional_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -101,7 +101,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Geo_text_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "geo_text_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "geo_text_chart");
         }
     }
 }

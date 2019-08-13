@@ -64,7 +64,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_borders_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_borders_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_borders_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -72,7 +72,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -81,7 +81,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 46)]
         public virtual void Sankey_colored_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_colored_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_colored_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -90,7 +90,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         public virtual void Sankey_fonts_chart() {
             // TODO DEVSIX-2905
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_fonts_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_fonts_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -98,7 +98,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_multilevel_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_multilevel_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_multilevel_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -106,7 +106,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_nodes_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "sankey_nodes_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "sankey_nodes_chart");
         }
     }
 }

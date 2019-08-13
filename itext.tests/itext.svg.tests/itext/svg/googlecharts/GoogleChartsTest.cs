@@ -67,7 +67,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BarChart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "bar_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "bar_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -76,7 +76,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Annotation_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "annotation_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "annotation_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -121,7 +121,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Candlestick_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "candlestick_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "candlestick_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -142,7 +142,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
         public virtual void Diff_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "diff_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "diff_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -150,7 +150,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Donut_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "donut_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "donut_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -158,7 +158,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Waterfall_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "waterfall_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "waterfall_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -166,7 +166,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Histogram_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "histogram_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "histogram_chart");
         }
     }
 }

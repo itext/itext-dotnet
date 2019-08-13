@@ -65,7 +65,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Treemaps_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "treemaps_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -74,7 +74,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Treemaps2_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "treemaps2_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps2_chart");
         }
     }
 }

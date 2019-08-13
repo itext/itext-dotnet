@@ -75,7 +75,7 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 4)]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 4)]
         public virtual void SymbolTest() {
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "symbol");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "symbol");
         }
     }
 }

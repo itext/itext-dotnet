@@ -71,7 +71,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void MarkerTest() {
             //TODO: update when DEVSIX-2262, 2860 fixed
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "marker");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -79,7 +79,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void Markers_in_different_elements() {
             //TODO: update when DEVSIX-2262, 2860 and DEVSIX-2719 fixed
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "Markers_in_elements");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "Markers_in_elements");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -87,7 +87,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void MarkerUnits() {
             //TODO: update when DEVSIX-2262, 2860 fixed
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "marker_Units");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker_Units");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -95,7 +95,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void Marker_RefXY_Orient() {
             //TODO: update when DEVSIX-2262,2860 fixed
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "marker_RefXY_orient");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker_RefXY_orient");
         }
     }
 }

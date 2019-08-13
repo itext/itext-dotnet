@@ -66,70 +66,70 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RectClipPathComplexTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_rect_complex");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_rect_complex");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RectClipPathSimpleTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_rect_simple");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_rect_simple");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CircleClipPathComplexTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_circle_complex");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_circle_complex");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CircleClipPathSimpleTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_circle_simple");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_circle_simple");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultiClipPathComplexTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_multi_complex");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_multi_complex");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MoveClipPathTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_move");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_move");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MoveClipPathRuleMultipleTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clippath_rule_multiple");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_rule_multiple");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClipRule() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipRule");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipRule");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClipPathRuleParameterVsFillRule() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipPathRuleParameterVsFillRule");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRuleParameterVsFillRule");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClipPathRuleEvenoddNonzero() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipPathRuleEvenoddNonzero");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRuleEvenoddNonzero");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -138,7 +138,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ClipPathCss() {
             //TODO: update after DEVSIX-2827
             properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipPathCss", properties);
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathCss", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -146,7 +146,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ClipPathCssProperty() {
             properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipPathCssProperty", properties);
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathCssProperty", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -156,7 +156,7 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 27)]
         public virtual void ClipPathRulesCombined() {
             //TODO: update after DEVSIX-2377
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "clipPathRulesCombined");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRulesCombined");
         }
     }
 }

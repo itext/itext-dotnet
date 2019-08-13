@@ -60,21 +60,21 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalLineStrokeTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeWidthTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void Advanced_stroke_Test() {
             //TODO: update cmp-file after DEVSIX-2258
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke_advanced");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke_advanced");
         }
     }
 }

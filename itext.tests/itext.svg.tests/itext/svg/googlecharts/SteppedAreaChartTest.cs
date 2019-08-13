@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Stepped_area_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "stepped_area_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "stepped_area_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Stepped_area2_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "stepped_area2_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "stepped_area2_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Stepped_area3_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "stepped_area3_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "stepped_area3_chart");
         }
     }
 }

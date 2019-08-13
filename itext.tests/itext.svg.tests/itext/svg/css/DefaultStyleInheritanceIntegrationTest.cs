@@ -62,7 +62,7 @@ namespace iText.Svg.Css {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleGroupInheritanceTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "simpleGroupInheritance");
+            ConvertAndCompare(sourceFolder, destinationFolder, "simpleGroupInheritance");
         }
 
         //Inheritance in use tags
@@ -70,7 +70,7 @@ namespace iText.Svg.Css {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UseFillInheritanceTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "useFillInheritance");
+            ConvertAndCompare(sourceFolder, destinationFolder, "useFillInheritance");
         }
 
         //Inheritance and g-tags
@@ -78,14 +78,14 @@ namespace iText.Svg.Css {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GroupInheritanceTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "groupInheritance");
+            ConvertAndCompare(sourceFolder, destinationFolder, "groupInheritance");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UseInheritanceNotOverridingTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "useInheritanceNotOverriding");
+            ConvertAndCompare(sourceFolder, destinationFolder, "useInheritanceNotOverriding");
         }
     }
 }

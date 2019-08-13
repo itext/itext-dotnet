@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gauge_charts() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "gauge_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "gauge_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gauge2_charts() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "gauge2_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "gauge2_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gauge3_charts() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "gauge3_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "gauge3_chart");
         }
     }
 }

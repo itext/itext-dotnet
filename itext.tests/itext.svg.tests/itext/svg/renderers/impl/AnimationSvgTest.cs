@@ -74,7 +74,7 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Animation() {
             //TODO: update when DEVSIX-2282 fixed
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "animation");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "animation");
         }
     }
 }

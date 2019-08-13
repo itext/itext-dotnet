@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Trendlines_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "trendlines_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Trendlines2_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "trendlines2_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines2_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Trendlines3_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "trendlines3_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines3_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -86,7 +86,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Trendlines4_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "trendlines4_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines4_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -94,7 +94,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Trendlines5_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "trendlines5_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines5_chart");
         }
     }
 }

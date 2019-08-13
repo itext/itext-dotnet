@@ -73,7 +73,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void MaskBasic() {
             //TODO: update after DEVSIX-2378 implementation
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "maskBasic", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskBasic", properties);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void MaskWithGradient() {
             //TODO: update after DEVSIX-2378 implementation
-            ConvertAndCompareSinglePageVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradient", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradient", properties);
         }
     }
 }

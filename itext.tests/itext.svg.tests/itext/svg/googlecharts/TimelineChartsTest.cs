@@ -65,7 +65,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Timeline_advanced_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "timeline_advanced_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "timeline_advanced_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -85,7 +85,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Timeline_labeled_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "timeline_labeled_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "timeline_labeled_chart");
         }
     }
 }

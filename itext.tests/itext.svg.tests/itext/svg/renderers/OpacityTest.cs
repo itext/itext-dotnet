@@ -60,21 +60,21 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestOpacitySimple() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_simple");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_simple");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestOpacityRGBA() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_rgba");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_rgba");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestOpacityComplex() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_complex");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacity_complex");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -82,7 +82,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void TestRGBA() {
             //TODO: update after DEVSIX-2673 fix
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_rgba");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_rgba");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -91,7 +91,7 @@ namespace iText.Svg.Renderers {
         public virtual void TestFillOpacityWithComma() {
             NUnit.Framework.Assert.That(() =>  {
                 //TODO DEVSIX-2678
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "testFillOpacityWithComma");
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testFillOpacityWithComma");
             }
             , NUnit.Framework.Throws.InstanceOf<FormatException>())
 ;
@@ -103,7 +103,7 @@ namespace iText.Svg.Renderers {
         public virtual void TestFillOpacityWithPercents() {
             NUnit.Framework.Assert.That(() =>  {
                 //TODO DEVSIX-2678
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "testFillOpacityWithPercents");
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testFillOpacityWithPercents");
             }
             , NUnit.Framework.Throws.InstanceOf<FormatException>())
 ;
@@ -114,7 +114,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void TestFillOpacity() {
             //TODO: update after DEVSIX-2678 fix
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_fill_opacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_fill_opacity");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -123,7 +123,7 @@ namespace iText.Svg.Renderers {
         public virtual void TestStrokeOpacityWithComma() {
             NUnit.Framework.Assert.That(() =>  {
                 //TODO DEVSIX-2679
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "testStrokeOpacityWithComma");
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testStrokeOpacityWithComma");
             }
             , NUnit.Framework.Throws.InstanceOf<Exception>())
 ;
@@ -135,7 +135,7 @@ namespace iText.Svg.Renderers {
         public virtual void TestStrokeOpacityWithPercents() {
             NUnit.Framework.Assert.That(() =>  {
                 //TODO DEVSIX-2679
-                ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "testStrokeOpacityWithPercents");
+                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testStrokeOpacityWithPercents");
             }
             , NUnit.Framework.Throws.InstanceOf<FormatException>())
 ;
@@ -146,7 +146,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void TestStrokeOpacity() {
             //TODO: update after DEVSIX-2679 fix
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_stroke_opacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_stroke_opacity");
         }
     }
 }

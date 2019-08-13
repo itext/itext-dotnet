@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Pie_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pie_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "pie_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Pie3D_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pie3D_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "pie3D_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PieHole_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pieHole_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "pieHole_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -86,7 +86,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Rotating_pie_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "rotating_pie_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "rotating_pie_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -94,7 +94,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PieChart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "pieChart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "pieChart");
         }
     }
 }

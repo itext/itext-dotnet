@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Exploding_slice_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "exploding_slice_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "exploding_slice_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Removing_slice_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "removing_slice_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "removing_slice_chart");
         }
     }
 }

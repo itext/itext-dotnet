@@ -64,7 +64,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void WordTrees_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "wordTrees_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -73,7 +73,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees2_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "wordTrees2_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -82,7 +82,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees3_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "wordTrees3_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -91,7 +91,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void WordTrees4_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "wordTrees4_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4_chart");
         }
     }
 }

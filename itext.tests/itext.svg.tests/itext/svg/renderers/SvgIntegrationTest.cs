@@ -119,14 +119,14 @@ namespace iText.Svg.Renderers {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareVisually(String src, String dest, String fileName) {
+        public virtual void ConvertAndCompare(String src, String dest, String fileName) {
             Convert(src + fileName + ".svg", dest + fileName + ".pdf");
             Compare(fileName, src, dest);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareSinglePageStructurally(String src, String dest, String fileName) {
+        public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
             ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
                 (dest + fileName + ".pdf", FileMode.Create));
             Compare(fileName, src, dest);
@@ -134,46 +134,18 @@ namespace iText.Svg.Renderers {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareSinglePageStructurally(String src, String dest, String fileName, ISvgConverterProperties
+        public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName, ISvgConverterProperties
              properties) {
             ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
                 (dest + fileName + ".pdf", FileMode.Create), properties);
-            Compare(fileName, src, dest);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareSinglePageVisually(String src, String dest, String fileName) {
-            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (dest + fileName + ".pdf", FileMode.Create));
-            Compare(fileName, src, dest);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareSinglePageVisually(String src, String dest, String fileName, ISvgConverterProperties
-             properties) {
-            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (dest + fileName + ".pdf", FileMode.Create), properties);
-            Compare(fileName, src, dest);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        public virtual void ConvertAndCompareStructurally(String src, String dest, String fileName) {
-            Convert(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream(dest + fileName
-                 + ".pdf", FileMode.Create));
             Compare(fileName, src, dest);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         protected internal virtual void Compare(String filename, String sourceFolder, String destinationFolder) {
-            String result = new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder + "cmp_"
-                 + filename + ".pdf", destinationFolder, "diff_");
-            if (result != null && !result.Contains("No visual differences")) {
-                NUnit.Framework.Assert.Fail(result);
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder
+                 + "cmp_" + filename + ".pdf", destinationFolder, "diff_"));
         }
     }
 }

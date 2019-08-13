@@ -142,7 +142,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void FontResolverIntegrationTest() {
             //TODO DEVSIX-2058
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontssvg");
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontssvg");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -150,7 +150,7 @@ namespace iText.Svg.Css {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ValidLocalFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "validLocalFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "validLocalFontTest");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -158,7 +158,7 @@ namespace iText.Svg.Css {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FontWeightTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontWeightTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontWeightTest");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -167,7 +167,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void GoogleFontsTest() {
             //TODO DEVSIX-2264: that test shall fail after the fix.
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "googleFontsTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "googleFontsTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -175,7 +175,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "externalCss");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -183,7 +183,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss");
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -192,7 +192,7 @@ namespace iText.Svg.Css {
         public virtual void SvgWithExternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
             // Take a note this method differs from the one used in Default Page test
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss");
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -200,7 +200,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "internalCss_custom");
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -208,7 +208,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "externalCss_palette");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette");
         }
     }
 }

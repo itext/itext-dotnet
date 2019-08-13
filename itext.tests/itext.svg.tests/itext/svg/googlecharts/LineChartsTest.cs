@@ -62,7 +62,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "line_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "line_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_classic_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "line_classic_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "line_classic_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_material_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "line_material_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "line_material_chart");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -86,7 +86,7 @@ namespace iText.Svg.Googlecharts {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_topX_chart() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "line_topX_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "line_topX_chart");
         }
     }
 }
