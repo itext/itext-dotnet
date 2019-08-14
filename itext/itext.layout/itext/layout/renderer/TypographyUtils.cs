@@ -54,8 +54,8 @@ using iText.Kernel.Font;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    internal sealed class TypographyUtils {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(TypographyUtils));
+    public sealed class TypographyUtils {
+        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TypographyUtils));
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
 
@@ -126,6 +126,15 @@ namespace iText.Layout.Renderer {
             }
             TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
             SUPPORTED_SCRIPTS = supportedScripts;
+        }
+
+        private TypographyUtils() {
+        }
+
+        /// <summary>Checks if layout module can access pdfCalligraph</summary>
+        /// <returns><code>true</code> if layout can access pdfCalligraph and <code>false</code> otherwise</returns>
+        public static bool IsPdfCalligraphAvailable() {
+            return TYPOGRAPHY_MODULE_INITIALIZED;
         }
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
@@ -261,10 +270,6 @@ namespace iText.Layout.Renderer {
                 return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, (Object)
                     null, new Type[] { typeof(Object) }, typographyConfig);
             }
-        }
-
-        internal static bool IsTypographyModuleInitialized() {
-            return TYPOGRAPHY_MODULE_INITIALIZED;
         }
 
         private static Object CallMethod(String className, String methodName, Type[] parameterTypes, params Object
