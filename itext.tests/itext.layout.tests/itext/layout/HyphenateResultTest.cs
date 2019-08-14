@@ -67,6 +67,12 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HindiHyphResult() {
+            //लाभहानि
+            TestHyphenateResult("hi", "लाभहानि", new int[] { 3 });
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SpacesTest01() {
             //Annuitätendarlehen
             TestHyphenateResult("de", "    Annuitätendarlehen", new int[] { 5, 7, 10, 13, 15 });
