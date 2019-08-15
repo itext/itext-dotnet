@@ -6,13 +6,13 @@
     <title>iText 7 Hyph</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
-    <licenseUrl>http://www.gnu.org/licenses/agpl.html</licenseUrl>
-    <projectUrl>http://itextpdf.com/</projectUrl>
-    <iconUrl>http://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+    <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
+    <projectUrl>https://itextpdf.com/</projectUrl>
+    <iconUrl>https://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>XML files that can be used for hyphenation with iText 7, an open source PDF library</description>
     <summary></summary>
-    <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
+    <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2019 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf hyphenation hyph</tags>
