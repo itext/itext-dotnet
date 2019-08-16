@@ -35,7 +35,7 @@ using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.XMP.Impl
 {
-	/// <summary>Utilities for <code>XMPNode</code>.</summary>
+	/// <summary>Utilities for <c>XMPNode</c>.</summary>
 	/// <since>Aug 28, 2006</since>
 	public sealed class XMPNodeUtils : XMPConst
 	{
@@ -440,19 +440,17 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>
-		/// After processing by ExpandXPath, a step can be of these forms:
-		/// <ul>
-		/// <li>qualName - A top level property or struct field.
+		/// After processing by ExpandXPath, a step can be of certain forms described in documentation.
 		/// </summary>
 		/// <remarks>
 		/// After processing by ExpandXPath, a step can be of these forms:
 		/// <ul>
-		/// <li>qualName - A top level property or struct field.
-		/// <li>[index] - An element of an array.
-		/// <li>[last()] - The last element of an array.
-		/// <li>[qualName="value"] - An element in an array of structs, chosen by a field value.
-		/// <li>[?qualName="value"] - An element in an array, chosen by a qualifier value.
-		/// <li>?qualName - A general qualifier.
+		/// <li>qualName - A top level property or struct field.</li>
+		/// <li>[index] - An element of an array.</li>
+		/// <li>[last()] - The last element of an array.</li>
+		/// <li>[qualName="value"] - An element in an array of structs, chosen by a field value.</li>
+		/// <li>[?qualName="value"] - An element in an array, chosen by a qualifier value.</li>
+		/// <li>?qualName - A general qualifier.</li>
 		/// </ul>
 		/// Find the appropriate child node, resolving aliases, and optionally creating nodes.
 		/// </remarks>
@@ -785,16 +783,15 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>
-		/// <ol>
-		/// <li>Look for an exact match with the specific language.
+		/// Look for an exact match with the specific language.
 		/// </summary>
 		/// <remarks>
-		/// <ol>
-		/// <li>Look for an exact match with the specific language.
-		/// <li>If a generic language is given, look for partial matches.
-		/// <li>Look for an "x-default"-item.
-		/// <li>Choose the first item.
-		/// </ol>
+		/// <ul>
+		/// <li>Look for an exact match with the specific language.</li>
+		/// <li>If a generic language is given, look for partial matches.</li>
+		/// <li>Look for an "x-default"-item.</li>
+		/// <li>Choose the first item.</li>
+		/// </ul>
 		/// </remarks>
 		/// <param name="arrayNode">the alt text array node</param>
 		/// <param name="genericLang">the generic language</param>

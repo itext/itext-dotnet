@@ -522,21 +522,17 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>
-		/// Sorts the complete datamodel according to the following rules:
-		/// <ul>
-		/// <li>Nodes at one level are sorted by name, that is prefix + local name
-		/// <li>Starting at the root node the children and qualifier are sorted recursively,
-		/// which the following exceptions.
+		/// Sorts the complete datamodel according to the rules.
 		/// </summary>
 		/// <remarks>
 		/// Sorts the complete datamodel according to the following rules:
 		/// <ul>
-		/// <li>Nodes at one level are sorted by name, that is prefix + local name
+		/// <li>Nodes at one level are sorted by name, that is prefix + local name</li>
 		/// <li>Starting at the root node the children and qualifier are sorted recursively,
-		/// which the following exceptions.
-		/// <li>Sorting will not be used for arrays.
+		/// which the following exceptions.</li>
+		/// <li>Sorting will not be used for arrays.</li>
 		/// <li>Within qualifier "xml:lang" and/or "rdf:type" stay at the top in that order,
-		/// all others are sorted.
+		/// all others are sorted.</li>
 		/// </ul>
 		/// </remarks>
 		public virtual void Sort()

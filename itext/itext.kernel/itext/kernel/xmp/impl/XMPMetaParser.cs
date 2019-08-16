@@ -101,14 +101,16 @@ namespace iText.Kernel.XMP.Impl
 		/// Latin-1/ISO-8859-1 can be accepted when the input is a byte stream
 		/// (some old toolkits versions such packets). The stream is
 		/// then wrapped in another stream that converts Latin-1 to UTF-8.
-		/// <p>
+		/// <para>
 		/// If control characters shall be fixed, a reader is used that fixes the chars to spaces
 		/// (if the input is a byte stream is has to be read as character stream).
-		/// <p>
+		/// </para>
+		/// <para>
 		/// Both options reduce the performance of the parser.
+		/// </para>
 		/// </remarks>
 		/// <param name="input">
-		/// the input can be an <code>InputStream</code>, a <code>String</code> or
+		/// the input can be an <c>Stream</c>, a <c>String</c> or
 		/// a byte buffer containing the XMP packet.
 		/// </param>
 		/// <param name="options">the parsing options</param>
@@ -220,30 +222,30 @@ namespace iText.Kernel.XMP.Impl
 		/// is parsed (e.g. SVG). The XML parser counted all rdf:RDF and
 		/// pxmp:XMP_Packet nodes, and kept a pointer to the last one. If there is
 		/// more than one possible root use PickBestRoot to choose among them.
-		/// <p>
+		/// <para>
 		/// If there is a root node, try to extract the version of the previous XMP
-		/// toolkit.
-		/// <p>
+		/// toolkit.</para>
+		/// <para>
 		/// Pick the first x:xmpmeta among multiple root candidates. If there aren't
 		/// any, pick the first bare rdf:RDF if that is allowed. The returned root is
 		/// the rdf:RDF child if an x:xmpmeta element was chosen. The search is
 		/// breadth first, so a higher level candiate is chosen over a lower level
-		/// one that was textually earlier in the serialized XML.
+		/// one that was textually earlier in the serialized XML.</para>
 		/// </remarks>
 		/// <param name="root">the root of the xml document</param>
 		/// <param name="xmpmetaRequired">
 		/// flag if the xmpmeta-tag is still required, might be set
-		/// initially to <code>true</code>, if the parse option "REQUIRE_XMP_META" is set
+		/// initially to <c>true</c>, if the parse option "REQUIRE_XMP_META" is set
 		/// </param>
 		/// <param name="result">The result array that is filled during the recursive process.
 		/// 	</param>
 		/// <returns>
-		/// Returns an array that contains the result or <code>null</code>.
+		/// Returns an array that contains the result or <c>null</c>.
 		/// The array contains:
 		/// <ul>
-		/// <li>[0] - the rdf:RDF-node
-		/// <li>[1] - an object that is either XMP_RDF or XMP_PLAIN (the latter is decrecated)
-		/// <li>[2] - the body text of the xpacket-instruction.
+		/// <li>[0] - the rdf:RDF-node</li>
+		/// <li>[1] - an object that is either XMP_RDF or XMP_PLAIN (the latter is decrecated)</li>
+		/// <li>[2] - the body text of the xpacket-instruction.</li>
 		/// </ul>
 		/// </returns>
 		private static Object[] FindRootNode(XmlNode root, bool xmpmetaRequired, Object[] result) {
