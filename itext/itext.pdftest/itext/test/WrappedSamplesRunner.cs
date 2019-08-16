@@ -207,7 +207,12 @@ namespace iText.Test {
 
         private static bool IsIgnoredClassOrPackage(String fullName, RunnerSearchConfig searchConfig) {
             foreach (String ignoredPath in searchConfig.GetIgnoredPaths()) {
-                if (fullName.Contains(ignoredPath)) {
+                String filePath = Path.Combine(TestUtil.GetParentProjectDirectory(TestContext
+                        .CurrentContext.TestDirectory), 
+                    ignoredPath.Replace(".", "\\"));
+
+                if ((Directory.Exists(filePath) && fullName.Contains(ignoredPath))
+                    || (File.Exists(filePath + ".cs") && fullName.Equals(ignoredPath))) {
                     return true;
                 }
             }
