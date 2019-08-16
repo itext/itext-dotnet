@@ -35,7 +35,6 @@ namespace iText.Kernel.XMP.Options {
     /// Options for
     /// <see cref="iText.Kernel.XMP.XMPMetaFactory.SerializeToBuffer(iText.Kernel.XMP.XMPMeta, SerializeOptions)"/
     ///     >
-    /// .
     /// </summary>
     /// <since>24.01.2006</since>
     public sealed class SerializeOptions : iText.Kernel.XMP.Options.Options {

@@ -66,9 +66,8 @@ namespace iText.Kernel.Pdf {
     /// way to represent characters outside the printable ASCII character set.<br />
     /// This object is described in the 'Portable Document Format Reference Manual
     /// version 1.7' section 3.2.3 (page 53-56).
-    /// <p>
-    /// <see cref="PdfObject"/>
     /// </summary>
+    /// <seealso cref="PdfObject"/>
     public class PdfString : PdfPrimitiveObject {
         protected internal String value;
 

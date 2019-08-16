@@ -213,28 +213,28 @@ namespace iText.Kernel.Geom {
         /// <ul>
         /// <li>
         /// <see cref="TYPE_IDENTITY"/>
-        /// - new basis equals original one and zero translation</li>
+        /// - new basis equals original one and zero translation
         /// <li>
         /// <see cref="TYPE_TRANSLATION"/>
-        /// - translation vector isn't zero</li>
+        /// - translation vector isn't zero
         /// <li>
         /// <see cref="TYPE_UNIFORM_SCALE"/>
-        /// - vectors length of new basis equals</li>
+        /// - vectors length of new basis equals
         /// <li>
         /// <see cref="TYPE_GENERAL_SCALE"/>
-        /// - vectors length of new basis doesn't equal</li>
+        /// - vectors length of new basis doesn't equal
         /// <li>
         /// <see cref="TYPE_FLIP"/>
-        /// - new basis vector orientation differ from original one</li>
+        /// - new basis vector orientation differ from original one
         /// <li>
         /// <see cref="TYPE_QUADRANT_ROTATION"/>
-        /// - new basis is rotated by 90, 180, 270, or 360 degrees</li>
+        /// - new basis is rotated by 90, 180, 270, or 360 degrees
         /// <li>
         /// <see cref="TYPE_GENERAL_ROTATION"/>
-        /// - new basis is rotated by arbitrary angle</li>
+        /// - new basis is rotated by arbitrary angle
         /// <li>
         /// <see cref="TYPE_GENERAL_TRANSFORM"/>
-        /// - transformation can't be inversed</li>
+        /// - transformation can't be inversed
         /// </ul>
         /// </remarks>
         /// <returns>the type of this AffineTransform</returns>

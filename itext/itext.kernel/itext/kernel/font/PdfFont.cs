@@ -389,8 +389,10 @@ namespace iText.Kernel.Font {
         /// </summary>
         /// <remarks>
         /// Indicates if all the glyphs and widths for that particular
-        /// encoding should be included in the document. When set to <CODE>true</CODE>
-        /// only the glyphs used will be included in the font. When set to <CODE>false&lt;/CODE
+        /// encoding should be included in the document. When set to
+        /// <see langword="true"/>
+        /// only the glyphs used will be included in the font. When set to
+        /// <see langword="false"/>
         /// the full font will be included and all subset ranges will be removed.
         /// </remarks>
         /// <param name="subset">new value of property subset</param>

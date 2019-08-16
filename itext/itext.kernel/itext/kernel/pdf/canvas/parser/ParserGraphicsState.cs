@@ -58,7 +58,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
     public class ParserGraphicsState : CanvasGraphicsState {
         private Path clippingPath;
 
-        /// <summary>Internal empty & default constructor.</summary>
+        /// <summary>Internal empty and default constructor.</summary>
         internal ParserGraphicsState() {
         }
 

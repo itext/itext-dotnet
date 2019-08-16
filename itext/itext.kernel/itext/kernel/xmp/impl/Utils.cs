@@ -111,14 +111,9 @@ namespace iText.Kernel.XMP.Impl {
             return buffer.ToString();
         }
 
-        /// <summary>
-        /// Split the name and value parts for field and qualifier selectors:
-        /// <ul>
-        /// <li>[qualName="value"] - An element in an array of structs, chosen by a
-        /// field value.
-        /// </summary>
+        /// <summary>Split the name and value parts for field and qualifier selectors.</summary>
         /// <remarks>
-        /// Split the name and value parts for field and qualifier selectors:
+        /// Split the name and value parts for field and qualifier selectors. Following selectors are taken into account:
         /// <ul>
         /// <li>[qualName="value"] - An element in an array of structs, chosen by a
         /// field value.
@@ -266,9 +261,9 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>
         /// Check some requirements for an UUID:
         /// <ul>
-        /// <li>Length of the UUID is 32</li>
+        /// <li>Length of the UUID is 32
         /// <li>The Delimiter count is 4 and all the 4 delimiter are on their right
-        /// position (8,13,18,23)</li>
+        /// position (8,13,18,23)
         /// </ul>
         /// </summary>
         /// <param name="uuid">uuid to test</param>

@@ -47,19 +47,26 @@ using System.Text;
 using iText.Kernel.Font;
 
 namespace iText.Kernel.Pdf {
-    /// <summary><CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
-    ///     </summary>
-    /// <remarks>
-    /// <CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
+    /// <summary>
+    /// <see cref="PdfTextArray"/>
+    /// defines an array with displacements and
+    /// <see cref="PdfString"/>
+    /// -objects.
     /// <P>
-    /// A <CODE>PdfTextArray</CODE> is used with the operator <VAR>TJ</VAR> in <CODE>PdfCanvas</CODE>.
-    /// The first object in this array has to be a <CODE>PdfString</CODE>;
+    /// A
+    /// <see cref="PdfTextArray"/>
+    /// is used with the operator TJ in
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// .
+    /// The first object in this array has to be a
+    /// <see cref="PdfString"/>
+    /// ;
     /// see reference manual version 1.3 section 8.7.5, pages 346-347.
     /// OR
     /// see reference manual version 1.6 section 5.3.2, pages 378-379.
     /// To emit a more efficient array, we consolidate repeated numbers or strings into single array entries.
-    /// "add( 50 ); add( -50 );" will REMOVE the combined zero from the array.
-    /// </remarks>
+    /// For example: "add( 50 ); add( -50 );" will REMOVE the combined zero from the array.
+    /// </summary>
     public class PdfTextArray : PdfArray {
         private float lastNumber = float.NaN;
 

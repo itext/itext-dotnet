@@ -190,7 +190,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
         /// .
         /// The permissions can be combined by ORing them.
-        /// <p>
         /// </remarks>
         /// <param name="userPassword">the user password. Can be null or empty</param>
         /// <param name="ownerPassword">the owner password. Can be null or empty</param>
@@ -242,7 +241,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
         /// .
         /// The permissions can be combined by ORing them.
-        /// <p>
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
         /// <param name="permissions">the user permissions for each of the certificates</param>

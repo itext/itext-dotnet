@@ -1344,12 +1344,12 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Changes the <VAR>Flatness</VAR>.</summary>
+        /// <summary>Changes the Flatness.</summary>
         /// <remarks>
-        /// Changes the <VAR>Flatness</VAR>.
-        /// <br />
-        /// <VAR>Flatness</VAR> sets the maximum permitted distance in device pixels between the
-        /// mathematically correct path and an approximation constructed from straight line segments.<BR>
+        /// Changes the Flatness.
+        /// <p>
+        /// Flatness sets the maximum permitted distance in device pixels between the
+        /// mathematically correct path and an approximation constructed from straight line segments.
         /// </remarks>
         /// <param name="flatnessTolerance">a value</param>
         /// <returns>current canvas.</returns>

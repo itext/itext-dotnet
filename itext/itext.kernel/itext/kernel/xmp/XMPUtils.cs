@@ -131,9 +131,9 @@ namespace iText.Kernel.XMP {
             AppendProperties(source, dest, doAllProperties, replaceOldValues, false);
         }
 
-        /// <summary><p>Append properties from one XMP object to another.</summary>
+        /// <summary>Append properties from one XMP object to another.</summary>
         /// <remarks>
-        /// <p>Append properties from one XMP object to another.
+        /// Append properties from one XMP object to another.
         /// <p>XMPUtils#appendProperties was created to support the File Info dialog's Append button, and
         /// has been been generalized somewhat from those specific needs. It appends information from one
         /// XMP object (source) to another (dest). The default operation is to append only external

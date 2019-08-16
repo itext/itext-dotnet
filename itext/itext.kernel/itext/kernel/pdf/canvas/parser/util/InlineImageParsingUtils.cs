@@ -377,7 +377,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <summary>This method acts like a check that bytes that were parsed are really all image bytes.</summary>
         /// <remarks>
         /// This method acts like a check that bytes that were parsed are really all image bytes. If it's true,
-        /// then decoding will succeed, but if not all image bytes were read and "<ws>EI<ws>" bytes were just a part of the image,
+        /// then decoding will succeed, but if not all image bytes were read and "&lt;ws&gt;EI&lt;ws&gt;" bytes were just a part of the image,
         /// then decoding should fail.
         /// Not the best solution, but probably there is no better and more reliable way to check this.
         /// <p>

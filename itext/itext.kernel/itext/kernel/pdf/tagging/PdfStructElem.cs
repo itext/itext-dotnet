@@ -428,16 +428,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <ul>
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
-        /// for the International Phonetic Alphabet by the International Phonetic Association;</li>
+        /// for the International Phonetic Alphabet by the International Phonetic Association;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.x_sampa"/>
-        /// for Extended Speech Assessment Methods Phonetic Alphabet (X-SAMPA);</li>
+        /// for Extended Speech Assessment Methods Phonetic Alphabet (X-SAMPA);
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_pinyin"/>
-        /// for Pinyin Latin romanization (Mandarin);</li>
+        /// for Pinyin Latin romanization (Mandarin);
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_wadegile"/>
-        /// for Wade-Giles romanization (Mandarin).</li>
+        /// for Wade-Giles romanization (Mandarin).
         /// </ul>
         /// Other values may be used.
         /// </param>

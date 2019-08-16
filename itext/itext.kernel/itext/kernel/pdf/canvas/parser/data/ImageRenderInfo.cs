@@ -95,15 +95,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <li>get image bytes with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
         /// , these image bytes
-        /// represent native image, i.e you can write these bytes to disk and get just an usual image;</li>
+        /// represent native image, i.e you can write these bytes to disk and get just an usual image;
         /// <li>obtain PdfStream object which contains image dictionary with
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
-        /// method;</li>
+        /// method;
         /// <li>convert image to
         /// <see cref="Java.Awt.Image.BufferedImage"/>
         /// with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
-        /// ;</li>
+        /// ;
         /// </ul>
         /// </remarks>
         public virtual PdfImageXObject GetImage() {
