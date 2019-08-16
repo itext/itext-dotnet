@@ -1,0 +1,16 @@
+VeraPDF is open source software dual licensed for sustainability and reuse in accordance with PREFORMA’s requirements. 
+Other project outputs such as test corpora and documentation are issued under a Creative Commons license.
+
+MPL v2+
+The Mozilla Public License v2+ allows covered source code to be mixed with other files under a different, even proprietary license. 
+Code licensed under the MPL must remain under the MPL, and freely available in source form.
+Link: https://www.mozilla.org/MPL/2.0/
+
+GPL v3+
+The GNU General Public License v3 guarantees users the freedom to run, study, share (copy), and modify the software. 
+The copyleft quality of the GPLv3 requires those rights to be retained.
+Link: http://www.gnu.org/licenses/gpl-3.0.en.html
+
+CC-BY-4.0
+The Creative Commons is a public copyright license that enable the free distribution of an otherwise copyrighted work.
+Link: https://creativecommons.org/licenses/by/4.0/
