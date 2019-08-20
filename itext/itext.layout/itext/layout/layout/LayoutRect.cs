@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 namespace com.itextpdf.layout.layout
 {
+	[System.ObsoleteAttribute(@"Will be removed in iText 7.2. Use iText.Kernel.Geom.Rectangle instead.")]
 	public class LayoutRect
 	{
 		protected internal float x;
