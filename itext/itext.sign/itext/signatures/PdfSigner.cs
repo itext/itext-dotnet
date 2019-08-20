@@ -407,8 +407,9 @@ namespace iText.Signatures {
         /// <summary>Setter for the field lock dictionary.</summary>
         /// <remarks>
         /// Setter for the field lock dictionary.
-        /// <p><strong>Be aware:</strong> if a signature is created on an existing signature field,
-        /// then its /Lock dictionary takes the precedence (if it exists).</p>
+        /// <p>
+        /// <strong>Be aware:</strong> if a signature is created on an existing signature field,
+        /// then its /Lock dictionary takes the precedence (if it exists).
         /// </remarks>
         /// <param name="fieldLock">Field lock dictionary</param>
         public virtual void SetFieldLockDict(PdfSigFieldLock fieldLock) {

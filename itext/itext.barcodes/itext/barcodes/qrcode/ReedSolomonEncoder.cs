@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary><p>Implements Reed-Solomon encoding, as the name implies.</p></summary>
+    /// <summary>Implements Reed-Solomon encoding, as the name implies.</summary>
     /// <author>Sean Owen</author>
     /// <author>William Rucklidge</author>
     internal sealed class ReedSolomonEncoder {

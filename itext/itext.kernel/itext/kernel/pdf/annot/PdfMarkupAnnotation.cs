@@ -441,7 +441,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// <p>
         /// See ISO-320001, free text annotations (Table 174), line annotations (Table 175), polygon annotations (Table 178),
         /// and polyline annotations (Table 178) for the specific intent values for those types.
-        /// </p>
         /// </remarks>
         /// <param name="intent">
         /// a

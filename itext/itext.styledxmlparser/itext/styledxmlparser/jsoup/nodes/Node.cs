@@ -106,7 +106,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// which is a shortcut to the
         /// <see cref="AbsUrl(System.String)"/>
         /// method.
-        /// </p>
+        /// <p>
         /// E.g.:
         /// <blockquote><code>String url = a.attr("abs:href");</code></blockquote>
         /// </remarks>
@@ -203,7 +203,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <code>&lt;img src&gt;</code>).
         /// <p>
         /// E.g.: <code>String absUrl = linkEl.absUrl("href");</code>
-        /// </p>
         /// <p>
         /// If the attribute value is already absolute (i.e. it starts with a protocol, like
         /// <code>http://</code> or <code>https://</code> etc), and it successfully parses as a URL, the attribute is
@@ -211,13 +210,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="baseUri"/>
         /// , and made
         /// absolute using that.
-        /// </p>
         /// <p>
         /// As an alternate, you can use the
         /// <see cref="Attr(System.String)"/>
         /// method with the <code>abs:</code> prefix, e.g.:
         /// <code>String absUrl = linkEl.attr("abs:href");</code>
-        /// </p>
         /// </remarks>
         /// <param name="attributeKey">The attribute key</param>
         /// <returns>
@@ -413,10 +410,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// the node but keeping its children.
         /// <p>
         /// For example, with the input html:
-        /// </p>
         /// <p>
         /// <c>&lt;div&gt;One &lt;span&gt;Two &lt;b&gt;Three&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;</c>
-        /// </p>
+        /// <p>
         /// Calling
         /// <c>element.unwrap()</c>
         /// on the
@@ -424,7 +420,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// element will result in the html:
         /// <p>
         /// <c>&lt;div&gt;One Two &lt;b&gt;Three&lt;/b&gt;&lt;/div&gt;</c>
-        /// </p>
+        /// <p>
         /// and the
         /// <c>"Two "</c>
         /// 

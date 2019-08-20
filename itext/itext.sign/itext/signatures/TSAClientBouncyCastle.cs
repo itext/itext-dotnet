@@ -64,7 +64,6 @@ namespace iText.Signatures {
     /// <p>
     /// Created by Aiken Sam, 2006-11-15, refactored by Martin Brunecky, 07/15/2007
     /// for ease of subclassing.
-    /// </p>
     /// </remarks>
     public class TSAClientBouncyCastle : ITSAClient {
         /// <summary>The default value for the hash algorithm</summary>

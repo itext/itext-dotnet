@@ -1456,24 +1456,17 @@ namespace iText.Kernel.Pdf {
             catalog.AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
         }
 
-        /// <summary>
-        /// <p>
-        /// Adds file associated with PDF document as a whole and identifies the relationship between them.
-        /// </summary>
+        /// <summary>Adds file associated with PDF document as a whole and identifies the relationship between them.</summary>
         /// <remarks>
-        /// <p>
         /// Adds file associated with PDF document as a whole and identifies the relationship between them.
-        /// </p>
         /// <p>
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method is very similar to
         /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
         /// .
         /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document catalog.
-        /// </p>
         /// <p>
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="description">the file description</param>
         /// <param name="fs">file specification dictionary of associated file</param>

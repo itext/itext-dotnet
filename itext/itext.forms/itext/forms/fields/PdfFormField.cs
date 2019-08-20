@@ -1677,7 +1677,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// Returns the type of the <p>Parent</p> form field, or of the wrapped
+        /// Returns the type of the parent form field, or of the wrapped
         /// &lt;PdfDictionary&gt; object.
         /// </summary>
         /// <returns>

@@ -62,7 +62,6 @@ namespace iText.Kernel.Pdf {
     /// <p>
     /// Each approach is designed to be most suitable for specific modes of document processing. There are four document
     /// processing modes: reading, writing, stamping and append mode.
-    /// </p>
     /// <p>
     /// Reading mode: The
     /// <see cref="PdfDocument"/>
@@ -71,7 +70,6 @@ namespace iText.Kernel.Pdf {
     /// by
     /// <see cref="PdfDocument.PdfDocument(PdfReader)"/>
     /// constructor.
-    /// </p>
     /// <p>
     /// Writing mode: The
     /// <see cref="PdfDocument"/>
@@ -80,7 +78,6 @@ namespace iText.Kernel.Pdf {
     /// by
     /// <see cref="PdfDocument.PdfDocument(PdfWriter)"/>
     /// constructor.
-    /// </p>
     /// <p>
     /// Stamping mode: The
     /// <see cref="PdfDocument"/>
@@ -99,7 +96,6 @@ namespace iText.Kernel.Pdf {
     /// by the end of
     /// <see cref="PdfDocument.Close()"/>
     /// call.
-    /// </p>
     /// <p>
     /// Append mode: The
     /// <see cref="PdfDocument"/>
@@ -117,7 +113,6 @@ namespace iText.Kernel.Pdf {
     /// This mode preserves the document intact with all its data, but adds additional data at the end of the file,
     /// which "overrides" and introduces amends to the original document. In this mode it's not required to rewrite the
     /// complete document which can be highly beneficial for big PDF documents handling.
-    /// </p>
     /// <p>
     /// The
     /// <see cref="PageFlushingHelper"/>
@@ -127,7 +122,6 @@ namespace iText.Kernel.Pdf {
     /// memory but makes it impossible to modify it or read data from it. Whenever there is an attempt to modify or to fetch
     /// flushed object inner contents an exception will be thrown. Flushing is only possible for objects in the writing
     /// and stamping modes, also its possible to flush modified objects in append mode.
-    /// </p>
     /// <p>
     /// Released object is the one which has not been modified and has been "detached" from the
     /// <see cref="PdfDocument"/>
@@ -140,12 +134,10 @@ namespace iText.Kernel.Pdf {
     /// <see cref="PdfDocument.Close()"/>
     /// in stamping mode all released objects
     /// will be re-read.
-    /// </p>
     /// <p>
     /// The
     /// <see cref="PageFlushingHelper"/>
     /// class doesn't work with PdfADocument instances.
-    /// </p>
     /// </remarks>
     public class PageFlushingHelper {
         private static readonly PageFlushingHelper.DeepFlushingContext pageContext;
@@ -180,7 +172,6 @@ namespace iText.Kernel.Pdf {
         /// mode if new pages are added or existing pages are heavily modified and
         /// <see cref="AppendModeFlush(int)"/>
         /// is not enough.
-        /// </p>
         /// <p>
         /// This method is highly effective in freeing the memory and works properly for the vast majority of documents
         /// and use cases, however it can potentially cause failures. If document handling fails with exception after
@@ -190,12 +181,10 @@ namespace iText.Kernel.Pdf {
         /// or consider using append mode and
         /// <see cref="AppendModeFlush(int)"/>
         /// method).
-        /// </p>
         /// <p>
         /// The unsafety comes from the possibility of objects being shared between pages and the fact that object data
         /// cannot be read after the flushing. Whenever flushed object is attempted to be modified or its data is fetched
         /// the exception will be thrown (flushed object can be added to the other objects, though).
-        /// </p>
         /// <p>
         /// In stamping/append mode the issue occurs if some object is shared between two or more pages, and the first page
         /// is flushed, and later for processing of the second page this object is required to be read/modified. Normally only
@@ -205,19 +194,15 @@ namespace iText.Kernel.Pdf {
         /// page contents parsing: text extraction, any general
         /// <see cref="iText.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
         /// class usage, usage of pdfSweep addon.
-        /// </p>
         /// <p>
         /// In writing mode this method normally will work without issues: by default iText creates page objects in such way
         /// that they are independent from each other. Again, the resources can be shared, but as mentioned above
         /// it's safe to add already flushed resources to the other pages because this doesn't require reading data from them.
-        /// </p>
         /// <p>
         /// For append mode only modified objects are flushed, all others are released and can be re-read later on.
-        /// </p>
         /// <p>
         /// This method shall be used only when it's known that the page and its inner structures processing is finished.
         /// This includes reading data from pages, page modification and page handling via addons/utilities.
-        /// </p>
         /// </remarks>
         /// <param name="pageNum">the page number which low level objects structure is to be flushed to the output stream.
         ///     </param>
@@ -239,22 +224,18 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PageFlushingHelper"/>
         /// for more details on modes). In append mode modified objects will be kept in memory.
         /// The page and all its inner structure objects can be re-read again.
-        /// </p>
         /// <p>
         /// This method will not have any effect in the writing mode. It is also not advised to be used in stamping mode:
         /// even though it will indeed release the objects, they will be definitely re-read again on document closing, which
         /// would affect performance.
-        /// </p>
         /// <p>
         /// When using this method in append mode (or in stamping mode), be careful not to try to modify the object instances
         /// obtained before the releasing! See
         /// <see cref="PageFlushingHelper"/>
         /// for details on released objects state.
-        /// </p>
         /// <p>
         /// This method shall be used only when it's known that the page and its inner structures processing is finished.
         /// This includes reading data from pages, page modification and page handling via addons/utilities.
-        /// </p>
         /// </remarks>
         /// <param name="pageNum">the page number which low level objects structure is to be released from memory.</param>
         public virtual void ReleaseDeep(int pageNum) {
@@ -282,17 +263,14 @@ namespace iText.Kernel.Pdf {
         /// for more details on modes). It is also not advised to be used in stamping mode: even though it will indeed
         /// release the objects and free the memory, the released objects will definitely be re-read again on document
         /// closing, which would affect performance.
-        /// </p>
         /// <p>
         /// When using this method in append mode (or in stamping mode), be careful not to try to modify the object instances
         /// obtained before this method call! See
         /// <see cref="PageFlushingHelper"/>
         /// for details on released and flushed objects state.
-        /// </p>
         /// <p>
         /// This method shall be used only when it's known that the page and its inner structures processing is finished.
         /// This includes reading data from pages, page modification and page handling via addons/utilities.
-        /// </p>
         /// </summary>
         /// <param name="pageNum">the page number which low level objects structure is to be flushed or released from memory.
         ///     </param>

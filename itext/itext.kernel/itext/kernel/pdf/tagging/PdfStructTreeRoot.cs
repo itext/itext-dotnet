@@ -207,7 +207,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Adds a
         /// <see cref="PdfNamespace"/>
         /// to the list of the namespaces used within the document.
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <p>
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="namespace">
         /// a
@@ -283,7 +284,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// For more info see
         /// <see cref="GetPronunciationLexiconsList()"/>
         /// .
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <p>
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="pronunciationLexiconFileSpec">
         /// a
@@ -420,22 +422,15 @@ namespace iText.Kernel.Pdf.Tagging {
             return document;
         }
 
-        /// <summary>
-        /// <p>
-        /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </summary>
+        /// <summary>Adds file associated with structure tree root and identifies the relationship between them.</summary>
         /// <remarks>
-        /// <p>
         /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </p>
         /// <p>
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure tree root dictionary.
         /// If description is provided, it also will add file description to catalog Names tree.
-        /// </p>
         /// <p>
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="description">the file description</param>
         /// <param name="fs">file specification dictionary of associated file</param>
@@ -462,14 +457,11 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <remarks>
         /// <p>
         /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </p>
         /// <p>
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure tree root dictionary.
-        /// </p>
         /// <p>
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {

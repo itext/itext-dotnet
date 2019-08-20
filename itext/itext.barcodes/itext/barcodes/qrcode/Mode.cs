@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary><p>See ISO 18004:2006, 6.4.1, Tables 2 and 3.</summary>
+    /// <summary>See ISO 18004:2006, 6.4.1, Tables 2 and 3.</summary>
     /// <remarks>
-    /// <p>See ISO 18004:2006, 6.4.1, Tables 2 and 3. This enum encapsulates the various modes in which
-    /// data can be encoded to bits in the QR code standard.</p>
+    /// See ISO 18004:2006, 6.4.1, Tables 2 and 3. This enum encapsulates the various modes in which
+    /// data can be encoded to bits in the QR code standard.
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class Mode {

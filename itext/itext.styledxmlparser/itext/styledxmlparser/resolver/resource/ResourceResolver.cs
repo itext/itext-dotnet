@@ -84,7 +84,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <p>
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
-        /// </p>
         /// </summary>
         /// <param name="baseUri">base URI against which all relative resource URIs will be resolved.</param>
         public ResourceResolver(String baseUri) {

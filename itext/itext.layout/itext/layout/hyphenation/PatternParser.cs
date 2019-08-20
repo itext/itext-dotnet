@@ -24,9 +24,10 @@ using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
-    /// <p>A SAX document handler to read and parse hyphenation patterns
-    /// from a XML file.</p>
-    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// A SAX document handler to read and parse hyphenation patterns
+    /// from a XML file.
+    /// <p>
+    /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </summary>
     public class PatternParser {
         private int currElement;

@@ -100,7 +100,8 @@ namespace iText.Signatures {
             /// <summary>Email address (RSA PKCS#9 extension) - IA5String.</summary>
             /// <remarks>
             /// Email address (RSA PKCS#9 extension) - IA5String.
-            /// <p>Note: if you're trying to be ultra orthodox, don't use this! It shouldn't be in here.</p>
+            /// <p>
+            /// Note: if you're trying to be ultra orthodox, don't use this! It shouldn't be in here.
             /// </remarks>
             public static readonly DerObjectIdentifier EmailAddress = new DerObjectIdentifier("1.2.840.113549.1.9.1");
 

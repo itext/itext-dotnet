@@ -54,7 +54,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// . The head method is called when the node is first
     /// seen, and the tail method when all of the node's children have been visited. As an example, head can be used to
     /// create a start tag for a node, and tail to create the end tag.
-    /// </p>
     /// </remarks>
     public interface NodeVisitor {
         /// <summary>Callback for when a node is first visited.</summary>

@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Canvas {
     /// structure and hierarchy is largely comparable to HTML. As in HTML, every tag
     /// type has a name, defined here in the <code>role</code> attribute. The tagging
     /// mechanism in Tagged PDF is extensible, so PDF creators can choose to create
-    /// custom tags.</p>
+    /// custom tags.
     /// </remarks>
     public class CanvasTag {
         /// <summary>The type of the tag.</summary>

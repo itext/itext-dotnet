@@ -103,7 +103,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// See also
         /// <see cref="SetNamespaceForNewTags(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         /// .
-        /// </p>
         /// </summary>
         /// <param name="document">the document, at which tag structure this instance will point.</param>
         public TagTreePointer(PdfDocument document) {
@@ -243,12 +242,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// if this tag doesn't explicitly define namespace by the means of
         /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         /// .
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
-        /// <p>It's highly recommended to acquire
+        /// <p>
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
+        /// <p>
+        /// It's highly recommended to acquire
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// class instances via
         /// <see cref="TagStructureContext.FetchNamespace(System.String)"/>
-        /// .</p>
+        /// .
         /// </summary>
         /// <param name="namespace">
         /// a
@@ -786,7 +787,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// ),
         /// then these tags are considered as not yet finished ones, and they won't be flushed immediately,
         /// but they will be flushed, when waiting state is removed.
-        /// </p>
         /// </remarks>
         /// <returns>
         /// this

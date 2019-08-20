@@ -287,12 +287,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="OutputSettings.Charset(System.Text.Encoding)">OutputSettings.charset(Charset)</see>
         /// but in addition it updates the
         /// charset / encoding element within the document.
-        /// <p>This enables
+        /// <p>
+        /// This enables
         /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>
-        /// .</p>
-        /// <p>If there's no element with charset / encoding information yet it will
-        /// be created. Obsolete charset / encoding definitions are removed!</p>
-        /// <p><b>Elements used:</b></p>
+        /// .
+        /// <p>
+        /// If there's no element with charset / encoding information yet it will
+        /// be created. Obsolete charset / encoding definitions are removed!
+        /// <p>
+        /// <b>Elements used:</b>
         /// <ul>
         /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
         /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>
@@ -325,8 +328,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// updated on changes through
         /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
         /// or not.
-        /// <p>If set to <tt>false</tt> <i>(default)</i> there are no elements
-        /// modified.</p>
+        /// <p>
+        /// If set to <tt>false</tt> <i>(default)</i> there are no elements
+        /// modified.
         /// </summary>
         /// <param name="update">
         /// If <tt>true</tt> the element updated on charset
@@ -373,7 +377,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <li>If there's no element yet it will be inserted</li>
         /// <li>Obsolete elements are removed</li>
         /// </ul>
-        /// <p><b>Elements used:</b></p>
+        /// <b>Elements used:</b>
         /// <ul>
         /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
         /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>

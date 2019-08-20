@@ -105,7 +105,7 @@ namespace iText.Signatures {
         /// <see cref="PdfPKCS7"/>
         /// can be used to fetch additional info about the signature
         /// and also to perform integrity check of data signed by the given signature field.
-        /// </p>
+        /// <p>
         /// In order to check that given signature covers the current PdfDocument revision please
         /// use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
@@ -136,7 +136,7 @@ namespace iText.Signatures {
         /// <see cref="PdfPKCS7"/>
         /// can be used to fetch additional info about the signature
         /// and also to perform integrity check of data signed by the given signature field.
-        /// </p>
+        /// <p>
         /// Prepared
         /// <see cref="PdfPKCS7"/>
         /// instance calculates digest based on signature's /ByteRange entry.
@@ -328,7 +328,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . Such signatures cannot be considered as verifying the PDF document,
         /// because content that is not covered by signature might have been modified since the signature creation.
-        /// </p>
+        /// <p>
         /// </remarks>
         /// <param name="name">the signature field name</param>
         /// <returns>true if the signature covers the entire document, false if it doesn't</returns>

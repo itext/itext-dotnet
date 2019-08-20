@@ -327,12 +327,10 @@ namespace iText.Kernel.Pdf {
         /// (see
         /// <see cref="StampingProperties.UseAppendMode()"/>
         /// ).
-        /// </p>
         /// <p>
         /// In append mode the whole document is preserved as is, and only changes to the document are
         /// appended to the end of the document file. Because of this, only modified objects need to be flushed and are
         /// allowed to be flushed (i.e. to be written).
-        /// </p>
         /// </remarks>
         /// <returns>
         /// this

@@ -1066,7 +1066,6 @@ namespace iText.Signatures {
         /// use
         /// <see cref="SignatureUtil.SignatureCoversWholeDocument(System.String)"/>
         /// method.
-        /// </p>
         /// </remarks>
         /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">

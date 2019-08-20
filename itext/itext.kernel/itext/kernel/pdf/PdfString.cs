@@ -234,11 +234,9 @@ namespace iText.Kernel.Pdf {
         /// and
         /// <see cref="GetValueBytes()"/>
         /// methods.
-        /// </p>
         /// <p>
         /// NOTE: this method is only needed in a very specific cases of encrypted documents. E.g. digital signature dictionary
         /// /Contents entry shall not be encrypted. Also this method isn't meaningful in non-encrypted documents.
-        /// </p>
         /// </remarks>
         public virtual void MarkAsUnencryptedObject() {
             SetState(PdfObject.UNENCRYPTED);

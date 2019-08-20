@@ -109,7 +109,7 @@ namespace iText.Barcodes.Qrcode {
             return ecBlocks[ecLevel.Ordinal()];
         }
 
-        /// <summary><p>Deduces version information purely from QR Code dimensions.</p></summary>
+        /// <summary>Deduces version information purely from QR Code dimensions.</summary>
         /// <param name="dimension">dimension in modules</param>
         /// <returns>
         /// 
@@ -202,12 +202,12 @@ namespace iText.Barcodes.Qrcode {
             return bitMatrix;
         }
 
-        /// <summary><p>Encapsulates a set of error-correction blocks in one symbol version.</summary>
+        /// <summary>Encapsulates a set of error-correction blocks in one symbol version.</summary>
         /// <remarks>
-        /// <p>Encapsulates a set of error-correction blocks in one symbol version. Most versions will
+        /// Encapsulates a set of error-correction blocks in one symbol version. Most versions will
         /// use blocks of differing sizes within one version, so, this encapsulates the parameters for
         /// each set of blocks. It also holds the number of error-correction codewords per block since it
-        /// will be the same across all blocks within one version.</p>
+        /// will be the same across all blocks within one version.
         /// </remarks>
         public sealed class ECBlocks {
             private readonly int ecCodewordsPerBlock;
@@ -247,11 +247,11 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <summary><p>Encapsualtes the parameters for one error-correction block in one symbol version.</summary>
+        /// <summary>Encapsualtes the parameters for one error-correction block in one symbol version.</summary>
         /// <remarks>
-        /// <p>Encapsualtes the parameters for one error-correction block in one symbol version.
+        /// Encapsualtes the parameters for one error-correction block in one symbol version.
         /// This includes the number of data codewords, and the number of times a block with these
-        /// parameters is used consecutively in the QR code version's format.</p>
+        /// parameters is used consecutively in the QR code version's format.
         /// </remarks>
         public sealed class ECB {
             private readonly int count;

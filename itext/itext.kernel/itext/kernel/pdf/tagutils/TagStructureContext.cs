@@ -214,8 +214,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// a document. For the new empty PDF 2.0 documents this namespace is set to
         /// <see cref="iText.Kernel.Pdf.Tagging.StandardNamespaces.PDF_2_0"/>
         /// .
-        /// </p>
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <p>
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <returns>
         /// a
@@ -242,8 +242,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// different from default, set this value before any modifications to the document were made and before
         /// <see cref="GetAutoTaggingPointer()"/>
         /// method was called for the first time.
-        /// </p>
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <p>
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="namespace">
         /// a
@@ -275,7 +275,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// will be returned by this method). However encountered namespaces will not be added to the document's structure tree root
         /// <see cref="iText.Kernel.Pdf.PdfName.Namespaces">/Namespaces</see>
         /// array unless they were set to the certain element of the tag structure.
-        /// </p>
         /// </summary>
         /// <param name="namespaceName">
         /// a
@@ -563,13 +562,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
-        /// <p>
         /// Gets
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
         /// at which
         /// <see cref="TagTreePointer"/>
         /// points.
-        /// </p>
+        /// <p>
         /// NOTE: Be aware that
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
         /// is a low level class, use it carefully,

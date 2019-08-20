@@ -227,7 +227,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <p>
         /// Note that an element can have both mixed Nodes and Elements as children. This method inspects
         /// a filtered list of children that are elements, and the index is based on that filtered list.
-        /// </p>
         /// </remarks>
         /// <param name="index">the index number of the element to retrieve</param>
         /// <returns>
@@ -246,7 +245,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// This is effectively a filter on
         /// <see cref="Node.ChildNodes()"/>
         /// to get Element nodes.
-        /// </p>
         /// </remarks>
         /// <returns>
         /// child elements. If this element has no children, returns an
@@ -276,7 +274,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>
         /// child text nodes. If this element has no text nodes, returns an
         /// empty list.
-        /// </p>
+        /// <p>
         /// For example, with the input HTML:
         /// <c>&lt;p&gt;One &lt;span&gt;Two&lt;/span&gt; Three &lt;br&gt; Four&lt;/p&gt;</c>
         /// with the
@@ -327,7 +325,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// This is effectively a filter on
         /// <see cref="Node.ChildNodes()"/>
         /// to get Data nodes.
-        /// </p>
         /// </remarks>
         /// <returns>
         /// child data nodes. If this element has no data nodes, returns an
@@ -354,7 +351,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>getElementBy*</c>
         /// methods, because
         /// multiple filters can be combined, e.g.:
-        /// </p>
         /// <ul>
         /// <li>
         /// <c>el.select("a[href]")</c>
@@ -367,11 +363,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>el.select("a[href*=example.com]")</c>
         /// - finds links pointing to example.com (loosely)
         /// </ul>
-        /// <p>
         /// See the query syntax documentation in
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// .
-        /// </p>
         /// </summary>
         /// <param name="cssQuery">
         /// a
@@ -608,7 +602,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <literal>'&gt;'</literal>
         /// ,
         /// followed by a unique selector for the element (tag.class.class:nth-child(n)).
-        /// </p>
         /// </remarks>
         /// <returns>the CSS Path that can be used to retrieve the element in a selector.</returns>
         public virtual String CssSelector() {
@@ -672,7 +665,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// This is similar to
         /// <see cref="Node.NextSibling()"/>
         /// , but specifically finds only Elements
-        /// </p>
         /// </remarks>
         /// <returns>the next element, or null if there is no next element</returns>
         /// <seealso cref="PreviousElementSibling()"/>
@@ -1024,12 +1016,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_952(accum)).Traverse(this);
+            new NodeTraversor(new _NodeVisitor_949(accum)).Traverse(this);
             return accum.ToString().Trim();
         }
 
-        private sealed class _NodeVisitor_952 : NodeVisitor {
-            public _NodeVisitor_952(StringBuilder accum) {
+        private sealed class _NodeVisitor_949 : NodeVisitor {
+            public _NodeVisitor_949(StringBuilder accum) {
                 this.accum = accum;
             }
 

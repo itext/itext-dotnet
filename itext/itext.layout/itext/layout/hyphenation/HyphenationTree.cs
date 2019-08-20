@@ -23,12 +23,10 @@ using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
-    /// <p>
     /// This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup.
     /// </summary>
     /// <remarks>
-    /// <p>
     /// This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup. It provides the provides the method to
     /// hyphenate a word.
@@ -201,20 +199,22 @@ namespace iText.Layout.Hyphenation {
         }
 
         /// <summary>
-        /// <p>Search for all possible partial matches of word starting
+        /// Search for all possible partial matches of word starting
         /// at index an update interletter values.
         /// </summary>
         /// <remarks>
-        /// <p>Search for all possible partial matches of word starting
+        /// Search for all possible partial matches of word starting
         /// at index an update interletter values. In other words, it
-        /// does something like:</p>
+        /// does something like:
+        /// <p>
         /// <code>
         /// for(i=0; i&lt;patterns.length; i++) {
         /// if ( word.substring(index).startsWidth(patterns[i]) )
         /// update_interletter_values(patterns[i]);
         /// }
         /// </code>
-        /// <p>But it is done in an efficient way since the patterns are
+        /// <p>
+        /// But it is done in an efficient way since the patterns are
         /// stored in a ternary tree. In fact, this is the whole purpose
         /// of having the tree: doing this search without having to test
         /// every single pattern. The number of patterns for languages
@@ -223,7 +223,7 @@ namespace iText.Layout.Hyphenation {
         /// really slow without the tree. The tradeoff is memory, but
         /// using a ternary tree instead of a trie, almost halves the
         /// the memory used by Lout or TeX. It's also faster than using
-        /// a hash table</p>
+        /// a hash table
         /// </remarks>
         /// <param name="word">null terminated word to match</param>
         /// <param name="index">start index from word</param>

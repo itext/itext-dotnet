@@ -115,21 +115,13 @@ namespace iText.Kernel.Pdf.Xobject {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// <p>
-        /// Adds file associated with PDF XObject and identifies the relationship between them.
-        /// </summary>
+        /// <summary>Adds file associated with PDF XObject and identifies the relationship between them.</summary>
         /// <remarks>
-        /// <p>
         /// Adds file associated with PDF XObject and identifies the relationship between them.
-        /// </p>
-        /// <p>
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the XObject dictionary.
-        /// </p>
         /// <p>
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {

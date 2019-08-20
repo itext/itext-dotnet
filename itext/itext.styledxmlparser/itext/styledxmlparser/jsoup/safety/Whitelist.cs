@@ -51,7 +51,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// Whitelists define what HTML (elements and attributes) to allow through the cleaner. Everything else is removed.
     /// <p>
     /// Start with one of the defaults:
-    /// </p>
     /// <ul>
     /// <li>
     /// <see cref="None()"/>
@@ -64,9 +63,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <li>
     /// <see cref="Relaxed()"/>
     /// </ul>
-    /// <p>
     /// If you need to allow more through (please be careful!), tweak a base whitelist with:
-    /// </p>
     /// <ul>
     /// <li>
     /// <see cref="AddTags(System.String[])"/>
@@ -77,9 +74,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <li>
     /// <see cref="AddProtocols(System.String, System.String, System.String[])"/>
     /// </ul>
-    /// <p>
     /// You can remove any setting from an existing whitelist with:
-    /// </p>
     /// <ul>
     /// <li>
     /// <see cref="RemoveTags(System.String[])"/>
@@ -90,17 +85,14 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <li>
     /// <see cref="RemoveProtocols(System.String, System.String, System.String[])"/>
     /// </ul>
-    /// <p>
     /// The cleaner and these whitelists assume that you want to clean a <code>body</code> fragment of HTML (to add user
     /// supplied HTML into a templated page), and not to clean a full HTML document. If the latter is the case, either wrap the
     /// document HTML around the cleaned body HTML, or create a whitelist that allows <code>html</code> and <code>head</code>
     /// elements as appropriate.
-    /// </p>
     /// <p>
     /// If you are going to extend a whitelist, please be very careful. Make sure you understand what attributes may lead to
     /// XSS attack vectors. URL attributes are particularly vulnerable and require careful validation. See
     /// http://ha.ckers.org/xss.html for some XSS attack examples.
-    /// </p>
     /// </remarks>
     /// <author>Jonathan Hedley</author>
     public class Whitelist {
@@ -141,22 +133,17 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         }
 
         /// <summary>
-        /// <p>
         /// This whitelist allows a fuller range of text nodes: <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
         /// ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and appropriate attributes.
         /// </summary>
         /// <remarks>
-        /// <p>
         /// This whitelist allows a fuller range of text nodes: <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
         /// ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and appropriate attributes.
-        /// </p>
         /// <p>
         /// Links (<code>a</code> elements) can point to <code>http, https, ftp, mailto</code>, and have an enforced
         /// <code>rel=nofollow</code> attribute.
-        /// </p>
         /// <p>
         /// Does not allow images.
-        /// </p>
         /// </remarks>
         /// <returns>whitelist</returns>
         public static iText.StyledXmlParser.Jsoup.Safety.Whitelist Basic() {
@@ -187,14 +174,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <p>
         /// Links do not have an enforced <code>rel=nofollow</code> attribute, but you can add that if desired.
         /// </summary>
-        /// <remarks>
-        /// This whitelist allows a full range of text and structural body HTML: <code>a, b, blockquote, br, caption, cite,
-        /// code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
-        /// sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
-        /// <p>
-        /// Links do not have an enforced <code>rel=nofollow</code> attribute, but you can add that if desired.
-        /// </p>
-        /// </remarks>
         /// <returns>whitelist</returns>
         public static iText.StyledXmlParser.Jsoup.Safety.Whitelist Relaxed() {
             return new iText.StyledXmlParser.Jsoup.Safety.Whitelist().AddTags("a", "b", "blockquote", "br", "caption", 
@@ -267,11 +246,9 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <p>
         /// E.g.: <code>addAttributes("a", "href", "class")</code> allows <code>href</code> and <code>class</code> attributes
         /// on <code>a</code> tags.
-        /// </p>
         /// <p>
         /// To make an attribute valid for <b>all tags</b>, use the pseudo tag <code>:all</code>, e.g.
         /// <code>addAttributes(":all", "class")</code>.
-        /// </p>
         /// </remarks>
         /// <param name="tag">The tag the attributes are for. The tag will be added to the allowed tag list if necessary.
         ///     </param>
@@ -307,11 +284,9 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <p>
         /// E.g.: <code>removeAttributes("a", "href", "class")</code> disallows <code>href</code> and <code>class</code>
         /// attributes on <code>a</code> tags.
-        /// </p>
         /// <p>
         /// To make an attribute invalid for <b>all tags</b>, use the pseudo tag <code>:all</code>, e.g.
         /// <code>removeAttributes(":all", "class")</code>.
-        /// </p>
         /// </remarks>
         /// <param name="tag">The tag the attributes are for.</param>
         /// <param name="keys">List of invalid attributes for the tag</param>
@@ -357,7 +332,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <p>
         /// E.g.: <code>addEnforcedAttribute("a", "rel", "nofollow")</code> will make all <code>a</code> tags output as
         /// <code>&lt;a href="..." rel="nofollow"&gt;</code>
-        /// </p>
         /// </remarks>
         /// <param name="tag">The tag the enforced attribute is for. The tag will be added to the allowed tag list if necessary.
         ///     </param>
@@ -429,7 +403,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// </c>
         /// option, the link must be resolvable against the base URI to an allowed protocol; otherwise the attribute
         /// will be removed.
-        /// </p>
         /// </remarks>
         /// <param name="preserve">
         /// 
@@ -451,11 +424,9 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// URLs with the defined protocol.
         /// <p>
         /// E.g.: <code>addProtocols("a", "href", "ftp", "http", "https")</code>
-        /// </p>
         /// <p>
         /// To allow a link to an in-page URL anchor (i.e. <code>&lt;a href="#anchor"&gt;</code>, add a <code>#</code>:<br />
         /// E.g.: <code>addProtocols("a", "href", "#")</code>
-        /// </p>
         /// </remarks>
         /// <param name="tag">Tag the URL protocol is for</param>
         /// <param name="key">Attribute key</param>
@@ -497,7 +468,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// Remove allowed URL protocols for an element's URL attribute.
         /// <p>
         /// E.g.: <code>removeProtocols("a", "href", "ftp")</code>
-        /// </p>
         /// </remarks>
         /// <param name="tag">Tag the URL protocol is for</param>
         /// <param name="key">Attribute key</param>

@@ -44,16 +44,13 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.IO.Util {
-    /// <summary>
-    /// <p>A hash map that uses primitive ints for the key rather than objects.</p>
-    /// <p>Note that this class is for internal optimization purposes only, and may
-    /// not be supported in future releases of Jakarta Commons Lang.
-    /// </summary>
+    /// <summary>A hash map that uses primitive ints for the key rather than objects.</summary>
     /// <remarks>
-    /// <p>A hash map that uses primitive ints for the key rather than objects.</p>
-    /// <p>Note that this class is for internal optimization purposes only, and may
+    /// A hash map that uses primitive ints for the key rather than objects.
+    /// <p>
+    /// Note that this class is for internal optimization purposes only, and may
     /// not be supported in future releases of Jakarta Commons Lang.  Utilities of
-    /// this sort may be included in future releases of Jakarta Commons Collections.</p>
+    /// this sort may be included in future releases of Jakarta Commons Collections.
     /// </remarks>
     /// <author>Justin Couch</author>
     /// <author>Alex Chaffee (alex@apache.org)</author>
@@ -84,16 +81,16 @@ namespace iText.IO.Util {
         private float loadFactor;
 
         /// <summary>
-        /// <p>Constructs a new, empty hashtable with a default capacity and load
-        /// factor, which is <code>20</code> and <code>0.75</code> respectively.</p>
+        /// Constructs a new, empty hashtable with a default capacity and load
+        /// factor, which is <code>20</code> and <code>0.75</code> respectively.
         /// </summary>
         public IntHashtable()
             : this(150, 0.75f) {
         }
 
         /// <summary>
-        /// <p>Constructs a new, empty hashtable with the specified initial capacity
-        /// and default load factor, which is <code>0.75</code>.</p>
+        /// Constructs a new, empty hashtable with the specified initial capacity
+        /// and default load factor, which is <code>0.75</code>.
         /// </summary>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
         /// <exception cref="System.ArgumentException">
@@ -105,8 +102,8 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Constructs a new, empty hashtable with the specified initial
-        /// capacity and the specified load factor.</p>
+        /// Constructs a new, empty hashtable with the specified initial
+        /// capacity and the specified load factor.
         /// </summary>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
         /// <param name="loadFactor">the load factor of the hashtable.</param>
@@ -133,13 +130,13 @@ namespace iText.IO.Util {
             : this(o.table.Length, o.loadFactor) {
         }
 
-        /// <summary><p>Returns the number of keys in this hashtable.</p></summary>
+        /// <summary>Returns the number of keys in this hashtable.</summary>
         /// <returns>the number of keys in this hashtable.</returns>
         public virtual int Size() {
             return count;
         }
 
-        /// <summary><p>Tests if this hashtable maps no keys to values.</p></summary>
+        /// <summary>Tests if this hashtable maps no keys to values.</summary>
         /// <returns>
         /// <code>true</code> if this hashtable maps no keys to values;
         /// <code>false</code> otherwise.
@@ -148,13 +145,14 @@ namespace iText.IO.Util {
             return count == 0;
         }
 
-        /// <summary><p>Tests if some key maps into the specified value in this hashtable.</summary>
+        /// <summary>Tests if some key maps into the specified value in this hashtable.</summary>
         /// <remarks>
-        /// <p>Tests if some key maps into the specified value in this hashtable.
+        /// Tests if some key maps into the specified value in this hashtable.
         /// This operation is more expensive than the <code>containsKey</code>
-        /// method.</p>
-        /// <p>Note that this method is identical in functionality to containsValue,
-        /// (which is part of the Map interface in the collections framework).</p>
+        /// method.
+        /// <p>
+        /// Note that this method is identical in functionality to containsValue,
+        /// (which is part of the Map interface in the collections framework).
         /// </remarks>
         /// <param name="value">a value to search for.</param>
         /// <returns>
@@ -180,11 +178,16 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Returns <code>true</code> if this HashMap maps one or more keys
-        /// to this value.</p>
-        /// <p>Note that this method is identical in functionality to contains
-        /// (which predates the Map interface).</p>
+        /// Returns <code>true</code> if this HashMap maps one or more keys
+        /// to this value.
         /// </summary>
+        /// <remarks>
+        /// Returns <code>true</code> if this HashMap maps one or more keys
+        /// to this value.
+        /// <p>
+        /// Note that this method is identical in functionality to contains
+        /// (which predates the Map interface).
+        /// </remarks>
         /// <param name="value">value whose presence in this HashMap is to be tested.</param>
         /// <returns>boolean <code>true</code> if the value is contained</returns>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
@@ -192,7 +195,7 @@ namespace iText.IO.Util {
             return Contains(value);
         }
 
-        /// <summary><p>Tests if the specified int is a key in this hashtable.</p></summary>
+        /// <summary>Tests if the specified int is a key in this hashtable.</summary>
         /// <param name="key">possible key.</param>
         /// <returns>
         /// <code>true</code> if and only if the specified int is a
@@ -211,7 +214,7 @@ namespace iText.IO.Util {
             return false;
         }
 
-        /// <summary><p>Returns the value to which the specified key is mapped in this map.</p></summary>
+        /// <summary>Returns the value to which the specified key is mapped in this map.</summary>
         /// <param name="key">a key in the hashtable.</param>
         /// <returns>
         /// the value to which the key is mapped in this hashtable;
@@ -231,13 +234,19 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Increases the capacity of and internally reorganizes this
+        /// Increases the capacity of and internally reorganizes this
         /// hashtable, in order to accommodate and access its entries more
-        /// efficiently.</p>
-        /// <p>This method is called automatically when the number of keys
-        /// in the hashtable exceeds this hashtable's capacity and load
-        /// factor.</p>
+        /// efficiently.
         /// </summary>
+        /// <remarks>
+        /// Increases the capacity of and internally reorganizes this
+        /// hashtable, in order to accommodate and access its entries more
+        /// efficiently.
+        /// <p>
+        /// This method is called automatically when the number of keys
+        /// in the hashtable exceeds this hashtable's capacity and load
+        /// factor.
+        /// </remarks>
         protected internal virtual void Rehash() {
             int oldCapacity = table.Length;
             IntHashtable.Entry[] oldMap = table;
@@ -257,15 +266,16 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Maps the specified <code>key</code> to the specified
+        /// Maps the specified <code>key</code> to the specified
         /// <code>value</code> in this hashtable.
         /// </summary>
         /// <remarks>
-        /// <p>Maps the specified <code>key</code> to the specified
+        /// Maps the specified <code>key</code> to the specified
         /// <code>value</code> in this hashtable. The key cannot be
-        /// <code>null</code>. </p>
-        /// <p>The value can be retrieved by calling the <code>get</code> method
-        /// with a key that is equal to the original key.</p>
+        /// <code>null</code>.
+        /// <p>
+        /// The value can be retrieved by calling the <code>get</code> method
+        /// with a key that is equal to the original key.
         /// </remarks>
         /// <param name="key">the hashtable key.</param>
         /// <param name="value">the value.</param>
@@ -301,11 +311,16 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Removes the key (and its corresponding value) from this
-        /// hashtable.</p>
-        /// <p>This method does nothing if the key is not present in the
-        /// hashtable.</p>
+        /// Removes the key (and its corresponding value) from this
+        /// hashtable.
         /// </summary>
+        /// <remarks>
+        /// Removes the key (and its corresponding value) from this
+        /// hashtable.
+        /// <p>
+        /// This method does nothing if the key is not present in the
+        /// hashtable.
+        /// </remarks>
         /// <param name="key">the key that needs to be removed.</param>
         /// <returns>
         /// the value to which the key had been mapped in this hashtable,
@@ -333,7 +348,7 @@ namespace iText.IO.Util {
             return 0;
         }
 
-        /// <summary><p>Clears this hashtable so that it contains no keys.</p></summary>
+        /// <summary>Clears this hashtable so that it contains no keys.</summary>
         public virtual void Clear() {
             IntHashtable.Entry[] tab = table;
             for (int index = tab.Length; --index >= 0; ) {
@@ -343,8 +358,8 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// <p>Innerclass that acts as a datastructure to create a new entry in the
-        /// table.</p>
+        /// Innerclass that acts as a datastructure to create a new entry in the
+        /// table.
         /// </summary>
         public class Entry {
             internal int key;
@@ -353,7 +368,7 @@ namespace iText.IO.Util {
 
             internal IntHashtable.Entry next;
 
-            /// <summary><p>Create a new entry with the given values.</p></summary>
+            /// <summary>Create a new entry with the given values.</summary>
             /// <param name="key">The key used to enter this in the table</param>
             /// <param name="value">The value for this key</param>
             /// <param name="next">A reference to the next entry in the table</param>
