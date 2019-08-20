@@ -375,17 +375,17 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.ViewClip;
                     break;
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.PrintArea;
                     break;
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.PrintClip;
                     break;
                 }
 
