@@ -691,13 +691,6 @@ namespace iText.Forms.Xfdf {
                         actionObject.SetMap((bool)action.GetAsBool(PdfName.IsMap));
                     }
                 }
-                //            else if(PdfName.GoTo.equals(type)) {
-                //
-                //            } else if (PdfName.GoToR.equals(type)) {
-                //            } else if (PdfName.Launch.equals(type)) {
-                //                //actionObject.setFileOriginalName();
-                //            } else if (PdfName.Named.equals(type)) {
-                //            }
                 annot.SetAction(actionObject);
             }
             PdfArray dest = (PdfArray)pdfLinkAnnotation.GetDestinationObject();
